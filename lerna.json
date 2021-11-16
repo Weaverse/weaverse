@@ -1,6 +1,7 @@
 {
   "packages": [
-    "packages/*"
+    "packages/sdk-react",
+    "packages/elements"
   ],
   "version": "independent",
   "npmClient": "yarn",
