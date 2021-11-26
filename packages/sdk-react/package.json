@@ -47,8 +47,9 @@
     }
   ],
   "devDependencies": {
+    "@hyperweaver/elements": "^0.1.0",
     "@size-limit/preset-small-lib": "^6.0.4",
-    "@types/react": "^17.0.35",
+    "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
     "husky": "^7.0.4",
     "react": "^17.0.2",
@@ -56,7 +57,9 @@
     "size-limit": "^6.0.4",
     "tsdx": "^0.14.1",
     "tslib": "^2.3.1",
-    "typescript": "^4.4.4",
-    "@hyperweaver/elements": "^0.1.0"
+    "typescript": "^4.5.2"
+  },
+  "dependencies": {
+    "@stitches/react": "^1.2.5"
   }
 }
