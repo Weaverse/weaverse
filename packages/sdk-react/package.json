@@ -33,7 +33,7 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "@hyperweaver/sdk-react",
+  "name": "@weaverse/sdk-react",
   "author": "Paul Phan",
   "module": "dist/sdk-react.esm.js",
   "size-limit": [
@@ -47,7 +47,7 @@
     }
   ],
   "devDependencies": {
-    "@hyperweaver/elements": "^0.1.0",
+    "@weaverse/elements": "^0.1.0",
     "@size-limit/preset-small-lib": "^6.0.4",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",

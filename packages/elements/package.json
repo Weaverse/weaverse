@@ -35,7 +35,7 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "@hyperweaver/elements",
+  "name": "@weaverse/elements",
   "author": "Paul Phan",
   "module": "dist/elements.esm.js",
   "size-limit": [

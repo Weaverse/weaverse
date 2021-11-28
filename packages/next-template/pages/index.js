@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import {Thing} from '@hyperweaver/sdk-react'
+import {Thing} from '@weaverse/sdk-react'
 
 export default function Home() {
   return (
