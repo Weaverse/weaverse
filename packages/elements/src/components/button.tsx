@@ -3,6 +3,7 @@ import {useEffect} from 'react'
 import {css} from '../theme'
 
 export const Button = ({color, setColor, style}: any) => {
+    let [count, setCount] = React.useState(0)
     useEffect(() => {
         window.addEventListener('message', (event) => {
             console.log(event.data)
@@ -17,7 +18,7 @@ export const Button = ({color, setColor, style}: any) => {
         ...style,
         backgroundColor: color
     })()
-    return <button className={cssClass}>Test Element</button>
+    return <button className={cssClass} onClick={() => setCount(count + 1)}>Test Button {count}</button>
 }
 
 Button.defaultProps = {
