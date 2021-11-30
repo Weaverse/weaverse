@@ -31,6 +31,8 @@ Button.defaultProps = {
     type: 'button',
     tag: 'button'
 }
-
+Button.configs = {
+    type: 'button'
+}
 
 export default Button

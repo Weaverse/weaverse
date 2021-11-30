@@ -1,8 +1,29 @@
 import * as React from 'react'
 import {useEffect} from 'react'
-import Element from '@weaverse/elements'
+import Elements from '@weaverse/elements'
 
-export const Thing = () => {
+
+export class WeaverseSDK {
+  elementInstances = new Map<string, any>()
+
+  constructor() {
+    this.init()
+  }
+
+  registerElement = (name: string, element: any) => {
+    this.elementInstances.set(name, element)
+  }
+
+  init() {
+    Object.keys(Elements).forEach(key => {
+      // @ts-ignore
+      Elements[key]?.configs?.type && this.registerElement(Elements[key].configs.type, Elements[key])
+    })
+    console.log('WeaverseSDK initialized', this.elementInstances)
+  }
+}
+
+export const Thing = ({sdk}: { sdk: WeaverseSDK }) => {
   let [color, setColor] = React.useState('red')
   useEffect(() => {
     window.addEventListener('message', (event) => {
@@ -13,10 +34,12 @@ export const Thing = () => {
       }
     })
   }, [])
+  let Button = sdk.elementInstances.get('button')
+  let Base = sdk.elementInstances.get('base')
   return <div>
-    <Element.Button color={color} setColor={setColor}/>
-    <Element.BaseElement tag="button" style={{background: color}}>
+    <Button color={color} setColor={setColor}/>
+    <Base tag="button" style={{background: color}}>
       Hello world
-    </Element.BaseElement>
+    </Base>
   </div>
-};
+}

@@ -1,7 +1,9 @@
 import Button from './components/button'
 import BaseElement from './components/base'
 
-export default {
+const elements = {
     Button,
     BaseElement
 }
+
+export default elements

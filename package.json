@@ -10,5 +10,6 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "version": "0.1.4"
 }

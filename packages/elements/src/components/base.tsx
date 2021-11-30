@@ -11,4 +11,8 @@ export const BaseElement = ({tag, children, ...props}: any) => {
         className: cssClass
     }, children)
 }
+
+BaseElement.configs = {
+    type: 'base'
+}
 export default BaseElement
