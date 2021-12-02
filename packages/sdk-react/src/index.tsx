@@ -1,45 +1,46 @@
 import * as React from 'react'
 import {useEffect} from 'react'
-import Elements from '@weaverse/elements'
+import {Weaverse} from './base'
 
 
-export class WeaverseSDK {
-  elementInstances = new Map<string, any>()
-
-  constructor() {
-    this.init()
-  }
-
-  registerElement = (name: string, element: any) => {
-    this.elementInstances.set(name, element)
-  }
-
-  init() {
-    Object.keys(Elements).forEach(key => {
-      // @ts-ignore
-      Elements[key]?.configs?.type && this.registerElement(Elements[key].configs.type, Elements[key])
-    })
-    console.log('WeaverseSDK initialized', this.elementInstances)
-  }
-}
-
-export const Thing = ({sdk}: { sdk: WeaverseSDK }) => {
-  let [color, setColor] = React.useState('red')
+const WeaverseRoot = ({context}: { context: Weaverse }) => {
+  let [data, setData] = React.useState<any>(context.projectData)
   useEffect(() => {
-    window.addEventListener('message', (event) => {
-      if (event.data.type?.startsWith('HW')) {
-        if (event.data.type === 'HW_SET_COLOR') {
-          setColor(event.data.payload)
+    let handleUpdate = () => {
+      console.log('WeaverseRoot: context changed', context.projectData)
+      setData(context.projectData)
+    }
+    context.subscribe(handleUpdate)
+    context.updateProjectData()
+    return () => {
+      context.unsubscribe(handleUpdate)
+    }
+  }, [])
+  let components: any = {}
+  if (Array.isArray(data?.items)) {
+    let items = data.items
+    items.forEach((item: any) => {
+      if (context.elementInstances.get(item.type)) {
+        components[item.id] = {
+          component: context.elementInstances.get(item.type),
+          props: item.props
         }
       }
+
     })
-  }, [])
-  let Button = sdk.elementInstances.get('button')
-  let Base = sdk.elementInstances.get('base')
+  }
+  console.log('WeaverseRoot: components', components)
   return <div>
-    <Button color={color} setColor={setColor}/>
-    <Base tag="button" style={{background: color}}>
-      Hello world
-    </Base>
+    <RenderComponent components={components}/>
   </div>
 }
+const RenderComponent = ({components}: any) => {
+  return <div>
+    {Object.keys(components).map((key: string) => {
+      console.log('RenderComponent: key', key, components)
+      let {component, props} = components[key]
+      return React.cloneElement(component, props)
+    })}</div>
+}
+
+export {Weaverse, WeaverseRoot}
