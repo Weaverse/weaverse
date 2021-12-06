@@ -3,16 +3,6 @@ import {css} from '../theme'
 
 export const Button = ({color, setColor, style}: any) => {
     let [count, setCount] = React.useState(0)
-    // useEffect(() => {
-    //     window.addEventListener('message', (event) => {
-    //         console.log(event.data)
-    //         if (event.data.type?.startsWith('HW')) {
-    //             if (event.data.type === 'HW_SET_COLOR') {
-    //                 setColor(event.data.payload)
-    //             }
-    //         }
-    //     })
-    // }, [])
     let cssClass = css({
         ...style,
         backgroundColor: color

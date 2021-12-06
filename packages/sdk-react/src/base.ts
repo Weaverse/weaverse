@@ -2,17 +2,34 @@
 
 import Elements from '@weaverse/elements'
 
+export interface ProjectDataItemType {
+	type: string
+	name: string
+	id: string | number
+}
+
+export interface ProjectDataType {
+	items: ProjectDataItemType[]
+}
+
 export class Weaverse {
 	elementInstances = new Map<string, any>()
+	itemInstances = new Map<string | number, WeaverseItemStore>()
 	appUrl: string = 'http://localhost:3000'
 	projectKey: string = ''
-	projectData: any = {}
+	projectData: ProjectDataType = {
+		items: []
+	}
 	listeners: Set<any> = new Set()
 
-	constructor({appUrl, projectKey, projectData}: { appUrl?: string, projectKey?: string, projectData?: any } = {}) {
+	constructor({
+					appUrl,
+					projectKey,
+					projectData
+				}: { appUrl?: string, projectKey?: string, projectData?: ProjectDataType } = {}) {
 		this.appUrl = appUrl || this.appUrl
 		this.projectKey = projectKey || this.projectKey
-		this.projectData = projectData || this.projectData
+		projectData && (this.projectData = projectData)
 		this.init()
 	}
 
@@ -47,12 +64,62 @@ export class Weaverse {
 	updateProjectData() {
 		if (this.projectKey) {
 			this.fetchProjectData().then(data => {
-				this.projectData = data
-				this.triggerUpdate()
+				if (data) {
+					this.projectData = data
+					this.initItemData()
+					this.triggerUpdate()
+				}
 				console.log('this.projectData', this.projectData)
 			}).catch(err => {
 				console.error(err)
 			})
 		}
 	}
+
+	initItemData() {
+		let data = this.projectData
+		if (data.items) {
+			data.items.forEach(item => {
+				let itemStore = new WeaverseItemStore(item, this)
+				this.itemInstances.set(item.id, itemStore)
+			})
+		}
+	}
+}
+
+export class WeaverseItemStore {
+	data: any = {}
+	listeners: Set<any> = new Set()
+	Component: any
+
+	constructor(itemData: any = {}, weaverse: Weaverse) {
+		this.data = itemData
+		let {type} = itemData
+		if (type) {
+			this.Component = weaverse.elementInstances.get(type)
+		}
+	}
+
+	subscribe(fn: any) {
+		this.listeners.add(fn)
+	}
+
+	unsubscribe(fn: any) {
+		this.listeners.delete(fn)
+	}
+
+	triggerUpdate() {
+		this.listeners.forEach(fn => fn())
+	}
+
+
+	// addItem(item: any) {
+	// 	this.items.push(item)
+	// 	this.triggerUpdate()
+	// }
+	//
+	// removeItem(item: any) {
+	// 	this.items = this.items.filter(i => i !== item)
+	// 	this.triggerUpdate()
+	// }
 }
