@@ -7,7 +7,25 @@ export const Button = ({color, setColor, style}: any) => {
     let {css} = useContext(ThemeContext)
     let cssClass = css({
         ...style,
-        backgroundColor: '$blue500'
+        background: 'green',
+        variants: {
+            color: {
+                violet: {
+                    backgroundColor: 'blueviolet',
+                    color: 'white',
+                    '&:hover': {
+                        backgroundColor: 'darkviolet'
+                    }
+                },
+                gray: {
+                    backgroundColor: 'gainsboro',
+                    '&:hover': {
+                        backgroundColor: 'lightgray'
+                    }
+                }
+            }
+        }
+
     })()
     return <button className={cssClass} onClick={() => setCount(count + 1)}>Test Button {count}</button>
 }
