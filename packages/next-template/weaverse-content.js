@@ -1,10 +1,10 @@
-import {Weaverse, WeaverseRoot} from "@weaverse/sdk-react";
+import {Weaverse, WeaverseRoot} from "@weaverse/react";
 
-let weaverseContext = new Weaverse({projectKey: '1'})
+export let weaverseContext = new Weaverse({projectKey: '1'})
 
-export const WeaverseContent = () => {
+export const WeaverseContent = ({defaultData}) => {
 
-	return <WeaverseRoot context={weaverseContext}/>
+	return <WeaverseRoot context={weaverseContext} defaultData={defaultData}/>
 }
 
 export default WeaverseContent

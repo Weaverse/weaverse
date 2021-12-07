@@ -1,6 +1,6 @@
 {
   "packages": [
-    "packages/sdk-react",
+    "packages/react",
     "packages/elements"
   ],
   "version": "0.1.3",

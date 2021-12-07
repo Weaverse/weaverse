@@ -1,5 +1,5 @@
 // TODO: Implement Weaverse SDK class
-
+import fetch from 'isomorphic-unfetch'
 import Elements from '@weaverse/elements'
 
 export interface ProjectDataItemType {
@@ -68,6 +68,9 @@ export class Weaverse {
 					this.projectData = data
 					this.initItemData()
 					this.triggerUpdate()
+					window.top?.postMessage({
+						type: 'weaverse.workspace.init', payload: this.projectData
+					}, '*')
 				}
 				console.log('this.projectData', this.projectData)
 			}).catch(err => {

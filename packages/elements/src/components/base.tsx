@@ -1,8 +1,10 @@
-import React from 'react'
-import {css} from '../theme'
+import React, {useContext} from 'react'
+import {ThemeContext} from '../theme'
 
 export const BaseElement = ({tag = 'div', children, ...props}: any) => {
     let {style, ...rest} = props
+    let {css} = useContext(ThemeContext)
+
     let cssClass = css({
         ...style
     })()

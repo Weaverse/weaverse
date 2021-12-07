@@ -14,11 +14,11 @@
     "node": ">=10"
   },
   "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build",
+    "start": "tsdx watch --name sdk-react",
+    "build": "tsdx build --name sdk-react",
     "test": "tsdx test --passWithNoTests",
     "lint": "tsdx lint",
-    "prepare": "tsdx build",
+    "prepare": "tsdx build --name sdk-react",
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
@@ -37,7 +37,7 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "@weaverse/sdk-react",
+  "name": "@weaverse/react",
   "author": "Paul Phan",
   "module": "dist/sdk-react.esm.js",
   "size-limit": [
@@ -64,6 +64,6 @@
     "typescript": "^4.5.2"
   },
   "dependencies": {
-    "global-state-hook": "^2.4.0"
+    "isomorphic-unfetch": "^3.1.0"
   }
 }

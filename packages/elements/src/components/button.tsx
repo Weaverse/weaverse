@@ -1,11 +1,13 @@
 import * as React from 'react'
-import {css} from '../theme'
+import {useContext} from 'react'
+import {ThemeContext} from '../theme'
 
 export const Button = ({color, setColor, style}: any) => {
     let [count, setCount] = React.useState(0)
+    let {css} = useContext(ThemeContext)
     let cssClass = css({
         ...style,
-        backgroundColor: color
+        backgroundColor: '$blue500'
     })()
     return <button className={cssClass} onClick={() => setCount(count + 1)}>Test Button {count}</button>
 }
