@@ -31,44 +31,33 @@ const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: 
       }
     }
   }}>
-    hehe
-    <RenderItems context={context}/>
+    <RenderRoot context={context}/>
   </ThemeProvider>
 }
 
-const RenderItems = ({context}: { context: Weaverse }) => {
+const RenderRoot = ({context}: { context: Weaverse }) => {
   let {itemInstances, elementInstances} = context
-  let root = itemInstances.get(0)
-  if (root) {
-    let {id, type, childIds, ...rest} = root.data
-    let Component = elementInstances.get(type)
-    if (Component) {
-      return <Component data-wv-id={id} {...rest}>
-        {renderItem(childIds, context)}
-      </Component>
-    }
+  return <RenderItem itemId={0} context={context}/>
+}
+
+const Item = ({itemInstance, elementInstances, context}: any) => {
+  let {id, type, childIds, ...rest} = itemInstance.data
+  let Component = elementInstances.get(type)
+  if (Component) {
+    return <Component key={id} data-wv-id={id} {...rest}>
+      {Array.isArray(childIds) && childIds.map(childId => <RenderItem key={childId} itemId={childId}
+                                                                      context={context}/>)}
+    </Component>
   }
   return null
 }
-
-const renderItem = (childIds: number[], context: any) => {
-  if (Array.isArray(childIds)) {
-    let {itemInstances, elementInstances} = context
-    return childIds.map(id => {
-      let itemInstance = itemInstances.get(id)
-      if (itemInstance) {
-        let {id, type, childIds, ...rest} = itemInstance.data
-        let Component = elementInstances.get(type)
-        if (Component) {
-          return <Component key={id} data-wv-id={id} {...rest}>
-            {renderItem(childIds, itemInstances)}
-          </Component>
-        }
-      }
-      return null
-    })
+const RenderItem = ({itemId, context}: { itemId: number, context: any }): any => {
+  let {itemInstances, elementInstances} = context
+  let itemInstance = itemInstances.get(itemId)
+  if (itemInstance) {
+    return <Item itemInstance={itemInstance} elementInstances={elementInstances} context={context}/>
   }
-  return null
+  return <></>
 }
 
 export {Weaverse, WeaverseRoot, ThemeProvider, ThemeContext, stitches}

@@ -1,6 +1,7 @@
 // TODO: Implement Weaverse SDK class
 import fetch from 'isomorphic-unfetch'
 import Elements from '@weaverse/elements'
+import {useEffect} from 'react'
 
 export interface ProjectDataItemType {
 	type: string
@@ -103,6 +104,11 @@ export class WeaverseItemStore {
 		}
 	}
 
+	setData(data: any) {
+		this.data = Object.assign(this.data, data)
+		this.triggerUpdate()
+	}
+
 	subscribe(fn: any) {
 		this.listeners.add(fn)
 	}
@@ -113,6 +119,15 @@ export class WeaverseItemStore {
 
 	triggerUpdate() {
 		this.listeners.forEach(fn => fn())
+	}
+
+	useSubscription(fn: any) {
+		useEffect(() => {
+			this.subscribe(fn)
+			return () => {
+				this.unsubscribe(fn)
+			}
+		}, [])
 	}
 
 
