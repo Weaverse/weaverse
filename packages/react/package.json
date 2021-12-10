@@ -15,6 +15,7 @@
   },
   "scripts": {
     "start": "tsdx watch --name sdk-react",
+    "dev": "tsdx watch --name sdk-react",
     "build": "tsdx build --name sdk-react",
     "test": "tsdx test --passWithNoTests",
     "lint": "tsdx lint",

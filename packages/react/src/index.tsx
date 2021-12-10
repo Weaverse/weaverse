@@ -3,6 +3,7 @@ import {useEffect} from 'react'
 import {Weaverse} from './core'
 import {stitches, ThemeContext, ThemeProvider} from '@weaverse/elements'
 
+
 const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: any }) => {
   let [data, setData] = React.useState<any>(context.projectData)
   useEffect(() => {
@@ -30,9 +31,11 @@ const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: 
       }
     }
   }}>
+    hehe
     <RenderItems context={context}/>
   </ThemeProvider>
 }
+
 const RenderItems = ({context}: { context: Weaverse }) => {
   let {itemInstances, elementInstances} = context
   let root = itemInstances.get(0)

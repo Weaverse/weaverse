@@ -15,6 +15,7 @@
   },
   "scripts": {
     "start": "tsdx watch",
+    "dev": "tsdx watch",
     "build": "tsdx build",
     "test": "tsdx test --passWithNoTests",
     "lint": "tsdx lint",

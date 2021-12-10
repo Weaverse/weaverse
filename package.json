@@ -2,14 +2,40 @@
   "name": "root",
   "private": true,
   "devDependencies": {
-    "lerna": "^4.0.0"
+    "lerna": "^4.0.0",
+    "turbo": "*"
   },
   "scripts": {
     "bootstrap": "lerna bootstrap --force-local && lerna link && lerna run build",
-    "patch": "lerna version patch"
+    "dev": "turbo run dev --parallel",
+    "dev2": "turbo run dev --scope=\"@weaverse/elements\" --scope=\"@weaverse/react\" --no-cache --no-deps",
+    "test": "turbo run test",
+    "build": "turbo run build --graph"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
+  "turbo": {
+    "pipeline": {
+      "build": {
+        "dependsOn": [
+          "^build"
+        ],
+        "outputs": [
+          "dist/**"
+        ]
+      },
+      "test": {
+        "outputs": []
+      },
+      "dev": {
+        "cache": false,
+        "outputs": [
+          "dist/**"
+        ]
+      }
+    }
+  },
   "version": "0.1.4"
 }
