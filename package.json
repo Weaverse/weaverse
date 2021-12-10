@@ -10,7 +10,7 @@
     "dev": "turbo run dev --parallel",
     "dev2": "turbo run dev --scope=\"@weaverse/elements\" --scope=\"@weaverse/react\" --no-cache --no-deps",
     "test": "turbo run test",
-    "build": "turbo run build --graph"
+    "build": "turbo run build --graph=repo-graph.svg"
   },
   "workspaces": [
     "packages/*",
