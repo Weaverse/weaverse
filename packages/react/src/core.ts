@@ -118,11 +118,12 @@ export class WeaverseItemStore {
 	}
 
 	triggerUpdate() {
-		this.listeners.forEach(fn => fn())
+		this.listeners.forEach(fn => fn(this.data))
 	}
 
-	useSubscription(fn: any) {
+	useSubscription = (fn: any) => {
 		useEffect(() => {
+			console.log('subscribe', fn)
 			this.subscribe(fn)
 			return () => {
 				this.unsubscribe(fn)

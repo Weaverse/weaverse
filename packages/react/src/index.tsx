@@ -3,7 +3,6 @@ import {useEffect} from 'react'
 import {Weaverse} from './core'
 import {stitches, ThemeContext, ThemeProvider} from '@weaverse/elements'
 
-
 const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: any }) => {
   let [data, setData] = React.useState<any>(context.projectData)
   useEffect(() => {
@@ -31,22 +30,28 @@ const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: 
       }
     }
   }}>
-    <RenderRoot context={context}/>
+    <RenderItem itemId={0} context={context}/>
   </ThemeProvider>
 }
 
-const RenderRoot = ({context}: { context: Weaverse }) => {
-  let {itemInstances, elementInstances} = context
-  return <RenderItem itemId={0} context={context}/>
-}
 
 const Item = ({itemInstance, elementInstances, context}: any) => {
   let {id, type, childIds, ...rest} = itemInstance.data
+  let {useSubscription} = itemInstance
+  useSubscription((update: any) => {
+    console.log('update', update)
+  })
   let Component = elementInstances.get(type)
   if (Component) {
     return <Component key={id} data-wv-id={id} {...rest}>
-      {Array.isArray(childIds) && childIds.map(childId => <RenderItem key={childId} itemId={childId}
-                                                                      context={context}/>)}
+      {Array.isArray(childIds)
+      && childIds.map(childId =>
+          <RenderItem
+              key={childId}
+              itemId={childId}
+              context={context}
+          />
+      )}
     </Component>
   }
   return null
