@@ -39,7 +39,7 @@ const Item = ({itemInstance, elementInstances, context}: any) => {
   let {id, type, childIds, ...rest} = itemInstance.data
   let {useSubscription} = itemInstance
   useSubscription((update: any) => {
-    console.log('update', update)
+    // console.log('update', update)
   })
   let Component = elementInstances.get(type)
   if (Component) {

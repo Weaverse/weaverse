@@ -2,6 +2,8 @@
 import fetch from 'isomorphic-unfetch'
 import Elements from '@weaverse/elements'
 import {useEffect} from 'react'
+import {isBrowser} from './utils'
+
 
 export interface ProjectDataItemType {
 	type: string
@@ -22,6 +24,8 @@ export class Weaverse {
 		items: []
 	}
 	listeners: Set<any> = new Set()
+	isEditor = false
+	currentFrameSubscription: any
 
 	constructor({
 					appUrl,
@@ -43,6 +47,8 @@ export class Weaverse {
 			// @ts-ignore
 			Elements[key]?.configs?.type && this.registerElement(Elements[key].configs.type, Elements[key])
 		})
+		this.subscribeMessageEvent()
+
 
 	}
 
@@ -56,6 +62,7 @@ export class Weaverse {
 
 	triggerUpdate() {
 		this.listeners.forEach(fn => fn())
+		this.triggerEditorUpdate()
 	}
 
 	fetchProjectData() {
@@ -69,14 +76,43 @@ export class Weaverse {
 					this.projectData = data
 					this.initItemData()
 					this.triggerUpdate()
-					window.top?.postMessage({
-						type: 'weaverse.workspace.init', payload: this.projectData
-					}, '*')
 				}
-				console.log('this.projectData', this.projectData)
 			}).catch(err => {
 				console.error(err)
 			})
+		}
+	}
+
+	subscribeMessageEvent() {
+		if (typeof this.currentFrameSubscription === 'function') {
+			this.currentFrameSubscription()
+		}
+		isBrowser && window.addEventListener('message', this.handleMessageEvent)
+		this.currentFrameSubscription = () => {
+			isBrowser && window.removeEventListener('message', this.handleMessageEvent)
+		}
+		return this.currentFrameSubscription
+	}
+
+	triggerEditorUpdate(type = 'weaverse.workspace.init') {
+		if (this.isEditor) {
+			window.top?.postMessage({
+				type, payload: {
+					projectKey: this.projectKey,
+					projectData: this.projectData
+				}
+			}, '*')
+		}
+	}
+
+	handleMessageEvent = (e: MessageEvent) => {
+		if (e.data?.type?.startsWith('weaverse.')) {
+			console.log('e.data', e.data)
+			let type = e.data.type
+			switch (type) {
+				case 'weaverse.editor.ready':
+					this.isEditor = true
+			}
 		}
 	}
 
@@ -123,7 +159,6 @@ export class WeaverseItemStore {
 
 	useSubscription = (fn: any) => {
 		useEffect(() => {
-			console.log('subscribe', fn)
 			this.subscribe(fn)
 			return () => {
 				this.unsubscribe(fn)
