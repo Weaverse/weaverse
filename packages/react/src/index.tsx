@@ -4,13 +4,14 @@ import {Weaverse} from './core'
 import {stitches, ThemeContext, ThemeProvider} from '@weaverse/elements'
 
 const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: any }) => {
-  let [data, setData] = React.useState<any>(context.projectData)
+  let [, setData] = React.useState<any>(context.projectData)
   useEffect(() => {
     let handleUpdate = () => {
       setData(context.projectData)
     }
     context.subscribe(handleUpdate)
     context.updateProjectData()
+
     return () => {
       context.unsubscribe(handleUpdate)
     }
@@ -37,10 +38,6 @@ const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: 
 
 const Item = ({itemInstance, elementInstances, context}: any) => {
   let {id, type, childIds, ...rest} = itemInstance.data
-  let {useSubscription} = itemInstance
-  useSubscription((update: any) => {
-    // console.log('update', update)
-  })
   let Component = elementInstances.get(type)
   if (Component) {
     return <Component key={id} data-wv-id={id} {...rest}>
@@ -59,6 +56,12 @@ const Item = ({itemInstance, elementInstances, context}: any) => {
 const RenderItem = ({itemId, context}: { itemId: number, context: any }): any => {
   let {itemInstances, elementInstances} = context
   let itemInstance = itemInstances.get(itemId)
+  useEffect(() => {
+    console.log('render item', itemId)
+    itemInstance.subscribe((update: any) => {
+      console.log('update', update)
+    })
+  }, [itemId])
   if (itemInstance) {
     return <Item itemInstance={itemInstance} elementInstances={elementInstances} context={context}/>
   }

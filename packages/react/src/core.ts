@@ -107,11 +107,22 @@ export class Weaverse {
 
 	handleMessageEvent = (e: MessageEvent) => {
 		if (e.data?.type?.startsWith('weaverse.')) {
-			console.log('e.data', e.data)
 			let type = e.data.type
 			switch (type) {
 				case 'weaverse.editor.ready':
 					this.isEditor = true
+					break
+				case 'weaverse.editor.update':
+					let {payload} = e.data
+					let {itemId, color, text} = payload
+					let instance = this.itemInstances.get(itemId)
+					if (instance) {
+						instance.setData({
+							style: {
+								color
+							}
+						})
+					}
 			}
 		}
 	}
@@ -140,25 +151,34 @@ export class WeaverseItemStore {
 		}
 	}
 
-	setData(data: any) {
+	setData = (data: any) => {
 		this.data = Object.assign(this.data, data)
+		console.log('setData', this)
 		this.triggerUpdate()
 	}
 
-	subscribe(fn: any) {
+	subscribe = (fn: any) => {
+		console.log('subscribe', this)
 		this.listeners.add(fn)
 	}
 
-	unsubscribe(fn: any) {
+	unsubscribe = (fn: any) => {
+		console.log('unsubscribe', this)
+
 		this.listeners.delete(fn)
 	}
 
-	triggerUpdate() {
-		this.listeners.forEach(fn => fn(this.data))
+	triggerUpdate = () => {
+		console.log('triggerUpdate', this)
+
+		this.listeners.forEach(fn => {
+			return fn(this.data)
+		})
 	}
 
 	useSubscription = (fn: any) => {
 		useEffect(() => {
+			console.log('subscribe', this)
 			this.subscribe(fn)
 			return () => {
 				this.unsubscribe(fn)
