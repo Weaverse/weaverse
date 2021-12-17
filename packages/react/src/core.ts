@@ -48,8 +48,6 @@ export class Weaverse {
 			Elements[key]?.configs?.type && this.registerElement(Elements[key].configs.type, Elements[key])
 		})
 		this.subscribeMessageEvent()
-
-
 	}
 
 	subscribe(fn: any) {
@@ -114,12 +112,12 @@ export class Weaverse {
 					break
 				case 'weaverse.editor.update':
 					let {payload} = e.data
-					let {itemId, color, text} = payload
+					let {itemId, background} = payload
 					let instance = this.itemInstances.get(itemId)
 					if (instance) {
 						instance.setData({
 							style: {
-								color
+								background
 							}
 						})
 					}
@@ -131,7 +129,7 @@ export class Weaverse {
 		let data = this.projectData
 		if (data.items) {
 			data.items.forEach(item => {
-				let itemStore = new WeaverseItemStore(item, this)
+				let itemStore = this.itemInstances.get(item.id) || new WeaverseItemStore(item, this)
 				this.itemInstances.set(item.id, itemStore)
 			})
 		}
@@ -153,24 +151,18 @@ export class WeaverseItemStore {
 
 	setData = (data: any) => {
 		this.data = Object.assign(this.data, data)
-		console.log('setData', this)
 		this.triggerUpdate()
 	}
 
 	subscribe = (fn: any) => {
-		console.log('subscribe', this)
 		this.listeners.add(fn)
 	}
 
 	unsubscribe = (fn: any) => {
-		console.log('unsubscribe', this)
-
 		this.listeners.delete(fn)
 	}
 
 	triggerUpdate = () => {
-		console.log('triggerUpdate', this)
-
 		this.listeners.forEach(fn => {
 			return fn(this.data)
 		})
@@ -178,7 +170,6 @@ export class WeaverseItemStore {
 
 	useSubscription = (fn: any) => {
 		useEffect(() => {
-			console.log('subscribe', this)
 			this.subscribe(fn)
 			return () => {
 				this.unsubscribe(fn)

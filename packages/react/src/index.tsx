@@ -1,7 +1,6 @@
 import * as React from 'react'
 import {useEffect} from 'react'
 import {Weaverse} from './core'
-import {stitches, ThemeContext, ThemeProvider} from '@weaverse/elements'
 
 const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: any }) => {
   let [, setData] = React.useState<any>(context.projectData)
@@ -20,24 +19,20 @@ const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: 
     context.projectData = defaultData
     context.initItemData()
   }
-  return <ThemeProvider theme={{
-    token: {
-      colors: {
-        gray500: 'hsl(206,10%,76%)',
-        blue500: 'hsl(206,100%,50%)',
-        purple500: 'hsl(252,78%,60%)',
-        green500: 'hsl(148,60%,60%)',
-        red500: 'hsl(352,100%,62%)'
-      }
-    }
-  }}>
-    <RenderItem itemId={0} context={context}/>
-  </ThemeProvider>
+  return <RenderItem itemId={0} context={context}/>
+
 }
 
 
 const Item = ({itemInstance, elementInstances, context}: any) => {
-  let {id, type, childIds, ...rest} = itemInstance.data
+  let [data, setData] = React.useState<any>(itemInstance.data)
+  let {id, type, childIds, ...rest} = data
+
+  let {useSubscription} = itemInstance
+  useSubscription((update: any) => {
+    console.log('update', update)
+    setData({...update})
+  })
   let Component = elementInstances.get(type)
   if (Component) {
     return <Component key={id} data-wv-id={id} {...rest}>
@@ -56,16 +51,10 @@ const Item = ({itemInstance, elementInstances, context}: any) => {
 const RenderItem = ({itemId, context}: { itemId: number, context: any }): any => {
   let {itemInstances, elementInstances} = context
   let itemInstance = itemInstances.get(itemId)
-  useEffect(() => {
-    console.log('render item', itemId)
-    itemInstance.subscribe((update: any) => {
-      console.log('update', update)
-    })
-  }, [itemId])
   if (itemInstance) {
     return <Item itemInstance={itemInstance} elementInstances={elementInstances} context={context}/>
   }
   return <></>
 }
 
-export {Weaverse, WeaverseRoot, ThemeProvider, ThemeContext, stitches}
+export {Weaverse, WeaverseRoot}

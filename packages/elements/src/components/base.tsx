@@ -1,16 +1,9 @@
-import React, {useContext} from 'react'
-import {ThemeContext} from '../theme'
+import React from 'react'
 
 export const BaseElement = ({tag = 'div', children, ...props}: any) => {
-    let {style, ...rest} = props
-    let {css} = useContext(ThemeContext)
-
-    let cssClass = css({
-        ...style
-    })()
+    console.log('props', props)
     return React.createElement(tag, {
-        ...rest,
-        className: cssClass
+        ...props
     }, children)
 }
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import NextDocument, {Head, Html, Main, NextScript} from 'next/document';
-import {stitches} from "@weaverse/react";
 
 
 export default class Document extends NextDocument {
@@ -8,7 +7,6 @@ export default class Document extends NextDocument {
 		return (
 			<Html lang="en">
 				<Head>
-					<style id="stitches" dangerouslySetInnerHTML={{__html: stitches.getCssText()}}/>
 				</Head>
 				<body>
 				<Main/>
