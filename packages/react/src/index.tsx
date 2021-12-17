@@ -48,6 +48,7 @@ const Item = ({itemInstance, elementInstances, context}: any) => {
   }
   return null
 }
+
 const RenderItem = ({itemId, context}: { itemId: number, context: any }): any => {
   let {itemInstances, elementInstances} = context
   let itemInstance = itemInstances.get(itemId)

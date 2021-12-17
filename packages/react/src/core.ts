@@ -18,7 +18,7 @@ export interface ProjectDataType {
 export class Weaverse {
 	elementInstances = new Map<string, any>()
 	itemInstances = new Map<string | number, WeaverseItemStore>()
-	appUrl: string = 'http://localhost:3000'
+	appUrl: string = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://weaverse.io'
 	projectKey: string = ''
 	projectData: ProjectDataType = {
 		items: []
@@ -36,6 +36,7 @@ export class Weaverse {
 		this.projectKey = projectKey || this.projectKey
 		projectData && (this.projectData = projectData)
 		this.init()
+		console.log('process.env.NODE_ENV', process.env.NODE_ENV)
 	}
 
 	registerElement(name: string, element: any) {
