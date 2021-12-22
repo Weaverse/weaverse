@@ -2,9 +2,12 @@ import * as React from 'react'
 import {useEffect} from 'react'
 import {Weaverse} from './core'
 
+let stitches = require('@stitches/core')
+
 const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: any }) => {
   let [, setData] = React.useState<any>(context.projectData)
   useEffect(() => {
+    console.log('stitches', stitches, stitches?.createStitches())
     let handleUpdate = () => {
       setData(context.projectData)
     }
@@ -21,6 +24,7 @@ const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: 
   }
   return <RenderItem itemId={0} context={context}/>
 }
+
 
 const Item = ({itemInstance, elementInstances, context}: any) => {
   let [data, setData] = React.useState<any>(itemInstance.data)

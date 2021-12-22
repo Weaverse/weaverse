@@ -2783,6 +2783,11 @@
     "@size-limit/esbuild" "7.0.4"
     "@size-limit/file" "7.0.4"
 
+"@stitches/core@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@stitches/core/-/core-1.2.6.tgz#ca464406eb8e5788ed6332548833d5f46e43fa3c"
+  integrity sha512-nDGhYDZw74uL7D4FYwpya2Sgr1LucsdrF7Nr6Ut4jQD49sBK36S2eC2oCAlfAX0JksH0QVfOrWwUipp3uaID1w==
+
 "@storybook/addon-actions@6.4.9":
   version "6.4.9"
   resolved "https://registry.yarnpkg.com/@storybook/addon-actions/-/addon-actions-6.4.9.tgz#1d4e8c00ad304efe6722043dac759f4716b515ee"
