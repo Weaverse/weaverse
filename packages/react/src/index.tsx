@@ -20,29 +20,32 @@ const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: 
     context.initItemData()
   }
   return <RenderItem itemId={0} context={context}/>
-
 }
-
 
 const Item = ({itemInstance, elementInstances, context}: any) => {
   let [data, setData] = React.useState<any>(itemInstance.data)
   let {id, type, childIds, ...rest} = data
 
-  let {useSubscription} = itemInstance
-  useSubscription((update: any) => {
-    console.log('update', update)
-    setData({...update})
-  })
+  useEffect(() => {
+    let handleUpdate = (update: any) => {
+      console.log('update', update)
+      setData({...update})
+    }
+    itemInstance.subscribe(handleUpdate)
+    return () => {
+      itemInstance.unsubscribe(handleUpdate)
+    }
+  }, [])
   let Component = elementInstances.get(type)
   if (Component) {
     return <Component key={id} data-wv-id={id} {...rest}>
       {Array.isArray(childIds)
-      && childIds.map(childId =>
-          <RenderItem
-              key={childId}
-              itemId={childId}
-              context={context}
-          />
+          && childIds.map(childId =>
+              <RenderItem
+                  key={childId}
+                  itemId={childId}
+                  context={context}
+              />
       )}
     </Component>
   }

@@ -1,7 +1,6 @@
 // TODO: Implement Weaverse SDK class
 import fetch from 'isomorphic-unfetch'
 import Elements from '@weaverse/elements'
-import {useEffect} from 'react'
 import {isBrowser} from './utils'
 
 
@@ -13,6 +12,101 @@ export interface ProjectDataItemType {
 
 export interface ProjectDataType {
 	items: ProjectDataItemType[]
+}
+
+const isSheetAccessible = (sheet: CSSStyleSheet) => {
+	if (sheet.href && !sheet.href.startsWith(location.origin)) {
+		return false
+	}
+
+	try {
+		sheet.cssRules
+		return true
+	} catch (e) {
+		return false
+	}
+}
+
+export class WeaverseStyle {
+	public styleSheets: StyleSheetList
+	public document: Document
+
+	constructor(root: Document) {
+		this.document = root
+		this.styleSheets = this.document.styleSheets
+	}
+
+	// Create styleSheet instance that work both on client and server side
+	createSheet = (root?: Document) => {
+		let sheetInstance: any = null
+
+		const reset = () => {
+			const sheets = Object(root).styleSheets || []
+			// iterate all stylesheets until a hydratable stylesheet is found
+			for (const sheet of sheets) {
+				if (!isSheetAccessible(sheet)) continue
+
+				for (let index = 0, rules = sheet.cssRules; rules[index]; ++index) {
+					// /** @type {CSSStyleRule} Possible indicator rule. */
+					const check = Object(rules[index])
+					if (check.selectorText && check.selectorText.includes('@media')) {
+						if (!sheetInstance) sheetInstance = {sheet, reset, rules: sheet.cssRules}
+						break
+					}
+
+				}
+
+				// if a hydratable stylesheet is found, stop looking
+				if (sheetInstance) break
+			}
+			// if no hydratable stylesheet is found
+			if (!sheetInstance) {
+				const createCSSMediaRule = (sourceCssText: string) => {
+					let rule: any = {
+						cssRules: [],
+						insertRule(cssText: string, index: number) {
+							this.cssRules.splice(index, 0, createCSSMediaRule(cssText))
+						},
+						get cssText() {
+							return sourceCssText === '@media{}' ? `@media{${[].map.call(this.cssRules, (cssRule: any) => cssRule.cssText).join('')}}` : sourceCssText
+						}
+					}
+					return rule
+				}
+
+				sheetInstance = {
+					sheet: root ? (root.head || root).appendChild(root.createElement('style')).sheet : createCSSMediaRule(''),
+					rules: {},
+					reset,
+					toString() {
+						const {cssRules} = sheetInstance.sheet
+						return [].map
+							.call(cssRules, (cssMediaRule: CSSMediaRule, cssRuleIndex) => {
+								const {cssText} = cssMediaRule
+
+								let lastRuleCssText = ''
+								if (cssRules[cssRuleIndex - 1]) {
+									if (!cssMediaRule.cssRules.length) return ''
+
+									for (const name in sheetInstance.rules) {
+										if (sheetInstance.rules[name].group === cssMediaRule) {
+											return `--sxs{--sxs:${[...sheetInstance.rules[name].cache].join(' ')}}${cssText}`
+										}
+									}
+
+									return cssMediaRule.cssRules.length ? `${lastRuleCssText}${cssText}` : ''
+								}
+
+								return cssText
+							})
+							.join('')
+					}
+				}
+			}
+		}
+
+	}
+
 }
 
 export class Weaverse {
@@ -169,14 +263,6 @@ export class WeaverseItemStore {
 		})
 	}
 
-	useSubscription = (fn: any) => {
-		useEffect(() => {
-			this.subscribe(fn)
-			return () => {
-				this.unsubscribe(fn)
-			}
-		}, [])
-	}
 
 
 	// addItem(item: any) {
