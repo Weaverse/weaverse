@@ -126,7 +126,7 @@ export class Weaverse {
 	listeners: Set<any> = new Set()
 	isEditor = false
 	currentFrameSubscription: any
-
+	stitchesInstance = null
 	constructor({appUrl, projectKey, projectData}: WeaverseType = {}) {
 		this.appUrl = appUrl || this.appUrl
 		this.projectKey = projectKey || this.projectKey
@@ -208,7 +208,7 @@ export class Weaverse {
 					let instance = this.itemInstances.get(itemId)
 					if (instance) {
 						instance.setData({
-							style: {
+							css: {
 								background
 							}
 						})
