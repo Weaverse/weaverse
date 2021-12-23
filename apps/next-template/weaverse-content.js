@@ -1,7 +1,7 @@
-import {Weaverse, WeaverseRoot} from "@weaverse/react";
-import {useEffect} from "react";
+import {createRootContext, WeaverseRoot} from '@weaverse/react'
+import {useEffect} from 'react'
 
-export let weaverseContext = new Weaverse({projectKey: '1'})
+export let weaverseContext = createRootContext({projectKey: '1'})
 
 export const WeaverseContent = ({defaultData}) => {
 	useEffect(() => {

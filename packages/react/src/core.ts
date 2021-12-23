@@ -1,6 +1,5 @@
 // TODO: Implement Weaverse SDK class
 import fetch from 'isomorphic-unfetch'
-import Elements from '@weaverse/elements'
 import {isBrowser} from './utils'
 
 
@@ -14,99 +13,106 @@ export interface ProjectDataType {
 	items: ProjectDataItemType[]
 }
 
-const isSheetAccessible = (sheet: CSSStyleSheet) => {
-	if (sheet.href && !sheet.href.startsWith(location.origin)) {
-		return false
-	}
+// const isSheetAccessible = (sheet: CSSStyleSheet) => {
+// 	if (sheet.href && !sheet.href.startsWith(location.origin)) {
+// 		return false
+// 	}
+//
+// 	try {
+// 		sheet.cssRules
+// 		return true
+// 	} catch (e) {
+// 		return false
+// 	}
+// }
 
-	try {
-		sheet.cssRules
-		return true
-	} catch (e) {
-		return false
-	}
-}
+// export class WeaverseStyle {
+// 	public styleSheets: StyleSheetList
+// 	public document: Document
+//
+// 	constructor(root: Document) {
+// 		this.document = root
+// 		this.styleSheets = this.document.styleSheets
+// 	}
+//
+// 	// Create styleSheet instance that work both on client and server side
+// 	createSheet = (root?: Document) => {
+// 		let sheetInstance: any = null
+//
+// 		const reset = () => {
+// 			const sheets = Object(root).styleSheets || []
+// 			// iterate all stylesheets until a hydratable stylesheet is found
+// 			for (const sheet of sheets) {
+// 				if (!isSheetAccessible(sheet)) continue
+//
+// 				for (let index = 0, rules = sheet.cssRules; rules[index]; ++index) {
+// 					// /** @type {CSSStyleRule} Possible indicator rule. */
+// 					const check = Object(rules[index])
+// 					if (check.selectorText && check.selectorText.includes('@media')) {
+// 						if (!sheetInstance) sheetInstance = {sheet, reset, rules: sheet.cssRules}
+// 						break
+// 					}
+//
+// 				}
+//
+// 				// if a hydratable stylesheet is found, stop looking
+// 				if (sheetInstance) break
+// 			}
+// 			// if no hydratable stylesheet is found
+// 			if (!sheetInstance) {
+// 				const createCSSMediaRule = (sourceCssText: string) => {
+// 					let rule: any = {
+// 						cssRules: [],
+// 						insertRule(cssText: string, index: number) {
+// 							this.cssRules.splice(index, 0, createCSSMediaRule(cssText))
+// 						},
+// 						get cssText() {
+// 							return sourceCssText === '@media{}' ? `@media{${[].map.call(this.cssRules, (cssRule: any) => cssRule.cssText).join('')}}` : sourceCssText
+// 						}
+// 					}
+// 					return rule
+// 				}
+//
+// 				sheetInstance = {
+// 					sheet: root ? (root.head || root).appendChild(root.createElement('style')).sheet : createCSSMediaRule(''),
+// 					rules: {},
+// 					reset,
+// 					toString() {
+// 						const {cssRules} = sheetInstance.sheet
+// 						return [].map
+// 							.call(cssRules, (cssMediaRule: CSSMediaRule, cssRuleIndex) => {
+// 								const {cssText} = cssMediaRule
+//
+// 								let lastRuleCssText = ''
+// 								if (cssRules[cssRuleIndex - 1]) {
+// 									if (!cssMediaRule.cssRules.length) return ''
+//
+// 									for (const name in sheetInstance.rules) {
+// 										if (sheetInstance.rules[name].group === cssMediaRule) {
+// 											return `--sxs{--sxs:${[...sheetInstance.rules[name].cache].join(' ')}}${cssText}`
+// 										}
+// 									}
+//
+// 									return cssMediaRule.cssRules.length ? `${lastRuleCssText}${cssText}` : ''
+// 								}
+//
+// 								return cssText
+// 							})
+// 							.join('')
+// 					}
+// 				}
+// 			}
+// 		}
+//
+// 	}
+//
+// }
 
-export class WeaverseStyle {
-	public styleSheets: StyleSheetList
-	public document: Document
-
-	constructor(root: Document) {
-		this.document = root
-		this.styleSheets = this.document.styleSheets
-	}
-
-	// Create styleSheet instance that work both on client and server side
-	createSheet = (root?: Document) => {
-		let sheetInstance: any = null
-
-		const reset = () => {
-			const sheets = Object(root).styleSheets || []
-			// iterate all stylesheets until a hydratable stylesheet is found
-			for (const sheet of sheets) {
-				if (!isSheetAccessible(sheet)) continue
-
-				for (let index = 0, rules = sheet.cssRules; rules[index]; ++index) {
-					// /** @type {CSSStyleRule} Possible indicator rule. */
-					const check = Object(rules[index])
-					if (check.selectorText && check.selectorText.includes('@media')) {
-						if (!sheetInstance) sheetInstance = {sheet, reset, rules: sheet.cssRules}
-						break
-					}
-
-				}
-
-				// if a hydratable stylesheet is found, stop looking
-				if (sheetInstance) break
-			}
-			// if no hydratable stylesheet is found
-			if (!sheetInstance) {
-				const createCSSMediaRule = (sourceCssText: string) => {
-					let rule: any = {
-						cssRules: [],
-						insertRule(cssText: string, index: number) {
-							this.cssRules.splice(index, 0, createCSSMediaRule(cssText))
-						},
-						get cssText() {
-							return sourceCssText === '@media{}' ? `@media{${[].map.call(this.cssRules, (cssRule: any) => cssRule.cssText).join('')}}` : sourceCssText
-						}
-					}
-					return rule
-				}
-
-				sheetInstance = {
-					sheet: root ? (root.head || root).appendChild(root.createElement('style')).sheet : createCSSMediaRule(''),
-					rules: {},
-					reset,
-					toString() {
-						const {cssRules} = sheetInstance.sheet
-						return [].map
-							.call(cssRules, (cssMediaRule: CSSMediaRule, cssRuleIndex) => {
-								const {cssText} = cssMediaRule
-
-								let lastRuleCssText = ''
-								if (cssRules[cssRuleIndex - 1]) {
-									if (!cssMediaRule.cssRules.length) return ''
-
-									for (const name in sheetInstance.rules) {
-										if (sheetInstance.rules[name].group === cssMediaRule) {
-											return `--sxs{--sxs:${[...sheetInstance.rules[name].cache].join(' ')}}${cssText}`
-										}
-									}
-
-									return cssMediaRule.cssRules.length ? `${lastRuleCssText}${cssText}` : ''
-								}
-
-								return cssText
-							})
-							.join('')
-					}
-				}
-			}
-		}
-
-	}
-
+export type WeaverseType = {
+	[key: string]: any
+	appUrl?: string,
+	projectKey?: string,
+	projectData?: ProjectDataType
 }
 
 export class Weaverse {
@@ -121,16 +127,11 @@ export class Weaverse {
 	isEditor = false
 	currentFrameSubscription: any
 
-	constructor({
-					appUrl,
-					projectKey,
-					projectData
-				}: { appUrl?: string, projectKey?: string, projectData?: ProjectDataType } = {}) {
+	constructor({appUrl, projectKey, projectData}: WeaverseType = {}) {
 		this.appUrl = appUrl || this.appUrl
 		this.projectKey = projectKey || this.projectKey
 		projectData && (this.projectData = projectData)
 		this.init()
-		console.log('process.env.NODE_ENV', process.env.NODE_ENV)
 	}
 
 	registerElement(name: string, element: any) {
@@ -138,10 +139,6 @@ export class Weaverse {
 	}
 
 	init() {
-		Object.keys(Elements).forEach(key => {
-			// @ts-ignore
-			Elements[key]?.configs?.type && this.registerElement(Elements[key].configs.type, Elements[key])
-		})
 		this.subscribeMessageEvent()
 	}
 

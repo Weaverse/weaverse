@@ -24,7 +24,6 @@
     "analyze": "size-limit --why"
   },
   "peerDependencies": {
-    "@weaverse/elements": "^0.1.1",
     "react": ">=16"
   },
   "husky": {
@@ -55,7 +54,6 @@
     "@size-limit/preset-small-lib": "^7.0.4",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
-    "@weaverse/elements": "^0.1.4",
     "husky": "^7.0.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

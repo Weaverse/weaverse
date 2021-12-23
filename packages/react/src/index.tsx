@@ -1,13 +1,23 @@
 import * as React from 'react'
 import {useEffect} from 'react'
-import {Weaverse} from './core'
+import {Weaverse, WeaverseType} from './core'
+import Elements from './elements'
 
 let stitches = require('@stitches/core')
+
+const createRootContext = (configs: WeaverseType) => {
+  const rootContext = new Weaverse(configs)
+  Object.keys(Elements).forEach(key => {
+    // @ts-ignore
+    Elements[key]?.configs?.type && rootContext.registerElement(Elements[key].configs.type, Elements[key])
+  })
+
+  return rootContext
+}
 
 const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: any }) => {
   let [, setData] = React.useState<any>(context.projectData)
   useEffect(() => {
-    console.log('stitches', stitches, stitches?.createStitches())
     let handleUpdate = () => {
       setData(context.projectData)
     }
@@ -32,7 +42,6 @@ const Item = ({itemInstance, elementInstances, context}: any) => {
 
   useEffect(() => {
     let handleUpdate = (update: any) => {
-      console.log('update', update)
       setData({...update})
     }
     itemInstance.subscribe(handleUpdate)
@@ -56,6 +65,7 @@ const Item = ({itemInstance, elementInstances, context}: any) => {
   return null
 }
 
+
 const RenderItem = ({itemId, context}: { itemId: number, context: any }): any => {
   let {itemInstances, elementInstances} = context
   let itemInstance = itemInstances.get(itemId)
@@ -65,4 +75,4 @@ const RenderItem = ({itemId, context}: { itemId: number, context: any }): any =>
   return <></>
 }
 
-export {Weaverse, WeaverseRoot}
+export {createRootContext, WeaverseRoot}
