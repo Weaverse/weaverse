@@ -16,7 +16,6 @@ const createRootContext = (configs: WeaverseType) => {
         }
       }
   )
-  console.log('stitchesInstance', stitchesInstance)
   rootContext.stitchesInstance = stitchesInstance
   Object.keys(Elements).forEach(key => {
     // @ts-ignore
@@ -63,9 +62,7 @@ const Item = ({itemInstance, elementInstances, context}: any) => {
   }, [])
   let realClassName = className || ''
   if (css) {
-    let selector = (context.stitchesInstance.css({
-      '@bp2': css
-    })()).className
+    let selector = (context.stitchesInstance.css(css)()).className
     console.log('selector', selector)
     realClassName += ' ' + selector
   }
