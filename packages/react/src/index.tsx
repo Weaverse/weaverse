@@ -2,21 +2,10 @@ import React, {useEffect} from 'react'
 import {Weaverse, WeaverseType} from './core'
 import Elements from './elements'
 
-let stitches = require('@stitches/core')
 
 const createRootContext = (configs: WeaverseType) => {
   const rootContext = new Weaverse(configs)
-  let stitchesInstance = stitches.createStitches(
-      {
-        prefix: 'weaverse',
-        media: {
-          bp1: '(min-width: 640px)',
-          bp2: '(max-width: 768px)',
-          bp3: '(min-width: 1024px)'
-        }
-      }
-  )
-  rootContext.stitchesInstance = stitchesInstance
+  // Register the element components
   Object.keys(Elements).forEach(key => {
     // @ts-ignore
     Elements[key]?.configs?.type && rootContext.registerElement(Elements[key].configs.type, Elements[key])

@@ -1,6 +1,12 @@
 // TODO: Implement Weaverse SDK class
+// Only core code is implemented here, avoid importing other packages,
+// the core code should be framework agnostic, no react, vue, angular, etc.
 import fetch from 'isomorphic-unfetch'
 import {isBrowser} from './utils'
+
+// stitches problem, we should use require instead of import
+// using stitches core only for framework-agnostic code
+let stitches = require('@stitches/core')
 
 
 export interface ProjectDataItemType {
@@ -13,101 +19,6 @@ export interface ProjectDataType {
 	items: ProjectDataItemType[]
 }
 
-// const isSheetAccessible = (sheet: CSSStyleSheet) => {
-// 	if (sheet.href && !sheet.href.startsWith(location.origin)) {
-// 		return false
-// 	}
-//
-// 	try {
-// 		sheet.cssRules
-// 		return true
-// 	} catch (e) {
-// 		return false
-// 	}
-// }
-
-// export class WeaverseStyle {
-// 	public styleSheets: StyleSheetList
-// 	public document: Document
-//
-// 	constructor(root: Document) {
-// 		this.document = root
-// 		this.styleSheets = this.document.styleSheets
-// 	}
-//
-// 	// Create styleSheet instance that work both on client and server side
-// 	createSheet = (root?: Document) => {
-// 		let sheetInstance: any = null
-//
-// 		const reset = () => {
-// 			const sheets = Object(root).styleSheets || []
-// 			// iterate all stylesheets until a hydratable stylesheet is found
-// 			for (const sheet of sheets) {
-// 				if (!isSheetAccessible(sheet)) continue
-//
-// 				for (let index = 0, rules = sheet.cssRules; rules[index]; ++index) {
-// 					// /** @type {CSSStyleRule} Possible indicator rule. */
-// 					const check = Object(rules[index])
-// 					if (check.selectorText && check.selectorText.includes('@media')) {
-// 						if (!sheetInstance) sheetInstance = {sheet, reset, rules: sheet.cssRules}
-// 						break
-// 					}
-//
-// 				}
-//
-// 				// if a hydratable stylesheet is found, stop looking
-// 				if (sheetInstance) break
-// 			}
-// 			// if no hydratable stylesheet is found
-// 			if (!sheetInstance) {
-// 				const createCSSMediaRule = (sourceCssText: string) => {
-// 					let rule: any = {
-// 						cssRules: [],
-// 						insertRule(cssText: string, index: number) {
-// 							this.cssRules.splice(index, 0, createCSSMediaRule(cssText))
-// 						},
-// 						get cssText() {
-// 							return sourceCssText === '@media{}' ? `@media{${[].map.call(this.cssRules, (cssRule: any) => cssRule.cssText).join('')}}` : sourceCssText
-// 						}
-// 					}
-// 					return rule
-// 				}
-//
-// 				sheetInstance = {
-// 					sheet: root ? (root.head || root).appendChild(root.createElement('style')).sheet : createCSSMediaRule(''),
-// 					rules: {},
-// 					reset,
-// 					toString() {
-// 						const {cssRules} = sheetInstance.sheet
-// 						return [].map
-// 							.call(cssRules, (cssMediaRule: CSSMediaRule, cssRuleIndex) => {
-// 								const {cssText} = cssMediaRule
-//
-// 								let lastRuleCssText = ''
-// 								if (cssRules[cssRuleIndex - 1]) {
-// 									if (!cssMediaRule.cssRules.length) return ''
-//
-// 									for (const name in sheetInstance.rules) {
-// 										if (sheetInstance.rules[name].group === cssMediaRule) {
-// 											return `--sxs{--sxs:${[...sheetInstance.rules[name].cache].join(' ')}}${cssText}`
-// 										}
-// 									}
-//
-// 									return cssMediaRule.cssRules.length ? `${lastRuleCssText}${cssText}` : ''
-// 								}
-//
-// 								return cssText
-// 							})
-// 							.join('')
-// 					}
-// 				}
-// 			}
-// 		}
-//
-// 	}
-//
-// }
-
 export type WeaverseType = {
 	[key: string]: any
 	appUrl?: string,
@@ -116,24 +27,83 @@ export type WeaverseType = {
 }
 
 export class Weaverse {
+	/**
+	 * For storing, registering element React component from Weaverse or created by user/developer
+	 * @type {Map<string, React.Component>}
+	 */
 	elementInstances = new Map<string, any>()
+	/**
+	 * list of element/items store to provide data, handle state update, state sharing, etc.
+	 * @type {Map<string, any>}
+	 */
 	itemInstances = new Map<string | number, WeaverseItemStore>()
+	/**
+	 * Weaverse base URL that can provide by user/developer. for local development, use localhost:3000
+	 * @type {string}
+	 */
 	appUrl: string = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://weaverse.io'
+	/**
+	 * Weaverse project key to access project data via API
+	 * @type {string}
+	 */
 	projectKey: string = ''
+	/**
+	 * Weaverse project data, by default, user can provide project data via React Component:
+	 * <WeaverseRoot defaultData={projectData} /> it will be used to server-side rendering
+	 */
 	projectData: ProjectDataType = {
 		items: []
 	}
+	/**
+	 * storing subscribe callback function for any component that want to listen to the change of WeaverseRoot
+	 * @type {Map<string, (data: any) => void>}
+	 */
 	listeners: Set<any> = new Set()
+	/**
+	 * check whether the sdk is inEditor or not
+	 * if isEditor is true, it means the sdk is inEditor mode, render the editor UI
+	 * else render the preview UI, plain HTML + CSS + React hydrate
+	 * @type {boolean}
+	 */
 	isEditor = false
+	/**
+	 * instance for subscribing to window message, save it to currentFrameSubscription then can remove it when unmount
+	 */
 	currentFrameSubscription: any
+	/**
+	 * stitches instance for handling CSS stylesheet, media, theme for Weaverse project
+	 */
 	stitchesInstance = null
+
+	/**
+	 * constructor
+	 * @param appUrl {string} Weaverse base URL that can provide by user/developer. for local development, use localhost:3000
+	 * @param projectKey {string} Weaverse project key to access project data via API
+	 * @param projectData {ProjectDataType} Weaverse project data, by default, user can provide project data via React Component.
+	 */
 	constructor({appUrl, projectKey, projectData}: WeaverseType = {}) {
 		this.appUrl = appUrl || this.appUrl
 		this.projectKey = projectKey || this.projectKey
 		projectData && (this.projectData = projectData)
+		// init the stitches instance
+		this.stitchesInstance = stitches.createStitches(
+			{
+				prefix: 'weaverse',
+				media: {
+					bp1: '(min-width: 640px)',
+					bp2: '(max-width: 768px)',
+					bp3: '(min-width: 1024px)'
+				}
+			}
+		)
 		this.init()
 	}
 
+	/**
+	 * register the custom React Component to Weaverse, store it into Weaverse.elementInstances
+	 * @param name {string} unique name of the custom React Component
+	 * @param element {React.Component} custom React Component
+	 */
 	registerElement(name: string, element: any) {
 		this.elementInstances.set(name, element)
 	}
@@ -155,10 +125,16 @@ export class Weaverse {
 		this.triggerEditorUpdate()
 	}
 
+	/**
+	 * fetch data from Weaverse API (https://weaverse.io/api/v1/projects/:projectKey)
+	 */
 	fetchProjectData() {
 		return fetch(this.appUrl + `/api/public/${this.projectKey}`).then(r => r.json())
 	}
 
+	/**
+	 * fetch and update the project data, then trigger update to re-render the WeaverseRoot
+	 */
 	updateProjectData() {
 		if (this.projectKey) {
 			this.fetchProjectData().then(data => {
@@ -173,6 +149,9 @@ export class Weaverse {
 		}
 	}
 
+	/**
+	 * subscribe to window message event from editor(parent window), and handle the message event
+	 */
 	subscribeMessageEvent() {
 		if (typeof this.currentFrameSubscription === 'function') {
 			this.currentFrameSubscription()
@@ -195,15 +174,21 @@ export class Weaverse {
 		}
 	}
 
-	handleMessageEvent = (e: MessageEvent) => {
-		if (e.data?.type?.startsWith('weaverse.')) {
-			let type = e.data.type
+	/**
+	 * handle the message event from editor(parent window)
+	 * the message type will start with "weavers.",
+	 * when an item got message to update, get the item instance and setData to it
+	 * @param event {MessageEvent}
+	 */
+	handleMessageEvent = (event: MessageEvent) => {
+		if (event.data?.type?.startsWith('weaverse.')) {
+			let type = event.data.type
 			switch (type) {
 				case 'weaverse.editor.ready':
 					this.isEditor = true
 					break
 				case 'weaverse.editor.update':
-					let {payload} = e.data
+					let {payload} = event.data
 					let {itemId, background} = payload
 					let instance = this.itemInstances.get(itemId)
 					if (instance) {
@@ -228,6 +213,23 @@ export class Weaverse {
 	}
 }
 
+/**
+ * WeaverseItemStore is a store for Weaverse item, it can be used to subscribe/update the item data
+ * @param itemData {ItemType} Weaverse item data
+ * @param weaverse {Weaverse} Weaverse instance
+ * Usage:
+ * ```jsx
+ * useEffect(() => {
+ *     let handleUpdate = (update: any) => {
+ *       setData({...update})
+ *     }
+ *     itemInstance.subscribe(handleUpdate)
+ *     return () => {
+ *       itemInstance.unsubscribe(handleUpdate)
+ *     }
+ *   }, [])
+ *   ```
+ */
 export class WeaverseItemStore {
 	data: any = {}
 	listeners: Set<any> = new Set()
@@ -260,15 +262,4 @@ export class WeaverseItemStore {
 		})
 	}
 
-
-
-	// addItem(item: any) {
-	// 	this.items.push(item)
-	// 	this.triggerUpdate()
-	// }
-	//
-	// removeItem(item: any) {
-	// 	this.items = this.items.filter(i => i !== item)
-	// 	this.triggerUpdate()
-	// }
 }
