@@ -39,7 +39,6 @@ const Item = ({itemInstance, elementInstances, context}: any) => {
   let [data, setData] = React.useState<any>(itemInstance.data)
   let {id, type, childIds, css, className, ...rest} = data
 
-
   useEffect(() => {
     let handleUpdate = (update: any) => {
       setData({...update})
@@ -49,6 +48,7 @@ const Item = ({itemInstance, elementInstances, context}: any) => {
       itemInstance.unsubscribe(handleUpdate)
     }
   }, [])
+
   let realClassName = className || ''
   if (css) {
     let selector = (context.stitchesInstance.css(css)()).className
@@ -70,7 +70,6 @@ const Item = ({itemInstance, elementInstances, context}: any) => {
   }
   return null
 }
-
 
 const RenderItem = ({itemId, context}: { itemId: number, context: any }): any => {
   let {itemInstances, elementInstances} = context

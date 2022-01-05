@@ -2,11 +2,9 @@
   "name": "root",
   "private": true,
   "devDependencies": {
-    "lerna": "^4.0.0",
     "turbo": "*"
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap --force-local && lerna link && lerna run build",
     "dev": "turbo run dev",
     "dev2": "turbo run dev --scope=\"@weaverse/react\" --no-cache",
     "test": "turbo run test",
