@@ -10,9 +10,14 @@ let stitches = require('@stitches/core')
 
 
 export interface ProjectDataItemType {
-	type: string
-	name: string
-	id: string | number
+  type: string
+  name?: string
+  id: string | number
+  description?: string
+  childIds?: Array<string | number>
+  css?: {
+    [key: string]: string
+  }
 }
 
 export interface ProjectDataType {
@@ -26,6 +31,7 @@ export type WeaverseType = {
 	projectKey?: string,
 	projectData?: ProjectDataType
 }
+
 
 export class Weaverse {
 	/**
@@ -130,23 +136,27 @@ export class Weaverse {
 	 * fetch data from Weaverse API (https://weaverse.io/api/v1/projects/:projectKey)
 	 */
 	fetchProjectData() {
-		return fetch(this.appUrl + `/api/public/${this.projectKey}`).then(r => r.json())
+    return fetch(this.appUrl + `/api/public/${this.projectKey}`).then(r => r.json()).catch(console.error)
 	}
 
 	/**
 	 * fetch and update the project data, then trigger update to re-render the WeaverseRoot
 	 */
 	updateProjectData() {
-		if (this.projectKey) {
-			this.fetchProjectData().then(data => {
-				if (data) {
-					this.projectData = data
-					this.initItemData()
-					this.triggerUpdate()
-				}
-			}).catch(err => {
-				console.error(err)
-			})
+    console.log('this.projectData', this.projectData)
+    this.initItemData()
+    this.triggerUpdate()
+    return
+    if (this.projectKey) {
+      this.fetchProjectData().then(data => {
+        if (data) {
+          this.projectData = data
+          this.initItemData()
+          this.triggerUpdate()
+        }
+      }).catch(err => {
+        console.error(err)
+      })
 		}
 	}
 

@@ -51,7 +51,12 @@ const Item = ({itemInstance, elementInstances, context}: any) => {
 
   let realClassName = className || ''
   if (css) {
+
+    // let stitches create the style from css object and
+    // then return the classname, so we can use it in the render
     let selector = (context.stitchesInstance.css(css)()).className
+
+
     console.log('selector', selector)
     realClassName += ' ' + selector
   }

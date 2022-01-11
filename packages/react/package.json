@@ -38,7 +38,7 @@
     "trailingComma": "es5"
   },
   "name": "@weaverse/react",
-  "author": "Paul Phan",
+  "author": "Weaverse Team",
   "module": "dist/sdk-react.esm.js",
   "size-limit": [
     {
