@@ -64,8 +64,6 @@
   },
   "dependencies": {
     "@stitches/core": "^1.2.6",
-    "isomorphic-unfetch": "^3.1.0",
-    "react": "^18.0.0-rc.0",
-    "react-dom": "^18.0.0-rc.0"
+    "isomorphic-unfetch": "^3.1.0"
   }
 }
