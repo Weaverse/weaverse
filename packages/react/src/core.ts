@@ -2,8 +2,8 @@
 // Only core code is implemented here, avoid importing other packages,
 // the core code should be framework agnostic, no react, vue, angular, etc.
 import fetch from 'isomorphic-unfetch'
-import {isBrowser} from './utils'
-
+import * as process from 'process'
+import StudioBridge from './studio-bridge'
 // stitches problem, we should use require instead of import
 // using stitches core only for framework-agnostic code
 let stitches = require('@stitches/core')
@@ -74,10 +74,6 @@ export class Weaverse {
 	 */
 	isEditor = false
 	/**
-	 * instance for subscribing to window message, save it to currentFrameSubscription then can remove it when unmount
-	 */
-	currentFrameSubscription: any
-	/**
 	 * stitches instance for handling CSS stylesheet, media, theme for Weaverse project
 	 */
 	stitchesInstance = null
@@ -92,17 +88,6 @@ export class Weaverse {
 		this.appUrl = appUrl || this.appUrl
 		this.projectKey = projectKey || this.projectKey
 		projectData && (this.projectData = projectData)
-		// init the stitches instance
-		this.stitchesInstance = stitches.createStitches(
-			{
-				prefix: 'weaverse',
-				media: {
-					bp1: '(min-width: 640px)',
-					bp2: '(max-width: 768px)',
-					bp3: '(min-width: 1024px)'
-				}
-			}
-		)
 		this.init()
 	}
 
@@ -116,8 +101,27 @@ export class Weaverse {
 	}
 
 	init() {
-		this.subscribeMessageEvent()
-	}
+    // init the stitches instance
+    this.stitchesInstance = stitches.createStitches(
+      {
+        prefix: 'weaverse',
+        media: {
+          bp1: '(min-width: 640px)',
+          bp2: '(max-width: 768px)',
+          bp3: '(min-width: 1024px)'
+        }
+      }
+    )
+    // only load studio bridge if it's in editor mode
+    if (process.env.NODE_ENV === 'development') {
+      // in development mode, we should use localhost:3000 as appUrl
+      // this.appUrl = 'http://localhost:3000'
+      // let StudioBridge = require('./studio-bridge')
+      console.log('Weaverse: init studio bridge', StudioBridge)
+      let studioBridge = new StudioBridge(this)
+      studioBridge.subscribeMessageEvent()
+    }
+  }
 
 	subscribe(fn: any) {
 		this.listeners.add(fn)
@@ -160,19 +164,7 @@ export class Weaverse {
 		}
 	}
 
-	/**
-	 * subscribe to window message event from editor(parent window), and handle the message event
-	 */
-	subscribeMessageEvent() {
-		if (typeof this.currentFrameSubscription === 'function') {
-			this.currentFrameSubscription()
-		}
-		isBrowser && window.addEventListener('message', this.handleMessageEvent)
-		this.currentFrameSubscription = () => {
-			isBrowser && window.removeEventListener('message', this.handleMessageEvent)
-		}
-		return this.currentFrameSubscription
-	}
+
 
 	triggerEditorUpdate(type = 'weaverse.workspace.init') {
 		if (this.isEditor) {
@@ -182,34 +174,6 @@ export class Weaverse {
 					projectData: this.projectData
 				}
 			}, '*')
-		}
-	}
-
-	/**
-	 * handle the message event from editor(parent window)
-	 * the message type will start with "weavers.",
-	 * when an item got message to update, get the item instance and setData to it
-	 * @param event {MessageEvent}
-	 */
-	handleMessageEvent = (event: MessageEvent) => {
-		if (event.data?.type?.startsWith('weaverse.')) {
-			let type = event.data.type
-			switch (type) {
-				case 'weaverse.editor.ready':
-					this.isEditor = true
-					break
-				case 'weaverse.editor.update':
-					let {payload} = event.data
-					let {itemId, background} = payload
-					let instance = this.itemInstances.get(itemId)
-					if (instance) {
-						instance.setData({
-							css: {
-								background
-							}
-						})
-					}
-			}
 		}
 	}
 
@@ -226,7 +190,7 @@ export class Weaverse {
 
 /**
  * WeaverseItemStore is a store for Weaverse item, it can be used to subscribe/update the item data
- * @param itemData {ItemType} Weaverse item data
+ * @param itemData {ProjectDataItemType} Weaverse item data
  * @param weaverse {Weaverse} Weaverse instance
  * Usage:
  * ```jsx
