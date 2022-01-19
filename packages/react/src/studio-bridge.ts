@@ -26,7 +26,7 @@ export class StudioBridge {
     if (typeof this.currentFrameSubscription === 'function') {
       this.currentFrameSubscription()
     }
-    console.log(' isBrowser && window', isBrowser, window)
+    console.log(' isBrowser && window', isBrowser)
     isBrowser && window.addEventListener('message', this.handleMessageEvent)
     this.currentFrameSubscription = () => {
       isBrowser && window.removeEventListener('message', this.handleMessageEvent)
@@ -41,7 +41,6 @@ export class StudioBridge {
    * @param event {MessageEvent}
    */
   handleMessageEvent = (event: MessageEvent) => {
-    console.log('event', event)
     if (event.data?.type?.startsWith('weaverse.')) {
       let type = event.data.type
       switch (type) {

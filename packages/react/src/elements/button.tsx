@@ -1,9 +1,9 @@
 import * as React from 'react'
 
-export const Button = (props: any) => {
-    let [count, setCount] = React.useState(0)
-    return <button {...props} onClick={() => setCount(count + 1)}>Test Button {count}</button>
-}
+export const Button = React.forwardRef((props: any, ref) => {
+  let [count, setCount] = React.useState(0)
+  return <button ref={ref} {...props} onClick={() => setCount(count + 1)}>Test Button {count}</button>
+})
 
 Button.defaultProps = {
     style: {
@@ -15,6 +15,7 @@ Button.defaultProps = {
     type: 'button',
     tag: 'button'
 }
+// @ts-ignore
 Button.configs = {
     type: 'button'
 }

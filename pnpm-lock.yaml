@@ -31,10 +31,12 @@ importers:
       '@stitches/core': ^1.2.6
       '@types/react': ^17.0.38
       '@types/react-dom': ^17.0.11
+      '@types/react-is': ^17.0.3
       husky: ^7.0.4
       isomorphic-unfetch: ^3.1.0
       react: ^17.0.2
       react-dom: ^17.0.2
+      react-is: ^17.0.2
       size-limit: ^7.0.5
       tsdx: ^0.14.1
       tslib: ^2.3.1
@@ -42,10 +44,12 @@ importers:
     dependencies:
       '@stitches/core': 1.2.6
       isomorphic-unfetch: 3.1.0
+      react-is: 17.0.2
     devDependencies:
       '@size-limit/preset-small-lib': 7.0.5_size-limit@7.0.5
       '@types/react': 17.0.38
       '@types/react-dom': 17.0.11
+      '@types/react-is': 17.0.3
       husky: 7.0.4
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
@@ -1855,6 +1859,12 @@ packages:
 
   /@types/react-dom/17.0.11:
     resolution: { integrity: sha512-f96K3k+24RaLGVu/Y2Ng3e1EbZ8/cVJvypZWd7cy0ofCBaf2lcM46xNhycMZ2xGwbBjRql7hOlZ+e2WlJ5MH3Q== }
+    dependencies:
+      '@types/react': 17.0.38
+    dev: true
+
+  /@types/react-is/17.0.3:
+    resolution: { integrity: sha512-aBTIWg1emtu95bLTLx0cpkxwGW3ueZv71nE2YFBpL8k/z5czEW8yYpOo8Dp+UUAFAtKwNaOsh/ioSeQnWlZcfw== }
     dependencies:
       '@types/react': 17.0.38
     dev: true

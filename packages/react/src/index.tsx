@@ -1,6 +1,7 @@
-import React, {useEffect} from 'react'
-import {Weaverse, WeaverseType} from './core'
+import React, {FC, useEffect} from 'react'
+import {Weaverse, WeaverseItemStore, WeaverseType} from './core'
 import Elements from './elements'
+import {isBrowser} from './utils'
 
 
 const createRootContext = (configs: WeaverseType) => {
@@ -22,7 +23,7 @@ const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: 
     }
     context.subscribe(handleUpdate)
     context.updateProjectData()
-
+    context.loadStudio()
     return () => {
       context.unsubscribe(handleUpdate)
     }
@@ -34,16 +35,26 @@ const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: 
   return <RenderItem itemId={0} context={context}/>
 }
 
+type ItemProps = {
+  itemInstance: WeaverseItemStore
+  elementInstances: Map<string, FC>
+  context: Weaverse
+}
 
-const Item = ({itemInstance, elementInstances, context}: any) => {
+const Item = ({itemInstance, elementInstances, context}: ItemProps) => {
   let [data, setData] = React.useState<any>(itemInstance.data)
   let {id, type, childIds, css, className, ...rest} = data
-
+  let ref = itemInstance.ref
   useEffect(() => {
     let handleUpdate = (update: any) => {
       setData({...update})
     }
     itemInstance.subscribe(handleUpdate)
+    if (!ref.current && isBrowser) {
+      Object.assign(ref, {current: document.querySelector(`[data-wv-id="${id}"]`)})
+    }
+    console.log('ref', ref)
+
     return () => {
       itemInstance.unsubscribe(handleUpdate)
     }
@@ -56,21 +67,23 @@ const Item = ({itemInstance, elementInstances, context}: any) => {
     // then return the classname, so we can use it in the render
     let selector = (context.stitchesInstance.css(css)()).className
 
-
-    console.log('selector', selector)
     realClassName += ' ' + selector
   }
   let Component = elementInstances.get(type)
   if (Component) {
+    // @ts-ignore
+    if (Component.$$typeof === Symbol.for('react.forward_ref')) {
+      rest.ref = ref
+    }
     return <Component key={id} data-wv-id={id} {...rest} className={realClassName}>
       {Array.isArray(childIds)
-          && childIds.map(childId =>
-              <RenderItem
-                  key={childId}
-                  itemId={childId}
-                  context={context}
-              />
-          )}
+              && childIds.map(childId =>
+                      <RenderItem
+                              key={childId}
+                              itemId={childId}
+                              context={context}
+                      />
+              )}
     </Component>
   }
   return null

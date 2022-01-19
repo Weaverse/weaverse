@@ -4,6 +4,8 @@
 import fetch from 'isomorphic-unfetch'
 import * as process from 'process'
 import StudioBridge from './studio-bridge'
+import Stitches from '@stitches/core/types/stitches'
+import {createRef, RefObject} from 'react'
 // stitches problem, we should use require instead of import
 // using stitches core only for framework-agnostic code
 let stitches = require('@stitches/core')
@@ -76,7 +78,7 @@ export class Weaverse {
 	/**
 	 * stitches instance for handling CSS stylesheet, media, theme for Weaverse project
 	 */
-	stitchesInstance = null
+  stitchesInstance: Stitches | any
 
 	/**
 	 * constructor
@@ -112,26 +114,32 @@ export class Weaverse {
         }
       }
     )
+  }
+
+  loadStudio() {
+    console.log('process.env.NODE_ENV', process.env.NODE_ENV)
     // only load studio bridge if it's in editor mode
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV !== 'production') {
+      // TODO: separate studio bridge into a separate package
       // in development mode, we should use localhost:3000 as appUrl
       // this.appUrl = 'http://localhost:3000'
       // let StudioBridge = require('./studio-bridge')
-      console.log('Weaverse: init studio bridge', StudioBridge)
       let studioBridge = new StudioBridge(this)
+      console.log('Weaverse: init studio bridge', studioBridge)
+
       studioBridge.subscribeMessageEvent()
     }
   }
 
-	subscribe(fn: any) {
-		this.listeners.add(fn)
-	}
+  subscribe(fn: any) {
+    this.listeners.add(fn)
+  }
 
-	unsubscribe(fn: any) {
-		this.listeners.delete(fn)
-	}
+  unsubscribe(fn: any) {
+    this.listeners.delete(fn)
+  }
 
-	triggerUpdate() {
+  triggerUpdate() {
 		this.listeners.forEach(fn => fn())
 		this.triggerEditorUpdate()
 	}
@@ -208,14 +216,15 @@ export class Weaverse {
 export class WeaverseItemStore {
 	data: any = {}
 	listeners: Set<any> = new Set()
-	Component: any
-
+  Component: any
+  ref: RefObject<HTMLElement | any>
 	constructor(itemData: any = {}, weaverse: Weaverse) {
 		this.data = itemData
 		let {type} = itemData
 		if (type) {
 			this.Component = weaverse.elementInstances.get(type)
 		}
+    this.ref = createRef()
 	}
 
 	setData = (data: any) => {
