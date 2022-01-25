@@ -26,7 +26,6 @@ export class StudioBridge {
     if (typeof this.currentFrameSubscription === 'function') {
       this.currentFrameSubscription()
     }
-    console.log(' isBrowser && window', isBrowser)
     isBrowser && window.addEventListener('message', this.handleMessageEvent)
     this.currentFrameSubscription = () => {
       isBrowser && window.removeEventListener('message', this.handleMessageEvent)
@@ -60,6 +59,10 @@ export class StudioBridge {
           }
       }
     }
+  }
+
+  sendMessageToEditor(type: string, payload: any) {
+    isBrowser && window.parent.postMessage({type, payload}, '*')
   }
 }
 

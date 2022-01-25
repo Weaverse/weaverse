@@ -15,9 +15,5 @@ Button.defaultProps = {
     type: 'button',
     tag: 'button'
 }
-// @ts-ignore
-Button.configs = {
-    type: 'button'
-}
 
 export default Button

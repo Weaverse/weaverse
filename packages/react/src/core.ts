@@ -5,7 +5,6 @@ import fetch from 'isomorphic-unfetch'
 import * as process from 'process'
 import StudioBridge from './studio-bridge'
 import Stitches from '@stitches/core/types/stitches'
-import {createRef, RefObject} from 'react'
 // stitches problem, we should use require instead of import
 // using stitches core only for framework-agnostic code
 let stitches = require('@stitches/core')
@@ -69,26 +68,28 @@ export class Weaverse {
 	 */
 	listeners: Set<any> = new Set()
 	/**
-	 * check whether the sdk is inEditor or not
-	 * if isEditor is true, it means the sdk is inEditor mode, render the editor UI
-	 * else render the preview UI, plain HTML + CSS + React hydrate
-	 * @type {boolean}
-	 */
-	isEditor = false
-	/**
-	 * stitches instance for handling CSS stylesheet, media, theme for Weaverse project
-	 */
+   * check whether the sdk is inEditor or not
+   * if isEditor is true, it means the sdk is inEditor mode, render the editor UI
+   * else render the preview UI, plain HTML + CSS + React hydrate
+   * @type {boolean}
+   */
+  isEditor = false
+  /**
+   * stitches instance for handling CSS stylesheet, media, theme for Weaverse project
+   */
   stitchesInstance: Stitches | any
 
-	/**
-	 * constructor
-	 * @param appUrl {string} Weaverse base URL that can provide by user/developer. for local development, use localhost:3000
-	 * @param projectKey {string} Weaverse project key to access project data via API
-	 * @param projectData {ProjectDataType} Weaverse project data, by default, user can provide project data via React Component.
-	 */
-	constructor({appUrl, projectKey, projectData}: WeaverseType = {}) {
-		this.appUrl = appUrl || this.appUrl
-		this.projectKey = projectKey || this.projectKey
+  studioBridge?: StudioBridge
+
+  /**
+   * constructor
+   * @param appUrl {string} Weaverse base URL that can provide by user/developer. for local development, use localhost:3000
+   * @param projectKey {string} Weaverse project key to access project data via API
+   * @param projectData {ProjectDataType} Weaverse project data, by default, user can provide project data via React Component.
+   */
+  constructor({appUrl, projectKey, projectData}: WeaverseType = {}) {
+    this.appUrl = appUrl || this.appUrl
+    this.projectKey = projectKey || this.projectKey
 		projectData && (this.projectData = projectData)
 		this.init()
 	}
@@ -124,10 +125,10 @@ export class Weaverse {
       // in development mode, we should use localhost:3000 as appUrl
       // this.appUrl = 'http://localhost:3000'
       // let StudioBridge = require('./studio-bridge')
-      let studioBridge = new StudioBridge(this)
-      console.log('Weaverse: init studio bridge', studioBridge)
+      this.studioBridge = new StudioBridge(this)
+      console.log('Weaverse: init studio bridge', this.studioBridge)
 
-      studioBridge.subscribeMessageEvent()
+      this.studioBridge.subscribeMessageEvent()
     }
   }
 
@@ -214,21 +215,23 @@ export class Weaverse {
  *   ```
  */
 export class WeaverseItemStore {
-	data: any = {}
-	listeners: Set<any> = new Set()
+  data: any = {}
+  listeners: Set<any> = new Set()
   Component: any
-  ref: RefObject<HTMLElement | any>
-	constructor(itemData: any = {}, weaverse: Weaverse) {
-		this.data = itemData
-		let {type} = itemData
-		if (type) {
-			this.Component = weaverse.elementInstances.get(type)
-		}
-    this.ref = createRef()
-	}
+  ref: any = {
+    current: null
+  }
 
-	setData = (data: any) => {
-		this.data = Object.assign(this.data, data)
+  constructor(itemData: any = {}, weaverse: Weaverse) {
+    this.data = itemData
+    let {type} = itemData
+    if (type) {
+      this.Component = weaverse.elementInstances.get(type)
+    }
+  }
+
+  setData = (data: any) => {
+    this.data = Object.assign(this.data, data)
 		this.triggerUpdate()
 	}
 

@@ -11,7 +11,3 @@ Grid.defaultProps = {
   },
   type: 'grid'
 }
-
-Grid.configs = {
-  type: 'grid'
-}

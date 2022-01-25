@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react'
+import React, {FC, useEffect, useState} from 'react'
 import {Weaverse, WeaverseItemStore, WeaverseType} from './core'
 import Elements from './elements'
 import {isBrowser} from './utils'
@@ -9,14 +9,14 @@ const createRootContext = (configs: WeaverseType) => {
   // Register the element components
   Object.keys(Elements).forEach(key => {
     // @ts-ignore
-    Elements[key]?.configs?.type && rootContext.registerElement(Elements[key].configs.type, Elements[key])
+    Elements[key]?.defaultProps?.type && rootContext.registerElement(Elements[key].defaultProps.type, Elements[key])
   })
 
   return rootContext
 }
 
 const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: any }) => {
-  let [, setData] = React.useState<any>(context.projectData)
+  let [, setData] = useState<any>(context.projectData)
   useEffect(() => {
     let handleUpdate = () => {
       setData(context.projectData)
@@ -32,7 +32,9 @@ const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: 
     context.projectData = defaultData
     context.initItemData()
   }
-  return <RenderItem itemId={0} context={context}/>
+  return <div>
+    <RenderItem itemId={0} context={context}/>
+  </div>
 }
 
 type ItemProps = {
@@ -42,18 +44,17 @@ type ItemProps = {
 }
 
 const Item = ({itemInstance, elementInstances, context}: ItemProps) => {
-  let [data, setData] = React.useState<any>(itemInstance.data)
+  let [data, setData] = useState<any>(itemInstance.data)
   let {id, type, childIds, css, className, ...rest} = data
-  let ref = itemInstance.ref
   useEffect(() => {
     let handleUpdate = (update: any) => {
       setData({...update})
     }
     itemInstance.subscribe(handleUpdate)
-    if (!ref.current && isBrowser) {
-      Object.assign(ref, {current: document.querySelector(`[data-wv-id="${id}"]`)})
+    if (!itemInstance.ref.current && isBrowser) {
+      Object.assign(itemInstance.ref, {current: document.querySelector(`[data-wv-id="${id}"]`)})
     }
-    console.log('ref', ref)
+    console.log('ref', itemInstance.ref)
 
     return () => {
       itemInstance.unsubscribe(handleUpdate)
@@ -73,7 +74,7 @@ const Item = ({itemInstance, elementInstances, context}: ItemProps) => {
   if (Component) {
     // @ts-ignore
     if (Component.$$typeof === Symbol.for('react.forward_ref')) {
-      rest.ref = ref
+      rest.ref = itemInstance.ref
     }
     return <Component key={id} data-wv-id={id} {...rest} className={realClassName}>
       {Array.isArray(childIds)
