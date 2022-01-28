@@ -1,7 +1,6 @@
 import React, {FC, useEffect, useState} from 'react'
-import {Weaverse, WeaverseItemStore, WeaverseType} from './core'
+import {isBrowser, Weaverse, WeaverseItemStore, WeaverseType} from '@weaverse/core'
 import Elements from './elements'
-import {isBrowser} from './utils'
 
 
 const createRootContext = (configs: WeaverseType) => {
@@ -19,11 +18,15 @@ const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: 
   let [, setData] = useState<any>(context.projectData)
   useEffect(() => {
     let handleUpdate = () => {
-      setData(context.projectData)
+      setData({...context.projectData})
     }
     context.subscribe(handleUpdate)
     context.updateProjectData()
-    context.loadStudio()
+    let shouldRenderStudio = context.loadStudio()
+    console.log('shouldRenderStudio', shouldRenderStudio)
+    if (shouldRenderStudio) {
+      handleUpdate()
+    }
     return () => {
       context.unsubscribe(handleUpdate)
     }
@@ -32,7 +35,9 @@ const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: 
     context.projectData = defaultData
     context.initItemData()
   }
-  return <div>
+  let handleProps = context?.studioBridge?.handleProps || {}
+  console.log('handleProps', handleProps)
+  return <div {...handleProps}>
     <RenderItem itemId={0} context={context}/>
   </div>
 }
@@ -54,7 +59,6 @@ const Item = ({itemInstance, elementInstances, context}: ItemProps) => {
     if (!itemInstance.ref.current && isBrowser) {
       Object.assign(itemInstance.ref, {current: document.querySelector(`[data-wv-id="${id}"]`)})
     }
-    console.log('ref', itemInstance.ref)
 
     return () => {
       itemInstance.unsubscribe(handleUpdate)

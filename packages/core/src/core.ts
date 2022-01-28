@@ -22,52 +22,52 @@ export interface ProjectDataItemType {
 }
 
 export interface ProjectDataType {
-	items: ProjectDataItemType[]
+  items: ProjectDataItemType[]
 }
 
 
 export type WeaverseType = {
-	[key: string]: any
-	appUrl?: string,
-	projectKey?: string,
-	projectData?: ProjectDataType
+  [key: string]: any
+  appUrl?: string,
+  projectKey?: string,
+  projectData?: ProjectDataType
 }
 
 
 export class Weaverse {
-	/**
-	 * For storing, registering element React component from Weaverse or created by user/developer
-	 * @type {Map<string, React.Component>}
-	 */
-	elementInstances = new Map<string, any>()
-	/**
-	 * list of element/items store to provide data, handle state update, state sharing, etc.
-	 * @type {Map<string, any>}
-	 */
-	itemInstances = new Map<string | number, WeaverseItemStore>()
-	/**
-	 * Weaverse base URL that can provide by user/developer. for local development, use localhost:3000
-	 * @type {string}
-	 */
-	appUrl: string = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://weaverse.io'
-	/**
-	 * Weaverse project key to access project data via API
-	 * @type {string}
-	 */
-	projectKey: string = ''
-	/**
-	 * Weaverse project data, by default, user can provide project data via React Component:
-	 * <WeaverseRoot defaultData={projectData} /> it will be used to server-side rendering
-	 */
-	projectData: ProjectDataType = {
-		items: []
-	}
-	/**
-	 * storing subscribe callback function for any component that want to listen to the change of WeaverseRoot
-	 * @type {Map<string, (data: any) => void>}
-	 */
-	listeners: Set<any> = new Set()
-	/**
+  /**
+   * For storing, registering element React component from Weaverse or created by user/developer
+   * @type {Map<string, React.Component>}
+   */
+  elementInstances = new Map<string, any>()
+  /**
+   * list of element/items store to provide data, handle state update, state sharing, etc.
+   * @type {Map<string, any>}
+   */
+  itemInstances = new Map<string | number, WeaverseItemStore>()
+  /**
+   * Weaverse base URL that can provide by user/developer. for local development, use localhost:3000
+   * @type {string}
+   */
+  appUrl: string = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://weaverse.io'
+  /**
+   * Weaverse project key to access project data via API
+   * @type {string}
+   */
+  projectKey: string = ''
+  /**
+   * Weaverse project data, by default, user can provide project data via React Component:
+   * <WeaverseRoot defaultData={projectData} /> it will be used to server-side rendering
+   */
+  projectData: ProjectDataType = {
+    items: []
+  }
+  /**
+   * storing subscribe callback function for any component that want to listen to the change of WeaverseRoot
+   * @type {Map<string, (data: any) => void>}
+   */
+  listeners: Set<any> = new Set()
+  /**
    * check whether the sdk is inEditor or not
    * if isEditor is true, it means the sdk is inEditor mode, render the editor UI
    * else render the preview UI, plain HTML + CSS + React hydrate
@@ -90,20 +90,20 @@ export class Weaverse {
   constructor({appUrl, projectKey, projectData}: WeaverseType = {}) {
     this.appUrl = appUrl || this.appUrl
     this.projectKey = projectKey || this.projectKey
-		projectData && (this.projectData = projectData)
-		this.init()
-	}
+    projectData && (this.projectData = projectData)
+    this.init()
+  }
 
-	/**
-	 * register the custom React Component to Weaverse, store it into Weaverse.elementInstances
-	 * @param name {string} unique name of the custom React Component
-	 * @param element {React.Component} custom React Component
-	 */
-	registerElement(name: string, element: any) {
-		this.elementInstances.set(name, element)
-	}
+  /**
+   * register the custom React Component to Weaverse, store it into Weaverse.elementInstances
+   * @param name {string} unique name of the custom React Component
+   * @param element {React.Component} custom React Component
+   */
+  registerElement(name: string, element: any) {
+    this.elementInstances.set(name, element)
+  }
 
-	init() {
+  init() {
     // init the stitches instance
     this.stitchesInstance = stitches.createStitches(
       {
@@ -129,7 +129,9 @@ export class Weaverse {
       console.log('Weaverse: init studio bridge', this.studioBridge)
 
       this.studioBridge.subscribeMessageEvent()
+      return true
     }
+    return false
   }
 
   subscribe(fn: any) {
@@ -141,21 +143,21 @@ export class Weaverse {
   }
 
   triggerUpdate() {
-		this.listeners.forEach(fn => fn())
-		this.triggerEditorUpdate()
-	}
+    this.listeners.forEach(fn => fn())
+    this.triggerEditorUpdate()
+  }
 
-	/**
-	 * fetch data from Weaverse API (https://weaverse.io/api/v1/projects/:projectKey)
-	 */
-	fetchProjectData() {
+  /**
+   * fetch data from Weaverse API (https://weaverse.io/api/v1/projects/:projectKey)
+   */
+  fetchProjectData() {
     return fetch(this.appUrl + `/api/public/${this.projectKey}`).then(r => r.json()).catch(console.error)
-	}
+  }
 
-	/**
-	 * fetch and update the project data, then trigger update to re-render the WeaverseRoot
-	 */
-	updateProjectData() {
+  /**
+   * fetch and update the project data, then trigger update to re-render the WeaverseRoot
+   */
+  updateProjectData() {
     console.log('this.projectData', this.projectData)
     this.initItemData()
     this.triggerUpdate()
@@ -170,31 +172,30 @@ export class Weaverse {
       }).catch(err => {
         console.error(err)
       })
-		}
-	}
+    }
+  }
 
 
+  triggerEditorUpdate(type = 'weaverse.workspace.init') {
+    if (this.isEditor) {
+      window.top?.postMessage({
+        type, payload: {
+          projectKey: this.projectKey,
+          projectData: this.projectData
+        }
+      }, '*')
+    }
+  }
 
-	triggerEditorUpdate(type = 'weaverse.workspace.init') {
-		if (this.isEditor) {
-			window.top?.postMessage({
-				type, payload: {
-					projectKey: this.projectKey,
-					projectData: this.projectData
-				}
-			}, '*')
-		}
-	}
-
-	initItemData() {
-		let data = this.projectData
-		if (data.items) {
-			data.items.forEach(item => {
-				let itemStore = this.itemInstances.get(item.id) || new WeaverseItemStore(item, this)
-				this.itemInstances.set(item.id, itemStore)
-			})
-		}
-	}
+  initItemData() {
+    let data = this.projectData
+    if (data.items) {
+      data.items.forEach(item => {
+        let itemStore = this.itemInstances.get(item.id) || new WeaverseItemStore(item, this)
+        this.itemInstances.set(item.id, itemStore)
+      })
+    }
+  }
 }
 
 /**
@@ -232,21 +233,20 @@ export class WeaverseItemStore {
 
   setData = (data: any) => {
     this.data = Object.assign(this.data, data)
-		this.triggerUpdate()
-	}
+    this.triggerUpdate()
+  }
 
-	subscribe = (fn: any) => {
-		this.listeners.add(fn)
-	}
+  subscribe = (fn: any) => {
+    this.listeners.add(fn)
+  }
 
-	unsubscribe = (fn: any) => {
-		this.listeners.delete(fn)
-	}
+  unsubscribe = (fn: any) => {
+    this.listeners.delete(fn)
+  }
 
-	triggerUpdate = () => {
-		this.listeners.forEach(fn => {
-			return fn(this.data)
-		})
-	}
-
+  triggerUpdate = () => {
+    this.listeners.forEach(fn => {
+      return fn(this.data)
+    })
+  }
 }

@@ -25,15 +25,22 @@ importers:
       eslint: 7.32.0
       eslint-config-next: 12.0.8_eslint@7.32.0+next@12.0.8
 
+  packages/core:
+    specifiers:
+      '@stitches/core': ^1.2.6
+      isomorphic-unfetch: ^3.1.0
+    dependencies:
+      '@stitches/core': 1.2.6
+      isomorphic-unfetch: 3.1.0
+
   packages/react:
     specifiers:
       '@size-limit/preset-small-lib': ^7.0.5
-      '@stitches/core': ^1.2.6
       '@types/react': ^17.0.38
       '@types/react-dom': ^17.0.11
       '@types/react-is': ^17.0.3
+      '@weaverse/core': ^0.1.0
       husky: ^7.0.4
-      isomorphic-unfetch: ^3.1.0
       react: ^17.0.2
       react-dom: ^17.0.2
       react-is: ^17.0.2
@@ -42,8 +49,7 @@ importers:
       tslib: ^2.3.1
       typescript: ^4.5.5
     dependencies:
-      '@stitches/core': 1.2.6
-      isomorphic-unfetch: 3.1.0
+      '@weaverse/core': link:../core
       react-is: 17.0.2
     devDependencies:
       '@size-limit/preset-small-lib': 7.0.5_size-limit@7.0.5
@@ -4696,7 +4702,7 @@ packages:
   /isomorphic-unfetch/3.1.0:
     resolution: { integrity: sha512-geDJjpoZ8N0kWexiwkX8F9NkTsXhetLPVbZFQ+JTW239QNOwvB0gniuR1Wc6f0AMTn7/mFGyXvHTifrCp/GH8Q== }
     dependencies:
-      node-fetch: 2.6.6
+      node-fetch: 2.6.1
       unfetch: 4.2.0
     dev: false
 
@@ -5734,13 +5740,6 @@ packages:
   /node-fetch/2.6.1:
     resolution: { integrity: sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw== }
     engines: { node: 4.x || >=6.0.0 }
-    dev: false
-
-  /node-fetch/2.6.6:
-    resolution: { integrity: sha512-Z8/6vRlTUChSdIgMa51jxQ4lrw/Jy5SOW10ObaA47/RElsAN2c5Pn8bTgFGWn/ibwzXTE8qwr1Yzx28vsecXEA== }
-    engines: { node: 4.x || >=6.0.0 }
-    dependencies:
-      whatwg-url: 5.0.0
     dev: false
 
   /node-int64/0.4.0:
@@ -7269,10 +7268,6 @@ packages:
       punycode: 2.1.1
     dev: true
 
-  /tr46/0.0.3:
-    resolution: { integrity: sha1-gYT9NH2snNwYWZLzpmIuFLnZq2o= }
-    dev: false
-
   /tr46/1.0.1:
     resolution: { integrity: sha1-qLE/1r/SSJUZZ0zN5VujaTtwbQk= }
     dependencies:
@@ -7747,10 +7742,6 @@ packages:
       defaults: 1.0.3
     dev: true
 
-  /webidl-conversions/3.0.1:
-    resolution: { integrity: sha1-JFNCdeKnvGvnvIZhHMFq4KVlSHE= }
-    dev: false
-
   /webidl-conversions/4.0.2:
     resolution: { integrity: sha512-YQ+BmxuTgd6UXZW3+ICGfyqRyHXVlD5GtQr5+qjiNW7bF0cqrzX500HVXPBOvgXb5YnzDd+h0zqyv61KUD7+Sg== }
     dev: true
@@ -7764,13 +7755,6 @@ packages:
   /whatwg-mimetype/2.3.0:
     resolution: { integrity: sha512-M4yMwr6mAnQz76TbJm914+gPpB/nCwvZbJU28cUD6dR004SAxDLOOSUaB1JDRqLtaOV/vi0IC5lEAGFgrjGv/g== }
     dev: true
-
-  /whatwg-url/5.0.0:
-    resolution: { integrity: sha1-lmRU6HZUYuN2RNNib2dCzotwll0= }
-    dependencies:
-      tr46: 0.0.3
-      webidl-conversions: 3.0.1
-    dev: false
 
   /whatwg-url/7.1.0:
     resolution: { integrity: sha512-WUu7Rg1DroM7oQvGWfOiAK21n74Gg+T4elXEQYkOhtyLeWiJFoOGLXPKI/9gzIie9CtwVLm8wtw6YJdKyxSjeg== }

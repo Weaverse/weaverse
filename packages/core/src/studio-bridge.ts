@@ -1,5 +1,5 @@
 import {isBrowser} from './utils'
-import type {Weaverse} from './core'
+import type {Weaverse} from '.'
 
 /**
  * When the editor is ready, we'll load this studio-bridge code.
@@ -14,9 +14,12 @@ export class StudioBridge {
    * instance for subscribing to window message, save it to currentFrameSubscription then can remove it when unmount
    */
   currentFrameSubscription: any
-
+  handleProps: any
   constructor(weaverse: Weaverse) {
     this.weaverse = weaverse
+    this.handleProps = {
+      onMouseDownCapture: this.handleMouseDown.bind(this)
+    }
   }
 
   /**
@@ -63,6 +66,11 @@ export class StudioBridge {
 
   sendMessageToEditor(type: string, payload: any) {
     isBrowser && window.parent.postMessage({type, payload}, '*')
+  }
+
+  handleMouseDown = (e: MouseEvent) => {
+    console.log('handleMouseDown', e)
+    this.sendMessageToEditor('weaverse.editor.mouseDown', {})
   }
 }
 
