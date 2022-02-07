@@ -48,6 +48,7 @@ type ItemProps = {
   context: Weaverse
 }
 
+
 const Item = ({itemInstance, elementInstances, context}: ItemProps) => {
   let [data, setData] = useState<any>(itemInstance.data)
   let {id, type, childIds, css, className, ...rest} = data
