@@ -3,8 +3,8 @@
 // the core code should be framework agnostic, no react, vue, angular, etc.
 import fetch from 'isomorphic-unfetch'
 import * as process from 'process'
-import StudioBridge from './studio-bridge'
 import Stitches from '@stitches/core/types/stitches'
+import {isIframe} from './utils'
 // stitches problem, we should use require instead of import
 // using stitches core only for framework-agnostic code
 let stitches = require('@stitches/core')
@@ -79,7 +79,7 @@ export class Weaverse {
    */
   stitchesInstance: Stitches | any
 
-  studioBridge?: StudioBridge
+  studioBridge?: any
 
   /**
    * constructor
@@ -115,23 +115,33 @@ export class Weaverse {
         }
       }
     )
+    this.loadStudio()
   }
 
   loadStudio() {
-    console.log('process.env.NODE_ENV', process.env.NODE_ENV)
-    // only load studio bridge if it's in editor mode
-    if (process.env.NODE_ENV !== 'production') {
-      // TODO: separate studio bridge into a separate package
-      // in development mode, we should use localhost:3000 as appUrl
-      // this.appUrl = 'http://localhost:3000'
-      // let StudioBridge = require('./studio-bridge')
-      this.studioBridge = new StudioBridge(this)
-      console.log('Weaverse: init studio bridge', this.studioBridge)
-
-      this.studioBridge.subscribeMessageEvent()
-      return true
+    if (isIframe) {
+      let initStudio = () => {
+        let StudioBridge = window.WeaverseStudioBridge
+        this.studioBridge = new StudioBridge(this)
+        this.studioBridge.subscribeMessageEvent()
+        this.triggerUpdate()
+        console.log('studio bridge initialized', this.studioBridge)
+      }
+      window.addEventListener('message', e => {
+        if (e.data?.type === 'weaverse.editor.ready') {
+          this.isEditor = true
+          if (!window.WeaverseStudioBridge) {
+            // load studio bridge script by url: https://weaverse.io/assets/studio/studio-bridge.js
+            const studioBridgeScript = document.createElement('script')
+            studioBridgeScript.src = `${this.appUrl}/assets/studio/studio-bridge.js`
+            studioBridgeScript.onload = initStudio
+            document.body.appendChild(studioBridgeScript)
+          } else {
+            initStudio()
+          }
+        }
+      })
     }
-    return false
   }
 
   subscribe(fn: any) {

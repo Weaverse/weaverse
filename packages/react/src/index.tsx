@@ -22,11 +22,6 @@ const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: 
     }
     context.subscribe(handleUpdate)
     context.updateProjectData()
-    let shouldRenderStudio = context.loadStudio()
-    console.log('shouldRenderStudio', shouldRenderStudio)
-    if (shouldRenderStudio) {
-      handleUpdate()
-    }
     return () => {
       context.unsubscribe(handleUpdate)
     }
@@ -41,6 +36,7 @@ const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: 
     <RenderItem itemId={0} context={context}/>
   </div>
 }
+
 
 type ItemProps = {
   itemInstance: WeaverseItemStore
@@ -72,7 +68,6 @@ const Item = ({itemInstance, elementInstances, context}: ItemProps) => {
     // let stitches create the style from css object and
     // then return the classname, so we can use it in the render
     let selector = (context.stitchesInstance.css(css)()).className
-
     realClassName += ' ' + selector
   }
   let Component = elementInstances.get(type)

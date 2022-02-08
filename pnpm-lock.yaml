@@ -10,7 +10,7 @@ importers:
 
   apps/next-template:
     specifiers:
-      '@weaverse/react': ^0.1.7
+      '@weaverse/react': ^0.1.8
       eslint: '7'
       eslint-config-next: 12.0.10
       next: 12.0.10
@@ -51,11 +51,10 @@ importers:
       '@types/react': ^17.0.39
       '@types/react-dom': ^17.0.11
       '@types/react-is': ^17.0.3
-      '@weaverse/core': ^0.1.0
+      '@weaverse/core': ^0.2.2
       husky: ^7.0.4
       react: ^17.0.2
       react-dom: ^17.0.2
-      react-is: ^17.0.2
       size-limit: ^7.0.8
       tsdx: ^0.14.1
       tslib: ^2.3.1
@@ -63,7 +62,6 @@ importers:
     dependencies:
       '@nextui-org/react': 1.0.2-beta.3_react-dom@17.0.2+react@17.0.2
       '@weaverse/core': link:../core
-      react-is: 17.0.2
     devDependencies:
       '@size-limit/preset-small-lib': 7.0.8_size-limit@7.0.8
       '@types/react': 17.0.39
@@ -6211,10 +6209,6 @@ packages:
   /react-is/16.13.1:
     resolution: { integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ== }
     dev: true
-
-  /react-is/17.0.2:
-    resolution: { integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w== }
-    dev: false
 
   /react/17.0.2:
     resolution: { integrity: sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA== }
