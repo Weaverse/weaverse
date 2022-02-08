@@ -65,6 +65,6 @@
   },
   "dependencies": {
     "@nextui-org/react": "^1.0.2-beta.3",
-    "@weaverse/core": "^0.1.0"
+    "@weaverse/core": "^0.2.2"
   }
 }
