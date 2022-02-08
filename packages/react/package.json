@@ -64,7 +64,7 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "react-is": "^17.0.2",
+    "@nextui-org/react": "^1.0.2-beta.3",
     "@weaverse/core": "^0.1.0"
   }
 }

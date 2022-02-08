@@ -46,6 +46,7 @@ importers:
 
   packages/react:
     specifiers:
+      '@nextui-org/react': ^1.0.2-beta.3
       '@size-limit/preset-small-lib': ^7.0.8
       '@types/react': ^17.0.39
       '@types/react-dom': ^17.0.11
@@ -60,6 +61,7 @@ importers:
       tslib: ^2.3.1
       typescript: ^4.5.5
     dependencies:
+      '@nextui-org/react': 1.0.2-beta.3_react-dom@17.0.2+react@17.0.2
       '@weaverse/core': link:../core
       react-is: 17.0.2
     devDependencies:
@@ -1217,6 +1219,12 @@ packages:
       regenerator-runtime: 0.13.9
     dev: true
 
+  /@babel/runtime/7.9.6:
+    resolution: { integrity: sha512-64AF1xY3OAkFHqOb9s4jpgk1Mm5vDZ4L3acHvAml+53nO1XbXLuDodsVpO4OIUsmemlUHMxNdYMNJmsvOwLrvQ== }
+    dependencies:
+      regenerator-runtime: 0.13.9
+    dev: false
+
   /@babel/template/7.16.7:
     resolution: { integrity: sha512-I8j/x8kHUrbYRTUxXrrMbfCa7jxkE7tZre39x3kjr9hvI82cK1FfqLygotcWN5kdPGWcLdWMHpSBavse5tWw3w== }
     engines: { node: '>=6.9.0' }
@@ -1604,6 +1612,18 @@ packages:
     dev: false
     optional: true
 
+  /@nextui-org/react/1.0.2-beta.3_react-dom@17.0.2+react@17.0.2:
+    resolution: { integrity: sha512-YkAXBc4f3Qfzf409BFZi9MAKj0lWArTb1L2ZASAKoBQKsxtRbVTko18Losjsjun/WwK4X8RiR9e8XlzYPm2RZA== }
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      '@babel/runtime': 7.9.6
+      '@stitches/react': 1.2.6_react@17.0.2
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    dev: false
+
   /@nodelib/fs.scandir/2.1.5:
     resolution: { integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g== }
     engines: { node: '>= 8' }
@@ -1747,6 +1767,14 @@ packages:
 
   /@stitches/core/1.2.6:
     resolution: { integrity: sha512-nDGhYDZw74uL7D4FYwpya2Sgr1LucsdrF7Nr6Ut4jQD49sBK36S2eC2oCAlfAX0JksH0QVfOrWwUipp3uaID1w== }
+    dev: false
+
+  /@stitches/react/1.2.6_react@17.0.2:
+    resolution: { integrity: sha512-gRVITYj8W4jJmoiVxWDv72yCvd12VvtUUAnTzs07EqmtvGCVgKZu3Dx0x5KVCcb0b6tfgvvNH2L84YrzdM4Mag== }
+    peerDependencies:
+      react: '>= 16.3.0'
+    dependencies:
+      react: 17.0.2
     dev: false
 
   /@types/babel__core/7.1.18:
@@ -6246,7 +6274,6 @@ packages:
 
   /regenerator-runtime/0.13.9:
     resolution: { integrity: sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA== }
-    dev: true
 
   /regenerator-transform/0.14.5:
     resolution: { integrity: sha512-eOf6vka5IO151Jfsw2NO9WpGX58W6wWmefK3I1zEGr0lOD0u8rwPaNqQL1aRxUaxLeKO3ArNh3VYg1KbaD+FFw== }
