@@ -187,13 +187,12 @@ export class Weaverse {
 
 
   triggerEditorUpdate(type = 'weaverse.workspace.init') {
-    if (this.isEditor) {
-      window.top?.postMessage({
-        type, payload: {
-          projectKey: this.projectKey,
-          projectData: this.projectData
-        }
-      }, '*')
+    if (this.isEditor && this.studioBridge) {
+      this.studioBridge.sendMessageToEditor(type, {
+        projectData: this.projectData,
+        projectKey: this.projectKey,
+        appUrl: this.appUrl
+      })
     }
   }
 

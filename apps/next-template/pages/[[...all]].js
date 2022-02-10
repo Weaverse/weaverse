@@ -26,8 +26,8 @@ export async function getServerSideProps(context) {
         childIds: [3, 4, 5, 6],
         css: {
           display: 'grid',
-          backgroundColor: 'cyan',
-          gridTemplateColumns: 'repeat(3, minmax(500px, 1fr))'
+          gridTemplate: 'repeat(3, 1fr) / repeat(2, 1fr)',
+          backgroundColor: 'cyan'
         }
       },
       {

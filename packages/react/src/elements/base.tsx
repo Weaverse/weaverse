@@ -1,13 +1,15 @@
 import React from 'react'
 
-export const BaseElement = ({tag, children, ...props}: any) => {
+export const BaseElement = React.forwardRef((({tag, children, ...props}: any, ref) => {
   return React.createElement(tag, {
+    ref,
     ...props
   }, children)
-}
+}))
 
 BaseElement.defaultProps = {
   type: 'base',
-  tag: 'div'
+  tag: 'div',
+  style: {}
 }
 export default BaseElement

@@ -2,7 +2,6 @@ import React, {FC, useEffect, useState} from 'react'
 import {isBrowser, Weaverse, WeaverseItemStore, WeaverseType} from '@weaverse/core'
 import Elements from './elements'
 
-
 const createRootContext = (configs: WeaverseType) => {
   const rootContext = new Weaverse(configs)
   // Register the element components

@@ -1,7 +1,7 @@
 import {createRootContext, WeaverseRoot} from '@weaverse/react'
 import {useEffect} from 'react'
 
-export let weaverseContext = createRootContext({projectKey: '1', appUrl: 'https://weaverse.io'})
+export let weaverseContext = createRootContext({projectKey: '1'})
 
 export const WeaverseContent = ({defaultData}) => {
 	useEffect(() => {

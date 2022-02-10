@@ -6,8 +6,8 @@ export default function Grid(props: any) {
 
 Grid.defaultProps = {
   style: {
-    // display: 'grid',
-    // outline: '1px solid red',
+    display: 'grid',
+    gridTemplate: '1fr / 1fr'
   },
   type: 'grid'
 }
