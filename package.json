@@ -14,25 +14,5 @@
     "packages/*",
     "apps/*"
   ],
-  "turbo": {
-    "pipeline": {
-      "build": {
-        "dependsOn": [
-          "^build"
-        ],
-        "outputs": [
-          "dist/**"
-        ]
-      },
-      "test": {
-        "outputs": []
-      },
-      "dev": {
-        "cache": false,
-        "outputs": [
-          "dist/**"
-        ]
-      }
-    }
-  }
+  "packageManager": "pnpm@6.31.0"
 }
