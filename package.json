@@ -6,7 +6,7 @@
   },
   "scripts": {
     "dev": "turbo run dev",
-    "dev2": "turbo run dev --scope=\"@weaverse/react\" --no-cache",
+    "dev2": "turbo run dev --no-cache",
     "test": "turbo run test",
     "build": "turbo run build --graph=repo-graph.svg"
   },

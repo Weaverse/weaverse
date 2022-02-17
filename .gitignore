@@ -5,3 +5,5 @@ build/**
  dist/**
  .next/**
 /.pnpm-store/
+/pnpm-global/
+/packages/core/pnpm-global/

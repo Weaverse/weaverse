@@ -168,10 +168,10 @@ export class Weaverse {
    * fetch and update the project data, then trigger update to re-render the WeaverseRoot
    */
   updateProjectData() {
-    console.log('this.projectData', this.projectData)
-    this.initItemData()
-    this.triggerUpdate()
-    return
+    // console.log('this.projectData', this.projectData)
+    // this.initItemData()
+    // this.triggerUpdate()
+    // return
     if (this.projectKey) {
       this.fetchProjectData().then(data => {
         if (data) {

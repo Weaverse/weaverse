@@ -23,8 +23,8 @@
     "analyze": "size-limit --why"
   },
   "peerDependencies": {
-    "react": ">=16",
-    "react-dom": ">=16"
+    "react": ">=17",
+    "react-dom": ">=17"
   },
   "husky": {
     "hooks": {
@@ -56,15 +56,13 @@
     "@types/react-dom": "^17.0.11",
     "@types/react-is": "^17.0.3",
     "husky": "^7.0.4",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
     "size-limit": "^7.0.8",
     "tsdx": "^0.14.1",
     "tslib": "^2.3.1",
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "@nextui-org/react": "^1.0.2-beta.3",
-    "@weaverse/core": "^0.2.3"
+    "@weaverse/core": "^0.2.3",
+    "@weaverse/react": "^0.1.9"
   }
 }

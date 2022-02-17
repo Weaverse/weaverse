@@ -5,7 +5,7 @@
     "types"
   ],
   "compilerOptions": {
-    "module": "esnext",
+    "module": "ES2015",
     "lib": [
       "dom",
       "esnext"

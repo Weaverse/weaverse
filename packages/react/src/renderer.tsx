@@ -1,21 +1,21 @@
-import React, {FC, useEffect, useState} from 'react'
+import * as React from 'react'
 import {isBrowser, Weaverse, WeaverseItemStore, WeaverseType} from '@weaverse/core'
 import Elements from './elements'
 
-const createRootContext = (configs: WeaverseType) => {
+export const createRootContext = (configs: WeaverseType) => {
   const rootContext = new Weaverse(configs)
   // Register the element components
   Object.keys(Elements).forEach(key => {
     // @ts-ignore
     Elements[key]?.defaultProps?.type && rootContext.registerElement(Elements[key].defaultProps.type, Elements[key])
   })
-
   return rootContext
 }
 
-const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: any }) => {
-  let [, setData] = useState<any>(context.projectData)
-  useEffect(() => {
+export const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: any }) => {
+  return <div>hiii</div>
+  let [, setData] = React.useState<any>(context.projectData)
+  React.useEffect(() => {
     let handleUpdate = () => {
       setData({...context.projectData})
     }
@@ -39,15 +39,15 @@ const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: 
 
 type ItemProps = {
   itemInstance: WeaverseItemStore
-  elementInstances: Map<string, FC>
+  elementInstances: Map<string, React.FC>
   context: Weaverse
 }
 
 
 const Item = ({itemInstance, elementInstances, context}: ItemProps) => {
-  let [data, setData] = useState<any>(itemInstance.data)
+  let [data, setData] = React.useState<any>(itemInstance.data)
   let {id, type, childIds, css, className, ...rest} = data
-  useEffect(() => {
+  React.useEffect(() => {
     let handleUpdate = (update: any) => {
       setData({...update})
     }
@@ -98,4 +98,3 @@ const RenderItem = ({itemId, context}: { itemId: number, context: any }): any =>
   return <></>
 }
 
-export {createRootContext, WeaverseRoot}
