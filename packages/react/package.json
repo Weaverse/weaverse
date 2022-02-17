@@ -62,7 +62,6 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "@weaverse/core": "^0.2.3",
-    "@weaverse/react": "^0.1.9"
+    "@weaverse/core": "^0.2.4"
   }
 }
