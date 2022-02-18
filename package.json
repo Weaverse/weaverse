@@ -11,8 +11,9 @@
     "build": "turbo run build --graph=repo-graph.svg"
   },
   "workspaces": [
-    "packages/*",
-    "apps/*"
+    "packages/core",
+    "packages/react",
+    "apps/next-template"
   ],
-  "packageManager": "pnpm@6.31.0"
+  "packageManager": "npm@8.1.2"
 }
