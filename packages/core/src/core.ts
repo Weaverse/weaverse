@@ -1,14 +1,11 @@
 // TODO: Implement Weaverse SDK class
 // Only core code is implemented here, avoid importing other packages,
 // the core code should be framework agnostic, no react, vue, angular, etc.
-import fetch from 'isomorphic-unfetch'
-import * as process from 'process'
-import Stitches from '@stitches/core/types/stitches'
+import fetch from './utils/fetch'
 import {isIframe} from './utils'
-// stitches problem, we should use require instead of import
 // using stitches core only for framework-agnostic code
-let stitches = require('@stitches/core')
-
+import * as stitches from '@stitches/core'
+import Stitches from '@stitches/core/types/stitches'
 
 export interface ProjectDataItemType {
   type: string
@@ -20,7 +17,6 @@ export interface ProjectDataItemType {
     [key: string]: string
   }
 }
-
 export interface ProjectDataType {
   items: ProjectDataItemType[]
 }
