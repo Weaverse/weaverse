@@ -22,5 +22,6 @@
     "packages/core",
     "packages/react"
   ],
-  "packageManager": "npm@8.1.2"
+  "packageManager": "npm@8.1.2",
+  "version": "0.0.1"
 }
