@@ -7,7 +7,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "type": "commonjs",
   "files": [
     "dist"
   ],
@@ -23,9 +22,5 @@
   "author": "Paul",
   "dependencies": {
     "@stitches/core": "^1.2.6"
-  },
-  "peerDependencies": {
-    "node-fetch": "^3",
-    "unfetch": "^4"
   }
 }

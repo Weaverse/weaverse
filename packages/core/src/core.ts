@@ -1,7 +1,6 @@
 // TODO: Implement Weaverse SDK class
 // Only core code is implemented here, avoid importing other packages,
 // the core code should be framework agnostic, no react, vue, angular, etc.
-import fetch from './utils/fetch'
 import {isIframe} from './utils'
 // using stitches core only for framework-agnostic code
 import * as stitches from '@stitches/core'
@@ -155,8 +154,10 @@ export class Weaverse {
 
   /**
    * fetch data from Weaverse API (https://weaverse.io/api/v1/projects/:projectKey)
+   * @param fetch {fetch} custom fetch function, pass in custom fetch function if you want to use your own fetch function
    */
-  fetchProjectData() {
+  fetchProjectData(fetch = globalThis.fetch) {
+    console.log('fetching project data...')
     return fetch(this.appUrl + `/api/public/${this.projectKey}`).then(r => r.json()).catch(console.error)
   }
 

@@ -20,7 +20,8 @@
   },
   "workspaces": [
     "packages/core",
-    "packages/react"
+    "packages/react",
+    "apps/remix"
   ],
   "packageManager": "npm@8.1.2",
   "version": "0.0.1"
