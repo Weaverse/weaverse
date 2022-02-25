@@ -6,7 +6,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "cross-env NODE_ENV=production remix build",
-    "dev": "cross-env PORT=3002 NODE_ENV=development remix dev",
+    "dev": "cross-env PORT=3001 NODE_ENV=development remix dev",
     "postinstall": "remix setup node",
     "start": "cross-env NODE_ENV=production remix-serve build"
   },

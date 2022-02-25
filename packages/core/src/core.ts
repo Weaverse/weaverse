@@ -124,6 +124,7 @@ export class Weaverse {
       }
       window.addEventListener('message', e => {
         if (e.data?.type === 'weaverse.editor.ready') {
+          console.log('studio message', e.data)
           this.isEditor = true
           if (!window.WeaverseStudioBridge) {
             // load studio bridge script by url: https://weaverse.io/assets/studio/studio-bridge.js

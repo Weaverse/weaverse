@@ -2,8 +2,7 @@ import {LoaderFunction, useLoaderData} from 'remix'
 import {WeaverseContent, weaverseContext} from '~/weaverse-content'
 
 export let loader: LoaderFunction = async () => {
-  let data = await weaverseContext.fetchProjectData()
-  return data
+  return await weaverseContext.fetchProjectData()
 }
 export default function Index() {
   let data = useLoaderData()

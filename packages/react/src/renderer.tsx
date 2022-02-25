@@ -31,7 +31,6 @@ export const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaul
     context.initItemData()
   }
   let handleProps = context?.studioBridge?.handleProps || {}
-  console.log('handleProps', handleProps)
   return <div {...handleProps}>
     <RenderItem itemId={0} context={context}/>
   </div>
