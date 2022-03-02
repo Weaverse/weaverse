@@ -19,8 +19,8 @@
     "build": "tsup src/index.ts --format esm,cjs --dts --outDir dist --external react"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-dom": "*"
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
   },
   "prettier": {
     "printWidth": 80,
