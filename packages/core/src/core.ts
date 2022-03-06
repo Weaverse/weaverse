@@ -5,6 +5,7 @@ import {isIframe} from './utils'
 // using stitches core only for framework-agnostic code
 import * as stitches from '@stitches/core'
 import Stitches from '@stitches/core/types/stitches'
+import {v4, validate} from 'uuid'
 
 export interface ProjectDataItemType {
   type: string
@@ -18,6 +19,7 @@ export interface ProjectDataItemType {
 }
 export interface ProjectDataType {
   items: ProjectDataItemType[]
+  rootId: string | number
 }
 
 
@@ -55,7 +57,8 @@ export class Weaverse {
    * <WeaverseRoot defaultData={projectData} /> it will be used to server-side rendering
    */
   projectData: ProjectDataType = {
-    items: []
+    items: [],
+    rootId: 0
   }
   /**
    * storing subscribe callback function for any component that want to listen to the change of WeaverseRoot
@@ -129,7 +132,7 @@ export class Weaverse {
           if (!window.WeaverseStudioBridge) {
             // load studio bridge script by url: https://weaverse.io/assets/studio/studio-bridge.js
             const studioBridgeScript = document.createElement('script')
-            studioBridgeScript.src = `${this.appUrl}/assets/studio/studio-bridge.js`
+            studioBridgeScript.src = `${this.appUrl}/assets/studio/studio-bridge.js?t=1`
             studioBridgeScript.onload = initStudio
             document.body.appendChild(studioBridgeScript)
           } else {
@@ -196,11 +199,34 @@ export class Weaverse {
 
   initItemData() {
     let data = this.projectData
-    if (data.items) {
-      data.items.forEach(item => {
-        let itemStore = this.itemInstances.get(item.id) || new WeaverseItemStore(item, this)
-        this.itemInstances.set(item.id, itemStore)
-      })
+    let rootItem = data.items.find(item => item.id === (data.rootId || 0))
+
+    if (rootItem) {
+      let initChildItems = (childIds: string[]) => {
+        return Array.isArray(childIds) ? childIds.map(id => {
+          let itemData = data.items.find(item => item.id === id)
+          if (itemData) {
+            itemData.id = validate(itemData.id as string) ? itemData.id : v4()
+            if (!this.itemInstances.get(itemData.id)) {
+              this.itemInstances.set(itemData.id, new WeaverseItemStore({
+                ...itemData,
+                childIds: initChildItems(itemData.childIds as string[])
+              }, this))
+            }
+            return itemData.id
+          }
+          return ''
+        }).filter(id => !!id) : []
+      }
+      let rootItemUuid = validate(rootItem.id as string) ? rootItem.id : v4()
+      if (!this.itemInstances.get(rootItemUuid)) {
+        this.projectData.rootId = rootItemUuid
+        rootItem.id = rootItemUuid
+        this.itemInstances.set(rootItemUuid, new WeaverseItemStore({
+          ...rootItem,
+          childIds: initChildItems(rootItem.childIds as string[])
+        }, this))
+      }
     }
   }
 }
@@ -232,9 +258,10 @@ export class WeaverseItemStore {
 
   constructor(itemData: any = {}, weaverse: Weaverse) {
     this.data = itemData
-    let {type} = itemData
-    if (type) {
+    let {type, id} = itemData
+    if (type && id) {
       this.Component = weaverse.elementInstances.get(type)
+
     }
   }
 

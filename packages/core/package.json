@@ -21,6 +21,7 @@
   "name": "@weaverse/core",
   "author": "Paul",
   "dependencies": {
-    "@stitches/core": "^1.2.6"
+    "@stitches/core": "^1.2.7",
+    "uuid": "^8.3.2"
   }
 }

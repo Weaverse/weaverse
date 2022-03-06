@@ -27,12 +27,13 @@ export const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaul
     }
   }, [])
   if (!context.projectData?.items?.length && defaultData) {
-    context.projectData = defaultData
+    Object.assign(context.projectData, defaultData)
     context.initItemData()
   }
+  console.log('context.projectData', context.projectData)
   let handleProps = context?.studioBridge?.handleProps || {}
   return <div {...handleProps}>
-    <RenderItem itemId={0} context={context}/>
+    <RenderItem itemId={context.projectData.rootId} context={context}/>
   </div>
 }
 
@@ -89,7 +90,7 @@ const Item = ({itemInstance, elementInstances, context}: ItemProps) => {
   return null
 }
 
-const RenderItem = ({itemId, context}: { itemId: number, context: any }): any => {
+const RenderItem = ({itemId, context}: { itemId: number | string, context: any }): any => {
   let {itemInstances, elementInstances} = context
   let itemInstance = itemInstances.get(itemId)
   if (itemInstance) {
