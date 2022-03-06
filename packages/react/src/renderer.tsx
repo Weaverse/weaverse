@@ -30,10 +30,9 @@ export const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaul
     Object.assign(context.projectData, defaultData)
     context.initItemData()
   }
-  console.log('context.projectData', context.projectData)
   let handleProps = context?.studioBridge?.handleProps || {}
-  return <div {...handleProps}>
-    <RenderItem itemId={context.projectData.rootId} context={context}/>
+  return <div className={`weaverse-root`} id={'weaverse-root'} {...handleProps}>
+    <RenderItem itemId={context.projectData.rootId || 0} context={context}/>
   </div>
 }
 
@@ -77,14 +76,16 @@ const Item = ({itemInstance, elementInstances, context}: ItemProps) => {
       rest.ref = itemInstance.ref
     }
     return <Component key={id} data-wv-id={id} {...rest} className={realClassName}>
-      {Array.isArray(childIds)
+      {
+              Array.isArray(childIds)
               && childIds.map(childId =>
                       <RenderItem
                               key={childId}
                               itemId={childId}
                               context={context}
                       />
-              )}
+              )
+      }
     </Component>
   }
   return null

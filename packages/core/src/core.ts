@@ -5,7 +5,6 @@ import {isIframe} from './utils'
 // using stitches core only for framework-agnostic code
 import * as stitches from '@stitches/core'
 import Stitches from '@stitches/core/types/stitches'
-import {v4, validate} from 'uuid'
 
 export interface ProjectDataItemType {
   type: string
@@ -17,6 +16,7 @@ export interface ProjectDataItemType {
     [key: string]: string
   }
 }
+
 export interface ProjectDataType {
   items: ProjectDataItemType[]
   rootId: string | number
@@ -169,10 +169,6 @@ export class Weaverse {
    * fetch and update the project data, then trigger update to re-render the WeaverseRoot
    */
   updateProjectData() {
-    // console.log('this.projectData', this.projectData)
-    // this.initItemData()
-    // this.triggerUpdate()
-    // return
     if (this.projectKey) {
       this.fetchProjectData().then(data => {
         if (data) {
@@ -199,34 +195,11 @@ export class Weaverse {
 
   initItemData() {
     let data = this.projectData
-    let rootItem = data.items.find(item => item.id === (data.rootId || 0))
-
-    if (rootItem) {
-      let initChildItems = (childIds: string[]) => {
-        return Array.isArray(childIds) ? childIds.map(id => {
-          let itemData = data.items.find(item => item.id === id)
-          if (itemData) {
-            itemData.id = validate(itemData.id as string) ? itemData.id : v4()
-            if (!this.itemInstances.get(itemData.id)) {
-              this.itemInstances.set(itemData.id, new WeaverseItemStore({
-                ...itemData,
-                childIds: initChildItems(itemData.childIds as string[])
-              }, this))
-            }
-            return itemData.id
-          }
-          return ''
-        }).filter(id => !!id) : []
-      }
-      let rootItemUuid = validate(rootItem.id as string) ? rootItem.id : v4()
-      if (!this.itemInstances.get(rootItemUuid)) {
-        this.projectData.rootId = rootItemUuid
-        rootItem.id = rootItemUuid
-        this.itemInstances.set(rootItemUuid, new WeaverseItemStore({
-          ...rootItem,
-          childIds: initChildItems(rootItem.childIds as string[])
-        }, this))
-      }
+    if (data.items) {
+      data.items.forEach(item => {
+        let itemStore = this.itemInstances.get(item.id) || new WeaverseItemStore(item, this)
+        this.itemInstances.set(item.id, itemStore)
+      })
     }
   }
 }
