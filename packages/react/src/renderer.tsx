@@ -28,7 +28,7 @@ export const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaul
   }, [])
   if (!context.projectData?.items?.length && defaultData) {
     Object.assign(context.projectData, defaultData)
-    context.initItemData()
+    context.initProjectItemData()
   }
   let handleProps = context?.studioBridge?.handleProps || {}
   return <div className={`weaverse-root`} id={'weaverse-root'} {...handleProps}>

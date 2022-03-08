@@ -116,8 +116,18 @@ export class Weaverse {
     this.loadStudio()
   }
 
+  listen(callback: any): void {
+    if (window.addEventListener) {
+      window.addEventListener('message', callback, false)
+    } else {
+      window.attachEvent('onmessage', callback)
+    }
+  }
+
   loadStudio() {
     if (isIframe) {
+      console.log('Weaverse SDK is initializing...', isIframe)
+
       let initStudio = () => {
         let StudioBridge = window.WeaverseStudioBridge
         this.studioBridge = new StudioBridge(this)
@@ -125,21 +135,24 @@ export class Weaverse {
         this.triggerUpdate()
         console.log('studio bridge initialized', this.studioBridge)
       }
-      window.addEventListener('message', e => {
-        if (e.data?.type === 'weaverse.editor.ready') {
-          console.log('studio message', e.data)
-          this.isEditor = true
-          if (!window.WeaverseStudioBridge) {
-            // load studio bridge script by url: https://weaverse.io/assets/studio/studio-bridge.js
-            const studioBridgeScript = document.createElement('script')
-            studioBridgeScript.src = `${this.appUrl}/assets/studio/studio-bridge.js?t=1`
-            studioBridgeScript.onload = initStudio
-            document.body.appendChild(studioBridgeScript)
-          } else {
-            initStudio()
+      window.addEventListener('load', () => {
+        window.addEventListener('message', e => {
+          if (e.data?.type === 'weaverse.editor.ready') {
+            console.log('studio message', e.data)
+            this.isEditor = true
+            if (!window.WeaverseStudioBridge) {
+              // load studio bridge script by url: https://weaverse.io/assets/studio/studio-bridge.js
+              const studioBridgeScript = document.createElement('script')
+              studioBridgeScript.src = `${this.appUrl}/assets/studio/studio-bridge.js?t=1`
+              studioBridgeScript.onload = initStudio
+              document.body.appendChild(studioBridgeScript)
+            } else {
+              initStudio()
+            }
           }
-        }
+        })
       })
+
     }
   }
 
@@ -173,7 +186,7 @@ export class Weaverse {
       this.fetchProjectData().then(data => {
         if (data) {
           this.projectData = data
-          this.initItemData()
+          this.initProjectItemData()
           this.triggerUpdate()
         }
       }).catch(err => {
@@ -193,7 +206,7 @@ export class Weaverse {
     }
   }
 
-  initItemData() {
+  initProjectItemData() {
     let data = this.projectData
     if (data.items) {
       data.items.forEach(item => {
@@ -201,6 +214,12 @@ export class Weaverse {
         this.itemInstances.set(item.id, itemStore)
       })
     }
+  }
+
+  addItem(item: any) {
+    let itemStore = new WeaverseItemStore(item, this)
+    this.itemInstances.set(item.id, itemStore)
+    return itemStore
   }
 }
 
