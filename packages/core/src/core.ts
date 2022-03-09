@@ -61,7 +61,8 @@ export class WeaverseItemStore {
     let {type, id} = itemData
     if (type && id) {
       this.Component = weaverse.elementInstances.get(type)
-
+      weaverse.itemInstances.set(id, this)
+      console.log('WeaverseItemStore created', this)
     }
   }
 
@@ -252,7 +253,7 @@ export class Weaverse {
   }
 
 
-  triggerEditorUpdate(type = 'weaverse.workspace.init') {
+  triggerEditorUpdate(type = 'weaverse.editor.init') {
     if (this.isEditor && this.studioBridge) {
       this.studioBridge.sendMessageToEditor(type, {
         projectData: this.projectData,
@@ -264,10 +265,13 @@ export class Weaverse {
 
   initProjectItemData() {
     let data = this.projectData
+    console.log('init project data', data)
     if (data.items) {
       data.items.forEach(item => {
-        let itemStore = this.itemInstances.get(item.id) || new WeaverseItemStore(item, this)
-        this.itemInstances.set(item.id, itemStore)
+        if (!this.itemInstances.get(item.id)) {
+          console.log('init item instance', item)
+          new WeaverseItemStore(item, this)
+        }
       })
     }
   }
