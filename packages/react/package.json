@@ -1,5 +1,5 @@
 {
-  "version": "0.3.1",
+  "version": "0.3.3",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -16,7 +16,8 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "tsup src/index.ts --format esm,cjs --dts --outDir dist --watch --external react",
-    "build": "tsup src/index.ts --format esm,cjs --dts --outDir dist --external react"
+    "build": "tsup src/index.ts --format esm,cjs --dts --outDir dist --external react",
+    "prepublish": "npm run build"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
@@ -31,6 +32,6 @@
   "name": "@weaverse/react",
   "author": "Weaverse Team",
   "dependencies": {
-    "@weaverse/core": "^0.3.1"
+    "@weaverse/core": "^0.3.2"
   }
 }
