@@ -31,6 +31,60 @@ export type WeaverseType = {
 }
 
 
+/**
+ * WeaverseItemStore is a store for Weaverse item, it can be used to subscribe/update the item data
+ * @param itemData {ProjectDataItemType} Weaverse item data
+ * @param weaverse {Weaverse} Weaverse instance
+ * Usage:
+ * ```jsx
+ * useEffect(() => {
+ *     let handleUpdate = (update: any) => {
+ *       setData({...update})
+ *     }
+ *     itemInstance.subscribe(handleUpdate)
+ *     return () => {
+ *       itemInstance.unsubscribe(handleUpdate)
+ *     }
+ *   }, [])
+ *   ```
+ */
+export class WeaverseItemStore {
+  data: any = {}
+  listeners: Set<any> = new Set()
+  Component: any
+  ref: any = {
+    current: null
+  }
+
+  constructor(itemData: any = {}, weaverse: Weaverse) {
+    this.data = itemData
+    let {type, id} = itemData
+    if (type && id) {
+      this.Component = weaverse.elementInstances.get(type)
+
+    }
+  }
+
+  setData = (data: any) => {
+    this.data = Object.assign(this.data, data)
+    this.triggerUpdate()
+  }
+
+  subscribe = (fn: any) => {
+    this.listeners.add(fn)
+  }
+
+  unsubscribe = (fn: any) => {
+    this.listeners.delete(fn)
+  }
+
+  triggerUpdate = () => {
+    this.listeners.forEach(fn => {
+      return fn(this.data)
+    })
+  }
+}
+
 export class Weaverse {
   /**
    * For storing, registering element React component from Weaverse or created by user/developer
@@ -78,6 +132,7 @@ export class Weaverse {
   stitchesInstance: Stitches | any
 
   studioBridge?: any
+  static WeaverseItemStore: typeof WeaverseItemStore = WeaverseItemStore
 
   /**
    * constructor
@@ -217,63 +272,4 @@ export class Weaverse {
     }
   }
 
-  addItem(item: any) {
-    let itemStore = new WeaverseItemStore(item, this)
-    this.itemInstances.set(item.id, itemStore)
-    return itemStore
-  }
-}
-
-/**
- * WeaverseItemStore is a store for Weaverse item, it can be used to subscribe/update the item data
- * @param itemData {ProjectDataItemType} Weaverse item data
- * @param weaverse {Weaverse} Weaverse instance
- * Usage:
- * ```jsx
- * useEffect(() => {
- *     let handleUpdate = (update: any) => {
- *       setData({...update})
- *     }
- *     itemInstance.subscribe(handleUpdate)
- *     return () => {
- *       itemInstance.unsubscribe(handleUpdate)
- *     }
- *   }, [])
- *   ```
- */
-export class WeaverseItemStore {
-  data: any = {}
-  listeners: Set<any> = new Set()
-  Component: any
-  ref: any = {
-    current: null
-  }
-
-  constructor(itemData: any = {}, weaverse: Weaverse) {
-    this.data = itemData
-    let {type, id} = itemData
-    if (type && id) {
-      this.Component = weaverse.elementInstances.get(type)
-
-    }
-  }
-
-  setData = (data: any) => {
-    this.data = Object.assign(this.data, data)
-    this.triggerUpdate()
-  }
-
-  subscribe = (fn: any) => {
-    this.listeners.add(fn)
-  }
-
-  unsubscribe = (fn: any) => {
-    this.listeners.delete(fn)
-  }
-
-  triggerUpdate = () => {
-    this.listeners.forEach(fn => {
-      return fn(this.data)
-    })
-  }
 }
