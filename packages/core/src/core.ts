@@ -172,13 +172,6 @@ export class Weaverse {
     this.loadStudio()
   }
 
-  listen(callback: any): void {
-    if (window.addEventListener) {
-      window.addEventListener('message', callback, false)
-    } else {
-      window.attachEvent('onmessage', callback)
-    }
-  }
 
   loadStudio() {
     if (isIframe) {
