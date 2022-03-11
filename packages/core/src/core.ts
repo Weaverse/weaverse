@@ -177,32 +177,29 @@ export class Weaverse {
     if (isIframe) {
       console.log('Weaverse SDK is initializing...', isIframe)
 
-      let initStudio = () => {
-        let StudioBridge = window.WeaverseStudioBridge
-        this.studioBridge = new StudioBridge(this)
-        this.studioBridge.subscribeMessageEvent()
-        this.triggerUpdate()
-        console.log('studio bridge initialized', this.studioBridge)
-      }
-      window.addEventListener('load', () => {
-        window.addEventListener('message', e => {
-          if (e.data?.type === 'weaverse.editor.ready') {
-            console.log('studio message', e.data)
-            this.isEditor = true
-            if (!window.WeaverseStudioBridge) {
-              // load studio bridge script by url: https://weaverse.io/assets/studio/studio-bridge.js
-              const studioBridgeScript = document.createElement('script')
-              studioBridgeScript.src = `${this.appUrl}/assets/studio/studio-bridge.js`
-              studioBridgeScript.type = 'module'
-              studioBridgeScript.onload = initStudio
-              document.body.appendChild(studioBridgeScript)
-            } else {
-              initStudio()
-            }
+      window.addEventListener('message', e => {
+        if (e.data?.type === 'weaverse.preview.initializeEditor') {
+          let initStudio = () => {
+            let StudioBridge = window.WeaverseStudioBridge
+            this.studioBridge = new StudioBridge(this)
+            this.studioBridge.subscribeMessageEvent()
+            this.triggerUpdate()
+            console.log('studio bridge initialized', this.studioBridge)
           }
-        })
+          console.log('studio message', e.data)
+          this.isEditor = true
+          if (!window.WeaverseStudioBridge) {
+            // load studio bridge script by url: https://weaverse.io/assets/studio/studio-bridge.js
+            const studioBridgeScript = document.createElement('script')
+            studioBridgeScript.src = `${this.appUrl}/assets/studio/studio-bridge.js`
+            studioBridgeScript.type = 'module'
+            studioBridgeScript.onload = initStudio
+            document.body.appendChild(studioBridgeScript)
+          } else {
+            initStudio()
+          }
+        }
       })
-
     }
   }
 
@@ -216,7 +213,13 @@ export class Weaverse {
 
   triggerUpdate() {
     this.listeners.forEach(fn => fn())
-    this.triggerEditorUpdate()
+    if (this.isEditor && this.studioBridge) {
+      this.studioBridge.sendMessageToEditor('weaverse.editor.updateProject', {
+        projectData: this.projectData,
+        projectKey: this.projectKey,
+        appUrl: this.appUrl
+      })
+    }
   }
 
   /**
@@ -245,16 +248,6 @@ export class Weaverse {
     }
   }
 
-
-  triggerEditorUpdate(type = 'weaverse.editor.init') {
-    if (this.isEditor && this.studioBridge) {
-      this.studioBridge.sendMessageToEditor(type, {
-        projectData: this.projectData,
-        projectKey: this.projectKey,
-        appUrl: this.appUrl
-      })
-    }
-  }
 
   initProjectItemData() {
     let data = this.projectData
