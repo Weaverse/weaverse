@@ -25,8 +25,7 @@
   },
   "workspaces": [
     "packages/core",
-    "packages/react",
-    "apps/next"
+    "packages/react"
   ],
   "packageManager": "npm@8.1.2",
   "version": "0.0.1"
