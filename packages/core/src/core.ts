@@ -175,7 +175,6 @@ export class Weaverse {
 
 
   loadStudio() {
-    console.log('loadStudio', {isIframe})
     if (isIframe) {
       console.log('Weaverse SDK is initializing...', isIframe)
 
