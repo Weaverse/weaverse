@@ -1,5 +1,5 @@
 {
-  "version": "0.3.2",
+  "version": "0.3.3",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -16,12 +16,12 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "tsup src/index.ts --format esm,cjs --dts --outDir dist --watch",
-    "build": "tsup src/index.ts --format esm,cjs --dts --outDir dist"
+    "build": "tsup src/index.ts --format esm,cjs --dts --outDir dist",
+    "prepublish": "npm run build"
   },
   "name": "@weaverse/core",
   "author": "Paul",
   "dependencies": {
-    "@stitches/core": "^1.2.7",
-    "uuid": "^8.3.2"
+    "@stitches/core": "^1.2.7"
   }
 }
