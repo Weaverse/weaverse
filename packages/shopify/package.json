@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1",
+  "version": "0.0.3",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -15,8 +15,8 @@
   },
   "scripts": {
     "start": "npm run dev",
-    "dev": "tsup src/index.ts --format esm,cjs --dts --outDir dist --watch --external react",
-    "build": "tsup src/index.ts --format esm,cjs --dts --outDir dist --external react",
+    "dev": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --watch --external react",
+    "build": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --external react",
     "prepublish": "npm run build"
   },
   "peerDependencies": {

@@ -13,8 +13,9 @@ export const createRootContext = (configs: WeaverseType) => {
   return rootContext
 }
 
+export type WeaverseRootPropsType = { context: Weaverse, defaultData: any }
 
-export const WeaverseRoot = ({context, defaultData}: { context: Weaverse, defaultData: any }) => {
+export const WeaverseRoot = ({context, defaultData}: WeaverseRootPropsType) => {
   let [, setData] = React.useState<any>(context.projectData)
   React.useEffect(() => {
     let handleUpdate = () => {
