@@ -1,5 +1,5 @@
 {
-  "version": "0.3.4",
+  "version": "0.0.1",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -28,9 +28,9 @@
     "semi": false,
     "singleQuote": true
   },
-  "name": "@weaverse/react",
+  "name": "@weaverse/shopify",
   "author": "Weaverse Team",
   "dependencies": {
-    "@weaverse/core": "^0.3.3"
+    "@weaverse/react": "^0.3.4"
   }
 }

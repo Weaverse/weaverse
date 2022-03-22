@@ -25,7 +25,8 @@
   },
   "workspaces": [
     "packages/core",
-    "packages/react"
+    "packages/react",
+    "packages/shopify"
   ],
   "packageManager": "npm@8.1.2",
   "version": "0.0.1"
