@@ -1,12 +1,12 @@
-import Button from './button'
 import BaseElement from './base'
-import Grid from './grid'
+import Button from './button'
 import Text from './text'
 
-const elements = {
+const elements: {
+  [key: string]: typeof BaseElement
+} = {
   Button,
   BaseElement,
-  Grid,
-  Text
+  Text,
 }
 export default elements
