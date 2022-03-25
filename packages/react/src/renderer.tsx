@@ -6,17 +6,15 @@ import {
   WeaverseType,
 } from '@weaverse/core'
 import * as React from 'react'
+import { WeaverseElement } from '@weaverse/core/src'
 
 export const createRootContext = (configs: WeaverseType) => {
   const rootContext = new Weaverse(configs)
   // Register the element components
   Object.keys(Elements).forEach((key) => {
-    if (Elements[key]?.defaultProps?.type) {
-      rootContext.registerElement(
-        Elements[key].defaultProps?.type,
-        Elements[key]
-      )
-    }
+    rootContext.registerElement(
+            Elements[key]
+    )
   })
   return rootContext
 }
@@ -52,12 +50,13 @@ export const WeaverseRoot = ({
 
 type ItemProps = {
   itemInstance: WeaverseItemStore
-  elementInstances: Map<string, React.FC>
+  elementInstances: Map<string, WeaverseElement>
   context: Weaverse
 }
 
 const Item = ({ itemInstance, elementInstances, context }: ItemProps) => {
   let [data, setData] = React.useState<any>(itemInstance.data)
+  console.log('render item',  data)
   let { id, type, childIds, css, className, ...rest } = data
   React.useEffect(() => {
     let handleUpdate = (update: any) => {
@@ -76,15 +75,17 @@ const Item = ({ itemInstance, elementInstances, context }: ItemProps) => {
     }
   }, [])
 
-  let realClassName = className || ''
+  let realClassName = className
   if (css) {
     // let stitches create the style from css object and
     // then return the classname, so we can use it in the render
     let selector = context.stitchesInstance.css(css)().className
-    realClassName += ' ' + selector
+    realClassName = realClassName ? `${selector} ${realClassName}` : selector
   }
-  let Component = elementInstances.get(type) || elementInstances.get('base')
-  if (Component) {
+  let element = elementInstances.get(type) || elementInstances.get('base')
+  console.log('render item',  element)
+  if (element?.Component) {
+    let Component = element.Component
     // @ts-ignore
     if (Component.$$typeof === Symbol.for('react.forward_ref')) {
       rest.ref = itemInstance.ref

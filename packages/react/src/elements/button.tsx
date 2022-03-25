@@ -10,9 +10,32 @@ Button.defaultProps = {
         borderRadius: '9999px',
         fontSize: '13px',
         padding: '10px 15px'
-    },
-    type: 'button',
-    tag: 'button'
+    }
 }
 
+export let schema = {
+  title: 'Button',
+  type: 'button',
+  properties: {
+    label: {
+      type: 'string',
+      title: 'Label',
+      default: 'Button'
+    },
+    onClick: {
+      type: 'string',
+      title: 'On Click',
+      default: '() => {}'
+    },
+    style: {
+      type: 'object',
+      title: 'Style',
+      default: {
+        borderRadius: '9999px',
+        fontSize: '13px',
+        padding: '10px 15px'
+      }
+    }
+  }
+}
 export default Button

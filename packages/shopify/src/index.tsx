@@ -8,8 +8,7 @@ let createWeaverseShopifyContext = (configs: WeaverseType) => {
   let context = createRootContext(configs)
 
   Object.keys(elements).forEach(key => {
-    // @ts-ignore
-    elements[key]?.defaultProps?.type && context.registerElement(elements[key].defaultProps.type, elements[key])
+    context.registerElement(elements[key])
   })
   return context
 }

@@ -1,12 +1,20 @@
-import BaseElement from './base'
-import Button from './button'
-import Text from './text'
+import * as BaseElement from './base'
+import * as Button from './button'
+import * as Text from './text'
+import {WeaverseElementMap} from '@weaverse/core'
 
-const elements: {
-  [key: string]: typeof BaseElement
-} = {
-  Button,
-  BaseElement,
-  Text,
+const elements: WeaverseElementMap  = {
+  Button: {
+    Component: Button.default,
+    schema: Button.schema,
+  },
+  BaseElement: {
+    Component: BaseElement.default,
+    schema: BaseElement.schema,
+  },
+  Text: {
+    Component: Text.default,
+    schema: Text.schema,
+  },
 }
 export default elements

@@ -5,6 +5,7 @@ import { isIframe } from "./utils";
 // using stitches core only for framework-agnostic code
 import * as stitches from "@stitches/core";
 import Stitches from "@stitches/core/types/stitches";
+import type {WeaverseElement} from './types'
 
 export interface ProjectDataItemType {
   type: string;
@@ -88,7 +89,7 @@ export class Weaverse {
    * For storing, registering element React component from Weaverse or created by user/developer
    * @type {Map<string, React.Component>}
    */
-  elementInstances = new Map<string, any>();
+  elementInstances = new Map<string, WeaverseElement>();
   /**
    * list of element/items store to provide data, handle state update, state sharing, etc.
    * @type {Map<string, any>}
@@ -150,14 +151,18 @@ export class Weaverse {
    * @param name {string} unique name of the custom React Component
    * @param element {React.Component} custom React Component
    */
-  registerElement(name: string, element: any) {
-    this.elementInstances.set(name, element);
+  registerElement(element: WeaverseElement) {
+    if (element?.schema?.type) {
+      this.elementInstances.set(element.schema.type, element);
+    } else {
+      throw new Error("Weaverse: registerElement: schema.type is required");
+    }
   }
 
   init() {
     // init the stitches instance
     this.stitchesInstance = stitches.createStitches({
-      prefix: "weaverse",
+      prefix: "we",
       media: {
         bp1: "(min-width: 640px)",
         bp2: "(max-width: 768px)",
@@ -252,3 +257,5 @@ export class Weaverse {
     }
   }
 }
+
+export * from './types';

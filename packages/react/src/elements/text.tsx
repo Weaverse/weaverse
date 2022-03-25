@@ -7,8 +7,10 @@ export const Text = React.forwardRef((props: any, ref) => {
 
 Text.defaultProps = {
   style: {},
-  type: 'text',
   tag: 'span'
 }
 
+export let schema = {
+  type: 'text',
+}
 export default Text

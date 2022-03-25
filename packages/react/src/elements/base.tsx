@@ -8,8 +8,10 @@ export const BaseElement = React.forwardRef((({tag, children, ...props}: any, re
 }))
 
 BaseElement.defaultProps = {
-  type: 'base',
   tag: 'div',
   style: {}
+}
+export let schema = {
+  type: 'base',
 }
 export default BaseElement
