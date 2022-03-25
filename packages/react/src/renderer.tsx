@@ -56,7 +56,6 @@ type ItemProps = {
 
 const Item = ({ itemInstance, elementInstances, context }: ItemProps) => {
   let [data, setData] = React.useState<any>(itemInstance.data)
-  console.log('render item',  data)
   let { id, type, childIds, css, className, ...rest } = data
   React.useEffect(() => {
     let handleUpdate = (update: any) => {
@@ -83,7 +82,6 @@ const Item = ({ itemInstance, elementInstances, context }: ItemProps) => {
     realClassName = realClassName ? `${selector} ${realClassName}` : selector
   }
   let element = elementInstances.get(type) || elementInstances.get('base')
-  console.log('render item',  element)
   if (element?.Component) {
     let Component = element.Component
     // @ts-ignore
