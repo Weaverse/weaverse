@@ -6,7 +6,7 @@ import {
   WeaverseType,
 } from '@weaverse/core'
 import * as React from 'react'
-import { WeaverseElement } from '@weaverse/core/src'
+import type { WeaverseElement } from '@weaverse/core'
 
 export const createRootContext = (configs: WeaverseType) => {
   const rootContext = new Weaverse(configs)
