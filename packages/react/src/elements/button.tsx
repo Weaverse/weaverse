@@ -1,41 +1,50 @@
 import * as React from 'react'
 
 export const Button = React.forwardRef((props: any, ref) => {
-  let [count, setCount] = React.useState(0)
-  return <button ref={ref} {...props} onClick={() => setCount(count + 1)}>Test Button {count}</button>
+  return <button ref={ref} {...props}>{props.value}</button>
 })
 
 Button.defaultProps = {
-    style: {
-        borderRadius: '9999px',
-        fontSize: '13px',
-        padding: '10px 15px'
-    }
+  value: "Click me",
+  style: {
+    borderRadius: '9999px',
+    fontSize: '13px',
+    padding: '10px 15px'
+  }
 }
 
 export let schema = {
   title: 'Button',
   type: 'button',
-  properties: {
-    label: {
-      type: 'string',
-      title: 'Label',
-      default: 'Button'
+  settings: [
+    {
+      tab: "header",
+      label: "Group 1",
+      inspectors: [
+        {
+          binding: 'data',
+          key: 'value',
+          componentType: 'textarea'
+        },
+        {
+          binding: 'style',
+          key: 'backgroundColor',
+          componentType: 'color'
+        },
+      ]
     },
-    onClick: {
-      type: 'string',
-      title: 'On Click',
-      default: '() => {}'
+    {
+      tab: "header",
+      label: "Group 2",
+      inspectors: [
+        {
+          binding: 'style',
+          key: 'color',
+          componentType: 'color'
+        },
+      ]
     },
-    style: {
-      type: 'object',
-      title: 'Style',
-      default: {
-        borderRadius: '9999px',
-        fontSize: '13px',
-        padding: '10px 15px'
-      }
-    }
-  }
+  ],
 }
+
 export default Button

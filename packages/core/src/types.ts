@@ -1,8 +1,23 @@
+export type InspectorComponentType = "textarea" | "color"
+
+export type WeaverseElementInspector = {
+  binding: 'data' | 'style',
+  key: string,
+  componentType: InspectorComponentType,
+}
+
+export type WeaverseElementSetting = {
+  tab: string
+  label: string
+  inspectors: WeaverseElementInspector[]
+}
+
 export type WeaverseElement = {
   Component: any
   schema: {
+    title: string
     type: string
-    [key: string]: any
+    settings: WeaverseElementSetting[]
   }
 }
 export type WeaverseElementMap = {
