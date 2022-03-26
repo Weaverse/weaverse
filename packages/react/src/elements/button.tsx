@@ -18,7 +18,7 @@ export const schema = {
   type: 'button',
   settings: [
     {
-      tab: "header",
+      tab: "Settings",
       label: "Group 1",
       inspectors: [
         {
@@ -34,7 +34,7 @@ export const schema = {
       ]
     },
     {
-      tab: "header",
+      tab: "Settings",
       label: "Group 2",
       inspectors: [
         {
