@@ -13,7 +13,7 @@ Button.defaultProps = {
   }
 }
 
-export let schema = {
+export const schema = {
   title: 'Button',
   type: 'button',
   settings: [
