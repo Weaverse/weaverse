@@ -1,9 +1,16 @@
-export type InspectorComponentType = "textarea" | "color"
+export type WeaverseElementMap = {
+  [key: string]: WeaverseElement
+}
 
-export type WeaverseElementInspector = {
-  binding: 'data' | 'style',
-  key: string,
-  componentType: InspectorComponentType,
+export type WeaverseElement = {
+  Component: any
+  schema: WeaverseElementSchema
+}
+
+export type WeaverseElementSchema = {
+  title: string
+  type: string
+  settings: WeaverseElementSetting[]
 }
 
 export type WeaverseElementSetting = {
@@ -12,18 +19,13 @@ export type WeaverseElementSetting = {
   inspectors: WeaverseElementInspector[]
 }
 
-export type WeaverseElement = {
-  Component: any
-  schema: {
-    title: string
-    type: string
-    settings: WeaverseElementSetting[]
-  }
-}
-export type WeaverseElementMap = {
-  [key: string]: WeaverseElement
+export type WeaverseElementInspector = {
+  binding: 'data' | 'style',
+  key: string,
+  componentType: InspectorComponentType,
 }
 
+export type InspectorComponentType = "textarea" | "color"
 declare global {
   interface Window {
     WeaverseStudioBridge: any
