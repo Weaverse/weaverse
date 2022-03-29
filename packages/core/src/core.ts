@@ -1,11 +1,11 @@
 // TODO: Implement Weaverse SDK class
 // Only core code is implemented here, avoid importing other packages,
 // the core code should be framework agnostic, no react, vue, angular, etc.
+import type { WeaverseElement } from "./types";
 import { isIframe } from "./utils";
 // using stitches core only for framework-agnostic code
 import * as stitches from "@stitches/core";
 import Stitches from "@stitches/core/types/stitches";
-import type {WeaverseElement} from './types'
 
 export interface ProjectDataItemType {
   type: string;
@@ -23,6 +23,10 @@ export interface ProjectDataType {
   rootId: string | number;
 }
 
+export type MediaBreakpoints = {
+  tablet: string;
+  mobile: string;
+};
 export type WeaverseType = {
   [key: string]: any;
   appUrl?: string;
@@ -133,15 +137,24 @@ export class Weaverse {
   studioBridge?: any;
   static WeaverseItemStore: typeof WeaverseItemStore = WeaverseItemStore;
 
+  mediaBreakPoints = {
+    // default is "all" and you don't need to specify it
+    // max-width need to subtract 0.02px to prevent bug https://getbootstrap.com/docs/5.1/layout/breakpoints/#max-width
+    tablet: "(max-width: 1023.98px)", // to set css for tablet, {'@tablet' : { // css }}
+    mobile: "(max-width: 767.98px)",
+  };
+
   /**
    * constructor
    * @param appUrl {string} Weaverse base URL that can provide by user/developer. for local development, use localhost:3000
    * @param projectKey {string} Weaverse project key to access project data via API
    * @param projectData {ProjectDataType} Weaverse project data, by default, user can provide project data via React Component.
+   * @param mediaBreakPoints {object} Pass down custom media query breakpoints or just use the default.
    */
-  constructor({ appUrl, projectKey, projectData }: WeaverseType = {}) {
+  constructor({ appUrl, projectKey, projectData, mediaBreakPoints }: WeaverseType = {}) {
     this.appUrl = appUrl || this.appUrl;
     this.projectKey = projectKey || this.projectKey;
+    this.mediaBreakPoints = mediaBreakPoints || this.mediaBreakPoints;
     projectData && (this.projectData = projectData);
     this.init();
   }
@@ -160,18 +173,17 @@ export class Weaverse {
   }
 
   init() {
-    // init the stitches instance
-    this.stitchesInstance = stitches.createStitches({
-      prefix: "we",
-      media: {
-        bp1: "(min-width: 640px)",
-        bp2: "(max-width: 768px)",
-        bp3: "(min-width: 1024px)",
-      },
-    });
+    this.initStitches();
     this.loadStudio();
   }
 
+  initStitches = () => {
+    // init the stitches instance
+    this.stitchesInstance = stitches.createStitches({
+      prefix: "we",
+      media: this.mediaBreakPoints,
+    });
+  };
   loadStudio() {
     if (isIframe) {
       window.addEventListener("message", (e) => {
@@ -258,4 +270,4 @@ export class Weaverse {
   }
 }
 
-export * from './types';
+export * from "./types";
