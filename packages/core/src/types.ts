@@ -22,10 +22,10 @@ export type WeaverseElementSetting = {
 export type WeaverseElementInspector = {
   binding: 'data' | 'style',
   key: string,
-  componentType: InspectorComponentType,
+  type: InspectorInputType,
 }
 
-export type InspectorComponentType = "textarea" | "color"
+export type InspectorInputType = "textarea" | "color" | "alignment"
 declare global {
   interface Window {
     WeaverseStudioBridge: any
