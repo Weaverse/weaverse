@@ -17,4 +17,5 @@ const elements: WeaverseElementMap  = {
     schema: Text.schema,
   },
 }
+
 export default elements
