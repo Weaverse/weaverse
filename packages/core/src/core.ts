@@ -176,13 +176,13 @@ export class Weaverse {
     if (isIframe) {
       window.addEventListener("message", (e) => {
         if (e.data?.type === "weaverse.preview.initializeEditor") {
+          this.isEditor = true;
           let initStudio = () => {
-            let StudioBridge = window.WeaverseStudioBridge;
-            this.studioBridge = new StudioBridge(this);
+            this.studioBridge = new window.WeaverseStudioBridge(this);
             this.studioBridge.subscribeMessageEvent();
             this.triggerUpdate();
           };
-          this.isEditor = true;
+
           if (!window.WeaverseStudioBridge) {
             // load studio bridge script by url: https://weaverse.io/assets/studio/studio-bridge.js
             const studioBridgeScript = document.createElement("script");
