@@ -1,7 +1,8 @@
 import * as React from 'react'
 
-export const Button = React.forwardRef((props: any, ref) => {
-  return <button ref={ref} {...props}>{props.value}</button>
+export const Button = React.forwardRef((props: any, ref: any) => {
+  const { style, ...rest } = props
+  return <button ref={ref} style={style} {...rest}>{props.value}</button>
 })
 
 Button.defaultProps = {
@@ -19,17 +20,41 @@ export const schema = {
   settings: [
     {
       tab: "Settings",
+      label: "Alignment",
+      inspectors: [
+        {
+          binding: 'style',
+          type: 'alignment'
+        },
+      ]
+    },
+    {
+      tab: "Settings",
+      label: "Overlay",
+      inspectors: [
+        {
+          binding: 'data',
+          key: 'applyOverlay',
+          label: 'Apply Overlay',
+          type: 'switch'
+        },
+      ]
+    },
+    {
+      tab: "Settings",
       label: "Group 1",
       inspectors: [
         {
           binding: 'data',
           key: 'value',
-          componentType: 'textarea'
+          type: 'textarea',
+          label: '',
+          default: ''
         },
         {
           binding: 'style',
           key: 'backgroundColor',
-          componentType: 'color'
+          type: 'color'
         },
       ]
     },
@@ -40,11 +65,12 @@ export const schema = {
         {
           binding: 'style',
           key: 'color',
-          componentType: 'color'
+          type: 'color'
         },
       ]
     },
   ],
+  toolbar: []
 }
 
 export default Button
