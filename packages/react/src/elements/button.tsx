@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 export const Button = React.forwardRef((props: any, ref: any) => {
-  const { style, ...rest } = props
+  const { style, buttonType, ...rest } = props
   return <button ref={ref} style={style} {...rest}>{props.value}</button>
 })
 
@@ -37,6 +37,16 @@ export const schema = {
           key: 'applyOverlay',
           label: 'Apply Overlay',
           type: 'switch'
+        },
+        {
+          binding: 'data',
+          key: 'buttonType',
+          label: 'Button Type',
+          type: 'select',
+          options: [
+            { value: 1, label: 'One' },
+            { value: 2, label: 'Two' },
+          ]
         },
       ]
     },

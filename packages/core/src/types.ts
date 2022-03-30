@@ -22,8 +22,14 @@ export type WeaverseElementSetting = {
 export type WeaverseElementInspector = {
   binding: 'data' | 'style',
   key: string,
-  label: string,
-  type: InspectorInputType,
+  label?: string,
+  type?: InspectorInputType,
+  options?: InspectorOption[]
+}
+
+export type InspectorOption = {
+  value: any,
+  label: string
 }
 
 export type InspectorInputType = "alignment" | "color" | "switch" | "textarea"
