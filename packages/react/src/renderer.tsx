@@ -1,4 +1,6 @@
 import Elements from './elements'
+import { shortCssObject } from './utils/css'
+import type { WeaverseElement } from '@weaverse/core'
 import {
   isBrowser,
   Weaverse,
@@ -6,15 +8,12 @@ import {
   WeaverseType,
 } from '@weaverse/core'
 import * as React from 'react'
-import type { WeaverseElement } from '@weaverse/core'
 
 export const createRootContext = (configs: WeaverseType) => {
   const rootContext = new Weaverse(configs)
   // Register the element components
   Object.keys(Elements).forEach((key) => {
-    rootContext.registerElement(
-            Elements[key]
-    )
+    rootContext.registerElement(Elements[key])
   })
   return rootContext
 }
@@ -78,7 +77,8 @@ const Item = ({ itemInstance, elementInstances, context }: ItemProps) => {
   if (css) {
     // let stitches create the style from css object and
     // then return the classname, so we can use it in the render
-    let selector = context.stitchesInstance.css(css)().className
+    let formattedCss = shortCssObject(css)
+    let selector = context.stitchesInstance.css(formattedCss)().className
     realClassName = realClassName ? `${selector} ${realClassName}` : selector
   }
   let element = elementInstances.get(type) || elementInstances.get('base')

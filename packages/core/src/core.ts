@@ -138,10 +138,10 @@ export class Weaverse {
   static WeaverseItemStore: typeof WeaverseItemStore = WeaverseItemStore;
 
   mediaBreakPoints = {
-    // default is "all" and you don't need to specify it
     // max-width need to subtract 0.02px to prevent bug https://getbootstrap.com/docs/5.1/layout/breakpoints/#max-width
-    tablet: "(max-width: 1023.98px)", // to set css for tablet, {'@tablet' : { // css }}
+    tablet: "(max-width: 1023.98px)", // to set css for tablet, {'@tablet' : { // css }},
     mobile: "(max-width: 767.98px)",
+    desktop: "all",
   };
 
   /**
@@ -161,8 +161,7 @@ export class Weaverse {
 
   /**
    * register the custom React Component to Weaverse, store it into Weaverse.elementInstances
-   * @param name {string} unique name of the custom React Component
-   * @param element {React.Component} custom React Component
+   * @param element {WeaverseElement} custom React Component
    */
   registerElement(element: WeaverseElement) {
     if (element?.schema?.type) {
