@@ -36,7 +36,7 @@ export type InspectorOption = {
   label: string;
 };
 
-export type InspectorInputType = "alignment" | "color" | "switch" | "textarea" | "select" | "grid";
+export type InspectorInputType = "alignment" | "color" | "switch" | "spacing" | "textarea" | "select" | "grid";
 declare global {
   interface Window {
     WeaverseStudioBridge: TODO;
