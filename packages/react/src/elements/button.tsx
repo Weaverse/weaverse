@@ -29,8 +29,18 @@ export const schema: WeaverseElementSchema = {
       ],
     },
     {
-      tab: 'Settings',
-      label: 'Overlay',
+      tab: "Settings",
+      label: "Spacing",
+      inspectors: [
+        {
+          binding: 'style',
+          type: 'spacing'
+        },
+      ]
+    },
+    {
+      tab: "Settings",
+      label: "Overlay",
       inspectors: [
         {
           binding: 'data',
