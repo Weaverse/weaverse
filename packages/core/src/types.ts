@@ -1,40 +1,44 @@
+export type TODO = any;
 export type WeaverseElementMap = {
-  [key: string]: WeaverseElement
-}
+  [key: string]: WeaverseElement;
+};
 
 export type WeaverseElement = {
-  Component: any
-  schema: WeaverseElementSchema
-}
+  Component: TODO;
+  schema: WeaverseElementSchema;
+};
 
 export type WeaverseElementSchema = {
-  title: string
-  type: string
-  settings: WeaverseElementSetting[]
-}
+  title: string;
+  type: string;
+  settings: WeaverseElementSetting[];
+  toolbar: TODO;
+  data?: TODO; // Default Element data
+};
 
 export type WeaverseElementSetting = {
-  tab: string
-  label: string
-  inspectors: WeaverseElementInspector[]
-}
+  tab: string;
+  label: string;
+  inspectors: WeaverseElementInspector[];
+};
 
 export type WeaverseElementInspector = {
-  binding: 'data' | 'style',
-  key: string,
-  label?: string,
-  type?: InspectorInputType,
-  options?: InspectorOption[]
-}
+  binding: "data" | "style";
+  key?: string;
+  label?: string;
+  type?: InspectorInputType;
+  options?: InspectorOption[];
+  default?: TODO;
+};
 
 export type InspectorOption = {
-  value: any,
-  label: string
-}
+  value: TODO;
+  label: string;
+};
 
-export type InspectorInputType = "alignment" | "color" | "switch" | "textarea"
+export type InspectorInputType = "alignment" | "color" | "switch" | "textarea" | "select";
 declare global {
   interface Window {
-    WeaverseStudioBridge: any
+    WeaverseStudioBridge: TODO;
   }
 }
