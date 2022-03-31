@@ -4,10 +4,15 @@ export default function Grid(props: any) {
   return <div {...props} />
 }
 
+export let schema = {
+  type: 'grid',
+  label: 'Grid',
+}
 Grid.defaultProps = {
   style: {
     display: 'grid',
-    gridTemplate: '1fr / 1fr'
+    gridTemplateRows:
+      'minmax(max-content,20%) minmax(max-content,20%) minmax(max-content,20%) minmax(max-content,20%) minmax(max-content,20%);',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
   },
-  type: 'grid'
 }

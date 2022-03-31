@@ -54,23 +54,26 @@ export type WeaverseType = {
 export class WeaverseItemStore {
   data: any = {};
   listeners: Set<any> = new Set();
-  Component: any;
+  Element: WeaverseElement;
   ref: any = {
     current: null,
   };
 
   constructor(itemData: any = {}, weaverse: Weaverse) {
-    this.data = itemData;
     let { type, id } = itemData;
-    if (type && id) {
-      this.Component = weaverse.elementInstances.get(type);
+    this.Element = weaverse.elementInstances.get(type) as WeaverseElement;
+
+    if (id) {
+      let defaultData = this.Element.schema?.data;
       weaverse.itemInstances.set(id, this);
+      this.data = { ...this.Element.Component.defaultProps, ...defaultData, ...itemData };
     }
   }
 
   setData = (data: any) => {
     this.data = Object.assign(this.data, data);
     this.triggerUpdate();
+    return this.data;
   };
 
   subscribe = (fn: any) => {
