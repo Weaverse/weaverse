@@ -2,15 +2,15 @@ import * as React from 'react'
 
 export const Button = React.forwardRef((props: any, ref: any) => {
   const { style, buttonType, ...rest } = props
-  return <button ref={ref} style={style} {...rest}>{props.value}</button>
+  return <button ref={ref} style={style} {...rest}>{props.value}. Apply Overlay: {props.applyOverlay ? 'true' : 'false'}</button>
 })
 
 Button.defaultProps = {
   value: "Click me",
+  applyOverlay: false,
   style: {
     borderRadius: '9999px',
     fontSize: '13px',
-    padding: '10px 15px'
   }
 }
 
@@ -25,6 +25,16 @@ export const schema = {
         {
           binding: 'style',
           type: 'alignment'
+        },
+      ]
+    },
+    {
+      tab: "Settings",
+      label: "Spacing",
+      inspectors: [
+        {
+          binding: 'style',
+          type: 'spacing'
         },
       ]
     },
