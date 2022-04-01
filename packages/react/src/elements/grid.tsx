@@ -12,10 +12,10 @@ export let schema: WeaverseElementSchema = {
     css: {
       '@desktop': {
         display: 'grid',
-        gridTemplateRows:
-          'minmax(max-content,20%) minmax(max-content,20%) minmax(max-content,20%) minmax(max-content,20%) minmax(max-content,20%);',
-        gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
-        minHeight: '80px',
+        gridTemplateRows: 'repeat(auto-fill, 48px)',
+        gridTemplateColumns: 'repeat(24, 1fr)',
+        gridGap: '8px',
+        minHeight: '480px',
         backgroundColor: '#c7c7c7',
       },
     },
