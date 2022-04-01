@@ -1,9 +1,10 @@
 import * as BaseElement from './base'
 import * as Button from './button'
+import * as Grid from './grid'
 import * as Text from './text'
-import {WeaverseElementMap} from '@weaverse/core'
+import { WeaverseElementMap } from '@weaverse/core'
 
-const elements: WeaverseElementMap  = {
+const elements: WeaverseElementMap = {
   Button: {
     Component: Button.default,
     schema: Button.schema,
@@ -15,6 +16,10 @@ const elements: WeaverseElementMap  = {
   Text: {
     Component: Text.default,
     schema: Text.schema,
+  },
+  Grid: {
+    Component: Grid.default,
+    schema: Grid.schema,
   },
 }
 

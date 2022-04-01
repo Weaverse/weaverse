@@ -62,11 +62,11 @@ export class WeaverseItemStore {
   constructor(itemData: any = {}, weaverse: Weaverse) {
     let { type, id } = itemData;
     this.Element = weaverse.elementInstances.get(type) as WeaverseElement;
-
-    if (id) {
-      let defaultData = this.Element.schema?.data;
+    console.log("this.Element", this.Element);
+    if (id && this.Element) {
+      let defaultData = this.Element?.schema?.data;
       weaverse.itemInstances.set(id, this);
-      this.data = { ...this.Element.Component.defaultProps, ...defaultData, ...itemData };
+      this.data = { ...this.Element?.Component?.defaultProps, ...defaultData, ...itemData };
     }
   }
 

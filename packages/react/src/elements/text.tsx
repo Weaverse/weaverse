@@ -1,27 +1,43 @@
+import { WeaverseElementSchema } from '@weaverse/core/src'
 import * as React from 'react'
 
 export const Text = React.forwardRef((props: any, ref) => {
-  let {children, value, ...rest} = props
-  return <span ref={ref} {...rest} contentEditable={true} dangerouslySetInnerHTML={{__html: value}}/>
+  let { children, value, ...rest } = props
+  return (
+    <span
+      ref={ref}
+      {...rest}
+      contentEditable={true}
+      dangerouslySetInnerHTML={{ __html: value }}
+    />
+  )
 })
 
 Text.defaultProps = {
   value: 'sample text',
-  tag: 'span'
+  tag: 'span',
 }
 
-export let schema = {
+export let schema: WeaverseElementSchema = {
   type: 'text',
-  inspectors: [{
-    binding: 'data',
-    key: 'value',
-    componentType: 'textarea'
-  },
+  title: 'Text Settings',
+  settings: [
     {
-      binding: 'style',
-      key: 'color',
-      componentType: 'color'
-    }
-  ]
+      tab: 'General',
+      label: 'Text',
+      inspectors: [
+        {
+          binding: 'data',
+          key: 'value',
+          type: 'textarea',
+        },
+        {
+          binding: 'style',
+          key: 'color',
+          type: 'color',
+        },
+      ],
+    },
+  ],
 }
 export default Text

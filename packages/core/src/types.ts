@@ -12,7 +12,7 @@ export type WeaverseElementSchema = {
   title: string;
   type: string;
   settings: WeaverseElementSetting[];
-  toolbar: TODO;
+  toolbar?: TODO;
   data?: TODO; // Default Element data
 };
 
@@ -23,10 +23,10 @@ export type WeaverseElementSetting = {
 };
 
 export type WeaverseElementInspector = {
-  binding: "data" | "style";
+  binding?: "data" | "style";
   key?: string;
   label?: string;
-  type?: InspectorInputType;
+  type: InspectorInputType;
   options?: InspectorOption[];
   default?: TODO;
 };
@@ -36,7 +36,7 @@ export type InspectorOption = {
   label: string;
 };
 
-export type InspectorInputType = "alignment" | "color" | "switch" | "spacing" | "textarea" | "select";
+export type InspectorInputType = "alignment" | "color" | "switch" | "spacing" | "textarea" | "select" | "grid";
 declare global {
   interface Window {
     WeaverseStudioBridge: TODO;
