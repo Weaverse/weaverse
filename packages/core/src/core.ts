@@ -198,9 +198,11 @@ export class Weaverse {
       prefix: "weaverse",
       media: this.mediaBreakPoints,
       theme: {
-        space: {
+        sizes: {
           rowSize: "48px",
           columns: 16,
+        },
+        space: {
           gap: "8px",
         },
       },

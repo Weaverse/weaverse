@@ -1,5 +1,6 @@
 import * as BaseElement from './base'
 import * as Button from './button'
+import * as Flex from './flex'
 import * as Grid from './grid'
 import * as Text from './text'
 import { WeaverseElementMap } from '@weaverse/core'
@@ -20,6 +21,10 @@ const elements: WeaverseElementMap = {
   Grid: {
     Component: Grid.default,
     schema: Grid.schema,
+  },
+  Flex: {
+    Component: Flex.default,
+    schema: Flex.schema,
   },
 }
 
