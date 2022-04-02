@@ -12,11 +12,15 @@ export let schema: WeaverseElementSchema = {
     css: {
       '@desktop': {
         display: 'grid',
-        gridTemplateRows: 'repeat(auto-fill, 48px)',
-        gridTemplateColumns: 'repeat(24, 1fr)',
-        gridGap: '8px',
+        gridTemplateRows: 'repeat(auto-fill, $rowSize)',
+        gridTemplateColumns: 'repeat($columns, 1fr)',
+        gridGap: '$gap',
         minHeight: '480px',
         backgroundColor: '#c7c7c7',
+      },
+      '@mobile': {
+        gridTemplateRows: '100%',
+        gridTemplateColumns: '100%',
       },
     },
   },

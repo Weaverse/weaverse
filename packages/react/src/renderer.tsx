@@ -18,30 +18,30 @@ export const createRootContext = (configs: WeaverseType) => {
   return rootContext
 }
 
-export type WeaverseRootPropsType = { context: Weaverse; defaultData: any }
+export type WeaverseRootPropsType = { context: Weaverse }
 
-export const WeaverseRoot = ({
-  context,
-  defaultData,
-}: WeaverseRootPropsType) => {
+export const WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
   let [, setData] = React.useState<any>(context.projectData)
   React.useEffect(() => {
     let handleUpdate = () => {
-      setData({ ...context.projectData })
+      setData({})
     }
     context.subscribe(handleUpdate)
-    context.updateProjectData()
+    if (context.projectData) {
+      setTimeout(handleUpdate, 110)
+    }
     return () => {
       context.unsubscribe(handleUpdate)
     }
   }, [])
-  if (!context.projectData?.items?.length && defaultData) {
-    Object.assign(context.projectData, defaultData)
-    context.initProjectItemData()
-  }
+  // if (!context.projectData?.items?.length && defaultData) {
+  //   Object.assign(context.projectData, defaultData)
+  //   context.initProjectItemData()
+  // }
   let handleProps = context?.studioBridge?.handleProps || {}
+  let themeClass = context.stitchesInstance.theme.className
   return (
-    <div className={`weaverse-root`} id={'weaverse-root'} {...handleProps}>
+    <div className={`weaverse-content-root ${themeClass}`} {...handleProps}>
       <RenderItem itemId={context.projectData.rootId || 0} context={context} />
     </div>
   )
@@ -89,7 +89,13 @@ const Item = ({ itemInstance, elementInstances, context }: ItemProps) => {
       rest.ref = itemInstance.ref
     }
     return (
-      <Component key={id} data-wv-id={id} {...rest} className={realClassName}>
+      <Component
+        key={id}
+        data-wv-type={type}
+        data-wv-id={id}
+        {...rest}
+        className={realClassName}
+      >
         {Array.isArray(childIds) &&
           childIds.map((childId) => (
             <RenderItem key={childId} itemId={childId} context={context} />
@@ -118,5 +124,6 @@ const RenderItem = ({
       />
     )
   }
+  console.warn(`Item instance ${itemId} not found`)
   return <></>
 }
