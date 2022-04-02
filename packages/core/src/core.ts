@@ -1,7 +1,7 @@
 // TODO: Implement Weaverse SDK class
 // Only core code is implemented here, avoid importing other packages,
 // the core code should be framework agnostic, no react, vue, angular, etc.
-import type { WeaverseElement } from "./types";
+import type { TODO, WeaverseElement } from "./types";
 import { isIframe } from "./utils";
 // using stitches core only for framework-agnostic code
 import * as stitches from "@stitches/core";
@@ -52,22 +52,34 @@ export type WeaverseType = {
  *   ```
  */
 export class WeaverseItemStore {
-  data: any = {};
   listeners: Set<any> = new Set();
-  Element: WeaverseElement;
   ref: any = {
     current: null,
   };
+  weaverse: Weaverse;
 
   constructor(itemData: any = {}, weaverse: Weaverse) {
     let { type, id } = itemData;
-    this.Element = weaverse.elementInstances.get(type) as WeaverseElement;
-    console.log("this.Element", this.Element);
-    if (id && this.Element) {
-      let defaultData = this.Element?.schema?.data;
+    this.weaverse = weaverse;
+
+    if (id && type) {
       weaverse.itemInstances.set(id, this);
-      this.data = { ...this.Element?.Component?.defaultProps, ...defaultData, ...itemData };
+      this.data = { ...itemData };
     }
+  }
+
+  _data: any = {};
+
+  get Element() {
+    return this.weaverse.elementInstances.get(this._data.type) as WeaverseElement;
+  }
+
+  set data(data: any) {
+    this._data = { ...this.data, ...data };
+  }
+
+  get data() {
+    return { ...this.Element?.Component?.defaultProps, ...this.Element?.schema?.data, ...this._data };
   }
 
   setData = (data: any) => {
@@ -177,38 +189,42 @@ export class Weaverse {
   init() {
     this.initStitches();
     this.loadStudio();
+    this.initProjectItemData();
   }
 
   initStitches = () => {
     // init the stitches instance
     this.stitchesInstance = stitches.createStitches({
-      prefix: "we",
+      prefix: "weaverse",
       media: this.mediaBreakPoints,
+      theme: {
+        space: {
+          rowSize: "48px",
+          columns: 16,
+          gap: "8px",
+        },
+      },
     });
   };
   loadStudio() {
     if (isIframe) {
-      window.addEventListener("message", (e) => {
-        if (e.data?.type === "weaverse.preview.initializeEditor") {
-          this.isEditor = true;
-          let initStudio = () => {
-            this.studioBridge = new window.WeaverseStudioBridge(this);
-            this.studioBridge.subscribeMessageEvent();
-            this.triggerUpdate();
-          };
+      this.isEditor = true;
+      let initStudio = () => {
+        this.studioBridge = new window.WeaverseStudioBridge(this);
+        this.studioBridge.subscribeMessageEvent();
+        this.triggerUpdate();
+      };
 
-          if (!window.WeaverseStudioBridge) {
-            // load studio bridge script by url: https://weaverse.io/assets/studio/studio-bridge.js
-            const studioBridgeScript = document.createElement("script");
-            studioBridgeScript.src = `${this.appUrl}/assets/studio/studio-bridge.js`;
-            studioBridgeScript.type = "module";
-            studioBridgeScript.onload = initStudio;
-            document.body.appendChild(studioBridgeScript);
-          } else {
-            initStudio();
-          }
-        }
-      });
+      if (!window.WeaverseStudioBridge) {
+        // load studio bridge script by url: https://weaverse.io/assets/studio/studio-bridge.js
+        const studioBridgeScript = document.createElement("script");
+        studioBridgeScript.src = `${this.appUrl}/assets/studio/studio-bridge.js`;
+        studioBridgeScript.type = "module";
+        studioBridgeScript.onload = initStudio;
+        document.body.appendChild(studioBridgeScript);
+      } else {
+        initStudio();
+      }
     }
   }
 
@@ -234,10 +250,20 @@ export class Weaverse {
   /**
    * fetch data from Weaverse API (https://weaverse.io/api/v1/projects/:projectKey)
    * @param fetch {fetch} custom fetch function, pass in custom fetch function if you want to use your own fetch function
+   * @param appUrl
+   * @param projectKey
    */
-  fetchProjectData(fetch = globalThis.fetch) {
-    return fetch(this.appUrl + `/api/public/${this.projectKey}`)
-      .then((r) => r.json())
+  static fetchProjectData({
+    fetch = globalThis.fetch,
+    appUrl,
+    projectKey,
+  }: {
+    fetch?: any;
+    appUrl?: string;
+    projectKey?: string;
+  }) {
+    return fetch(appUrl + `/api/public/${projectKey}`)
+      .then((r: TODO) => r.json())
       .catch(console.error);
   }
 
@@ -246,15 +272,15 @@ export class Weaverse {
    */
   updateProjectData() {
     if (this.projectKey) {
-      this.fetchProjectData()
-        .then((data) => {
+      Weaverse.fetchProjectData({ appUrl: this.appUrl, projectKey: this.projectKey })
+        .then((data: ProjectDataType) => {
           if (data) {
             this.projectData = data;
             this.initProjectItemData();
             this.triggerUpdate();
           }
         })
-        .catch((err) => {
+        .catch((err: TODO) => {
           console.error(err);
         });
     }

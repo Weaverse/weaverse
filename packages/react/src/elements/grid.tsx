@@ -13,7 +13,7 @@ export let schema: WeaverseElementSchema = {
       '@desktop': {
         display: 'grid',
         gridTemplateRows: 'repeat(auto-fill, 48px)',
-        gridTemplateColumns: 'repeat(24, 1fr)',
+        gridTemplateColumns: 'repeat(16, 1fr)',
         gridGap: '8px',
         minHeight: '480px',
         backgroundColor: '#c7c7c7',
