@@ -1,4 +1,4 @@
-import { WeaverseElementSchema } from '@weaverse/core/src'
+import { WeaverseElementSchema } from '@weaverse/core'
 import * as React from 'react'
 
 export const Text = React.forwardRef((props: any, ref) => {
