@@ -1,4 +1,4 @@
-import { WeaverseElementSchema } from '@weaverse/core/src'
+import { WeaverseElementSchema } from '@weaverse/core'
 import React, { forwardRef } from 'react'
 
 let Grid = forwardRef((props: any, ref) => {

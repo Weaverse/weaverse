@@ -1,4 +1,4 @@
-import { WeaverseElementSchema } from '@weaverse/core/src'
+import { WeaverseElementSchema } from '@weaverse/core'
 import * as React from 'react'
 
 export const Button = React.forwardRef((props: any, ref: any) => {
@@ -29,18 +29,18 @@ export const schema: WeaverseElementSchema = {
       ],
     },
     {
-      tab: "Settings",
-      label: "Spacing",
+      tab: 'Settings',
+      label: 'Spacing',
       inspectors: [
         {
           binding: 'style',
-          type: 'spacing'
+          type: 'spacing',
         },
-      ]
+      ],
     },
     {
-      tab: "Settings",
-      label: "Overlay",
+      tab: 'Settings',
+      label: 'Overlay',
       inspectors: [
         {
           binding: 'data',
