@@ -3,10 +3,6 @@
 pkg_file="package.json"
 packages=("core" "react" "shopify")
 
-print() {
-  echo -ne "\n$1\n"
-}
-
 upgrade() {
   pkg=${1:-version}
   ver_line=$(grep -F "\"$pkg\":" $pkg_file | sed -e 's/[^0-9.]//g')
@@ -17,7 +13,7 @@ upgrade() {
     old_ver="\"$pkg\": \"$major.$minor.$patch\""
     new_ver="\"$pkg\": \"$major.$minor.$((patch + 1))\""
     sed -i '' "s#$old_ver#$new_ver#" $pkg_file
-    print "📦📦📦 $pkg upgraded: $major.$minor.$patch --> $major.$minor.$((patch + 1))"
+    echo "📦📦📦 $pkg upgraded: $major.$minor.$patch --> $major.$minor.$((patch + 1))"
   fi
 }
 
@@ -25,19 +21,20 @@ main() {
   cd "./packages"
   for package in "${packages[@]}"; do
     cd ./$package
-    print "Upgrading @weaverse/$package..."
+    echo "Upgrading @weaverse/$package..."
     upgrade
     for package in "${packages[@]}"; do
       upgrade "@weaverse/$package"
     done
     cd ..
+    echo ''
   done
 
-  print "📦📦📦 Building packages..."
+  echo "📦📦📦 Building packages..."
   npm run build
 
   for package in "${packages[@]}"; do
-    print "🚀🚀🚀 Publishing @weaverse/$package to npm..."
+    echo "🚀🚀🚀 Publishing @weaverse/$package to npm..."
     # npm publish
   done
 }
