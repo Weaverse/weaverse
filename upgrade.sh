@@ -1,7 +1,12 @@
 #!/usr/bin/env sh
 
+packages=("core" "react" "shopify")
+
 upgrade() {
   pkg_file="package.json"
+
+  pkg=$1 || "version"
+  echo "Upgrading ${pkg}..."
 
   ver_txt=$(grep -F '"version":' $pkg_file | sed -e 's/[^0-9.]//g')
 
@@ -18,18 +23,17 @@ upgrade() {
 
   echo "📦📦📦 Publishing to npm..."
   # npm publish
-
-  echo "📦📦📦 Updating dependencies..."
-  # npm install
 }
 
 main() {
   cd "./packages"
-  packages=("core" "react" "shopify")
   for package in "${packages[@]}"; do
     cd ./$package
     echo -ne "\nUpgrading @weaverse/$package...\n"
     upgrade
+    for package in "${packages[@]}"; do
+      upgrade "@weaverse/$package"
+    done
     cd ..
   done
 }
