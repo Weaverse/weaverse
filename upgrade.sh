@@ -26,9 +26,15 @@ main() {
     for package in "${packages[@]}"; do
       upgrade "@weaverse/$package"
     done
+    cd ..
+  done
+
+  echo "Building packages..."
+  npm run build
+
+  for package in "${packages[@]}"; do
     echo "🚀🚀🚀 Publishing to npm..."
     # npm publish
-    cd ..
   done
 }
 
