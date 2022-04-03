@@ -13,7 +13,7 @@ export let schema: WeaverseElementSchema = {
       '@desktop': {
         display: 'flex',
         backgroundColor: 'rgba(248,203,203,0.38)',
-        gridArea: '1 / 1 / 3 / 3',
+        gridArea: '1 / 1 / 3 / 6',
       },
     },
   },
