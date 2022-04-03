@@ -26,6 +26,7 @@ export type WeaverseElementInspector = {
   binding?: "data" | "style";
   key?: string;
   label?: string;
+  placeholder?: string;
   type: InspectorInputType;
   options?: InspectorOption[];
   default?: TODO;
@@ -36,7 +37,7 @@ export type InspectorOption = {
   label: string;
 };
 
-export type InspectorInputType = "alignment" | "color" | "switch" | "spacing" | "textarea" | "select" | "grid" | "flex";
+export type InspectorInputType = "alignment" | "color" | "switch" | "spacing" | "textarea" | "input" | "select" | "grid" | "flex";
 declare global {
   interface Window {
     WeaverseStudioBridge: TODO;
