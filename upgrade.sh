@@ -16,11 +16,11 @@ upgrade() {
 
   echo "📦📦📦 Version upgraded: $major.$minor.$patch --> $major.$minor.$((patch + 1))"
 
-  echo "📦📦📦 Updating dependencies..."
-  # npm install
-
   echo "📦📦📦 Publishing to npm..."
   # npm publish
+
+  echo "📦📦📦 Updating dependencies..."
+  # npm install
 }
 
 main() {
