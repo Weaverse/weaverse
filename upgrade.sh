@@ -12,7 +12,7 @@ upgrade() {
     patch=$(cut -d "." -f3 <<<$ver_line)
     old_ver="\"$pkg\": \"$major.$minor.$patch\""
     new_ver="\"$pkg\": \"$major.$minor.$((patch + 1))\""
-    sed -i '' "s/$old_ver/$new_ver/" $pkg_file
+    sed -i '' "s#$old_ver#$new_ver#" $pkg_file
     echo "📦📦📦 $pkg upgraded: $major.$minor.$patch --> $major.$minor.$((patch + 1))"
   fi
 }
@@ -30,7 +30,7 @@ main() {
   done
 
   echo "Building packages..."
-  # npm run build
+  npm run build
 
   for package in "${packages[@]}"; do
     echo "🚀🚀🚀 Publishing to npm..."
