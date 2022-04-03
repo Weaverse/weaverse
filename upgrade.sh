@@ -30,12 +30,12 @@ main() {
     echo ''
   done
 
-  echo "📦📦📦 Building packages..."
+  echo "💿💿💿 Building packages..."
   npm run build
 
   for package in "${packages[@]}"; do
     echo "🚀🚀🚀 Publishing @weaverse/$package to npm..."
-    # npm publish
+    npm publish
   done
 }
 
