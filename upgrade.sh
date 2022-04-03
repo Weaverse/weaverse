@@ -28,7 +28,7 @@ main() {
   packages=("core" "react" "shopify")
   for package in "${packages[@]}"; do
     cd ./$package
-    echo -ne "\nUpgrading @weaverse/$package..."
+    echo -ne "\nUpgrading @weaverse/$package...\n"
     upgrade
     cd ..
   done
