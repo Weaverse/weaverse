@@ -52,7 +52,7 @@ main() {
   if [[ $1 == true ]]; then
     for package in "${packages[@]}"; do
       echo "🚀🚀🚀 Publishing @weaverse/$package to npm..."
-      # npm publish
+      npm publish
     done
   fi
 }
