@@ -17,6 +17,22 @@ upgrade() {
   fi
 }
 
+should_publish() {
+  PUBLISH_TO_NPM=false
+  for i in "$@"; do
+    case $i in
+    -p=* | --publish=*)
+      PUBLISH_TO_NPM="${i#*=}"
+      ;;
+    *)
+      echo "Unknown flag: $i"
+      exit 1
+      ;;
+    esac
+  done
+  echo $PUBLISH_TO_NPM
+}
+
 main() {
   cd "./packages"
   for package in "${packages[@]}"; do
@@ -33,10 +49,12 @@ main() {
   echo "💿💿💿 Building packages..."
   npm run build
 
-  for package in "${packages[@]}"; do
-    echo "🚀🚀🚀 Publishing @weaverse/$package to npm..."
-    npm publish
-  done
+  if [[ $1 == true ]]; then
+    for package in "${packages[@]}"; do
+      echo "🚀🚀🚀 Publishing @weaverse/$package to npm..."
+      # npm publish
+    done
+  fi
 }
 
-main
+main $(should_publish $@)
