@@ -55,6 +55,7 @@ main() {
       echo ''
       echo "🚀🚀🚀 Publishing @weaverse/$package to npm..."
       npm publish
+      cd ..
     done
   fi
 }
