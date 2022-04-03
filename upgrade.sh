@@ -12,7 +12,7 @@ upgrade() {
   old_ver="\"version\": \"$major.$minor.$patch\""
   new_ver="\"version\": \"$major.$minor.$((patch + 1))\""
 
-  sed -i '.json' "s/$old_ver/$new_ver/" $pkg_file
+  sed -i '' "s/$old_ver/$new_ver/" $pkg_file
 
   echo "📦📦📦 Version upgraded: $major.$minor.$patch --> $major.$minor.$((patch + 1))"
 
