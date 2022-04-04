@@ -30,6 +30,26 @@ export const schema: WeaverseElementSchema = {
     },
     {
       tab: 'Settings',
+      label: 'Visibility',
+      inspectors: [
+        {
+          binding: 'style',
+          type: 'visibility',
+        },
+      ],
+    },
+    {
+      tab: 'Settings',
+      label: 'Dimensions',
+      inspectors: [
+        {
+          binding: 'style',
+          type: 'dimensions',
+        },
+      ],
+    },
+    {
+      tab: 'Settings',
       label: 'Spacing',
       inspectors: [
         {
