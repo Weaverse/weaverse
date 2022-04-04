@@ -1,13 +1,13 @@
 import { WeaverseElementSchema } from '@weaverse/core'
 import React, { forwardRef } from 'react'
 
-let Grid = forwardRef((props: any, ref) => {
+let Layout = forwardRef((props: any, ref) => {
   return <div ref={ref} {...props} />
 })
 
 export let schema: WeaverseElementSchema = {
-  title: 'Grid',
-  type: 'grid',
+  title: 'Layout',
+  type: 'layout',
   data: {
     css: {
       '@desktop': {
@@ -19,22 +19,22 @@ export let schema: WeaverseElementSchema = {
         backgroundColor: '#c7c7c7',
       },
       '@mobile': {
-        gridTemplateRows: '100%',
-        gridTemplateColumns: '100%',
+        display: 'flex',
       },
     },
   },
   settings: [
     {
-      tab: 'Layout',
-      label: 'Grid',
+      tab: 'Settings',
+      label: 'Spacing',
       inspectors: [
         {
-          type: 'grid',
+          binding: 'style',
+          type: 'spacing',
         },
       ],
     },
   ],
 }
 
-export default Grid
+export default Layout

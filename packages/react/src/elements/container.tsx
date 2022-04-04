@@ -1,33 +1,36 @@
 import { WeaverseElementSchema } from '@weaverse/core'
 import React, { forwardRef } from 'react'
 
-let Flex = forwardRef((props: any, ref) => {
+let Container = forwardRef((props: any, ref) => {
   return <div ref={ref} {...props} />
 })
 
 export let schema: WeaverseElementSchema = {
-  title: 'Flex',
-  type: 'flex',
+  title: 'Container',
+  type: 'container',
   data: {
     css: {
       '@desktop': {
         display: 'flex',
         backgroundColor: 'rgba(248,203,203,0.38)',
-        gridArea: '1 / 1 / 3 / 3',
+        gridArea: '1 / 1 / 3 / 6',
+        minHeight: '96px',
       },
+      '@mobile': {},
     },
   },
   settings: [
     {
-      tab: 'Layout',
-      label: 'Flex',
+      tab: 'Settings',
+      label: 'Alignment',
       inspectors: [
         {
-          type: 'flex',
+          binding: 'style',
+          type: 'alignment',
         },
       ],
     },
   ],
 }
 
-export default Flex
+export default Container
