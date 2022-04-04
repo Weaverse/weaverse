@@ -68,8 +68,15 @@ export const schema: WeaverseElementSchema = {
           binding: 'data',
           key: 'value',
           type: 'textarea',
-          label: '',
-          default: '',
+          placeholder: 'Button text',
+          label: 'Button text 1',
+        },
+        {
+          binding: 'data',
+          key: 'value',
+          type: 'input',
+          placeholder: 'Button text',
+          label: 'Button text 2',
         },
         {
           binding: 'style',
