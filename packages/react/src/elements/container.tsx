@@ -16,7 +16,9 @@ export let schema: WeaverseElementSchema = {
         gridArea: '1 / 1 / 3 / 6',
         minHeight: '96px',
       },
-      '@mobile': {},
+      '@mobile': {
+        display: 'flex',
+      },
     },
   },
   settings: [
@@ -27,6 +29,16 @@ export let schema: WeaverseElementSchema = {
         {
           binding: 'style',
           type: 'alignment',
+        },
+      ],
+    },
+    {
+      tab: 'Settings',
+      label: 'Visibility',
+      inspectors: [
+        {
+          binding: 'style',
+          type: 'visibility',
         },
       ],
     },
