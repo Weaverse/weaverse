@@ -125,6 +125,9 @@ export const schema: WeaverseElementSchema = {
         fontSize: '13px',
         padding: '10px 15px',
       },
+      // '@mobile': {
+      //   display: 'block'
+      // }
     },
   },
 }
