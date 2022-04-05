@@ -11,7 +11,7 @@ export let schema: WeaverseElementSchema = {
   data: {
     css: {
       '@desktop': {
-        display: 'grid',
+        display: 'grid !important',
         gridTemplateRows: 'repeat(auto-fill, $rowSize)',
         gridTemplateColumns: 'repeat($columns, 1fr)',
         gridGap: '$gap',
@@ -19,7 +19,7 @@ export let schema: WeaverseElementSchema = {
         backgroundColor: '#c7c7c7',
       },
       '@mobile': {
-        display: 'flex',
+        display: 'flex !important',
       },
     },
   },
