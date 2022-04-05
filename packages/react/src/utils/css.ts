@@ -2,7 +2,7 @@
 export let shortCssObject = (css: { [key: string]: any }) => {
   return {
     '@desktop': css[`@desktop`],
-    '@tablet': css[`@tablet`],
+    // '@tablet': css[`@tablet`],
     '@mobile': css[`@mobile`],
   }
 }
