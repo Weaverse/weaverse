@@ -153,7 +153,7 @@ export class Weaverse {
   static WeaverseItemStore: typeof WeaverseItemStore = WeaverseItemStore;
 
   mediaBreakPoints = {
-    desktop: "all", // desktop first -> display: none;
+    desktop: "all",
     // max-width need to subtract 0.02px to prevent bug https://getbootstrap.com/docs/5.1/layout/breakpoints/#max-width
     // tablet: "(max-width: 1023.98px)", // to set css for tablet, {'@tablet' : { // css }},
     mobile: "(max-width: 767.98px)",
