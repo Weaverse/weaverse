@@ -1,7 +1,7 @@
 import * as BaseElement from './base'
 import * as Button from './button'
-import * as Flex from './flex'
-import * as Grid from './grid'
+import * as Container from './container'
+import * as Layout from './layout'
 import * as Text from './text'
 import { WeaverseElementMap } from '@weaverse/core'
 
@@ -18,13 +18,13 @@ const elements: WeaverseElementMap = {
     Component: Text.default,
     schema: Text.schema,
   },
-  Grid: {
-    Component: Grid.default,
-    schema: Grid.schema,
+  Layout: {
+    Component: Layout.default,
+    schema: Layout.schema,
   },
-  Flex: {
-    Component: Flex.default,
-    schema: Flex.schema,
+  Container: {
+    Component: Container.default,
+    schema: Container.schema,
   },
 }
 
