@@ -48,6 +48,7 @@ export type InspectorInputType = "alignment"
   | "textarea"
   | "select"
   | "visibility"
+  | "border"
 declare global {
   interface Window {
     WeaverseStudioBridge: TODO;
