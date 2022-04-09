@@ -30,6 +30,10 @@ export let schema: WeaverseElementSchema = {
           binding: 'style',
           type: 'alignment',
         },
+        {
+          binding: 'style',
+          type: 'border',
+        },
       ],
     },
     {
