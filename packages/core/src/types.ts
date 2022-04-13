@@ -37,7 +37,8 @@ export type InspectorOption = {
   label: string;
 };
 
-export type InspectorInputType = "alignment"
+export type InspectorInputType =
+  | "alignment"
   | "color"
   | "dimensions"
   | "flex"
@@ -49,6 +50,7 @@ export type InspectorInputType = "alignment"
   | "select"
   | "visibility"
   | "border"
+  | "image";
 declare global {
   interface Window {
     WeaverseStudioBridge: TODO;
