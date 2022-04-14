@@ -32,6 +32,7 @@ export type WeaverseType = {
   appUrl?: string;
   projectKey?: string;
   projectData?: ProjectDataType;
+  isDesignMode?: boolean;
 };
 
 /**
@@ -138,12 +139,12 @@ export class Weaverse {
    */
   listeners: Set<any> = new Set();
   /**
-   * check whether the sdk is inEditor or not
-   * if isEditor is true, it means the sdk is inEditor mode, render the editor UI
+   * check whether the sdk is isDesignMode or not
+   * if isDesignMode is true, it means the sdk is isDesignMode mode, render the editor UI
    * else render the preview UI, plain HTML + CSS + React hydrate
    * @type {boolean}
    */
-  isEditor = false;
+  isDesignMode: boolean = false;
   /**
    * stitches instance for handling CSS stylesheet, media, theme for Weaverse project
    */
@@ -166,10 +167,12 @@ export class Weaverse {
    * @param projectData {ProjectDataType} Weaverse project data, by default, user can provide project data via React Component.
    * @param mediaBreakPoints {object} Pass down custom media query breakpoints or just use the default.
    */
-  constructor({ appUrl, projectKey, projectData, mediaBreakPoints }: WeaverseType = {}) {
+  constructor({ appUrl, projectKey, projectData, mediaBreakPoints, isDesignMode }: WeaverseType = {}) {
     this.appUrl = appUrl || this.appUrl;
     this.projectKey = projectKey || this.projectKey;
     this.mediaBreakPoints = mediaBreakPoints || this.mediaBreakPoints;
+    this.isDesignMode = isDesignMode || this.isDesignMode;
+    console.log("set design mode", this.isDesignMode);
     projectData && (this.projectData = projectData);
     this.init();
   }
@@ -209,8 +212,8 @@ export class Weaverse {
     });
   };
   loadStudio() {
-    if (isIframe) {
-      this.isEditor = true;
+    console.log("this.isDesignMode", this.isDesignMode);
+    if (this.isDesignMode && isIframe) {
       let initStudio = () => {
         this.studioBridge = new window.WeaverseStudioBridge(this);
         this.studioBridge.subscribeMessageEvent();
@@ -240,7 +243,7 @@ export class Weaverse {
 
   triggerUpdate() {
     this.listeners.forEach((fn) => fn());
-    if (this.isEditor && this.studioBridge) {
+    if (this.isDesignMode && this.studioBridge) {
       this.studioBridge.sendMessageToEditor("weaverse.editor.updateProject", {
         projectData: this.projectData,
         projectKey: this.projectKey,

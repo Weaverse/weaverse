@@ -2,9 +2,9 @@ import { WeaverseElementSchema } from '@weaverse/core'
 import * as React from 'react'
 
 export const Button = React.forwardRef((props: any, ref: any) => {
-  const { style, buttonType, css, ...rest } = props
+  const { buttonType, css, ...rest } = props
   return (
-    <button ref={ref} style={style} {...rest}>
+    <button ref={ref} {...rest}>
       {props.value}
     </button>
   )
