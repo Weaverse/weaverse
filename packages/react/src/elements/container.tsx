@@ -15,9 +15,10 @@ export let schema: WeaverseElementSchema = {
         backgroundColor: 'rgba(248,203,203,0.38)',
         gridArea: '1 / 1 / 3 / 6',
         minHeight: '96px',
+        overflow: 'hidden',
       },
       '@mobile': {
-        display: 'flex',
+        width: '100%',
       },
     },
   },
