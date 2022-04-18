@@ -172,7 +172,6 @@ export class Weaverse {
     this.projectKey = projectKey || this.projectKey;
     this.mediaBreakPoints = mediaBreakPoints || this.mediaBreakPoints;
     this.isDesignMode = isDesignMode || this.isDesignMode;
-    console.log("set design mode", this.isDesignMode);
     projectData && (this.projectData = projectData);
     this.init();
   }
@@ -212,7 +211,6 @@ export class Weaverse {
     });
   };
   loadStudio() {
-    console.log("this.isDesignMode", this.isDesignMode);
     if (this.isDesignMode && isIframe) {
       let initStudio = () => {
         this.studioBridge = new window.WeaverseStudioBridge(this);

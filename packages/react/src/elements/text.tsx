@@ -36,9 +36,12 @@ export let schema: WeaverseElementSchema = {
       '@desktop': {
         width: '100%',
         height: 'fit-content',
-        '&:focus': {
-          outline: 'none',
-        },
+        padding: 0,
+        margin: 0,
+        outline: 'none',
+        wordWrap: 'break-word',
+        overflowWrap: 'break-word',
+        whitespace: 'break-spaces',
       },
     },
   },
