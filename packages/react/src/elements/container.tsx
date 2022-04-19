@@ -18,11 +18,9 @@ export let schema: WeaverseElementSchema = {
         justifyContent: 'center',
         textAlign: 'left',
         gridArea: '1 / 1 / 3 / 6',
-        minHeight: '96px',
         overflow: 'hidden',
-      },
-      '@mobile': {
         width: '100%',
+        height: 'fit-content',
       },
     },
   },
