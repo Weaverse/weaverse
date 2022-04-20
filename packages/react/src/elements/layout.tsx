@@ -2,7 +2,13 @@ import { WeaverseElementSchema } from '@weaverse/core'
 import React, { forwardRef } from 'react'
 
 let Layout = forwardRef((props: any, ref) => {
-  return <div ref={ref} {...props} />
+  return (
+    <div
+      ref={ref}
+      {...props}
+      children={props.children || 'Layout Placeholder'}
+    />
+  )
 })
 
 export let schema: WeaverseElementSchema = {
@@ -21,6 +27,7 @@ export let schema: WeaverseElementSchema = {
       },
       '@mobile': {
         display: 'flex !important',
+        flexDirection: 'column',
       },
     },
   },
