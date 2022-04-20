@@ -214,7 +214,6 @@ export class Weaverse {
     if (this.isDesignMode && isIframe) {
       let initStudio = () => {
         this.studioBridge = new window.WeaverseStudioBridge(this);
-        this.studioBridge.subscribeMessageEvent();
         this.triggerUpdate();
       };
 

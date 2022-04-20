@@ -39,7 +39,7 @@ export let schema: WeaverseElementSchema = {
         padding: 0,
         margin: 0,
         outline: 'none',
-        wordWrap: 'break-word',
+        wordBreak: 'break-word',
         overflowWrap: 'break-word',
         whitespace: 'break-spaces',
       },
