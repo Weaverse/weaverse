@@ -20,6 +20,7 @@ export let schema: WeaverseElementSchema = {
         display: 'grid !important',
         gridTemplateRows: 'repeat(auto-fill, $rowSize)',
         gridTemplateColumns: 'repeat($columns, 1fr)',
+        gridAutoRows: '$sizes$rowSize',
         gridGap: '$gap',
         minHeight: '104px',
         width: '100%',
