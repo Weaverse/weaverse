@@ -3,19 +3,11 @@ import * as React from 'react'
 
 export const Text = React.forwardRef((props: any, ref) => {
   let { children, value, ...rest } = props
-  return (
-    <span
-      ref={ref}
-      {...rest}
-      contentEditable={true}
-      dangerouslySetInnerHTML={{ __html: value }}
-    />
-  )
+  return <div ref={ref} {...rest} dangerouslySetInnerHTML={{ __html: value }} />
 })
 
 Text.defaultProps = {
   value: 'sample text',
-  tag: 'span',
 }
 
 export let schema: WeaverseElementSchema = {
@@ -39,5 +31,19 @@ export let schema: WeaverseElementSchema = {
       ],
     },
   ],
+  data: {
+    css: {
+      '@desktop': {
+        width: '100%',
+        height: 'fit-content',
+        padding: 0,
+        margin: 0,
+        outline: 'none',
+        wordBreak: 'break-word',
+        overflowWrap: 'break-word',
+        whitespace: 'break-spaces',
+      },
+    },
+  },
 }
 export default Text

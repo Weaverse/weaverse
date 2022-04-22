@@ -13,11 +13,14 @@ export let schema: WeaverseElementSchema = {
       '@desktop': {
         display: 'flex',
         backgroundColor: 'rgba(248,203,203,0.38)',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        textAlign: 'left',
         gridArea: '1 / 1 / 3 / 6',
-        minHeight: '96px',
-      },
-      '@mobile': {
-        display: 'flex',
+        overflow: 'hidden',
+        width: '100%',
+        height: 'fit-content',
       },
     },
   },
