@@ -33,16 +33,6 @@ export let schema: WeaverseElementSchema = {
     },
   },
   settings: [
-    {
-      tab: 'Settings',
-      label: 'Spacing',
-      inspectors: [
-        {
-          binding: 'style',
-          type: 'spacing',
-        },
-      ],
-    },
   ],
 }
 

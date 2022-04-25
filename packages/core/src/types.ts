@@ -9,48 +9,26 @@ export type WeaverseElement = {
 };
 
 export type WeaverseElementSchema = {
-  title: string;
+  title?: string;
   type: string;
-  settings: WeaverseElementSetting[];
+  settings?: WeaverseElementSettingInput[];
+  styles?: WeaverseElementStyleInput[];
   toolbar?: TODO;
   data?: TODO; // Default Element data
 };
-
-export type WeaverseElementSetting = {
-  tab: string;
-  label: string;
-  inspectors: WeaverseElementInspector[];
+export type WeaverseElementStyleInput = {
+  name?: string;
+  type: 'alignment' | 'color' | 'dimensions' | 'flex' | 'grid' | 'input' | 'switch' | 'spacing' | 'textarea' | 'visibility' | 'border' | 'background' | 'typography' | 'shadow' | 'position' | 'overflow' | 'display' | 'other';
+  defaultValue?: string;
 };
-
-export type WeaverseElementInspector = {
-  binding?: "data" | "style";
-  key?: string;
-  label?: string;
-  placeholder?: string;
-  type: InspectorInputType;
-  options?: InspectorOption[];
-  default?: TODO;
+export type WeaverseElementSettingInput = {
+  type: 'input' | 'textarea' | 'select' | 'checkbox' | 'radio' | 'color' | 'range' | 'button' | 'image';
+  name: string;
+  defaultValue?: string;
+  helpText?: string;
+  options?: TODO[];
+  condition?: TODO;
 };
-
-export type InspectorOption = {
-  value: TODO;
-  label: string;
-};
-
-export type InspectorInputType =
-  | "alignment"
-  | "color"
-  | "dimensions"
-  | "flex"
-  | "grid"
-  | "input"
-  | "switch"
-  | "spacing"
-  | "textarea"
-  | "select"
-  | "visibility"
-  | "border"
-  | "image";
 declare global {
   interface Window {
     WeaverseStudioBridge: TODO;

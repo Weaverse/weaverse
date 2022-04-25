@@ -25,26 +25,7 @@ export let schema: WeaverseElementSchema = {
     },
   },
   settings: [
-    {
-      tab: 'Settings',
-      label: 'Alignment',
-      inspectors: [
-        {
-          binding: 'style',
-          type: 'alignment',
-        },
-      ],
-    },
-    {
-      tab: 'Settings',
-      label: 'Visibility',
-      inspectors: [
-        {
-          binding: 'style',
-          type: 'visibility',
-        },
-      ],
-    },
+
   ],
 }
 
