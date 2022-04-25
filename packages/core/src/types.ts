@@ -11,23 +11,20 @@ export type WeaverseElement = {
 export type WeaverseElementSchema = {
   title?: string;
   type: string;
-  settings?: WeaverseElementSettingInput[];
-  styles?: WeaverseElementStyleInput[];
+  settings?: WeaverseElementInput[];
+  styles?: WeaverseElementInput[];
   toolbar?: TODO;
   data?: TODO; // Default Element data
 };
-export type WeaverseElementStyleInput = {
-  name?: string;
-  type: 'alignment' | 'color' | 'dimensions' | 'flex' | 'grid' | 'input' | 'switch' | 'spacing' | 'textarea' | 'visibility' | 'border' | 'background' | 'typography' | 'shadow' | 'position' | 'overflow' | 'display' | 'other';
+export type WeaverseElementInput = {
+  label?: string;
+  type:  'select' | 'checkbox' | 'radio'  | 'range' | 'button' | 'image' | 'file' | 'hidden'  | 'alignment' | 'color' | 'dimensions' | 'flex' | 'grid' | 'input' | 'switch' | 'spacing' | 'textarea' | 'visibility' | 'border' | 'background' | 'typography' | 'shadow' | 'position' | 'overflow' | 'display' | 'other'
+  name?: string; // binding property name
   defaultValue?: string;
-};
-export type WeaverseElementSettingInput = {
-  type: 'input' | 'textarea' | 'select' | 'checkbox' | 'radio' | 'color' | 'range' | 'button' | 'image';
-  name: string;
-  defaultValue?: string;
-  helpText?: string;
-  options?: TODO[];
-  condition?: TODO;
+  helpText?: string; // display help text
+  options?: TODO[]; // select options
+  conditions?: TODO[]; // only display if conditions are met, eg. {  name: 'productDataLoaded', value: true }
+  [key: string]: TODO; // other properties, implement later
 };
 declare global {
   interface Window {

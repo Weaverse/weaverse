@@ -19,19 +19,19 @@ export const schema: WeaverseElementSchema = {
   type: 'button',
   styles: [
     {
-      type: 'alignment'
-    },
-    {
-      type: 'visibility'
-    },
-    {
       type: 'dimensions'
     },
     {
-      type: 'spacing'
+      type: 'alignment'
+    },
+    {
+      type: 'border'
     },
     {
       type: 'background'
+    },
+    {
+      type: 'spacing'
     },
   ],
   settings: [
