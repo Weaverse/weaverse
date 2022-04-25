@@ -14,22 +14,7 @@ export let schema: WeaverseElementSchema = {
   type: 'text',
   title: 'Text Settings',
   settings: [
-    {
-      tab: 'General',
-      label: 'Text',
-      inspectors: [
-        {
-          binding: 'data',
-          key: 'value',
-          type: 'textarea',
-        },
-        {
-          binding: 'style',
-          key: 'color',
-          type: 'color',
-        },
-      ],
-    },
+
   ],
   data: {
     css: {

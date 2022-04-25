@@ -13,11 +13,7 @@ Image.defaultProps = {
 
 export let schema: WeaverseElementSchema = {
   settings: [
-    {
-      tab: 'General',
-      label: 'Image URL',
-      inspectors: [{ type: 'image' }],
-    },
+
   ],
   type: 'image',
   title: 'Image',

@@ -23,7 +23,8 @@ export let schema: WeaverseElementSchema = {
         // gridAutoRows: '$sizes$rowSize',
         gridGap: '$gap',
         minHeight: '104px',
-        width: '$grid-width',
+        width: '$width',
+        maxWidth: '$max-width',
         margin: '0 auto',
       },
       '@mobile': {
@@ -33,16 +34,6 @@ export let schema: WeaverseElementSchema = {
     },
   },
   settings: [
-    {
-      tab: 'Settings',
-      label: 'Spacing',
-      inspectors: [
-        {
-          binding: 'style',
-          type: 'spacing',
-        },
-      ],
-    },
   ],
 }
 
