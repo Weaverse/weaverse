@@ -192,6 +192,7 @@ export class Weaverse {
     this.initStitches();
     this.loadStudio();
     this.initProjectItemData();
+    this.updateProjectData()
   }
 
   initStitches = () => {
@@ -240,13 +241,6 @@ export class Weaverse {
 
   triggerUpdate() {
     this.listeners.forEach((fn) => fn());
-    if (this.isDesignMode && this.studioBridge) {
-      this.studioBridge.sendMessageToEditor("weaverse.editor.updateProject", {
-        projectData: this.projectData,
-        projectKey: this.projectKey,
-        appUrl: this.appUrl,
-      });
-    }
   }
 
   /**
@@ -273,7 +267,7 @@ export class Weaverse {
    * fetch and update the project data, then trigger update to re-render the WeaverseRoot
    */
   updateProjectData() {
-    if (this.projectKey) {
+    if (this.projectKey && !this.projectData.rootId) {
       Weaverse.fetchProjectData({ appUrl: this.appUrl, projectKey: this.projectKey })
         .then((data: ProjectDataType) => {
           if (data) {
