@@ -38,10 +38,10 @@ export const WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
   //   Object.assign(context.projectData, defaultData)
   //   context.initProjectItemData()
   // }
-  let handleProps = context?.studioBridge?.handleProps || {}
+  let eventHandlers = context?.studioBridge?.eventHandlers || {}
   let themeClass = context.stitchesInstance.theme.className
   return (
-    <div className={`weaverse-content-root ${themeClass}`} {...handleProps}>
+    <div className={`weaverse-content-root ${themeClass}`} {...eventHandlers}>
       <RenderItem itemId={context.projectData.rootId || 0} context={context} />
     </div>
   )
