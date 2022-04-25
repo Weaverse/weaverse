@@ -201,8 +201,10 @@ export class Weaverse {
       media: this.mediaBreakPoints,
       theme: {
         sizes: {
-          rowSize: "48px",
-          columns: 16,
+          "width": "100%",
+          "column-count": "16",
+          "row-count": "12",
+          "row-size": "48px",
         },
         space: {
           gap: "8px",
