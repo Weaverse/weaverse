@@ -6,7 +6,7 @@ let Layout = forwardRef((props: any, ref) => {
     <div
       ref={ref}
       {...props}
-      children={props.children || 'Layout Placeholder'}
+      children={props.children}
     />
   )
 })

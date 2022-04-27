@@ -15,7 +15,7 @@ export let schema: WeaverseElementSchema = {
         backgroundColor: 'rgba(248,203,203,0.38)',
         flexDirection: 'column',
         alignItems: 'flex-start',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         textAlign: 'left',
         gridArea: '1 / 1 / 3 / 6',
         overflow: 'hidden',
