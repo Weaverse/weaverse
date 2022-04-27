@@ -6,7 +6,7 @@ let Layout = forwardRef((props: any, ref) => {
     <div
       ref={ref}
       {...props}
-      children={props.children || 'Layout Placeholder'}
+      children={props.children}
     />
   )
 })
@@ -18,12 +18,13 @@ export let schema: WeaverseElementSchema = {
     css: {
       '@desktop': {
         display: 'grid !important',
-        gridTemplateRows: 'repeat(auto-fill, $rowSize)',
-        gridTemplateColumns: 'repeat($columns, 1fr)',
-        gridAutoRows: '$sizes$rowSize',
+        gridTemplateRows: 'repeat($row-count, $row-size)',
+        gridTemplateColumns: 'repeat($column-count, 1fr)',
+        // gridAutoRows: '$sizes$rowSize',
         gridGap: '$gap',
         minHeight: '104px',
-        width: '100%',
+        width: '$width',
+        maxWidth: '$max-width',
         margin: '0 auto',
       },
       '@mobile': {
