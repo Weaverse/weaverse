@@ -6,6 +6,7 @@ import { isIframe } from "./utils";
 // using stitches core only for framework-agnostic code
 import * as stitches from "@stitches/core";
 import Stitches from "@stitches/core/types/stitches";
+import { RefObject } from "react";
 
 export interface ProjectDataItemType {
   type: string;
@@ -54,7 +55,7 @@ export type WeaverseType = {
  */
 export class WeaverseItemStore {
   listeners: Set<any> = new Set();
-  ref: any = {
+  ref: RefObject<HTMLElement> = {
     current: null,
   };
   weaverse: Weaverse;
