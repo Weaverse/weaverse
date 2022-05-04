@@ -36,7 +36,14 @@ export const schema: WeaverseElementSchema = {
   ],
   settings: [
   ],
-  toolbar: [],
+  toolbar: [
+    {
+      type: 'delete'
+    },
+    {
+      type: 'duplicate'
+    },
+  ],
   data: {
     css: {
       '@desktop': {
