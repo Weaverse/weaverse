@@ -8,6 +8,12 @@ export type WeaverseElement = {
   schema: WeaverseElementSchema;
 };
 
+export type WeaverseElementCatalog = {
+  name: string
+  icon?: string
+  group?: 'essential' | 'composition' | 'other'
+}
+
 export type WeaverseElementSchema = {
   title?: string;
   type: string;
@@ -15,6 +21,7 @@ export type WeaverseElementSchema = {
   styles?: WeaverseElementInput[];
   toolbar?: TODO;
   data?: TODO; // Default Element data
+  catalog?: WeaverseElementCatalog; // Element catalog
 };
 export type WeaverseElementInput = {
   label?: string;

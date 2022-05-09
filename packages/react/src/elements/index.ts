@@ -3,6 +3,7 @@ import * as Button from './button'
 import * as Container from './container'
 import * as Layout from './layout'
 import * as Text from './text'
+import * as Image from './image'
 import { WeaverseElementMap } from '@weaverse/core'
 
 const elements: WeaverseElementMap = {
@@ -25,6 +26,10 @@ const elements: WeaverseElementMap = {
   Container: {
     Component: Container.default,
     schema: Container.schema,
+  },
+  Image: {
+    Component: Image.default,
+    schema: Image.schema,
   },
 }
 
