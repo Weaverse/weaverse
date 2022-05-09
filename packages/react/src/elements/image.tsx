@@ -1,4 +1,4 @@
-import { WeaverseElementSchema } from 'dist'
+import { WeaverseElementSchema } from '@weaverse/core'
 import React from 'react'
 
 let Image = React.forwardRef<HTMLImageElement, any>(function Image(props, ref) {
