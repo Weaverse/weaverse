@@ -1,4 +1,4 @@
-import { WeaverseElementSchema } from '@weaverse/react'
+import { WeaverseElementSchema } from '@weaverse/core'
 import React from 'react'
 
 let Image = React.forwardRef<HTMLImageElement, any>(function Image(props, ref) {
@@ -12,9 +12,7 @@ Image.defaultProps = {
 }
 
 export let schema: WeaverseElementSchema = {
-  settings: [
-
-  ],
+  settings: [],
   type: 'image',
   title: 'Image',
   data: {

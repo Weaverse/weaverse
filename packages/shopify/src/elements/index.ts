@@ -1,10 +1,9 @@
-import * as Image from './image'
-import type {WeaverseElementMap} from '@weaverse/core'
+import type { WeaverseElementMap } from '@weaverse/core'
 
 let elements: WeaverseElementMap = {
-  Image: {
-    Component: Image.default,
-    schema: Image.schema,
-  }
+  // Image: {
+  //   Component: Image.default,
+  //   schema: Image.schema,
+  // }
 }
 export default elements
