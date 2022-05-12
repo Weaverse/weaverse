@@ -1,6 +1,8 @@
 // TODO: Implement Weaverse SDK class
 // Only core code is implemented here, avoid importing other packages,
 // the core code should be framework agnostic, no react, vue, angular, etc.
+// noinspection JSUnusedGlobalSymbols
+
 import type { TODO, WeaverseElement } from "./types";
 import { isIframe } from "./utils";
 // using stitches core only for framework-agnostic code
@@ -24,16 +26,13 @@ export interface ProjectDataType {
   rootId: string | number;
 }
 
-export type MediaBreakpoints = {
-  tablet: string;
-  mobile: string;
-};
 export type WeaverseType = {
-  [key: string]: any;
+  mediaBreakPoints?: any
   appUrl?: string;
   projectKey?: string;
   projectData?: ProjectDataType;
   isDesignMode?: boolean;
+  ssrMode?: boolean;
 };
 
 /**
@@ -146,6 +145,12 @@ export class Weaverse {
    * @type {boolean}
    */
   isDesignMode: boolean = false;
+
+  /**
+   * Use in element to optionally render special HTML for hydration
+   * @type {boolean}
+   */
+  ssrMode: boolean = false;
   /**
    * stitches instance for handling CSS stylesheet, media, theme for Weaverse project
    */
@@ -167,12 +172,15 @@ export class Weaverse {
    * @param projectKey {string} Weaverse project key to access project data via API
    * @param projectData {ProjectDataType} Weaverse project data, by default, user can provide project data via React Component.
    * @param mediaBreakPoints {object} Pass down custom media query breakpoints or just use the default.
+   * @param isDesignMode {boolean} check whether the sdk is isDesignMode or not
+   * @param ssrMode {boolean} Use in element to optionally render special HTML for hydration
    */
-  constructor({ appUrl, projectKey, projectData, mediaBreakPoints, isDesignMode }: WeaverseType = {}) {
+  constructor({ appUrl, projectKey, projectData, mediaBreakPoints, isDesignMode, ssrMode }: WeaverseType = {}) {
     this.appUrl = appUrl || this.appUrl;
     this.projectKey = projectKey || this.projectKey;
     this.mediaBreakPoints = mediaBreakPoints || this.mediaBreakPoints;
     this.isDesignMode = isDesignMode || this.isDesignMode;
+    this.ssrMode = ssrMode || this.ssrMode;
     projectData && (this.projectData = projectData);
     this.init();
   }
