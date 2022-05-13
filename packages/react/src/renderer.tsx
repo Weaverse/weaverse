@@ -55,7 +55,8 @@ type ItemProps = {
 
 const Item = ({ itemInstance, elementInstances, context }: ItemProps) => {
   let [data, setData] = React.useState<any>(itemInstance.data)
-  let { id, type, childIds, css, className, ...rest } = data
+  let { id, type, childIds, css, className: cls = '', ...rest } = data
+
   React.useEffect(() => {
     let handleUpdate = (update: any) => {
       setData({ ...update })
@@ -73,14 +74,21 @@ const Item = ({ itemInstance, elementInstances, context }: ItemProps) => {
     }
   }, [])
 
-  let realClassName = className
+  let className = ""
   if (css) {
     // let stitches create the style from css object and
     // then return the classname, so we can use it in the render
     let formattedCss = shortCssObject(css)
-    let selector = context.stitchesInstance.css(formattedCss)().className
-    realClassName = realClassName ? `${selector} ${realClassName}` : selector
+    let { className: newClass = '' } = context.stitchesInstance.css(formattedCss)()
+    let { stichesClass } = itemInstance
+    let otherClass = (itemInstance.ref.current?.className || "")
+      .replace(stichesClass, "")
+      .replace(cls, "")
+      .trim()
+    className = `${cls} ${newClass} ${otherClass}`.trim()
+    itemInstance.stichesClass = newClass
   }
+
   let element = elementInstances.get(type) || elementInstances.get('base')
   if (element?.Component) {
     let Component = element.Component
@@ -94,7 +102,7 @@ const Item = ({ itemInstance, elementInstances, context }: ItemProps) => {
         data-wv-type={type}
         data-wv-id={id}
         {...rest}
-        className={realClassName}
+        className={className}
       >
         {Array.isArray(childIds) &&
           childIds.map((childId) => (
