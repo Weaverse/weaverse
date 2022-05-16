@@ -58,6 +58,7 @@ export class WeaverseItemStore {
     current: null,
   };
   weaverse: Weaverse;
+  stichesClass = ""
 
   constructor(itemData: any = {}, weaverse: Weaverse) {
     let { type, id } = itemData;
