@@ -43,6 +43,16 @@ export const schema: WeaverseElementSchema = {
     {
       type: 'duplicate'
     },
+    {
+      type: 'link',
+      settings: {
+        target: '',
+        openInNewTab: false
+      }
+    },
+    {
+      type: 'color'
+    }
   ],
   data: {
     css: {
