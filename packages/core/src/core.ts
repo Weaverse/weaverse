@@ -58,7 +58,7 @@ export class WeaverseItemStore {
     current: null,
   };
   weaverse: Weaverse;
-  stichesClass = ""
+  stitchesClass = ""
 
   constructor(itemData: any = {}, weaverse: Weaverse) {
     let { type, id } = itemData;
@@ -200,7 +200,7 @@ export class Weaverse {
 
   init() {
     this.initStitches();
-    this.loadStudio();
+    // this.loadStudio();
     this.initProjectItemData();
     this.updateProjectData()
   }
@@ -224,25 +224,25 @@ export class Weaverse {
       },
     });
   };
-  loadStudio() {
-    if (this.isDesignMode && isIframe) {
-      let initStudio = () => {
-        this.studioBridge = new window.WeaverseStudioBridge(this);
-        this.triggerUpdate();
-      };
-
-      if (!window.WeaverseStudioBridge) {
-        // load studio bridge script by url: https://weaverse.io/assets/studio/studio-bridge.js
-        const studioBridgeScript = document.createElement("script");
-        studioBridgeScript.src = `${this.appUrl}/assets/studio/studio-bridge.js`;
-        studioBridgeScript.type = "module";
-        studioBridgeScript.onload = initStudio;
-        document.body.appendChild(studioBridgeScript);
-      } else {
-        initStudio();
-      }
-    }
-  }
+  // loadStudio() {
+  //   if (this.isDesignMode && isIframe) {
+  //     let initStudio = () => {
+  //       this.studioBridge = new window.WeaverseStudioBridge(this);
+  //       this.triggerUpdate();
+  //     };
+  //
+  //     if (!window.WeaverseStudioBridge) {
+  //       // load studio bridge script by url: https://weaverse.io/assets/studio/studio-bridge.js
+  //       const studioBridgeScript = document.createElement("script");
+  //       studioBridgeScript.src = `${this.appUrl}/assets/studio/studio-bridge.js`;
+  //       studioBridgeScript.type = "module";
+  //       studioBridgeScript.onload = initStudio;
+  //       document.body.appendChild(studioBridgeScript);
+  //     } else {
+  //       initStudio();
+  //     }
+  //   }
+  // }
 
   subscribe(fn: any) {
     this.listeners.add(fn);

@@ -33,10 +33,6 @@ export const WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
       context.unsubscribe(handleUpdate)
     }
   }, [])
-  // if (!context.projectData?.items?.length && defaultData) {
-  //   Object.assign(context.projectData, defaultData)
-  //   context.initProjectItemData()
-  // }
   let eventHandlers = context?.studioBridge?.eventHandlers || {}
   let themeClass = context.stitchesInstance.theme.className
   return (
@@ -56,6 +52,7 @@ type ItemProps = {
 const Item = ({ itemInstance, elementInstances }: ItemProps) => {
   let [data, setData] = useState<any>(itemInstance.data)
   let { id, type, childIds, css, className: cls = '', ...rest } = data
+  console.log('data', data)
   useEffect(() => {
     let handleUpdate = (update: any) => {
       setData({ ...update })
@@ -80,13 +77,13 @@ const Item = ({ itemInstance, elementInstances }: ItemProps) => {
     // then return the classname, so we can use it in the render
     let formattedCss = shortCssObject(css)
     let { className: newClass = '' } = context.stitchesInstance.css(formattedCss)()
-    let { stichesClass } = itemInstance
+    let { stitchesClass } = itemInstance
     let otherClass = (itemInstance.ref.current?.className || "")
-      .replace(stichesClass, "")
+      .replace(stitchesClass, "")
       .replace(cls, "")
       .trim()
     className = `${cls} ${newClass} ${otherClass}`.trim()
-    itemInstance.stichesClass = newClass
+    itemInstance.stitchesClass = newClass
   }
 
   let element = elementInstances.get(type) || elementInstances.get('base')
