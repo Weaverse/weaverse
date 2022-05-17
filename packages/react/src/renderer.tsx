@@ -1,13 +1,8 @@
 import Elements from './elements'
 import { shortCssObject } from './utils/css'
 import type { WeaverseElement } from '@weaverse/core'
-import {
-  isBrowser,
-  Weaverse,
-  WeaverseItemStore,
-  WeaverseType,
-} from '@weaverse/core'
-import * as React from 'react'
+import { isBrowser, Weaverse, WeaverseItemStore, WeaverseType } from '@weaverse/core'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 
 export const createRootContext = (configs: WeaverseType) => {
   const rootContext = new Weaverse(configs)
@@ -18,11 +13,15 @@ export const createRootContext = (configs: WeaverseType) => {
   return rootContext
 }
 
+export let WeaverseContext = createContext<Weaverse>({} as Weaverse)
+export let WeaverseContextProvider = WeaverseContext.Provider
+export let WeaverseContextConsumer = WeaverseContext.Consumer
+
 export type WeaverseRootPropsType = { context: Weaverse }
 
 export const WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
-  let [, setData] = React.useState<any>(context.projectData)
-  React.useEffect(() => {
+  let [, setData] = useState<any>(context.projectData)
+  useEffect(() => {
     let handleUpdate = () => {
       setData({})
     }
@@ -34,38 +33,35 @@ export const WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
       context.unsubscribe(handleUpdate)
     }
   }, [])
-  // if (!context.projectData?.items?.length && defaultData) {
-  //   Object.assign(context.projectData, defaultData)
-  //   context.initProjectItemData()
-  // }
   let eventHandlers = context?.studioBridge?.eventHandlers || {}
   let themeClass = context.stitchesInstance.theme.className
   return (
-    <div className={`weaverse-content-root ${themeClass}`} {...eventHandlers}>
-      <RenderItem itemId={context.projectData.rootId || 0} context={context} />
-    </div>
+          <div className={`weaverse-content-root ${themeClass}`} {...eventHandlers}>
+            <WeaverseContextProvider value={context}>
+              <RenderItem itemId={context.projectData.rootId || 0} />
+            </WeaverseContextProvider>
+          </div>
   )
 }
 
 type ItemProps = {
   itemInstance: WeaverseItemStore
   elementInstances: Map<string, WeaverseElement>
-  context: Weaverse
 }
 
-const Item = ({ itemInstance, elementInstances, context }: ItemProps) => {
-  let [data, setData] = React.useState<any>(itemInstance.data)
+const Item = ({ itemInstance, elementInstances }: ItemProps) => {
+  let [data, setData] = useState<any>(itemInstance.data)
   let { id, type, childIds, css, className: cls = '', ...rest } = data
-
-  React.useEffect(() => {
+  console.log('data', data)
+  useEffect(() => {
     let handleUpdate = (update: any) => {
       setData({ ...update })
     }
     itemInstance.subscribe(handleUpdate)
     if (isBrowser && !itemInstance.ref.current) {
-      // fallback ref if component is not React.forwardRef
+      // fallback ref if component is not forwardRef
       Object.assign(itemInstance.ref, {
-        current: document.querySelector(`[data-wv-id="${id}"]`),
+        current: document.querySelector(`[data-wv-id="${id}"]`)
       })
     }
 
@@ -73,6 +69,7 @@ const Item = ({ itemInstance, elementInstances, context }: ItemProps) => {
       itemInstance.unsubscribe(handleUpdate)
     }
   }, [])
+  let context = useContext(WeaverseContext)
 
   let className = ""
   if (css) {
@@ -80,13 +77,13 @@ const Item = ({ itemInstance, elementInstances, context }: ItemProps) => {
     // then return the classname, so we can use it in the render
     let formattedCss = shortCssObject(css)
     let { className: newClass = '' } = context.stitchesInstance.css(formattedCss)()
-    let { stichesClass } = itemInstance
+    let { stitchesClass } = itemInstance
     let otherClass = (itemInstance.ref.current?.className || "")
-      .replace(stichesClass, "")
+      .replace(stitchesClass, "")
       .replace(cls, "")
       .trim()
     className = `${cls} ${newClass} ${otherClass}`.trim()
-    itemInstance.stichesClass = newClass
+    itemInstance.stitchesClass = newClass
   }
 
   let element = elementInstances.get(type) || elementInstances.get('base')
@@ -106,7 +103,7 @@ const Item = ({ itemInstance, elementInstances, context }: ItemProps) => {
       >
         {Array.isArray(childIds) &&
           childIds.map((childId) => (
-            <RenderItem key={childId} itemId={childId} context={context} />
+                  <RenderItem key={childId} itemId={childId} />
           ))}
       </Component>
     )
@@ -116,19 +113,18 @@ const Item = ({ itemInstance, elementInstances, context }: ItemProps) => {
 
 const RenderItem = ({
   itemId,
-  context,
 }: {
   itemId: number | string
-  context: any
 }): any => {
+  let context = useContext(WeaverseContext)
   let { itemInstances, elementInstances } = context
+
   let itemInstance = itemInstances.get(itemId)
   if (itemInstance) {
     return (
       <Item
         itemInstance={itemInstance}
         elementInstances={elementInstances}
-        context={context}
       />
     )
   }
