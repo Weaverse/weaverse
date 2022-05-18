@@ -52,7 +52,6 @@ type ItemProps = {
 const Item = ({ itemInstance, elementInstances }: ItemProps) => {
   let [data, setData] = useState<any>(itemInstance.data)
   let { id, type, childIds, css, className: cls = '', ...rest } = data
-  console.log('data', data)
   useEffect(() => {
     let handleUpdate = (update: any) => {
       setData({ ...update })
