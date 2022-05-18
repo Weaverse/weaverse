@@ -1,9 +1,13 @@
 import type { WeaverseElementMap } from '@weaverse/core'
+import {ProductBox} from './product/box'
 
 let elements: WeaverseElementMap = {
-  // Image: {
-  //   Component: Image.default,
-  //   schema: Image.schema,
-  // }
+  ProductBox: {
+    Component: ProductBox,
+    schema: {
+      title: 'Product Details',
+      type: 'ProductBox',
+    }
+  }
 }
 export default elements

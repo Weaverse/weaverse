@@ -12,7 +12,7 @@ Text.defaultProps = {
 
 export let schema: WeaverseElementSchema = {
   type: 'text',
-  title: 'Text Settings',
+  title: 'Text',
   settings: [
 
   ],
