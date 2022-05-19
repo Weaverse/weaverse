@@ -10,6 +10,7 @@ export type Product = {
 
 export type ProductContextProps = {
   product?: Product
+  productId?: string | number
 }
 
 

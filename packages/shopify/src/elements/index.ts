@@ -1,5 +1,6 @@
 import type { WeaverseElementMap } from '@weaverse/core'
 import {ProductBox} from './product/box'
+import {ProductTitle} from './product/title'
 
 let elements: WeaverseElementMap = {
   ProductBox: {
@@ -7,6 +8,13 @@ let elements: WeaverseElementMap = {
     schema: {
       title: 'Product Details',
       type: 'ProductBox',
+    }
+  },
+  ProductTitle: {
+    Component: ProductTitle,
+    schema: {
+      title: 'Product Title',
+      type: 'ProductTitle'
     }
   }
 }
