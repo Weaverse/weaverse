@@ -36,11 +36,11 @@ export const WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
   let eventHandlers = context?.studioBridge?.eventHandlers || {}
   let themeClass = context.stitchesInstance.theme.className
   return (
-          <div className={`weaverse-content-root ${themeClass}`} {...eventHandlers}>
-            <WeaverseContextProvider value={context}>
-              <RenderItem itemId={context.projectData.rootId || 0} />
-            </WeaverseContextProvider>
-          </div>
+    <div className={`weaverse-content-root ${themeClass}`} {...eventHandlers}>
+      <WeaverseContextProvider value={context}>
+        <RenderItem itemId={context.projectData.rootId || 0} />
+      </WeaverseContextProvider>
+    </div>
   )
 }
 
@@ -102,7 +102,7 @@ const Item = ({ itemInstance, elementInstances }: ItemProps) => {
       >
         {Array.isArray(childIds) &&
           childIds.map((childId) => (
-                  <RenderItem key={childId} itemId={childId} />
+            <RenderItem key={childId} itemId={childId} />
           ))}
       </Component>
     )
