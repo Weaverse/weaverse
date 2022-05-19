@@ -2,12 +2,24 @@ import { WeaverseElementSchema } from '@weaverse/core'
 import React, { forwardRef } from 'react'
 
 let Layout = forwardRef((props: any, ref) => {
+  const { css, children, rows, gap, rowSize, columns, gridSize, contentSize, ...rest } = props
   return (
     <div
       ref={ref}
-      {...props}
-      children={props.children}
-    />
+      style={{
+        '--content-size': contentSize + 'px',
+        '--grid-size': gridSize + 'px',
+        '--rows': rows,
+        '--columns': columns,
+        '--gap': gap + 'px',
+        '--row-size': rowSize + 'px',
+        '--col-size': 'calc((var(--grid-size) - calc(var(--columns) - 1) * var(--gap)) / var(--columns))',
+        '--edge-size': 'calc((100vw - var(--content-size)) / 2)',
+      }}
+      {...rest}
+    >
+      {children}
+    </div>
   )
 })
 
@@ -18,20 +30,21 @@ export let schema: WeaverseElementSchema = {
     css: {
       '@desktop': {
         display: 'grid !important',
-        gridTemplateRows: 'repeat($row-count, $row-size)',
-        gridTemplateColumns: 'repeat($column-count, 1fr)',
-        // gridAutoRows: '$sizes$rowSize',
-        gridGap: '$gap',
-        minHeight: '104px',
-        width: '$width',
-        maxWidth: '$max-width',
-        margin: '0 auto',
+        gridTemplateRows: 'repeat(var(--rows), var(--row-size))',
+        gridTemplateColumns: 'var(--edge-size) 1fr repeat(var(--columns), var(--col-size)) 1fr var(--edge-size)',
+        gridGap: 'var(--gap)',
       },
       '@mobile': {
         display: 'flex !important',
         flexDirection: 'column',
       },
     },
+    contentSize: 1600,
+    gridSize: 1224,
+    rows: 12,
+    columns: 12,
+    gap: 16,
+    rowSize: 48,
   },
   settings: [
   ],

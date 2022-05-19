@@ -210,18 +210,18 @@ export class Weaverse {
     this.stitchesInstance = stitches.createStitches({
       prefix: "weaverse",
       media: this.mediaBreakPoints,
-      theme: {
-        sizes: {
-          "width": "100%",
-          "max-width": "100%",
-          "column-count": "16",
-          "row-count": "12",
-          "row-size": "48px",
-        },
-        space: {
-          gap: "8px",
-        },
-      },
+      // theme: {
+      //   sizes: {
+      //     "width": "100%",
+      //     "max-width": "100%",
+      //     "column-count": "16",
+      //     "row-count": "12",
+      //     "row-size": "48px",
+      //   },
+      //   space: {
+      //     gap: "8px",
+      //   },
+      // },
     });
   };
   // loadStudio() {
