@@ -2,20 +2,19 @@ import { WeaverseElementSchema } from '@weaverse/core'
 import React, { forwardRef } from 'react'
 
 let Layout = forwardRef((props: any, ref) => {
-  const { css, children, rowCount, rowGap, rowHeight, columnCount, columnGap, gridWidth, layoutWidth, ...rest } = props
+  const { css, children, rows, gap, rowSize, columns, gridSize, contentSize, ...rest } = props
   return (
     <div
       ref={ref}
       style={{
-        '--row-count': rowCount,
-        '--row-gap': rowGap + 'px',
-        '--row-height': rowHeight + 'px',
-        '--col-count': columnCount,
-        '--col-gap': columnGap + 'px',
-        '--grid-width': gridWidth + 'px',
-        '--layout-width': layoutWidth + '%',
-        '--edge-width': 'calc((var(--layout-width) - var(--grid-width)) / 2)',
-        '--col-width': 'calc((var(--grid-width) - calc(var(--col-count) - 1) * var(--col-gap)) / var(--col-count))'
+        '--content-size': contentSize + 'px',
+        '--grid-size': gridSize + 'px',
+        '--rows': rows,
+        '--columns': columns,
+        '--gap': gap + 'px',
+        '--row-size': rowSize + 'px',
+        '--col-size': 'calc((var(--grid-size) - calc(var(--columns) - 1) * var(--gap)) / var(--columns))',
+        '--edge-size': 'calc((100vw - var(--content-size)) / 2)',
       }}
       {...rest}
     >
@@ -31,22 +30,21 @@ export let schema: WeaverseElementSchema = {
     css: {
       '@desktop': {
         display: 'grid !important',
-        gridTemplateRows: 'repeat(var(--row-count), var(--row-height))',
-        gridTemplateColumns: 'var(--edge-width) 1fr repeat(var(--col-count),var(--col-width)) 1fr var(--edge-width)',
-        gridGap: 'var(--row-gap) var(--col-gap)',
+        gridTemplateRows: 'repeat(var(--rows), var(--row-size))',
+        gridTemplateColumns: 'var(--edge-size) 1fr repeat(var(--columns), var(--col-size)) 1fr var(--edge-size)',
+        gridGap: 'var(--gap)',
       },
       '@mobile': {
         display: 'flex !important',
         flexDirection: 'column',
       },
     },
-    rowCount: 12,
-    rowGap: 8,
-    rowHeight: 48,
-    columnCount: 16,
-    columnGap: 8,
-    gridWidth: 1224,
-    layoutWidth: 100,
+    contentSize: 1600,
+    gridSize: 1224,
+    rows: 12,
+    columns: 12,
+    gap: 16,
+    rowSize: 48,
   },
   settings: [
   ],
