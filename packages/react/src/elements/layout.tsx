@@ -33,6 +33,7 @@ export let schema: WeaverseElementSchema = {
         gridTemplateRows: 'repeat(var(--rows), var(--row-size))',
         gridTemplateColumns: 'var(--edge-size) 1fr repeat(var(--columns), var(--col-size)) 1fr var(--edge-size)',
         gridGap: 'var(--gap)',
+        padding: '16px 0',
       },
       '@mobile': {
         display: 'flex !important',
