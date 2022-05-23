@@ -29,7 +29,10 @@ export let schema: WeaverseElementSchema = {
   data: {
     css: {
       '@desktop': {
-        padding: '16px 0',
+        paddingTop: '16px',
+        paddingBottom: '16px',
+        paddingLeft: 'var(--gap)',
+        paddingRight: 'var(--gap)',
         '> [data-layout-content]': {
           margin: '0 auto',
           display: 'grid !important',
