@@ -3,7 +3,7 @@
 // the core code should be framework agnostic, no react, vue, angular, etc.
 // noinspection JSUnusedGlobalSymbols
 
-import type { TODO, WeaverseElement } from "./types";
+import type { TODO, WeaverseElement, WeaverseElementData } from "./types";
 import { isIframe } from "./utils";
 // using stitches core only for framework-agnostic code
 import * as stitches from "@stitches/core";
@@ -60,7 +60,7 @@ export class WeaverseItemStore {
   weaverse: Weaverse;
   stitchesClass = ""
 
-  constructor(itemData: any = {}, weaverse: Weaverse) {
+  constructor(itemData: WeaverseElementData, weaverse: Weaverse) {
     let { type, id } = itemData;
     this.weaverse = weaverse;
 
