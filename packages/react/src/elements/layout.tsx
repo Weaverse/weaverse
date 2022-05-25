@@ -44,8 +44,11 @@ export let schema: WeaverseElementSchema = {
         }
       },
       '@mobile': {
-        display: 'flex !important',
-        flexDirection: 'column',
+        padding: "0",
+        '> [data-layout-content]': {
+          display: 'flex !important',
+          flexDirection: 'column',
+        }
       },
     },
     gridSize: 1224,
