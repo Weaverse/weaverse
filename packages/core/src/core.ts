@@ -3,12 +3,11 @@
 // the core code should be framework agnostic, no react, vue, angular, etc.
 // noinspection JSUnusedGlobalSymbols
 
-import type { TODO, WeaverseElement, WeaverseElementData } from "./types";
-import { isIframe } from "./utils";
 // using stitches core only for framework-agnostic code
 import * as stitches from "@stitches/core";
 import Stitches from "@stitches/core/types/stitches";
 import { RefObject } from "react";
+import type { TODO, WeaverseElement, WeaverseElementData } from "./types";
 
 export interface ProjectDataItemType {
   type: string;
@@ -200,49 +199,16 @@ export class Weaverse {
 
   init() {
     this.initStitches();
-    // this.loadStudio();
     this.initProjectItemData();
     this.updateProjectData()
   }
 
   initStitches = () => {
-    // init the stitches instance
     this.stitchesInstance = stitches.createStitches({
       prefix: "weaverse",
       media: this.mediaBreakPoints,
-      // theme: {
-      //   sizes: {
-      //     "width": "100%",
-      //     "max-width": "100%",
-      //     "column-count": "16",
-      //     "row-count": "12",
-      //     "row-size": "48px",
-      //   },
-      //   space: {
-      //     gap: "8px",
-      //   },
-      // },
     });
   };
-  // loadStudio() {
-  //   if (this.isDesignMode && isIframe) {
-  //     let initStudio = () => {
-  //       this.studioBridge = new window.WeaverseStudioBridge(this);
-  //       this.triggerUpdate();
-  //     };
-  //
-  //     if (!window.WeaverseStudioBridge) {
-  //       // load studio bridge script by url: https://weaverse.io/assets/studio/studio-bridge.js
-  //       const studioBridgeScript = document.createElement("script");
-  //       studioBridgeScript.src = `${this.appUrl}/assets/studio/studio-bridge.js`;
-  //       studioBridgeScript.type = "module";
-  //       studioBridgeScript.onload = initStudio;
-  //       document.body.appendChild(studioBridgeScript);
-  //     } else {
-  //       initStudio();
-  //     }
-  //   }
-  // }
 
   subscribe(fn: any) {
     this.listeners.add(fn);
