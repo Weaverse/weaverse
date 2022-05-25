@@ -33,7 +33,7 @@ export type WeaverseElementData = {
   [key: string]: any;
 }
 export type WeaverseElementCSS = {
-  '@desktop': CSSProperties
+  '@desktop'?: CSSProperties
   '@mobile'?: CSSProperties
 }
 export type WeaverseElementInput = {
