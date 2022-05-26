@@ -24,6 +24,10 @@ export interface ProjectDataItemType {
 export interface ProjectDataType {
   items: ProjectDataItemType[];
   rootId: string | number;
+  script: {
+    css: string;
+    js: string;
+  }
 }
 
 export type WeaverseType = {
@@ -133,6 +137,10 @@ export class Weaverse {
   projectData: ProjectDataType = {
     items: [],
     rootId: 0,
+    script: {
+      css: '',
+      js: '',
+    }
   };
   /**
    * storing subscribe callback function for any component that want to listen to the change of WeaverseRoot
