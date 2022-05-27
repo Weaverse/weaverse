@@ -11,9 +11,9 @@
     "prettier": "^2.6.2",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
-    "tsup": "^5.12.8",
-    "turbo": "^1.2.11",
-    "typescript": "^4.6.4"
+    "tsup": "^5.12.9",
+    "turbo": "^1.2.14",
+    "typescript": "^4.7.2"
   },
   "scripts": {
     "dev": "turbo run dev --no-cache",
