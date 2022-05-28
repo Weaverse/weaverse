@@ -1,3 +1,5 @@
+import { CSSProperties } from "@stitches/core";
+
 export type TODO = any;
 export type WeaverseElementMap = {
   [key: string]: WeaverseElement;
@@ -20,9 +22,20 @@ export type WeaverseElementSchema = {
   settings?: WeaverseElementInput[];
   styles?: WeaverseElementInput[];
   toolbar?: TODO;
-  data?: TODO; // Default Element data
+  data?: WeaverseElementData; // Default Element data
   catalog?: WeaverseElementCatalog; // Element catalog
 };
+export type WeaverseElementData = {
+  id?: string
+  type?: string
+  childIds?: (string | number)[] | undefined
+  css?: WeaverseElementCSS
+  [key: string]: any;
+}
+export type WeaverseElementCSS = {
+  '@desktop'?: CSSProperties
+  '@mobile'?: CSSProperties
+}
 export type WeaverseElementInput = {
   label?: string;
   type:  'select' | 'checkbox' | 'radio'  | 'range' | 'button' | 'image' | 'file' | 'hidden'  | 'alignment' | 'color' | 'dimensions' | 'flex' | 'grid' | 'input' | 'switch' | 'spacing' | 'textarea' | 'visibility' | 'border' | 'background' | 'typography' | 'shadow' | 'position' | 'overflow' | 'display' | 'other'
