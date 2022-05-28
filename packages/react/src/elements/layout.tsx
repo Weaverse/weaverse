@@ -39,7 +39,7 @@ export let schema: WeaverseElementSchema = {
           display: 'grid !important',
           gridTemplateRows: 'repeat(var(--rows), var(--row-size))',
           gridTemplateColumns: 'repeat(var(--columns), minmax(0, var(--col-size)))',
-          gridGap: 'var(--gap)',
+          gap: 'var(--gap)',
           maxWidth: 'var(--grid-size)',
         }
       },
