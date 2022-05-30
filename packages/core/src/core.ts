@@ -7,43 +7,13 @@
 import * as stitches from "@stitches/core";
 import Stitches from "@stitches/core/types/stitches";
 import { RefObject } from "react";
-import type { TODO, WeaverseElement, WeaverseElementData } from "./types";
-
-export interface ProjectDataItemType {
-  type: string;
-  name?: string;
-  id: string | number;
-  description?: string;
-  childIds?: Array<string | number>;
-  css?: {
-    [key: string]: string;
-  };
-}
-
-export interface ProjectDataType {
-  items: ProjectDataItemType[];
-  rootId: string | number;
-  script: {
-    css: string;
-    js: string;
-  }
-}
-
-export type WeaverseType = {
-  mediaBreakPoints?: any
-  appUrl?: string;
-  projectKey?: string;
-  projectData?: ProjectDataType;
-  isDesignMode?: boolean;
-  ssrMode?: boolean;
-};
+import type { TODO, WeaverseElement, WeaverseElementData, ProjectDataType, WeaverseType } from "./types";
 
 /**
  * WeaverseItemStore is a store for Weaverse item, it can be used to subscribe/update the item data
- * @param itemData {ProjectDataItemType} Weaverse item data
+ * @param itemData {WeaverseElementData} Weaverse item data
  * @param weaverse {Weaverse} Weaverse instance
- * Usage:
- * ```jsx
+ * @example
  * useEffect(() => {
  *     let handleUpdate = (update: any) => {
  *       setData({...update})
@@ -52,8 +22,7 @@ export type WeaverseType = {
  *     return () => {
  *       itemInstance.unsubscribe(handleUpdate)
  *     }
- *   }, [])
- *   ```
+ * }, [])
  */
 export class WeaverseItemStore {
   listeners: Set<any> = new Set();
@@ -73,21 +42,21 @@ export class WeaverseItemStore {
     }
   }
 
-  _data: any = {};
+  _data: WeaverseElementData = {};
 
   get Element() {
-    return this.weaverse.elementInstances.get(this._data.type) as WeaverseElement;
+    return this.weaverse.elementInstances.get(this._data.type!) as WeaverseElement;
   }
 
-  set data(data: any) {
+  set data(data: WeaverseElementData) {
     this._data = { ...this.data, ...data };
   }
 
-  get data() {
+  get data(): WeaverseElementData {
     return { ...this.Element?.Component?.defaultProps, ...this.Element?.schema?.data, ...this._data };
   }
 
-  setData = (data: any) => {
+  setData = (data: WeaverseElementData) => {
     this.data = Object.assign(this.data, data);
     this.triggerUpdate();
     return this.data;
@@ -273,7 +242,7 @@ export class Weaverse {
     let data = this.projectData;
     if (data.items) {
       data.items.forEach((item) => {
-        if (!this.itemInstances.get(item.id)) {
+        if (!this.itemInstances.get(item.id as string | number)) {
           new WeaverseItemStore(item, this);
         }
       });
