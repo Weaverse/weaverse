@@ -1,5 +1,34 @@
 import { CSSProperties } from "@stitches/core";
 
+export interface ProjectDataItemType {
+  type: string;
+  name?: string;
+  id: string | number;
+  description?: string;
+  childIds?: Array<string | number>;
+  css?: {
+    [key: string]: string;
+  };
+}
+
+export interface ProjectDataType {
+  items: ProjectDataItemType[];
+  rootId: string | number;
+  script: {
+    css: string;
+    js: string;
+  }
+}
+
+export type WeaverseType = {
+  mediaBreakPoints?: any
+  appUrl?: string;
+  projectKey?: string;
+  projectData?: ProjectDataType;
+  isDesignMode?: boolean;
+  ssrMode?: boolean;
+};
+
 export type TODO = any;
 export type WeaverseElementMap = {
   [key: string]: WeaverseElement;
