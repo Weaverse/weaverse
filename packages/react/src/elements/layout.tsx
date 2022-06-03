@@ -29,7 +29,6 @@ export let schema: WeaverseElementSchema = {
   data: {
     css: {
       '@desktop': {
-        overflow: 'hidden',
         paddingTop: '16px',
         paddingBottom: '16px',
         paddingLeft: 'var(--gap)',
