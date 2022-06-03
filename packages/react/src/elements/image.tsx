@@ -18,7 +18,9 @@ export let schema: WeaverseElementSchema = {
   data: {
     css: {
       '@desktop': {
-        padding: '10px',
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
       },
     },
   },
