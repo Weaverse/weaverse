@@ -2,18 +2,18 @@
   "name": "root",
   "private": true,
   "devDependencies": {
-    "@types/node": "^17.0.33",
-    "@types/react": "^18.0.9",
-    "@typescript-eslint/eslint-plugin": "^5.23.0",
-    "@typescript-eslint/parser": "^5.23.0",
-    "eslint": "^8.15.0",
+    "@types/node": "^17.0.38",
+    "@types/react": "^18.0.10",
+    "@typescript-eslint/eslint-plugin": "^5.27.0",
+    "@typescript-eslint/parser": "^5.27.0",
+    "eslint": "^8.16.0",
     "eslint-config-prettier": "^8.5.0",
     "prettier": "^2.6.2",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
-    "tsup": "^5.12.7",
-    "turbo": "^1.2.9",
-    "typescript": "^4.6.4"
+    "tsup": "^5.12.9",
+    "turbo": "^1.2.16",
+    "typescript": "^4.7.2"
   },
   "scripts": {
     "dev": "turbo run dev --no-cache",
