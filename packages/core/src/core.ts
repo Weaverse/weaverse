@@ -44,8 +44,11 @@ export class WeaverseItemStore {
 
   _data: WeaverseElementData = {};
 
-  get Element() {
-    return this.weaverse.elementInstances.get(this._data.type!) as WeaverseElement;
+  get _id() { return this._data.id };
+  get _element() { return this.ref.current };
+
+  get Element(): WeaverseElement | undefined {
+    return this.weaverse.elementInstances.get(this._data.type!);
   }
 
   set data(data: WeaverseElementData) {
@@ -80,12 +83,10 @@ export class WeaverseItemStore {
 export class Weaverse {
   /**
    * For storing, registering element React component from Weaverse or created by user/developer
-   * @type {Map<string, React.Component>}
    */
   elementInstances = new Map<string, WeaverseElement>();
   /**
    * list of element/items store to provide data, handle state update, state sharing, etc.
-   * @type {Map<string, any>}
    */
   itemInstances = new Map<string | number, WeaverseItemStore>();
   /**
