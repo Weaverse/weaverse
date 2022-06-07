@@ -136,7 +136,7 @@ export class Weaverse {
   /**
    * stitches instance for handling CSS stylesheet, media, theme for Weaverse project
    */
-  stitchesInstance: Stitches;
+  stitchesInstance: Stitches | any;
 
   studioBridge?: any;
   static WeaverseItemStore: typeof WeaverseItemStore = WeaverseItemStore;
