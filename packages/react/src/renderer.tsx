@@ -1,132 +1,90 @@
-import Elements from './elements'
-import { shortCssObject } from './utils/css'
-import type { WeaverseElement } from '@weaverse/core'
-import { isBrowser, Weaverse, WeaverseItemStore, WeaverseType } from '@weaverse/core'
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import type { ProjectDataType, WeaverseElementData } from '@weaverse/core'
+import { isBrowser, WeaverseItemStore } from '@weaverse/core'
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import { WeaverseContext, WeaverseContextProvider } from './context'
+import { WeaverseRootPropsType } from './types'
+import { generateItemClass } from './utils'
 
-export const createRootContext = (configs: WeaverseType) => {
-  const rootContext = new Weaverse(configs)
-  // Register the element components
-  Object.keys(Elements).forEach((key) => {
-    rootContext.registerElement(Elements[key])
-  })
-  return rootContext
-}
+export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
+  let [, setData] = useState<ProjectDataType | {}>(context.projectData)
+  let rootRef = useRef<HTMLElement>()
 
-export let WeaverseContext = createContext<Weaverse>({} as Weaverse)
-export let WeaverseContextProvider = WeaverseContext.Provider
-export let WeaverseContextConsumer = WeaverseContext.Consumer
-
-export type WeaverseRootPropsType = { context: Weaverse }
-
-export const WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
-  let [, setData] = useState<any>(context.projectData)
   useEffect(() => {
-    let handleUpdate = () => {
-      setData({})
-    }
-    context.subscribe(handleUpdate)
+    let update = () => setData({})
+    context.subscribe(update)
     if (context.projectData) {
-      setTimeout(handleUpdate, 110)
+      setTimeout(update, 110)
     }
+    context.contentRootElement = rootRef.current
     return () => {
-      context.unsubscribe(handleUpdate)
+      context.unsubscribe(update)
     }
   }, [])
+
   let eventHandlers = context?.studioBridge?.eventHandlers || {}
   let themeClass = context.stitchesInstance.theme.className
   return (
-    <div className={`weaverse-content-root ${themeClass}`} {...eventHandlers}>
+    <div className={`weaverse-content-root ${themeClass}`} {...eventHandlers} ref={rootRef}>
       <WeaverseContextProvider value={context}>
-        <RenderItem itemId={context.projectData.rootId || 0} />
+        <ItemInstance id={context.projectData.rootId || 0} />
       </WeaverseContextProvider>
     </div>
   )
 }
 
-type ItemProps = {
-  itemInstance: WeaverseItemStore
-  elementInstances: Map<string, WeaverseElement>
+type ItemComponentProps = {
+  instance: InstanceType<typeof WeaverseItemStore>
 }
 
-const Item = ({ itemInstance, elementInstances }: ItemProps) => {
-  let [data, setData] = useState<any>(itemInstance.data)
-  let { id, type, childIds, css, className: cls = '', ...rest } = data
+const ItemComponent = ({ instance }: ItemComponentProps) => {
+  let { stitchesInstance, elementInstances } = useContext(WeaverseContext)
+  let [data, setData] = useState<WeaverseElementData>(instance.data)
+  let { id, type, childIds = [], css, className: cls = '', ...rest } = data
+
   useEffect(() => {
-    let handleUpdate = (update: any) => {
-      setData({ ...update })
-    }
-    itemInstance.subscribe(handleUpdate)
-    if (isBrowser && !itemInstance.ref.current) {
+    let update = (data: WeaverseElementData) => setData({ ...data })
+    instance.subscribe(update)
+    if (isBrowser && !instance.ref.current) {
       // fallback ref if component is not forwardRef
-      Object.assign(itemInstance.ref, {
+      Object.assign(instance.ref, {
         current: document.querySelector(`[data-wv-id="${id}"]`)
       })
     }
-
     return () => {
-      itemInstance.unsubscribe(handleUpdate)
+      instance.unsubscribe(update)
     }
   }, [])
-  let context = useContext(WeaverseContext)
 
-  let className = ""
-  if (css) {
-    // let stitches create the style from css object and
-    // then return the classname, so we can use it in the render
-    let formattedCss = shortCssObject(css)
-    let { className: newClass = '' } = context.stitchesInstance.css(formattedCss)()
-    let { stitchesClass } = itemInstance
-    let otherClass = (itemInstance.ref.current?.className || "")
-      .replace(stitchesClass, "")
-      .replace(cls, "")
-      .trim()
-    className = `${cls} ${newClass} ${otherClass}`.trim()
-    itemInstance.stitchesClass = newClass
-  }
-
-  let element = elementInstances.get(type) || elementInstances.get('base')
-  if (element?.Component) {
-    let Component = element.Component
+  let Element = elementInstances.get(type || 'base')
+  if (Element?.Component) {
+    let Component = Element.Component
     // @ts-ignore
     if (Component.$$typeof === Symbol.for('react.forward_ref')) {
-      rest.ref = itemInstance.ref
+      rest.ref = instance.ref
     }
     return (
       <Component
         key={id}
         data-wv-type={type}
         data-wv-id={id}
+        className={generateItemClass(instance, stitchesInstance)}
         {...rest}
-        className={className}
       >
-        {Array.isArray(childIds) &&
-          childIds.map((childId) => (
-            <RenderItem key={childId} itemId={childId} />
-          ))}
+        {childIds.map(id => <ItemInstance key={id} id={id} />)}
       </Component>
     )
   }
   return null
 }
 
-const RenderItem = ({
-  itemId,
-}: {
-  itemId: number | string
-}): any => {
+let ItemInstance = ({ id }: { id: string | number }) => {
   let context = useContext(WeaverseContext)
-  let { itemInstances, elementInstances } = context
-
-  let itemInstance = itemInstances.get(itemId)
-  if (itemInstance) {
+  let { itemInstances } = context
+  let instance = itemInstances.get(id)
+  if (!instance) {
     return (
-      <Item
-        itemInstance={itemInstance}
-        elementInstances={elementInstances}
-      />
+      <div style={{ display: "none" }}>Item instance {id} not found</div>
     )
   }
-  console.warn(`Item instance ${itemId} not found`)
-  return <></>
+  return <ItemComponent instance={instance} />
 }
