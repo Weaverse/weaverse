@@ -82,6 +82,10 @@ export class WeaverseItemStore {
 
 export class Weaverse {
   /**
+   * The `weaverse-content-root` element of Weaverse SDK 
+  */
+  contentRootElement: HTMLElement | undefined;
+  /**
    * For storing, registering element React component from Weaverse or created by user/developer
    */
   elementInstances = new Map<string, WeaverseElement>();
@@ -132,7 +136,7 @@ export class Weaverse {
   /**
    * stitches instance for handling CSS stylesheet, media, theme for Weaverse project
    */
-  stitchesInstance: Stitches | any;
+  stitchesInstance: Stitches;
 
   studioBridge?: any;
   static WeaverseItemStore: typeof WeaverseItemStore = WeaverseItemStore;
