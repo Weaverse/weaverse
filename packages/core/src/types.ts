@@ -34,6 +34,12 @@ export type WeaverseElementCatalog = {
   group?: 'essential' | 'composition' | 'other'
 }
 
+export type ElementFlags = 'draggable' | 'resizable' | 'sortableOnMobile' | 'hasSelection'
+
+export type WeaverseElementFlags = {
+  [key in ElementFlags]: boolean
+}
+
 export type WeaverseElementSchema = {
   title?: string;
   type: string;
@@ -42,6 +48,7 @@ export type WeaverseElementSchema = {
   toolbar?: TODO;
   data?: WeaverseElementData; // Default Element data
   catalog?: WeaverseElementCatalog; // Element catalog
+  flags?: WeaverseElementFlags
 };
 export type WeaverseElementData = {
   id?: string | number

@@ -26,6 +26,12 @@ export let schema: WeaverseElementSchema = {
   },
   settings: [
   ],
+  flags: {
+    draggable: true,
+    resizeable: true,
+    sortableOnMobile: true,
+    hasSelection: false,
+  }
 }
 
 export default Container
