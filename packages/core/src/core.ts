@@ -46,8 +46,9 @@ export class WeaverseItemStore {
 
   get _id() { return this._data.id };
   get _element() { return this.ref.current };
+  get _flags() { return this.Element?.schema?.flags || {}; }
 
-  get Element(): WeaverseElement | undefined {
+  get Element() {
     return this.weaverse.elementInstances.get(this._data.type!);
   }
 
