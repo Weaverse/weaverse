@@ -26,6 +26,7 @@ let Layout = forwardRef((props: any, ref) => {
 export let schema: WeaverseElementSchema = {
   title: 'Layout',
   type: 'layout',
+  parentType: "root",
   data: {
     css: {
       '@desktop': {

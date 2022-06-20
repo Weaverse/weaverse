@@ -14,6 +14,7 @@ Image.defaultProps = {
 export let schema: WeaverseElementSchema = {
   settings: [],
   type: 'image',
+  parentType: "layout",
   title: 'Image',
   data: {
     css: {

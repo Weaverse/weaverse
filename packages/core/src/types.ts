@@ -37,12 +37,13 @@ export type WeaverseElementCatalog = {
 export type ElementFlags = 'draggable' | 'resizable' | 'sortableOnMobile' | 'hasSelection'
 
 export type WeaverseElementFlags = {
-  [key in ElementFlags]: boolean
+  [key in ElementFlags]?: boolean
 }
 
 export type WeaverseElementSchema = {
   title?: string;
   type: string;
+  parentType: "container" | "layout" | "root";
   settings?: WeaverseElementInput[];
   styles?: WeaverseElementInput[];
   toolbar?: TODO;

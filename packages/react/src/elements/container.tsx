@@ -8,6 +8,7 @@ let Container = forwardRef((props: any, ref) => {
 export let schema: WeaverseElementSchema = {
   title: 'Container',
   type: 'container',
+  parentType: "layout",
   data: {
     css: {
       '@desktop': {
@@ -28,7 +29,7 @@ export let schema: WeaverseElementSchema = {
   ],
   flags: {
     draggable: true,
-    resizeable: true,
+    resizable: true,
     sortableOnMobile: true,
     hasSelection: false,
   }
