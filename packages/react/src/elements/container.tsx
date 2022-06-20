@@ -30,7 +30,7 @@ export let schema: WeaverseElementSchema = {
   flags: {
     draggable: true,
     resizable: true,
-    sortableOnMobile: true,
+    sortable: true,
     hasSelection: false,
   }
 }
