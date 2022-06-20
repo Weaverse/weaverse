@@ -20,6 +20,7 @@ BaseElement.defaultProps = {
 }
 export let schema: WeaverseElementSchema = {
   type: 'base',
+  parentType: "container",
   title: 'Base',
   settings: [],
 }

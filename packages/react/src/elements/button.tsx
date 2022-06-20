@@ -26,6 +26,7 @@ Button.defaultProps = {
 export const schema: WeaverseElementSchema = {
   title: 'Button',
   type: 'button',
+  parentType: "container",
   styles: [
     {
       type: 'dimensions'
