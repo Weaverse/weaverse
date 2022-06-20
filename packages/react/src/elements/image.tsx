@@ -23,7 +23,15 @@ export let schema: WeaverseElementSchema = {
         height: "100%",
         objectFit: "cover",
       },
+      '@mobile': {
+        display: 'block'
+      }
     },
   },
+  flags: {
+    resizable: true,
+    draggable: true,
+    sortable: true,
+  }
 }
 export default Image
