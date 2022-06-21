@@ -19,7 +19,6 @@ export let schema: WeaverseElementSchema = {
         justifyContent: 'flex-start',
         textAlign: 'left',
         gridArea: '1 / 1 / 3 / 6',
-        overflow: 'hidden',
         width: '100%',
         height: 'fit-content',
       },
@@ -31,7 +30,6 @@ export let schema: WeaverseElementSchema = {
     draggable: true,
     resizable: true,
     sortable: true,
-    hasSelection: false,
   }
 }
 
