@@ -34,14 +34,22 @@ export type WeaverseElementCatalog = {
   group?: 'essential' | 'composition' | 'other'
 }
 
+export type ElementFlags = 'draggable' | 'resizable' | 'sortable'
+
+export type WeaverseElementFlags = {
+  [key in ElementFlags]?: boolean
+}
+
 export type WeaverseElementSchema = {
   title?: string;
   type: string;
+  parentType: "container" | "layout" | "root";
   settings?: WeaverseElementInput[];
   styles?: WeaverseElementInput[];
   toolbar?: TODO;
   data?: WeaverseElementData; // Default Element data
   catalog?: WeaverseElementCatalog; // Element catalog
+  flags?: WeaverseElementFlags
 };
 export type WeaverseElementData = {
   id?: string | number

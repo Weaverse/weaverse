@@ -12,23 +12,24 @@ Text.defaultProps = {
 
 export let schema: WeaverseElementSchema = {
   type: 'text',
+  parentType: "container",
   title: 'Text',
   settings: [
 
   ],
   data: {
     css: {
-      '@desktop': {
-        width: '100%',
+      "@desktop": {
+        width: "100%",
         height: 'fit-content',
         padding: 0,
         margin: 0,
         outline: 'none',
         wordBreak: 'break-word',
         overflowWrap: 'break-word',
-        whitespace: 'break-spaces',
-      },
-    },
+        whiteSpace: 'break-spaces',
+      }
+    }
   },
 }
 export default Text

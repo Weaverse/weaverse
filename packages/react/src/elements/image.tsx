@@ -14,6 +14,7 @@ Image.defaultProps = {
 export let schema: WeaverseElementSchema = {
   settings: [],
   type: 'image',
+  parentType: "layout",
   title: 'Image',
   data: {
     css: {
@@ -22,7 +23,15 @@ export let schema: WeaverseElementSchema = {
         height: "100%",
         objectFit: "cover",
       },
+      '@mobile': {
+        display: 'block'
+      }
     },
   },
+  flags: {
+    resizable: true,
+    draggable: true,
+    sortable: true,
+  }
 }
 export default Image
