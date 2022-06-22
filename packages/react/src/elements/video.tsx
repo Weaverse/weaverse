@@ -1,9 +1,17 @@
 import {WeaverseElementSchema} from '@weaverse/core'
-import * as React from 'react'
+import React, {FC, forwardRef, useContext} from 'react'
+import {WeaverseContext} from '../context'
 
-const Video = React.forwardRef((props, ref) => {
-  const {src, type} = props
-  return <video ref={ref} {...props}>
+const Video: FC = forwardRef((props, ref) => {
+  const {isDesignMode} = useContext(WeaverseContext)
+  let {src, type, controls, autoPlay, loop, muted, ...rest} = props
+
+  if (isDesignMode) {
+    controls = false
+    autoPlay = false
+  }
+  console.info("9779 props", props, isDesignMode)
+  return <video ref={ref} controls={controls} autoPlay={autoPlay} loop={loop} muted={true} {...rest}>
     <source src={src} type={type || "video/mp4"} controlsList="nodownload" disablePictureInPicture/>
   </video>
 })
@@ -14,15 +22,16 @@ Video.defaultProps = {
   loop: false,
   type: "video/mp4",
   controls: false,
-  autoplay: true,
+  autoPlay: true,
   muted: true,
-  width: 100%,
+  width: "100%",
   height: "auto"
 }
 
 export const schema: WeaverseElementSchema = {
   title: 'Video',
   type: "video",
+  parentType: "layout",
   toolbar: [
     {
       type: 'delete'
@@ -37,6 +46,11 @@ export const schema: WeaverseElementSchema = {
       type: 'color'
     }
   ],
+  flags: {
+    resizable: true,
+    draggable: true,
+    sortable: true,
+  }
 }
 
 export default Video
