@@ -7,7 +7,7 @@ let Image = React.forwardRef<HTMLImageElement, any>(function Image(props, ref) {
 })
 
 Image.defaultProps = {
-  src: 'https://ucarecdn.com/48d73272-3fe3-43f6-8b5b-22b68fc5a8c8/section.png',
+  src: 'https://ucarecdn.com/1cdc9d39-ca62-492e-8ec7-f1a86b241a90/',
   alt: 'weaverse image element',
 }
 
