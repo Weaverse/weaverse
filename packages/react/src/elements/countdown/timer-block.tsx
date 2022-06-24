@@ -5,7 +5,7 @@ const TimerBlock: FC = (props: any) => {
     <div>
       {props.value.toString().padStart(2, "0")}
     </div>
-    <div className="wv-countdown-label">{props.label}</div>
+    {props.label && <div className="wv-countdown-label">{props.label}</div>}
   </div>
 }
 

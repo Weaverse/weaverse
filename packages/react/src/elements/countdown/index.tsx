@@ -7,7 +7,7 @@ import TimerBlock from './timer-block'
 
 const Countdown: FC = forwardRef((props, ref) => {
   const {isDesignMode} = useContext(WeaverseContext)
-  let {type, startTime, endTime, periods, redirectUrl, openInNewTab} = props
+  let {type, startTime, endTime, periods, redirectUrl, openInNewTab, showColon, showLabel} = props
   const [remaining, setRemaining] = React.useState(0)
   if (typeof endTime !== 'number') {
     endTime = Number.parseInt(endTime)
@@ -27,13 +27,13 @@ const Countdown: FC = forwardRef((props, ref) => {
   // const remainingTime = (type === 'specific' ? new Date(endTime).getTime() : (new Date(startTime) + periods * 60 * 1000)) - Date.now()
   const timer = getTime(remaining)
   return <div ref={ref} {...props}>
-    <TimerBlock value={timer.days} label="days"/>
-    <span>:</span>
-    <TimerBlock value={timer.hours} label="hours"/>
-    <span>:</span>
-    <TimerBlock value={timer.mins} label="minutes"/>
-    <span>:</span>
-    <TimerBlock value={timer.secs} label="seconds"/>
+    <TimerBlock value={timer.days} label={showLabel && "days"}/>
+    <span className={!showColon && "hidden"}>:</span>
+    <TimerBlock value={timer.hours} label={showLabel && "hours"}/>
+    <span className={!showColon && "hidden"}>:</span>
+    <TimerBlock value={timer.mins} label={showLabel && "minutes"}/>
+    <span className={!showColon && "hidden"}>:</span>
+    <TimerBlock value={timer.secs} label={showLabel && "seconds"}/>
   </div>
 })
 
@@ -42,31 +42,15 @@ Countdown.defaultProps = {
   startTime: Date.now(),
   endTime: 1661140528000,
   redirectUrl: "",
-  openInNewTab: false
-
+  openInNewTab: false,
+  showLabel: true,
+  showColon: true
 }
 
 export const schema: WeaverseElementSchema = {
   title: 'Countdown',
   type: "countdown",
   parentType: "container",
-  styles: [
-    {
-      type: 'dimensions'
-    },
-    {
-      type: 'alignment'
-    },
-    {
-      type: 'border'
-    },
-    {
-      type: 'background'
-    },
-    {
-      type: 'spacing'
-    },
-  ],
   toolbar: [
     {
       type: 'delete'
@@ -85,20 +69,23 @@ export const schema: WeaverseElementSchema = {
     css: {
       '@desktop': {
         fontFamily: 'Inter',
-        fontSize: "36px",
+        fontSize: 36,
         fontWeight: 500,
         display: "grid",
         gridAutoFlow: "column",
-        gap: "10px",
+        gap: 10,
         "& > div": {
-          width: "48px",
+          width: 48,
           textAlign: "center"
         },
         "& .wv-countdown-label": {
-          fontSize: "10px"
+          fontSize: 10
         },
         "& > span": {
           lineHeight: "100%"
+        },
+        "& .hidden": {
+          visibility: "hidden"
         }
       }
     }
