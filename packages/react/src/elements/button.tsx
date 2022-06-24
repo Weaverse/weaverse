@@ -14,13 +14,13 @@ export const Button = React.forwardRef((props: any, ref: any) => {
 
   return (
     <button ref={ref} {...rest}>
-      {props.value}
+     {props.value}
     </button>
   )
 })
 
 Button.defaultProps = {
-  value: 'Click me',
+  value: 'Shop now',
 }
 
 export const schema: WeaverseElementSchema = {
@@ -63,9 +63,12 @@ export const schema: WeaverseElementSchema = {
   data: {
     css: {
       '@desktop': {
-        borderRadius: '9999px',
+        borderRadius: '72px',
+        border: "none",
+        backgroundColor: "#0F71FF",
+        color: "#fff",
         fontSize: '13px',
-        padding: '10px 15px',
+        padding: '10px 20px',
       }
     },
     target: '',

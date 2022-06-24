@@ -8,6 +8,7 @@ import * as stitches from "@stitches/core";
 import Stitches from "@stitches/core/types/stitches";
 import { RefObject } from "react";
 import type { TODO, WeaverseElement, WeaverseElementData, ProjectDataType, WeaverseType, WeaverseElementFlags } from "./types";
+import {stichesUtils} from './utils/styles'
 
 /**
  * WeaverseItemStore is a store for Weaverse item, it can be used to subscribe/update the item data
@@ -190,6 +191,7 @@ export class Weaverse {
     this.stitchesInstance = stitches.createStitches({
       prefix: "weaverse",
       media: this.mediaBreakPoints,
+      utils: stichesUtils
     });
   };
 
