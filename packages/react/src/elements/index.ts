@@ -6,6 +6,8 @@ import * as Text from './text'
 import * as Image from './image'
 import * as Video from './video'
 import { WeaverseElementMap } from '@weaverse/core'
+import * as Map from './map'
+import * as Countdown from './countdown'
 
 const elements: WeaverseElementMap = {
   Button: {
@@ -35,6 +37,14 @@ const elements: WeaverseElementMap = {
   Video: {
     Component: Video.default,
     schema: Video.schema
+  },
+  Map: {
+    Component: Map.default,
+    schema: Map.schema
+  },
+  Countdown: {
+    Component: Countdown.default,
+    schema: Countdown.schema
   }
 }
 
