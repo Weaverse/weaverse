@@ -71,6 +71,9 @@ export const schema: WeaverseElementSchema = {
     target: '',
     openInNewTab: false
   },
+  flags: {
+    draggable: true
+  }
 }
 
 export default Button

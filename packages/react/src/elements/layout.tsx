@@ -44,7 +44,7 @@ export let schema: WeaverseElementSchema = {
         }
       },
       '@mobile': {
-        padding: "0",
+        padding: "0 16px",
         '> [data-layout-content]': {
           display: 'flex !important',
           flexDirection: 'column',
