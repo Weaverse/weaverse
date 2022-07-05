@@ -8,6 +8,7 @@ let elements: WeaverseElementMap = {
     Component: ProductBox,
     schema: {
       title: 'Product Details',
+      parentType: "layout",
       type: 'ProductBox',
     }
   },
@@ -15,6 +16,7 @@ let elements: WeaverseElementMap = {
     Component: ProductTitle,
     schema: {
       title: 'Product Title',
+      parentType: "layout", // TODO
       type: 'ProductTitle'
     }
   },
