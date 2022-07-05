@@ -1,6 +1,7 @@
 import type { WeaverseElementMap } from '@weaverse/core'
 import {ProductBox} from './product/box'
 import {ProductTitle} from './product/title'
+import * as Form from './form'
 
 let elements: WeaverseElementMap = {
   ProductBox: {
@@ -16,6 +17,10 @@ let elements: WeaverseElementMap = {
       title: 'Product Title',
       type: 'ProductTitle'
     }
+  },
+  Form: {
+    Component: Form.default,
+    schema: Form.schema
   }
 }
 export default elements

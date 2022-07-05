@@ -33,6 +33,10 @@ export const stichesUtils = {
   px: (value) => ({
     paddingLeft: value,
     paddingRight: value
+  }),
+  py: (value) => ({
+    paddingTop: value,
+    paddingBottom: value
   })
 
 }
