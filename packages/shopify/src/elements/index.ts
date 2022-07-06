@@ -9,6 +9,11 @@ let elements: WeaverseElementMap = {
       title: 'Product Details',
       parentType: "layout",
       type: 'ProductBox',
+      flags: {
+        draggable: true,
+        resizable: true,
+        sortable: true
+      }
     }
   },
   ProductTitle: {
