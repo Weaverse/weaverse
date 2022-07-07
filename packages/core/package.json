@@ -1,5 +1,5 @@
 {
-  "version": "0.6.11",
+  "version": "0.6.15",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -20,7 +20,7 @@
     "prepublish": "npm run build"
   },
   "name": "@weaverse/core",
-  "author": "Paul",
+  "author": "Weaverse Team",
   "dependencies": {
     "@stitches/core": "^1.2.8"
   }
