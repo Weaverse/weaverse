@@ -40,14 +40,15 @@ export type WeaverseElementFlags = {
   [key in ElementFlags]?: boolean
 }
 
-export type ToolbarAction = 
-'duplicate' | 
-'delete' |
-'edit-button' | 
-'insert-link' | 
-'select-template' | 
-'copy-style' |
-'paste-style'
+export type ToolbarAction =
+  'duplicate' |
+  'delete' |
+  'edit-button' |
+  'insert-link' |
+  'select-template' |
+  'copy-styles' |
+  'paste-styles'
+
 
 export type WeaverseElementSchema = {
   title?: string;
