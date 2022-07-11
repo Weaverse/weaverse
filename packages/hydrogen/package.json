@@ -28,7 +28,7 @@
     "semi": false,
     "singleQuote": true
   },
-  "name": "@weaverse/shopify",
+  "name": "@weaverse/hydrogen",
   "author": "Weaverse Team",
   "dependencies": {
     "@weaverse/react": "0.6.15"

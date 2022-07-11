@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 pkg_file="package.json"
-packages=("core" "react" "shopify")
+packages=("core" "react" "shopify" "hydrogen")
 
 upgrade() {
   pkg=${1:-version}

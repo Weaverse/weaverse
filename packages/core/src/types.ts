@@ -40,13 +40,23 @@ export type WeaverseElementFlags = {
   [key in ElementFlags]?: boolean
 }
 
+export type ToolbarAction =
+  'duplicate' |
+  'delete' |
+  'edit-button' |
+  'insert-link' |
+  'select-template' |
+  'copy-styles' |
+  'paste-styles'
+
+
 export type WeaverseElementSchema = {
   title?: string;
   type: string;
   parentType: "container" | "layout" | "root";
   settings?: WeaverseElementInput[];
   styles?: WeaverseElementInput[];
-  toolbar?: TODO;
+  toolbar?: (ToolbarAction | ToolbarAction[])[];
   data?: WeaverseElementData; // Default Element data
   catalog?: WeaverseElementCatalog; // Element catalog
   flags?: WeaverseElementFlags
