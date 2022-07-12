@@ -1,11 +1,14 @@
 import React, {FC, forwardRef, useContext} from 'react'
 import {WeaverseElementSchema} from '@weaverse/core'
-import {WeaverseContext} from '@weaverse/react/src/context'
+import { WeaverseContext } from '@weaverse/react'
 
 const Form: FC = forwardRef((props, ref) => {
-  const {isDesignMode, ssrMode} = useContext(WeaverseContext)
+  const {isDesignMode, ssrMode, stitchesInstance} = useContext(WeaverseContext)
   const {fields, formType, button, ...rest} = props
-  console.info("9779 fields", fields)
+  const buttonCss = {
+    alignSelf: button.position === "left" ? "flex-start" : button.position === "right" ? "flex-end" : "center"
+  }
+  const {className: buttonClass = '' } = stitchesInstance.css(buttonCss)()
   const formContent = (
     <div ref={ref} {...rest}>
       {
@@ -26,7 +29,7 @@ const Form: FC = forwardRef((props, ref) => {
           </div>
         ))
       }
-      <button>{button.text}</button>
+      <button className={buttonClass} position={button.position}>{button.text}</button>
     </div>
   )
   if (ssrMode) {
@@ -70,6 +73,9 @@ Form.defaultProps = {
   button: {
     text: "Submit",
     position: "center",
+    openInNewTab: true,
+    targetLink: "https://myshop.com"
+
   }
 }
 
@@ -77,6 +83,7 @@ export const schema: WeaverseElementSchema = {
   type: "form",
   title: "Form",
   parentType: "container",
+  subElements: ["label", "button"],
   toolbar: [
     {
       type: 'delete'
@@ -98,6 +105,9 @@ export const schema: WeaverseElementSchema = {
         flexDirection: "column",
         gap: 14,
         width: "100%",
+        "& label": {
+          backgroundColor: "red"
+        },
         "& > div": {
           display: "flex",
           flexDirection: "column",
@@ -113,8 +123,7 @@ export const schema: WeaverseElementSchema = {
           color: "#fff",
           padding: "14px 30px",
           border: "none",
-          width: "fit-content",
-          alignSelf: "center"
+          width: "fit-content"
         }
       }
     }
