@@ -50,6 +50,11 @@ export type ToolbarAction =
   'paste-styles'
 
 
+export type WeaverseChildElement = {
+  label: string,
+  selector: string
+}
+
 export type WeaverseElementSchema = {
   title?: string;
   type: string;
@@ -58,6 +63,7 @@ export type WeaverseElementSchema = {
   styles?: WeaverseElementInput[];
   toolbar?: (ToolbarAction | ToolbarAction[])[];
   data?: WeaverseElementData; // Default Element data
+  subElements?: WeaverseChildElement[];
   catalog?: WeaverseElementCatalog; // Element catalog
   flags?: WeaverseElementFlags
 };
