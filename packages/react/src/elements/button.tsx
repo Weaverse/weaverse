@@ -5,16 +5,18 @@ export const Button = React.forwardRef((props: any, ref: any) => {
   const { buttonType, css, openInNewTab = false, target = '', ...rest } = props
 
   if (target) {
-    return <a href={target} target={openInNewTab ? '_blank' : '_self'}>
-      <button ref={ref} {...rest}>
-        {props.value}
-      </button>
-    </a>
+    return (
+      <a href={target} target={openInNewTab ? '_blank' : '_self'}>
+        <button ref={ref} {...rest}>
+          {props.value}
+        </button>
+      </a>
+    )
   }
 
   return (
     <button ref={ref} {...rest}>
-     {props.value}
+      {props.value}
     </button>
   )
 })
@@ -26,57 +28,56 @@ Button.defaultProps = {
 export const schema: WeaverseElementSchema = {
   title: 'Button',
   type: 'button',
-  parentType: "container",
+  parentType: 'container',
   styles: [
     {
-      type: 'dimensions'
+      type: 'dimensions',
     },
     {
-      type: 'alignment'
+      type: 'alignment',
     },
     {
-      type: 'border'
+      type: 'border',
     },
     {
-      type: 'background'
+      type: 'background',
     },
     {
-      type: 'spacing'
+      type: 'spacing',
     },
   ],
-  settings: [
-  ],
+  settings: [],
   toolbar: [
     {
-      type: 'delete'
+      type: 'delete',
     },
     {
-      type: 'duplicate'
+      type: 'duplicate',
     },
     {
       type: 'link',
     },
     {
-      type: 'color'
-    }
+      type: 'color',
+    },
   ],
   data: {
     css: {
       '@desktop': {
         borderRadius: '72px',
-        border: "none",
-        backgroundColor: "#0F71FF",
-        color: "#fff",
+        border: 'none',
+        backgroundColor: '#0F71FF',
+        color: '#fff',
         fontSize: '13px',
         padding: '10px 20px',
-      }
+      },
     },
     target: '',
-    openInNewTab: false
+    openInNewTab: false,
   },
   flags: {
-    draggable: true
-  }
+    draggable: true,
+  },
 }
 
 export default Button

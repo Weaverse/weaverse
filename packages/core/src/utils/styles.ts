@@ -1,42 +1,41 @@
 export const stichesUtils = {
   // Abbreviated margin properties
-  m: (value) => ({
-    margin: value
+  m: (value: string) => ({
+    margin: value,
   }),
-  mt: (value) => ({
-    marginTop: value
-  }),
-  mr: (value) => ({
-    marginRight: value
-  }),
-  mb: (value) => ({
-    marginBottom: value
-  }),
-  ml: (value) => ({
-    marginLeft: value
-  }),
-  mx: (value) => ({
-    marginLeft: value,
-    marginRight: value
-  }),
-  my: (value) => ({
+  mt: (value: string) => ({
     marginTop: value,
-    marginBottom: value
+  }),
+  mr: (value: string) => ({
+    marginRight: value,
+  }),
+  mb: (value: string) => ({
+    marginBottom: value,
+  }),
+  ml: (value: string) => ({
+    marginLeft: value,
+  }),
+  mx: (value: string) => ({
+    marginLeft: value,
+    marginRight: value,
+  }),
+  my: (value: string) => ({
+    marginTop: value,
+    marginBottom: value,
   }),
 
   // A property for applying width/height together
-  size: (value) => ({
+  size: (value: string) => ({
     width: value,
-    height: value
+    height: value,
   }),
   // Abbreviated padding properties
-  px: (value) => ({
+  px: (value: string) => ({
     paddingLeft: value,
-    paddingRight: value
+    paddingRight: value,
   }),
-  py: (value) => ({
+  py: (value: string) => ({
     paddingTop: value,
-    paddingBottom: value
-  })
-
-}
+    paddingBottom: value,
+  }),
+};

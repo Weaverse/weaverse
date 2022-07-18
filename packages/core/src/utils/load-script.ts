@@ -1,13 +1,13 @@
 const loadScript = function (url: string) {
   return new Promise(function (resolve) {
-    const script = document.createElement('script')
-    script.src = url
+    const script = document.createElement("script");
+    script.src = url;
 
-    script.addEventListener('load', function () {
+    script.addEventListener("load", function () {
       // The script is loaded completely
-      resolve(true)
-    })
+      resolve(true);
+    });
 
-    document.head.appendChild(script)
-  })
-}
+    document.head.appendChild(script);
+  });
+};

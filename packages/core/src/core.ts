@@ -7,9 +7,15 @@
 import * as stitches from "@stitches/core";
 import Stitches from "@stitches/core/types/stitches";
 import { RefObject } from "react";
-import type { TODO, WeaverseElement, WeaverseElementData, ProjectDataType, WeaverseType, WeaverseElementFlags } from "./types";
-import {stichesUtils} from './utils/styles'
-import {isIframe} from './utils'
+import type {
+  TODO,
+  WeaverseElement,
+  WeaverseElementData,
+  ProjectDataType,
+  WeaverseType,
+  WeaverseElementFlags,
+} from "./types";
+import { stichesUtils } from "./utils/styles";
 
 /**
  * WeaverseItemStore is a store for Weaverse item, it can be used to subscribe/update the item data
@@ -32,7 +38,7 @@ export class WeaverseItemStore {
     current: null,
   };
   weaverse: Weaverse;
-  stitchesClass = ""
+  stitchesClass = "";
 
   constructor(itemData: WeaverseElementData, weaverse: Weaverse) {
     let { type, id } = itemData;
@@ -47,8 +53,12 @@ export class WeaverseItemStore {
   _data: WeaverseElementData = {};
   _flags: WeaverseElementFlags = {};
 
-  get _id() { return this._data.id };
-  get _element() { return this.ref.current };
+  get _id() {
+    return this._data.id;
+  }
+  get _element() {
+    return this.ref.current;
+  }
 
   get Element() {
     return this.weaverse.elementInstances.get(this._data.type!);
@@ -85,8 +95,8 @@ export class WeaverseItemStore {
 
 export class Weaverse {
   /**
-   * The `weaverse-content-root` element of Weaverse SDK 
-  */
+   * The `weaverse-content-root` element of Weaverse SDK
+   */
   contentRootElement: HTMLElement | undefined;
   /**
    * For storing, registering element React component from Weaverse or created by user/developer
@@ -114,9 +124,9 @@ export class Weaverse {
     items: [],
     rootId: 0,
     script: {
-      css: '',
-      js: '',
-    }
+      css: "",
+      js: "",
+    },
   };
   /**
    * storing subscribe callback function for any component that want to listen to the change of WeaverseRoot
@@ -212,7 +222,7 @@ export class Weaverse {
     this.stitchesInstance = stitches.createStitches({
       prefix: "weaverse",
       media: this.mediaBreakPoints,
-      utils: stichesUtils
+      utils: stichesUtils,
     });
   };
 
