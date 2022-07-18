@@ -16,6 +16,7 @@ import type {
   WeaverseElementFlags,
 } from "./types";
 import { stichesUtils } from "./utils/styles";
+import { isIframe } from "./utils";
 
 /**
  * WeaverseItemStore is a store for Weaverse item, it can be used to subscribe/update the item data
@@ -41,7 +42,7 @@ export class WeaverseItemStore {
   stitchesClass = "";
 
   constructor(itemData: WeaverseElementData, weaverse: Weaverse) {
-    let { type, id } = itemData;
+    const { type, id } = itemData;
     this.weaverse = weaverse;
 
     if (id && type) {
@@ -115,7 +116,7 @@ export class Weaverse {
    * Weaverse project key to access project data via API
    * @type {string}
    */
-  projectKey: string = "";
+  projectKey = "";
   /**
    * Weaverse project data, by default, user can provide project data via React Component:
    * <WeaverseRoot defaultData={projectData} /> it will be used to server-side rendering
@@ -139,13 +140,13 @@ export class Weaverse {
    * else render the preview UI, plain HTML + CSS + React hydrate
    * @type {boolean}
    */
-  isDesignMode: boolean = false;
+  isDesignMode = false;
 
   /**
    * Use in element to optionally render special HTML for hydration
    * @type {boolean}
    */
-  ssrMode: boolean = false;
+  ssrMode = false;
   /**
    * stitches instance for handling CSS stylesheet, media, theme for Weaverse project
    */
@@ -182,7 +183,7 @@ export class Weaverse {
 
   loadStudio() {
     if (this.isDesignMode && isIframe) {
-      let initStudio = () => {
+      const initStudio = () => {
         this.studioBridge = new window.WeaverseStudioBridge(this);
         this.triggerUpdate();
       };
@@ -214,8 +215,8 @@ export class Weaverse {
   init() {
     this.initStitches();
     this.initProjectItemData();
-    this.updateProjectData()
-    this.loadStudio()
+    this.updateProjectData();
+    this.loadStudio();
   }
 
   initStitches = () => {
@@ -278,7 +279,7 @@ export class Weaverse {
   }
 
   initProjectItemData() {
-    let data = this.projectData;
+    const data = this.projectData;
     if (data.items) {
       data.items.forEach((item) => {
         if (!this.itemInstances.get(item.id as string | number)) {

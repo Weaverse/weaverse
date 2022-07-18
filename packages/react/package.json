@@ -1,5 +1,5 @@
 {
-  "version": "0.6.15",
+  "version": "0.6.16",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -31,6 +31,6 @@
   "name": "@weaverse/react",
   "author": "Weaverse Team",
   "dependencies": {
-    "@weaverse/core": "0.6.15"
+    "@weaverse/core": "0.6.16"
   }
 }
