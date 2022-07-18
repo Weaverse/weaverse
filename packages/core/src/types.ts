@@ -6,11 +6,11 @@ export interface ProjectDataType {
   script: {
     css: string;
     js: string;
-  }
+  };
 }
 
 export type WeaverseType = {
-  mediaBreakPoints?: any
+  mediaBreakPoints?: any;
   appUrl?: string;
   projectKey?: string;
   projectData?: ProjectDataType;
@@ -29,31 +29,30 @@ export type WeaverseElement = {
 };
 
 export type WeaverseElementCatalog = {
-  name: string
-  icon?: string
-  group?: 'essential' | 'composition' | 'other'
-}
+  name: string;
+  icon?: string;
+  group?: "essential" | "composition" | "other";
+};
 
-export type ElementFlags = 'draggable' | 'resizable' | 'sortable'
+export type ElementFlags = "draggable" | "resizable" | "sortable";
 
 export type WeaverseElementFlags = {
-  [key in ElementFlags]?: boolean
-}
+  [key in ElementFlags]?: boolean;
+};
 
 export type ToolbarAction =
-  'duplicate' |
-  'delete' |
-  'edit-button' |
-  'insert-link' |
-  'select-template' |
-  'copy-styles' |
-  'paste-styles'
-
+  | "duplicate"
+  | "delete"
+  | "edit-button"
+  | "insert-link"
+  | "select-template"
+  | "copy-styles"
+  | "paste-styles";
 
 export type WeaverseChildElement = {
-  label: string,
-  selector: string
-}
+  label: string;
+  selector: string;
+};
 
 export type WeaverseElementSchema = {
   title?: string;
@@ -65,22 +64,48 @@ export type WeaverseElementSchema = {
   data?: WeaverseElementData; // Default Element data
   subElements?: WeaverseChildElement[];
   catalog?: WeaverseElementCatalog; // Element catalog
-  flags?: WeaverseElementFlags
+  flags?: WeaverseElementFlags;
 };
 export type WeaverseElementData = {
-  id?: string | number
-  type?: string | undefined
-  childIds?: (string | number)[] | undefined
-  css?: WeaverseElementCSS
+  id?: string | number;
+  type?: string | undefined;
+  childIds?: (string | number)[] | undefined;
+  css?: WeaverseElementCSS;
   [key: string]: any;
-}
+};
 export type WeaverseElementCSS = {
-  '@desktop'?: CSSProperties | { [key: string]: CSSProperties }
-  '@mobile'?: CSSProperties | { [key: string]: CSSProperties }
-}
+  "@desktop"?: CSSProperties | { [key: string]: CSSProperties };
+  "@mobile"?: CSSProperties | { [key: string]: CSSProperties };
+};
 export type WeaverseElementInput = {
   label?: string;
-  type: 'select' | 'checkbox' | 'radio' | 'range' | 'button' | 'image' | 'file' | 'hidden' | 'alignment' | 'color' | 'dimensions' | 'flex' | 'grid' | 'input' | 'switch' | 'spacing' | 'textarea' | 'visibility' | 'border' | 'background' | 'typography' | 'shadow' | 'position' | 'overflow' | 'display' | 'other'
+  type:
+    | "select"
+    | "checkbox"
+    | "radio"
+    | "range"
+    | "button"
+    | "image"
+    | "file"
+    | "hidden"
+    | "alignment"
+    | "color"
+    | "dimensions"
+    | "flex"
+    | "grid"
+    | "input"
+    | "switch"
+    | "spacing"
+    | "textarea"
+    | "visibility"
+    | "border"
+    | "background"
+    | "typography"
+    | "shadow"
+    | "position"
+    | "overflow"
+    | "display"
+    | "other";
   name?: string; // binding property name
   defaultValue?: string;
   helpText?: string; // display help text

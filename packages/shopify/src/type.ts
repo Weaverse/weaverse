@@ -1,11 +1,11 @@
-import {WeaverseElementProps} from '@weaverse/react'
+import { WeaverseElementProps } from '@weaverse/react'
 
 export type Product = {
-  id: number;
-  title: string;
-  body_html: string;
-  vendor: string;
-  handle: string;
+  id: number
+  title: string
+  body_html: string
+  vendor: string
+  handle: string
 }
 
 export type ProductContextProps = {
@@ -13,8 +13,7 @@ export type ProductContextProps = {
   productId?: string | number
 }
 
-
-export interface ProductBoxProps extends WeaverseElementProps{
-  productId: number;
-  productHandle?: string;
+export interface ProductBoxProps extends WeaverseElementProps {
+  productId: number
+  productHandle?: string
 }

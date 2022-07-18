@@ -1,10 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2020",
-    "lib": [
-      "dom",
-      "esnext"
-    ],
+    "lib": ["dom", "esnext"],
     "importHelpers": true,
     // stricter type-checking for stronger correctness. Recommended by TS
     "strict": true,

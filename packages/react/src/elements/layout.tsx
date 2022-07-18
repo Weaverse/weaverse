@@ -2,7 +2,8 @@ import { WeaverseElementSchema } from '@weaverse/core'
 import React, { forwardRef } from 'react'
 
 let Layout = forwardRef((props: any, ref) => {
-  const { css, children, rows, gap, rowSize, columns, gridSize, ...rest } = props
+  const { css, children, rows, gap, rowSize, columns, gridSize, ...rest } =
+    props
   return (
     <section
       ref={ref}
@@ -12,13 +13,12 @@ let Layout = forwardRef((props: any, ref) => {
         '--columns': columns,
         '--gap': gap + 'px',
         '--row-size': rowSize + 'px',
-        '--col-size': 'calc((var(--grid-size) - calc(var(--columns) - 1) * var(--gap)) / var(--columns))',
+        '--col-size':
+          'calc((var(--grid-size) - calc(var(--columns) - 1) * var(--gap)) / var(--columns))',
       }}
       {...rest}
     >
-      <div data-layout-content>
-        {children}
-      </div>
+      <div data-layout-content>{children}</div>
     </section>
   )
 })
@@ -26,7 +26,7 @@ let Layout = forwardRef((props: any, ref) => {
 export let schema: WeaverseElementSchema = {
   title: 'Layout',
   type: 'layout',
-  parentType: "root",
+  parentType: 'root',
   data: {
     css: {
       '@desktop': {
@@ -38,17 +38,18 @@ export let schema: WeaverseElementSchema = {
           margin: '0 auto',
           display: 'grid !important',
           gridTemplateRows: 'repeat(var(--rows), var(--row-size))',
-          gridTemplateColumns: 'repeat(var(--columns), minmax(0, var(--col-size)))',
+          gridTemplateColumns:
+            'repeat(var(--columns), minmax(0, var(--col-size)))',
           gap: 'var(--gap)',
           maxWidth: 'var(--grid-size)',
-        }
+        },
       },
       '@mobile': {
-        padding: "0 16px",
+        padding: '0 16px',
         '> [data-layout-content]': {
           display: 'flex !important',
           flexDirection: 'column',
-        }
+        },
       },
     },
     gridSize: 1224,
@@ -57,8 +58,7 @@ export let schema: WeaverseElementSchema = {
     gap: 16,
     rowSize: 48,
   },
-  settings: [
-  ],
+  settings: [],
 }
 
 export default Layout

@@ -1,7 +1,7 @@
-import { Weaverse } from "@weaverse/core";
+import { Weaverse } from '@weaverse/core'
 
 export interface WeaverseElementProps {
-    children?: React.ReactNode;
+  children?: React.ReactNode
 }
 
 export type WeaverseRootPropsType = { context: Weaverse }
