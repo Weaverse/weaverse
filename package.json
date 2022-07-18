@@ -11,6 +11,7 @@
     "eslint": "^8.19.0",
     "eslint-config-prettier": "^8.5.0",
     "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
     "prettier": "2.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -24,7 +25,8 @@
     "test": "turbo run test",
     "build": "turbo run build",
     "build:graph": "turbo run build --graph=repo-graph.svg",
-    "prepare": "turbo run build"
+    "prepare": "turbo run build",
+    "preprepare": "husky install"
   },
   "workspaces": [
     "packages/core",
@@ -38,5 +40,8 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
+  },
+  "lint-staged": {
+    "./**/*.{js,jsx,ts,tsx,yml}": "prettier --write --ignore-unknown"
   }
 }
