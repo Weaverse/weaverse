@@ -24,7 +24,11 @@ export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
   let eventHandlers = context?.studioBridge?.eventHandlers || {}
   let themeClass = context.stitchesInstance.theme.className
   return (
-    <div className={`weaverse-content-root ${themeClass}`} {...eventHandlers} ref={rootRef}>
+    <div
+      className={`weaverse-content-root ${themeClass}`}
+      {...eventHandlers}
+      ref={rootRef}
+    >
       <WeaverseContextProvider value={context}>
         <ItemInstance id={context.projectData.rootId || 0} />
       </WeaverseContextProvider>
@@ -47,7 +51,7 @@ const ItemComponent = ({ instance }: ItemComponentProps) => {
     if (isBrowser && !instance.ref.current) {
       // fallback ref if component is not forwardRef
       Object.assign(instance.ref, {
-        current: document.querySelector(`[data-wv-id="${id}"]`)
+        current: document.querySelector(`[data-wv-id="${id}"]`),
       })
     }
     return () => {
@@ -70,7 +74,9 @@ const ItemComponent = ({ instance }: ItemComponentProps) => {
         className={generateItemClass(instance, stitchesInstance)}
         {...rest}
       >
-        {childIds.map(id => <ItemInstance key={id} id={id} />)}
+        {childIds.map((id) => (
+          <ItemInstance key={id} id={id} />
+        ))}
       </Component>
     )
   }
@@ -82,9 +88,7 @@ let ItemInstance = ({ id }: { id: string | number }) => {
   let { itemInstances } = context
   let instance = itemInstances.get(id)
   if (!instance) {
-    return (
-      <div style={{ display: "none" }}>Item instance {id} not found</div>
-    )
+    return <div style={{ display: 'none' }}>Item instance {id} not found</div>
   }
   return <ItemComponent instance={instance} />
 }

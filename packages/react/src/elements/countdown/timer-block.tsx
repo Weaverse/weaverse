@@ -1,12 +1,12 @@
-import React, {FC} from 'react'
+import React, { FC } from 'react'
 
 const TimerBlock: FC = (props: any) => {
-  return <div>
+  return (
     <div>
-      {props.value.toString().padStart(2, "0")}
+      <div>{props.value.toString().padStart(2, '0')}</div>
+      {props.label && <div className="wv-countdown-label">{props.label}</div>}
     </div>
-    {props.label && <div className="wv-countdown-label">{props.label}</div>}
-  </div>
+  )
 }
 
 export default TimerBlock

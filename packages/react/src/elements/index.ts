@@ -36,16 +36,16 @@ const elements: WeaverseElementMap = {
   },
   Video: {
     Component: Video.default,
-    schema: Video.schema
+    schema: Video.schema,
   },
   Map: {
     Component: Map.default,
-    schema: Map.schema
+    schema: Map.schema,
   },
   Countdown: {
     Component: Countdown.default,
-    schema: Countdown.schema
-  }
+    schema: Countdown.schema,
+  },
 }
 
 export default elements
