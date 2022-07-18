@@ -9,6 +9,7 @@ import Stitches from "@stitches/core/types/stitches";
 import { RefObject } from "react";
 import type { TODO, WeaverseElement, WeaverseElementData, ProjectDataType, WeaverseType, WeaverseElementFlags } from "./types";
 import {stichesUtils} from './utils/styles'
+import {isIframe} from './utils'
 
 /**
  * WeaverseItemStore is a store for Weaverse item, it can be used to subscribe/update the item data
@@ -169,6 +170,25 @@ export class Weaverse {
     this.init();
   }
 
+  loadStudio() {
+    if (this.isDesignMode && isIframe) {
+      let initStudio = () => {
+        this.studioBridge = new window.WeaverseStudioBridge(this);
+        this.triggerUpdate();
+      };
+
+      if (!window.WeaverseStudioBridge) {
+        // load studio bridge script by url: https://weaverse.io/assets/studio/studio-bridge.js
+        const studioBridgeScript = document.createElement("script");
+        studioBridgeScript.src = `${this.appUrl}/assets/studio/studio-bridge.js`;
+        studioBridgeScript.type = "module";
+        studioBridgeScript.onload = initStudio;
+        document.body.appendChild(studioBridgeScript);
+      } else {
+        initStudio();
+      }
+    }
+  }
   /**
    * register the custom React Component to Weaverse, store it into Weaverse.elementInstances
    * @param element {WeaverseElement} custom React Component
@@ -185,6 +205,7 @@ export class Weaverse {
     this.initStitches();
     this.initProjectItemData();
     this.updateProjectData()
+    this.loadStudio()
   }
 
   initStitches = () => {
