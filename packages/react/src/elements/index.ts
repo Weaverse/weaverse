@@ -1,12 +1,12 @@
+import { WeaverseElementMap } from '@weaverse/core'
 import * as Button from './button'
 import * as Container from './container'
-import * as Layout from './layout'
-import * as Text from './text'
-import * as Image from './image'
-import * as Video from './video'
-import { WeaverseElementMap } from '@weaverse/core'
-import * as Map from './map'
 import * as Countdown from './countdown'
+import * as Image from './image'
+import * as Layout from './layout'
+import * as Map from './map'
+import * as Text from './text'
+import * as Video from './video'
 
 const elements: WeaverseElementMap = {
   Countdown: {
