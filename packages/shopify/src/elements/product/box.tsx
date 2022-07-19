@@ -2,8 +2,8 @@ import React, { forwardRef } from 'react'
 import { ProductProvider, weaverseShopifyProducts } from './context'
 import { ProductBoxProps } from '../../type'
 
-export let ProductBox = forwardRef<any, ProductBoxProps>((props, ref) => {
-  let { children, productId, productHandle, ...rest } = props
+let ProductBox = forwardRef<HTMLDivElement, ProductBoxProps>((props, ref) => {
+  let { children, productId, ...rest } = props
   let product = weaverseShopifyProducts[productId]
   return (
     <div {...rest} ref={ref}>
@@ -17,3 +17,5 @@ export let ProductBox = forwardRef<any, ProductBoxProps>((props, ref) => {
     </div>
   )
 })
+
+export default ProductBox

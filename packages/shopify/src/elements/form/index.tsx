@@ -1,8 +1,8 @@
-import React, { FC, forwardRef, useContext } from 'react'
-import { WeaverseElementSchema } from '@weaverse/core'
+import { TODO } from '@weaverse/core'
 import { WeaverseContext } from '@weaverse/react'
+import React, { forwardRef, useContext } from 'react'
 
-const Form: FC = forwardRef((props, ref) => {
+const Form = forwardRef<HTMLElement, TODO>((props, ref) => {
   const { isDesignMode, ssrMode, stitchesInstance } =
     useContext(WeaverseContext)
   const { fields, formType, button, ...rest } = props
@@ -17,7 +17,7 @@ const Form: FC = forwardRef((props, ref) => {
   const { className: buttonClass = '' } = stitchesInstance.css(buttonCss)()
   const formContent = (
     <div ref={ref} {...rest}>
-      {fields.map((field) => (
+      {fields.map((field: any) => (
         <div
           key={field.id}
           style={{ pointerEvents: isDesignMode ? 'none' : 'auto' }}
@@ -50,7 +50,7 @@ const Form: FC = forwardRef((props, ref) => {
       <>
         {`{% form '${formType}' %}`}
         {formContent}
-        {`{% endform %}`}
+        {'{% endform %}'}
       </>
     )
   }
@@ -93,58 +93,58 @@ Form.defaultProps = {
   },
 }
 
-export const schema: WeaverseElementSchema = {
-  type: 'form',
-  title: 'Form',
-  parentType: 'container',
-  subElements: ['label', 'button'],
-  toolbar: [
-    {
-      type: 'delete',
-    },
-    {
-      type: 'duplicate',
-    },
-    {
-      type: 'link',
-    },
-    {
-      type: 'color',
-    },
-  ],
-  data: {
-    css: {
-      '@desktop': {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 14,
-        width: '100%',
-        '& label': {
-          backgroundColor: 'red',
-        },
-        '& > div': {
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 4,
-        },
-        '& input, & textarea': {
-          px: 12,
-          py: 10,
-          border: '1px solid #ddd',
-        },
-        '& button': {
-          background: '#4B5563',
-          color: '#fff',
-          padding: '14px 30px',
-          border: 'none',
-          width: 'fit-content',
-        },
-      },
-    },
-  },
-  flags: {
-    draggable: true,
-  },
-}
+// export const schema: WeaverseElementSchema = {
+//   type: 'form',
+//   title: 'Form',
+//   parentType: 'container',
+//   subElements: ['label', 'button'],
+//   toolbar: [
+//     {
+//       type: 'delete',
+//     },
+//     {
+//       type: 'duplicate',
+//     },
+//     {
+//       type: 'link',
+//     },
+//     {
+//       type: 'color',
+//     },
+//   ],
+//   data: {
+//     css: {
+//       '@desktop': {
+//         display: 'flex',
+//         flexDirection: 'column',
+//         gap: 14,
+//         width: '100%',
+//         '& label': {
+//           backgroundColor: 'red',
+//         },
+//         '& > div': {
+//           display: 'flex',
+//           flexDirection: 'column',
+//           gap: 4,
+//         },
+//         '& input, & textarea': {
+//           px: 12,
+//           py: 10,
+//           border: '1px solid #ddd',
+//         },
+//         '& button': {
+//           background: '#4B5563',
+//           color: '#fff',
+//           padding: '14px 30px',
+//           border: 'none',
+//           width: 'fit-content',
+//         },
+//       },
+//     },
+//   },
+//   flags: {
+//     draggable: true,
+//   },
+// }
 
 export default Form
