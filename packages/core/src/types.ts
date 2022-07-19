@@ -90,7 +90,7 @@ export type ElementInspector = {
 
 export type InspectorInput = {
   label?: string;
-  type: InspectorInputType;
+  type: InputType;
   name?: string; // binding property name
   defaultValue?: string;
   helpText?: string; // display help text
@@ -99,7 +99,7 @@ export type InspectorInput = {
   [key: string]: TODO; // other properties, implement later
 };
 
-export type InspectorInputType =
+export type InputType =
   | "select"
   | "checkbox"
   | "radio"
