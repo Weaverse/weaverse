@@ -4,18 +4,13 @@ import { WeaverseContext } from '../context'
 
 const Video = forwardRef<HTMLVideoElement, TODO>((props, ref) => {
   const { isDesignMode } = useContext(WeaverseContext)
-  let { src, type, controls, autoPlay, loop, muted, ...rest } = props
-
-  if (isDesignMode) {
-    controls = false
-    autoPlay = false
-  }
+  let { src, type, controls, poster, autoPlay, loop, muted, ...rest } = props
 
   return (
     <video
       ref={ref}
-      controls={controls}
-      autoPlay={autoPlay}
+      controls={isDesignMode ? false : controls}
+      autoPlay={isDesignMode ? false : autoPlay}
       loop={loop}
       muted={true}
       controlsList="nodownload"
@@ -36,33 +31,18 @@ Video.defaultProps = {
   controls: false,
   autoPlay: true,
   muted: true,
-  width: '100%',
-  height: 'auto',
+  css: {
+    '@desktop': {
+      height: 'fit-content',
+      margin: 0,
+      outline: 'none',
+      overflowWrap: 'break-word',
+      padding: 0,
+      whitespace: 'break-spaces',
+      width: '100%',
+      wordBreak: 'break-word',
+    },
+  },
 }
-
-// export const schema: WeaverseElementSchema = {
-//   title: 'Video',
-//   type: 'video',
-//   parentType: 'layout',
-//   toolbar: [
-//     {
-//       type: 'delete',
-//     },
-//     {
-//       type: 'duplicate',
-//     },
-//     {
-//       type: 'link',
-//     },
-//     {
-//       type: 'color',
-//     },
-//   ],
-//   flags: {
-//     resizable: true,
-//     draggable: true,
-//     sortable: true,
-//   },
-// }
 
 export default Video

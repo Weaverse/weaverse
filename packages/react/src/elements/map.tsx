@@ -24,38 +24,11 @@ const Map = forwardRef<HTMLDivElement, TODO>((props, ref) => {
 Map.defaultProps = {
   place: 'Hanoi',
   zoom: 14,
+  css: {
+    '@desktop': {
+      gridArea: '1 / 1 / 11 / 13',
+    },
+  },
 }
-
-// export const schema: WeaverseElementSchema = {
-//   title: 'Map',
-//   type: 'map',
-//   parentType: 'layout',
-//   toolbar: [
-//     {
-//       type: 'delete',
-//     },
-//     {
-//       type: 'duplicate',
-//     },
-//     {
-//       type: 'link',
-//     },
-//     {
-//       type: 'color',
-//     },
-//   ],
-//   data: {
-//     css: {
-//       '@desktop': {
-//         gridArea: '1 / 1 / 11 / 13',
-//       },
-//     },
-//   },
-//   flags: {
-//     resizable: true,
-//     draggable: true,
-//     sortable: true,
-//   },
-// }
 
 export default Map

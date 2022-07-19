@@ -89,60 +89,34 @@ Form.defaultProps = {
     openInNewTab: true,
     targetLink: 'https://myshop.com',
   },
+  css: {
+    '@desktop': {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 14,
+      width: '100%',
+      '& label': {
+        backgroundColor: 'red',
+      },
+      '& > div': {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 4,
+      },
+      '& input, & textarea': {
+        px: 12,
+        py: 10,
+        border: '1px solid #ddd',
+      },
+      '& button': {
+        background: '#4B5563',
+        color: '#fff',
+        padding: '14px 30px',
+        border: 'none',
+        width: 'fit-content',
+      },
+    },
+  },
 }
-
-// export const schema: WeaverseElementSchema = {
-//   type: 'form',
-//   title: 'Form',
-//   parentType: 'container',
-//   subElements: ['label', 'button'],
-//   toolbar: [
-//     {
-//       type: 'delete',
-//     },
-//     {
-//       type: 'duplicate',
-//     },
-//     {
-//       type: 'link',
-//     },
-//     {
-//       type: 'color',
-//     },
-//   ],
-//   data: {
-//     css: {
-//       '@desktop': {
-//         display: 'flex',
-//         flexDirection: 'column',
-//         gap: 14,
-//         width: '100%',
-//         '& label': {
-//           backgroundColor: 'red',
-//         },
-//         '& > div': {
-//           display: 'flex',
-//           flexDirection: 'column',
-//           gap: 4,
-//         },
-//         '& input, & textarea': {
-//           px: 12,
-//           py: 10,
-//           border: '1px solid #ddd',
-//         },
-//         '& button': {
-//           background: '#4B5563',
-//           color: '#fff',
-//           padding: '14px 30px',
-//           border: 'none',
-//           width: 'fit-content',
-//         },
-//       },
-//     },
-//   },
-//   flags: {
-//     draggable: true,
-//   },
-// }
 
 export default Form
