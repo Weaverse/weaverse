@@ -6,7 +6,7 @@ import type { ItemComponentProps, WeaverseRootPropsType } from './types'
 import { generateItemClass } from './utils'
 
 export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
-  let [, setData] = useState<ProjectDataType>(context.projectData)
+  let [, setData] = useState<ProjectDataType | unknown>(context.projectData)
   let rootRef = useRef<HTMLElement>()
 
   useEffect(() => {
