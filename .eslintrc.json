@@ -20,7 +20,8 @@
     "semi": ["error", "never"],
     "react/display-name": "off",
     "prefer-const": "off",
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "no-mixed-spaces-and-tabs": "off"
   },
   "settings": {
     "react": {

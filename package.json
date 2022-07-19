@@ -10,6 +10,7 @@
     "@typescript-eslint/parser": "^5.30.6",
     "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.30.1",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
@@ -43,8 +44,17 @@
       "@commitlint/config-conventional"
     ]
   },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "importOrder": [
+      "^@(.*)/(.*)$",
+      "^~/(.*)$",
+      "^[./]"
+    ]
+  },
   "lint-staged": {
-    "./**/*.{js,jsx,ts,tsx,yml}": [
+    "./**/*.{js,jsx,ts,tsx,yml,json}": [
       "nr lint:fix",
       "prettier --write --ignore-unknown"
     ]
