@@ -205,10 +205,10 @@ export class Weaverse {
    * @param element {WeaverseElement} custom React Component
    */
   registerElement(element: WeaverseElement) {
-    if (element?.schema?.type) {
-      this.elementInstances.set(element.schema.type, element);
+    if (element?.type) {
+      this.elementInstances.set(element?.type, element);
     } else {
-      throw new Error("Weaverse: registerElement: schema.type is required");
+      throw new Error("Weaverse: registerElement: `type` is required");
     }
   }
 
