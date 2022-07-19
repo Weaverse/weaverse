@@ -40,9 +40,7 @@ const Form = forwardRef<HTMLElement, TODO>((props, ref) => {
           )}
         </div>
       ))}
-      <button className={buttonClass} position={button.position}>
-        {button.text}
-      </button>
+      <button className={buttonClass}>{button.text}</button>
     </div>
   )
   if (ssrMode) {
