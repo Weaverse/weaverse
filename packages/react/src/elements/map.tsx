@@ -1,9 +1,9 @@
 import React, { FC, forwardRef } from 'react'
-import { WeaverseElementSchema } from '@weaverse/core'
+import { TODO, WeaverseElementSchema } from '@weaverse/core'
 
-const Map: FC = forwardRef((props, ref) => {
+const Map = forwardRef<HTMLDivElement, TODO>((props, ref) => {
   const { place, zoom } = props
-  console.info('9779 props', props)
+
   return (
     <div ref={ref} {...props}>
       <iframe
@@ -26,36 +26,36 @@ Map.defaultProps = {
   zoom: 14,
 }
 
-export const schema: WeaverseElementSchema = {
-  title: 'Map',
-  type: 'map',
-  parentType: 'layout',
-  toolbar: [
-    {
-      type: 'delete',
-    },
-    {
-      type: 'duplicate',
-    },
-    {
-      type: 'link',
-    },
-    {
-      type: 'color',
-    },
-  ],
-  data: {
-    css: {
-      '@desktop': {
-        gridArea: '1 / 1 / 11 / 13',
-      },
-    },
-  },
-  flags: {
-    resizable: true,
-    draggable: true,
-    sortable: true,
-  },
-}
+// export const schema: WeaverseElementSchema = {
+//   title: 'Map',
+//   type: 'map',
+//   parentType: 'layout',
+//   toolbar: [
+//     {
+//       type: 'delete',
+//     },
+//     {
+//       type: 'duplicate',
+//     },
+//     {
+//       type: 'link',
+//     },
+//     {
+//       type: 'color',
+//     },
+//   ],
+//   data: {
+//     css: {
+//       '@desktop': {
+//         gridArea: '1 / 1 / 11 / 13',
+//       },
+//     },
+//   },
+//   flags: {
+//     resizable: true,
+//     draggable: true,
+//     sortable: true,
+//   },
+// }
 
 export default Map

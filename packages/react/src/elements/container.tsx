@@ -1,35 +1,35 @@
-import { WeaverseElementSchema } from '@weaverse/core'
+import { TODO } from '@weaverse/core'
 import React, { forwardRef } from 'react'
 
-let Container = forwardRef((props: any, ref) => {
+let Container = forwardRef<HTMLElement, TODO>((props, ref) => {
   return <div ref={ref} {...props} />
 })
 
-export let schema: WeaverseElementSchema = {
-  title: 'Container',
-  type: 'container',
-  parentType: 'layout',
-  data: {
-    css: {
-      '@desktop': {
-        display: 'flex',
-        backgroundColor: 'rgba(248,203,203,0.38)',
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-        justifyContent: 'flex-start',
-        textAlign: 'left',
-        gridArea: '1 / 1 / 3 / 6',
-        width: '100%',
-        height: 'fit-content',
-      },
-    },
-  },
-  settings: [],
-  flags: {
-    draggable: true,
-    resizable: true,
-    sortable: true,
-  },
-}
+// export let schema: WeaverseElementSchema = {
+//   title: 'Container',
+//   type: 'container',
+//   parentType: 'layout',
+//   data: {
+//     css: {
+//       '@desktop': {
+//         display: 'flex',
+//         backgroundColor: 'rgba(248,203,203,0.38)',
+//         flexDirection: 'column',
+//         alignItems: 'flex-start',
+//         justifyContent: 'flex-start',
+//         textAlign: 'left',
+//         gridArea: '1 / 1 / 3 / 6',
+//         width: '100%',
+//         height: 'fit-content',
+//       },
+//     },
+//   },
+//   settings: [],
+//   flags: {
+//     draggable: true,
+//     resizable: true,
+//     sortable: true,
+//   },
+// }
 
 export default Container

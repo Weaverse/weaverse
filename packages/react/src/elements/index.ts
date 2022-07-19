@@ -1,4 +1,3 @@
-import * as BaseElement from './base'
 import * as Button from './button'
 import * as Container from './container'
 import * as Layout from './layout'
@@ -10,41 +9,37 @@ import * as Map from './map'
 import * as Countdown from './countdown'
 
 const elements: WeaverseElementMap = {
+  Countdown: {
+    Component: Countdown.default,
+    type: 'countdown',
+  },
   Button: {
     Component: Button.default,
-    schema: Button.schema,
-  },
-  BaseElement: {
-    Component: BaseElement.default,
-    schema: BaseElement.schema,
-  },
-  Text: {
-    Component: Text.default,
-    schema: Text.schema,
-  },
-  Layout: {
-    Component: Layout.default,
-    schema: Layout.schema,
+    type: 'button',
   },
   Container: {
     Component: Container.default,
-    schema: Container.schema,
+    type: 'container',
   },
   Image: {
     Component: Image.default,
-    schema: Image.schema,
+    type: 'image',
   },
-  Video: {
-    Component: Video.default,
-    schema: Video.schema,
+  Layout: {
+    Component: Layout.default,
+    type: 'layout',
   },
   Map: {
     Component: Map.default,
-    schema: Map.schema,
+    type: 'map',
   },
-  Countdown: {
-    Component: Countdown.default,
-    schema: Countdown.schema,
+  Text: {
+    Component: Text.default,
+    type: 'text',
+  },
+  Video: {
+    Component: Video.default,
+    type: 'video',
   },
 }
 

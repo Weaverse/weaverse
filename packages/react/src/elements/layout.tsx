@@ -1,9 +1,9 @@
-import { WeaverseElementSchema } from '@weaverse/core'
+import { TODO, WeaverseElementSchema } from '@weaverse/core'
 import React, { forwardRef } from 'react'
 
-let Layout = forwardRef((props: any, ref) => {
-  const { css, children, rows, gap, rowSize, columns, gridSize, ...rest } =
-    props
+let Layout = forwardRef<HTMLElement, TODO>((props, ref) => {
+  let { css, children, rows, gap, rowSize, columns, gridSize, ...rest } = props
+
   return (
     <section
       ref={ref}
@@ -23,42 +23,42 @@ let Layout = forwardRef((props: any, ref) => {
   )
 })
 
-export let schema: WeaverseElementSchema = {
-  title: 'Layout',
-  type: 'layout',
-  parentType: 'root',
-  data: {
-    css: {
-      '@desktop': {
-        paddingTop: '16px',
-        paddingBottom: '16px',
-        paddingLeft: 'var(--gap)',
-        paddingRight: 'var(--gap)',
-        '> [data-layout-content]': {
-          margin: '0 auto',
-          display: 'grid !important',
-          gridTemplateRows: 'repeat(var(--rows), var(--row-size))',
-          gridTemplateColumns:
-            'repeat(var(--columns), minmax(0, var(--col-size)))',
-          gap: 'var(--gap)',
-          maxWidth: 'var(--grid-size)',
-        },
-      },
-      '@mobile': {
-        padding: '0 16px',
-        '> [data-layout-content]': {
-          display: 'flex !important',
-          flexDirection: 'column',
-        },
-      },
-    },
-    gridSize: 1224,
-    rows: 12,
-    columns: 12,
-    gap: 16,
-    rowSize: 48,
-  },
-  settings: [],
-}
+// export let schema: WeaverseElementSchema = {
+//   title: 'Layout',
+//   type: 'layout',
+//   parentType: 'root',
+//   data: {
+//     css: {
+//       '@desktop': {
+//         paddingTop: '16px',
+//         paddingBottom: '16px',
+//         paddingLeft: 'var(--gap)',
+//         paddingRight: 'var(--gap)',
+//         '> [data-layout-content]': {
+//           margin: '0 auto',
+//           display: 'grid !important',
+//           gridTemplateRows: 'repeat(var(--rows), var(--row-size))',
+//           gridTemplateColumns:
+//             'repeat(var(--columns), minmax(0, var(--col-size)))',
+//           gap: 'var(--gap)',
+//           maxWidth: 'var(--grid-size)',
+//         },
+//       },
+//       '@mobile': {
+//         padding: '0 16px',
+//         '> [data-layout-content]': {
+//           display: 'flex !important',
+//           flexDirection: 'column',
+//         },
+//       },
+//     },
+//     gridSize: 1224,
+//     rows: 12,
+//     columns: 12,
+//     gap: 16,
+//     rowSize: 48,
+//   },
+//   settings: [],
+// }
 
 export default Layout
