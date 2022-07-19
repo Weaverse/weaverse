@@ -5,3 +5,5 @@ export interface WeaverseElementProps {
 }
 
 export type WeaverseRootPropsType = { context: Weaverse }
+
+export type CountdownTimeKey = 'days' | 'hours' | 'minutes' | 'seconds'
