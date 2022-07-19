@@ -1,8 +1,8 @@
 import React, { forwardRef, useContext } from 'react'
-import { WeaverseContext } from '@weaverse/react'
+import { TODO, WeaverseContext } from '@weaverse/react'
 import { ProductContext } from './context'
 
-export let ProductTitle = forwardRef((props: any, ref) => {
+let ProductTitle = forwardRef<HTMLDivElement, TODO>((props, ref) => {
   let { ...rest } = props
   let { product, productId } = useContext(ProductContext)
   let weaverseContext = useContext(WeaverseContext)
@@ -16,3 +16,5 @@ export let ProductTitle = forwardRef((props: any, ref) => {
     </div>
   )
 })
+
+export default ProductTitle

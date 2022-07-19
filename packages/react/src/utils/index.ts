@@ -1,11 +1,11 @@
-import { WeaverseItemStore } from '@weaverse/core'
+import type { WeaverseItemStore } from '@weaverse/core'
 
 // make the css data formatted to correct order (desktop, tablet, mobile)
 let shortCssObject = (css: { [key: string]: any }) => {
   return {
-    '@desktop': css[`@desktop`],
+    '@desktop': css['@desktop'],
     // '@tablet': css[`@tablet`],
-    '@mobile': css[`@mobile`],
+    '@mobile': css['@mobile'],
   }
 }
 
@@ -14,11 +14,12 @@ export function generateItemClass(
   stitchesInstance: any
 ) {
   let { css, className: cls = '' } = instance.data
+  let defaultCss = instance.Element?.Component?.defaultProps?.css || {}
   let className = ''
-  if (css) {
+  if (css || defaultCss) {
     // let stitches create the style from css object and
     // then return the classname, so we can use it in the render
-    let formattedCss = shortCssObject(css)
+    let formattedCss = shortCssObject(css || defaultCss)
     let { className: newClass = '' } = stitchesInstance.css(formattedCss)()
     let { stitchesClass } = instance
     let otherClass = (instance.ref.current?.className || '')

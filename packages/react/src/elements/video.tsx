@@ -1,31 +1,23 @@
-import { WeaverseElementSchema } from '@weaverse/core'
-import React, { FC, forwardRef, useContext } from 'react'
+import { TODO } from '@weaverse/core'
+import React, { forwardRef, useContext } from 'react'
 import { WeaverseContext } from '../context'
 
-const Video: FC = forwardRef((props, ref) => {
+const Video = forwardRef<HTMLVideoElement, TODO>((props, ref) => {
   const { isDesignMode } = useContext(WeaverseContext)
-  let { src, type, controls, autoPlay, loop, muted, ...rest } = props
+  let { src, type, controls, poster, autoPlay, loop, muted, ...rest } = props
 
-  if (isDesignMode) {
-    controls = false
-    autoPlay = false
-  }
-  console.info('9779 props', props, isDesignMode)
   return (
     <video
       ref={ref}
-      controls={controls}
-      autoPlay={autoPlay}
+      controls={isDesignMode ? false : controls}
+      autoPlay={isDesignMode ? false : autoPlay}
       loop={loop}
       muted={true}
+      controlsList="nodownload"
+      disablePictureInPicture
       {...rest}
     >
-      <source
-        src={src}
-        type={type || 'video/mp4'}
-        controlsList="nodownload"
-        disablePictureInPicture
-      />
+      <source src={src} type={type || 'video/mp4'} />
     </video>
   )
 })
@@ -39,32 +31,17 @@ Video.defaultProps = {
   controls: false,
   autoPlay: true,
   muted: true,
-  width: '100%',
-  height: 'auto',
-}
-
-export const schema: WeaverseElementSchema = {
-  title: 'Video',
-  type: 'video',
-  parentType: 'layout',
-  toolbar: [
-    {
-      type: 'delete',
+  css: {
+    '@desktop': {
+      height: 'fit-content',
+      margin: 0,
+      outline: 'none',
+      overflowWrap: 'break-word',
+      padding: 0,
+      whitespace: 'break-spaces',
+      width: '100%',
+      wordBreak: 'break-word',
     },
-    {
-      type: 'duplicate',
-    },
-    {
-      type: 'link',
-    },
-    {
-      type: 'color',
-    },
-  ],
-  flags: {
-    resizable: true,
-    draggable: true,
-    sortable: true,
   },
 }
 
