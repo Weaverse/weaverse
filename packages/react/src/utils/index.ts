@@ -1,11 +1,11 @@
-import { WeaverseItemStore } from '@weaverse/core'
+import type { WeaverseItemStore } from '@weaverse/core'
 
 // make the css data formatted to correct order (desktop, tablet, mobile)
 let shortCssObject = (css: { [key: string]: any }) => {
   return {
-    '@desktop': css[`@desktop`],
+    '@desktop': css['@desktop'],
     // '@tablet': css[`@tablet`],
-    '@mobile': css[`@mobile`],
+    '@mobile': css['@mobile'],
   }
 }
 

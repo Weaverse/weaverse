@@ -1,4 +1,5 @@
-import { CSSProperties } from "@stitches/core";
+import type { CSSProperties } from "@stitches/core";
+import type { ForwardRefExoticComponent } from "react";
 
 export interface ProjectDataType {
   items: WeaverseElementData[];
@@ -24,14 +25,17 @@ export type WeaverseElementMap = {
 };
 
 export type WeaverseElement = {
-  Component: TODO;
-  schema: WeaverseElementSchema;
+  Component: ForwardRefExoticComponent<any>;
+  type: string;
+  schema?: WeaverseElementSchema;
 };
+
+export type CatalogGroup = "essential" | "composition" | "other";
 
 export type WeaverseElementCatalog = {
   name: string;
   icon?: string;
-  group?: "essential" | "composition" | "other";
+  group?: CatalogGroup;
 };
 
 export type ElementFlags = "draggable" | "resizable" | "sortable";
@@ -58,8 +62,9 @@ export type WeaverseElementSchema = {
   title?: string;
   type: string;
   parentType: "container" | "layout" | "root";
-  settings?: WeaverseElementInput[];
-  styles?: WeaverseElementInput[];
+  // settings?: InspectorInput[];
+  // styles?: InspectorInput[];
+  inspector?: ElementInspector;
   toolbar?: (ToolbarAction | ToolbarAction[])[];
   data?: WeaverseElementData; // Default Element data
   subElements?: WeaverseChildElement[];
@@ -77,35 +82,15 @@ export type WeaverseElementCSS = {
   "@desktop"?: CSSProperties | { [key: string]: CSSProperties };
   "@mobile"?: CSSProperties | { [key: string]: CSSProperties };
 };
-export type WeaverseElementInput = {
+
+export type ElementInspector = {
+  settings?: InspectorInput[];
+  styles?: InspectorInput[];
+};
+
+export type InspectorInput = {
   label?: string;
-  type:
-    | "select"
-    | "checkbox"
-    | "radio"
-    | "range"
-    | "button"
-    | "image"
-    | "file"
-    | "hidden"
-    | "alignment"
-    | "color"
-    | "dimensions"
-    | "flex"
-    | "grid"
-    | "input"
-    | "switch"
-    | "spacing"
-    | "textarea"
-    | "visibility"
-    | "border"
-    | "background"
-    | "typography"
-    | "shadow"
-    | "position"
-    | "overflow"
-    | "display"
-    | "other";
+  type: InspectorInputType;
   name?: string; // binding property name
   defaultValue?: string;
   helpText?: string; // display help text
@@ -113,9 +98,31 @@ export type WeaverseElementInput = {
   conditions?: TODO[]; // only display if conditions are met, eg. {  name: 'productDataLoaded', value: true }
   [key: string]: TODO; // other properties, implement later
 };
-declare global {
-  interface Window {
-    WeaverseStudioBridge: TODO;
-    weaverseShopifyProducts: TODO;
-  }
-}
+
+export type InspectorInputType =
+  | "select"
+  | "checkbox"
+  | "radio"
+  | "range"
+  | "button"
+  | "image"
+  | "file"
+  | "hidden"
+  | "alignment"
+  | "color"
+  | "dimensions"
+  | "flex"
+  | "grid"
+  | "input"
+  | "switch"
+  | "spacing"
+  | "textarea"
+  | "visibility"
+  | "border"
+  | "background"
+  | "typography"
+  | "shadow"
+  | "position"
+  | "overflow"
+  | "display"
+  | "other";

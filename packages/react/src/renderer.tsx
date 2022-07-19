@@ -1,12 +1,12 @@
 import type { ProjectDataType, WeaverseElementData } from '@weaverse/core'
-import { isBrowser, WeaverseItemStore } from '@weaverse/core'
+import { isBrowser } from '@weaverse/core'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { WeaverseContext, WeaverseContextProvider } from './context'
-import { WeaverseRootPropsType } from './types'
+import type { ItemComponentProps, WeaverseRootPropsType } from './types'
 import { generateItemClass } from './utils'
 
 export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
-  let [, setData] = useState<ProjectDataType | {}>(context.projectData)
+  let [, setData] = useState<ProjectDataType>(context.projectData)
   let rootRef = useRef<HTMLElement>()
 
   useEffect(() => {
@@ -36,14 +36,10 @@ export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
   )
 }
 
-type ItemComponentProps = {
-  instance: InstanceType<typeof WeaverseItemStore>
-}
-
 const ItemComponent = ({ instance }: ItemComponentProps) => {
   let { stitchesInstance, elementInstances } = useContext(WeaverseContext)
   let [data, setData] = useState<WeaverseElementData>(instance.data)
-  let { id, type, childIds = [], css, className: cls = '', ...rest } = data
+  let { id, type, childIds = [], ...rest } = data
 
   useEffect(() => {
     let update = (data: WeaverseElementData) => setData({ ...data })
@@ -62,7 +58,6 @@ const ItemComponent = ({ instance }: ItemComponentProps) => {
   let Element = elementInstances.get(type || 'base')
   if (Element?.Component) {
     let Component = Element.Component
-    // @ts-ignore
     if (Component.$$typeof === Symbol.for('react.forward_ref')) {
       rest.ref = instance.ref
     }
