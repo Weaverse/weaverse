@@ -39,7 +39,7 @@ export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
 const ItemComponent = ({ instance }: ItemComponentProps) => {
   let { stitchesInstance, elementInstances } = useContext(WeaverseContext)
   let [data, setData] = useState<WeaverseElementData>(instance.data)
-  let { id, type, childIds = [], ...rest } = data
+  let { id, type, childIds = [], css, className, ...rest } = data
 
   useEffect(() => {
     let update = (data: WeaverseElementData) => setData({ ...data })

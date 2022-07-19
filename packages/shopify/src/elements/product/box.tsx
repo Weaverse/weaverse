@@ -3,7 +3,7 @@ import { ProductProvider, weaverseShopifyProducts } from './context'
 import { ProductBoxProps } from '../../type'
 
 let ProductBox = forwardRef<HTMLDivElement, ProductBoxProps>((props, ref) => {
-  let { children, productId, ...rest } = props
+  let { children, productId, productHandle, ...rest } = props
   let product = weaverseShopifyProducts[productId]
   return (
     <div {...rest} ref={ref}>
