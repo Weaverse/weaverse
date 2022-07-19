@@ -14,11 +14,12 @@ export function generateItemClass(
   stitchesInstance: any
 ) {
   let { css, className: cls = '' } = instance.data
+  let defaultCss = instance.Element?.Component?.defaultProps?.css || {}
   let className = ''
-  if (css) {
+  if (css || defaultCss) {
     // let stitches create the style from css object and
     // then return the classname, so we can use it in the render
-    let formattedCss = shortCssObject(css)
+    let formattedCss = shortCssObject(css || defaultCss)
     let { className: newClass = '' } = stitchesInstance.css(formattedCss)()
     let { stitchesClass } = instance
     let otherClass = (instance.ref.current?.className || '')
