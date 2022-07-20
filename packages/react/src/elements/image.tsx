@@ -2,7 +2,7 @@ import { TODO } from '@weaverse/core'
 import React from 'react'
 
 let Image = React.forwardRef<HTMLImageElement, TODO>((props, ref) => {
-  let { src, alt, ...rest } = props
+  let { src, alt, children, ...rest } = props
   return <img ref={ref} {...rest} alt={alt} src={src} />
 })
 
