@@ -4,9 +4,9 @@
 // noinspection JSUnusedGlobalSymbols
 
 // using stitches core only for framework-agnostic code
-import * as stitches from '@stitches/core'
-import Stitches from '@stitches/core/types/stitches'
-import { RefObject } from 'react'
+import * as stitches from "@stitches/core"
+import Stitches from "@stitches/core/types/stitches"
+import { RefObject } from "react"
 import type {
   TODO,
   WeaverseElement,
@@ -14,9 +14,9 @@ import type {
   ProjectDataType,
   WeaverseType,
   WeaverseElementFlags,
-} from './types'
-import { stichesUtils } from './utils/styles'
-import { isIframe } from './utils'
+} from "./types"
+import { stichesUtils } from "./utils/styles"
+import { isIframe } from "./utils"
 
 /**
  * WeaverseItemStore is a store for Weaverse item, it can be used to subscribe/update the item data
@@ -39,7 +39,7 @@ export class WeaverseItemStore {
     current: null,
   }
   weaverse: Weaverse
-  stitchesClass = ''
+  stitchesClass = ""
 
   constructor(itemData: WeaverseElementData, weaverse: Weaverse) {
     const { type, id } = itemData
@@ -70,8 +70,7 @@ export class WeaverseItemStore {
   }
 
   get data(): WeaverseElementData {
-    let { css, ...rest } = this.Element?.Component?.defaultProps || {}
-    return { ...rest, ...this._data }
+    return { ...this.Element?.Component?.defaultProps, ...this._data }
   }
 
   setData = (data: WeaverseElementData) => {
@@ -112,12 +111,12 @@ export class Weaverse {
    * Weaverse base URL that can provide by user/developer. for local development, use localhost:3000
    * @type {string}
    */
-  appUrl: string = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://weaverse.io'
+  appUrl: string = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://weaverse.io"
   /**
    * Weaverse project key to access project data via API
    * @type {string}
    */
-  projectKey = ''
+  projectKey = ""
   /**
    * Weaverse project data, by default, user can provide project data via React Component:
    * <WeaverseRoot defaultData={projectData} /> it will be used to server-side rendering
@@ -126,8 +125,8 @@ export class Weaverse {
     items: [],
     rootId: 0,
     script: {
-      css: '',
-      js: '',
+      css: "",
+      js: "",
     },
   }
   /**
@@ -157,10 +156,10 @@ export class Weaverse {
   static WeaverseItemStore: typeof WeaverseItemStore = WeaverseItemStore
 
   mediaBreakPoints = {
-    desktop: 'all',
+    desktop: "all",
     // max-width need to subtract 0.02px to prevent bug https://getbootstrap.com/docs/5.1/layout/breakpoints/#max-width
     // tablet: "(max-width: 1023.98px)", // to set css for tablet, {'@tablet' : { // css }},
-    mobile: '(max-width: 767.98px)',
+    mobile: "(max-width: 767.98px)",
   }
 
   /**
@@ -191,9 +190,9 @@ export class Weaverse {
 
       if (!window.WeaverseStudioBridge) {
         // load studio bridge script by url: https://weaverse.io/assets/studio/studio-bridge.js
-        const studioBridgeScript = document.createElement('script')
+        const studioBridgeScript = document.createElement("script")
         studioBridgeScript.src = `${this.appUrl}/assets/studio/studio-bridge.js`
-        studioBridgeScript.type = 'module'
+        studioBridgeScript.type = "module"
         studioBridgeScript.onload = initStudio
         document.body.appendChild(studioBridgeScript)
       } else {
@@ -209,7 +208,7 @@ export class Weaverse {
     if (element?.type) {
       this.elementInstances.set(element?.type, element)
     } else {
-      throw new Error('Weaverse: registerElement: `type` is required')
+      throw new Error("Weaverse: registerElement: `type` is required")
     }
   }
 
@@ -222,7 +221,7 @@ export class Weaverse {
 
   initStitches = () => {
     this.stitchesInstance = stitches.createStitches({
-      prefix: 'weaverse',
+      prefix: "weaverse",
       media: this.mediaBreakPoints,
       utils: stichesUtils,
     })
@@ -291,4 +290,4 @@ export class Weaverse {
   }
 }
 
-export * from './types'
+export * from "./types"

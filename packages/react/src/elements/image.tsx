@@ -1,8 +1,8 @@
-import { TODO, WeaverseElementSchema } from '@weaverse/core'
+import { TODO } from '@weaverse/core'
 import React from 'react'
 
 let Image = React.forwardRef<HTMLImageElement, TODO>((props, ref) => {
-  let { src, alt, children, ...rest } = props
+  let { src, alt, ...rest } = props
   return <img ref={ref} {...rest} alt={alt} src={src} />
 })
 
