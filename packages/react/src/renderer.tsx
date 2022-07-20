@@ -45,17 +45,18 @@ const ItemComponent = ({ instance }: ItemComponentProps) => {
     let update = (data: WeaverseElementData) => setData({ ...data })
     instance.subscribe(update)
     if (isBrowser && !instance.ref.current) {
-      // fallback ref if component is not forwardRef
+      // fallback `ref` if component is not `forwardRef`
       Object.assign(instance.ref, {
         current: document.querySelector(`[data-wv-id="${id}"]`),
       })
     }
+    instance.ref.current?.removeAttribute('css')
     return () => {
       instance.unsubscribe(update)
     }
   }, [])
 
-  let Element = elementInstances.get(type || 'base')
+  let Element = elementInstances.get(type!)
   if (Element?.Component) {
     let Component = Element.Component
     if (Component.$$typeof === Symbol.for('react.forward_ref')) {
