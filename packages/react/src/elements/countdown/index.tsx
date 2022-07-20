@@ -71,6 +71,29 @@ Countdown.defaultProps = {
   openInNewTab: false,
   showLabel: true,
   showColon: true,
+  css: {
+    '@desktop': {
+      fontFamily: 'Inter',
+      fontSize: 36,
+      fontWeight: 500,
+      display: 'grid',
+      gridAutoFlow: 'column',
+      gap: 10,
+      '& > div': {
+        width: 48,
+        textAlign: 'center',
+      },
+      '& .wv-countdown-label': {
+        fontSize: 10,
+      },
+      '& > span': {
+        lineHeight: '100%',
+      },
+      '& .hidden': {
+        visibility: 'hidden',
+      },
+    },
+  },
 }
 
 export default Countdown
