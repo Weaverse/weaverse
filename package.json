@@ -46,6 +46,7 @@
   },
   "prettier": {
     "semi": false,
+    "bracketSpacing": true,
     "importOrder": [
       "^@(.*)/(.*)$",
       "^~/(.*)$",
