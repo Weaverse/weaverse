@@ -2,10 +2,10 @@ import React, { FC, forwardRef } from 'react'
 import { TODO, WeaverseElementSchema } from '@weaverse/core'
 
 const Map = forwardRef<HTMLDivElement, TODO>((props, ref) => {
-  const { place, zoom } = props
+  const { place, zoom, ...rest } = props
 
   return (
-    <div ref={ref} {...props}>
+    <div ref={ref} {...rest}>
       <iframe
         loading="lazy"
         scrolling="no"

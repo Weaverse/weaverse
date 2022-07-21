@@ -1,4 +1,4 @@
-import { TODO, WeaverseElementSchema } from '@weaverse/core'
+import { TODO } from '@weaverse/core'
 import React from 'react'
 
 let Image = React.forwardRef<HTMLImageElement, TODO>((props, ref) => {
