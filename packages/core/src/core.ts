@@ -40,19 +40,17 @@ export class WeaverseItemStore {
   }
   weaverse: Weaverse
   stitchesClass = ""
+  _data: WeaverseElementData = { id: "", type: "" }
+  _flags: WeaverseElementFlags = {}
 
   constructor(itemData: WeaverseElementData, weaverse: Weaverse) {
-    const { type, id } = itemData
+    let { type, id } = itemData
     this.weaverse = weaverse
-
     if (id && type) {
       weaverse.itemInstances.set(id, this)
       this.data = { ...itemData }
     }
   }
-
-  _data: WeaverseElementData = {}
-  _flags: WeaverseElementFlags = {}
 
   get _id() {
     return this._data.id
@@ -65,7 +63,7 @@ export class WeaverseItemStore {
     return this.weaverse.elementInstances.get(this._data.type!)
   }
 
-  set data(data: WeaverseElementData) {
+  set data(data: Omit<WeaverseElementData, "id" | "type">) {
     this._data = { ...this.data, ...data }
   }
 
@@ -73,7 +71,7 @@ export class WeaverseItemStore {
     return { ...this.Element?.Component?.defaultProps, ...this._data }
   }
 
-  setData = (data: WeaverseElementData) => {
+  setData = (data: Omit<WeaverseElementData, "id" | "type">) => {
     this.data = Object.assign(this.data, data)
     this.triggerUpdate()
     return this.data
@@ -122,12 +120,9 @@ export class Weaverse {
    * <WeaverseRoot defaultData={projectData} /> it will be used to server-side rendering
    */
   projectData: ProjectDataType = {
+    rootId: "",
     items: [],
-    rootId: 0,
-    script: {
-      css: "",
-      js: "",
-    },
+    script: { css: "", js: "" },
   }
   /**
    * storing subscribe callback function for any component that want to listen to the change of WeaverseRoot
