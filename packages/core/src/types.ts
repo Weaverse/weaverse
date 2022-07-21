@@ -1,9 +1,9 @@
-import type { CSSProperties } from '@stitches/core'
-import type { ForwardRefExoticComponent } from 'react'
+import type { CSSProperties } from "@stitches/core"
+import type { ForwardRefExoticComponent } from "react"
 
 export interface ProjectDataType {
   items: WeaverseElementData[]
-  rootId: string | number
+  rootId: string
   script: {
     css: string
     js: string
@@ -30,7 +30,7 @@ export type WeaverseElement = {
   schema?: WeaverseElementSchema
 }
 
-export type CatalogGroup = 'essential' | 'composition' | 'other'
+export type CatalogGroup = "essential" | "composition" | "other"
 
 export type WeaverseElementCatalog = {
   name: string
@@ -38,49 +38,48 @@ export type WeaverseElementCatalog = {
   group?: CatalogGroup
 }
 
-export type ElementFlags = 'draggable' | 'resizable' | 'sortable'
+export type ElementFlags = "draggable" | "resizable" | "sortable"
 
 export type WeaverseElementFlags = {
   [key in ElementFlags]?: boolean
 }
 
 export type ToolbarAction =
-  | 'duplicate'
-  | 'delete'
-  | 'edit-button'
-  | 'insert-link'
-  | 'select-template'
-  | 'copy-styles'
-  | 'paste-styles'
+  | "duplicate"
+  | "delete"
+  | "edit-button"
+  | "insert-link"
+  | "select-template"
+  | "copy-styles"
+  | "paste-styles"
 
 export type WeaverseChildElement = {
   label: string
   selector: string
 }
 
+export type ElementParentType = "container" | "layout" | "root"
+
 export type WeaverseElementSchema = {
-  title?: string
   type: string
-  parentType: 'container' | 'layout' | 'root'
-  // settings?: InspectorInput[];
-  // styles?: InspectorInput[];
+  parentType: ElementParentType
+  title: string
   inspector?: ElementInspector
   toolbar?: (ToolbarAction | ToolbarAction[])[]
-  // data?: WeaverseElementData; // Default Element data
   subElements?: WeaverseChildElement[]
   catalog?: WeaverseElementCatalog // Element catalog
   flags?: WeaverseElementFlags
 }
 export type WeaverseElementData = {
-  id?: string | number
-  type?: string | undefined
+  id: string
+  type: string
   childIds?: (string | number)[] | undefined
   css?: WeaverseElementCSS
   [key: string]: any
 }
 export type WeaverseElementCSS = {
-  '@desktop'?: CSSProperties | { [key: string]: CSSProperties }
-  '@mobile'?: CSSProperties | { [key: string]: CSSProperties }
+  "@desktop"?: CSSProperties | { [key: string]: CSSProperties }
+  "@mobile"?: CSSProperties | { [key: string]: CSSProperties }
 }
 
 export type ElementInspector = {
@@ -89,8 +88,8 @@ export type ElementInspector = {
 }
 
 export type InspectorInput = {
-  label?: string
   type: InputType
+  label?: string
   name?: string // binding property name
   defaultValue?: string
   helpText?: string // display help text
@@ -100,32 +99,32 @@ export type InspectorInput = {
 }
 
 export type InputType =
-  | 'select'
-  | 'checkbox'
-  | 'radio'
-  | 'range'
-  | 'button'
-  | 'image'
-  | 'file'
-  | 'hidden'
-  | 'alignment'
-  | 'color'
-  | 'dimensions'
-  | 'flex'
-  | 'grid'
-  | 'input'
-  | 'switch'
-  | 'spacing'
-  | 'textarea'
-  | 'visibility'
-  | 'border'
-  | 'background'
-  | 'typography'
-  | 'shadow'
-  | 'position'
-  | 'overflow'
-  | 'display'
-  | 'other'
+  | "select"
+  | "checkbox"
+  | "radio"
+  | "range"
+  | "button"
+  | "image"
+  | "file"
+  | "hidden"
+  | "alignment"
+  | "color"
+  | "dimensions"
+  | "flex"
+  | "grid"
+  | "input"
+  | "switch"
+  | "spacing"
+  | "textarea"
+  | "visibility"
+  | "border"
+  | "background"
+  | "typography"
+  | "shadow"
+  | "position"
+  | "overflow"
+  | "display"
+  | "other"
 
 declare global {
   interface Window {
