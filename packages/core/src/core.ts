@@ -210,8 +210,9 @@ export class Weaverse {
   init() {
     this.initStitches()
     this.initProjectItemData()
-    this.updateProjectData()
-    this.loadStudio()
+    setTimeout(() => {
+      this.loadStudio()
+    }, 1000)
   }
 
   initStitches = () => {
