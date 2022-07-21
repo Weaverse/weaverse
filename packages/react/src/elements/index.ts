@@ -7,6 +7,7 @@ import * as Layout from './layout'
 import * as Map from './map'
 import * as Text from './text'
 import * as Video from './video'
+import * as Instagram from './instagram'
 
 const elements: WeaverseElementMap = {
   Countdown: {
@@ -24,6 +25,10 @@ const elements: WeaverseElementMap = {
   Image: {
     Component: Image.default,
     type: 'image',
+  },
+  Instagram: {
+    Component: Instagram.default,
+    type: 'instagram',
   },
   Layout: {
     Component: Layout.default,
