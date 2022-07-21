@@ -95,9 +95,6 @@ Form.defaultProps = {
       flexDirection: 'column',
       gap: 14,
       width: '100%',
-      '& label': {
-        backgroundColor: 'red',
-      },
       '& > div': {
         display: 'flex',
         flexDirection: 'column',

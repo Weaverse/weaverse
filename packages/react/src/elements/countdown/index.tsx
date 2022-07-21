@@ -7,7 +7,7 @@ import { getTime, times } from './utils'
 const Countdown = forwardRef<HTMLDivElement, TODO>((props, ref) => {
   const { isDesignMode } = useContext(WeaverseContext)
   let {
-    type,
+    timerType,
     startTime,
     endTime,
     periods,
@@ -26,7 +26,7 @@ const Countdown = forwardRef<HTMLDivElement, TODO>((props, ref) => {
   useEffect(() => {
     const flag = setInterval(() => {
       const remainingTime = Math.max(
-        (type === 'specific'
+        (timerType === 'specific'
           ? new Date(endTime).getTime()
           : new Date(startTime).getTime() + periods * 60 * 1000) - Date.now(),
         0
@@ -44,7 +44,7 @@ const Countdown = forwardRef<HTMLDivElement, TODO>((props, ref) => {
     return () => {
       clearInterval(flag)
     }
-  }, [startTime, endTime, periods, type])
+  }, [startTime, endTime, periods, timerType])
 
   const timer = getTime(remaining)
   return (
@@ -54,7 +54,11 @@ const Countdown = forwardRef<HTMLDivElement, TODO>((props, ref) => {
           <React.Fragment key={time}>
             <TimerBlock label={showLabel ? time : ''} value={timer[time]} />
             {time !== 'seconds' && (
-              <span className={showColon ? '' : 'hidden'}>:</span>
+              <span
+                className={`wv-countdown-number ${showColon ? '' : 'hidden'}`}
+              >
+                :
+              </span>
             )}
           </React.Fragment>
         )
@@ -64,10 +68,11 @@ const Countdown = forwardRef<HTMLDivElement, TODO>((props, ref) => {
 })
 
 Countdown.defaultProps = {
-  type: 'specific',
+  timerType: 'specific',
   startTime: Date.now(),
   endTime: 1661140528000,
-  redirectUrl: '',
+  periods: 90,
+  redirectUrl: 'https://myshop.com',
   openInNewTab: false,
   showLabel: true,
   showColon: true,
