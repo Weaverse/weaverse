@@ -54,7 +54,11 @@ const Countdown = forwardRef<HTMLDivElement, TODO>((props, ref) => {
           <React.Fragment key={time}>
             <TimerBlock label={showLabel ? time : ''} value={timer[time]} />
             {time !== 'seconds' && (
-              <span className={showColon ? '' : 'hidden'}>:</span>
+              <span
+                className={`wv-countdown-number ${showColon ? '' : 'hidden'}`}
+              >
+                :
+              </span>
             )}
           </React.Fragment>
         )
