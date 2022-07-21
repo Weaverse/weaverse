@@ -58,9 +58,11 @@ export type WeaverseChildElement = {
   selector: string
 }
 
+export type ElementParentType = "container" | "layout" | "root"
+
 export type WeaverseElementSchema = {
   type: string
-  parentType: "container" | "layout" | "root"
+  parentType: ElementParentType
   title: string
   inspector?: ElementInspector
   toolbar?: (ToolbarAction | ToolbarAction[])[]
