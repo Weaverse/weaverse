@@ -25,7 +25,7 @@ const Instagram = forwardRef<HTMLDivElement, TODO>((props, ref) => {
     gridTemplateColumns: `repeat(${imagesPerRow[0] || 1}, 1fr)`,
   }
   const { className: instagramClass = '' } = stitchesInstance.css(css)()
-  console.info('9779 instag class', className, instagramClass)
+
   return (
     <div className={`${className} ${instagramClass}`} ref={ref} {...rest}>
       {!token
