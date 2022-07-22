@@ -250,11 +250,16 @@ export class Weaverse {
     appUrl?: string
     projectKey?: string
   }) {
+    console.log("Weaverse: fetchProjectData", appUrl, projectKey)
     return fetch(appUrl + `/api/public/${projectKey}`)
       .then((r: TODO) => r.json())
       .catch(console.error)
   }
-
+  setProjectData(projectData: ProjectDataType) {
+    this.projectData = projectData
+    this.initProjectItemData()
+    this.triggerUpdate()
+  }
   /**
    * fetch and update the project data, then trigger update to re-render the WeaverseRoot
    */
