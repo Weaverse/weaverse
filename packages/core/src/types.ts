@@ -1,5 +1,5 @@
-import type { CSSProperties } from "@stitches/core"
 import type { ForwardRefExoticComponent } from "react"
+import { stichesUtils } from "./utils/styles"
 
 export interface ProjectDataType {
   items: WeaverseElementData[]
@@ -83,9 +83,12 @@ export type WeaverseElementData = {
   css?: WeaverseElementCSS
   [key: string]: any
 }
+
+// export type CSS = React.CSSProperties | CSSProperties | { [key: keyof typeof stichesUtils]: string | number }
+export type WeaverseCSSProperties = React.CSSProperties | Record<keyof typeof stichesUtils, string | number>
 export type WeaverseElementCSS = {
-  "@desktop"?: CSSProperties | { [key: string]: CSSProperties }
-  "@mobile"?: CSSProperties | { [key: string]: CSSProperties }
+  "@desktop"?: WeaverseCSSProperties | { [selector: string]: WeaverseCSSProperties }
+  "@mobile"?: WeaverseCSSProperties | { [selector: string]: WeaverseCSSProperties }
 }
 
 export type ElementInspector = {
