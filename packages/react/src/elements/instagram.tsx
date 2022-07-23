@@ -28,7 +28,7 @@ const Instagram = forwardRef<HTMLDivElement, TODO>((props, ref) => {
             setMedia([...res.data])
           }
         })
-        .catch(console.error)
+        .catch(setError)
     }
   }, [token])
 
