@@ -13,7 +13,7 @@ const Instagram = forwardRef<HTMLDivElement, TODO>((props, ref) => {
   let { isDesignMode } = useContext(WeaverseContext)
 
   useEffect(() => {
-    if (!token) {
+    if (token) {
       let params = new URLSearchParams({
         access_token: token,
         fields: 'id,media_type,caption,media_url,permalink',
