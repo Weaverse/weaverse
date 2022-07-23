@@ -1,7 +1,10 @@
-import { WeaverseElementSchema } from '@weaverse/core'
+import { TODO } from '@weaverse/core'
 import * as React from 'react'
 
-export const Button = React.forwardRef((props: any, ref: any) => {
+export const Button = React.forwardRef<
+  HTMLButtonElement | HTMLAnchorElement,
+  TODO
+>((props, ref) => {
   const { openInNewTab, target, value, ...rest } = props
 
   if (target) {

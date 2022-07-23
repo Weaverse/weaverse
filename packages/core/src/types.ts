@@ -60,9 +60,15 @@ export type WeaverseChildElement = {
 
 export type ElementParentType = "container" | "layout" | "root"
 
+export type ElementGridSize = {
+  rowSpan: number
+  colSpan: number
+}
+
 export type WeaverseElementSchema = {
   type: string
   parentType: ElementParentType
+  gridSize?: ElementGridSize
   title: string
   inspector?: ElementInspector
   toolbar?: (ToolbarAction | ToolbarAction[])[]
