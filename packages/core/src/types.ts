@@ -84,11 +84,11 @@ export type WeaverseElementData = {
   [key: string]: any
 }
 
-// export type CSS = React.CSSProperties | CSSProperties | { [key: keyof typeof stichesUtils]: string | number }
 export type WeaverseCSSProperties = React.CSSProperties | Record<keyof typeof stichesUtils, string | number>
+export type CSS = WeaverseCSSProperties | { [selector: string]: CSS }
 export type WeaverseElementCSS = {
-  "@desktop"?: WeaverseCSSProperties | { [selector: string]: WeaverseCSSProperties }
-  "@mobile"?: WeaverseCSSProperties | { [selector: string]: WeaverseCSSProperties }
+  "@desktop"?: CSS
+  "@mobile"?: CSS
 }
 
 export type ElementInspector = {
