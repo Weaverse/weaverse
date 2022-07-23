@@ -1,11 +1,11 @@
-import { TODO } from '@weaverse/core'
 import * as React from 'react'
+import { ButtonElementProps } from '../types'
 
-export const Button = React.forwardRef<
+export let Button = React.forwardRef<
   HTMLButtonElement | HTMLAnchorElement,
-  TODO
+  ButtonElementProps
 >((props, ref) => {
-  const { openInNewTab, target, value, ...rest } = props
+  let { openInNewTab, target, value, ...rest } = props
 
   if (target) {
     return (
@@ -14,7 +14,7 @@ export const Button = React.forwardRef<
         target={openInNewTab ? '_blank' : '_self'}
         rel="noreferrer"
         {...rest}
-        ref={ref}
+        ref={ref as React.Ref<HTMLAnchorElement>}
       >
         {value}
       </a>
@@ -22,7 +22,7 @@ export const Button = React.forwardRef<
   }
 
   return (
-    <button ref={ref} {...rest}>
+    <button ref={ref as React.Ref<HTMLButtonElement>} {...rest}>
       {value}
     </button>
   )

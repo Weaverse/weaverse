@@ -1,9 +1,16 @@
-import { TODO } from '@weaverse/core'
 import React, { forwardRef } from 'react'
+import { ContainerElementProps } from '../types'
 
-let Container = forwardRef<HTMLElement, TODO>((props, ref) => {
-  return <div ref={ref} {...props} />
-})
+let Container = forwardRef<HTMLDivElement, ContainerElementProps>(
+  (props, ref) => {
+    let { children, ...rest } = props
+    return (
+      <div ref={ref} {...rest}>
+        {children}
+      </div>
+    )
+  }
+)
 
 Container.defaultProps = {
   css: {
