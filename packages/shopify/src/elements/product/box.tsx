@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react'
 import { ProductProvider, weaverseShopifyProducts } from './context'
-import { ProductBoxProps } from '../../type'
+import { ProductBoxProps } from '../../types'
 
 let ProductBox = forwardRef<HTMLDivElement, ProductBoxProps>((props, ref) => {
   let { children, productId, productHandle, ...rest } = props

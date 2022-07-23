@@ -1,5 +1,6 @@
 import { WeaverseElementProps } from '@weaverse/react'
 
+// Product
 export type Product = {
   id: number
   title: string
@@ -18,6 +19,7 @@ export interface ProductBoxProps extends WeaverseElementProps {
   productHandle?: string
 }
 
+// Form
 export interface FormElementProps extends WeaverseElementProps {
   formType: string
   fields: FormField[]

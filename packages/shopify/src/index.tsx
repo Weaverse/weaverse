@@ -23,3 +23,4 @@ let ShopifyRoot = ({ context }: WeaverseRootPropsType) => {
 }
 
 export { ShopifyRoot, createWeaverseShopifyContext }
+export * from './types'

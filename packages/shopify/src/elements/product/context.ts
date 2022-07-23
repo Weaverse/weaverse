@@ -1,12 +1,15 @@
 import { createContext } from 'react'
-import { ProductContextProps } from '../../type'
+import { ProductContextProps } from '../../types'
 export let ProductContext = createContext<ProductContextProps>({})
 export let ProductProvider = ProductContext.Provider
 export let ProductConsumer = ProductContext.Consumer
 
-// For fast access to window.weaverseShopifyProducts and server-side render , create a proxy version of window.weaverseShopifyProduct
-// @ts-ignore
+/**
+ * For fast access to `window.weaverseShopifyProducts` and server-side render
+ * create a proxy version of `window.weaverseShopifyProduct`
+ */
 export let weaverseShopifyProducts = new Proxy(
+  // @ts-ignore
   globalThis?.weaverseShopifyProducts || {},
   {
     get: (target, name) => {
@@ -15,5 +18,3 @@ export let weaverseShopifyProducts = new Proxy(
     },
   }
 )
-
-// export let ProductListContext = createContext<ProductContextProps>({})
