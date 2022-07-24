@@ -1,23 +1,18 @@
-import { TODO } from '@weaverse/core'
 import { WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext } from 'react'
+import { FormElementProps, FormFieldProps } from '../../types'
 
-const Form = forwardRef<HTMLElement, TODO>((props, ref) => {
-  const { isDesignMode, ssrMode, stitchesInstance } =
-    useContext(WeaverseContext)
+const Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
+  const { isDesignMode, ssrMode } = useContext(WeaverseContext)
   const { fields, formType, button, ...rest } = props
-  const buttonCss = {
-    alignSelf:
-      button.position === 'left'
-        ? 'flex-start'
-        : button.position === 'right'
-        ? 'flex-end'
-        : 'center',
-  }
-  const { className: buttonClass = '' } = stitchesInstance.css(buttonCss)()
+
+  let style = {
+    '--wv-form-submit-align': button.position,
+  } as React.CSSProperties
+
   const formContent = (
-    <div ref={ref} {...rest}>
-      {fields.map((field: any) => (
+    <div ref={ref} {...rest} style={style}>
+      {fields.map((field: FormFieldProps) => (
         <div
           key={field.id}
           style={{ pointerEvents: isDesignMode ? 'none' : 'auto' }}
@@ -40,16 +35,16 @@ const Form = forwardRef<HTMLElement, TODO>((props, ref) => {
           )}
         </div>
       ))}
-      <button className={buttonClass}>{button.text}</button>
+      <button type="submit">{button.text}</button>
     </div>
   )
   if (ssrMode) {
     return (
-      <>
+      <div ref={ref} {...rest} style={style}>
         {`{% form '${formType}' %}`}
         {formContent}
         {'{% endform %}'}
-      </>
+      </div>
     )
   }
   return formContent
@@ -106,6 +101,7 @@ Form.defaultProps = {
         border: '1px solid #ddd',
       },
       '& button': {
+        alignSelf: 'var(--wv-form-submit-align)',
         background: '#4B5563',
         color: '#fff',
         padding: '14px 30px',

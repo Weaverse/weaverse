@@ -1,24 +1,24 @@
-import { TODO } from '@weaverse/core'
 import React, { forwardRef, useContext } from 'react'
 import { WeaverseContext } from '../context'
+import { VideoElementProps } from '../types'
 
-const Video = forwardRef<HTMLVideoElement, TODO>((props, ref) => {
-  const { isDesignMode } = useContext(WeaverseContext)
+let Video = forwardRef<HTMLDivElement, VideoElementProps>((props, ref) => {
+  let { isDesignMode } = useContext(WeaverseContext)
   let { src, type, controls, poster, autoPlay, loop, muted, ...rest } = props
 
   return (
-    <video
-      ref={ref}
-      controls={isDesignMode ? false : controls}
-      autoPlay={isDesignMode ? false : autoPlay}
-      loop={loop}
-      muted={true}
-      controlsList="nodownload"
-      disablePictureInPicture
-      {...rest}
-    >
-      <source src={src} type={type || 'video/mp4'} />
-    </video>
+    <div ref={ref} {...rest}>
+      <video
+        controls={isDesignMode ? false : controls}
+        autoPlay={isDesignMode ? false : autoPlay}
+        loop={loop}
+        muted={true}
+        controlsList="nodownload"
+        disablePictureInPicture
+      >
+        <source src={src} type={type || 'video/mp4'} />
+      </video>
+    </div>
   )
 })
 
@@ -38,7 +38,7 @@ Video.defaultProps = {
       outline: 'none',
       overflowWrap: 'break-word',
       padding: 0,
-      whitespace: 'break-spaces',
+      whiteSpace: 'break-spaces',
       width: '100%',
       wordBreak: 'break-word',
     },

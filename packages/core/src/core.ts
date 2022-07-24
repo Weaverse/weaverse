@@ -5,7 +5,7 @@
 
 // using stitches core only for framework-agnostic code
 import * as stitches from "@stitches/core"
-import Stitches from "@stitches/core/types/stitches"
+import type Stitches from "@stitches/core/types/stitches"
 import { RefObject } from "react"
 import type {
   TODO,
