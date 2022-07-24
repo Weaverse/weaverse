@@ -1,5 +1,6 @@
 import type { ForwardRefExoticComponent } from "react"
 import { stichesUtils } from "./utils/styles"
+import type * as Stitches from "@stitches/core"
 
 export interface ProjectDataType {
   items: WeaverseElementData[]
@@ -76,6 +77,7 @@ export type WeaverseElementSchema = {
   catalog?: WeaverseElementCatalog // Element catalog
   flags?: WeaverseElementFlags
 }
+
 export type WeaverseElementData = {
   id: string
   type: string
@@ -84,12 +86,13 @@ export type WeaverseElementData = {
   [key: string]: any
 }
 
-export type WeaverseCSSProperties = React.CSSProperties | Record<keyof typeof stichesUtils, string | number>
-export type DeviceCSS = WeaverseCSSProperties | { [selector: string]: DeviceCSS }
-export type WeaverseElementCSS = {
-  "@desktop"?: DeviceCSS
-  "@mobile"?: DeviceCSS
-}
+export type WeaverseCSSProperties = Stitches.CSS & Partial<Record<keyof typeof stichesUtils, string | number>>
+
+export type ChildElementCSS = Partial<{
+  [selector: string]: WeaverseCSSProperties & ChildElementCSS
+}>
+
+export type WeaverseElementCSS = Partial<Record<"@desktop" | "@mobile", WeaverseCSSProperties | ChildElementCSS>>
 
 export type ElementInspector = {
   settings?: InspectorInput[]
