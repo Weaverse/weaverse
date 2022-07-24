@@ -1,6 +1,6 @@
 import { WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext } from 'react'
-import { FormElementProps, FormField } from '../../types'
+import { FormElementProps, FormFieldProps } from '../../types'
 
 const Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
   const { isDesignMode, ssrMode } = useContext(WeaverseContext)
@@ -12,7 +12,7 @@ const Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
 
   const formContent = (
     <div ref={ref} {...rest} style={style}>
-      {fields.map((field: FormField) => (
+      {fields.map((field: FormFieldProps) => (
         <div
           key={field.id}
           style={{ pointerEvents: isDesignMode ? 'none' : 'auto' }}
