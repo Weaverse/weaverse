@@ -52,7 +52,7 @@ const Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
 
     return (
       <div ref={ref} {...rest} style={style}>
-        <div className="wv-ig-medias">
+        <div className="wv-ig-media-container">
           {media.slice(0, numberOfImages).map((item) => {
             let linkProps
             if (!isDesignMode) {
@@ -79,7 +79,7 @@ Instagram.defaultProps = {
   gap: 0,
   css: {
     '@desktop': {
-      '.wv-ig-medias': {
+      '.wv-ig-media-container': {
         overflow: 'hidden',
         maxWidth: '100%',
         maxHeight: '100%',
