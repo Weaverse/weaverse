@@ -17,12 +17,11 @@ Image.defaultProps = {
   alt: 'weaverse image element',
   css: {
     '@desktop': {
-      width: '100%',
-      height: '100%',
-      objectFit: 'cover',
-    },
-    '@mobile': {
-      display: 'block',
+      img: {
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+      },
     },
   },
 }
