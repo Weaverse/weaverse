@@ -101,6 +101,7 @@ export type AdvancedGroup = {
 }
 
 export type BasicGroup = {
+  type: "basic"
   label: string
   inputs: BasicInput[]
 }
