@@ -92,15 +92,40 @@ export interface ElementCSS {
 }
 
 export interface ElementInspector {
-  settings?: InspectorInput[]
-  styles?: InspectorInput[]
+  settings?: (AdvancedGroup | BasicGroup)[]
+  styles?: (AdvancedGroup | BasicGroup)[]
 }
 
-export interface InspectorInput {
+export type AdvancedGroup = {
+  type: AdvancedInput
+}
+
+export type BasicGroup = {
+  type: "basic"
+  label: string
+  inputs: BasicInput[]
+}
+
+export type AdvancedInput =
+  // Styles
+  | "alignment"
+  | "background"
+  | "border"
+  | "countdown"
+  | "dimensions"
+  // Elements
+  | "form"
+  | "instagram"
+  | "product"
+  | "spacing"
+  | "visibility"
+
+export interface BasicInput {
   type: InputType
-  label?: string
-  name?: string // binding's name
+  label: string
+  name: string // binding's name
   defaultValue?: string
+  placeholder?: string
   helpText?: string
   // For `select` inputs
   options?: { value: string; label: string }[]
@@ -108,33 +133,7 @@ export interface InspectorInput {
   conditions?: TODO[]
 }
 
-export type InputType =
-  | "select"
-  | "checkbox"
-  | "radio"
-  | "range"
-  | "button"
-  | "image"
-  | "file"
-  | "hidden"
-  | "alignment"
-  | "color"
-  | "dimensions"
-  | "flex"
-  | "grid"
-  | "input"
-  | "switch"
-  | "spacing"
-  | "textarea"
-  | "visibility"
-  | "border"
-  | "background"
-  | "typography"
-  | "shadow"
-  | "position"
-  | "overflow"
-  | "display"
-  | "other"
+export type InputType = "select" | "radio" | "range" | "button" | "image" | "color" | "input" | "switch" | "textarea"
 
 declare global {
   interface Window {
