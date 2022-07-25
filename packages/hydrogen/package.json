@@ -32,6 +32,6 @@
   "author": "Weaverse Team",
   "dependencies": {
     "@shopify/hydrogen": "^1.1.0",
-    "@weaverse/react": "0.6.17"
+    "@weaverse/react": "0.6.19"
   }
 }
