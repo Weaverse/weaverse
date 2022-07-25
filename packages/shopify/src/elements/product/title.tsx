@@ -1,5 +1,6 @@
 import React, { forwardRef, useContext } from 'react'
-import { TODO, WeaverseContext } from '@weaverse/react'
+import type { TODO } from '@weaverse/react'
+import { WeaverseContext } from '@weaverse/react'
 import { ProductContext } from './context'
 
 let ProductTitle = forwardRef<HTMLDivElement, TODO>((props, ref) => {

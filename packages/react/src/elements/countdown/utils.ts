@@ -1,4 +1,4 @@
-import { CountdownTimeKey } from '../../types'
+import type { CountdownTimeKey } from '../../types'
 
 export let times: CountdownTimeKey[] = ['days', 'hours', 'minutes', 'seconds']
 

@@ -7,3 +7,4 @@ build/**
 /.pnpm-store/
 /pnpm-global/
 /packages/core/pnpm-global/
+.vscode/

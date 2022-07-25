@@ -1,10 +1,14 @@
-import { TODO, WeaverseElementSchema } from '@weaverse/core'
 import * as React from 'react'
+import type { TextElementProps } from '../types'
 
-const Text = React.forwardRef<HTMLDivElement, TODO>((props, ref) => {
-  let { children, value, ...rest } = props
-  return <div ref={ref} {...rest} dangerouslySetInnerHTML={{ __html: value }} />
-})
+const Text = React.forwardRef<HTMLDivElement, TextElementProps>(
+  (props, ref) => {
+    let { children, value, ...rest } = props
+    return (
+      <div ref={ref} {...rest} dangerouslySetInnerHTML={{ __html: value }} />
+    )
+  }
+)
 
 Text.defaultProps = {
   value: 'The quick brown fox jumps over the lazy dog',
@@ -12,8 +16,7 @@ Text.defaultProps = {
     '@desktop': {
       width: '100%',
       height: 'fit-content',
-      padding: 0,
-      margin: 0,
+      padding: '20px',
       outline: 'none',
       wordBreak: 'break-word',
       overflowWrap: 'break-word',

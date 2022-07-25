@@ -1,9 +1,9 @@
-import type { WeaverseElementMap } from '@weaverse/core'
+import type { ElementsMap } from '@weaverse/core'
 import * as ProductBox from './product/box'
 import * as ProductTitle from './product/title'
 import * as Form from './form'
 
-let elements: WeaverseElementMap = {
+let elements: ElementsMap = {
   ProductBox: {
     Component: ProductBox.default,
     type: 'product-box',

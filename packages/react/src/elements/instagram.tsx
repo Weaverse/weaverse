@@ -1,65 +1,96 @@
 import React, { forwardRef, useContext, useEffect, useState } from 'react'
-import { TODO } from '@weaverse/core'
 import { WeaverseContext } from '../context'
+import type { InstagramElementProps, InstagramMedia } from '../types'
+import Placeholder from './shared/Placeholder'
 
-type InstagramItem = {
-  id: string
-  media_type: 'IMAGE' | 'CAROUSEL_ALBUM'
-  media_url: string
-  caption: string
-}
+let INSTAGRAM_API = 'https://graph.instagram.com'
 
-const Instagram = forwardRef<HTMLDivElement, TODO>((props, ref) => {
-  const { stitchesInstance } = useContext(WeaverseContext)
-  const { token, numberOfImages, imagesPerRow, className, ...rest } = props
-  const [media, setMedia] = useState<InstagramItem[]>([])
-  useEffect(() => {
-    const url = `https://graph.instagram.com/me/media?fields=id,media_type,caption,media_url&access_token=${token}`
-    fetch(url)
-      .then((res) => res.json())
-      .then((res) => {
-        setMedia(res.data)
-      })
-  }, [token])
-  const css = {
-    gridTemplateColumns: `repeat(${imagesPerRow[0] || 1}, 1fr)`,
-  }
-  const { className: instagramClass = '' } = stitchesInstance.css(css)()
+const Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
+  (props, ref) => {
+    const { token, username, numberOfImages, imagesPerRow, gap, ...rest } =
+      props
+    const [media, setMedia] = useState<InstagramMedia[]>([])
+    const [error, setError] = useState(null)
+    let { isDesignMode } = useContext(WeaverseContext)
 
-  return (
-    <div className={`${className} ${instagramClass}`} ref={ref} {...rest}>
-      {!token
-        ? 'Token is empty'
-        : media.map((item, key) => {
+    useEffect(() => {
+      if (token) {
+        let params = new URLSearchParams({
+          access_token: token,
+          fields: 'id,media_type,caption,media_url,permalink',
+        })
+        fetch(`${INSTAGRAM_API}/me/media?${params.toString()}`)
+          .then((res) => res.json())
+          .then((res) => {
+            if (res.error) {
+              setError(res)
+            } else {
+              setError(null)
+              setMedia([...res.data])
+            }
+          })
+          .catch(setError)
+      }
+    }, [token])
+
+    if (!token || error) {
+      return (
+        <div ref={ref} {...rest}>
+          <Placeholder element="Instagram">
+            {!token
+              ? 'Connect your Instagram account to display photos on your site.'
+              : 'Invalid or expired token!'}
+          </Placeholder>
+        </div>
+      )
+    }
+
+    let style = {
+      '--wv-ig-images-per-row': imagesPerRow,
+      '--wv-ig-images-gap': gap,
+    } as React.CSSProperties
+
+    return (
+      <div ref={ref} {...rest} style={style}>
+        <div className="wv-ig-media-container">
+          {media.slice(0, numberOfImages).map((item) => {
+            let linkProps
+            if (!isDesignMode) {
+              linkProps = { href: item.permalink, target: '_blank' }
+            }
+
             return (
-              <div key={key} className="wv-instagram-item">
-                <img
-                  width="100%"
-                  height="100%"
-                  alt={item.caption}
-                  src={item.media_url}
-                />
-              </div>
+              <a key={item.id} {...linkProps}>
+                <img alt={item.caption} src={item.media_url} />
+              </a>
             )
           })}
-    </div>
-  )
-})
+        </div>
+      </div>
+    )
+  }
+)
 
 Instagram.defaultProps = {
   token: '',
-  numberOfImages: [12],
-  imagesPerRow: [4],
+  username: '',
+  numberOfImages: 8,
+  imagesPerRow: 4,
+  gap: 0,
   css: {
     '@desktop': {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(4, 1fr)',
-      '& .wv-instagram-item': {
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'red',
-        '& img': {
-          objectFit: 'contain',
+      '.wv-ig-media-container': {
+        overflow: 'hidden',
+        maxWidth: '100%',
+        maxHeight: '100%',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(var(--wv-ig-images-per-row, 4), 1fr)',
+        gap: 'var(--wv-ig-images-gap, 0px)',
+        img: {
+          aspectRatio: '1 / 1',
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
         },
       },
     },

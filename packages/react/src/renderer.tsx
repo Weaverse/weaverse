@@ -1,4 +1,4 @@
-import type { ProjectDataType, WeaverseElementData } from '@weaverse/core'
+import type { ProjectDataType, ElementData } from '@weaverse/core'
 import { isBrowser } from '@weaverse/core'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { WeaverseContext, WeaverseContextProvider } from './context'
@@ -38,11 +38,11 @@ export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
 
 const ItemComponent = ({ instance }: ItemComponentProps) => {
   let { stitchesInstance, elementInstances } = useContext(WeaverseContext)
-  let [data, setData] = useState<WeaverseElementData>(instance.data)
+  let [data, setData] = useState<ElementData>(instance.data)
   let { id, type, childIds = [], css, className, ...rest } = data
 
   useEffect(() => {
-    let update = (data: WeaverseElementData) => setData({ ...data })
+    let update = (data: ElementData) => setData({ ...data })
     instance.subscribe(update)
     if (isBrowser && !instance.ref.current) {
       // fallback `ref` if component is not `forwardRef`

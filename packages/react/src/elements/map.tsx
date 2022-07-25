@@ -1,8 +1,8 @@
-import React, { FC, forwardRef } from 'react'
-import { TODO, WeaverseElementSchema } from '@weaverse/core'
+import React, { forwardRef } from 'react'
+import type { MapElementProps } from '../types'
 
-const Map = forwardRef<HTMLDivElement, TODO>((props, ref) => {
-  const { place, zoom, ...rest } = props
+let Map = forwardRef<HTMLDivElement, MapElementProps>((props, ref) => {
+  let { place, zoom, ...rest } = props
 
   return (
     <div ref={ref} {...rest}>
@@ -13,9 +13,7 @@ const Map = forwardRef<HTMLDivElement, TODO>((props, ref) => {
         height="100%"
         title="map"
         src={`https://maps.google.com/maps?z=${zoom}&t=m&q=${place}&ie=UTF8&&output=embed`}
-        style={{
-          pointerEvents: 'none',
-        }}
+        style={{ pointerEvents: 'none' }}
       />
     </div>
   )
@@ -24,11 +22,6 @@ const Map = forwardRef<HTMLDivElement, TODO>((props, ref) => {
 Map.defaultProps = {
   place: 'Hanoi',
   zoom: 14,
-  css: {
-    '@desktop': {
-      gridArea: '1 / 1 / 11 / 13',
-    },
-  },
 }
 
 export default Map

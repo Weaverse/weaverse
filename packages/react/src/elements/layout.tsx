@@ -1,23 +1,20 @@
-import { TODO } from '@weaverse/core'
 import React, { forwardRef } from 'react'
+import type { LayoutElementProps } from '../types'
 
-let Layout = forwardRef<HTMLElement, TODO>((props, ref) => {
+let Layout = forwardRef<HTMLElement, LayoutElementProps>((props, ref) => {
   let { children, rows, gap, rowSize, columns, gridSize, ...rest } = props
+  let style = {
+    '--grid-size': gridSize + 'px',
+    '--rows': rows,
+    '--columns': columns,
+    '--gap': gap + 'px',
+    '--row-size': rowSize + 'px',
+    '--col-size':
+      'calc((var(--grid-size) - calc(var(--columns) - 1) * var(--gap)) / var(--columns))',
+  } as React.CSSProperties
 
   return (
-    <section
-      ref={ref}
-      style={{
-        '--grid-size': gridSize + 'px',
-        '--rows': rows,
-        '--columns': columns,
-        '--gap': gap + 'px',
-        '--row-size': rowSize + 'px',
-        '--col-size':
-          'calc((var(--grid-size) - calc(var(--columns) - 1) * var(--gap)) / var(--columns))',
-      }}
-      {...rest}
-    >
+    <section ref={ref} {...rest} style={style}>
       <div data-layout-content>{children}</div>
     </section>
   )

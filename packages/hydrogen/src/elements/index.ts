@@ -1,4 +1,4 @@
-import type { WeaverseElementMap } from '@weaverse/core'
+import type { ElementsMap } from '@weaverse/core'
 
-let elements: WeaverseElementMap = {}
+let elements: ElementsMap = {}
 export default elements
