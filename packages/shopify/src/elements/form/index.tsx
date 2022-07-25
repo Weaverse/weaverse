@@ -20,7 +20,9 @@ const Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
           <label htmlFor={field.label}>{field.label}</label>
           {field.type !== 'multiline' ? (
             <input
-              name={`contact[${field.label}]`}
+              name={`contact[${
+                field.type === 'email' ? 'email' : field.label
+              }]`}
               type={field.type}
               placeholder={field.placeholder}
               required={field.required}
@@ -42,6 +44,21 @@ const Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
     return (
       <div ref={ref} {...rest} style={style}>
         {`{% form '${formType}' %}`}
+        {` {% if form.posted_successfully? %} `}
+        {`<h3>{% render 'icon-success' %}{{ 'newsletter.success' | t }}</h3>`}
+        {button.targetLink && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `window.open(${button.targetLink},${
+                button.openInNewTab ? '_blank' : '_self'
+              })`,
+            }}
+          ></script>
+        )}
+        {` {%- endif -%} `}
+        {`{% if form.errors %}`}
+        {`<p>{{ form.errors | default_errors }}</p>`}
+        {`{% endif %}`}
         {formContent}
         {'{% endform %}'}
       </div>
