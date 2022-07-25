@@ -30,8 +30,8 @@
     "build:graph": "turbo run build --graph=repo-graph.svg",
     "prepare": "turbo run build",
     "preprepare": "husky install",
-    "lint": "eslint",
-    "lint:fix": "eslint --fix"
+    "lint": "eslint packages",
+    "lint:fix": "eslint packages --fix"
   },
   "workspaces": [
     "packages/core",

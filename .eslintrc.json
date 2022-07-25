@@ -34,7 +34,8 @@
     ],
     "prefer-const": "off",
     "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-non-null-assertion": "off"
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/consistent-type-imports": "warn"
   },
   "settings": {
     "react": {

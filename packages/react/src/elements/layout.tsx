@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react'
-import { LayoutElementProps } from '../types'
+import type { LayoutElementProps } from '../types'
 
 let Layout = forwardRef<HTMLElement, LayoutElementProps>((props, ref) => {
   let { children, rows, gap, rowSize, columns, gridSize, ...rest } = props

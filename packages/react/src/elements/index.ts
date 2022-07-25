@@ -1,4 +1,4 @@
-import { WeaverseElementMap } from '@weaverse/core'
+import type { ElementsMap } from '@weaverse/core'
 import * as Button from './button'
 import * as Container from './container'
 import * as Countdown from './countdown'
@@ -9,7 +9,7 @@ import * as Text from './text'
 import * as Video from './video'
 import * as Instagram from './instagram'
 
-const elements: WeaverseElementMap = {
+const elements: ElementsMap = {
   Countdown: {
     Component: Countdown.default,
     type: 'countdown',
