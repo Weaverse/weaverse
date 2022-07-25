@@ -102,7 +102,9 @@ export interface InspectorInput {
   name?: string // binding's name
   defaultValue?: string
   helpText?: string
-  // only display if conditions are met, eg. { name: 'productDataLoaded', value: true }
+  // For `select` inputs
+  options?: { value: string; label: string }[]
+  // Only display if condition matches (eg: if `clickAction` is `"open-link"`)
   conditions?: TODO[]
 }
 
