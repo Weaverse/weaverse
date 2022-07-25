@@ -110,7 +110,7 @@ export type AdvancedGroup =
   | "spacing"
   | "visibility"
 
-export interface BasicGroup {
+export type BasicGroup = {
   label: string
   inputs: BasicInput[]
 }
