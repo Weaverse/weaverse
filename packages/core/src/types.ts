@@ -92,11 +92,20 @@ export interface ElementCSS {
 }
 
 export interface ElementInspector {
-  settings?: AdvancedGroup | BasicInput[]
-  styles?: AdvancedGroup | BasicInput[]
+  settings?: (AdvancedGroup | BasicGroup)[]
+  styles?: (AdvancedGroup | BasicGroup)[]
 }
 
-export type AdvancedGroup =
+export type AdvancedGroup = {
+  type: AdvancedInput
+}
+
+export type BasicGroup = {
+  label: string
+  inputs: BasicInput[]
+}
+
+export type AdvancedInput =
   // Styles
   | "alignment"
   | "background"
@@ -109,11 +118,6 @@ export type AdvancedGroup =
   | "product"
   | "spacing"
   | "visibility"
-
-export type BasicGroup = {
-  label: string
-  inputs: BasicInput[]
-}
 
 export interface BasicInput {
   type: InputType
