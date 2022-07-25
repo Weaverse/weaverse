@@ -206,8 +206,9 @@ export class Weaverse {
   init() {
     this.initStitches()
     this.initProjectItemData()
-    this.updateProjectData()
-    this.loadStudio()
+    setTimeout(() => {
+      this.loadStudio()
+    }, 1000)
   }
 
   initStitches = () => {
@@ -245,11 +246,16 @@ export class Weaverse {
     appUrl?: string
     projectKey?: string
   }) {
+    console.log("Weaverse: fetchProjectData", appUrl, projectKey)
     return fetch(appUrl + `/api/public/${projectKey}`)
       .then((r: Response) => r.json())
       .catch(console.error)
   }
-
+  setProjectData(projectData: ProjectDataType) {
+    this.projectData = projectData
+    this.initProjectItemData()
+    this.triggerUpdate()
+  }
   /**
    * fetch and update the project data, then trigger update to re-render the WeaverseRoot
    */
