@@ -7,13 +7,13 @@
 import * as stitches from "@stitches/core"
 import type Stitches from "@stitches/core/types/stitches"
 import type { RefObject } from "react"
-import type { ProjectDataType, WeaverseElement, WeaverseElementData, WeaverseElementFlags, WeaverseType } from "./types"
+import type { ProjectDataType, WeaverseElement, ElementData, ElementFlags, WeaverseType } from "./types"
 import { isIframe } from "./utils"
 import { stichesUtils } from "./utils/styles"
 
 /**
  * WeaverseItemStore is a store for Weaverse item, it can be used to subscribe/update the item data
- * @param itemData {WeaverseElementData} Weaverse item data
+ * @param itemData {ElementData} Weaverse item data
  * @param weaverse {Weaverse} Weaverse instance
  * @example
  * useEffect(() => {
@@ -33,10 +33,10 @@ export class WeaverseItemStore {
   }
   weaverse: Weaverse
   stitchesClass = ""
-  _data: WeaverseElementData = { id: "", type: "" }
-  _flags: WeaverseElementFlags = {}
+  _data: ElementData = { id: "", type: "" }
+  _flags: ElementFlags = {}
 
-  constructor(itemData: WeaverseElementData, weaverse: Weaverse) {
+  constructor(itemData: ElementData, weaverse: Weaverse) {
     let { type, id } = itemData
     this.weaverse = weaverse
     if (id && type) {
@@ -56,15 +56,15 @@ export class WeaverseItemStore {
     return this.weaverse.elementInstances.get(this._data.type!)
   }
 
-  set data(data: Omit<WeaverseElementData, "id" | "type">) {
+  set data(data: Omit<ElementData, "id" | "type">) {
     this._data = { ...this.data, ...data }
   }
 
-  get data(): WeaverseElementData {
+  get data(): ElementData {
     return { ...this.Element?.Component?.defaultProps, ...this._data }
   }
 
-  setData = (data: Omit<WeaverseElementData, "id" | "type">) => {
+  setData = (data: Omit<ElementData, "id" | "type">) => {
     this.data = Object.assign(this.data, data)
     this.triggerUpdate()
     return this.data

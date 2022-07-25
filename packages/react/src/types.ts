@@ -1,12 +1,8 @@
-import type {
-  Weaverse,
-  WeaverseElementCSS,
-  WeaverseItemStore,
-} from '@weaverse/core'
+import type { Weaverse, ElementCSS, WeaverseItemStore } from '@weaverse/core'
 import type { ReactElement, ReactNode } from 'react'
 
 export interface WeaverseElementProps extends ReactElement {
-  css?: WeaverseElementCSS
+  css?: ElementCSS
   children?: ReactElement | ReactElement[] | ReactNode | ReactNode[]
 }
 
