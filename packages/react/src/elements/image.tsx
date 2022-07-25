@@ -1,5 +1,5 @@
 import React from 'react'
-import { ImageElementProps } from '../types'
+import type { ImageElementProps } from '../types'
 
 let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
   (props, ref) => {

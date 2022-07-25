@@ -1,4 +1,4 @@
-import { WeaverseElementProps } from '@weaverse/react'
+import type { WeaverseElementProps } from '@weaverse/react'
 
 // Product
 export type Product = {

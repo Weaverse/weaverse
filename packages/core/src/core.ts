@@ -6,17 +6,10 @@
 // using stitches core only for framework-agnostic code
 import * as stitches from "@stitches/core"
 import type Stitches from "@stitches/core/types/stitches"
-import { RefObject } from "react"
-import type {
-  TODO,
-  WeaverseElement,
-  WeaverseElementData,
-  ProjectDataType,
-  WeaverseType,
-  WeaverseElementFlags,
-} from "./types"
-import { stichesUtils } from "./utils/styles"
+import type { RefObject } from "react"
+import type { ProjectDataType, WeaverseElement, WeaverseElementData, WeaverseElementFlags, WeaverseType } from "./types"
 import { isIframe } from "./utils"
+import { stichesUtils } from "./utils/styles"
 
 /**
  * WeaverseItemStore is a store for Weaverse item, it can be used to subscribe/update the item data
@@ -201,6 +194,9 @@ export class Weaverse {
    */
   registerElement(element: WeaverseElement) {
     if (element?.type) {
+      if (this.elementInstances.has(element.type)) {
+        throw new Error(`Weaverse: Element '${element.type}' already registered`)
+      }
       this.elementInstances.set(element?.type, element)
     } else {
       throw new Error("Weaverse: registerElement: `type` is required")
@@ -250,7 +246,7 @@ export class Weaverse {
     projectKey?: string
   }) {
     return fetch(appUrl + `/api/public/${projectKey}`)
-      .then((r: TODO) => r.json())
+      .then((r: Response) => r.json())
       .catch(console.error)
   }
 
@@ -267,7 +263,7 @@ export class Weaverse {
             this.triggerUpdate()
           }
         })
-        .catch((err: TODO) => {
+        .catch((err: Error) => {
           console.error(err)
         })
     }

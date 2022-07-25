@@ -1,5 +1,5 @@
 import type { ForwardRefExoticComponent } from "react"
-import { stichesUtils } from "./utils/styles"
+import type { stichesUtils } from "./utils/styles"
 import type * as Stitches from "@stitches/core"
 
 export interface ProjectDataType {
@@ -107,7 +107,6 @@ export type InspectorInput = {
   helpText?: string // display help text
   options?: TODO[] // select options
   conditions?: TODO[] // only display if conditions are met, eg. {  name: 'productDataLoaded', value: true }
-  [key: string]: TODO // other properties, implement later
 }
 
 export type InputType =

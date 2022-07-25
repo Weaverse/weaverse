@@ -1,4 +1,4 @@
-import { WeaverseElementMap } from '@weaverse/core'
+import type { WeaverseElementMap } from '@weaverse/core'
 import * as Button from './button'
 import * as Container from './container'
 import * as Countdown from './countdown'

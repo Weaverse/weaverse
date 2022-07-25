@@ -1,6 +1,6 @@
 import { WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext } from 'react'
-import { FormElementProps, FormFieldProps } from '../../types'
+import type { FormElementProps, FormFieldProps } from '../../types'
 
 const Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
   const { isDesignMode, ssrMode } = useContext(WeaverseContext)

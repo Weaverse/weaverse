@@ -1,4 +1,5 @@
-import { Weaverse, WeaverseType } from '@weaverse/core'
+import type { WeaverseType } from '@weaverse/core'
+import { Weaverse } from '@weaverse/core'
 import { createContext } from 'react'
 import Elements from './elements'
 

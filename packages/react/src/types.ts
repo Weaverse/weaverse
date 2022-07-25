@@ -3,7 +3,7 @@ import type {
   WeaverseElementCSS,
   WeaverseItemStore,
 } from '@weaverse/core'
-import { ReactElement, ReactNode } from 'react'
+import type { ReactElement, ReactNode } from 'react'
 
 export interface WeaverseElementProps extends ReactElement {
   css?: WeaverseElementCSS
@@ -17,6 +17,11 @@ export type ItemComponentProps = {
 }
 
 //////////// Element types
+// Placeholder
+export interface PlaceholderProps extends WeaverseElementProps {
+  element: string
+}
+
 // Button
 export interface ButtonElementProps extends WeaverseElementProps {
   value: string
@@ -27,7 +32,7 @@ export interface ButtonElementProps extends WeaverseElementProps {
 
 // Container
 export interface ContainerElementProps extends WeaverseElementProps {
-  TODO?: any
+  [key: string]: any
 }
 
 // Image
@@ -79,6 +84,11 @@ export interface CountdownElementProps extends WeaverseElementProps {
   openInNewTab: boolean
   showLabel: boolean
   showColon: boolean
+}
+
+export type TimerBlockProps = {
+  label: string
+  value: number
 }
 
 // Instagram
