@@ -11,7 +11,7 @@ let InputField = ({
 }) => {
   let id = useId()
   return (
-    <div style={{ pointerEvents: isDesignMode ? 'none' : 'auto' }}>
+    <div className={`wv-e-pen`}>
       <label htmlFor={id}>{field.label}</label>
       {field.type !== 'multiline' ? (
         <input
