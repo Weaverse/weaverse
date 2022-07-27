@@ -1,6 +1,38 @@
 import { WeaverseContext } from '@weaverse/react'
-import React, { forwardRef, useContext } from 'react'
+import React, { forwardRef, useContext, useId } from 'react'
 import type { FormElementProps, FormFieldProps } from '../../types'
+
+let InputField = ({
+  field,
+  isDesignMode,
+}: {
+  field: FormFieldProps
+  isDesignMode: boolean
+}) => {
+  let id = useId()
+  return (
+    <div style={{ pointerEvents: isDesignMode ? 'none' : 'auto' }}>
+      <label htmlFor={id}>{field.label}</label>
+      {field.type !== 'multiline' ? (
+        <input
+          id={id}
+          name={`contact[${field.label}]`}
+          type={field.type}
+          placeholder={field.placeholder}
+          required={field.required}
+        />
+      ) : (
+        <textarea
+          id={id}
+          name={`contact[${field.label}]`}
+          placeholder={field.placeholder}
+          rows={4}
+          required={field.required}
+        ></textarea>
+      )}
+    </div>
+  )
+}
 
 const Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
   const { isDesignMode, ssrMode } = useContext(WeaverseContext)
@@ -12,28 +44,8 @@ const Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
 
   const formContent = (
     <div ref={ref} {...rest} style={style}>
-      {fields.map((field: FormFieldProps) => (
-        <div
-          key={field.id}
-          style={{ pointerEvents: isDesignMode ? 'none' : 'auto' }}
-        >
-          <label htmlFor={field.label}>{field.label}</label>
-          {field.type !== 'multiline' ? (
-            <input
-              name={`contact[${field.label}]`}
-              type={field.type}
-              placeholder={field.placeholder}
-              required={field.required}
-            />
-          ) : (
-            <textarea
-              name={`contact[${field.label}]`}
-              placeholder={field.placeholder}
-              rows={4}
-              required={field.required}
-            ></textarea>
-          )}
-        </div>
+      {fields.map((field) => (
+        <InputField key={field.id} field={field} isDesignMode={isDesignMode} />
       ))}
       <button type="submit">{button.text}</button>
     </div>
