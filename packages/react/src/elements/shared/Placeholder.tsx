@@ -12,6 +12,8 @@ const Placeholder = forwardRef<HTMLElement, TODO>((props, ref) => {
     alignItems: 'center',
     justifyContent: 'center',
     color: '#374151',
+    pointerEvents: 'none',
+    zIndex: 1,
   }
   return (
     <div style={style} ref={ref} {...rest}>

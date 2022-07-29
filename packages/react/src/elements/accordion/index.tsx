@@ -64,11 +64,12 @@ Accordion.defaultProps = {
       '.wv-accordion-header': {
         borderRadius: 4,
         padding: 4,
+        marginBottom: 4,
         backgroundColor: '#aaa',
         '&.active': {
           color: 'blue',
         },
-        '&.active + .wv-accordion-content': {
+        '&.active + [data-wv-type="accordion.content"]': {
           display: 'grid',
         },
       },

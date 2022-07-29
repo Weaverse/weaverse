@@ -10,6 +10,7 @@ import * as Video from './video'
 import * as Instagram from './instagram'
 import * as Accordion from './accordion'
 import * as AccordionWrapper from './accordion/AccordionWrapper'
+import * as AccordionContent from './accordion/AccordionContent'
 
 const elements: WeaverseElementMap = {
   Countdown: {
@@ -55,6 +56,10 @@ const elements: WeaverseElementMap = {
   AccordionWrapper: {
     Component: AccordionWrapper.default,
     type: 'accordion.wrapper',
+  },
+  AccordionContent: {
+    Component: AccordionContent.default,
+    type: 'accordion.content',
   },
 }
 
