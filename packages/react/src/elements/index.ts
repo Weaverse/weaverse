@@ -52,7 +52,7 @@ const elements: WeaverseElementMap = {
     Component: Accordion.default,
     type: 'accordion',
   },
-  AccordionWraper: {
+  AccordionWrapper: {
     Component: AccordionWrapper.default,
     type: 'accordion.wrapper',
   },

@@ -39,7 +39,7 @@ export type WeaverseElementCatalog = {
   group?: CatalogGroup
 }
 
-export type ElementFlags = "draggable" | "resizable" | "sortable"
+export type ElementFlags = "draggable" | "resizable" | "sortable" | "droppable"
 
 export type WeaverseElementFlags = {
   [key in ElementFlags]?: boolean

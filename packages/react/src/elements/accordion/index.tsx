@@ -65,9 +65,8 @@ Accordion.defaultProps = {
         borderRadius: 4,
         padding: 4,
         backgroundColor: '#aaa',
-        border: '1px solid #ddd',
         '&.active': {
-          backgroundColor: 'aqua',
+          color: 'blue',
         },
         '&.active + .wv-accordion-content': {
           display: 'grid',

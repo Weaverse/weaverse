@@ -5,6 +5,8 @@ const Placeholder = forwardRef<HTMLElement, TODO>((props, ref) => {
   let { element, children, ...rest } = props
   let style = {
     height: '100%',
+    position: 'absolute',
+    width: '100%',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
