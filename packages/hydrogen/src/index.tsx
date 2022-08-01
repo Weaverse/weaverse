@@ -22,4 +22,22 @@ let WeaverseHydrogenRoot = ({ context }: WeaverseRootProps) => {
   return <WeaverseRoot context={context} />
 }
 
-export { WeaverseHydrogenRoot, createWeaverseHydrogenContext }
+let fetchPageData = ({
+  baseUrl = 'https://studio.weaverse.io',
+  projectKey,
+  handle,
+}: {
+  baseUrl?: string
+  projectKey: string
+  handle: string
+}) => {
+  return fetch(baseUrl + '/api/public/projects', {
+    method: 'POST',
+    body: JSON.stringify({
+      projectKey,
+      handle,
+    }),
+  }).then((res) => res.json())
+}
+
+export { WeaverseHydrogenRoot, createWeaverseHydrogenContext, fetchPageData }

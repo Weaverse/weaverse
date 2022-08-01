@@ -20,8 +20,8 @@
     "prepublish": "npm run build"
   },
   "peerDependencies": {
-    "react": ">=16.8.0",
-    "react-dom": ">=16.8.0"
+    "react": ">=18",
+    "react-dom": ">=18"
   },
   "prettier": {
     "printWidth": 80,
@@ -31,7 +31,6 @@
   "name": "@weaverse/hydrogen",
   "author": "Weaverse Team",
   "dependencies": {
-    "@shopify/hydrogen": "^1.2.0",
     "@weaverse/react": "0.6.22"
   }
 }
