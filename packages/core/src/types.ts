@@ -41,7 +41,7 @@ export interface ElementCatalog {
   group?: CatalogGroup
 }
 
-export type FlagType = "draggable" | "resizable" | "sortable"
+export type FlagType = "draggable" | "resizable" | "sortable" | "droppable"
 export type ElementFlags = Partial<Record<FlagType, boolean>>
 export type ToolbarAction =
   | "duplicate"
