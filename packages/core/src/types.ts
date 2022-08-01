@@ -69,7 +69,7 @@ export interface ElementSchema {
   gridSize?: GridSize
   inspector?: ElementInspector
   toolbar?: (ToolbarAction | ToolbarAction[])[]
-  subElements?: ChildElement[]
+  childElements?: ChildElement[]
   catalog?: ElementCatalog
   flags?: ElementFlags
 }
@@ -133,7 +133,7 @@ export interface BasicInput {
   conditions?: TODO[]
 }
 
-export type InputType = "select" | "radio" | "range" | "button" | "image" | "color" | "input" | "switch" | "textarea"
+export type InputType = "select" | "radio" | "range" | "button" | "image" | "color" | "text" | "switch" | "textarea"
 
 declare global {
   interface Window {
