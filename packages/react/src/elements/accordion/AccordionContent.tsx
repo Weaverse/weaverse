@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react'
-import { WeaverseElementProps } from '../../types'
+import type { WeaverseElementProps } from '../../types'
 import Placeholder from '../shared/Placeholder'
 
 interface AccordionContentElementProps extends WeaverseElementProps {
