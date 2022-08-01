@@ -127,7 +127,7 @@ Form.defaultProps = {
         py: 10,
         border: '1px solid #ddd',
       },
-      '& button': {
+      button: {
         alignSelf: 'var(--wv-form-submit-align)',
         background: '#4B5563',
         color: '#fff',
