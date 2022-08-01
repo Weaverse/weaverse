@@ -122,13 +122,6 @@ export class Weaverse {
    * @type {Map<string, (data: any) => void>}
    */
   listeners: Set<any> = new Set()
-  /**
-   * check whether the sdk is isDesignMode or not
-   * if isDesignMode is true, it means the sdk is isDesignMode mode, render the editor UI
-   * else render the preview UI, plain HTML + CSS + React hydrate
-   * @type {boolean}
-   */
-  isDesignMode = false
 
   /**
    * Use in element to optionally render special HTML for hydration
@@ -156,37 +149,38 @@ export class Weaverse {
    * @param projectKey {string} Weaverse project key to access project data via API
    * @param projectData {ProjectDataType} Weaverse project data, by default, user can provide project data via React Component.
    * @param mediaBreakPoints {object} Pass down custom media query breakpoints or just use the default.
-   * @param isDesignMode {boolean} check whether the sdk is isDesignMode or not
    * @param ssrMode {boolean} Use in element to optionally render special HTML for hydration
    */
-  constructor({ appUrl, projectKey, projectData, mediaBreakPoints, isDesignMode, ssrMode }: WeaverseType = {}) {
+  constructor({ appUrl, projectKey, projectData, mediaBreakPoints, ssrMode }: WeaverseType = {}) {
     this.appUrl = appUrl || this.appUrl
     this.projectKey = projectKey || this.projectKey
     this.mediaBreakPoints = mediaBreakPoints || this.mediaBreakPoints
-    this.isDesignMode = isDesignMode || this.isDesignMode
+    // this.isDesignMode = isDesignMode || this.isDesignMode // Removed to manually check and loadStudio in browser-hydrate or useEffect
     this.ssrMode = ssrMode || this.ssrMode
     projectData && (this.projectData = projectData)
     this.init()
   }
 
   loadStudio() {
-    if (this.isDesignMode && isIframe) {
-      const initStudio = () => {
-        this.studioBridge = new window.WeaverseStudioBridge(this)
-        this.triggerUpdate()
-      }
+    setTimeout(() => {
+      if (isIframe) {
+        const initStudio = () => {
+          this.studioBridge = new window.WeaverseStudioBridge(this)
+          this.triggerUpdate()
+        }
 
-      if (!window.WeaverseStudioBridge) {
-        // load studio bridge script by url: https://weaverse.io/assets/studio/studio-bridge.js
-        const studioBridgeScript = document.createElement("script")
-        studioBridgeScript.src = `${this.appUrl}/assets/studio/studio-bridge.js`
-        studioBridgeScript.type = "module"
-        studioBridgeScript.onload = initStudio
-        document.body.appendChild(studioBridgeScript)
-      } else {
-        initStudio()
+        if (!window.WeaverseStudioBridge) {
+          // load studio bridge script by url: https://weaverse.io/assets/studio/studio-bridge.js
+          const studioBridgeScript = document.createElement("script")
+          studioBridgeScript.src = `${this.appUrl}/assets/studio/studio-bridge.js`
+          studioBridgeScript.type = "module"
+          studioBridgeScript.onload = initStudio
+          document.body.appendChild(studioBridgeScript)
+        } else {
+          initStudio()
+        }
       }
-    }
+    }, 2000)
   }
   /**
    * register the custom React Component to Weaverse, store it into Weaverse.elementInstances
@@ -206,9 +200,6 @@ export class Weaverse {
   init() {
     this.initStitches()
     this.initProjectItemData()
-    setTimeout(() => {
-      this.loadStudio()
-    }, 1000)
   }
 
   initStitches = () => {
