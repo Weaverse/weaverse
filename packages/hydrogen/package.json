@@ -1,5 +1,5 @@
 {
-  "version": "0.6.21",
+  "version": "0.6.22",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -20,8 +20,8 @@
     "prepublish": "npm run build"
   },
   "peerDependencies": {
-    "react": ">=16.8.0",
-    "react-dom": ">=16.8.0"
+    "react": ">=18",
+    "react-dom": ">=18"
   },
   "prettier": {
     "printWidth": 80,
@@ -31,7 +31,6 @@
   "name": "@weaverse/hydrogen",
   "author": "Weaverse Team",
   "dependencies": {
-    "@weaverse/react": "0.6.21",
-    "@shopify/hydrogen": "^1.1.0"
+    "@weaverse/react": "0.6.23"
   }
 }
