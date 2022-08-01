@@ -8,6 +8,9 @@ import * as Map from './map'
 import * as Text from './text'
 import * as Video from './video'
 import * as Instagram from './instagram'
+import * as Accordion from './accordion'
+import * as AccordionWrapper from './accordion/AccordionWrapper'
+import * as AccordionContent from './accordion/AccordionContent'
 
 const elements: ElementsMap = {
   Countdown: {
@@ -45,6 +48,18 @@ const elements: ElementsMap = {
   Video: {
     Component: Video.default,
     type: 'video',
+  },
+  Accordion: {
+    Component: Accordion.default,
+    type: 'accordion',
+  },
+  AccordionWrapper: {
+    Component: AccordionWrapper.default,
+    type: 'accordion.wrapper',
+  },
+  AccordionContent: {
+    Component: AccordionContent.default,
+    type: 'accordion.content',
   },
 }
 
