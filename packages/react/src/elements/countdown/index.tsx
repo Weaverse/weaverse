@@ -90,7 +90,7 @@ Countdown.defaultProps = {
         width: 48,
         textAlign: 'center',
       },
-      '& .wv-countdown-label': {
+      '.wv-countdown-label': {
         fontSize: 10,
       },
       '& > span': {
