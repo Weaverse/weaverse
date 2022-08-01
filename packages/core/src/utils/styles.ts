@@ -38,4 +38,4 @@ export const stichesUtils = {
     paddingTop: value,
     paddingBottom: value,
   }),
-};
+}

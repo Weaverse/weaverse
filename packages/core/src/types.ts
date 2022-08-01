@@ -1,9 +1,12 @@
 import type { ForwardRefExoticComponent } from "react"
-import { stichesUtils } from "./utils/styles"
+import type { stichesUtils } from "./utils/styles"
 import type * as Stitches from "@stitches/core"
 
+export type TODO = any
+
+// Project types
 export interface ProjectDataType {
-  items: WeaverseElementData[]
+  items: ElementData[]
   rootId: string
   script: {
     css: string
@@ -11,7 +14,8 @@ export interface ProjectDataType {
   }
 }
 
-export type WeaverseType = {
+// Weaverse types
+export interface WeaverseType {
   mediaBreakPoints?: any
   appUrl?: string
   projectKey?: string
@@ -20,31 +24,25 @@ export type WeaverseType = {
   ssrMode?: boolean
 }
 
-export type TODO = any
-export type WeaverseElementMap = {
-  [key: string]: WeaverseElement
-}
-
 export type WeaverseElement = {
   Component: ForwardRefExoticComponent<any>
   type: string
-  schema?: WeaverseElementSchema
+  schema?: ElementSchema
+}
+export interface ElementsMap {
+  [key: string]: WeaverseElement
 }
 
+// Element types
 export type CatalogGroup = "essential" | "composition" | "other"
-
-export type WeaverseElementCatalog = {
+export interface ElementCatalog {
   name: string
   icon?: string
   group?: CatalogGroup
 }
 
-export type ElementFlags = "draggable" | "resizable" | "sortable" | "droppable"
-
-export type WeaverseElementFlags = {
-  [key in ElementFlags]?: boolean
-}
-
+export type FlagType = "draggable" | "resizable" | "sortable" | "droppable"
+export type ElementFlags = Partial<Record<FlagType, boolean>>
 export type ToolbarAction =
   | "duplicate"
   | "delete"
@@ -54,93 +52,93 @@ export type ToolbarAction =
   | "copy-styles"
   | "paste-styles"
 
-export type WeaverseChildElement = {
+export interface ChildElement {
   label: string
   selector: string
 }
-
-export type ElementParentType = "container" | "layout" | "root"
-
-export type ElementGridSize = {
+export type ParentType = "container" | "layout" | "root"
+export type GridSize = {
   rowSpan: number
   colSpan: number
 }
 
-export type WeaverseElementSchema = {
-  type: string
-  parentType: ElementParentType
-  gridSize?: ElementGridSize
+export interface ElementSchema {
   title: string
+  type: string
+  parentType: ParentType
+  gridSize?: GridSize
   inspector?: ElementInspector
   toolbar?: (ToolbarAction | ToolbarAction[])[]
-  subElements?: WeaverseChildElement[]
-  catalog?: WeaverseElementCatalog // Element catalog
-  flags?: WeaverseElementFlags
+  subElements?: ChildElement[]
+  catalog?: ElementCatalog
+  flags?: ElementFlags
 }
 
-export type WeaverseElementData = {
+export interface ElementData {
   id: string
   type: string
-  childIds?: (string | number)[] | undefined
-  css?: WeaverseElementCSS
+  childIds?: (string | number)[]
+  css?: ElementCSS
   [key: string]: any
 }
 
 export type WeaverseCSSProperties = Stitches.CSS & Partial<Record<keyof typeof stichesUtils, string | number>>
-
 export type ChildElementCSS = Partial<{
   [selector: string]: WeaverseCSSProperties & ChildElementCSS
 }>
-
-export type WeaverseElementCSS = Partial<Record<"@desktop" | "@mobile", WeaverseCSSProperties | ChildElementCSS>>
-
-export type ElementInspector = {
-  settings?: InspectorInput[]
-  styles?: InspectorInput[]
+export interface ElementCSS {
+  "@desktop"?: WeaverseCSSProperties | ChildElementCSS
+  "@mobile"?: WeaverseCSSProperties | ChildElementCSS
 }
 
-export type InspectorInput = {
-  type: InputType
-  label?: string
-  name?: string // binding property name
-  defaultValue?: string
-  helpText?: string // display help text
-  options?: TODO[] // select options
-  conditions?: TODO[] // only display if conditions are met, eg. {  name: 'productDataLoaded', value: true }
-  [key: string]: TODO // other properties, implement later
+export interface ElementInspector {
+  settings?: (AdvancedGroup | BasicGroup)[]
+  styles?: (AdvancedGroup | BasicGroup)[]
 }
 
-export type InputType =
-  | "select"
-  | "checkbox"
-  | "radio"
-  | "range"
-  | "button"
-  | "image"
-  | "file"
-  | "hidden"
+export type AdvancedGroup = {
+  type: AdvancedInput
+}
+
+export type BasicGroup = {
+  type: "basic"
+  label: string
+  inputs: BasicInput[]
+}
+
+export type AdvancedInput =
+  // Styles
   | "alignment"
-  | "color"
-  | "dimensions"
-  | "flex"
-  | "grid"
-  | "input"
-  | "switch"
-  | "spacing"
-  | "textarea"
-  | "visibility"
-  | "border"
   | "background"
-  | "typography"
-  | "shadow"
-  | "position"
-  | "overflow"
-  | "display"
-  | "other"
+  | "border"
+  | "countdown"
+  | "dimensions"
+  // Elements
+  | "form"
+  | "instagram"
+  | "product"
+  | "spacing"
+  | "visibility"
+
+export interface BasicInput {
+  type: InputType
+  label: string
+  name: string // binding's name
+  defaultValue?: string
+  placeholder?: string
+  helpText?: string
+  // For `select` inputs
+  options?: { value: string; label: string }[]
+  // Only display if condition matches (eg: if `clickAction` is `"open-link"`)
+  conditions?: TODO[]
+}
+
+export type InputType = "select" | "radio" | "range" | "button" | "image" | "color" | "input" | "switch" | "textarea"
 
 declare global {
   interface Window {
     WeaverseStudioBridge: TODO
     weaverseShopifyProducts: TODO
+    weaverseGlobalSettings: TODO
   }
 }

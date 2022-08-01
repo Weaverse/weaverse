@@ -1,6 +1,6 @@
 import React, { forwardRef, useContext, useEffect, useState } from 'react'
 import { WeaverseContext } from '../context'
-import { InstagramElementProps, InstagramMedia } from '../types'
+import type { InstagramElementProps, InstagramMedia } from '../types'
 import Placeholder from './shared/Placeholder'
 
 let INSTAGRAM_API = 'https://graph.instagram.com'

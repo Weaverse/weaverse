@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { ProductContextProps } from '../../types'
+import type { ProductContextProps } from '../../types'
 export let ProductContext = createContext<ProductContextProps>({})
 export let ProductProvider = ProductContext.Provider
 export let ProductConsumer = ProductContext.Consumer

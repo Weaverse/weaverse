@@ -1,13 +1,13 @@
 import elements from './elements'
-import {
-  createRootContext,
-  WeaverseRoot,
-  WeaverseRootPropsType,
-  WeaverseType,
-} from '@weaverse/react'
+import type { WeaverseRootPropsType, WeaverseType } from '@weaverse/react'
+import { createRootContext, WeaverseRoot } from '@weaverse/react'
 import React from 'react'
 
 export * from '@weaverse/react'
+
+export type WeaverseRootProps = WeaverseRootPropsType & {
+  data?: any
+}
 
 let createWeaverseHydrogenContext = (configs: WeaverseType) => {
   let context = createRootContext(configs)
@@ -18,7 +18,7 @@ let createWeaverseHydrogenContext = (configs: WeaverseType) => {
   return context
 }
 
-let WeaverseHydrogenRoot = ({ context }: WeaverseRootPropsType) => {
+let WeaverseHydrogenRoot = ({ context }: WeaverseRootProps) => {
   return <WeaverseRoot context={context} />
 }
 

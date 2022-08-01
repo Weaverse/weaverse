@@ -1,4 +1,4 @@
-import { WeaverseElementMap } from '@weaverse/core'
+import type { ElementsMap } from '@weaverse/core'
 import * as Button from './button'
 import * as Container from './container'
 import * as Countdown from './countdown'
@@ -12,7 +12,7 @@ import * as Accordion from './accordion'
 import * as AccordionWrapper from './accordion/AccordionWrapper'
 import * as AccordionContent from './accordion/AccordionContent'
 
-const elements: WeaverseElementMap = {
+const elements: ElementsMap = {
   Countdown: {
     Component: Countdown.default,
     type: 'countdown',

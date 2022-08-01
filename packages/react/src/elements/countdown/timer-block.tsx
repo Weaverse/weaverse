@@ -1,7 +1,7 @@
-import { TODO } from '@weaverse/core'
 import React from 'react'
+import type { TimerBlockProps } from '../../types'
 
-export function TimerBlock({ value, label }: TODO) {
+export function TimerBlock({ value, label }: TimerBlockProps) {
   return (
     <div>
       <div className="wv-countdown-number">
