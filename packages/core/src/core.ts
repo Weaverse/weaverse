@@ -268,7 +268,7 @@ export class Weaverse {
 
   initProjectItemData() {
     const data = this.projectData
-    if (data.items) {
+    if (data?.items) {
       data.items.forEach((item) => {
         if (!this.itemInstances.get(item.id as string | number)) {
           new WeaverseItemStore(item, this)

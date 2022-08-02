@@ -23,17 +23,17 @@ export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
 
   let eventHandlers = context?.studioBridge?.eventHandlers || {}
   let themeClass = context.stitchesInstance.theme.className
-  return (
+  return context.projectData?.rootId ? (
     <div
       className={`weaverse-content-root ${themeClass}`}
       {...eventHandlers}
       ref={rootRef}
     >
       <WeaverseContextProvider value={context}>
-        <ItemInstance id={context.projectData.rootId || 0} />
+        <ItemInstance id={context.projectData.rootId} />
       </WeaverseContextProvider>
     </div>
-  )
+  ) : null
 }
 
 const ItemComponent = ({ instance }: ItemComponentProps) => {

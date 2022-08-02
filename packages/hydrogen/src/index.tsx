@@ -19,7 +19,7 @@ let createWeaverseHydrogenContext = (configs: WeaverseType) => {
 }
 
 let WeaverseHydrogenRoot = ({ context }: WeaverseRootProps) => {
-  return <WeaverseRoot context={context} />
+  return context?.projectData?.items ? <WeaverseRoot context={context} /> : null
 }
 
 let fetchPageData = ({
@@ -37,7 +37,12 @@ let fetchPageData = ({
       projectKey,
       handle,
     }),
-  }).then((res) => res.json())
+  })
+    .then((res) => res.json())
+    .catch((e) => {
+      console.error(e)
+      return {}
+    })
 }
 
 export { WeaverseHydrogenRoot, createWeaverseHydrogenContext, fetchPageData }
