@@ -39,6 +39,7 @@ export interface ElementCatalog {
   name: string
   icon?: string
   group?: CatalogGroup
+  data?: ElementData[]
 }
 
 export type FlagType = "draggable" | "resizable" | "sortable" | "droppable"
