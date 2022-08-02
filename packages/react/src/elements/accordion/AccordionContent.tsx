@@ -20,8 +20,8 @@ const AccordionContent = forwardRef<
     '--columns': columns,
     '--gap': gap + 'px',
     '--row-size': rowSize + 'px',
-    // '--col-size':
-    //   'calc((var(--grid-size) - calc(var(--columns) - 1) * var(--gap)) / var(--columns))',
+    '--col-size':
+      'calc((var(--grid-size) - calc(var(--columns) - 1) * var(--gap)) / var(--columns))',
   } as React.CSSProperties
 
   return (
@@ -43,11 +43,12 @@ AccordionContent.defaultProps = {
   css: {
     '@desktop': {
       width: '100%',
+      maxWidth: 'var(--grid-size)',
       backgroundColor: '#DDD',
       display: 'none',
-      gridTemplate:
-        'repeat(var(--rows),var(--row-size))/repeat(var(--columns),1fr)',
-      gridGap: 'var(--gap)',
+      gridTemplateRows: 'repeat(var(--rows), var(--row-size))',
+      gridTemplateColumns: 'repeat(var(--columns), minmax(0, var(--col-size)))',
+      gap: 'var(--gap)',
       borderRadius: 4,
     },
   },
