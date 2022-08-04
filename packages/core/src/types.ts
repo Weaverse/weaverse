@@ -116,7 +116,6 @@ export type AdvancedInput =
   | "dimensions"
   // Elements
   | "form"
-  | "instagram"
   | "product"
   | "spacing"
   | "visibility"
@@ -138,7 +137,17 @@ export interface BasicInput {
   conditions?: TODO[]
 }
 
-export type InputType = "select" | "radio" | "range" | "button" | "image" | "color" | "text" | "switch" | "textarea"
+export type InputType =
+  | "instagram"
+  | "select"
+  | "radio"
+  | "range"
+  | "button"
+  | "image"
+  | "color"
+  | "text"
+  | "switch"
+  | "textarea"
 
 declare global {
   interface Window {
