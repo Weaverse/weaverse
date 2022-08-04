@@ -128,8 +128,12 @@ export interface BasicInput {
   defaultValue?: string
   placeholder?: string
   helpText?: string
-  // For `select` inputs
+  // For `select` input
   options?: { value: string; label: string }[]
+  // For `range` input
+  min?: number
+  max?: number
+  step?: number
   // Only display if condition matches (eg: if `clickAction` is `"open-link"`)
   conditions?: TODO[]
 }
