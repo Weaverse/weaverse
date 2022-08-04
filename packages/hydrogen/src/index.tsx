@@ -26,16 +26,19 @@ let fetchPageData = ({
   baseUrl = 'https://studio.weaverse.io',
   projectKey,
   handle,
+  published = true,
 }: {
   baseUrl?: string
   projectKey: string
   handle: string
+  published?: boolean
 }) => {
   return fetch(baseUrl + '/api/public/projects', {
     method: 'POST',
     body: JSON.stringify({
       projectKey,
       handle,
+      published,
     }),
   })
     .then((res) => res.json())
