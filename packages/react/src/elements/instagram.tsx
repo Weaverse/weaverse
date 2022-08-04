@@ -4,12 +4,11 @@ import Placeholder from './shared/Placeholder'
 
 let INSTAGRAM_API = 'https://graph.instagram.com'
 
-const Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
+let Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
   (props, ref) => {
-    const { token, username, numberOfImages, imagesPerRow, gap, ...rest } =
-      props
-    const [media, setMedia] = useState<InstagramMedia[]>([])
-    const [error, setError] = useState(null)
+    let { token, username, numberOfImages, imagesPerRow, gap, ...rest } = props
+    let [media, setMedia] = useState<InstagramMedia[]>([])
+    let [error, setError] = useState(null)
 
     useEffect(() => {
       if (token) {
@@ -45,7 +44,7 @@ const Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
 
     let style = {
       '--wv-ig-images-per-row': imagesPerRow,
-      '--wv-ig-images-gap': gap,
+      '--wv-ig-images-gap': gap + 'px',
     } as React.CSSProperties
 
     return (
