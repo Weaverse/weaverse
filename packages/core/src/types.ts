@@ -127,8 +127,8 @@ export interface BasicInput {
   defaultValue?: string
   placeholder?: string
   helpText?: string
-  // For `select` input
-  options?: { value: string; label: string }[]
+  // For `select` or `toggle-group` input
+  options?: { value: string; label: string; icon?: string }[]
   // For `range` input
   min?: number
   max?: number
@@ -138,16 +138,15 @@ export interface BasicInput {
 }
 
 export type InputType =
-  | "instagram"
-  | "select"
-  | "radio"
-  | "range"
-  | "button"
-  | "image"
   | "color"
-  | "text"
+  | "image"
+  | "instagram"
+  | "range"
+  | "select"
   | "switch"
+  | "text"
   | "textarea"
+  | "toggle-group"
 
 declare global {
   interface Window {

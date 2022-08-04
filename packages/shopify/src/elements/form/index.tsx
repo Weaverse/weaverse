@@ -30,10 +30,18 @@ let InputField = ({ field }: { field: FormFieldProps }) => {
 
 const Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
   const { ssrMode } = useContext(WeaverseContext)
-  const { fields, formType, button, ...rest } = props
+  const {
+    fields,
+    formType,
+    submitText,
+    submitPosition,
+    targetLink,
+    openInNewTab,
+    ...rest
+  } = props
 
   let style = {
-    '--wv-form-submit-align': button.position,
+    '--wv-form-submit-align': submitPosition,
   } as React.CSSProperties
 
   const formContent = (
@@ -41,7 +49,7 @@ const Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
       {fields.map((field) => (
         <InputField key={field.id} field={field} />
       ))}
-      <button type="submit">{button.text}</button>
+      <button type="submit">{submitText}</button>
     </div>
   )
   if (ssrMode) {
@@ -50,11 +58,11 @@ const Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
         {`{% form '${formType}' %}`}
         {` {% if form.posted_successfully? %} `}
         {`<h3>{% render 'icon-success' %}{{ 'newsletter.success' | t }}</h3>`}
-        {button.targetLink && (
+        {targetLink && (
           <script
             dangerouslySetInnerHTML={{
-              __html: `window.open(${button.targetLink},${
-                button.openInNewTab ? '_blank' : '_self'
+              __html: `window.open(${targetLink},${
+                openInNewTab ? '_blank' : '_self'
               })`,
             }}
           ></script>
@@ -99,18 +107,17 @@ Form.defaultProps = {
       required: false,
     },
   ],
-  button: {
-    text: 'Submit',
-    position: 'center',
-    openInNewTab: true,
-    targetLink: 'https://myshop.com',
-  },
+  submitText: 'Submit',
+  submitPosition: 'center',
+  openInNewTab: true,
+  targetLink: 'https://myshop.com',
   css: {
     '@desktop': {
       display: 'flex',
       flexDirection: 'column',
       gap: 14,
       width: '100%',
+      padding: '12px',
       '& > div': {
         display: 'flex',
         flexDirection: 'column',
