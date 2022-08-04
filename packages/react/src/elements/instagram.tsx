@@ -1,5 +1,4 @@
-import React, { forwardRef, useContext, useEffect, useState } from 'react'
-import { WeaverseContext } from '../context'
+import React, { forwardRef, useEffect, useState } from 'react'
 import type { InstagramElementProps, InstagramMedia } from '../types'
 import Placeholder from './shared/Placeholder'
 
@@ -11,7 +10,6 @@ const Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
       props
     const [media, setMedia] = useState<InstagramMedia[]>([])
     const [error, setError] = useState(null)
-    let { isDesignMode } = useContext(WeaverseContext)
 
     useEffect(() => {
       if (token) {
@@ -54,14 +52,10 @@ const Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
       <div ref={ref} {...rest} style={style}>
         <div className="wv-ig-media-container">
           {media.slice(0, numberOfImages).map((item) => {
-            let linkProps
-            if (!isDesignMode) {
-              linkProps = { href: item.permalink, target: '_blank' }
-            }
-
+            let { id, permalink, caption, media_url } = item
             return (
-              <a key={item.id} {...linkProps}>
-                <img alt={item.caption} src={item.media_url} />
+              <a key={id} href={permalink} target="_blank" rel="noreferrer">
+                <img alt={caption} src={media_url} />
               </a>
             )
           })}
