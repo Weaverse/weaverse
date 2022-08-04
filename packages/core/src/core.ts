@@ -122,6 +122,13 @@ export class Weaverse {
    * @type {Map<string, (data: any) => void>}
    */
   listeners: Set<any> = new Set()
+  /**
+   * check whether the sdk is isDesignMode or not
+   * if isDesignMode is true, it means the sdk is isDesignMode mode, render the editor UI
+   * else render the preview UI, plain HTML + CSS + React hydrate
+   * @type {boolean}
+   */
+  isDesignMode = false
 
   /**
    * Use in element to optionally render special HTML for hydration
@@ -149,21 +156,32 @@ export class Weaverse {
    * @param projectKey {string} Weaverse project key to access project data via API
    * @param projectData {ProjectDataType} Weaverse project data, by default, user can provide project data via React Component.
    * @param mediaBreakPoints {object} Pass down custom media query breakpoints or just use the default.
+   * @param isDesignMode {boolean} check whether the sdk is isDesignMode or not
    * @param ssrMode {boolean} Use in element to optionally render special HTML for hydration
    */
-  constructor({ appUrl, projectKey, projectData, mediaBreakPoints, ssrMode }: WeaverseType = {}) {
+  constructor({ appUrl, projectKey, projectData, mediaBreakPoints, isDesignMode, ssrMode }: WeaverseType = {}) {
+    this.init({ appUrl, projectKey, projectData, mediaBreakPoints, isDesignMode, ssrMode })
+  }
+
+  init(
+    { appUrl, projectKey, projectData, mediaBreakPoints, isDesignMode, ssrMode }: WeaverseType = {},
+    forceUpdate = false
+  ) {
     this.appUrl = appUrl || this.appUrl
     this.projectKey = projectKey || this.projectKey
     this.mediaBreakPoints = mediaBreakPoints || this.mediaBreakPoints
-    // this.isDesignMode = isDesignMode || this.isDesignMode // Removed to manually check and loadStudio in browser-hydrate or useEffect
+    this.isDesignMode = isDesignMode || this.isDesignMode
     this.ssrMode = ssrMode || this.ssrMode
-    projectData && (this.projectData = projectData)
-    this.init()
+    this.projectData = projectData || this.projectData
+    this.initStitches()
+    this.initProjectItemData()
+    forceUpdate && this.triggerUpdate()
+    this.loadStudio()
   }
 
   loadStudio() {
     setTimeout(() => {
-      if (isIframe) {
+      if (isIframe && this.isDesignMode) {
         const initStudio = () => {
           this.studioBridge = new window.WeaverseStudioBridge(this)
           this.triggerUpdate()
@@ -197,17 +215,14 @@ export class Weaverse {
     }
   }
 
-  init() {
-    this.initStitches()
-    this.initProjectItemData()
-  }
-
   initStitches = () => {
-    this.stitchesInstance = stitches.createStitches({
-      prefix: "weaverse",
-      media: this.mediaBreakPoints,
-      utils: stichesUtils,
-    })
+    this.stitchesInstance =
+      this.stitchesInstance ||
+      stitches.createStitches({
+        prefix: "weaverse",
+        media: this.mediaBreakPoints,
+        utils: stichesUtils,
+      })
   }
 
   subscribe(fn: any) {
@@ -250,21 +265,21 @@ export class Weaverse {
   /**
    * fetch and update the project data, then trigger update to re-render the WeaverseRoot
    */
-  updateProjectData() {
-    if (this.projectKey && !this.projectData.rootId) {
-      Weaverse.fetchProjectData({ appUrl: this.appUrl, projectKey: this.projectKey })
-        .then((data: ProjectDataType) => {
-          if (data) {
-            this.projectData = data
-            this.initProjectItemData()
-            this.triggerUpdate()
-          }
-        })
-        .catch((err: Error) => {
-          console.error(err)
-        })
-    }
-  }
+  // updateProjectData() {
+  //   if (this.projectKey && !this.projectData.rootId) {
+  //     Weaverse.fetchProjectData({ appUrl: this.appUrl, projectKey: this.projectKey })
+  //       .then((data: ProjectDataType) => {
+  //         if (data) {
+  //           this.projectData = data
+  //           this.initProjectItemData()
+  //           this.triggerUpdate()
+  //         }
+  //       })
+  //       .catch((err: Error) => {
+  //         console.error(err)
+  //       })
+  //   }
+  // }
 
   initProjectItemData() {
     const data = this.projectData
