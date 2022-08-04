@@ -116,7 +116,6 @@ export type AdvancedInput =
   | "dimensions"
   // Elements
   | "form"
-  | "instagram"
   | "product"
   | "spacing"
   | "visibility"
@@ -128,13 +127,27 @@ export interface BasicInput {
   defaultValue?: string
   placeholder?: string
   helpText?: string
-  // For `select` inputs
+  // For `select` input
   options?: { value: string; label: string }[]
+  // For `range` input
+  min?: number
+  max?: number
+  step?: number
   // Only display if condition matches (eg: if `clickAction` is `"open-link"`)
   conditions?: TODO[]
 }
 
-export type InputType = "select" | "radio" | "range" | "button" | "image" | "color" | "text" | "switch" | "textarea"
+export type InputType =
+  | "instagram"
+  | "select"
+  | "radio"
+  | "range"
+  | "button"
+  | "image"
+  | "color"
+  | "text"
+  | "switch"
+  | "textarea"
 
 declare global {
   interface Window {

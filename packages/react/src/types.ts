@@ -14,8 +14,9 @@ export type ItemComponentProps = {
 
 //////////// Element types
 // Placeholder
-export interface PlaceholderProps extends WeaverseElementProps {
+export interface PlaceholderProps {
   element: string
+  children: ReactElement | ReactElement[] | ReactNode | ReactNode[]
 }
 
 // Button

@@ -2,16 +2,10 @@ import { WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext, useId } from 'react'
 import type { FormElementProps, FormFieldProps } from '../../types'
 
-let InputField = ({
-  field,
-  isDesignMode,
-}: {
-  field: FormFieldProps
-  isDesignMode: boolean
-}) => {
+let InputField = ({ field }: { field: FormFieldProps }) => {
   let id = useId()
   return (
-    <div className={`wv-e-pen`}>
+    <div>
       <label htmlFor={id}>{field.label}</label>
       {field.type !== 'multiline' ? (
         <input
@@ -35,7 +29,7 @@ let InputField = ({
 }
 
 const Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
-  const { isDesignMode, ssrMode } = useContext(WeaverseContext)
+  const { ssrMode } = useContext(WeaverseContext)
   const { fields, formType, button, ...rest } = props
 
   let style = {
@@ -45,7 +39,7 @@ const Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
   const formContent = (
     <div ref={ref} {...rest} style={style}>
       {fields.map((field) => (
-        <InputField key={field.id} field={field} isDesignMode={isDesignMode} />
+        <InputField key={field.id} field={field} />
       ))}
       <button type="submit">{button.text}</button>
     </div>
