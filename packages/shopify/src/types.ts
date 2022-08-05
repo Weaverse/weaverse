@@ -23,7 +23,10 @@ export interface ProductBoxProps extends WeaverseElementProps {
 export interface FormElementProps extends WeaverseElementProps {
   formType: string
   fields: FormFieldProps[]
-  button: FormSubmitButtonProps
+  submitText: string
+  submitPosition: 'flex-start' | 'flex-end' | 'center'
+  openInNewTab: boolean
+  targetLink: string
 }
 
 export type FormFieldType = 'text' | 'email' | 'multiline'
@@ -34,11 +37,4 @@ export type FormFieldProps = {
   showLabel: boolean
   label: string
   required: boolean
-}
-
-export type FormSubmitButtonProps = {
-  text: string
-  position: 'flex-start' | 'flex-end' | 'center'
-  openInNewTab: boolean
-  targetLink: string
 }

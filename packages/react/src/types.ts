@@ -36,6 +36,22 @@ export interface ContainerElementProps extends WeaverseElementProps {
 export interface ImageElementProps extends WeaverseElementProps {
   src: string
   alt: string
+  objectFit: 'contain' | 'cover'
+  objectPosition:
+    | 'left'
+    | 'right'
+    | 'top'
+    | 'bottom'
+    | 'center'
+    | 'center left'
+    | 'center right'
+    | 'top left'
+    | 'top right'
+    | 'bottom left'
+    | 'bottom right'
+  onClickAction: 'none' | 'open-lightbox' | 'open-link'
+  linkTo?: string
+  openLinkInNewTab?: boolean
 }
 
 // Layout
