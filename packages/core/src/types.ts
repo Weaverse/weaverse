@@ -14,6 +14,13 @@ export interface ProjectDataType {
   }
 }
 
+export interface InitializeData {
+  id: string
+  handle: string
+  data: ProjectDataType
+  published: boolean
+}
+
 // Weaverse types
 export interface WeaverseType {
   mediaBreakPoints?: any

@@ -7,7 +7,7 @@
 import * as stitches from "@stitches/core"
 import type Stitches from "@stitches/core/types/stitches"
 import type { RefObject } from "react"
-import type { ProjectDataType, WeaverseElement, ElementData, ElementFlags, WeaverseType } from "./types"
+import type { ProjectDataType, WeaverseElement, ElementData, ElementFlags, WeaverseType, InitializeData } from "./types"
 import { isIframe } from "./utils"
 import { stichesUtils } from "./utils/styles"
 
@@ -178,10 +178,19 @@ export class Weaverse {
     forceUpdate && this.triggerUpdate()
     this.loadStudio()
   }
+  initializeData = (data: InitializeData) => {
+    let { handle, data: pageData, published, id } = data
+    this.projectData = pageData
+    this.isDesignMode = !published
+
+    this.initProjectItemData()
+    this.triggerUpdate()
+    this.loadStudio()
+  }
 
   loadStudio() {
     setTimeout(() => {
-      if (isIframe && this.isDesignMode) {
+      if (isIframe && this.isDesignMode && !this.studioBridge) {
         const initStudio = () => {
           this.studioBridge = new window.WeaverseStudioBridge(this)
           this.triggerUpdate()
