@@ -23,19 +23,23 @@ let WeaverseHydrogenRoot = ({ context }: WeaverseRootProps) => {
 }
 
 let fetchPageData = ({
-  baseUrl = 'https://studio.weaverse.io',
+  studioUrl = 'https://studio.weaverse.io',
   projectKey,
-  handle,
+  url,
 }: {
-  baseUrl?: string
+  studioUrl?: string
   projectKey: string
-  handle: string
+  url: URL
 }) => {
-  return fetch(baseUrl + '/api/public/projects', {
+  let handle = url.pathname
+  let isDesignMode = url.searchParams.get('isDesignMode') === 'true'
+
+  return fetch(studioUrl + '/api/public/projects', {
     method: 'POST',
     body: JSON.stringify({
       projectKey,
       handle,
+      published: !isDesignMode,
     }),
   })
     .then((res) => res.json())
