@@ -7,7 +7,7 @@
 import * as stitches from "@stitches/core"
 import type Stitches from "@stitches/core/types/stitches"
 import type { RefObject } from "react"
-import type { ProjectDataType, WeaverseElement, ElementData, ElementFlags, WeaverseType, InitializeData } from "./types"
+import type { ElementData, ElementFlags, InitializeData, ProjectDataType, WeaverseElement, WeaverseType } from "./types"
 import { isIframe } from "./utils"
 import { stichesUtils } from "./utils/styles"
 
@@ -163,10 +163,7 @@ export class Weaverse {
     this.init({ appUrl, projectKey, projectData, mediaBreakPoints, isDesignMode, ssrMode })
   }
 
-  init(
-    { appUrl, projectKey, projectData, mediaBreakPoints, isDesignMode, ssrMode }: WeaverseType = {},
-    forceUpdate = false
-  ) {
+  init({ appUrl, projectKey, projectData, mediaBreakPoints, isDesignMode, ssrMode }: WeaverseType = {}) {
     this.appUrl = appUrl || this.appUrl
     this.projectKey = projectKey || this.projectKey
     this.mediaBreakPoints = mediaBreakPoints || this.mediaBreakPoints
@@ -175,17 +172,18 @@ export class Weaverse {
     this.projectData = projectData || this.projectData
     this.initStitches()
     this.initProjectItemData()
-    forceUpdate && this.triggerUpdate()
-    this.loadStudio()
   }
+  initialized = false
   initializeData = (data: InitializeData) => {
-    let { handle, data: pageData, published, id } = data
-    this.projectData = pageData
-    this.isDesignMode = !published
-
-    this.initProjectItemData()
-    this.triggerUpdate()
-    this.loadStudio()
+    if (!this.initialized) {
+      let { data: pageData, published, id } = data
+      this.projectData = { ...pageData, pageId: id }
+      this.isDesignMode = !published
+      this.initProjectItemData()
+      this.triggerUpdate()
+      this.loadStudio()
+    }
+    this.initialized = true
   }
 
   loadStudio() {
@@ -193,6 +191,7 @@ export class Weaverse {
       if (isIframe && this.isDesignMode && !this.studioBridge) {
         const initStudio = () => {
           this.studioBridge = new window.WeaverseStudioBridge(this)
+          // trigger update to make event listener from studio work
           this.triggerUpdate()
         }
 
@@ -261,7 +260,6 @@ export class Weaverse {
     appUrl?: string
     projectKey?: string
   }) {
-    console.log("Weaverse: fetchProjectData", appUrl, projectKey)
     return fetch(appUrl + `/api/public/${projectKey}`)
       .then((r: Response) => r.json())
       .catch(console.error)
