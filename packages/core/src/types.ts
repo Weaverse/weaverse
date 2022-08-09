@@ -12,6 +12,7 @@ export interface ProjectDataType {
     css: string
     js: string
   }
+  pageId?: string // for standalone app, we have pageId for the page that we're editing
 }
 
 export interface InitializeData {
