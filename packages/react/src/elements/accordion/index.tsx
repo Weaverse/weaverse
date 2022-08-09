@@ -6,8 +6,8 @@ interface AccordionElementProps extends WeaverseElementProps {
 }
 
 interface accordionContext {
-  active: null | number
-  setActive: (param: number) => void
+  active: null | string
+  setActive: (param: string) => void
 }
 
 export const AccordionContext = createContext<accordionContext>({
@@ -20,8 +20,8 @@ export const AccordionContext = createContext<accordionContext>({
 const Accordion = forwardRef<HTMLDivElement, AccordionElementProps>(
   (props, ref) => {
     const { items, children, ...rest } = props
-    const [active, setActive] = useState<number | null>(null)
-    const setOpenAccordion = (id: number) => {
+    const [active, setActive] = useState<string | null>(null)
+    const setOpenAccordion = (id: string) => {
       if (id === active) {
         setActive(null)
       } else {
@@ -63,14 +63,14 @@ Accordion.defaultProps = {
       gap: 4,
       '.wv-accordion-header': {
         borderRadius: 4,
-        padding: 4,
+        padding: 12,
         marginBottom: 4,
-        backgroundColor: '#aaa',
+        border: '1px solid #76A9FA',
         '&.active': {
           color: 'blue',
         },
         '&.active + [data-wv-type="accordion.content"]': {
-          display: 'grid',
+          maxHeight: 'var(--max-height, inherit)',
         },
       },
     },
