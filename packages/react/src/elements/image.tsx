@@ -28,7 +28,6 @@ let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
         console.log('TODO: click action:', onClickAction)
       }
     }
-
     return (
       <div ref={ref} {...rest} style={style} onClick={handleClick}>
         <img alt={alt} src={src} />
