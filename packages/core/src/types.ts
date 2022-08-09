@@ -121,11 +121,11 @@ export type AdvancedInput =
   | "border"
   | "countdown"
   | "dimensions"
+  | "visibility"
+  | "spacing"
   // Elements
   | "form"
   | "product"
-  | "spacing"
-  | "visibility"
 
 export interface BasicInput {
   type: InputType
