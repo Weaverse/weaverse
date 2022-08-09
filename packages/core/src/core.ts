@@ -180,8 +180,10 @@ export class Weaverse {
       this.projectData = { ...pageData, pageId: id }
       this.isDesignMode = !published
       this.initProjectItemData()
-      this.triggerUpdate()
-      this.loadStudio()
+      if (this.isDesignMode) {
+        this.triggerUpdate()
+        this.loadStudio()
+      }
     }
     this.initialized = true
   }
