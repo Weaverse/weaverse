@@ -176,7 +176,8 @@ export class Weaverse {
   initialized = false
   initializeData = (data: InitializeData) => {
     if (!this.initialized) {
-      let { data: pageData, published, id } = data
+      let { data: pageData, published, id, projectKey } = data
+      this.projectKey = projectKey || this.projectKey
       this.projectData = { ...pageData, pageId: id }
       this.isDesignMode = !published
       this.initProjectItemData()
