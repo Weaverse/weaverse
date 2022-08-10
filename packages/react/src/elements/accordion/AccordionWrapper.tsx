@@ -11,18 +11,16 @@ const AccordionWrapper = forwardRef<
   HTMLDivElement,
   AccordionWrapperElementProps
 >((props, ref) => {
-  const { wrapperId, headerText, children, ...rest } = props
+  const { ['data-wv-id']: wvId, headerText, children, ...rest } = props
   const { active, setActive } = useContext(AccordionContext)
 
   return (
     <div ref={ref} {...rest}>
       <div
-        onClick={() => setActive(wrapperId)}
-        className={`wv-accordion-header ${
-          active === wrapperId ? 'active' : ''
-        }`}
+        onClick={() => setActive(wvId)}
+        className={`wv-accordion-header ${active === wvId ? 'active' : ''}`}
       >
-        {headerText} #{wrapperId}
+        {headerText}
       </div>
       {children}
     </div>
@@ -30,8 +28,7 @@ const AccordionWrapper = forwardRef<
 })
 
 AccordionWrapper.defaultProps = {
-  wrapperId: 1,
-  headerText: 'Header 1',
+  headerText: 'Header text',
   css: {
     '@desktop': {
       maxHeight: '100%',

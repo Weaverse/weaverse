@@ -3,6 +3,8 @@ import type { ReactElement, ReactNode } from 'react'
 
 export interface WeaverseElementProps extends ReactElement {
   css?: ElementCSS
+  ['data-wv-type']: string
+  ['data-wv-id']: string
   children?: ReactElement | ReactElement[] | ReactNode | ReactNode[]
 }
 

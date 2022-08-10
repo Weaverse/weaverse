@@ -20,6 +20,7 @@ export interface InitializeData {
   handle: string
   data: ProjectDataType
   published: boolean
+  projectKey?: string
 }
 
 // Weaverse types

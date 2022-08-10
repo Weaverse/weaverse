@@ -8,13 +8,14 @@ import { generateItemClass } from './utils'
 export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
   let [, setData] = useState<ProjectDataType | unknown>(context.projectData)
   let rootRef = useRef<HTMLElement>()
+  let update = () => setData({})
 
   useEffect(() => {
-    let update = () => setData({})
     context.subscribe(update)
-    if (context.projectData) {
-      setTimeout(update, 110)
-    }
+    // no need to self update anymore since we control updating from core context
+    // if (context.projectData) {
+    //   setTimeout(update, 110)
+    // }
     context.contentRootElement = rootRef.current
     return () => {
       context.unsubscribe(update)
