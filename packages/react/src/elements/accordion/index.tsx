@@ -31,7 +31,6 @@ const Accordion = forwardRef<HTMLDivElement, AccordionElementProps>(
     // const headerStyle = {
     //   "--wv-acc-header-active":
     // }
-    console.info('9779 active', active)
     return (
       <div ref={ref} {...rest}>
         <AccordionContext.Provider

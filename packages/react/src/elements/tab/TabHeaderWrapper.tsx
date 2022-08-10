@@ -34,18 +34,22 @@
 //
 // export default TabHeaderWrapper
 
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { WeaverseContext } from '../../context'
 import { TabContext } from './index'
+import type { ElementData } from '@weaverse/core'
 
 function TabHeader(props: { wvId: string | number }) {
   const { wvId } = props
   const { active, setActive } = useContext(TabContext)
-
   const { itemInstances } = useContext(WeaverseContext)
 
   const instance = itemInstances.get(wvId)!
-  const data = instance.data
+  let [data, setData] = useState<ElementData>(instance.data)
+  useEffect(() => {
+    let update = (data: ElementData) => setData({ ...data })
+    instance.subscribe(update)
+  }, [])
   const text = data.headerText!
   return (
     <div
