@@ -23,7 +23,6 @@ const Tab = forwardRef<HTMLDivElement, TabElementProps>((props, ref) => {
   const { items, children, ...rest } = props
   const defaultActive = (React.Children.toArray(children)?.[0] as any)?.props
     ?.id
-  console.info('9779 default', defaultActive, children)
   const [active, setActive] = useState<string | number | null>(defaultActive)
   const setOpenTab = (id: string | number) => {
     if (id === active) {
