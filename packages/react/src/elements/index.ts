@@ -11,6 +11,8 @@ import * as Instagram from './instagram'
 import * as Accordion from './accordion'
 import * as AccordionWrapper from './accordion/AccordionWrapper'
 import * as AccordionContent from './accordion/AccordionContent'
+import * as Tab from './tab'
+import * as TabContent from './tab/TabContent'
 
 const elements: ElementsMap = {
   Countdown: {
@@ -60,6 +62,14 @@ const elements: ElementsMap = {
   AccordionContent: {
     Component: AccordionContent.default,
     type: 'accordion.content',
+  },
+  Tab: {
+    Component: Tab.default,
+    type: 'tab',
+  },
+  TabContent: {
+    Component: TabContent.default,
+    type: 'tab.content',
   },
 }
 
