@@ -21,16 +21,16 @@ let createWeaverseHydrogenContext = (configs: WeaverseType) => {
 let WeaverseHydrogenRoot = ({ context }: WeaverseRootProps) => {
   return context?.projectData?.items ? <WeaverseRoot context={context} /> : null
 }
-
+export type WHFetchConfigs = {
+  studioUrl?: string
+  projectKey: string
+  url: URL
+}
 let fetchPageData = ({
   studioUrl = 'https://studio.weaverse.io',
   projectKey,
   url,
-}: {
-  studioUrl?: string
-  projectKey: string
-  url: URL
-}) => {
+}: WHFetchConfigs) => {
   let handle = url.pathname
   let isDesignMode = url.searchParams.get('isDesignMode') === 'true'
 
