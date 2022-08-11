@@ -51,7 +51,7 @@ AccordionContent.defaultProps = {
       gap: 'var(--gap)',
       overflow: 'hidden',
       maxHeight: 0,
-      transition: 'all 0.3s ease-in-out',
+      transition: 'all var(--transition-duration, 0.3s) ease-in-out',
       borderRadius: 4,
     },
   },
