@@ -102,7 +102,7 @@ export class Weaverse {
    * Weaverse base URL that can provide by user/developer. for local development, use localhost:3000
    * @type {string}
    */
-  appUrl: string = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://weaverse.io"
+  appUrl: string = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://ss.weaverse.io"
   /**
    * Weaverse project key to access project data via API
    * @type {string}
@@ -176,8 +176,9 @@ export class Weaverse {
   initialized = false
   initializeData = (data: InitializeData) => {
     if (!this.initialized) {
-      let { data: pageData, published, id, projectKey } = data
+      let { data: pageData, published, id, projectKey, studioUrl } = data
       this.projectKey = projectKey || this.projectKey
+      this.appUrl = studioUrl || this.appUrl
       this.projectData = { ...pageData, pageId: id }
       this.isDesignMode = !published
       this.initProjectItemData()

@@ -8,3 +8,4 @@ build/**
 /pnpm-global/
 /packages/core/pnpm-global/
 .vscode/
+.DS_Store
