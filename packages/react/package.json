@@ -8,7 +8,7 @@
     "access": "public"
   },
   "files": [
-    "dist"
+    "dist/*"
   ],
   "engines": {
     "node": ">=10"
@@ -31,6 +31,6 @@
   "name": "@weaverse/react",
   "author": "Weaverse Team",
   "dependencies": {
-    "@weaverse/core": "0.6.30"
+    "@weaverse/core": "0.6.26"
   }
 }
