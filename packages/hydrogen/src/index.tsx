@@ -26,15 +26,15 @@ export type WHFetchConfigs = {
   projectKey: string
   url: URL
 }
-let fetchPageData = ({
-  studioUrl = 'https://studio.weaverse.io',
+let fetchPageData = async ({
+  studioUrl = 'https://ss.weaverse.io',
   projectKey,
   url,
 }: WHFetchConfigs) => {
   let handle = url.pathname
   let isDesignMode = url.searchParams.get('isDesignMode') === 'true'
 
-  return fetch(studioUrl + '/api/public/projects', {
+  let data = await fetch(studioUrl + '/api/public/projects', {
     method: 'POST',
     body: JSON.stringify({
       projectKey,
@@ -47,6 +47,7 @@ let fetchPageData = ({
       console.error(e)
       return {}
     })
+  return { ...data, studioUrl }
 }
 
 export { WeaverseHydrogenRoot, createWeaverseHydrogenContext, fetchPageData }

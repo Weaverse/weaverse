@@ -21,6 +21,7 @@ export interface InitializeData {
   data: ProjectDataType
   published: boolean
   projectKey?: string
+  studioUrl?: string
 }
 
 // Weaverse types
