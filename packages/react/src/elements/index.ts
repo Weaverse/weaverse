@@ -13,6 +13,8 @@ import * as AccordionWrapper from './accordion/AccordionWrapper'
 import * as AccordionContent from './accordion/AccordionContent'
 import * as Tab from './tab'
 import * as TabContent from './tab/TabContent'
+import * as Slider from './slider'
+import * as SliderContent from './slider/SliderContent'
 
 const elements: ElementsMap = {
   Countdown: {
@@ -70,6 +72,14 @@ const elements: ElementsMap = {
   TabContent: {
     Component: TabContent.default,
     type: 'tab.content',
+  },
+  Slider: {
+    Component: Slider.default,
+    type: 'slider',
+  },
+  SliderContent: {
+    Component: SliderContent.default,
+    type: 'slider.content',
   },
 }
 
