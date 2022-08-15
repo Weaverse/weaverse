@@ -1,5 +1,5 @@
 {
-  "version": "0.7.2",
+  "version": "0.7.5",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -31,6 +31,7 @@
   "name": "@weaverse/react",
   "author": "Weaverse Team",
   "dependencies": {
-    "@weaverse/core": "0.7.2"
+    "@weaverse/core": "0.7.5",
+    "nuka-carousel": "^5.2.0"
   }
 }

@@ -5,7 +5,7 @@ import React, {
   useState,
 } from 'react'
 import type { WeaverseElementProps } from '../../types'
-// import * as Carousel from 'nuka-carousel'
+import * as Carousel from 'nuka-carousel'
 type SliderElementProps = WeaverseElementProps
 
 interface ISliderContext {
@@ -32,12 +32,12 @@ const Slider = forwardRef<HTMLDivElement, SliderElementProps>((props, ref) => {
       <SliderContext.Provider value={{ active, setActive }}>
         {children}
       </SliderContext.Provider>
-      {/*<Carousel.default>*/}
-      {/*  <div className="slide">Hi</div>*/}
-      {/*  <div className="slide">Hieee</div>*/}
-      {/*  <div className="slide">Hixxx</div>*/}
-      {/*  <div className="slide">Hi3</div>*/}
-      {/*</Carousel.default>*/}
+      <Carousel.default>
+        <div className="slide">Hi</div>
+        <div className="slide">Hieee</div>
+        <div className="slide">Hixxx</div>
+        <div className="slide">Hi3</div>
+      </Carousel.default>
     </div>
   )
 })
