@@ -31,6 +31,6 @@
   "name": "@weaverse/shopify",
   "author": "Weaverse Team",
   "dependencies": {
-    "@weaverse/react": "0.7.2"
+    "@weaverse/react": "0.7.3"
   }
 }
