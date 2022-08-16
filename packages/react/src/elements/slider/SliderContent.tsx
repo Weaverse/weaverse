@@ -1,21 +1,31 @@
 import React, { forwardRef, useContext } from 'react'
-import type { WeaverseElementProps } from '../../types'
 import Placeholder from '../shared/Placeholder'
 import { SliderContext } from './index'
+import type { GridContentElementProps } from '../../types'
+import { WeaverseContext } from '../../context'
 
-interface SliderContentElementProps extends WeaverseElementProps {
-  rows: number
-  columns: number
-  gap: number
-  rowSize: number
+interface SliderContentElementProps extends GridContentElementProps {
+  mediaUrl: string
+  openInNewTab: boolean
+  targetLink: string
 }
 
 const SliderContent = forwardRef<HTMLDivElement, SliderContentElementProps>(
   (props, ref) => {
     const { active } = useContext(SliderContext)
+    const { isDesignMode } = useContext(WeaverseContext)
     const wvId = props['data-wv-id']
-    const { rows, columns, gap, rowSize, children, ...rest } = props
-
+    const {
+      mediaUrl,
+      targetLink,
+      openInNewTab,
+      rows,
+      columns,
+      gap,
+      rowSize,
+      children,
+      ...rest
+    } = props
     let style = {
       '--rows': rows,
       '--columns': columns,
@@ -25,10 +35,15 @@ const SliderContent = forwardRef<HTMLDivElement, SliderContentElementProps>(
         'calc((var(--grid-size) - calc(var(--columns) - 1) * var(--gap)) / var(--columns))',
       '--max-height': rows * rowSize + gap * (rowSize - 1) + 'px',
       '--content-active': active === wvId ? 'grid' : 'none',
+      '--background-url': `url(${mediaUrl}`,
     } as React.CSSProperties
-
+    const handleClick = () => {
+      if (!isDesignMode && targetLink) {
+        window.open(targetLink, openInNewTab ? '_blank' : '_self')
+      }
+    }
     return (
-      <div ref={ref} {...rest} style={style}>
+      <div {...rest} style={style} onClick={handleClick}>
         {React.Children.count(children) > 0 ? (
           children
         ) : (
@@ -40,6 +55,10 @@ const SliderContent = forwardRef<HTMLDivElement, SliderContentElementProps>(
 )
 
 SliderContent.defaultProps = {
+  mediaUrl:
+    'https://i.pinimg.com/originals/6c/2f/f1/6c2ff122b867292548328c26749e6cca.jpg',
+  openInNewTab: false,
+  targetLink: 'https://myshop.com',
   rows: 2,
   columns: 12,
   gap: 4,
@@ -54,6 +73,7 @@ SliderContent.defaultProps = {
       gap: 'var(--gap)',
       // transition: 'all var(--transition-duration, 0.3s) ease-in-out',
       borderRadius: 4,
+      backgroundImage: 'var(--background-url, none)',
     },
   },
 }

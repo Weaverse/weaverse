@@ -1,40 +1,32 @@
 import React, { forwardRef } from 'react'
-import type { WeaverseElementProps } from '../../types'
 import Placeholder from '../shared/Placeholder'
+import type { GridContentElementProps } from '../../types'
 
-interface AccordionContentElementProps extends WeaverseElementProps {
-  rows: number
-  columns: number
-  gap: number
-  rowSize: number
-}
+const AccordionContent = forwardRef<HTMLDivElement, GridContentElementProps>(
+  (props, ref) => {
+    const { rows, columns, gap, rowSize, children, ...rest } = props
 
-const AccordionContent = forwardRef<
-  HTMLDivElement,
-  AccordionContentElementProps
->((props, ref) => {
-  const { rows, columns, gap, rowSize, children, ...rest } = props
+    let style = {
+      '--rows': rows,
+      '--columns': columns,
+      '--gap': gap + 'px',
+      '--row-size': rowSize + 'px',
+      '--col-size':
+        'calc((var(--grid-size) - calc(var(--columns) - 1) * var(--gap)) / var(--columns))',
+      '--max-height': rows * rowSize + gap * (rowSize - 1) + 'px',
+    } as React.CSSProperties
 
-  let style = {
-    '--rows': rows,
-    '--columns': columns,
-    '--gap': gap + 'px',
-    '--row-size': rowSize + 'px',
-    '--col-size':
-      'calc((var(--grid-size) - calc(var(--columns) - 1) * var(--gap)) / var(--columns))',
-    '--max-height': rows * rowSize + gap * (rowSize - 1) + 'px',
-  } as React.CSSProperties
-
-  return (
-    <div ref={ref} {...rest} style={style}>
-      {React.Children.count(children) > 0 ? (
-        children
-      ) : (
-        <Placeholder element="Accordion">Item Content</Placeholder>
-      )}
-    </div>
-  )
-})
+    return (
+      <div ref={ref} {...rest} style={style}>
+        {React.Children.count(children) > 0 ? (
+          children
+        ) : (
+          <Placeholder element="Accordion">Item Content</Placeholder>
+        )}
+      </div>
+    )
+  }
+)
 
 AccordionContent.defaultProps = {
   rows: 2,
