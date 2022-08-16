@@ -1,13 +1,12 @@
 import React, { forwardRef, useContext } from 'react'
-import type { WeaverseElementProps } from '../../types'
 import Placeholder from '../shared/Placeholder'
 import { SliderContext } from './index'
+import type { GridContentElementProps } from '../../types'
 
-interface SliderContentElementProps extends WeaverseElementProps {
-  rows: number
-  columns: number
-  gap: number
-  rowSize: number
+interface SliderContentElementProps extends GridContentElementProps {
+  mediaUrl: string
+  openInNewTab: boolean
+  targetLink: string
 }
 
 const SliderContent = forwardRef<HTMLDivElement, SliderContentElementProps>(
@@ -15,7 +14,6 @@ const SliderContent = forwardRef<HTMLDivElement, SliderContentElementProps>(
     const { active } = useContext(SliderContext)
     const wvId = props['data-wv-id']
     const { rows, columns, gap, rowSize, children, ...rest } = props
-
     let style = {
       '--rows': rows,
       '--columns': columns,
@@ -28,7 +26,7 @@ const SliderContent = forwardRef<HTMLDivElement, SliderContentElementProps>(
     } as React.CSSProperties
 
     return (
-      <div ref={ref} {...rest} style={style}>
+      <div {...rest} style={style}>
         {React.Children.count(children) > 0 ? (
           children
         ) : (
@@ -40,6 +38,9 @@ const SliderContent = forwardRef<HTMLDivElement, SliderContentElementProps>(
 )
 
 SliderContent.defaultProps = {
+  mediaUrl: '',
+  openInNewTab: false,
+  targetLink: 'https://myshop.com',
   rows: 2,
   columns: 12,
   gap: 4,
