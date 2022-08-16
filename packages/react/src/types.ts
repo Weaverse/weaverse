@@ -56,13 +56,16 @@ export interface ImageElementProps extends WeaverseElementProps {
   openLinkInNewTab?: boolean
 }
 
-// Layout
-export interface LayoutElementProps extends WeaverseElementProps {
-  gridSize: number
+// GridContentElement
+export interface GridContentElementProps extends WeaverseElementProps {
   rows: number
   columns: number
   gap: number
   rowSize: number
+}
+// Layout
+export interface LayoutElementProps extends GridContentElementProps {
+  gridSize: number
 }
 
 // Map

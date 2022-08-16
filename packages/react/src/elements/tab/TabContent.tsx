@@ -1,16 +1,9 @@
 import React, { forwardRef, useContext } from 'react'
-import type { WeaverseElementProps } from '../../types'
 import Placeholder from '../shared/Placeholder'
 import { TabContext } from './index'
+import type { GridContentElementProps } from '../../types'
 
-interface TabContentElementProps extends WeaverseElementProps {
-  rows: number
-  columns: number
-  gap: number
-  rowSize: number
-}
-
-const TabContent = forwardRef<HTMLDivElement, TabContentElementProps>(
+const TabContent = forwardRef<HTMLDivElement, GridContentElementProps>(
   (props, ref) => {
     const { active } = useContext(TabContext)
     const wvId = props['data-wv-id']
