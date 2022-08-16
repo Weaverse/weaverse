@@ -15,14 +15,10 @@ interface SliderElementProps extends WeaverseElementProps {
 
 interface ISliderContext {
   active: null | string | number
-  setActive: (param: string | number) => void
 }
 
 export const SliderContext = createContext<ISliderContext>({
   active: null,
-  setActive: () => {
-    //
-  },
 })
 
 const Slider = forwardRef<HTMLDivElement, SliderElementProps>((props, ref) => {
@@ -36,7 +32,7 @@ const Slider = forwardRef<HTMLDivElement, SliderElementProps>((props, ref) => {
   const [active, setActive] = useState<string | number | null>(defaultActive)
   return (
     <div {...rest} ref={ref}>
-      <SliderContext.Provider value={{ active, setActive }}>
+      <SliderContext.Provider value={{ active }}>
         <Carousel
           dragging={false}
           beforeSlide={(beforeIndex: number, lastIndex: number) => {
@@ -46,7 +42,7 @@ const Slider = forwardRef<HTMLDivElement, SliderElementProps>((props, ref) => {
             <button
               className="wv-slider-btn"
               onClick={props.previousSlide}
-              disabled={props.currentSlide === 0}
+              disabled={(isDesignMode || !autoplay) && props.currentSlide === 0}
             >
               <i className="wv-slider-arrow wv-slider-arrow-left" />
             </button>
@@ -55,7 +51,10 @@ const Slider = forwardRef<HTMLDivElement, SliderElementProps>((props, ref) => {
             <button
               className="wv-slider-btn"
               onClick={props.nextSlide}
-              disabled={props.slidesToShow === props.currentSlide}
+              disabled={
+                (isDesignMode || !autoplay) &&
+                props.slidesToShow === props.currentSlide
+              }
             >
               <i className="wv-slider-arrow wv-slider-arrow-right" />
             </button>
@@ -73,8 +72,8 @@ const Slider = forwardRef<HTMLDivElement, SliderElementProps>((props, ref) => {
 
 Slider.defaultProps = {
   fullWidth: true,
-  autoplay: false,
-  delay: 7,
+  autoplay: true,
+  delay: 3,
   css: {
     '@desktop': {
       '& .wv-slider-btn': {
