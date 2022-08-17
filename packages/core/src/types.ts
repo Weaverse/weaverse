@@ -153,6 +153,7 @@ export type InputType =
   | "instagram"
   | "range"
   | "select"
+  | "sortable"
   | "switch"
   | "text"
   | "textarea"
