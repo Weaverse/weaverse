@@ -1,6 +1,5 @@
 import React, { forwardRef, useContext } from 'react'
 import Placeholder from '../shared/Placeholder'
-import { SliderContext } from './index'
 import type { GridContentElementProps } from '../../types'
 import { WeaverseContext } from '../../context'
 
@@ -12,9 +11,7 @@ interface SliderContentElementProps extends GridContentElementProps {
 
 const SliderContent = forwardRef<HTMLDivElement, SliderContentElementProps>(
   (props, ref) => {
-    const { active } = useContext(SliderContext)
     const { isDesignMode } = useContext(WeaverseContext)
-    const wvId = props['data-wv-id']
     const {
       mediaUrl,
       targetLink,
@@ -34,7 +31,6 @@ const SliderContent = forwardRef<HTMLDivElement, SliderContentElementProps>(
       '--col-size':
         'calc((var(--grid-size) - calc(var(--columns) - 1) * var(--gap)) / var(--columns))',
       '--max-height': rows * rowSize + gap * (rowSize - 1) + 'px',
-      '--content-active': active === wvId ? 'grid' : 'none',
       '--background-url': `url(${mediaUrl}`,
     } as React.CSSProperties
     const handleClick = () => {
@@ -67,11 +63,10 @@ SliderContent.defaultProps = {
     '@desktop': {
       width: '100%',
       maxWidth: 'var(--grid-size)',
-      display: 'var(--content-active, none)',
+      display: 'grid',
       gridTemplateRows: 'repeat(var(--rows), var(--row-size))',
       gridTemplateColumns: 'repeat(var(--columns), minmax(0, var(--col-size)))',
       gap: 'var(--gap)',
-      // transition: 'all var(--transition-duration, 0.3s) ease-in-out',
       borderRadius: 4,
       backgroundImage: 'var(--background-url, none)',
     },
