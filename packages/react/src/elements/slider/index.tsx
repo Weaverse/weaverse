@@ -1,4 +1,4 @@
-import React, { createContext, forwardRef, useContext, useState } from 'react'
+import React, { forwardRef, useContext } from 'react'
 import type { WeaverseElementProps } from '../../types'
 
 import C from 'nuka-carousel'
@@ -13,59 +13,41 @@ interface SliderElementProps extends WeaverseElementProps {
   delay: number
 }
 
-interface ISliderContext {
-  active: null | string | number
-}
-
-export const SliderContext = createContext<ISliderContext>({
-  active: null,
-})
-
 const Slider = forwardRef<HTMLDivElement, SliderElementProps>((props, ref) => {
   const { isDesignMode } = useContext(WeaverseContext)
   const { autoplay, delay, children, ...rest } = props
-  const childIds = React.Children.map(
-    children,
-    (child: any) => child.props.id
-  ) as Array<string>
-  const defaultActive = childIds[0]
-  const [active, setActive] = useState<string | number | null>(defaultActive)
+
   return (
     <div {...rest} ref={ref}>
-      <SliderContext.Provider value={{ active }}>
-        <Carousel
-          dragging={false}
-          beforeSlide={(beforeIndex: number, lastIndex: number) => {
-            setActive(childIds[lastIndex])
-          }}
-          renderCenterLeftControls={(props: ControlProps) => (
-            <button
-              className="wv-slider-btn"
-              onClick={props.previousSlide}
-              disabled={(isDesignMode || !autoplay) && props.currentSlide === 0}
-            >
-              <i className="wv-slider-arrow wv-slider-arrow-left" />
-            </button>
-          )}
-          renderCenterRightControls={(props: ControlProps) => (
-            <button
-              className="wv-slider-btn"
-              onClick={props.nextSlide}
-              disabled={
-                (isDesignMode || !autoplay) &&
-                props.slidesToShow === props.currentSlide
-              }
-            >
-              <i className="wv-slider-arrow wv-slider-arrow-right" />
-            </button>
-          )}
-          wrapAround={!isDesignMode}
-          autoplay={!isDesignMode && autoplay}
-          autoplayInterval={delay * 1000}
-        >
-          {children}
-        </Carousel>
-      </SliderContext.Provider>
+      <Carousel
+        dragging={false}
+        renderCenterLeftControls={(props: ControlProps) => (
+          <button
+            className="wv-slider-btn"
+            onClick={props.previousSlide}
+            disabled={(isDesignMode || !autoplay) && props.currentSlide === 0}
+          >
+            <i className="wv-slider-arrow wv-slider-arrow-left" />
+          </button>
+        )}
+        renderCenterRightControls={(props: ControlProps) => (
+          <button
+            className="wv-slider-btn"
+            onClick={props.nextSlide}
+            disabled={
+              (isDesignMode || !autoplay) &&
+              props.slidesToShow === props.currentSlide
+            }
+          >
+            <i className="wv-slider-arrow wv-slider-arrow-right" />
+          </button>
+        )}
+        wrapAround={!isDesignMode}
+        autoplay={!isDesignMode && autoplay}
+        autoplayInterval={delay * 1000}
+      >
+        {children}
+      </Carousel>
     </div>
   )
 })
