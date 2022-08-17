@@ -37,7 +37,7 @@ let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
 )
 
 Image.defaultProps = {
-  src: 'https://ucarecdn.com/1cdc9d39-ca62-492e-8ec7-f1a86b241a90/',
+  src: 'https://ucarecdn.com/c413b8fe-ceec-4948-9c42-a0434c4ca920/',
   alt: 'Image alt text',
   objectFit: 'cover',
   objectPosition: 'center',

@@ -44,13 +44,13 @@ const Tab = forwardRef<HTMLDivElement, TabElementProps>((props, ref) => {
 Tab.defaultProps = {
   items: [
     {
-      headerText: 'Header 1',
+      headerText: 'Tab 1',
     },
     {
-      headerText: 'Header 2',
+      headerText: 'Tab 2',
     },
     {
-      headerText: 'Header 2',
+      headerText: 'Tab 2',
     },
   ],
   css: {
@@ -58,7 +58,7 @@ Tab.defaultProps = {
       display: 'flex',
       flexDirection: 'column',
       gap: 4,
-      '& .wv-tab-headerWrapper': {
+      '& .wv-tab-header-wrapper': {
         width: '100%',
         display: 'flex',
         marginBottom: 10,
