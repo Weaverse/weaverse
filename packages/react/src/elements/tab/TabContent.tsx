@@ -37,6 +37,7 @@ TabContent.defaultProps = {
   columns: 12,
   gap: 4,
   rowSize: 48,
+  headerText: 'Tab header',
   css: {
     '@desktop': {
       width: '100%',
