@@ -2,10 +2,6 @@ import React, { createContext, forwardRef, useState } from 'react'
 import type { WeaverseElementProps } from '../../types'
 import { TabHeaderWrapper } from './TabHeaderWrapper'
 
-interface TabElementProps extends WeaverseElementProps {
-  items: any[]
-}
-
 interface tabContext {
   active: null | string | number
   setActive: (param: string | number) => void
@@ -18,9 +14,9 @@ export const TabContext = createContext<tabContext>({
   },
 })
 
-const Tab = forwardRef<HTMLDivElement, TabElementProps>((props, ref) => {
+const Tab = forwardRef<HTMLDivElement, WeaverseElementProps>((props, ref) => {
   const wvId = props['data-wv-id']
-  const { items, children, ...rest } = props
+  const { children, ...rest } = props
   const defaultActive = (React.Children.toArray(children)?.[0] as any)?.props
     ?.id
   const [active, setActive] = useState<string | number | null>(defaultActive)
@@ -42,17 +38,6 @@ const Tab = forwardRef<HTMLDivElement, TabElementProps>((props, ref) => {
 })
 
 Tab.defaultProps = {
-  items: [
-    {
-      headerText: 'Header 1',
-    },
-    {
-      headerText: 'Header 2',
-    },
-    {
-      headerText: 'Header 2',
-    },
-  ],
   css: {
     '@desktop': {
       display: 'flex',
@@ -72,18 +57,6 @@ Tab.defaultProps = {
           color: '#fff',
         },
       },
-      // '.wv-tab-header': {
-      //   borderRadius: 4,
-      //   padding: 12,
-      //   marginBottom: 4,
-      //   border: '1px solid #76A9FA',
-      //   '&.active': {
-      //     color: 'blue',
-      //   },
-      //   '&.active + [data-wv-type="tab.content"]': {
-      //     maxHeight: 'var(--max-height, inherit)',
-      //   },
-      // },
     },
   },
 }
