@@ -1,5 +1,5 @@
 import type { Weaverse, ElementCSS, WeaverseItemStore } from '@weaverse/core'
-import type { ReactElement, ReactNode } from 'react'
+import type { CSSProperties, ReactElement, ReactNode } from 'react'
 
 export interface WeaverseElementProps extends ReactElement {
   css?: ElementCSS
@@ -19,6 +19,7 @@ export type ItemComponentProps = {
 export interface PlaceholderProps {
   element: string
   children: ReactElement | ReactElement[] | ReactNode | ReactNode[]
+  style?: CSSProperties
 }
 
 // Button
