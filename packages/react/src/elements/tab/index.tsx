@@ -43,7 +43,7 @@ Tab.defaultProps = {
       display: 'flex',
       flexDirection: 'column',
       gap: 4,
-      '& .wv-tab-headerWrapper': {
+      '& .wv-tab-header-wrapper': {
         width: '100%',
         display: 'flex',
         marginBottom: 10,

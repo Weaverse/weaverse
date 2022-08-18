@@ -87,7 +87,7 @@ Form.defaultProps = {
       type: 'text',
       placeholder: 'Please enter your name',
       showLabel: true,
-      label: 'Your name: ',
+      label: 'Your name',
       required: false,
     },
     {

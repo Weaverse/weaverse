@@ -94,8 +94,10 @@ export interface VideoElementProps extends WeaverseElementProps {
 // Countdown
 export type CountdownTimeKey = 'days' | 'hours' | 'minutes' | 'seconds'
 
+export type CountdownTimerType = 'fixed-time' | 'evergreen'
+
 export interface CountdownElementProps extends WeaverseElementProps {
-  timerType: 'fixed-time' | 'evergreen'
+  timerType: CountdownTimerType
   startTime: number
   endTime: number
   periods: number

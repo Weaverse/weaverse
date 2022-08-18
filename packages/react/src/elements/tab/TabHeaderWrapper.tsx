@@ -67,7 +67,7 @@ export function TabHeaderWrapper(props: { wvId: string }) {
   const data = instance.data
   const childIds = data.childIds!
   return (
-    <div className={'wv-tab-headerWrapper'}>
+    <div className={'wv-tab-header-wrapper'}>
       {childIds.map((id) => (
         <TabHeader key={id} wvId={id} />
       ))}
