@@ -7,7 +7,15 @@
 import * as stitches from "@stitches/core"
 import type Stitches from "@stitches/core/types/stitches"
 import type { RefObject } from "react"
-import type { ElementData, ElementFlags, InitializeData, ProjectDataType, WeaverseElement, WeaverseType } from "./types"
+import type {
+  BreakPoints,
+  ElementData,
+  ElementFlags,
+  InitializeData,
+  ProjectDataType,
+  WeaverseElement,
+  WeaverseType,
+} from "./types"
 import { isIframe } from "./utils"
 import { stichesUtils } from "./utils/styles"
 
@@ -143,7 +151,7 @@ export class Weaverse {
   studioBridge?: any
   static WeaverseItemStore: typeof WeaverseItemStore = WeaverseItemStore
 
-  mediaBreakPoints = {
+  mediaBreakPoints: BreakPoints = {
     desktop: "all",
     // max-width need to subtract 0.02px to prevent bug https://getbootstrap.com/docs/5.1/layout/breakpoints/#max-width
     // tablet: "(max-width: 1023.98px)", // to set css for tablet, {'@tablet' : { // css }},
