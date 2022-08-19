@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
-import { WeaverseContext } from '../context'
-import type { ImageElementProps } from '../types'
+import { WeaverseContext } from '~/context'
+import type { ImageElementProps } from '~/types'
 
 let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
   (props, ref) => {

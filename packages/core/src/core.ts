@@ -16,8 +16,7 @@ import type {
   WeaverseElement,
   WeaverseType,
 } from "./types"
-import { isIframe } from "./utils"
-import { stichesUtils } from "./utils/styles"
+import { isIframe, stichesUtils } from "./utils"
 
 /**
  * WeaverseItemStore is a store for Weaverse item, it can be used to subscribe/update the item data
@@ -311,5 +310,3 @@ export class Weaverse {
     }
   }
 }
-
-export * from "./types"

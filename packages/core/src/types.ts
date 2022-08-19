@@ -1,6 +1,6 @@
-import type { ForwardRefExoticComponent } from "react"
-import type { stichesUtils } from "./utils/styles"
 import type * as Stitches from "@stitches/core"
+import type { ForwardRefExoticComponent } from "react"
+import type { stichesUtils } from "./utils"
 
 export type TODO = any
 

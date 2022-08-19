@@ -1,9 +1,9 @@
 import React, { forwardRef, useContext } from 'react'
-import type { WeaverseElementProps } from '../../types'
+import type { WeaverseElementProps } from '~/types'
 
 import C from 'nuka-carousel'
 import type { ControlProps } from 'nuka-carousel/lib/types'
-import { WeaverseContext } from '../../context'
+import { WeaverseContext } from '~/context'
 // @ts-ignore
 let Carousel = C.default
 

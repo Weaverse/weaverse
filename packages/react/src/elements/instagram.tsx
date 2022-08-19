@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useState } from 'react'
-import type { InstagramElementProps, InstagramMedia } from '../types'
+import type { InstagramElementProps, InstagramMedia } from '~/types'
 import Placeholder from './shared/Placeholder'
 
 let INSTAGRAM_API = 'https://graph.instagram.com'

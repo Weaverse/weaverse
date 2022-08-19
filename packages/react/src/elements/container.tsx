@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react'
-import type { ContainerElementProps } from '../types'
+import type { ContainerElementProps } from '~/types'
 
 let Container = forwardRef<HTMLDivElement, ContainerElementProps>(
   (props, ref) => {

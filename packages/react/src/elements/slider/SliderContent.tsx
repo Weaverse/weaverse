@@ -1,7 +1,7 @@
 import React, { forwardRef, useContext } from 'react'
-import Placeholder from '../shared/Placeholder'
-import type { GridContentElementProps } from '../../types'
-import { WeaverseContext } from '../../context'
+import Placeholder from '~/elements/shared/Placeholder'
+import type { GridContentElementProps } from '~/types'
+import { WeaverseContext } from '~/context'
 
 interface SliderContentElementProps extends GridContentElementProps {
   mediaUrl: string

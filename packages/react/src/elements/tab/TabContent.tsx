@@ -1,7 +1,7 @@
 import React, { forwardRef, useContext } from 'react'
-import Placeholder from '../shared/Placeholder'
+import Placeholder from '~/elements/shared/Placeholder'
 import { TabContext } from './index'
-import type { GridContentElementProps } from '../../types'
+import type { GridContentElementProps } from '~/types'
 
 const TabContent = forwardRef<HTMLDivElement, GridContentElementProps>(
   (props, ref) => {

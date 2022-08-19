@@ -1,6 +1,6 @@
 import { WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext, useId } from 'react'
-import type { FormElementProps, FormFieldProps } from '../../types'
+import type { FormElementProps, FormFieldProps } from '~/types'
 
 let InputField = ({ field }: { field: FormFieldProps }) => {
   let id = useId()

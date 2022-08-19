@@ -1,5 +1,5 @@
 // import React, {forwardRef, useContext} from 'react'
-// import {WeaverseElementProps} from '../../types'
+// import {WeaverseElementProps} from '~/types'
 // import {TabContext} from './index'
 //
 // interface TabHeaderProps extends WeaverseElementProps {
@@ -35,7 +35,7 @@
 // export default TabHeaderWrapper
 
 import React, { useContext, useEffect, useState } from 'react'
-import { WeaverseContext } from '../../context'
+import { WeaverseContext } from '~/context'
 import { TabContext } from './index'
 import type { ElementData } from '@weaverse/core'
 

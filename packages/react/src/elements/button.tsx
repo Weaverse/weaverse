@@ -1,5 +1,5 @@
 import * as React from 'react'
-import type { ButtonElementProps } from '../types'
+import type { ButtonElementProps } from '~/types'
 
 export let Button = React.forwardRef<
   HTMLButtonElement | HTMLAnchorElement,

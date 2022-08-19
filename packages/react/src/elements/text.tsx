@@ -1,5 +1,5 @@
 import * as React from 'react'
-import type { TextElementProps } from '../types'
+import type { TextElementProps } from '~/types'
 
 const Text = React.forwardRef<HTMLDivElement, TextElementProps>(
   (props, ref) => {
