@@ -49,18 +49,6 @@ Accordion.defaultProps = {
       display: 'flex',
       flexDirection: 'column',
       gap: 4,
-      '.wv-accordion-header': {
-        borderRadius: 4,
-        padding: 12,
-        marginBottom: 4,
-        border: '1px solid #76A9FA',
-        '&.active': {
-          color: 'blue',
-        },
-        '&.active + [data-wv-type="accordion.content"]': {
-          maxHeight: 'var(--max-height, inherit)',
-        },
-      },
     },
   },
 }
