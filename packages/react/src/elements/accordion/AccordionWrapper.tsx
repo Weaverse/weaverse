@@ -4,14 +4,13 @@ import { AccordionContext } from './index'
 
 interface AccordionWrapperElementProps extends WeaverseElementProps {
   name: string
-  headerText: string
 }
 
 const AccordionWrapper = forwardRef<
   HTMLDivElement,
   AccordionWrapperElementProps
 >((props, ref) => {
-  const { ['data-wv-id']: wvId, headerText, children, ...rest } = props
+  const { ['data-wv-id']: wvId, name, children, ...rest } = props
   const { active, setActive } = useContext(AccordionContext)
 
   return (
@@ -20,7 +19,7 @@ const AccordionWrapper = forwardRef<
         onClick={() => setActive(wvId)}
         className={`wv-accordion-header ${active === wvId ? 'active' : ''}`}
       >
-        {headerText}
+        {name}
       </div>
       {children}
     </div>
