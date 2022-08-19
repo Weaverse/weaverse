@@ -3,8 +3,8 @@ import type { PlaceholderProps } from '~/types'
 
 const Placeholder = forwardRef<HTMLDivElement, PlaceholderProps>(
   (props, ref) => {
-    let { element, children, ...rest } = props
-    let style = {
+    let { element, children, style: newStyle, ...rest } = props
+    let defaultStyle = {
       position: 'absolute',
       height: 'calc(100% - 20px)',
       width: 'calc(100% - 20px)',
@@ -18,7 +18,7 @@ const Placeholder = forwardRef<HTMLDivElement, PlaceholderProps>(
       border: '1px dashed #0F71FF',
       margin: 10,
     } as React.CSSProperties
-
+    const style = { ...defaultStyle, ...newStyle }
     return (
       <div style={style} ref={ref} {...rest}>
         <div style={{ fontWeight: 600, marginBottom: '10px' }}>{element}</div>
