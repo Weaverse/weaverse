@@ -1,6 +1,6 @@
 import React, { forwardRef, useContext } from 'react'
-import type { WeaverseElementProps } from '../types'
-import { WeaverseContext } from '../context'
+import type { WeaverseElementProps } from '~/types'
+import { WeaverseContext } from '~/context'
 import Placeholder from './shared/Placeholder'
 
 interface CustomHTMLProps extends WeaverseElementProps {

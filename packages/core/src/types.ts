@@ -1,6 +1,6 @@
-import type { ForwardRefExoticComponent } from "react"
-import type { stichesUtils } from "./utils/styles"
 import type * as Stitches from "@stitches/core"
+import type { ForwardRefExoticComponent } from "react"
+import type { stichesUtils } from "./utils"
 
 export type TODO = any
 
@@ -24,9 +24,14 @@ export interface InitializeData {
   studioUrl?: string
 }
 
+export type BreakPoints = {
+  mobile: string
+  desktop: string
+}
+
 // Weaverse types
 export interface WeaverseType {
-  mediaBreakPoints?: any
+  mediaBreakPoints?: BreakPoints
   appUrl?: string
   projectKey?: string
   projectData?: ProjectDataType
@@ -34,8 +39,13 @@ export interface WeaverseType {
   ssrMode?: boolean
 }
 
-export type WeaverseElement = {
-  Component: ForwardRefExoticComponent<any>
+export interface ElementComponentProps extends ElementData {
+  css: ElementCSS
+  [key: string]: any
+}
+
+export interface WeaverseElement {
+  Component: ForwardRefExoticComponent<ElementComponentProps>
   type: string
   schema?: ElementSchema
 }

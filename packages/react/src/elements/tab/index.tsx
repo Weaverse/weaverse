@@ -1,5 +1,5 @@
 import React, { createContext, forwardRef, useState } from 'react'
-import type { WeaverseElementProps } from '../../types'
+import type { WeaverseElementProps } from '~/types'
 import { TabHeaderWrapper } from './TabHeaderWrapper'
 
 interface tabContext {

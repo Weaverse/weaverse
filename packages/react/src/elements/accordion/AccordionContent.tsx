@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react'
-import Placeholder from '../shared/Placeholder'
-import type { GridContentElementProps } from '../../types'
+import Placeholder from '~/elements/shared/Placeholder'
+import type { GridContentElementProps } from '~/types'
 
 const AccordionContent = forwardRef<HTMLDivElement, GridContentElementProps>(
   (props, ref) => {

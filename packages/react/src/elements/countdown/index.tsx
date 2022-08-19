@@ -1,6 +1,6 @@
 import React, { forwardRef, useContext, useEffect } from 'react'
-import { WeaverseContext } from '../../context'
-import type { CountdownElementProps } from '../../types'
+import { WeaverseContext } from '~/context'
+import type { CountdownElementProps } from '~/types'
 import { TimerBlock } from './timer-block'
 import { getTime, times } from './utils'
 
