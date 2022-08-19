@@ -43,7 +43,9 @@ const SliderContent = forwardRef<HTMLDivElement, SliderContentElementProps>(
         {React.Children.count(children) > 0 ? (
           children
         ) : (
-          <Placeholder element="Slider">Slider Content</Placeholder>
+          <Placeholder element="Slider Content">
+            Please drag and drop an element here
+          </Placeholder>
         )}
       </div>
     )
@@ -51,11 +53,10 @@ const SliderContent = forwardRef<HTMLDivElement, SliderContentElementProps>(
 )
 
 SliderContent.defaultProps = {
-  mediaUrl:
-    'https://i.pinimg.com/originals/6c/2f/f1/6c2ff122b867292548328c26749e6cca.jpg',
+  mediaUrl: '',
   openInNewTab: false,
   targetLink: 'https://myshop.com',
-  rows: 2,
+  rows: 4,
   columns: 12,
   gap: 4,
   rowSize: 48,

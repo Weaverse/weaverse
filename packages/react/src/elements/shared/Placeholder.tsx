@@ -6,8 +6,8 @@ const Placeholder = forwardRef<HTMLDivElement, PlaceholderProps>(
     let { element, children, ...rest } = props
     let style = {
       position: 'absolute',
-      height: '100%',
-      width: '100%',
+      height: 'calc(100% - 20px)',
+      width: 'calc(100% - 20px)',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -15,6 +15,8 @@ const Placeholder = forwardRef<HTMLDivElement, PlaceholderProps>(
       color: '#374151',
       pointerEvents: 'none',
       zIndex: 1,
+      border: '1px dashed #0F71FF',
+      margin: 10,
     } as React.CSSProperties
 
     return (

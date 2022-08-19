@@ -25,7 +25,9 @@ const TabContent = forwardRef<HTMLDivElement, GridContentElementProps>(
         {React.Children.count(children) > 0 ? (
           children
         ) : (
-          <Placeholder element="Tab">Item Content</Placeholder>
+          <Placeholder element="Tab Content">
+            Please drag and drop an element here
+          </Placeholder>
         )}
       </div>
     )

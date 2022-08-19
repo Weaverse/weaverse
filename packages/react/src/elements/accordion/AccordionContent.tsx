@@ -21,7 +21,9 @@ const AccordionContent = forwardRef<HTMLDivElement, GridContentElementProps>(
         {React.Children.count(children) > 0 ? (
           children
         ) : (
-          <Placeholder element="Accordion">Item Content</Placeholder>
+          <Placeholder element="Accordion Content">
+            Please drag and drop an element here
+          </Placeholder>
         )}
       </div>
     )
