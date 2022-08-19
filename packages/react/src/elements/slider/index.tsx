@@ -36,7 +36,7 @@ const Slider = forwardRef<HTMLDivElement, SliderElementProps>((props, ref) => {
             onClick={props.nextSlide}
             disabled={
               (isDesignMode || !autoplay) &&
-              props.slidesToShow === props.currentSlide
+              props.slideCount === props.currentSlide
             }
           >
             <i className="wv-slider-arrow wv-slider-arrow-right" />
