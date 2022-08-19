@@ -14,10 +14,6 @@ export const CustomHTML = forwardRef<HTMLDivElement, CustomHTMLProps>(
     const style = {
       '--pointer-events': isDesignMode ? 'none' : 'auto',
     } as React.CSSProperties
-    // const placeholderStyle = {
-    //   position: 'relative',
-    //   pointerEvents: 'auto'
-    // } as React.CSSProperties
 
     if (!content)
       return (
