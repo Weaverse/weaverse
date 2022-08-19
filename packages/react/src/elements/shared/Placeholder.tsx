@@ -22,7 +22,7 @@ const Placeholder = forwardRef<HTMLDivElement, PlaceholderProps>(
     } as React.CSSProperties
     const style = { ...defaultStyle, ...newStyle }
     return (
-      <div style={style} ref={ref} {...rest}>
+      <div data-wv-type="placeholder" style={style} ref={ref} {...rest}>
         <div style={{ fontWeight: 600, marginBottom: '10px' }}>{element}</div>
         <div>{children}</div>
       </div>
