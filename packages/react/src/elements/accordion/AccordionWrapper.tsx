@@ -3,7 +3,7 @@ import type { WeaverseElementProps } from '~/types'
 import { AccordionContext } from './index'
 
 interface AccordionWrapperElementProps extends WeaverseElementProps {
-  wrapperId: number
+  name: string
   headerText: string
 }
 
@@ -28,7 +28,7 @@ const AccordionWrapper = forwardRef<
 })
 
 AccordionWrapper.defaultProps = {
-  headerText: 'Header text',
+  name: 'Accordion item',
   css: {
     '@desktop': {
       maxHeight: '100%',
