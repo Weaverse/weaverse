@@ -3,7 +3,11 @@ import Placeholder from '~/elements/shared/Placeholder'
 import { TabContext } from './index'
 import type { GridContentElementProps } from '~/types'
 
-const TabContent = forwardRef<HTMLDivElement, GridContentElementProps>(
+interface TabContentElementProps extends GridContentElementProps {
+  name: string
+}
+
+const TabContent = forwardRef<HTMLDivElement, TabContentElementProps>(
   (props, ref) => {
     const { active } = useContext(TabContext)
     const wvId = props['data-wv-id']
@@ -39,7 +43,7 @@ TabContent.defaultProps = {
   columns: 12,
   gap: 4,
   rowSize: 48,
-  headerText: 'Tab header',
+  name: 'Tab header',
   css: {
     '@desktop': {
       width: '100%',
