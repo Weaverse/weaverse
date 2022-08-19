@@ -12,10 +12,12 @@ const Placeholder = forwardRef<HTMLDivElement, PlaceholderProps>(
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      color: '#374151',
       pointerEvents: 'none',
       zIndex: 1,
+      color: '#374151',
+      backgroundColor: '#F9FAFB',
       border: '1px dashed #0F71FF',
+      borderRadius: 4,
       margin: 10,
     } as React.CSSProperties
     const style = { ...defaultStyle, ...newStyle }
