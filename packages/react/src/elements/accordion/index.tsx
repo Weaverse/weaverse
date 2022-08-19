@@ -44,17 +44,6 @@ const Accordion = forwardRef<HTMLDivElement, AccordionElementProps>(
 )
 
 Accordion.defaultProps = {
-  items: [
-    {
-      id: 1,
-      headerText: 'Header 1',
-      childrenId: true,
-    },
-    {
-      id: 2,
-      headerText: 'Header 2',
-    },
-  ],
   css: {
     '@desktop': {
       display: 'flex',

@@ -50,13 +50,12 @@ function TabHeader(props: { wvId: string | number }) {
     let update = (data: ElementData) => setData({ ...data })
     instance.subscribe(update)
   }, [])
-  const text = data.headerText!
   return (
     <div
       onClick={() => setActive(wvId)}
       className={`wv-tab-header${active === wvId ? ' active' : ''}`}
     >
-      {text}
+      {data.name}
     </div>
   )
 }

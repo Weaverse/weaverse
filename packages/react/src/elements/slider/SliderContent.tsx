@@ -4,6 +4,7 @@ import type { GridContentElementProps } from '~/types'
 import { WeaverseContext } from '~/context'
 
 interface SliderContentElementProps extends GridContentElementProps {
+  name: string
   mediaUrl: string
   openInNewTab: boolean
   targetLink: string
@@ -51,6 +52,7 @@ const SliderContent = forwardRef<HTMLDivElement, SliderContentElementProps>(
 )
 
 SliderContent.defaultProps = {
+  name: 'Slider',
   mediaUrl:
     'https://i.pinimg.com/originals/6c/2f/f1/6c2ff122b867292548328c26749e6cca.jpg',
   openInNewTab: false,
