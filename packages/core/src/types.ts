@@ -148,7 +148,7 @@ export interface BasicInput {
   placeholder?: string
   helpText?: string
   // For `select` or `toggle-group` input
-  options?: { value: string; label: string; icon?: string }[]
+  options?: { value: string; label: string; icon?: string; weight?: string }[]
   // For `range` input
   min?: number
   max?: number

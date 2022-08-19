@@ -12,7 +12,7 @@ const AccordionWrapper = forwardRef<
   AccordionWrapperElementProps
 >((props, ref) => {
   const { ['data-wv-id']: wvId, name, children, ...rest } = props
-  const { active, setActive } = useContext(AccordionContext)
+  const { iconStyle, active, setActive } = useContext(AccordionContext)
 
   return (
     <div ref={ref} {...rest}>
@@ -22,7 +22,7 @@ const AccordionWrapper = forwardRef<
       >
         <span>{name}</span>
         <span className="wv-icon">
-          <Icon name="plus" />
+          <Icon name={iconStyle} />
         </span>
       </div>
       {children}
