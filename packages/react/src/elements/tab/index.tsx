@@ -21,9 +21,7 @@ const Tab = forwardRef<HTMLDivElement, WeaverseElementProps>((props, ref) => {
     ?.id
   const [active, setActive] = useState<string | number | null>(defaultActive)
   const setOpenTab = (id: string | number) => {
-    if (id === active) {
-      setActive(null)
-    } else {
+    if (id !== active) {
       setActive(id)
     }
   }
@@ -49,12 +47,12 @@ Tab.defaultProps = {
         marginBottom: 10,
       },
       '& .wv-tab-header': {
-        backgroundColor: '#f0f2f3',
-        padding: '10px 16px',
+        backgroundColor: '#fff',
+        padding: '15px 24px',
+        border: '1px solid #E4E7EB',
         cursor: 'pointer',
         '&.active': {
-          backgroundColor: '#0F71FF',
-          color: '#fff',
+          backgroundColor: '#E4E7EB',
         },
       },
     },

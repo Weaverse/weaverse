@@ -14,23 +14,18 @@ export const CustomHTML = forwardRef<HTMLDivElement, CustomHTMLProps>(
     const style = {
       '--pointer-events': isDesignMode ? 'none' : 'auto',
     } as React.CSSProperties
-    const placeholderStyle = {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexDirection: 'column',
-    } as React.CSSProperties
+    // const placeholderStyle = {
+    //   position: 'relative',
+    //   pointerEvents: 'auto'
+    // } as React.CSSProperties
 
     if (!content)
       return (
-        <Placeholder
-          ref={ref}
-          {...rest}
-          style={placeholderStyle}
-          element="Custom HTML"
-        >
-          Please add your custom HTML codes.
-        </Placeholder>
+        <div ref={ref} {...rest}>
+          <Placeholder element="Custom HTML">
+            Please add your custom HTML codes.
+          </Placeholder>
+        </div>
       )
     return (
       <div
