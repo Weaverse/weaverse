@@ -1,6 +1,10 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "allowJs": true
+    "allowJs": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./src/*"]
+    }
   }
 }
