@@ -17,7 +17,7 @@ import * as Slider from './slider'
 import * as SliderContent from './slider/SliderContent'
 import * as CustomHTML from './custom-html'
 
-const elements: ElementsMap = {
+export const Elements: ElementsMap = {
   Countdown: {
     Component: Countdown.default,
     type: 'countdown',
@@ -87,5 +87,3 @@ const elements: ElementsMap = {
     type: 'custom.html',
   },
 }
-
-export default elements

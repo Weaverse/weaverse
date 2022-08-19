@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react'
-import type { MapElementProps } from '../types'
+import type { MapElementProps } from '~/types'
 
 let Map = forwardRef<HTMLDivElement, MapElementProps>((props, ref) => {
   let { place, zoom, ...rest } = props

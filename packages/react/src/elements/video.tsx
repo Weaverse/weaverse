@@ -1,6 +1,6 @@
 import React, { forwardRef, useContext } from 'react'
-import { WeaverseContext } from '../context'
-import type { VideoElementProps } from '../types'
+import { WeaverseContext } from '~/context'
+import type { VideoElementProps } from '~/types'
 
 let Video = forwardRef<HTMLDivElement, VideoElementProps>((props, ref) => {
   let { isDesignMode } = useContext(WeaverseContext)

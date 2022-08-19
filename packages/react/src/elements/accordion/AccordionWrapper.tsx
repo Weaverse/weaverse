@@ -1,5 +1,5 @@
 import React, { forwardRef, useContext } from 'react'
-import type { WeaverseElementProps } from '../../types'
+import type { WeaverseElementProps } from '~/types'
 import { AccordionContext } from './index'
 
 interface AccordionWrapperElementProps extends WeaverseElementProps {

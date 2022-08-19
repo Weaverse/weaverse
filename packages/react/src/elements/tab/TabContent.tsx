@@ -1,7 +1,7 @@
 import React, { forwardRef, useContext } from 'react'
-import Placeholder from '../shared/Placeholder'
+import Placeholder from '~/elements/shared/Placeholder'
 import { TabContext } from './index'
-import type { GridContentElementProps } from '../../types'
+import type { GridContentElementProps } from '~/types'
 
 const TabContent = forwardRef<HTMLDivElement, GridContentElementProps>(
   (props, ref) => {
@@ -39,6 +39,7 @@ TabContent.defaultProps = {
   columns: 12,
   gap: 4,
   rowSize: 48,
+  headerText: 'Tab header',
   css: {
     '@desktop': {
       width: '100%',
