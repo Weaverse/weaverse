@@ -64,6 +64,7 @@ const ItemComponent = ({ instance }: ItemComponentProps) => {
       rest.ref = instance.ref
     }
     return (
+      // @ts-ignore
       <Component
         key={id}
         data-wv-type={type}
