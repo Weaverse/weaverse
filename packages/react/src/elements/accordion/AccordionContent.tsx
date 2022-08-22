@@ -31,7 +31,7 @@ const AccordionContent = forwardRef<HTMLDivElement, GridContentElementProps>(
 )
 
 AccordionContent.defaultProps = {
-  rows: 2,
+  rows: 3,
   columns: 12,
   gap: 4,
   rowSize: 48,
