@@ -12,18 +12,16 @@ const AccordionWrapper = forwardRef<
   AccordionWrapperElementProps
 >((props, ref) => {
   const { ['data-wv-id']: wvId, name, children, ...rest } = props
-  const { iconStyle, active, setActive } = useContext(AccordionContext)
-
+  const { iconName, active, setActive } = useContext(AccordionContext)
+  const isActive = active.includes(wvId)
   return (
     <div ref={ref} {...rest}>
       <div
         onClick={() => setActive(wvId)}
-        className={`wv-accordion-header ${active === wvId ? 'active' : ''}`}
+        className={`wv-acc-header ${isActive ? 'active' : ''}`}
       >
         <span>{name}</span>
-        <span className="wv-icon">
-          <Icon name={iconStyle} />
-        </span>
+        <Icon className="wv-acc-icon" active={isActive} name={iconName} />
       </div>
       {children}
     </div>
@@ -36,7 +34,7 @@ AccordionWrapper.defaultProps = {
     '@desktop': {
       maxHeight: '100%',
       // icon
-      '.wv-icon': {
+      '.wv-acc-icon': {
         position: 'absolute',
         right: 16,
         width: 16,
@@ -44,18 +42,14 @@ AccordionWrapper.defaultProps = {
         transition: 'all 0.3s ease-in-out 0s',
       },
       // accordion header
-      '.wv-accordion-header': {
+      '.wv-acc-header': {
+        display: 'flex',
+        alignItems: 'center',
         borderRadius: 4,
         padding: 12,
         marginBottom: 4,
         border: '1px solid #76A9FA',
         cursor: 'pointer',
-        '&.active': {
-          color: 'blue',
-          '.wv-icon': {
-            transform: 'rotate(90deg)',
-          },
-        },
         '&.active + [data-wv-type="accordion.content"]': {
           maxHeight: 'var(--max-height, inherit)',
         },
