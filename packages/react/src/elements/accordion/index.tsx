@@ -2,18 +2,18 @@ import React, { createContext, forwardRef, useState } from 'react'
 import type { WeaverseElementProps } from '~/types'
 
 interface AccordionElementProps extends WeaverseElementProps {
-  iconStyle: string
+  iconName: string
 }
 
 interface accordionContext {
-  iconStyle: string
-  active: null | string
+  iconName: string
+  active: string[]
   setActive: (param: string) => void
 }
 
 export const AccordionContext = createContext<accordionContext>({
-  iconStyle: 'arrow',
-  active: null,
+  iconName: 'arrow',
+  active: [],
   setActive: () => {
     //
   },
@@ -21,22 +21,20 @@ export const AccordionContext = createContext<accordionContext>({
 
 const Accordion = forwardRef<HTMLDivElement, AccordionElementProps>(
   (props, ref) => {
-    const { iconStyle, children, ...rest } = props
-    const [active, setActive] = useState<string | null>(null)
+    const { iconName, children, ...rest } = props
+    const [active, setActive] = useState<string[]>([])
     const setOpenAccordion = (id: string) => {
-      if (id === active) {
-        setActive(null)
+      if (active.includes(id)) {
+        setActive(active.filter((_id) => _id !== id))
       } else {
-        setActive(id)
+        setActive([...active, id])
       }
     }
-    // const headerStyle = {
-    //   "--wv-acc-header-active":
-    // }
+
     return (
       <div ref={ref} {...rest}>
         <AccordionContext.Provider
-          value={{ active, setActive: setOpenAccordion, iconStyle }}
+          value={{ active, setActive: setOpenAccordion, iconName }}
         >
           {children}
         </AccordionContext.Provider>
@@ -46,7 +44,7 @@ const Accordion = forwardRef<HTMLDivElement, AccordionElementProps>(
 )
 
 Accordion.defaultProps = {
-  iconStyle: 'arrow',
+  iconName: 'arrow',
   css: {
     '@desktop': {
       display: 'flex',
