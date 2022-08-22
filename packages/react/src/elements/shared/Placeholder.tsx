@@ -6,19 +6,19 @@ const Placeholder = forwardRef<HTMLDivElement, PlaceholderProps>(
     let { element, children, style: newStyle, ...rest } = props
     let defaultStyle = {
       position: 'absolute',
-      height: 'calc(100% - 20px)',
-      width: 'calc(100% - 20px)',
+      height: '100%',
+      width: '100%',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
       pointerEvents: 'none',
-      zIndex: 1,
       color: '#374151',
       backgroundColor: '#F9FAFB',
+      backgroundClip: 'content-box',
+      padding: 10,
       border: '1px dashed #0F71FF',
       borderRadius: 4,
-      margin: 10,
     } as React.CSSProperties
     const style = { ...defaultStyle, ...newStyle }
     return (
