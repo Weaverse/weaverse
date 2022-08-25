@@ -40,7 +40,7 @@ export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
 const ItemComponent = ({ instance }: ItemComponentProps) => {
   let { stitchesInstance, elementInstances } = useContext(WeaverseContext)
   let [data, setData] = useState<ElementData>(instance.data)
-  let { id, type, childIds = [], css, className, style, ...rest } = data
+  let { id, type, childIds = [], css, className, ...rest } = data
 
   useEffect(() => {
     let update = (data: ElementData) => setData({ ...data })
@@ -70,7 +70,6 @@ const ItemComponent = ({ instance }: ItemComponentProps) => {
         data-wv-type={type}
         data-wv-id={id}
         className={generateItemClass(instance, stitchesInstance)}
-        style={{ '--el-z-index': rest.zIndex, ...style }}
         {...rest}
       >
         {childIds.map((id) => (
