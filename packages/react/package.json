@@ -32,6 +32,6 @@
   "author": "Weaverse Team",
   "dependencies": {
     "@weaverse/core": "0.7.7",
-    "nuka-carousel": "^5.2.0"
+    "nuka-carousel": "^5.3.0"
   }
 }

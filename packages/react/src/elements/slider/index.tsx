@@ -1,11 +1,12 @@
-import React, { forwardRef, useContext } from 'react'
+import React, { forwardRef, useContext, isValidElement } from 'react'
 import type { WeaverseElementProps } from '~/types'
 
-import C from 'nuka-carousel'
+import { Carousel } from 'nuka-carousel/lib/carousel'
 import type { ControlProps } from 'nuka-carousel/lib/types'
 import { WeaverseContext } from '~/context'
+
 // @ts-ignore
-let Carousel = C.default
+// let Carousel = isValidElement(<C />) ? C : C.default
 
 interface SliderElementProps extends WeaverseElementProps {
   fullWidth: boolean
