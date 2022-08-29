@@ -19,7 +19,7 @@
     "react-dom": "^18.2.0",
     "tsup": "^6.2.2",
     "turbo": "^1.4.3",
-    "typescript": "^4.7.4"
+    "typescript": "^4.8.2"
   },
   "scripts": {
     "dev": "turbo run dev --no-cache",
