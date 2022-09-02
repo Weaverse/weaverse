@@ -129,16 +129,7 @@ export type BasicGroup = {
 
 export type AdvancedInput =
   // Styles
-  | "alignment"
-  | "background"
-  | "border"
-  | "countdown"
-  | "dimensions"
-  | "visibility"
-  | "spacing"
-  // Elements
-  | "form"
-  | "product"
+  "border" | "alignment" | "background" | "dimensions" | "spacing" | "visibility"
 
 export interface BasicInput {
   type: InputType
@@ -158,9 +149,10 @@ export interface BasicInput {
 }
 
 export type InputType =
+  // Basic inputs
   | "color"
+  | "datepicker"
   | "image"
-  | "instagram"
   | "range"
   | "select"
   | "sortable"
@@ -168,6 +160,11 @@ export type InputType =
   | "text"
   | "textarea"
   | "toggle-group"
+  // Element inputs
+  | "form"
+  | "product"
+  | "custom.html"
+  | "instagram"
 
 declare global {
   interface Window {
