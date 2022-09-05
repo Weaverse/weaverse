@@ -24,10 +24,11 @@ export interface PlaceholderProps {
 
 // Button
 export interface ButtonElementProps extends WeaverseElementProps {
-  value: string
-  openInNewTab: boolean
-  target: string
   type: 'button' | 'submit' | 'reset'
+  text: string
+  clickAction: 'none' | 'openLink'
+  linkTo: string
+  openInNewTab: boolean
 }
 
 // Container
