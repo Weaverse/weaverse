@@ -5,34 +5,35 @@ export let Button = React.forwardRef<
   HTMLButtonElement | HTMLAnchorElement,
   ButtonElementProps
 >((props, ref) => {
-  let { openInNewTab, target, value, ...rest } = props
+  let { text, clickAction, linkTo, openInNewTab, ...rest } = props
 
-  if (target) {
+  if (clickAction && linkTo) {
     return (
       <a
-        href={target}
+        href={linkTo}
         target={openInNewTab ? '_blank' : '_self'}
         rel="noreferrer"
         {...rest}
         ref={ref as React.Ref<HTMLAnchorElement>}
       >
-        {value}
+        {text}
       </a>
     )
   }
 
   return (
     <button ref={ref as React.Ref<HTMLButtonElement>} {...rest}>
-      {value}
+      {text}
     </button>
   )
 })
 
 Button.defaultProps = {
-  value: 'Shop now',
-  openInNewTab: false,
-  target: '',
   type: 'button',
+  text: 'Shop now',
+  clickAction: 'none',
+  linkTo: '',
+  openInNewTab: false,
   css: {
     '@desktop': {
       borderRadius: '72px',

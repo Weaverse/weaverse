@@ -138,14 +138,29 @@ export interface BasicInput {
   defaultValue?: string
   placeholder?: string
   helpText?: string
-  // For `select` or `toggle-group` input
+  /**
+   * For `select` or `toggle-group` input
+   */
   options?: { value: string; label: string; icon?: string; weight?: string }[]
-  // For `range` input
+  /**
+   * For `range` input
+   */
   min?: number
   max?: number
   step?: number
-  // Only display if condition matches (eg: if `clickAction` is `"open-link"`)
-  conditions?: TODO[]
+  /**
+   Only display if condition matches.
+
+   Format: `bindingName.conditionalOperator.value`
+   *
+   * Supported operators: `eq`, `neq`, `gt`, `gte`, `lt`, `lte`
+   *
+   * @example
+   * `clickAction.eq.openLink`
+   * `clickAction.neq.openLink`
+   * `imagesPerRow.gt.1`
+   */
+  condition?: string
 }
 
 export type InputType =
