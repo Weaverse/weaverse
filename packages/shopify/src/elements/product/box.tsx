@@ -18,4 +18,12 @@ let ProductBox = forwardRef<HTMLDivElement, ProductBoxProps>((props, ref) => {
   )
 })
 
+ProductBox.defaultProps = {
+  productId: 7176136523960,
+  productHandle: 'vans-sk8-hi-decon-cutout-leaves-white',
+  css: {
+    '@desktop': {},
+  },
+}
+
 export default ProductBox
