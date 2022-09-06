@@ -149,9 +149,9 @@ export interface BasicInput {
   max?: number
   step?: number
   /**
-   Only display if condition matches.
-
-   Format: `bindingName.conditionalOperator.value`
+   * Only display if condition matches.
+   *
+   * Format: `bindingName.conditionalOperator.value`
    *
    * Supported operators: `eq`, `neq`, `gt`, `gte`, `lt`, `lte`
    *
