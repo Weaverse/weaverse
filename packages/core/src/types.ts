@@ -153,11 +153,11 @@ export interface BasicInput {
    *
    * Format: `bindingName.conditionalOperator.value`
    *
-   * Supported operators: `eq`, `neq`, `gt`, `gte`, `lt`, `lte`
+   * Supported operators: `eq`, `ne`, `gt`, `gte`, `lt`, `lte`
    *
    * @example
    * `clickAction.eq.openLink`
-   * `clickAction.neq.openLink`
+   * `clickAction.ne.openLink`
    * `imagesPerRow.gt.1`
    */
   condition?: string
