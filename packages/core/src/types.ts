@@ -149,15 +149,15 @@ export interface BasicInput {
   max?: number
   step?: number
   /**
-   Only display if condition matches.
-
-   Format: `bindingName.conditionalOperator.value`
+   * Only display if condition matches.
    *
-   * Supported operators: `eq`, `neq`, `gt`, `gte`, `lt`, `lte`
+   * Format: `bindingName.conditionalOperator.value`
+   *
+   * Supported operators: `eq`, `ne`, `gt`, `gte`, `lt`, `lte`
    *
    * @example
    * `clickAction.eq.openLink`
-   * `clickAction.neq.openLink`
+   * `clickAction.ne.openLink`
    * `imagesPerRow.gt.1`
    */
   condition?: string
