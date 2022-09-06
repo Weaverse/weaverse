@@ -18,3 +18,14 @@ export let weaverseShopifyProducts = new Proxy(
     },
   }
 )
+
+export let weaverseShopifyStoreData = new Proxy(
+  // @ts-ignore
+  globalThis?.weaverseShopifyStoreData || {},
+  {
+    get: (target, name) => {
+      // @ts-ignore
+      return target?.[name] || globalThis?.weaverseShopifyStoreData?.[name]
+    },
+  }
+)
