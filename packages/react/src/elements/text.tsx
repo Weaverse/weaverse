@@ -14,10 +14,7 @@ Text.defaultProps = {
   value: 'The quick brown fox jumps over the lazy dog',
   css: {
     '@desktop': {
-      width: '100%',
-      height: 'fit-content',
-      padding: '20px',
-      outline: 'none',
+      padding: '10px',
       wordBreak: 'break-word',
       overflowWrap: 'break-word',
       whiteSpace: 'break-spaces',
