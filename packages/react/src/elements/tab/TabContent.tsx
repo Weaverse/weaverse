@@ -30,7 +30,7 @@ const TabContent = forwardRef<HTMLDivElement, TabContentElementProps>(
           children
         ) : (
           <Placeholder element="Tab Content">
-            Please drag and drop an element here
+            Drag and drop an element here.
           </Placeholder>
         )}
       </div>

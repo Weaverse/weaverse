@@ -85,7 +85,7 @@ Form.defaultProps = {
     {
       id: 1,
       type: 'text',
-      placeholder: 'Please enter your name',
+      placeholder: 'Enter your name',
       showLabel: true,
       label: 'Your name',
       required: false,
@@ -95,7 +95,7 @@ Form.defaultProps = {
       showLabel: true,
       label: 'Your email',
       type: 'email',
-      placeholder: 'Please enter your email',
+      placeholder: 'Enter your email',
       required: true,
     },
     {
@@ -103,7 +103,7 @@ Form.defaultProps = {
       showLabel: true,
       label: 'Your message',
       type: 'multiline',
-      placeholder: 'Please enter your message',
+      placeholder: 'Enter your message',
       required: false,
     },
   ],

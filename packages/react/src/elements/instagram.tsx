@@ -35,7 +35,7 @@ let Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
         <div ref={ref} {...rest}>
           <Placeholder element="Instagram">
             {!token
-              ? 'Connect your Instagram account to display photos on your site.'
+              ? 'Connect to Instagram to display photos on your site.'
               : 'Invalid or expired token!'}
           </Placeholder>
         </div>

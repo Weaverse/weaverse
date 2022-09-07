@@ -64,14 +64,7 @@ export interface ElementCatalog {
 
 export type FlagType = "draggable" | "resizable" | "sortable" | "droppable" | "deletable" | "duplicable"
 export type ElementFlags = Partial<Record<FlagType, boolean>>
-export type ToolbarAction =
-  | "duplicate"
-  | "delete"
-  | "edit-button"
-  | "insert-link"
-  | "select-template"
-  | "copy-styles"
-  | "paste-styles"
+export type ToolbarAction = "duplicate" | "delete" | "copy-styles" | "paste-styles"
 
 export interface ChildElement {
   label: string
