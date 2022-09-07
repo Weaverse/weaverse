@@ -3,7 +3,7 @@ import type { TODO } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
 import { ProductContext } from './context'
 
-let ProductTitle = forwardRef<HTMLDivElement, TODO>((props, ref) => {
+let ProductDescription = forwardRef<HTMLDivElement, TODO>((props, ref) => {
   let { ...rest } = props
   let { product, productId } = useContext(ProductContext)
   let weaverseContext = useContext(WeaverseContext)
@@ -12,16 +12,15 @@ let ProductTitle = forwardRef<HTMLDivElement, TODO>((props, ref) => {
     return null
   }
   return (
-    <h3 ref={ref} {...rest}>
-      {ssrMode ? `{{ product_${productId}.title }}` : product?.title}
-    </h3>
+    <div ref={ref} {...rest}>
+      {ssrMode ? `{{ product_${productId}.description }}` : product?.body_html}
+    </div>
   )
 })
-
-ProductTitle.defaultProps = {
+ProductDescription.defaultProps = {
   css: {
     '@desktop': {},
   },
 }
 
-export default ProductTitle
+export default ProductDescription
