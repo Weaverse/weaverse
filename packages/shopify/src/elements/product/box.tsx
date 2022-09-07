@@ -12,7 +12,7 @@ let ProductBox = forwardRef<HTMLDivElement, ProductBoxProps>((props, ref) => {
           {children}
         </ProductProvider>
       ) : (
-        'Please select product!'
+        'Select a product and start editing.'
       )}
     </div>
   )

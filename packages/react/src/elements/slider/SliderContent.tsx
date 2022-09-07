@@ -45,7 +45,7 @@ const SliderContent = forwardRef<HTMLDivElement, SliderContentElementProps>(
           children
         ) : (
           <Placeholder element="Slider Content">
-            Please drag and drop an element here
+            Drag and drop an element here.
           </Placeholder>
         )}
       </div>

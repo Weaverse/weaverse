@@ -22,7 +22,7 @@ const AccordionContent = forwardRef<HTMLDivElement, GridContentElementProps>(
           children
         ) : (
           <Placeholder element="Accordion Content">
-            Please drag and drop an element here
+            Drag and drop an element here.
           </Placeholder>
         )}
       </div>

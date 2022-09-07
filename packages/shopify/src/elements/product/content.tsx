@@ -17,7 +17,7 @@ let ProductContent = forwardRef<HTMLDivElement, TODO>((props, ref) => {
       {React.Children.count(children) > 0 ? (
         children
       ) : (
-        <div>Please drag and drop an element here</div>
+        <div>Drag and drop an element here</div>
       )}
     </div>
   )
