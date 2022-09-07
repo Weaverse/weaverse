@@ -19,7 +19,7 @@ export const CustomHTML = forwardRef<HTMLDivElement, CustomHTMLProps>(
       return (
         <div ref={ref} {...rest}>
           <Placeholder element="Custom HTML">
-            Please add your custom HTML codes.
+            Add your custom HTML code.
           </Placeholder>
         </div>
       )
