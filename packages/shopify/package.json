@@ -1,5 +1,5 @@
 {
-  "version": "0.7.8",
+  "version": "0.7.9",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -31,6 +31,6 @@
   "name": "@weaverse/shopify",
   "author": "Weaverse Team",
   "dependencies": {
-    "@weaverse/react": "0.7.8"
+    "@weaverse/react": "0.7.9"
   }
 }
