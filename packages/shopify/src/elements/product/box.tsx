@@ -1,14 +1,19 @@
-import React, { forwardRef } from 'react'
+import React, { forwardRef, useId, useState } from 'react'
 import { ProductProvider, weaverseShopifyProducts } from './context'
 import type { ProductBoxProps } from '~/types'
 
 let ProductBox = forwardRef<HTMLDivElement, ProductBoxProps>((props, ref) => {
   let { children, productId, productHandle, ...rest } = props
   let product = weaverseShopifyProducts[productId]
+  let formId = useId()
+
+  let [variantId, onChangeVariant] = useState(product?.variants[0].id || '')
   return (
     <div {...rest} ref={ref}>
       {productId ? (
-        <ProductProvider value={{ product, productId }}>
+        <ProductProvider
+          value={{ product, productId, formId, variantId, onChangeVariant }}
+        >
           {children}
         </ProductProvider>
       ) : (
@@ -19,8 +24,8 @@ let ProductBox = forwardRef<HTMLDivElement, ProductBoxProps>((props, ref) => {
 })
 
 ProductBox.defaultProps = {
-  productId: 7176136523960,
-  productHandle: 'vans-sk8-hi-decon-cutout-leaves-white',
+  productId: 7176137277624,
+  productHandle: 'adidas-kids-stan-smith',
   css: {
     '@desktop': {},
   },

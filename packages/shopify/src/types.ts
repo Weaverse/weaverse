@@ -52,6 +52,7 @@ export type Product = {
   images: IProductImage[]
   variants: IProductVariant[]
   body_html: string
+  description: string
   vendor: string
   handle: string
 }
@@ -59,6 +60,9 @@ export type Product = {
 export type ProductContextProps = {
   product?: Product
   productId?: string | number
+  formId?: string
+  variantId: number
+  onChangeVariant: (id: number) => void
 }
 
 export interface ProductBoxProps extends WeaverseElementProps {

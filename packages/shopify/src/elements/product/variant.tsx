@@ -1,15 +1,33 @@
 import React, { forwardRef, useContext } from 'react'
 import type { TODO } from '@weaverse/react'
 import { ProductContext } from './context'
+import { WeaverseContext } from '@weaverse/react'
 
 let ProductVariant = forwardRef<HTMLDivElement, TODO>((props, ref) => {
   let { ...rest } = props
-  let { product, productId } = useContext(ProductContext)
+  let { product, productId, formId, variantId, onChangeVariant } =
+    useContext(ProductContext)
+  let weaverseContext = useContext(WeaverseContext)
+  let { ssrMode } = weaverseContext
   if (!productId) {
     return null
   }
+  // if (ssrMode) {
+  //   return (
+  //     <select name='id' form={formId} ref={ref} {...rest}>\
+  //       `{%%}`
+  //     </select>
+  //   )
+  // }
   return (
-    <select ref={ref} {...rest}>
+    <select
+      name="id"
+      defaultValue={variantId}
+      onChange={(e) => onChangeVariant(Number.parseInt(e.target.value))}
+      form={formId}
+      ref={ref}
+      {...rest}
+    >
       {product?.variants.map((variant) => (
         <option key={variant.id} value={variant.id}>
           {variant.title}

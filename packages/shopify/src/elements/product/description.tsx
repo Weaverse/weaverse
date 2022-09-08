@@ -13,7 +13,9 @@ let ProductDescription = forwardRef<HTMLDivElement, TODO>((props, ref) => {
   }
   return (
     <div ref={ref} {...rest}>
-      {ssrMode ? `{{ product_${productId}.description }}` : product?.body_html}
+      {ssrMode
+        ? `{{ product_${productId}.description }}`
+        : product?.body_html || product?.description}
     </div>
   )
 })
