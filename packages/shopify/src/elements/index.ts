@@ -6,8 +6,9 @@ import * as Form from './form'
 import * as ProductDescription from './product/description'
 import * as ProductAtc from './product/atc'
 import * as ProductVariant from './product/variant'
-import * as ProductImage from '~/elements/product/image'
-import * as ProductContent from '~/elements/product/content'
+import * as ProductImage from './product/image'
+import * as ProductContent from './product/content'
+import * as ProductQuantity from './product/quantity'
 
 let elements: ElementsMap = {
   ProductBox: {
@@ -44,6 +45,10 @@ let elements: ElementsMap = {
   ProductPrice: {
     Component: ProductPrice.default,
     type: 'product-price',
+  },
+  ProductQuantity: {
+    Component: ProductQuantity.default,
+    type: 'product-quantity',
   },
   ProductAtc: {
     Component: ProductAtc.default,
