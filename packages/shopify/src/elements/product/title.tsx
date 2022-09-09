@@ -12,15 +12,19 @@ let ProductTitle = forwardRef<HTMLDivElement, TODO>((props, ref) => {
     return null
   }
   return (
-    <h3 ref={ref} {...rest}>
+    <h2 ref={ref} {...rest}>
       {ssrMode ? `{{ product_${productId}.title }}` : product?.title}
-    </h3>
+    </h2>
   )
 })
 
 ProductTitle.defaultProps = {
   css: {
-    '@desktop': {},
+    '@desktop': {
+      fontSize: 32,
+      lineHeight: '48px',
+      margin: 0,
+    },
   },
 }
 

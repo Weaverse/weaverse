@@ -42,6 +42,9 @@ interface IProductVariant {
   updated_at: string
   weight: number
   // weight_unit: ProductVariantWeightUnit;
+
+  // live view
+  featured_media: { id: number }
 }
 
 export type Product = {
@@ -52,9 +55,12 @@ export type Product = {
   images: IProductImage[]
   variants: IProductVariant[]
   body_html: string
-  description: string
   vendor: string
   handle: string
+  // live view
+  featured_image: string
+  media: IProductImage[]
+  description: string
 }
 
 export type ProductContextProps = {
