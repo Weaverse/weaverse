@@ -42,7 +42,9 @@ let ProductPrice = forwardRef<HTMLDivElement, TODO>((props, ref) => {
 
 ProductPrice.defaultProps = {
   css: {
-    '@desktop': {},
+    '@desktop': {
+      fontWeight: 600,
+    },
   },
 }
 

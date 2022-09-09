@@ -14,7 +14,7 @@ let ProductBox = forwardRef<HTMLDivElement, ProductBoxProps>((props, ref) => {
         <ProductProvider
           value={{ product, productId, formId, variantId, onChangeVariant }}
         >
-          {children}
+          {product && children}
         </ProductProvider>
       ) : (
         'Select a product and start editing.'

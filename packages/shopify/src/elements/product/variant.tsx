@@ -43,7 +43,7 @@ ProductVariant.defaultProps = {
       width: '100%',
       padding: 10,
       border: 'none',
-      background: '#eee',
+      background: '#f0f0f0f0',
     },
   },
 }

@@ -5,24 +5,32 @@ import { ProductContext } from './context'
 
 let ProductImage = forwardRef<HTMLDivElement, TODO>((props, ref) => {
   let { ...rest } = props
-  let { product, productId } = useContext(ProductContext)
-  let image = product?.image
-  console.info('9779 image', image)
+  let { product, productId, variantId } = useContext(ProductContext)
   let weaverseContext = useContext(WeaverseContext)
   let { ssrMode } = weaverseContext
-  if (!productId || !image) {
+  let images = product?.media || product?.images || []
+  console.info('9779 images', ssrMode, images)
+  if (!productId || !images.length) {
     return null
   }
+  let variants = product?.variants || []
+  let variant = variants.find((variant) => variant.id === variantId)
+  let imageId = variant?.image_id || variant?.featured_media.id
+  let image = images.find((img) => img.id === imageId)
+  let src = image?.src || product?.featured_image || product?.image.src
   return (
     <div ref={ref} {...rest}>
       {ssrMode ? (
-        `{{ product_${productId}.title }}`
+        <img
+          src={`{{ product_${productId}.featured_image }}`}
+          alt="featured image"
+        />
       ) : (
         <img
-          width={image.width}
-          height={image.height}
-          src={image.src}
-          alt={image.alt || undefined}
+          width={image?.width}
+          height={image?.height}
+          src={src}
+          alt={image?.alt || undefined}
         />
       )}
     </div>
