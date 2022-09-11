@@ -74,6 +74,7 @@ export type ProductContextProps = {
 export interface ProductBoxProps extends WeaverseElementProps {
   productId: number
   productHandle?: string
+  optionStyles?: 'combined' | 'custom'
 }
 
 // Form

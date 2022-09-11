@@ -3,7 +3,7 @@ import { ProductProvider, weaverseShopifyProducts } from './context'
 import type { ProductBoxProps } from '~/types'
 
 let ProductBox = forwardRef<HTMLDivElement, ProductBoxProps>((props, ref) => {
-  let { children, productId, productHandle, ...rest } = props
+  let { children, productId, productHandle, optionStyles, ...rest } = props
   let product = weaverseShopifyProducts[productId]
   let formId = useId()
 
@@ -24,8 +24,8 @@ let ProductBox = forwardRef<HTMLDivElement, ProductBoxProps>((props, ref) => {
 })
 
 ProductBox.defaultProps = {
-  productId: 7176137277624,
-  productHandle: 'adidas-kids-stan-smith',
+  // productId: 7176137277624,
+  // productHandle: 'adidas-kids-stan-smith',
   css: {
     '@desktop': {},
   },
