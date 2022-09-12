@@ -9,6 +9,7 @@ import * as ProductVariant from './product/variant'
 import * as ProductImage from './product/image'
 import * as ProductContent from './product/content'
 import * as ProductQuantity from './product/quantity'
+import * as CustomHTML from './custom-html'
 
 let elements: ElementsMap = {
   ProductBox: {
@@ -65,6 +66,17 @@ let elements: ElementsMap = {
   Form: {
     Component: Form.default,
     type: 'form',
+  },
+  CustomHTML: {
+    Component: CustomHTML.default,
+    type: 'custom.html',
+    defaultCss: {
+      '@desktop': {
+        '& > *': {
+          pointerEvents: 'var(--pointer-events, unset)',
+        },
+      },
+    },
   },
 }
 export default elements

@@ -12,10 +12,6 @@ export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
 
   useEffect(() => {
     context.subscribe(update)
-    // no need to self update anymore since we control updating from core context
-    // if (context.projectData) {
-    //   setTimeout(update, 110)
-    // }
     context.contentRootElement = rootRef.current
     return () => {
       context.unsubscribe(update)
@@ -51,10 +47,7 @@ const ItemComponent = ({ instance }: ItemComponentProps) => {
         current: document.querySelector(`[data-wv-id="${id}"]`),
       })
     }
-    instance.ref.current?.removeAttribute('css')
-    return () => {
-      instance.unsubscribe(update)
-    }
+    return () => instance.unsubscribe(update)
   }, [])
 
   let Element = elementInstances.get(type!)
