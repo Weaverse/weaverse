@@ -16,6 +16,9 @@ let ProductImage = forwardRef<HTMLDivElement, TODO>((props, ref) => {
   if (!productId || !images.length) {
     return null
   }
+  function renderVideo(item: any) {
+    return <iframe src={item.embedUrl} frameBorder="0" allowFullScreen></iframe>
+  }
   useEffect(() => {
     let variants = product?.variants || []
     let variant = variants.find((variant) => variant.id === variantId)
@@ -26,18 +29,32 @@ let ProductImage = forwardRef<HTMLDivElement, TODO>((props, ref) => {
     }
   }, [variantId])
 
-  let items = images.map((image) => ({
-    original: image.src,
-    thumbnail: image.src,
-    originalHeight: '100%',
-    originalWidth: '100%',
-    alt: image.alt,
-  }))
+  let items = images.map((image) => {
+    let src = image.src || image.preview_image.src
+    let item = {
+      original: src,
+      thumbnail: src,
+      originalHeight: '100%',
+      originalWidth: '100%',
+      alt: image.alt,
+    }
+    if (image.media_type === 'external_video') {
+      Object.assign(item, {
+        embedUrl: `https://www.youtube.com/embed/${image.external_id}?autoplay=1&showinfo=0`,
+        renderItem: renderVideo,
+      })
+    }
+    return item
+  })
 
   return (
     <div ref={ref} {...rest}>
       <style>
         {`
+        iframe {
+          width: 100%;
+          height: 100%;
+        }
         .image-gallery-slide, .image-gallery-slides, .image-gallery-swipe, .image-gallery-content, .image-gallery {
           height: 100%;
         }
