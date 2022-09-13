@@ -12,6 +12,12 @@ type IProductImage = {
   height: number
   updated_at: string
   alt: string | null
+  //live view
+  media_type: string
+  external_id: string
+  preview_image: {
+    src: string
+  }
 }
 
 interface IProductVariant {
