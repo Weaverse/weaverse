@@ -4,8 +4,9 @@
   "devDependencies": {
     "@commitlint/cli": "^17.1.2",
     "@commitlint/config-conventional": "^17.1.0",
-    "@types/node": "^18.7.16",
-    "@types/react": "^18.0.19",
+    "@types/node": "^18.7.15",
+    "@types/react": "^18.0.18",
+    "@types/react-image-gallery": "^1.0.5",
     "@typescript-eslint/eslint-plugin": "^5.36.2",
     "@typescript-eslint/parser": "^5.36.2",
     "eslint": "8.22.0",
