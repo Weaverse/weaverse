@@ -68,7 +68,7 @@ export class WeaverseItemStore {
   }
 
   get data(): ElementData {
-    return { ...this.Element?.Component?.defaultProps, ...this._data }
+    return { css: this.Element?.defaultCss, ...this.Element?.Component?.defaultProps, ...this._data }
   }
 
   setData = (data: Omit<ElementData, "id" | "type">) => {

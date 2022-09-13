@@ -1,5 +1,5 @@
 import type * as Stitches from "@stitches/core"
-import type { ForwardRefExoticComponent } from "react"
+import type { ForwardRefExoticComponent, ReactElement } from "react"
 import type { stichesUtils } from "./utils"
 
 export type TODO = any
@@ -39,15 +39,11 @@ export interface WeaverseType {
   ssrMode?: boolean
 }
 
-export interface ElementComponentProps extends ElementData {
-  css: ElementCSS
-  [key: string]: any
-}
-
 export interface WeaverseElement {
-  Component: ForwardRefExoticComponent<ElementComponentProps>
+  Component: ForwardRefExoticComponent<any>
   type: string
   schema?: ElementSchema
+  defaultCss?: ElementCSS
 }
 export interface ElementsMap {
   [key: string]: WeaverseElement

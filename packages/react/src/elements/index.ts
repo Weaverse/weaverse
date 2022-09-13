@@ -15,8 +15,11 @@ import * as Tab from './tab'
 import * as TabContent from './tab/TabContent'
 import * as Slider from './slider'
 import * as SliderContent from './slider/SliderContent'
-import * as CustomHTML from './custom-html'
+import Placeholder from '~/elements/shared/Placeholder'
 
+export const SharedComponents = {
+  Placeholder,
+}
 export const Elements: ElementsMap = {
   Countdown: {
     Component: Countdown.default,
@@ -81,9 +84,5 @@ export const Elements: ElementsMap = {
   SliderContent: {
     Component: SliderContent.default,
     type: 'slider.content',
-  },
-  CustomHTML: {
-    Component: CustomHTML.default,
-    type: 'custom.html',
   },
 }

@@ -1,7 +1,9 @@
 import React, { forwardRef, useContext } from 'react'
-import type { WeaverseElementProps } from '~/types'
-import { WeaverseContext } from '~/context'
-import Placeholder from './shared/Placeholder'
+import type { WeaverseElementProps } from '@weaverse/react'
+import { WeaverseContext } from '@weaverse/react'
+import { SharedComponents } from '@weaverse/react'
+
+let Placeholder = SharedComponents.Placeholder
 
 interface CustomHTMLProps extends WeaverseElementProps {
   content: string
@@ -14,7 +16,6 @@ export const CustomHTML = forwardRef<HTMLDivElement, CustomHTMLProps>(
     const style = {
       '--pointer-events': isDesignMode ? 'none' : 'auto',
     } as React.CSSProperties
-
     if (!content)
       return (
         <div ref={ref} {...rest}>
@@ -25,6 +26,7 @@ export const CustomHTML = forwardRef<HTMLDivElement, CustomHTMLProps>(
       )
     return (
       <div
+        data-prevent-hydration="true"
         ref={ref}
         {...rest}
         style={style}
@@ -37,13 +39,6 @@ export const CustomHTML = forwardRef<HTMLDivElement, CustomHTMLProps>(
 CustomHTML.defaultProps = {
   content: '',
   type: 'custom.html',
-  css: {
-    '@desktop': {
-      '& > *': {
-        pointerEvents: 'var(--pointer-events, unset)',
-      },
-    },
-  },
 }
 
 export default CustomHTML
