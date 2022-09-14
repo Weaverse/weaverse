@@ -53,12 +53,21 @@ interface IProductVariant {
   featured_media: { id: number }
 }
 
+interface IProductOption {
+  id: number
+  name: string
+  position: number
+  product_id: number
+  values: string[]
+}
+
 export type Product = {
   id: number
   title: string
   price: string
   image: IProductImage
   images: IProductImage[]
+  options: IProductOption[]
   variants: IProductVariant[]
   body_html: string
   vendor: string
