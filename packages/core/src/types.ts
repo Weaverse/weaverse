@@ -66,7 +66,7 @@ export interface ChildElement {
   label: string
   selector: string
 }
-export type ParentType = "container" | "layout" | "root"
+export type ParentType = "container" | "layout" | "root" | "product.content"
 export type GridSize = {
   rowSpan: number
   colSpan: number

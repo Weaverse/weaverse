@@ -53,23 +53,23 @@ let ProductAtc = forwardRef<HTMLDivElement, TODO>((props, ref) => {
       ? rest.addedText
       : buttonText
   return (
-    <form
-      ref={ref}
-      {...rest}
-      method="post"
-      action="/cart/add"
-      id={formId}
-      acceptCharset="UTF-8"
-      encType="multipart/form-data"
-      noValidate="novalidate"
-      data-type="add-to-cart-form"
-    >
-      <input type="hidden" name="form_type" value="product" />
-      <input type="hidden" name="utf8" value="✓" />
-      <button disabled={!!status} onClick={handleATC}>
-        {text}
-      </button>
-    </form>
+    <div ref={ref} {...rest}>
+      <form
+        method="post"
+        action="/cart/add"
+        id={formId}
+        acceptCharset="UTF-8"
+        encType="multipart/form-data"
+        noValidate
+        data-type="add-to-cart-form"
+      >
+        <input type="hidden" name="form_type" value="product" />
+        <input type="hidden" name="utf8" value="✓" />
+        <button disabled={!!status} onClick={handleATC}>
+          {text}
+        </button>
+      </form>
+    </div>
   )
 })
 
@@ -80,6 +80,9 @@ ProductAtc.defaultProps = {
   cartAction: '',
   css: {
     '@desktop': {
+      form: {
+        height: '100%',
+      },
       button: {
         border: 'none',
         // borderRadius: 50,
