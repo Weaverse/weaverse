@@ -64,9 +64,17 @@ let ProductVariant = forwardRef<HTMLDivElement, TODO>((props, ref) => {
         {/*TODO add default css when finish styling*/}
         <style>
           {`
-          [data-wv-type="product-variant"] select {
-            display: none;
-          }
+              [data-wv-type="product-variant"] select {
+                display: none;
+              }
+              [data-wv-type="product-variant"] {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+              }
+              label.swatch-label {display: inline-block; margin-bottom: 8px;}
+              span.option-display-name {font-weight: bold;}
+              span.selected-value {margin-left: 8px;}
               div.option-values {
                 display: flex;
                 gap: 8px;

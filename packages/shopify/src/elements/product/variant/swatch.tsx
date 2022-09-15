@@ -10,7 +10,12 @@ export let Swatch = (props: any) => {
     let defaultSrc = ''
     return (
       <div key={option.id}>
-        <label>{swatch.displayName || option.name}</label>
+        <label className="swatch-label">
+          <span className="option-display-name">
+            {swatch.displayName || option.name}:
+          </span>
+          <span className="selected-value">{defaultValue}</span>
+        </label>
         <div className="option-values">
           {option.values.map((val: any) => {
             // color
