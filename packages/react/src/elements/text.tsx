@@ -10,16 +10,17 @@ const Text = React.forwardRef<HTMLDivElement, TextElementProps>(
   }
 )
 
+export let css = {
+  '@desktop': {
+    padding: '10px',
+    wordBreak: 'break-word',
+    overflowWrap: 'break-word',
+    whiteSpace: 'break-spaces',
+  },
+}
+
 Text.defaultProps = {
   value: 'The quick brown fox jumps over the lazy dog',
-  css: {
-    '@desktop': {
-      padding: '10px',
-      wordBreak: 'break-word',
-      overflowWrap: 'break-word',
-      whiteSpace: 'break-spaces',
-    },
-  },
 }
 
 export default Text

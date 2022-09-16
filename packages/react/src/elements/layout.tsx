@@ -20,36 +20,36 @@ let Layout = forwardRef<HTMLElement, LayoutElementProps>((props, ref) => {
   )
 })
 
+export let css = {
+  '@desktop': {
+    paddingTop: '16px',
+    paddingBottom: '16px',
+    paddingLeft: 'var(--gap)',
+    paddingRight: 'var(--gap)',
+    '> [data-layout-content]': {
+      margin: '0 auto',
+      display: 'grid !important',
+      gridTemplateRows: 'repeat(var(--rows), var(--row-size))',
+      gridTemplateColumns: 'repeat(var(--columns), minmax(0, var(--col-size)))',
+      gap: 'var(--gap)',
+      maxWidth: 'var(--grid-size)',
+    },
+  },
+  '@mobile': {
+    padding: '0 16px',
+    '> [data-layout-content]': {
+      display: 'flex !important',
+      flexDirection: 'column',
+    },
+  },
+}
+
 Layout.defaultProps = {
   gridSize: 1224,
   rows: 12,
   columns: 12,
   gap: 16,
   rowSize: 48,
-  css: {
-    '@desktop': {
-      paddingTop: '16px',
-      paddingBottom: '16px',
-      paddingLeft: 'var(--gap)',
-      paddingRight: 'var(--gap)',
-      '> [data-layout-content]': {
-        margin: '0 auto',
-        display: 'grid !important',
-        gridTemplateRows: 'repeat(var(--rows), var(--row-size))',
-        gridTemplateColumns:
-          'repeat(var(--columns), minmax(0, var(--col-size)))',
-        gap: 'var(--gap)',
-        maxWidth: 'var(--grid-size)',
-      },
-    },
-    '@mobile': {
-      padding: '0 16px',
-      '> [data-layout-content]': {
-        display: 'flex !important',
-        flexDirection: 'column',
-      },
-    },
-  },
 }
 
 export default Layout

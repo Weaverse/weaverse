@@ -24,6 +24,7 @@ export const Elements: ElementsMap = {
   Countdown: {
     Component: Countdown.default,
     type: 'countdown',
+    defaultCss: Countdown.css,
   },
   Button: {
     Component: Button.default,
@@ -32,57 +33,71 @@ export const Elements: ElementsMap = {
   Container: {
     Component: Container.default,
     type: 'container',
+    defaultCss: Container.css,
   },
   Image: {
     Component: Image.default,
     type: 'image',
+    defaultCss: Image.css,
   },
   Instagram: {
     Component: Instagram.default,
     type: 'instagram',
+    defaultCss: Instagram.css,
   },
   Layout: {
     Component: Layout.default,
     type: 'layout',
+    defaultCss: Layout.css,
   },
   Map: {
     Component: Map.default,
     type: 'map',
+    defaultCss: Map.css,
   },
   Text: {
     Component: Text.default,
     type: 'text',
+    defaultCss: Text.css,
   },
   Video: {
     Component: Video.default,
     type: 'video',
+    defaultCss: Video.css,
   },
   Accordion: {
     Component: Accordion.default,
     type: 'accordion',
+    defaultCss: Accordion.css,
   },
   AccordionWrapper: {
     Component: AccordionWrapper.default,
     type: 'accordion.wrapper',
+    defaultCss: AccordionWrapper.css,
   },
   AccordionContent: {
     Component: AccordionContent.default,
     type: 'accordion.content',
+    defaultCss: AccordionContent.css,
   },
   Tab: {
     Component: Tab.default,
     type: 'tab',
+    defaultCss: Tab.css,
   },
   TabContent: {
     Component: TabContent.default,
     type: 'tab.content',
+    defaultCss: TabContent.css,
   },
   Slider: {
     Component: Slider.default,
     type: 'slider',
+    defaultCss: Slider.css,
   },
   SliderContent: {
     Component: SliderContent.default,
     type: 'slider.content',
+    defaultCss: SliderContent.css,
   },
 }

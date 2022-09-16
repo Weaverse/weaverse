@@ -38,26 +38,27 @@ const TabContent = forwardRef<HTMLDivElement, TabContentElementProps>(
   }
 )
 
+export let css = {
+  '@desktop': {
+    width: '100%',
+    maxWidth: 'var(--grid-size)',
+    display: 'var(--content-active, none)',
+    gridTemplateRows: 'repeat(var(--rows), var(--row-size))',
+    gridTemplateColumns: 'repeat(var(--columns), minmax(0, var(--col-size)))',
+    gap: 'var(--gap)',
+    // overflow: 'hidden',
+    // maxHeight: 0,
+    // transition: 'all var(--transition-duration, 0.3s) ease-in-out',
+    borderRadius: 4,
+  },
+}
+
 TabContent.defaultProps = {
   rows: 3,
   columns: 12,
   gap: 4,
   rowSize: 48,
   name: 'Tab header',
-  css: {
-    '@desktop': {
-      width: '100%',
-      maxWidth: 'var(--grid-size)',
-      display: 'var(--content-active, none)',
-      gridTemplateRows: 'repeat(var(--rows), var(--row-size))',
-      gridTemplateColumns: 'repeat(var(--columns), minmax(0, var(--col-size)))',
-      gap: 'var(--gap)',
-      // overflow: 'hidden',
-      // maxHeight: 0,
-      // transition: 'all var(--transition-duration, 0.3s) ease-in-out',
-      borderRadius: 4,
-    },
-  },
 }
 
 export default TabContent

@@ -53,6 +53,19 @@ const SliderContent = forwardRef<HTMLDivElement, SliderContentElementProps>(
   }
 )
 
+export let css = {
+  '@desktop': {
+    width: '100%',
+    maxWidth: 'var(--grid-size)',
+    display: 'grid',
+    gridTemplateRows: 'repeat(var(--rows), var(--row-size))',
+    gridTemplateColumns: 'repeat(var(--columns), minmax(0, var(--col-size)))',
+    gap: 'var(--gap)',
+    borderRadius: 4,
+    backgroundImage: 'var(--background-url, none)',
+  },
+}
+
 SliderContent.defaultProps = {
   name: 'Slider',
   mediaUrl: '',
@@ -62,18 +75,6 @@ SliderContent.defaultProps = {
   columns: 12,
   gap: 4,
   rowSize: 48,
-  css: {
-    '@desktop': {
-      width: '100%',
-      maxWidth: 'var(--grid-size)',
-      display: 'grid',
-      gridTemplateRows: 'repeat(var(--rows), var(--row-size))',
-      gridTemplateColumns: 'repeat(var(--columns), minmax(0, var(--col-size)))',
-      gap: 'var(--gap)',
-      borderRadius: 4,
-      backgroundImage: 'var(--background-url, none)',
-    },
-  },
 }
 
 export default SliderContent
