@@ -48,6 +48,7 @@ export class WeaverseItemStore {
     this.weaverse = weaverse
     if (id && type) {
       weaverse.itemInstances.set(id, this)
+      console.info("9779 WeaverseItemStore item", itemData)
       this.data = { ...itemData }
     }
   }
@@ -68,7 +69,9 @@ export class WeaverseItemStore {
   }
 
   get data(): ElementData {
-    return { css: this.Element?.defaultCss, ...this.Element?.Component?.defaultProps, ...this._data }
+    let css = this.Element?.defaultCss
+    let defaultData = { ...this.Element?.Component?.defaultProps, ...(css && { css }) }
+    return { ...defaultData, ...this._data }
   }
 
   setData = (data: Omit<ElementData, "id" | "type">) => {
