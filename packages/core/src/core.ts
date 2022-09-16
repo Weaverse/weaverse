@@ -48,7 +48,6 @@ export class WeaverseItemStore {
     this.weaverse = weaverse
     if (id && type) {
       weaverse.itemInstances.set(id, this)
-      console.info("9779 WeaverseItemStore item", itemData)
       this.data = { ...itemData }
     }
   }

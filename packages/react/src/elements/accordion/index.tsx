@@ -42,16 +42,16 @@ const Accordion = forwardRef<HTMLDivElement, AccordionElementProps>(
     )
   }
 )
+export let css = {
+  '@desktop': {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 4,
+  },
+}
 
 Accordion.defaultProps = {
   iconName: 'arrow',
-  css: {
-    '@desktop': {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 4,
-    },
-  },
 }
 
 export default Accordion

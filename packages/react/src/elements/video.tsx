@@ -23,6 +23,16 @@ let Video = forwardRef<HTMLDivElement, VideoElementProps>((props, ref) => {
   )
 })
 
+export let css = {
+  '@desktop': {
+    video: {
+      height: '100%',
+      width: '100%',
+      aspectRatio: '16 / 9',
+    },
+  },
+}
+
 Video.defaultProps = {
   src: 'https://youtu.be/wM-NT6hcw48',
   poster:
@@ -32,15 +42,6 @@ Video.defaultProps = {
   controls: false,
   autoPlay: true,
   muted: true,
-  css: {
-    '@desktop': {
-      video: {
-        height: '100%',
-        width: '100%',
-        aspectRatio: '16 / 9',
-      },
-    },
-  },
 }
 
 export default Video

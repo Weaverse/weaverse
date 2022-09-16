@@ -63,6 +63,24 @@ let Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
     )
   }
 )
+export let css = {
+  '@desktop': {
+    '.wv-ig-media-container': {
+      overflow: 'hidden',
+      maxWidth: '100%',
+      maxHeight: '100%',
+      display: 'grid',
+      gridTemplateColumns: 'repeat(var(--wv-ig-images-per-row, 4), 1fr)',
+      gap: 'var(--wv-ig-images-gap, 0px)',
+      img: {
+        aspectRatio: '1 / 1',
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+      },
+    },
+  },
+}
 
 Instagram.defaultProps = {
   token: '',
@@ -70,24 +88,6 @@ Instagram.defaultProps = {
   numberOfImages: 8,
   imagesPerRow: 4,
   gap: 0,
-  css: {
-    '@desktop': {
-      '.wv-ig-media-container': {
-        overflow: 'hidden',
-        maxWidth: '100%',
-        maxHeight: '100%',
-        display: 'grid',
-        gridTemplateColumns: 'repeat(var(--wv-ig-images-per-row, 4), 1fr)',
-        gap: 'var(--wv-ig-images-gap, 0px)',
-        img: {
-          aspectRatio: '1 / 1',
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-        },
-      },
-    },
-  },
 }
 
 export default Instagram

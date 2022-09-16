@@ -47,31 +47,32 @@ const Tab = forwardRef<HTMLDivElement, TabProps>((props, ref) => {
   )
 })
 
-Tab.defaultProps = {
-  fullWidthTabHeader: false,
-  css: {
-    '@desktop': {
+export let css = {
+  '@desktop': {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 4,
+    '& .wv-tab-header-wrapper': {
+      width: '100%',
       display: 'flex',
-      flexDirection: 'column',
-      gap: 4,
-      '& .wv-tab-header-wrapper': {
-        width: '100%',
-        display: 'flex',
-        marginBottom: 10,
-      },
-      '& .wv-tab-header': {
-        backgroundColor: '#fff',
-        padding: '15px 24px',
-        border: '1px solid #E4E7EB',
-        cursor: 'pointer',
-        textAlign: 'center',
-        width: 'var(--tab-width, auto)',
-        '&.active': {
-          backgroundColor: '#E4E7EB',
-        },
+      marginBottom: 10,
+    },
+    '& .wv-tab-header': {
+      backgroundColor: '#fff',
+      padding: '15px 24px',
+      border: '1px solid #E4E7EB',
+      cursor: 'pointer',
+      textAlign: 'center',
+      width: 'var(--tab-width, auto)',
+      '&.active': {
+        backgroundColor: '#E4E7EB',
       },
     },
   },
+}
+
+Tab.defaultProps = {
+  fullWidthTabHeader: false,
 }
 
 export default Tab

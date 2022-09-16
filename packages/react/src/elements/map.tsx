@@ -19,6 +19,8 @@ let Map = forwardRef<HTMLDivElement, MapElementProps>((props, ref) => {
   )
 })
 
+export let css = {}
+
 Map.defaultProps = {
   place: 'Hanoi',
   zoom: 14,

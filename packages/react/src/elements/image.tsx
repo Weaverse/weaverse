@@ -36,6 +36,17 @@ let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
   }
 )
 
+export let css = {
+  '@desktop': {
+    img: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'var(--wv-img-object-fit, cover)',
+      objectPosition: 'var(--wv-img-object-position, center)',
+    },
+  },
+}
+
 Image.defaultProps = {
   src: 'https://ucarecdn.com/c413b8fe-ceec-4948-9c42-a0434c4ca920/',
   alt: 'Image alt text',
@@ -43,16 +54,6 @@ Image.defaultProps = {
   objectPosition: 'center',
   onClickAction: 'open-lightbox',
   openLinkInNewTab: false,
-  css: {
-    '@desktop': {
-      img: {
-        width: '100%',
-        height: '100%',
-        objectFit: 'var(--wv-img-object-fit, cover)',
-        objectPosition: 'var(--wv-img-object-position, center)',
-      },
-    },
-  },
 }
 
 export default Image

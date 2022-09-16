@@ -53,42 +53,43 @@ const Slider = forwardRef<HTMLDivElement, SliderElementProps>((props, ref) => {
   )
 })
 
+export let css = {
+  '@desktop': {
+    '& .wv-slider-btn': {
+      borderRadius: '100%',
+      width: 40,
+      height: 40,
+      background: '#fff',
+      border: 'none',
+      cursor: 'pointer',
+      '&[disabled]': {
+        cursor: 'not-allowed',
+      },
+      '&:hover .wv-slider-arrow': {
+        borderColor: '#999',
+      },
+      '& .wv-slider-arrow': {
+        border: 'solid black',
+        borderWidth: '0 1px 1px 0',
+        display: 'inline-block',
+        padding: 5,
+      },
+      '& .wv-slider-arrow-right': {
+        transform: 'rotate(-45deg)',
+        marginRight: 5,
+      },
+      '& .wv-slider-arrow-left': {
+        transform: 'rotate(135deg)',
+        marginLeft: 5,
+      },
+    },
+  },
+}
+
 Slider.defaultProps = {
   fullWidth: true,
   autoplay: true,
   delay: 3,
-  css: {
-    '@desktop': {
-      '& .wv-slider-btn': {
-        borderRadius: '100%',
-        width: 40,
-        height: 40,
-        background: '#fff',
-        border: 'none',
-        cursor: 'pointer',
-        '&[disabled]': {
-          cursor: 'not-allowed',
-        },
-        '&:hover .wv-slider-arrow': {
-          borderColor: '#999',
-        },
-        '& .wv-slider-arrow': {
-          border: 'solid black',
-          borderWidth: '0 1px 1px 0',
-          display: 'inline-block',
-          padding: 5,
-        },
-        '& .wv-slider-arrow-right': {
-          transform: 'rotate(-45deg)',
-          marginRight: 5,
-        },
-        '& .wv-slider-arrow-left': {
-          transform: 'rotate(135deg)',
-          marginLeft: 5,
-        },
-      },
-    },
-  },
 }
 
 export default Slider
