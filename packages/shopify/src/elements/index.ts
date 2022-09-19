@@ -65,6 +65,7 @@ let elements: ElementsMap = {
     Component: ProductImage.default,
     type: 'product-image',
     defaultCss: ProductImage.css,
+    permanentCss: ProductImage.permanentCss,
   },
   Form: {
     Component: Form.default,

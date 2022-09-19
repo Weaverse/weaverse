@@ -44,6 +44,7 @@ export interface WeaverseElement {
   type: string
   schema?: ElementSchema
   defaultCss?: ElementCSS
+  permanentCss?: ElementCSS
 }
 export interface ElementsMap {
   [key: string]: WeaverseElement
