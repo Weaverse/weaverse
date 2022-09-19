@@ -6,13 +6,20 @@ let ProductBox = forwardRef<HTMLDivElement, ProductBoxProps>((props, ref) => {
   let { children, productId, productHandle, optionStyles, ...rest } = props
   let product = weaverseShopifyProducts[productId]
   let formId = useId()
-
+  let [variantPosition, onChangeVariantPosition] = useState(0)
   let [variantId, onChangeVariant] = useState(product?.variants[0].id || '')
   return (
     <div {...rest} ref={ref}>
       {productId ? (
         <ProductProvider
-          value={{ product, productId, formId, variantId, onChangeVariant }}
+          value={{
+            product,
+            productId,
+            formId,
+            variantPosition,
+            variantId,
+            onChangeVariant,
+          }}
         >
           {product && children}
         </ProductProvider>
