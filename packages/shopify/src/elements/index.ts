@@ -33,6 +33,7 @@ let elements: ElementsMap = {
   ProductTitle: {
     Component: ProductTitle.default,
     type: 'product-title',
+    defaultCss: ProductTitle.css,
     // schema: {
     //   title: 'Product Title',
     //   parentType: 'layout', // TODO
@@ -54,6 +55,7 @@ let elements: ElementsMap = {
   ProductAtc: {
     Component: ProductAtc.default,
     type: 'product-atc',
+    defaultCss: ProductAtc.css,
   },
   ProductVariant: {
     Component: ProductVariant.default,
@@ -62,6 +64,7 @@ let elements: ElementsMap = {
   ProductImage: {
     Component: ProductImage.default,
     type: 'product-image',
+    defaultCss: ProductImage.css,
   },
   Form: {
     Component: Form.default,

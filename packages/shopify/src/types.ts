@@ -83,6 +83,7 @@ export type ProductContextProps = {
   productId?: string | number
   formId?: string
   variantId: number
+  variantPosition: number
   onChangeVariant: (id: number) => void
 }
 
@@ -90,6 +91,27 @@ export interface ProductBoxProps extends WeaverseElementProps {
   productId: number
   productHandle?: string
   optionStyles?: 'combined' | 'custom'
+}
+
+export interface ProductTitleProps extends WeaverseElementProps {
+  htmlTag: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p'
+  linkProduct: boolean
+}
+
+export interface ProductImageProps extends WeaverseElementProps {
+  showThumbnails: boolean
+  thumbnailPosition: 'top' | 'right' | 'bottom' | 'left' | undefined
+  showBullets: boolean
+}
+
+export interface ProductAtcProps extends WeaverseElementProps {
+  buttonText: string
+  addingText: string
+  addedText: string
+  soldOutText: string
+  unavailableText: string
+  // cartAction: '' | 'cart'
+  goToCart: boolean
 }
 
 // Form

@@ -1,56 +1,59 @@
 import React, { forwardRef, useContext, useEffect, useState } from 'react'
-import type { TODO } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
 import { ProductContext } from './context'
 import IMG from 'react-image-gallery'
+import type { ProductImageProps } from '~/types'
 // @ts-ignore
 let ImageGallery = IMG.default
-let ProductImage = forwardRef<HTMLDivElement, TODO>((props, ref) => {
-  let { showThumbnail, ...rest } = props
-  let { product, productId, variantId } = useContext(ProductContext)
-  let weaverseContext = useContext(WeaverseContext)
-  let { ssrMode } = weaverseContext
-  let [startIndex, setStartIndex] = useState(0)
-  let images = product?.media || product?.images || []
+let ProductImage = forwardRef<HTMLDivElement, ProductImageProps>(
+  (props, ref) => {
+    let { showThumbnails, thumbnailPosition, showBullets, ...rest } = props
+    let { product, productId, variantId } = useContext(ProductContext)
+    let weaverseContext = useContext(WeaverseContext)
+    let { ssrMode } = weaverseContext
+    let [startIndex, setStartIndex] = useState(0)
+    let images = product?.media || product?.images || []
 
-  if (!productId || !images.length) {
-    return null
-  }
-  function renderVideo(item: any) {
-    return <iframe src={item.embedUrl} frameBorder="0" allowFullScreen></iframe>
-  }
-  useEffect(() => {
-    let variants = product?.variants || []
-    let variant = variants.find((variant) => variant.id === variantId)
-    let imageId = variant?.image_id || variant?.featured_media.id
-    let imageIndex = images.findIndex((img) => img.id === imageId)
-    if (imageIndex !== -1 && imageIndex !== startIndex) {
-      setStartIndex(imageIndex)
+    if (!productId || !images.length) {
+      return null
     }
-  }, [variantId])
+    function renderVideo(item: any) {
+      return (
+        <iframe src={item.embedUrl} frameBorder="0" allowFullScreen></iframe>
+      )
+    }
+    useEffect(() => {
+      let variants = product?.variants || []
+      let variant = variants.find((variant) => variant.id === variantId)
+      let imageId = variant?.image_id || variant?.featured_media.id
+      let imageIndex = images.findIndex((img) => img.id === imageId)
+      if (imageIndex !== -1 && imageIndex !== startIndex) {
+        setStartIndex(imageIndex)
+      }
+    }, [variantId])
 
-  let items = images.map((image) => {
-    let src = image.src || image.preview_image.src
-    let item = {
-      original: src,
-      thumbnail: src,
-      originalHeight: '100%',
-      originalWidth: '100%',
-      alt: image.alt,
-    }
-    if (image.media_type === 'external_video') {
-      Object.assign(item, {
-        embedUrl: `https://www.youtube.com/embed/${image.external_id}?autoplay=1&showinfo=0`,
-        renderItem: renderVideo,
-      })
-    }
-    return item
-  })
+    let items = images.map((image) => {
+      let src = image.src || image.preview_image.src
+      let item = {
+        original: src,
+        thumbnail: src,
+        originalHeight: '100%',
+        originalWidth: '100%',
+        alt: image.alt,
+      }
+      if (image.media_type === 'external_video') {
+        Object.assign(item, {
+          embedUrl: `https://www.youtube.com/embed/${image.external_id}?autoplay=1&showinfo=0`,
+          renderItem: renderVideo,
+        })
+      }
+      return item
+    })
 
-  return (
-    <div ref={ref} {...rest}>
-      <style>
-        {`
+    return (
+      <div ref={ref} {...rest}>
+        <style>
+          {`
         iframe {
           width: 100%;
           height: 100%;
@@ -403,36 +406,40 @@ let ProductImage = forwardRef<HTMLDivElement, TODO>((props, ref) => {
 }
         
         `}
-      </style>
-      {ssrMode ? (
-        <img
-          src={`{{ product_${productId}.featured_image }}`}
-          alt="featured image"
-        />
-      ) : (
-        <ImageGallery
-          items={items}
-          startIndex={startIndex}
-          showBullets
-          showIndex
-          showThumbnails={showThumbnail}
-        />
-      )}
-    </div>
-  )
-})
+        </style>
+        {ssrMode ? (
+          <img
+            src={`{{ product_${productId}.featured_image }}`}
+            alt="featured image"
+          />
+        ) : (
+          <ImageGallery
+            items={items}
+            startIndex={startIndex}
+            showBullets={showBullets}
+            showThumbnails={showThumbnails}
+            thumbnailPosition={thumbnailPosition}
+          />
+        )}
+      </div>
+    )
+  }
+)
 
-ProductImage.defaultProps = {
-  showThumbnail: false,
-  css: {
-    '@desktop': {
-      img: {
-        width: '100%',
-        height: '100%',
-        objectFit: 'contain',
-      },
+export let css = {
+  '@desktop': {
+    img: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'contain',
     },
   },
+}
+
+ProductImage.defaultProps = {
+  showThumbnails: false,
+  thumbnailPosition: 'bottom',
+  showBullets: true,
 }
 
 export default ProductImage
