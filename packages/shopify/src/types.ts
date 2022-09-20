@@ -83,7 +83,6 @@ export type ProductContextProps = {
   productId?: string | number
   formId?: string
   variantId: number
-  variantPosition: number
   onChangeVariant: (id: number) => void
 }
 
