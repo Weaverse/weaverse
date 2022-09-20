@@ -13,7 +13,6 @@ let ProductImage = forwardRef<HTMLDivElement, ProductImageProps>(
     let { ssrMode } = weaverseContext
     let [startIndex, setStartIndex] = useState(0)
     let images = product?.media || product?.images || []
-
     if (!productId || !images.length) {
       return null
     }
@@ -25,8 +24,11 @@ let ProductImage = forwardRef<HTMLDivElement, ProductImageProps>(
     useEffect(() => {
       let variants = product?.variants || []
       let variant = variants.find((variant) => variant.id === variantId)
-      let imageId = variant?.image_id || variant?.featured_media.id
-      let imageIndex = images.findIndex((img) => img.id === imageId)
+      let imageId = variant?.image_id || variant?.featured_media?.id
+      let imageIndex = Math.max(
+        images.findIndex((img) => img.id === imageId),
+        0
+      )
       if (imageIndex !== -1 && imageIndex !== startIndex) {
         setStartIndex(imageIndex)
       }
@@ -124,10 +126,17 @@ export let permanentCss = {
       position: 'relative',
       lineHeight: 0,
       top: '0',
-      display: 'flex',
-      flexDirection: 'column',
+      '&.bottom, &.top': {
+        display: 'flex',
+        flexDirection: 'column',
+      },
       '.image-gallery-slide': {
         '.image-gallery-image': { maxHeight: 'calc(100vh - 80px)' },
+      },
+      '&.left, &.right': {
+        '.image-gallery-slide': {
+          '.image-gallery-image': { maxHeight: '100vh' },
+        },
       },
     },
     '.image-gallery': {
@@ -206,34 +215,25 @@ export let permanentCss = {
       '.image-gallery-content': { top: '50%', transform: 'translateY(-50%)' },
     },
     '.image-gallery-slide-wrapper': {
-      height: '0',
-      flexGrow: 7,
+      '&.bottom, &.top': {
+        height: 0,
+        flexGrow: 7,
+      },
       position: 'relative',
+      '&.left, &.right': {
+        display: 'inline-block',
+        width: 'calc(100% - 110px)',
+        height: '100%',
+      },
     },
     '.image-gallery-thumbnails-wrapper': {
-      height: '0',
-      flexGrow: 3,
+      '&.bottom, &.top': {
+        height: 0,
+        flexGrow: 3,
+      },
       position: 'relative',
     },
     '.image-gallery-content.fullscreen': { background: '#000' },
-    '.image-gallery-content.left': {
-      '.image-gallery-slide': {
-        '.image-gallery-image': { maxHeight: '100vh' },
-      },
-    },
-    '.image-gallery-content.right': {
-      '.image-gallery-slide': {
-        '.image-gallery-image': { maxHeight: '100vh' },
-      },
-    },
-    '.image-gallery-slide-wrapper.left': {
-      display: 'inline-block',
-      width: 'calc(100% - 110px)',
-    },
-    '.image-gallery-slide-wrapper.right': {
-      display: 'inline-block',
-      width: 'calc(100% - 110px)',
-    },
     '.image-gallery-slide-wrapper.image-gallery-rtl': { direction: 'rtl' },
     '.image-gallery-slide.center': { position: 'relative' },
     '.image-gallery-bullets': {
