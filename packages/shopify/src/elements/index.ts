@@ -10,21 +10,12 @@ import * as ProductImage from './product/image'
 import * as ProductContent from './product/content'
 import * as ProductQuantity from './product/quantity'
 import * as CustomHTML from './custom-html'
+import * as ProductList from '~/elements/product-list'
 
 let elements: ElementsMap = {
   ProductBox: {
     Component: ProductBox.default,
     type: 'product-box',
-    // schema: {
-    //   title: 'Product Details',
-    //   parentType: 'layout',
-    //   type: 'ProductBox',
-    //   flags: {
-    //     draggable: true,
-    //     resizable: true,
-    //     sortable: true,
-    //   },
-    // },
   },
   ProductContent: {
     Component: ProductContent.default,
@@ -34,11 +25,6 @@ let elements: ElementsMap = {
     Component: ProductTitle.default,
     type: 'product-title',
     defaultCss: ProductTitle.css,
-    // schema: {
-    //   title: 'Product Title',
-    //   parentType: 'layout', // TODO
-    //   type: 'ProductTitle',
-    // },
   },
   ProductDescription: {
     Component: ProductDescription.default,
@@ -67,6 +53,10 @@ let elements: ElementsMap = {
     defaultCss: ProductImage.css,
     permanentCss: ProductImage.permanentCss,
   },
+  ProductList: {
+    Component: ProductList.default,
+    type: 'product-list',
+  },
   Form: {
     Component: Form.default,
     type: 'form',
@@ -74,13 +64,7 @@ let elements: ElementsMap = {
   CustomHTML: {
     Component: CustomHTML.default,
     type: 'custom.html',
-    defaultCss: {
-      '@desktop': {
-        '& > *': {
-          pointerEvents: 'var(--pointer-events, unset)',
-        },
-      },
-    },
+    defaultCss: CustomHTML.css,
   },
 }
 export default elements

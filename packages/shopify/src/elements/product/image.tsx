@@ -1,4 +1,5 @@
 import React, { forwardRef, useContext, useEffect, useState } from 'react'
+import type { ElementCSS} from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
 import { ProductContext } from './context'
 import IMG from 'react-image-gallery'
@@ -73,7 +74,15 @@ let ProductImage = forwardRef<HTMLDivElement, ProductImageProps>(
   }
 )
 
-export let css = {
+ProductImage.defaultProps = {
+  showThumbnails: false,
+  thumbnailPosition: 'bottom',
+  showBullets: true,
+}
+
+export default ProductImage
+
+export let css: ElementCSS = {
   '@desktop': {
     img: {
       width: '100%',
@@ -82,14 +91,6 @@ export let css = {
     },
   },
 }
-
-ProductImage.defaultProps = {
-  showThumbnails: false,
-  thumbnailPosition: 'bottom',
-  showBullets: true,
-}
-
-export default ProductImage
 
 export let permanentCss = {
   '@desktop': {
