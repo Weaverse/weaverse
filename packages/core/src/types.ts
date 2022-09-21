@@ -108,12 +108,12 @@ export interface ElementInspector {
 }
 
 export type AdvancedGroup = {
-  type: AdvancedInput
+  groupType: AdvancedInput
 }
 
 export type BasicGroup = {
-  type: "basic"
-  label: string
+  groupType: "basic"
+  groupHeader: string
   inputs: BasicInput[]
 }
 
@@ -175,6 +175,5 @@ declare global {
   interface Window {
     WeaverseStudioBridge: TODO
     weaverseShopifyProducts: TODO
-    weaverseGlobalSettings: TODO
   }
 }

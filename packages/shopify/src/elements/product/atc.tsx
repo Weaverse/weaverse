@@ -13,8 +13,7 @@ let ProductAtc = forwardRef<HTMLDivElement, ProductAtcProps>((props, ref) => {
     goToCart,
     ...rest
   } = props
-  let { productId, product, variantPosition, formId } =
-    useContext(ProductContext)
+  let { productId, product, variantId, formId } = useContext(ProductContext)
   let weaverseContext = useContext(WeaverseContext)
   let [status, setStatus] = useState('')
   let { ssrMode } = weaverseContext
@@ -61,7 +60,11 @@ let ProductAtc = forwardRef<HTMLDivElement, ProductAtcProps>((props, ref) => {
       : status === 'added'
       ? addedText
       : buttonText
-  let variant = product.variants[variantPosition]
+  let variantIndex = Math.max(
+    product.variants.findIndex((v) => v.id === variantId),
+    0
+  )
+  let variant = product.variants[variantIndex]
   let isSoldOut = (variant?.inventory_quantity || 0) <= 0
   return (
     <div ref={ref} {...rest}>
