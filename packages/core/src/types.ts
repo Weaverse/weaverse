@@ -2,8 +2,6 @@ import type * as Stitches from "@stitches/core"
 import type { ForwardRefExoticComponent, ReactElement } from "react"
 import type { stichesUtils } from "./utils"
 
-export type TODO = any
-
 // Project types
 export interface ProjectDataType {
   items: ElementData[]
@@ -24,7 +22,7 @@ export interface InitializeData {
   studioUrl?: string
 }
 
-export type BreakPoints = {
+export interface BreakPoints {
   mobile: string
   desktop: string
 }
@@ -61,7 +59,6 @@ export interface ElementCatalog {
 
 export type FlagType = "draggable" | "resizable" | "sortable" | "droppable" | "deletable" | "duplicable"
 export type ElementFlags = Partial<Record<FlagType, boolean>>
-export type ToolbarAction = "duplicate" | "delete" | "copy-styles" | "paste-styles"
 
 export interface ChildElement {
   label: string
@@ -72,7 +69,7 @@ export type GridSize = {
   rowSpan: number
   colSpan: number
 }
-
+export type ToolbarAction = "duplicate" | "delete" | "copy-styles" | "paste-styles"
 export interface ElementSchema {
   title: string
   type: string
@@ -107,24 +104,27 @@ export interface ElementInspector {
   styles?: (AdvancedGroup | BasicGroup)[]
 }
 
-export type AdvancedGroup = {
-  groupType: AdvancedInput
+export interface AdvancedGroup {
+  groupType: AdvancedGroupType
 }
 
-export type BasicGroup = {
+export interface BasicGroup {
   groupType: "basic"
   groupHeader: string
   inputs: BasicInput[]
 }
 
-export type AdvancedInput =
+export type AdvancedGroupType =
   // Styles
-  "border" | "alignment" | "background" | "dimensions" | "spacing" | "visibility"
+  "border" | "alignment" | "background" | "dimensions" | "spacing" | "typography" | "visibility"
 
 export interface BasicInput {
   type: InputType
   label: string
-  name: string // binding's name
+  /**
+   * The key of the value in the element data or css
+   */
+  name: string
   defaultValue?: string
   placeholder?: string
   helpText?: string
@@ -173,7 +173,7 @@ export type InputType =
 
 declare global {
   interface Window {
-    WeaverseStudioBridge: TODO
-    weaverseShopifyProducts: TODO
+    WeaverseStudioBridge: any
+    weaverseShopifyProducts: any
   }
 }
