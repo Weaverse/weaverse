@@ -1,5 +1,5 @@
 import React, { forwardRef, useContext, useEffect, useState } from 'react'
-import type { ElementCSS} from '@weaverse/react'
+import type { ElementCSS } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
 import { ProductContext } from './context'
 import IMG from 'react-image-gallery'
@@ -8,7 +8,15 @@ import type { ProductImageProps } from '~/types'
 let ImageGallery = IMG.default
 let ProductImage = forwardRef<HTMLDivElement, ProductImageProps>(
   (props, ref) => {
-    let { showThumbnails, thumbnailPosition, showBullets, ...rest } = props
+    let {
+      showThumbnails,
+      thumbnailPosition,
+      showBullets,
+      showFullscreenButton,
+      showPlayButton,
+      showNav,
+      ...rest
+    } = props
     let { product, productId, variantId } = useContext(ProductContext)
     let weaverseContext = useContext(WeaverseContext)
     let { ssrMode } = weaverseContext
@@ -67,6 +75,10 @@ let ProductImage = forwardRef<HTMLDivElement, ProductImageProps>(
             showBullets={showBullets}
             showThumbnails={showThumbnails}
             thumbnailPosition={thumbnailPosition}
+            showFullscreenButton={showFullscreenButton}
+            showPlayButton={showPlayButton}
+            showNav={showNav}
+            disableThumbnailScroll={true}
           />
         )}
       </div>
@@ -77,7 +89,10 @@ let ProductImage = forwardRef<HTMLDivElement, ProductImageProps>(
 ProductImage.defaultProps = {
   showThumbnails: false,
   thumbnailPosition: 'bottom',
-  showBullets: true,
+  showBullets: false,
+  showFullscreenButton: false,
+  showPlayButton: false,
+  showNav: false,
 }
 
 export default ProductImage
@@ -96,7 +111,7 @@ export let permanentCss = {
   '@desktop': {
     iframe: { width: '100%', height: '100%' },
     '.image-gallery-slide': {
-      height: '100%',
+      height: 'var(--container-height, 100%)',
       left: '0',
       position: 'absolute',
       top: '0',
@@ -114,16 +129,16 @@ export let permanentCss = {
       },
     },
     '.image-gallery-slides': {
-      height: '100%',
+      height: 'var(--container-height, 100%)',
       lineHeight: 0,
       overflow: 'hidden',
       position: 'relative',
       whiteSpace: 'nowrap',
       textAlign: 'center',
     },
-    '.image-gallery-swipe': { height: '100%' },
+    '.image-gallery-swipe': { height: 'var(--container-height, 100%)' },
     '.image-gallery-content': {
-      height: '100%',
+      height: 'var(--container-height, 100%)',
       position: 'relative',
       lineHeight: 0,
       top: '0',
@@ -141,7 +156,7 @@ export let permanentCss = {
       },
     },
     '.image-gallery': {
-      height: '100%',
+      height: 'var(--container-height, 100%)',
       WebkitUserSelect: 'none',
       MozUserSelect: 'none',
       msUserSelect: 'none',
@@ -217,7 +232,7 @@ export let permanentCss = {
     },
     '.image-gallery-slide-wrapper': {
       '&.bottom, &.top': {
-        height: 0,
+        height: 'var(--container-height, 0px)',
         flexGrow: 7,
       },
       position: 'relative',

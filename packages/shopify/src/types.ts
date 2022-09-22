@@ -81,9 +81,19 @@ export type Product = {
 export type ProductContextProps = {
   product?: Product
   productId?: string | number
-  formId?: string
+  formId: string
   variantId: number
   onChangeVariant: (id: number) => void
+}
+
+export type ProductListContextProps = {
+  productId?: string | number
+}
+
+export interface ProductListProps extends WeaverseElementProps {
+  collectionId: string | number
+  rows: number
+  itemsPerRow: number
 }
 
 export interface ProductBoxProps extends WeaverseElementProps {
@@ -101,6 +111,9 @@ export interface ProductImageProps extends WeaverseElementProps {
   showThumbnails: boolean
   thumbnailPosition: 'top' | 'right' | 'bottom' | 'left' | undefined
   showBullets: boolean
+  showFullscreenButton: boolean
+  showPlayButton: boolean
+  showNav: boolean
 }
 
 export interface ProductAtcProps extends WeaverseElementProps {

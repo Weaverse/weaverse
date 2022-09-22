@@ -3,6 +3,8 @@ import { weaverseShopifyStoreData } from '../context'
 
 export let Swatch = (props: any) => {
   let { option, value: defaultValue, handleOptionChange } = props
+  return <div>{option.name}</div>
+  // 9779 todo get swatch and presets by Proxy
   let { swatches, presets } = weaverseShopifyStoreData
   let swatch = swatches.find((sw: any) => sw.name === option.name)
   let { colors, images } = presets

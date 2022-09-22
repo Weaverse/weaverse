@@ -1,9 +1,15 @@
-import React, { forwardRef, useId, useState } from 'react'
-import { ProductProvider, weaverseShopifyProducts } from './context'
+import React, { forwardRef, useContext, useId, useState } from 'react'
+import {
+  ProductListContext,
+  ProductProvider,
+  weaverseShopifyProducts,
+} from './context'
 import type { ProductBoxProps } from '~/types'
 
 let ProductBox = forwardRef<HTMLDivElement, ProductBoxProps>((props, ref) => {
-  let { children, productId, productHandle, optionStyles, ...rest } = props
+  let { children, productId: pId, productHandle, optionStyles, ...rest } = props
+  let { productId: productAutoId } = useContext(ProductListContext)
+  let productId = productAutoId || pId
   let product = weaverseShopifyProducts[productId]
   let formId = useId()
   let [variantId, onChangeVariant] = useState(product?.variants[0].id || '')
@@ -31,9 +37,6 @@ let ProductBox = forwardRef<HTMLDivElement, ProductBoxProps>((props, ref) => {
 ProductBox.defaultProps = {
   // productId: 7176137277624,
   // productHandle: 'adidas-kids-stan-smith',
-  css: {
-    '@desktop': {},
-  },
 }
 
 export default ProductBox

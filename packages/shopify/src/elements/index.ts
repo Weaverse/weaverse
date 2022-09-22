@@ -56,6 +56,7 @@ let elements: ElementsMap = {
   ProductList: {
     Component: ProductList.default,
     type: 'product-list',
+    permanentCss: ProductList.permanentCss,
   },
   Form: {
     Component: Form.default,
