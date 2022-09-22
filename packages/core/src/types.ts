@@ -139,6 +139,10 @@ export interface BasicInput {
   max?: number
   step?: number
   /**
+   * For `sortable` input
+   */
+  visibleType?: boolean
+  /**
    * Only display if condition matches.
    *
    * Format: `bindingName.conditionalOperator.value`

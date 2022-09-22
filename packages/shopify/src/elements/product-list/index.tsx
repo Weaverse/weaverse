@@ -6,13 +6,14 @@ import {
 import type { ProductListProps } from '~/types'
 
 let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
-  let { collectionId, rows, itemsPerRow, children, ...rest } = props
+  let { collectionId, rows, itemsPerRow, containerHeight, children, ...rest } =
+    props
   let productIds = weaverseShopifyProductLists[collectionId || 'all'] || []
   return (
     <div
       ref={ref}
       {...rest}
-      style={{ ['--container-height' as string]: 'auto' }}
+      style={{ ['--container-height' as string]: containerHeight }}
     >
       {productIds.length
         ? productIds.slice(0, rows * itemsPerRow).map((productId: number) => (
@@ -36,6 +37,7 @@ ProductList.defaultProps = {
   collectionId: '',
   rows: 1,
   itemsPerRow: 4,
+  containerHeight: 'auto',
 }
 
 export let permanentCss = {
@@ -43,7 +45,7 @@ export let permanentCss = {
     display: 'grid',
     gridTemplateColumns: 'repeat(4, 1fr)',
     gap: 8,
-    '& [data-wv-type]': {
+    '& [data-wv-type]:not([data-wv-type="product-box"])': {
       textAlign: 'center',
       pointerEvents: 'none',
     },

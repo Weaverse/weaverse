@@ -94,6 +94,7 @@ export interface ProductListProps extends WeaverseElementProps {
   collectionId: string | number
   rows: number
   itemsPerRow: number
+  containerHeight: string
 }
 
 export interface ProductBoxProps extends WeaverseElementProps {
