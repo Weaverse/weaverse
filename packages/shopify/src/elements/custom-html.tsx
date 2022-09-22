@@ -1,7 +1,6 @@
 import React, { forwardRef, useContext } from 'react'
-import type { WeaverseElementProps } from '@weaverse/react'
-import { WeaverseContext } from '@weaverse/react'
-import { SharedComponents } from '@weaverse/react'
+import type { ElementCSS, WeaverseElementProps } from '@weaverse/react'
+import { SharedComponents, WeaverseContext } from '@weaverse/react'
 
 let Placeholder = SharedComponents.Placeholder
 
@@ -35,6 +34,14 @@ export const CustomHTML = forwardRef<HTMLDivElement, CustomHTMLProps>(
     )
   }
 )
+
+export let css: ElementCSS = {
+  '@desktop': {
+    '& > *': {
+      pointerEvents: 'var(--pointer-events, unset)',
+    },
+  },
+}
 
 CustomHTML.defaultProps = {
   content: '',
