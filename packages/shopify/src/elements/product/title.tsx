@@ -1,5 +1,5 @@
 import React, { forwardRef, useContext } from 'react'
-import type { ElementCSS} from '@weaverse/react'
+import type { ElementCSS } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
 import { ProductContext } from './context'
 import type { ProductTitleProps } from '~/types'
@@ -27,7 +27,7 @@ let ProductTitle = forwardRef<HTMLElement, ProductTitleProps>((props, ref) => {
 
 export let css: ElementCSS = {
   '@desktop': {
-    fontSize: 32,
+    fontSize: 24,
     lineHeight: '48px',
     margin: 0,
     a: {
