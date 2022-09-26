@@ -4,20 +4,21 @@ import {
   weaverseShopifyArticles,
   BlogContext,
 } from '../context'
-import type { TODO } from '@weaverse/core'
+import type { ElementCSS, TODO } from '@weaverse/core'
 
 let ArticleBox = forwardRef<HTMLDivElement, TODO>((props, ref) => {
   let { children, articleId: aId, articleHandle, optionStyles, ...rest } = props
-  let { articleId: articleAutoId } = useContext(BlogContext)
+  let { articleId: articleAutoId, blogHandle } = useContext(BlogContext)
   let articleId = articleAutoId || aId
   let article = weaverseShopifyArticles[articleId]
   return (
-    <div {...rest} ref={ref}>
+    <div {...rest} ref={ref} key={articleId}>
       {articleId ? (
         <ArticleContext.Provider
           value={{
             article,
             articleId,
+            blogHandle,
           }}
         >
           {article && children}
@@ -28,6 +29,10 @@ let ArticleBox = forwardRef<HTMLDivElement, TODO>((props, ref) => {
     </div>
   )
 })
+
+export let css: ElementCSS = {
+  '@desktop': {},
+}
 
 ArticleBox.defaultProps = {
   // articleId: 7176137277624,
