@@ -11,6 +11,10 @@ import * as ProductContent from './product/content'
 import * as ProductQuantity from './product/quantity'
 import * as CustomHTML from './custom-html'
 import * as ProductList from '~/elements/product-list'
+import * as ArticleList from '~/elements/article/list'
+import * as ArticleBox from '~/elements/article/box'
+import * as ArticleTitle from '~/elements/article/title'
+import * as ArticleImage from '~/elements/article/image'
 
 let elements: ElementsMap = {
   ProductBox: {
@@ -57,6 +61,22 @@ let elements: ElementsMap = {
     Component: ProductList.default,
     type: 'product-list',
     permanentCss: ProductList.permanentCss,
+  },
+  ArticleList: {
+    Component: ArticleList.default,
+    type: 'article-list',
+  },
+  ArticleBox: {
+    Component: ArticleBox.default,
+    type: 'article-box',
+  },
+  ArticleTitle: {
+    Component: ArticleTitle.default,
+    type: 'article-title',
+  },
+  ArticleImage: {
+    Component: ArticleImage.default,
+    type: 'article-image',
   },
   Form: {
     Component: Form.default,
