@@ -1,7 +1,7 @@
 import React, { forwardRef, useContext } from 'react'
 import type { TODO } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
-import { ProductContext, weaverseShopifyStoreData } from './context'
+import { ProductContext, weaverseShopifyStoreData } from '../context'
 
 function formatCurrency(price: string | undefined) {
   if (typeof price === 'undefined') return price

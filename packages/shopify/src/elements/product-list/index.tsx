@@ -1,8 +1,5 @@
 import React, { forwardRef } from 'react'
-import {
-  ProductListProvider,
-  weaverseShopifyProductLists,
-} from '../product/context'
+import { ProductListContext, weaverseShopifyProductLists } from '../context'
 import type { ProductListProps } from '~/types'
 
 let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
@@ -25,14 +22,14 @@ let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
     <div ref={ref} {...rest} style={styles}>
       {productIds.length
         ? productIds.slice(0, productNumber).map((productId: number) => (
-            <ProductListProvider
+            <ProductListContext.Provider
               key={productId}
               value={{
                 productId,
               }}
             >
               {children}
-            </ProductListProvider>
+            </ProductListContext.Provider>
           ))
         : 'Select collection'}
     </div>

@@ -1,9 +1,9 @@
 import React, { forwardRef, useContext, useId, useState } from 'react'
 import {
+  ProductContext,
   ProductListContext,
-  ProductProvider,
   weaverseShopifyProducts,
-} from './context'
+} from '../context'
 import type { ProductBoxProps } from '~/types'
 
 let ProductBox = forwardRef<HTMLDivElement, ProductBoxProps>((props, ref) => {
@@ -16,7 +16,7 @@ let ProductBox = forwardRef<HTMLDivElement, ProductBoxProps>((props, ref) => {
   return (
     <div {...rest} ref={ref}>
       {productId ? (
-        <ProductProvider
+        <ProductContext.Provider
           value={{
             product,
             productId,
@@ -26,7 +26,7 @@ let ProductBox = forwardRef<HTMLDivElement, ProductBoxProps>((props, ref) => {
           }}
         >
           {product && children}
-        </ProductProvider>
+        </ProductContext.Provider>
       ) : (
         'Select a product and start editing.'
       )}
