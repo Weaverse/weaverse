@@ -1,8 +1,8 @@
 import React, { forwardRef, useContext } from 'react'
 import type { TODO } from '@weaverse/react'
-import { ProductContext } from '../context'
 import { WeaverseContext } from '@weaverse/react'
 import { Swatch } from './swatch'
+import { ProductContext } from '~/elements/context'
 
 let ProductVariant = forwardRef<HTMLDivElement, TODO>((props, ref) => {
   let { variantType, ...rest } = props

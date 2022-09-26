@@ -1,30 +1,35 @@
 import React, { forwardRef } from 'react'
-import {
-  ProductListProvider,
-  weaverseShopifyProductLists,
-} from '../product/context'
+import { ProductListContext, weaverseShopifyProductLists } from '../context'
 import type { ProductListProps } from '~/types'
 
 let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
-  let { collectionId, rows, itemsPerRow, containerHeight, children, ...rest } =
-    props
+  let {
+    collectionId,
+    productNumber,
+    rows,
+    itemsPerSlide,
+    containerHeight,
+    children,
+    ...rest
+  } = props
   let productIds = weaverseShopifyProductLists[collectionId || 'all'] || []
+  let styles = {
+    ['--container-height']: containerHeight,
+    ['--items-per-row']: itemsPerSlide,
+  } as React.CSSProperties
+
   return (
-    <div
-      ref={ref}
-      {...rest}
-      style={{ ['--container-height' as string]: containerHeight }}
-    >
+    <div ref={ref} {...rest} style={styles}>
       {productIds.length
-        ? productIds.slice(0, rows * itemsPerRow).map((productId: number) => (
-            <ProductListProvider
+        ? productIds.slice(0, productNumber).map((productId: number) => (
+            <ProductListContext.Provider
               key={productId}
               value={{
                 productId,
               }}
             >
               {children}
-            </ProductListProvider>
+            </ProductListContext.Provider>
           ))
         : 'Select collection'}
     </div>
@@ -34,20 +39,20 @@ let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
 export default ProductList
 
 ProductList.defaultProps = {
-  collectionId: '',
+  collectionId: '291152593080',
+  productNumber: 4,
   rows: 1,
-  itemsPerRow: 4,
+  itemsPerSlide: 4,
   containerHeight: 'auto',
 }
 
 export let permanentCss = {
   '@desktop': {
     display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
+    gridTemplateColumns: 'repeat(var(--items-per-row), 1fr)',
     gap: 8,
     '& [data-wv-type]:not([data-wv-type="product-box"])': {
       textAlign: 'center',
-      pointerEvents: 'none',
     },
     '& [data-wv-type="product-box"]': {
       display: 'flex',

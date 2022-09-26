@@ -1,7 +1,7 @@
 import React, { forwardRef, useContext, useEffect, useState } from 'react'
 import type { ElementCSS } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
-import { ProductContext } from './context'
+import { ProductContext } from '../context'
 import IMG from 'react-image-gallery'
 import type { ProductImageProps } from '~/types'
 // @ts-ignore

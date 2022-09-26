@@ -1,7 +1,7 @@
 import React, { forwardRef, useContext, useState } from 'react'
 import { WeaverseContext } from '@weaverse/react'
-import { ProductContext } from './context'
 import type { ProductAtcProps } from '~/types'
+import { ProductContext } from '~/elements/context'
 
 let ProductAtc = forwardRef<HTMLDivElement, ProductAtcProps>((props, ref) => {
   let {
