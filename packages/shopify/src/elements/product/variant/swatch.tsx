@@ -1,5 +1,5 @@
 import React from 'react'
-import { weaverseShopifyStoreData } from '../context'
+import { weaverseShopifyStoreData } from '~/elements/context'
 
 export let Swatch = (props: any) => {
   let { option, value: defaultValue, handleOptionChange } = props

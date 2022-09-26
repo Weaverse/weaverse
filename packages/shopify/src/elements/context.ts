@@ -52,3 +52,13 @@ export let weaverseShopifyArticles = new Proxy(
     },
   }
 )
+export let weaverseShopifyBlogs = new Proxy(
+  // @ts-ignore
+  globalThis?.weaverseShopifyBlogs || {},
+  {
+    get: (target, name) => {
+      // @ts-ignore
+      return target?.[name] || globalThis?.weaverseShopifyBlogs?.[name]
+    },
+  }
+)

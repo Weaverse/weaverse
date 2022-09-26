@@ -1,7 +1,7 @@
 import React, { forwardRef, useContext, useState } from 'react'
 import type { TODO } from '@weaverse/react'
-import { ProductContext } from './context'
 import { WeaverseContext } from '@weaverse/react'
+import { ProductContext } from '~/elements/context'
 
 let ProductQuantity = forwardRef<HTMLDivElement, TODO>((props, ref) => {
   let { ...rest } = props
