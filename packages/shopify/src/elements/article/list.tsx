@@ -3,13 +3,17 @@ import React, { forwardRef } from 'react'
 import { BlogContext, weaverseShopifyBlogs } from '../context'
 
 let ArticleList = forwardRef<HTMLDivElement, TODO>((props, ref) => {
-  let { blogId, blogHandle, children, ...rest } = props
+  let { blogId, blogHandle, itemsPerSlide, articleNumber, children, ...rest } =
+    props
   let articleIds = weaverseShopifyBlogs[blogId]
+  let styles = {
+    ['--items-per-slide']: itemsPerSlide,
+  } as React.CSSProperties
   return (
-    <div ref={ref} {...props}>
+    <div ref={ref} {...props} style={styles}>
       {!articleIds
         ? `Select blog`
-        : articleIds.map((articleId: number) => {
+        : articleIds.slice(0, articleNumber).map((articleId: number) => {
             return (
               <BlogContext.Provider
                 key={articleId}
@@ -33,13 +37,22 @@ export let css: ElementCSS = {
 ArticleList.defaultProps = {
   blogId: 84781203640,
   blogHandle: 'news',
+  articleNumber: 4,
+  rows: 1,
+  itemsPerSlide: 4,
 }
 
 export let permanentCss: ElementCSS = {
   '@desktop': {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-    gridGap: '1rem',
+    gridTemplateColumns: 'repeat(var(--items-per-slide), 1fr)',
+    gap: 8,
+    '& [data-wv-type]:not(:last-child)': {
+      marginBottom: 8,
+    },
+    '& [data-wv-type="article-title"]': {
+      flex: 1,
+    },
   },
 }
 

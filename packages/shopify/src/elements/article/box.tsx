@@ -34,6 +34,10 @@ export let css: ElementCSS = {
   '@desktop': {},
 }
 
+export let permanentCss: ElementCSS = {
+  '@desktop': {},
+}
+
 ArticleBox.defaultProps = {
   // articleId: 7176137277624,
   // articleHandle: 'adidas-kids-stan-smith',
