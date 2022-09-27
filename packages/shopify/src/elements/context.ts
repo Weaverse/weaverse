@@ -62,3 +62,25 @@ export let weaverseShopifyBlogs = new Proxy(
     },
   }
 )
+
+export let weaverseSwatchesSettings = new Proxy(
+  // @ts-ignore
+  globalThis?.weaverseSwatchesSettings || [],
+  {
+    get: (target, name) => {
+      // @ts-ignore
+      return target?.[name] || globalThis?.weaverseSwatchesSettings?.[name]
+    },
+  }
+)
+
+export let weaversePresetsSettings = new Proxy(
+  // @ts-ignore
+  globalThis?.weaversePresetsSettings || {},
+  {
+    get: (target, name) => {
+      // @ts-ignore
+      return target?.[name] || globalThis?.weaversePresetsSettings?.[name]
+    },
+  }
+)

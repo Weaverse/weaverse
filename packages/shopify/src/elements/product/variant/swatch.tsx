@@ -1,20 +1,22 @@
 import React from 'react'
-import { weaverseShopifyStoreData } from '~/elements/context'
+import {
+  weaversePresetsSettings,
+  weaverseSwatchesSettings,
+} from '~/elements/context'
 
 export let Swatch = (props: any) => {
   let { option, value: defaultValue, handleOptionChange } = props
-  return <div>{option.name}</div>
-  // 9779 todo get swatch and presets by Proxy
-  let { swatches, presets } = weaverseShopifyStoreData
+  let swatches = weaverseSwatchesSettings || []
+  let presets = weaversePresetsSettings || {}
   let swatch = swatches.find((sw: any) => sw.name === option.name)
   let { colors, images } = presets
-  if (swatch.type) {
+  if (swatch?.type) {
     let defaultSrc = ''
     return (
       <div key={option.id}>
         <label className="swatch-label">
           <span className="option-display-name">
-            {swatch.displayName || option.name}:
+            {swatch?.displayName || option.name}:
           </span>
           <span className="selected-value">{defaultValue}</span>
         </label>
@@ -22,10 +24,10 @@ export let Swatch = (props: any) => {
           {option.values.map((val: any) => {
             // color
             let colorValue =
-              colors.find((c: any) => c.name === val)?.value || '#ddd'
+              colors?.find((c: any) => c.name === val)?.value || '#ddd'
             // image
             let imageSrc =
-              images.find((c: any) => c.name === val)?.value || defaultSrc
+              images?.find((c: any) => c.name === val)?.value || defaultSrc
             //
             let inputId = `${option.name}${val}`
             return (
@@ -61,14 +63,14 @@ export let Swatch = (props: any) => {
   }
   return (
     <div key={option.id}>
-      <label>{swatch.displayName || option.name}</label>
+      <label>{swatch?.displayName || option.name}</label>
       <select
         value={defaultValue}
         onChange={(e) => handleOptionChange(option.position, e.target.value)}
         name={option.name}
-        id={option.id.toString()}
+        id={option.id?.toString()}
       >
-        {option.values.map((val: any) => (
+        {option.values?.map((val: any) => (
           <option key={val} value={val}>
             {val}
           </option>
