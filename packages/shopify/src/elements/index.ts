@@ -16,6 +16,7 @@ import * as ArticleBox from '~/elements/article/box'
 import * as ArticleTitle from '~/elements/article/title'
 import * as ArticleContent from '~/elements/article/content'
 import * as ArticleImage from '~/elements/article/image'
+import * as ArticleMeta from '~/elements/article/meta'
 
 let elements: ElementsMap = {
   ProductBox: {
@@ -73,6 +74,7 @@ let elements: ElementsMap = {
     Component: ArticleBox.default,
     type: 'article-box',
     defaultCss: ArticleBox.css,
+    permanentCss: ArticleBox.permanentCss,
   },
   ArticleTitle: {
     Component: ArticleTitle.default,
@@ -84,11 +86,11 @@ let elements: ElementsMap = {
     type: 'article-content',
     defaultCss: ArticleContent.css,
   },
-  // ArticleMeta: {
-  //   Component: ArticleMeta.default,
-  //   type: 'article-meta',
-  //   defaultCss: ArticleMeta.css,
-  // },
+  ArticleMeta: {
+    Component: ArticleMeta.default,
+    type: 'article-meta',
+    defaultCss: ArticleMeta.css,
+  },
   ArticleImage: {
     Component: ArticleImage.default,
     type: 'article-image',

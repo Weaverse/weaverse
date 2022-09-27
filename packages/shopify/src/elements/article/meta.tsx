@@ -1,12 +1,33 @@
-import type { TODO } from '@weaverse/core'
-import React, { forwardRef } from 'react'
+import type { ElementCSS, TODO } from '@weaverse/core'
+import React, { forwardRef, useContext } from 'react'
+import { WeaverseContext } from '@weaverse/react'
+import { ArticleContext } from '~/elements/context'
 
 let ArticleMeta = forwardRef<HTMLDivElement, TODO>((props, ref) => {
+  let { ...rest } = props
+
+  let weaverseContext = useContext(WeaverseContext)
+  let { ssrMode } = weaverseContext
+  let { article, articleId } = useContext(ArticleContext)
+  let date = article?.published_at
+    ? new Date(article?.published_at)
+        .toDateString()
+        .split(' ')
+        .slice(1)
+        .join(' ')
+    : ''
+  let html = ssrMode
+    ? `by <b>{{ article_${articleId}.author }}</b> on <b>{{ article_${articleId}.published_at | date }}</b>`
+    : `by <b>${article?.author}</b> on <b>${date}</b>`
   return (
-    <div ref={ref} {...props}>
-      Article Meta
+    <div ref={ref} {...rest}>
+      <span dangerouslySetInnerHTML={{ __html: html }} />
     </div>
   )
 })
+
+export let css: ElementCSS = {
+  '@desktop': {},
+}
 
 export default ArticleMeta

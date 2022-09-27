@@ -24,8 +24,7 @@ let ArticleTitle = forwardRef<HTMLDivElement, TODO>((props, ref) => {
 
 export let css: ElementCSS = {
   '@desktop': {
-    fontSize: 24,
-    lineHeight: '48px',
+    fontSize: 20,
     margin: 0,
     a: {
       all: 'inherit',
@@ -35,7 +34,7 @@ export let css: ElementCSS = {
 }
 
 ArticleTitle.defaultProps = {
-  htmlTag: 'h2',
+  htmlTag: 'h3',
   linkArticle: true,
 }
 
