@@ -128,6 +128,63 @@ export interface ProductAtcProps extends WeaverseElementProps {
   goToCart: boolean
 }
 
+// Article
+export interface ArticleListProps extends WeaverseElementProps {
+  blogId: string | number
+  blogHandle?: string
+  itemsPerSlide: number
+  articleNumber: number
+}
+
+export interface ArticleBoxProps extends WeaverseElementProps {
+  articleId: number
+  articleHandle?: string
+}
+
+export interface ArticleTitleProps extends WeaverseElementProps {
+  htmlTag: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p'
+  linkArticle: boolean
+}
+
+export interface ArticleImageProps extends WeaverseElementProps {
+  linkArticle: boolean
+}
+
+// Collection
+interface IImage {
+  created_at: string
+  height: number
+  src: string
+  updated_at?: string
+  width: number
+  alt: string | null
+}
+
+interface Collection {
+  body_html: string
+  disjunctive: boolean
+  handle: string
+  id: number
+  image?: IImage
+  published_at: string
+  published_scope: string
+  // rules: ISmartCollectionRule[]
+  // sort_order: SmartCollectionSortOrder
+  template_suffix: string | null
+  title: string
+  updated_at: string
+}
+
+export interface CollectionBoxProps extends WeaverseElementProps {
+  collectionId: number
+  collectionHandle?: string
+}
+
+export type CollectionContextProps = {
+  collection: Collection
+  collectionId: string | number
+}
+
 // Form
 export interface FormElementProps extends WeaverseElementProps {
   formType: string

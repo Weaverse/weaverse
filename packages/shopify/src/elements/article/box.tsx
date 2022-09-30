@@ -4,10 +4,11 @@ import {
   weaverseShopifyArticles,
   BlogContext,
 } from '../context'
-import type { ElementCSS, TODO } from '@weaverse/core'
+import type { ElementCSS } from '@weaverse/core'
+import type { ArticleBoxProps } from '~/types'
 
-let ArticleBox = forwardRef<HTMLDivElement, TODO>((props, ref) => {
-  let { children, articleId: aId, articleHandle, optionStyles, ...rest } = props
+let ArticleBox = forwardRef<HTMLDivElement, ArticleBoxProps>((props, ref) => {
+  let { children, articleId: aId, articleHandle, ...rest } = props
   let { articleId: articleAutoId, blogHandle } = useContext(BlogContext)
   let articleId = articleAutoId || aId
   let article = weaverseShopifyArticles[articleId]

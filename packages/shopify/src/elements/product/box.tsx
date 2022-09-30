@@ -35,7 +35,7 @@ let ProductBox = forwardRef<HTMLDivElement, ProductBoxProps>((props, ref) => {
 })
 
 ProductBox.defaultProps = {
-  // productId: 7176137277624,
+  productId: 7176137277624,
   // productHandle: 'adidas-kids-stan-smith',
 }
 

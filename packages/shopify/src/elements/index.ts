@@ -14,9 +14,15 @@ import * as ProductList from '~/elements/product-list'
 import * as ArticleList from '~/elements/article/list'
 import * as ArticleBox from '~/elements/article/box'
 import * as ArticleTitle from '~/elements/article/title'
-import * as ArticleContent from '~/elements/article/content'
+import * as ArticleDescription from '~/elements/article/description'
 import * as ArticleImage from '~/elements/article/image'
 import * as ArticleMeta from '~/elements/article/meta'
+
+import * as CollectionList from '~/elements/collection/list'
+import * as CollectionBox from '~/elements/collection/box'
+import * as CollectionTitle from '~/elements/collection/title'
+import * as CollectionDescription from '~/elements/collection/description'
+import * as CollectionImage from '~/elements/collection/image'
 
 let elements: ElementsMap = {
   ProductBox: {
@@ -81,10 +87,10 @@ let elements: ElementsMap = {
     type: 'article-title',
     defaultCss: ArticleTitle.css,
   },
-  ArticleContent: {
-    Component: ArticleContent.default,
-    type: 'article-content',
-    defaultCss: ArticleContent.css,
+  ArticleDescription: {
+    Component: ArticleDescription.default,
+    type: 'article-description',
+    defaultCss: ArticleDescription.css,
   },
   ArticleMeta: {
     Component: ArticleMeta.default,
@@ -95,6 +101,33 @@ let elements: ElementsMap = {
     Component: ArticleImage.default,
     type: 'article-image',
     defaultCss: ArticleImage.css,
+  },
+  CollectionList: {
+    Component: CollectionList.default,
+    type: 'collection-list',
+    defaultCss: CollectionList.css,
+    permanentCss: CollectionList.permanentCss,
+  },
+  CollectionBox: {
+    Component: CollectionBox.default,
+    type: 'collection-box',
+    defaultCss: CollectionBox.css,
+    permanentCss: CollectionBox.permanentCss,
+  },
+  CollectionTitle: {
+    Component: CollectionTitle.default,
+    type: 'collection-title',
+    defaultCss: CollectionTitle.css,
+  },
+  CollectionDescription: {
+    Component: CollectionDescription.default,
+    type: 'collection-description',
+    defaultCss: CollectionDescription.css,
+  },
+  CollectionImage: {
+    Component: CollectionImage.default,
+    type: 'collection-image',
+    defaultCss: CollectionImage.css,
   },
   Form: {
     Component: Form.default,
