@@ -9,6 +9,7 @@ let ArticleTitle = forwardRef<HTMLDivElement, TODO>((props, ref) => {
   let weaverseContext = useContext(WeaverseContext)
   let { ssrMode } = weaverseContext
   let { article, articleId, blogHandle } = useContext(ArticleContext)
+  console.info('9779 article', article)
   let content = (
     <span>{ssrMode ? `{{ article_${articleId}.title }}` : article?.title}</span>
   )

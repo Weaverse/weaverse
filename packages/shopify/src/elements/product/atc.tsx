@@ -21,7 +21,8 @@ let ProductAtc = forwardRef<HTMLDivElement, ProductAtcProps>((props, ref) => {
     if (!goToCart) {
       // stay here action
       // @ts-ignore
-      let formElement = ref?.current as HTMLFormElement
+      let formElement = ref?.current.querySelector('form') as HTMLFormElement
+      console.info('9779 form', formElement)
       e.preventDefault()
       setStatus('adding')
       // @ts-ignore
@@ -65,7 +66,8 @@ let ProductAtc = forwardRef<HTMLDivElement, ProductAtcProps>((props, ref) => {
     0
   )
   let variant = product.variants[variantIndex]
-  let isSoldOut = (variant?.inventory_quantity || 0) <= 0
+  let isSoldOut = false
+  // let isSoldOut = (variant?.inventory_quantity || 0) <= 0
   return (
     <div ref={ref} {...rest}>
       <form
