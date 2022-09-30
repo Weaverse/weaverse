@@ -7,7 +7,6 @@ let CollectionTitle = forwardRef<HTMLDivElement, any>((props, ref) => {
   let { htmlTag, linkCollection, ...rest } = props
   let { ssrMode } = useContext(WeaverseContext)
   let { collection, collectionId } = useContext(CollectionContext)
-  console.info('9779  collection in title ', collection, props)
   let content = (
     <span>
       {ssrMode ? `{{ collection_${collectionId}.title }}` : collection?.title}
