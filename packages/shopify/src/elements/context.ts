@@ -1,10 +1,16 @@
 import React, { createContext } from 'react'
-import type { ProductContextProps, ProductListContextProps } from '~/types'
+import type {
+  CollectionContextProps,
+  ProductContextProps,
+  ProductListContextProps,
+} from '~/types'
 import type { TODO } from '@weaverse/core'
 export let ProductContext = createContext<ProductContextProps>({})
 export let ProductListContext = React.createContext<ProductListContextProps>({})
 export let ArticleContext = React.createContext<TODO>({})
 export let BlogContext = React.createContext<TODO>({})
+export let CollectionListContext = createContext<any>({})
+export let CollectionContext = createContext<any>({})
 /**
  * For fast access to `window.weaverseShopifyProducts` and server-side render
  * create a proxy version of `window.weaverseShopifyProduct`
@@ -16,6 +22,17 @@ export let weaverseShopifyProducts = new Proxy(
     get: (target, name) => {
       // @ts-ignore
       return target?.[name] || globalThis?.weaverseShopifyProducts?.[name]
+    },
+  }
+)
+
+export let weaverseShopifyCollections = new Proxy(
+  // @ts-ignore
+  globalThis?.weaverseShopifyCollections || {},
+  {
+    get: (target, name) => {
+      // @ts-ignore
+      return target?.[name] || globalThis?.weaverseShopifyCollections?.[name]
     },
   }
 )
