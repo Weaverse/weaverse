@@ -1,8 +1,9 @@
-import type { ElementCSS, TODO } from '@weaverse/core'
+import type { ElementCSS } from '@weaverse/core'
 import React, { forwardRef } from 'react'
 import { BlogContext, weaverseShopifyBlogs } from '../context'
+import type { ArticleListProps } from '~/types'
 
-let ArticleList = forwardRef<HTMLDivElement, TODO>((props, ref) => {
+let ArticleList = forwardRef<HTMLDivElement, ArticleListProps>((props, ref) => {
   let { blogId, blogHandle, itemsPerSlide, articleNumber, children, ...rest } =
     props
   let articleIds = weaverseShopifyBlogs[blogId]
@@ -38,7 +39,6 @@ ArticleList.defaultProps = {
   blogId: 84781203640,
   blogHandle: 'news',
   articleNumber: 4,
-  rows: 1,
   itemsPerSlide: 4,
 }
 

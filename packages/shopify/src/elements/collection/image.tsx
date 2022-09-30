@@ -5,7 +5,7 @@ import { CollectionContext } from '~/elements/context'
 let PLACEHOLDER_IMG =
   'https://ucarecdn.com/04c4766e-7ea7-4af5-9941-64f0c9ffa86b/placeholderimagesimage_large.webp'
 let CollectionImage = forwardRef<HTMLDivElement, any>((props, ref) => {
-  let { height, ...rest } = props
+  let { height, linkCollection, ...rest } = props
   let weaverseContext = useContext(WeaverseContext)
   let { ssrMode } = weaverseContext
   let { collection, collectionId } = useContext(CollectionContext)
@@ -13,15 +13,20 @@ let CollectionImage = forwardRef<HTMLDivElement, any>((props, ref) => {
   let styles = {
     ['--image-height']: height,
   }
+  let content = ssrMode ? (
+    <img
+      src={`{{ collection${collectionId}.image.src }}`}
+      alt={`{{ collection${collectionId}.image.alt }}`}
+    />
+  ) : (
+    <img src={src} alt={collection.image?.alt || ''} />
+  )
   return (
     <div ref={ref} {...rest} style={styles}>
-      {ssrMode ? (
-        <img
-          src={`{{ collection${collectionId}.image.src }}`}
-          alt={`{{ collection${collectionId}.image.alt }}`}
-        />
+      {linkCollection ? (
+        <a href={`/${collection.handle}`}>{content}</a>
       ) : (
-        <img src={src} alt={collection.image?.alt || ''} />
+        content
       )}
     </div>
   )

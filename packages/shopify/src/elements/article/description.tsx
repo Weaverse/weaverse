@@ -1,9 +1,9 @@
-import type { ElementCSS, TODO } from '@weaverse/core'
+import type { ElementCSS } from '@weaverse/core'
 import React, { forwardRef, useContext } from 'react'
 import { WeaverseContext } from '@weaverse/react'
 import { ArticleContext } from '~/elements/context'
 
-let ArticleDescription = forwardRef<HTMLDivElement, TODO>((props, ref) => {
+let ArticleDescription = forwardRef<HTMLDivElement>((props, ref) => {
   let { ...rest } = props
 
   let weaverseContext = useContext(WeaverseContext)

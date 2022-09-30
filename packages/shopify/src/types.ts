@@ -129,9 +129,25 @@ export interface ProductAtcProps extends WeaverseElementProps {
 }
 
 // Article
+export interface ArticleListProps extends WeaverseElementProps {
+  blogId: string | number
+  blogHandle?: string
+  itemsPerSlide: number
+  articleNumber: number
+}
+
 export interface ArticleBoxProps extends WeaverseElementProps {
   articleId: number
   articleHandle?: string
+}
+
+export interface ArticleTitleProps extends WeaverseElementProps {
+  htmlTag: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p'
+  linkArticle: boolean
+}
+
+export interface ArticleImageProps extends WeaverseElementProps {
+  linkArticle: boolean
 }
 
 // Collection
