@@ -11,6 +11,7 @@ export let ArticleContext = React.createContext<TODO>({})
 export let BlogContext = React.createContext<TODO>({})
 export let CollectionListContext = createContext<any>({})
 export let CollectionContext = createContext<CollectionContextProps>({})
+
 /**
  * For fast access to `window.weaverseShopifyProducts` and server-side render
  * create a proxy version of `window.weaverseShopifyProduct`
