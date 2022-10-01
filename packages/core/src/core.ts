@@ -111,7 +111,7 @@ export class Weaverse {
    * Weaverse base URL that can provide by user/developer. for local development, use localhost:3000
    * @type {string}
    */
-  appUrl: string = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://ss.weaverse.io"
+  appUrl: string = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://studio.weaverse.io"
   /**
    * Weaverse project key to access project data via API
    * @type {string}
@@ -259,7 +259,7 @@ export class Weaverse {
   }
 
   /**
-   * fetch data from Weaverse API (https://weaverse.io/api/v1/projects/:projectKey)
+   * fetch data from Weaverse API (https://weaverse.io/api/v1/project/:projectKey)
    * @param fetch {fetch} custom fetch function, pass in custom fetch function if you want to use your own fetch function
    * @param appUrl
    * @param projectKey
@@ -273,7 +273,7 @@ export class Weaverse {
     appUrl?: string
     projectKey?: string
   }) {
-    return fetch(appUrl + `/api/public/${projectKey}`)
+    return fetch(appUrl + `/api/public/project/${projectKey}`)
       .then((r: Response) => r.json())
       .catch(console.error)
   }
