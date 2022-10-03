@@ -110,6 +110,7 @@ export interface ProductTitleProps extends WeaverseElementProps {
 }
 
 export interface ProductImageProps extends WeaverseElementProps {
+  aspectRatio: string
   showThumbnails: boolean
   thumbnailPosition: 'top' | 'right' | 'bottom' | 'left' | undefined
   showBullets: boolean
@@ -148,6 +149,7 @@ export interface ArticleTitleProps extends WeaverseElementProps {
 
 export interface ArticleImageProps extends WeaverseElementProps {
   linkArticle: boolean
+  aspectRatio: string
 }
 
 // Collection

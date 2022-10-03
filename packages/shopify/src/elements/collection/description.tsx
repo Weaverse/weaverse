@@ -7,11 +7,9 @@ let CollectionDescription = forwardRef<HTMLDivElement>((props, ref) => {
   let { ...rest } = props
 
   let { ssrMode } = useContext(WeaverseContext)
-  let { collection, collectionId } = useContext(CollectionContext)
+  let { collection } = useContext(CollectionContext)
 
-  let html = ssrMode
-    ? `{{ collection_${collectionId}.description }}`
-    : collection?.body_html
+  let html = ssrMode ? `{{ wv_collection.description }}` : collection?.body_html
   return (
     <div ref={ref} {...rest}>
       <span dangerouslySetInnerHTML={{ __html: html }} />
@@ -22,6 +20,7 @@ let CollectionDescription = forwardRef<HTMLDivElement>((props, ref) => {
 export let css: ElementCSS = {
   '@desktop': {
     overflow: 'hidden',
+    display: 'none',
   },
 }
 

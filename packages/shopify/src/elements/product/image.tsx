@@ -9,6 +9,7 @@ let ImageGallery = IMG.default
 let ProductImage = forwardRef<HTMLDivElement, ProductImageProps>(
   (props, ref) => {
     let {
+      aspectRatio,
       showThumbnails,
       thumbnailPosition,
       showBullets,
@@ -60,14 +61,13 @@ let ProductImage = forwardRef<HTMLDivElement, ProductImageProps>(
       }
       return item
     })
-
+    let styles = {
+      ['--aspect-ratio']: aspectRatio,
+    } as React.CSSProperties
     return (
-      <div ref={ref} {...rest}>
+      <div ref={ref} {...rest} style={styles}>
         {ssrMode ? (
-          <img
-            src={`{{ product_${productId}.featured_image }}`}
-            alt="featured image"
-          />
+          `{% if wv_product.image %}{{ wv_product.featured_image  | image_url: width: 1500 | image_tag }} {% else %} {{ 'product-1' | placeholder_svg_tag }} {% endif %}`
         ) : (
           <ImageGallery
             items={items}
@@ -87,6 +87,7 @@ let ProductImage = forwardRef<HTMLDivElement, ProductImageProps>(
 )
 
 ProductImage.defaultProps = {
+  aspectRatio: '4/3',
   showThumbnails: false,
   thumbnailPosition: 'bottom',
   showBullets: false,
