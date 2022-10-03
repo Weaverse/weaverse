@@ -32,6 +32,6 @@
   "author": "Weaverse Team",
   "dependencies": {
     "@weaverse/react": "0.7.12",
-    "react-image-gallery": "^1.2.9"
+    "react-image-gallery": "^1.2.10"
   }
 }
