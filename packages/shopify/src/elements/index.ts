@@ -128,6 +128,7 @@ let elements: ElementsMap = {
     Component: CollectionImage.default,
     type: 'collection-image',
     defaultCss: CollectionImage.css,
+    permanentCss: CollectionImage.permanentCss,
   },
   Form: {
     Component: Form.default,

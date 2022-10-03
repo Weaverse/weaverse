@@ -6,14 +6,18 @@ import {
 } from '../context'
 import type { ElementCSS } from '@weaverse/core'
 import type { ArticleBoxProps } from '~/types'
+import { WeaverseContext } from '@weaverse/react'
 
 let ArticleBox = forwardRef<HTMLDivElement, ArticleBoxProps>((props, ref) => {
   let { children, articleId: aId, articleHandle, ...rest } = props
   let { articleId: articleAutoId, blogHandle } = useContext(BlogContext)
+  let { ssrMode } = useContext(WeaverseContext)
   let articleId = articleAutoId || aId
   let article = weaverseShopifyArticles[articleId]
+  let articleLiquid = `{% assign wv_article = article_${articleId} %}`
   return (
     <div {...rest} ref={ref} key={articleId}>
+      {ssrMode && articleLiquid}
       {articleId ? (
         <ArticleContext.Provider
           value={{

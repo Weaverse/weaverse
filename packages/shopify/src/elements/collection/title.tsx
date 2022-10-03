@@ -6,20 +6,24 @@ import type { ElementCSS } from '@weaverse/core'
 let CollectionTitle = forwardRef<HTMLDivElement, any>((props, ref) => {
   let { htmlTag, linkCollection, ...rest } = props
   let { ssrMode } = useContext(WeaverseContext)
-  let { collection, collectionId } = useContext(CollectionContext)
+  let { collection } = useContext(CollectionContext)
   let content = (
-    <span>
-      {ssrMode ? `{{ collection_${collectionId}.title }}` : collection?.title}
-    </span>
+    <span>{ssrMode ? `{{ wv_collection.title }}` : collection?.title}</span>
   )
   if (linkCollection) {
     content = (
-      <a href={`/${collection.handle}`}>
-        {ssrMode ? `{{ collection_${collectionId}.title }}` : collection?.title}
+      <a
+        href={
+          ssrMode
+            ? `/collections/{{ wv_collection.handle }}`
+            : `/collections/${collection?.handle}`
+        }
+      >
+        {ssrMode ? `{{ wv_collection.title }}` : collection?.title}
       </a>
     )
   }
-  return React.createElement(htmlTag, { ref, ...rest }, [content])
+  return React.createElement(htmlTag, { ref, ...rest }, content)
 })
 
 export let css: ElementCSS = {

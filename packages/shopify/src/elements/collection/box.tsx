@@ -6,15 +6,19 @@ import {
 } from '../context'
 import type { ElementCSS } from '@weaverse/core'
 import type { CollectionBoxProps } from '~/types'
+import { WeaverseContext } from '@weaverse/react'
 
 let CollectionBox = forwardRef<HTMLDivElement, CollectionBoxProps>(
   (props, ref) => {
     let { children, collectionId: cId, ...rest } = props
     let { collectionId: collectionAutoId } = useContext(CollectionListContext)
+    let { ssrMode } = useContext(WeaverseContext)
     let collectionId = collectionAutoId || cId
+    let collectionLiquid = `{% assign wv_collection = collection_${collectionId} %}`
     let collection = weaverseShopifyCollections[collectionId]
     return (
       <div {...rest} ref={ref} key={collectionId}>
+        {ssrMode && collectionLiquid}
         {collectionId ? (
           <CollectionContext.Provider
             value={{
@@ -22,7 +26,7 @@ let CollectionBox = forwardRef<HTMLDivElement, CollectionBoxProps>(
               collectionId,
             }}
           >
-            {collection && children}
+            {children}
           </CollectionContext.Provider>
         ) : (
           'Select a collection and start editing.'
