@@ -101,6 +101,7 @@ let elements: ElementsMap = {
     Component: ArticleImage.default,
     type: 'article-image',
     defaultCss: ArticleImage.css,
+    permanentCss: ArticleImage.permanentCss,
   },
   CollectionList: {
     Component: CollectionList.default,

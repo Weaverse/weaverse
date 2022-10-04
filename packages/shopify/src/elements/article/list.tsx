@@ -1,18 +1,29 @@
 import type { ElementCSS } from '@weaverse/core'
-import React, { forwardRef } from 'react'
+import React, { forwardRef, useContext } from 'react'
 import { BlogContext, weaverseShopifyBlogs } from '../context'
 import type { ArticleListProps } from '~/types'
+import { WeaverseContext } from '@weaverse/react'
 
 let ArticleList = forwardRef<HTMLDivElement, ArticleListProps>((props, ref) => {
   let { blogId, blogHandle, itemsPerSlide, articleNumber, children, ...rest } =
     props
-  let articleIds = weaverseShopifyBlogs[blogId]
+  let articleIds = weaverseShopifyBlogs[blogId] || []
   let styles = {
     ['--items-per-slide']: itemsPerSlide,
   } as React.CSSProperties
+  let { ssrMode } = useContext(WeaverseContext)
+  if (ssrMode) {
+    return (
+      <div ref={ref} {...rest} style={styles}>
+        {` {% for wv_article in blogs['${blogHandle}'].articles %} `}
+        {children}
+        {` {% endfor %} `}
+      </div>
+    )
+  }
   return (
-    <div ref={ref} {...props} style={styles}>
-      {!articleIds
+    <div ref={ref} {...rest} style={styles}>
+      {!blogId
         ? `Select blog`
         : articleIds.slice(0, articleNumber).map((articleId: number) => {
             return (
