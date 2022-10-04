@@ -79,7 +79,7 @@ export type Product = {
 }
 
 export type ProductContextProps = {
-  product?: Product
+  product: Product
   productId?: string | number
   formId: string
   variantId: number
@@ -127,6 +127,10 @@ export interface ProductAtcProps extends WeaverseElementProps {
   unavailableText: string
   // cartAction: '' | 'cart'
   goToCart: boolean
+}
+
+export interface ProductVariantProps extends WeaverseElementProps {
+  variantType: 'custom' | 'combined'
 }
 
 // Article

@@ -1,28 +1,25 @@
 import React, { forwardRef, useContext } from 'react'
-import type { TODO } from '@weaverse/react'
+import type { ElementCSS} from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
 import { ProductContext } from '~/elements/context'
 
-let ProductDescription = forwardRef<HTMLDivElement, TODO>((props, ref) => {
+let ProductDescription = forwardRef<HTMLDivElement>((props, ref) => {
   let { ...rest } = props
-  let { product, productId } = useContext(ProductContext)
-  let weaverseContext = useContext(WeaverseContext)
-  let { ssrMode } = weaverseContext
-  if (!productId) {
-    return null
-  }
+  let { product } = useContext(ProductContext)
+  let { ssrMode } = useContext(WeaverseContext)
   return (
     <div ref={ref} {...rest}>
       {ssrMode
-        ? `{{ product_${productId}.description }}`
-        : product?.body_html || product?.description}
+        ? `{{ wv_product.description }}`
+        : product.body_html || product.description}
     </div>
   )
 })
-ProductDescription.defaultProps = {
-  css: {
-    '@desktop': {},
-  },
+
+export let css: ElementCSS = {
+  '@desktop': {},
 }
+
+ProductDescription.defaultProps = {}
 
 export default ProductDescription

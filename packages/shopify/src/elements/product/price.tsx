@@ -1,5 +1,5 @@
 import React, { forwardRef, useContext } from 'react'
-import type { TODO } from '@weaverse/react'
+import type { ElementCSS } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
 import { ProductContext, weaverseShopifyStoreData } from '../context'
 
@@ -16,36 +16,37 @@ function formatCurrency(price: string | undefined) {
     : `$${formatPrice}`
 }
 
-let ProductPrice = forwardRef<HTMLDivElement, TODO>((props, ref) => {
+let ProductPrice = forwardRef<HTMLDivElement>((props, ref) => {
   let { ...rest } = props
-  let { product, productId, variantId } = useContext(ProductContext)
-  let weaverseContext = useContext(WeaverseContext)
-  let { ssrMode } = weaverseContext
-  if (!productId) {
-    return null
+  let { product, variantId } = useContext(ProductContext)
+  let { ssrMode } = useContext(WeaverseContext)
+  if (ssrMode) {
+    return (
+      <div ref={ref} {...rest}>
+        {`{{ wv_product.price | money_without_trailing_zeros }}`}
+      </div>
+    )
   }
-  let variants = product?.variants || []
+  let variants = product.variants || []
   let variantIndex = Math.max(
     variants.findIndex((variant) => variant.id === variantId),
     0
   )
-  let price = product?.variants[variantIndex]?.price
+  let price = product.variants[variantIndex]?.price
 
   return (
     <div ref={ref} {...rest}>
-      {ssrMode
-        ? `{{ product_${productId}.price | money_without_trailing_zeros }}`
-        : formatCurrency(price)}
+      {formatCurrency(price)}
     </div>
   )
 })
 
-ProductPrice.defaultProps = {
-  css: {
-    '@desktop': {
-      fontWeight: 600,
-    },
+export let css: ElementCSS = {
+  '@desktop': {
+    fontWeight: 600,
   },
 }
+
+ProductPrice.defaultProps = {}
 
 export default ProductPrice

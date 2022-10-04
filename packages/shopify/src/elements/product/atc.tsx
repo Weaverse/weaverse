@@ -13,10 +13,9 @@ let ProductAtc = forwardRef<HTMLDivElement, ProductAtcProps>((props, ref) => {
     goToCart,
     ...rest
   } = props
-  let { productId, product, variantId, formId } = useContext(ProductContext)
-  let weaverseContext = useContext(WeaverseContext)
+  let { product, variantId, formId } = useContext(ProductContext)
+  let { ssrMode } = useContext(WeaverseContext)
   let [status, setStatus] = useState('')
-  let { ssrMode } = weaverseContext
   let handleATC = (e: React.MouseEvent) => {
     if (!goToCart) {
       // stay here action
@@ -43,14 +42,14 @@ let ProductAtc = forwardRef<HTMLDivElement, ProductAtcProps>((props, ref) => {
         })
     }
   }
-  if (!productId || !product) {
-    return null
-  }
+
   if (ssrMode) {
     return (
       <div ref={ref} {...rest}>
-        {`{%- form 'product', product_${productId}, id: '${formId}', class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}`}
-        <button>{buttonText}</button>
+        {`{%- form 'product', wv_product, id: '${formId}', class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}`}
+        <button type="submit" name="add">
+          {buttonText}
+        </button>
         {`{% endform %}`}
       </div>
     )

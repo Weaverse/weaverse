@@ -19,8 +19,14 @@ let ProductImage = forwardRef<HTMLDivElement, ProductImageProps>(
       ...rest
     } = props
     let { product, productId, variantId } = useContext(ProductContext)
-    let weaverseContext = useContext(WeaverseContext)
-    let { ssrMode } = weaverseContext
+    let { ssrMode } = useContext(WeaverseContext)
+    if (ssrMode) {
+      return (
+        <div ref={ref} {...rest}>
+          {`{% if wv_product.featured_image %}{{ wv_product.featured_image  | image_url: width: 1500 | image_tag }} {% else %} {{ 'product-1' | placeholder_svg_tag }} {% endif %}`}
+        </div>
+      )
+    }
     let [startIndex, setStartIndex] = useState(0)
     let images = product?.media || product?.images || []
     if (!productId || !images.length) {
@@ -66,21 +72,17 @@ let ProductImage = forwardRef<HTMLDivElement, ProductImageProps>(
     } as React.CSSProperties
     return (
       <div ref={ref} {...rest} style={styles}>
-        {ssrMode ? (
-          `{% if wv_product.image %}{{ wv_product.featured_image  | image_url: width: 1500 | image_tag }} {% else %} {{ 'product-1' | placeholder_svg_tag }} {% endif %}`
-        ) : (
-          <ImageGallery
-            items={items}
-            startIndex={startIndex}
-            showBullets={showBullets}
-            showThumbnails={showThumbnails}
-            thumbnailPosition={thumbnailPosition}
-            showFullscreenButton={showFullscreenButton}
-            showPlayButton={showPlayButton}
-            showNav={showNav}
-            disableThumbnailScroll={true}
-          />
-        )}
+        <ImageGallery
+          items={items}
+          startIndex={startIndex}
+          showBullets={showBullets}
+          showThumbnails={showThumbnails}
+          thumbnailPosition={thumbnailPosition}
+          showFullscreenButton={showFullscreenButton}
+          showPlayButton={showPlayButton}
+          showNav={showNav}
+          disableThumbnailScroll={true}
+        />
       </div>
     )
   }

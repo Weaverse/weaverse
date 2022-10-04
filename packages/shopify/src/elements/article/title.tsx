@@ -14,16 +14,16 @@ let ArticleTitle = forwardRef<HTMLDivElement, ArticleTitleProps>(
       : `${blogHandle}/${article.handle}`
     let articleLink = `/blogs/${articleHandle}`
     let content = (
-      <span>{ssrMode ? `{{ wv_article.title }}` : article?.title}</span>
+      <span>{ssrMode ? `{{ wv_article.title }}` : article.title}</span>
     )
     if (linkArticle && blogHandle) {
       content = (
         <a href={articleLink}>
-          {ssrMode ? `{{ wv_article.title }}` : article?.title}
+          {ssrMode ? `{{ wv_article.title }}` : article.title}
         </a>
       )
     }
-    return React.createElement(htmlTag, { ref, ...rest }, [content])
+    return React.createElement(htmlTag, { ref, ...rest }, content)
   }
 )
 

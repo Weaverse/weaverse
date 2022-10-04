@@ -41,14 +41,17 @@ let elements: ElementsMap = {
   ProductDescription: {
     Component: ProductDescription.default,
     type: 'product-description',
+    defaultCss: ProductDescription.css,
   },
   ProductPrice: {
     Component: ProductPrice.default,
     type: 'product-price',
+    defaultCss: ProductPrice.css,
   },
   ProductQuantity: {
     Component: ProductQuantity.default,
     type: 'product-quantity',
+    defaultCss: ProductQuantity.css,
   },
   ProductAtc: {
     Component: ProductAtc.default,
@@ -58,6 +61,8 @@ let elements: ElementsMap = {
   ProductVariant: {
     Component: ProductVariant.default,
     type: 'product-variant',
+    defaultCss: ProductVariant.css,
+    permanentCss: ProductVariant.permanentCss,
   },
   ProductImage: {
     Component: ProductImage.default,
