@@ -6,30 +6,28 @@ import type { ProductTitleProps } from '~/types'
 
 let ProductTitle = forwardRef<HTMLElement, ProductTitleProps>((props, ref) => {
   let { htmlTag, linkProduct, ...rest } = props
-  let { product, productId } = useContext(ProductContext)
-  let weaverseContext = useContext(WeaverseContext)
-  let { ssrMode } = weaverseContext
-  if (!productId || !product) {
-    return null
-  }
+  let { product } = useContext(ProductContext)
+  let { ssrMode } = useContext(WeaverseContext)
+  let productHandle = ssrMode ? `{{ wv_product.handle }}` : product.handle
+  let productLink = `/products/${productHandle}`
   let content = (
-    <span>{ssrMode ? `{{ product_${productId}.title }}` : product?.title}</span>
+    <span>{ssrMode ? `{{ wv_product.title }}` : product.title}</span>
   )
   if (linkProduct) {
     content = (
-      <a href={`/product/${product.handle}`}>
-        {ssrMode ? `{{ product_${productId}.title }}` : product?.title}
+      <a href={productLink}>
+        {ssrMode ? `{{ wv_product.title }}` : product.title}
       </a>
     )
   }
-  return React.createElement(htmlTag, { ref, ...rest }, [content])
+  return React.createElement(htmlTag, { ref, ...rest }, content)
 })
 
 export let css: ElementCSS = {
   '@desktop': {
     fontSize: 24,
     lineHeight: '48px',
-    margin: 0,
+    // margin: 0,
     a: {
       all: 'inherit',
       cursor: 'pointer',

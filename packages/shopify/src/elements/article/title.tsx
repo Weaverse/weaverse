@@ -7,29 +7,30 @@ import type { ArticleTitleProps } from '~/types'
 let ArticleTitle = forwardRef<HTMLDivElement, ArticleTitleProps>(
   (props, ref) => {
     let { htmlTag, linkArticle, ...rest } = props
-    let weaverseContext = useContext(WeaverseContext)
-    let { ssrMode } = weaverseContext
-    let { article, articleId, blogHandle } = useContext(ArticleContext)
+    let { ssrMode } = useContext(WeaverseContext)
+    let { article, blogHandle } = useContext(ArticleContext)
+    let articleHandle = ssrMode
+      ? `{{ wv_article.handle }}`
+      : `${blogHandle}/${article.handle}`
+    let articleLink = `/blogs/${articleHandle}`
     let content = (
-      <span>
-        {ssrMode ? `{{ article_${articleId}.title }}` : article?.title}
-      </span>
+      <span>{ssrMode ? `{{ wv_article.title }}` : article.title}</span>
     )
     if (linkArticle && blogHandle) {
       content = (
-        <a href={`/blogs/${blogHandle}/${article.handle}`}>
-          {ssrMode ? `{{ article_${articleId}.title }}` : article?.title}
+        <a href={articleLink}>
+          {ssrMode ? `{{ wv_article.title }}` : article.title}
         </a>
       )
     }
-    return React.createElement(htmlTag, { ref, ...rest }, [content])
+    return React.createElement(htmlTag, { ref, ...rest }, content)
   }
 )
 
 export let css: ElementCSS = {
   '@desktop': {
     fontSize: 20,
-    margin: 0,
+    // margin: 0,
     a: {
       all: 'inherit',
       cursor: 'pointer',

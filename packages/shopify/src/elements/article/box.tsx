@@ -14,10 +14,15 @@ let ArticleBox = forwardRef<HTMLDivElement, ArticleBoxProps>((props, ref) => {
   let { ssrMode } = useContext(WeaverseContext)
   let articleId = articleAutoId || aId
   let article = weaverseShopifyArticles[articleId]
-  let articleLiquid = `{% assign wv_article = article_${articleId} %}`
+  if (ssrMode) {
+    return (
+      <div {...rest} ref={ref} key={articleId}>
+        {children}
+      </div>
+    )
+  }
   return (
     <div {...rest} ref={ref} key={articleId}>
-      {ssrMode && articleLiquid}
       {articleId ? (
         <ArticleContext.Provider
           value={{

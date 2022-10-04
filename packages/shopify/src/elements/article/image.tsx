@@ -16,16 +16,15 @@ let ArticleImage = forwardRef<HTMLDivElement, ArticleImageProps>(
     let { ssrMode } = useContext(WeaverseContext)
     let { article, blogHandle } = useContext(ArticleContext)
     let src = article?.image?.src
-    let articleHandle = ssrMode ? `{{ wv_article.handle }}` : article?.handle
-    let articleLink = `/blogs/${blogHandle}/${articleHandle}`
+    let articleHandle = ssrMode
+      ? `{{ wv_article.handle }}`
+      : `${blogHandle}/${article.handle}`
+    let articleLink = `/blogs/${articleHandle}`
     let styles = {
       ['--aspect-ratio']: aspectRatio,
     } as React.CSSProperties
     let content = ssrMode ? (
-      <img
-        src={`{{ wv_article.image.src }}`}
-        alt={`{{ wv_article.image.alt }}`}
-      />
+      `{% if wv_article.image %}{{ wv_article.image  | image_url: width: 1500 | image_tag }} {% else %} {{ 'image' | placeholder_svg_tag }} {% endif %}`
     ) : src ? (
       <img src={src} alt={article?.image?.alt} />
     ) : (

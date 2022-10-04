@@ -1,27 +1,29 @@
 import React, { forwardRef } from 'react'
-import type { TODO } from '@weaverse/core'
+import type { GridContentElementProps } from '@weaverse/react'
 
-let ProductContent = forwardRef<HTMLDivElement, TODO>((props, ref) => {
-  const { rows, columns, gap, rowSize, children, ...rest } = props
-  let style = {
-    '--rows': rows,
-    '--columns': columns,
-    '--gap': gap + 'px',
-    '--row-size': rowSize + 'px',
-    '--col-size':
-      'calc((var(--grid-size) - calc(var(--columns) - 1) * var(--gap)) / var(--columns))',
-    '--max-height': rows * rowSize + gap * (rowSize - 1) + 'px',
-  } as React.CSSProperties
-  return (
-    <div {...rest} ref={ref} style={style}>
-      {React.Children.count(children) > 0 ? (
-        children
-      ) : (
-        <div>Drag and drop an element here</div>
-      )}
-    </div>
-  )
-})
+let ProductContent = forwardRef<HTMLDivElement, GridContentElementProps>(
+  (props, ref) => {
+    const { rows, columns, gap, rowSize, children, ...rest } = props
+    let style = {
+      '--rows': rows,
+      '--columns': columns,
+      '--gap': gap + 'px',
+      '--row-size': rowSize + 'px',
+      '--col-size':
+        'calc((var(--grid-size) - calc(var(--columns) - 1) * var(--gap)) / var(--columns))',
+      '--max-height': rows * rowSize + gap * (rowSize - 1) + 'px',
+    } as React.CSSProperties
+    return (
+      <div {...rest} ref={ref} style={style}>
+        {React.Children.count(children) > 0 ? (
+          children
+        ) : (
+          <div>Drag and drop an element here</div>
+        )}
+      </div>
+    )
+  }
+)
 
 ProductContent.defaultProps = {
   rows: 7,

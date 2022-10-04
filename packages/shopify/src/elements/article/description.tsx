@@ -8,11 +8,9 @@ let ArticleDescription = forwardRef<HTMLDivElement>((props, ref) => {
 
   let weaverseContext = useContext(WeaverseContext)
   let { ssrMode } = weaverseContext
-  let { article, articleId } = useContext(ArticleContext)
+  let { article } = useContext(ArticleContext)
 
-  let html = ssrMode
-    ? `{{ article_${articleId}.content }}`
-    : article?.summary_html
+  let html = ssrMode ? `{{ wv_article.excerpt }}` : article?.summary_html
   return (
     <div ref={ref} {...rest}>
       <div dangerouslySetInnerHTML={{ __html: html }} />
