@@ -209,5 +209,6 @@ export type FormFieldProps = {
   placeholder: string
   showLabel: boolean
   label: string
+  name?: string
   required: boolean
 }
