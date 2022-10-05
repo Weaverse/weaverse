@@ -1,7 +1,15 @@
 import React, { useContext } from 'react'
 import { WeaverseContext } from '~/context'
 import type { ImageElementProps } from '~/types'
+let PREVIEW_MODIFIER = '-/preview/-/quality/smart/-/format/auto/'
+export function isUploadCareCdnUrl(url: string) {
+  return !!url.match(/^https:\/\/ucarecdn\.com\/([a-z0-9-]{36})\//)
+}
 
+function optimizeImage(url: string) {
+  if (!isUploadCareCdnUrl(url)) return url
+  return url.includes('-/preview/') ? url : `${url}${PREVIEW_MODIFIER}`
+}
 let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
   (props, ref) => {
     let { isDesignMode } = useContext(WeaverseContext)
@@ -30,7 +38,7 @@ let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
     }
     return (
       <div ref={ref} {...rest} style={style} onClick={handleClick}>
-        <img alt={alt} src={src} />
+        <img alt={alt} src={optimizeImage(src)} />
       </div>
     )
   }
@@ -48,7 +56,7 @@ export let css = {
 }
 
 Image.defaultProps = {
-  src: 'https://ucarecdn.com/c413b8fe-ceec-4948-9c42-a0434c4ca920/',
+  src: 'https://ucarecdn.com/c413b8fe-ceec-4948-9c42-a0434c4ca920/-/preview/-/quality/smart/-/format/auto/',
   alt: 'Image alt text',
   objectFit: 'cover',
   objectPosition: 'center',

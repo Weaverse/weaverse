@@ -36,7 +36,7 @@ export let css = {
 Video.defaultProps = {
   src: 'https://youtu.be/wM-NT6hcw48',
   poster:
-    'https://ucarecdn.com/48d73272-3fe3-43f6-8b5b-22b68fc5a8c8/section.png',
+    'https://ucarecdn.com/c413b8fe-ceec-4948-9c42-a0434c4ca920/-/preview/-/quality/smart/-/format/auto/',
   loop: false,
   type: 'video/mp4',
   controls: false,
