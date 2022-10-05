@@ -1,10 +1,12 @@
 import type { ElementCSS } from '@weaverse/core'
 import React, { forwardRef } from 'react'
 import { CollectionListContext } from '../context'
+import * as Carousel from '~/elements/shared/Carousel'
 
 let CollectionList = forwardRef<HTMLDivElement, any>((props, ref) => {
   let {
     itemsPerSlide,
+    itemsSpacing,
     collectionNumber,
     selectedCollections,
     collectionIds,
@@ -12,25 +14,26 @@ let CollectionList = forwardRef<HTMLDivElement, any>((props, ref) => {
     children,
     ...rest
   } = props
-  let styles = {
-    ['--items-per-slide']: itemsPerSlide,
-  } as React.CSSProperties
+
+  let renderContent = () => (
+    <Carousel.default itemsPerSlide={itemsPerSlide} gap={itemsSpacing}>
+      {selectedCollections.slice(0, collectionNumber).map((c: any) => {
+        return (
+          <CollectionListContext.Provider
+            key={c.id}
+            value={{
+              collectionId: c.id,
+            }}
+          >
+            {children}
+          </CollectionListContext.Provider>
+        )
+      })}
+    </Carousel.default>
+  )
   return (
-    <div ref={ref} {...rest} style={styles}>
-      {!selectedCollections
-        ? `Select blog`
-        : selectedCollections.slice(0, collectionNumber).map((c: any) => {
-            return (
-              <CollectionListContext.Provider
-                key={c.id}
-                value={{
-                  collectionId: c.id,
-                }}
-              >
-                {children}
-              </CollectionListContext.Provider>
-            )
-          })}
+    <div ref={ref} {...rest}>
+      {!selectedCollections ? `Select blog` : renderContent()}
     </div>
   )
 })
@@ -55,15 +58,12 @@ CollectionList.defaultProps = {
     },
   ],
   collectionNumber: 4,
-  rows: 1,
   itemsPerSlide: 4,
+  itemsSpacing: 4,
 }
 
 export let permanentCss: ElementCSS = {
   '@desktop': {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(var(--items-per-slide), 1fr)',
-    gap: 8,
     '& [data-wv-type]:not(:last-child)': {
       marginBottom: 8,
     },
@@ -72,6 +72,9 @@ export let permanentCss: ElementCSS = {
       flexDirection: 'column',
       gap: 4,
     },
+
+    // carousel
+    ...Carousel.css,
   },
 }
 

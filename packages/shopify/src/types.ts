@@ -94,9 +94,8 @@ export interface ProductListProps extends WeaverseElementProps {
   collectionId: number
   collectionHandle: string
   productNumber: number
-  rows: number
   itemsPerSlide: number
-  containerHeight: string
+  itemsSpacing: number
 }
 
 export interface ProductBoxProps extends WeaverseElementProps {
@@ -137,9 +136,10 @@ export interface ProductVariantProps extends WeaverseElementProps {
 // Article
 export interface ArticleListProps extends WeaverseElementProps {
   blogId: string | number
-  blogHandle?: string
+  blogHandle: string
   itemsPerSlide: number
   articleNumber: number
+  itemsSpacing: number
 }
 
 export interface ArticleBoxProps extends WeaverseElementProps {

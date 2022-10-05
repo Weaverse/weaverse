@@ -2,47 +2,48 @@ import React, { forwardRef, useContext } from 'react'
 import { ProductListContext, weaverseShopifyProductLists } from '../context'
 import type { ProductListProps } from '~/types'
 import { WeaverseContext } from '@weaverse/react'
+import * as Carousel from '~/elements/shared/Carousel'
 
 let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
   let {
     collectionId,
     collectionHandle,
     productNumber,
-    rows,
     itemsPerSlide,
-    containerHeight,
+    itemsSpacing,
     children,
     ...rest
   } = props
   let { ssrMode } = useContext(WeaverseContext)
   let productIds = weaverseShopifyProductLists[collectionId || 'all'] || []
-  let styles = {
-    ['--container-height']: containerHeight,
-    ['--items-per-row']: itemsPerSlide,
-  } as React.CSSProperties
+
   if (ssrMode) {
     return (
-      <div ref={ref} {...rest} style={styles}>
+      <div ref={ref} {...rest}>
         {` {% for wv_product in collections['${collectionHandle}'].products %} `}
         {children}
         {` {% endfor %} `}
       </div>
     )
   }
+
+  let renderContent = () => (
+    <Carousel.default itemsPerSlide={itemsPerSlide} gap={itemsSpacing}>
+      {productIds.slice(0, productNumber).map((productId: number) => (
+        <ProductListContext.Provider
+          key={productId}
+          value={{
+            productId,
+          }}
+        >
+          {children}
+        </ProductListContext.Provider>
+      ))}
+    </Carousel.default>
+  )
   return (
-    <div ref={ref} {...rest} style={styles}>
-      {productIds.length
-        ? productIds.slice(0, productNumber).map((productId: number) => (
-            <ProductListContext.Provider
-              key={productId}
-              value={{
-                productId,
-              }}
-            >
-              {children}
-            </ProductListContext.Provider>
-          ))
-        : 'Select collection'}
+    <div ref={ref} {...rest}>
+      {productIds.length ? renderContent() : 'Select collection'}
     </div>
   )
 })
@@ -52,17 +53,13 @@ export default ProductList
 ProductList.defaultProps = {
   collectionId: 291152986296,
   collectionHandle: 'men',
-  productNumber: 4,
-  rows: 1,
+  productNumber: 12,
   itemsPerSlide: 4,
-  containerHeight: 'auto',
+  itemsSpacing: 8,
 }
 
 export let permanentCss = {
   '@desktop': {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(var(--items-per-row), 1fr)',
-    gap: 8,
     '& [data-wv-type]:not([data-wv-type="product-box"])': {
       textAlign: 'center',
     },
@@ -70,6 +67,7 @@ export let permanentCss = {
       display: 'flex',
       flexDirection: 'column',
       gap: 4,
+      height: '100%',
     },
     '& [data-wv-type="product-image"] img': {
       width: '100%',
@@ -79,5 +77,7 @@ export let permanentCss = {
     '& [data-wv-type="product-title"]': {
       flex: 1,
     },
+
+    ...Carousel.css,
   },
 }
