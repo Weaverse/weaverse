@@ -104,8 +104,8 @@ export let css: ElementCSS = {
   '@desktop': {
     img: {
       width: '100%',
-      height: '100%',
       objectFit: 'contain',
+      aspectRatio: 'var(--aspect-ratio, 4/3)',
     },
   },
 }
@@ -114,12 +114,16 @@ export let permanentCss = {
   '@desktop': {
     iframe: { width: '100%', height: '100%' },
     '.image-gallery-slide': {
-      height: 'var(--container-height, 100%)',
+      // height: 'var(--container-height, 100%)',
       left: '0',
       position: 'absolute',
       top: '0',
       width: '100%',
-      '.image-gallery-image': { width: '100%', objectFit: 'contain' },
+      '.image-gallery-image': {
+        width: '100%',
+        objectFit: 'contain',
+        aspectRatio: 'var(--aspect-ratio, 4/3)',
+      },
       '.image-gallery-description': {
         background: 'rgba(0, 0, 0, .4)',
         bottom: '70px',
@@ -132,7 +136,7 @@ export let permanentCss = {
       },
     },
     '.image-gallery-slides': {
-      height: 'var(--container-height, 100%)',
+      // height: 'var(--container-height, 100%)',
       lineHeight: 0,
       overflow: 'hidden',
       position: 'relative',
@@ -141,13 +145,13 @@ export let permanentCss = {
     },
     '.image-gallery-swipe': { height: 'var(--container-height, 100%)' },
     '.image-gallery-content': {
-      height: 'var(--container-height, 100%)',
+      // height: 'var(--container-height, 100%)',
       position: 'relative',
       lineHeight: 0,
       top: '0',
       '&.bottom, &.top': {
-        display: 'flex',
-        flexDirection: 'column',
+        // display: 'flex',
+        // flexDirection: 'column',
       },
       '.image-gallery-slide': {
         '.image-gallery-image': { maxHeight: 'calc(100vh - 80px)' },
@@ -159,7 +163,7 @@ export let permanentCss = {
       },
     },
     '.image-gallery': {
-      height: 'var(--container-height, 100%)',
+      // height: 'var(--container-height, 100%)',
       WebkitUserSelect: 'none',
       MozUserSelect: 'none',
       msUserSelect: 'none',
@@ -235,8 +239,8 @@ export let permanentCss = {
     },
     '.image-gallery-slide-wrapper': {
       '&.bottom, &.top': {
-        height: 'var(--container-height, 0px)',
-        flexGrow: 7,
+        // height: 'var(--container-height, 0px)',
+        // flexGrow: 7,
       },
       position: 'relative',
       '&.left, &.right': {
@@ -247,8 +251,8 @@ export let permanentCss = {
     },
     '.image-gallery-thumbnails-wrapper': {
       '&.bottom, &.top': {
-        height: 0,
-        flexGrow: 3,
+        // height: 0,
+        // flexGrow: 3,
       },
       position: 'relative',
     },

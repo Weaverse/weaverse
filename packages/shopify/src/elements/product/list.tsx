@@ -1,10 +1,12 @@
-import React, { forwardRef } from 'react'
+import React, { forwardRef, useContext } from 'react'
 import { ProductListContext, weaverseShopifyProductLists } from '../context'
 import type { ProductListProps } from '~/types'
+import { WeaverseContext } from '@weaverse/react'
 
 let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
   let {
     collectionId,
+    collectionHandle,
     productNumber,
     rows,
     itemsPerSlide,
@@ -12,12 +14,21 @@ let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
     children,
     ...rest
   } = props
+  let { ssrMode } = useContext(WeaverseContext)
   let productIds = weaverseShopifyProductLists[collectionId || 'all'] || []
   let styles = {
     ['--container-height']: containerHeight,
     ['--items-per-row']: itemsPerSlide,
   } as React.CSSProperties
-
+  if (ssrMode) {
+    return (
+      <div ref={ref} {...rest} style={styles}>
+        {` {% for wv_product in collections['${collectionHandle}'].products %} `}
+        {children}
+        {` {% endfor %} `}
+      </div>
+    )
+  }
   return (
     <div ref={ref} {...rest} style={styles}>
       {productIds.length
@@ -39,7 +50,8 @@ let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
 export default ProductList
 
 ProductList.defaultProps = {
-  collectionId: '291152593080',
+  collectionId: 291152986296,
+  collectionHandle: 'men',
   productNumber: 4,
   rows: 1,
   itemsPerSlide: 4,
@@ -58,6 +70,11 @@ export let permanentCss = {
       display: 'flex',
       flexDirection: 'column',
       gap: 4,
+    },
+    '& [data-wv-type="product-image"] img': {
+      width: '100%',
+      height: 'auto',
+      objectFit: 'contain',
     },
     '& [data-wv-type="product-title"]': {
       flex: 1,

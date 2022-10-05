@@ -91,7 +91,8 @@ export type ProductListContextProps = {
 }
 
 export interface ProductListProps extends WeaverseElementProps {
-  collectionId: string | number
+  collectionId: number
+  collectionHandle: string
   productNumber: number
   rows: number
   itemsPerSlide: number
