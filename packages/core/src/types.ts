@@ -57,7 +57,7 @@ export interface ElementCatalog {
   data?: ElementData[]
 }
 
-export type FlagType = "draggable" | "resizable" | "sortable" | "droppable" | "deletable" | "duplicable"
+export type FlagType = "draggable" | "resizable" | "sortable" | "droppable" | "ignoreShortcutKeys"
 export type ElementFlags = Partial<Record<FlagType, boolean>>
 
 export interface ChildElement {
