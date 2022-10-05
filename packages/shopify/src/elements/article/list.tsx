@@ -3,41 +3,54 @@ import React, { forwardRef, useContext } from 'react'
 import { BlogContext, weaverseShopifyBlogs } from '../context'
 import type { ArticleListProps } from '~/types'
 import { WeaverseContext } from '@weaverse/react'
+import * as Carousel from '~/elements/shared/Carousel'
 
 let ArticleList = forwardRef<HTMLDivElement, ArticleListProps>((props, ref) => {
-  let { blogId, blogHandle, itemsPerSlide, articleNumber, children, ...rest } =
-    props
-  let articleIds = weaverseShopifyBlogs[blogId] || []
-  let styles = {
-    ['--items-per-slide']: itemsPerSlide,
-  } as React.CSSProperties
+  let {
+    blogId,
+    blogHandle,
+    itemsPerSlide,
+    itemsSpacing,
+    articleNumber,
+    children,
+    ...rest
+  } = props
+  let articleIds: number[] = weaverseShopifyBlogs[blogId] || []
+
   let { ssrMode } = useContext(WeaverseContext)
   if (ssrMode) {
     return (
-      <div ref={ref} {...rest} style={styles}>
+      <div ref={ref} {...rest}>
         {` {% for wv_article in blogs['${blogHandle}'].articles %} `}
         {children}
         {` {% endfor %} `}
       </div>
     )
   }
+
+  let renderContent = () => {
+    return (
+      <Carousel.default itemsPerSlide={itemsPerSlide} gap={itemsSpacing}>
+        {articleIds.slice(0, articleNumber).map((articleId: number) => {
+          return (
+            <BlogContext.Provider
+              key={articleId}
+              value={{
+                articleId,
+                blogHandle,
+              }}
+            >
+              {children}
+            </BlogContext.Provider>
+          )
+        })}
+      </Carousel.default>
+    )
+  }
+
   return (
-    <div ref={ref} {...rest} style={styles}>
-      {!blogId
-        ? `Select blog`
-        : articleIds.slice(0, articleNumber).map((articleId: number) => {
-            return (
-              <BlogContext.Provider
-                key={articleId}
-                value={{
-                  articleId,
-                  blogHandle,
-                }}
-              >
-                {children}
-              </BlogContext.Provider>
-            )
-          })}
+    <div ref={ref} {...rest}>
+      {!blogId ? `Select blog` : renderContent()}
     </div>
   )
 })
@@ -49,21 +62,22 @@ export let css: ElementCSS = {
 ArticleList.defaultProps = {
   blogId: 84781203640,
   blogHandle: 'news',
-  articleNumber: 4,
+  articleNumber: 12,
   itemsPerSlide: 4,
+  itemsSpacing: 4,
 }
 
 export let permanentCss: ElementCSS = {
   '@desktop': {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(var(--items-per-slide), 1fr)',
-    gap: 8,
     '& [data-wv-type]:not(:last-child)': {
       marginBottom: 8,
     },
     '& [data-wv-type="article-title"]': {
       flex: 1,
     },
+
+    // carousel
+    ...Carousel.css,
   },
 }
 
