@@ -57,7 +57,7 @@ CollectionList.defaultProps = {
       handle: 'nike',
     },
   ],
-  collectionNumber: 4,
+  collectionNumber: 12,
   itemsPerSlide: 4,
   itemsSpacing: 4,
 }

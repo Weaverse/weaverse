@@ -17,12 +17,15 @@ export let CarouselComponent = (props: any) => {
         )
       }
       renderCenterRightControls={(props: ControlProps) =>
-        props.slideCount !== props.currentSlide && (
+        props.slideCount > props.currentSlide + props.slidesToShow && (
           <button className="wv-slider-btn" onClick={props.nextSlide}>
             <i className="wv-slider-arrow wv-slider-arrow-right" />
           </button>
         )
       }
+      defaultControlsConfig={{
+        pagingDotsStyle: { display: 'none' },
+      }}
     >
       {children}
     </Carousel>
