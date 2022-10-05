@@ -18,7 +18,7 @@ let CollectionList = forwardRef<HTMLDivElement, any>((props, ref) => {
   return (
     <div ref={ref} {...rest} style={styles}>
       {!selectedCollections
-        ? `Select blog`
+        ? `Select collection(s)`
         : selectedCollections.slice(0, collectionNumber).map((c: any) => {
             return (
               <CollectionListContext.Provider
