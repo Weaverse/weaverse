@@ -1,5 +1,5 @@
 import React, { forwardRef, useContext } from 'react'
-import type { ElementCSS} from '@weaverse/react'
+import type { ElementCSS } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
 import { Swatch } from './swatch'
 import { ProductContext } from '~/elements/context'
@@ -62,62 +62,6 @@ let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
       })
       return (
         <div ref={ref} {...rest}>
-          {/*TODO add default css when finish styling*/}
-          <style>
-            {`
-              [data-wv-type="product-variant"] select {
-                display: none;
-              }
-              [data-wv-type="product-variant"] {
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-              }
-              label.swatch-label {display: inline-block; margin-bottom: 8px;}
-              span.option-display-name {font-weight: bold;}
-              span.selected-value {margin-left: 8px;}
-              div.option-values {
-                display: flex;
-                gap: 8px;
-                align-items: center;
-              }
-              label.wv-sw:hover, input:checked + label.wv-sw {
-                border-color: #212568;
-                background-clip: content-box;
-              }
-              label.wv-sw-button:hover, input:checked + label.wv-sw-button {
-                background-color: #212568;
-                color: #fff;
-                background-clip: border-box;
-              }
-              input[type=radio] {display: none;}
-              label.wv-sw {
-                 width: 40px;
-                 height: 40px;
-                 padding: 2px;
-                 display: inline-flex;
-                 justify-content: center;
-                 align-items: center;
-                 border: 1px solid;
-                 cursor: pointer;
-              }
-              label.wv-sw-round {
-                border-radius: 10px;
-              }
-              label.wv-sw-circle {
-                border-radius: 100%;
-              }
-              label.wv-sw-color {
-                background-color: var(--bg-color);
-              }
-              label.wv-sw-color.bordered {
-                border: 1px solid #333;
-              }
-              label.wv-sw-image {
-                background-image: url(var(--bg-image));
-              }
-            `}
-          </style>
           {defaultSelectComp}
           {swatchesOptionComp}
         </div>
@@ -147,7 +91,55 @@ ProductVariant.defaultProps = {
 }
 
 export let permanentCss: ElementCSS = {
-  '@desktop': {},
+  '@desktop': {
+    select: { display: 'none' },
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 10,
+    'label.swatch-label': { display: 'inline-block', marginBottom: 8 },
+    'span.option-display-name': { fontWeight: 'bold' },
+    'span.selected-value': { marginLeft: 8 },
+    'div.option-values': { display: 'flex', gap: 8, alignItems: 'center' },
+    'label.wv-sw': {
+      '&:hover': { borderColor: '#212568', backgroundClip: 'content-box' },
+      width: 40,
+      height: 40,
+      padding: 2,
+      display: 'inline-flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      border: '1px solid',
+      cursor: 'pointer',
+    },
+    input: {
+      '&:checked': {
+        '+': {
+          'label.wv-sw': {
+            borderColor: '#212568',
+            backgroundClip: 'content-box',
+          },
+          'label.wv-sw-button': {
+            backgroundColor: '#212568',
+            color: '#fff',
+            backgroundClip: 'border-box',
+          },
+        },
+      },
+    },
+    'label.wv-sw-button': {
+      '&:hover': {
+        backgroundColor: '#212568',
+        color: '#fff',
+        backgroundClip: 'border-box',
+      },
+    },
+    'input[type=radio]': { display: 'none' },
+    'label.wv-sw-round': { borderRadius: 10 },
+    'label.wv-sw-circle': { borderRadius: '100%' },
+    'label.wv-sw-color': { backgroundColor: 'var(--bg-color)' },
+    'label.wv-sw-color.bordered': { border: '1px solid #333' },
+    'label.wv-sw-image': { backgroundImage: 'url(var(--bg-image))' },
+  },
 }
 
 export default ProductVariant

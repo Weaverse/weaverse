@@ -2,23 +2,29 @@ import { WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext, useId } from 'react'
 import type { FormElementProps, FormFieldProps } from '~/types'
 
-let InputField = ({ field }: { field: FormFieldProps }) => {
-  let id = useId()
+let InputField = ({
+  field,
+  formId,
+}: {
+  field: FormFieldProps
+  formId: string
+}) => {
+  let fieldName = `contact[${field.name || field.label}]`
   return (
     <div>
-      <label htmlFor={id}>{field.label}</label>
+      <label htmlFor={fieldName}>{field.label}</label>
       {field.type !== 'multiline' ? (
         <input
-          id={id}
-          name={`contact[${field.type === 'email' ? 'email' : field.label}]`}
+          form={formId}
+          name={fieldName}
           type={field.type}
           placeholder={field.placeholder}
           required={field.required}
         />
       ) : (
         <textarea
-          id={id}
-          name={`contact[${field.label}]`}
+          form={formId}
+          name={fieldName}
           placeholder={field.placeholder}
           rows={4}
           required={field.required}
@@ -39,7 +45,7 @@ const Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
     openInNewTab,
     ...rest
   } = props
-
+  let formId = useId()
   let style = {
     '--wv-form-submit-align': submitPosition,
   } as React.CSSProperties
@@ -47,9 +53,19 @@ const Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
   const formContent = (
     <div ref={ref} {...rest} style={style}>
       {fields.map((field) => (
-        <InputField key={field.id} field={field} />
+        <InputField key={field.id} formId={formId} field={field} />
       ))}
-      <button type="submit">{submitText}</button>
+      <form
+        method="post"
+        action="/contact#contact_form"
+        id={formId}
+        acceptCharset="UTF-8"
+        className="contact-form"
+      >
+        <input type="hidden" name="form_type" value={formType} />
+        <input type="hidden" name="utf8" value="✓" />
+        <button type="submit">{submitText}</button>
+      </form>
     </div>
   )
   if (ssrMode) {
@@ -88,12 +104,14 @@ Form.defaultProps = {
       placeholder: 'Enter your name',
       showLabel: true,
       label: 'Your name',
+      name: 'first_name',
       required: false,
     },
     {
       id: 2,
       showLabel: true,
       label: 'Your email',
+      name: 'email',
       type: 'email',
       placeholder: 'Enter your email',
       required: true,
@@ -102,6 +120,7 @@ Form.defaultProps = {
       id: 3,
       showLabel: true,
       label: 'Your message',
+      name: 'message',
       type: 'multiline',
       placeholder: 'Enter your message',
       required: false,
