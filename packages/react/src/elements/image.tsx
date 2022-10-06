@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { WeaverseContext } from '~/context'
 import type { ImageElementProps } from '~/types'
+import { isBrowser } from '@weaverse/core'
 let PREVIEW_MODIFIER = '-/preview/-/quality/smart/-/format/auto/'
 export function isUploadCareCdnUrl(url: string) {
   return !!url.match(/^https:\/\/ucarecdn\.com\/([a-z0-9-]{36})\//)
@@ -10,6 +11,35 @@ function optimizeImage(url: string) {
   if (!isUploadCareCdnUrl(url)) return url
   return url.includes('-/preview/') ? url : `${url}${PREVIEW_MODIFIER}`
 }
+
+let loadUploadCareAdaptiveDelivery = () => {
+  if (!window.Blinkloader) {
+    console.log('loadUploadCareAdaptiveDelivery')
+    ;(function (src, cb) {
+      let s = document.createElement('script')
+      s.setAttribute('src', src)
+      s.onload = cb
+      ;(document.head || document.body).appendChild(s)
+    })(
+      'https://ucarecdn.com/libs/blinkloader/3.x/blinkloader.min.js',
+      function () {
+        window.Blinkloader.optimize({
+          pubkey: '1a22133d1a1bdc089d4c',
+          fadeIn: true,
+          lazyload: true,
+          smartCompression: true,
+          responsive: true,
+          retina: true,
+          webp: true,
+        })
+      }
+    )
+  }
+}
+if (isBrowser) {
+  loadUploadCareAdaptiveDelivery()
+}
+
 let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
   (props, ref) => {
     let { isDesignMode } = useContext(WeaverseContext)
@@ -38,7 +68,7 @@ let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
     }
     return (
       <div ref={ref} {...rest} style={style} onClick={handleClick}>
-        <img alt={alt} src={optimizeImage(src)} />
+        <img alt={alt} data-blink-src={src} />
       </div>
     )
   }
@@ -51,6 +81,9 @@ export let css = {
       height: '100%',
       objectFit: 'var(--wv-img-object-fit, cover)',
       objectPosition: 'var(--wv-img-object-position, center)',
+    },
+    '> [data-blink-src]': {
+      visibility: 'hidden',
     },
   },
 }
