@@ -49,7 +49,7 @@ export interface ElementsMap {
 }
 
 // Element types
-export type CatalogGroup = "essential" | "composition" | "other"
+export type CatalogGroup = "essential" | "composition" | "shopify"
 export interface ElementCatalog {
   name: string
   icon?: string
