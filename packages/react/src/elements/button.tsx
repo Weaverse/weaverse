@@ -1,5 +1,6 @@
 import * as React from 'react'
 import type { ButtonElementProps } from '~/types'
+import type { ElementCSS } from '@weaverse/core'
 
 export let Button = React.forwardRef<
   HTMLButtonElement | HTMLAnchorElement,
@@ -34,15 +35,17 @@ Button.defaultProps = {
   clickAction: 'none',
   linkTo: '',
   openInNewTab: false,
-  css: {
-    '@desktop': {
-      borderRadius: '72px',
-      border: 'none',
-      backgroundColor: '#0F71FF',
-      color: '#fff',
-      fontSize: '13px',
-      padding: '10px 20px',
-    },
+}
+
+export let css: ElementCSS = {
+  '@desktop': {
+    borderRadius: '72px',
+    border: 'none',
+    backgroundColor: '#0F71FF',
+    color: '#fff',
+    fontSize: '13px',
+    padding: '10px 20px',
+    textDecoration: 'none',
   },
 }
 

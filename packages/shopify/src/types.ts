@@ -197,7 +197,7 @@ export interface FormElementProps extends WeaverseElementProps {
   formType: string
   fields: FormFieldProps[]
   submitText: string
-  submitPosition: 'flex-start' | 'flex-end' | 'center'
+  submitPosition: 'left' | 'right' | 'center'
   openInNewTab: boolean
   targetLink: string
 }

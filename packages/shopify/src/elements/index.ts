@@ -139,6 +139,7 @@ let elements: ElementsMap = {
   Form: {
     Component: Form.default,
     type: 'form',
+    defaultCss: Form.css,
   },
   CustomHTML: {
     Component: CustomHTML.default,

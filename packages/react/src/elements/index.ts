@@ -29,6 +29,7 @@ export const Elements: ElementsMap = {
   Button: {
     Component: Button.default,
     type: 'button',
+    defaultCss: Button.css,
   },
   Container: {
     Component: Container.default,

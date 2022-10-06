@@ -38,6 +38,7 @@ const Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
           remainingTime < 1000
         ) {
           window.open(redirectUrl, openInNewTab ? '_blank' : '_self')
+          clearInterval(flag)
         }
         setRemaining(remainingTime)
       }, 1000)
@@ -54,11 +55,11 @@ const Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
             <React.Fragment key={time}>
               <TimerBlock label={showLabel ? time : ''} value={timer[time]} />
               {time !== 'seconds' && (
-                <span
-                  className={`wv-countdown-number ${showColon ? '' : 'hidden'}`}
-                >
-                  :
-                </span>
+                <div>
+                  <span className={`wv-cd-number ${showColon ? '' : 'hidden'}`}>
+                    :
+                  </span>
+                </div>
               )}
             </React.Fragment>
           )
@@ -76,11 +77,12 @@ export let css = {
     display: 'grid',
     gridAutoFlow: 'column',
     gap: 10,
-    '& > div': {
+    lineHeight: 'initial',
+    '.wv-cd-block': {
       width: 48,
       textAlign: 'center',
     },
-    '.wv-countdown-label': {
+    '.wv-cd-label': {
       fontSize: 10,
     },
     '& > span': {
@@ -95,7 +97,7 @@ export let css = {
 Countdown.defaultProps = {
   timerType: 'fixed-time',
   startTime: Date.now(),
-  endTime: 1661140528000,
+  endTime: 1666756528000,
   periods: 90,
   redirectUrl: 'https://myshop.com',
   openInNewTab: false,
