@@ -179,5 +179,6 @@ declare global {
   interface Window {
     WeaverseStudioBridge: any
     weaverseShopifyProducts: any
+    Blinkloader: any
   }
 }
