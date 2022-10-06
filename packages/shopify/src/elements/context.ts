@@ -4,13 +4,14 @@ import type {
   ProductContextProps,
   ProductListContextProps,
 } from '~/types'
-import type { TODO } from '@weaverse/core'
-export let ProductContext = createContext<ProductContextProps>({})
+export let ProductContext = createContext<Partial<ProductContextProps>>({})
 export let ProductListContext = React.createContext<ProductListContextProps>({})
-export let ArticleContext = React.createContext<TODO>({})
-export let BlogContext = React.createContext<TODO>({})
+export let ArticleContext = React.createContext<any>({})
+export let BlogContext = React.createContext<any>({})
 export let CollectionListContext = createContext<any>({})
-export let CollectionContext = createContext<CollectionContextProps>({})
+export let CollectionContext = createContext<Partial<CollectionContextProps>>(
+  {}
+)
 
 /**
  * For fast access to `window.weaverseShopifyProducts` and server-side render
