@@ -1,10 +1,8 @@
-import React, { useContext } from 'react'
-import { WeaverseContext } from '~/context'
+import React from 'react'
 import type { ImageElementProps } from '~/types'
 
 let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
   (props, ref) => {
-    let { isDesignMode } = useContext(WeaverseContext)
     let {
       src,
       alt,
@@ -12,6 +10,7 @@ let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
       objectPosition,
       onClickAction,
       openLinkInNewTab,
+      linkTo,
       ...rest
     } = props
 
@@ -20,17 +19,18 @@ let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
       '--wv-img-object-position': objectPosition,
     } as React.CSSProperties
 
-    let handleClick = () => {
-      if (isDesignMode) {
-        return console.log('Click action:', onClickAction)
-      }
-      if (onClickAction) {
-        console.log('TODO: click action:', onClickAction)
-      }
+    let content = <img alt={alt} src={src} />
+    if (onClickAction === 'open-link' && linkTo) {
+      let target = openLinkInNewTab ? '_blank' : '_self'
+      content = (
+        <a href={linkTo} target={target}>
+          {content}
+        </a>
+      )
     }
     return (
-      <div ref={ref} {...rest} style={style} onClick={handleClick}>
-        <img alt={alt} src={src} />
+      <div ref={ref} {...rest} style={style}>
+        {content}
       </div>
     )
   }
@@ -52,8 +52,9 @@ Image.defaultProps = {
   alt: 'Image alt text',
   objectFit: 'cover',
   objectPosition: 'center',
-  onClickAction: 'open-lightbox',
+  onClickAction: 'open-link',
   openLinkInNewTab: false,
+  linkTo: '',
 }
 
 export default Image
