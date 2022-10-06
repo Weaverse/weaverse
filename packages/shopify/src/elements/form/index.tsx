@@ -1,3 +1,4 @@
+import type { ElementCSS } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext, useId } from 'react'
 import type { FormElementProps, FormFieldProps } from '~/types'
@@ -130,33 +131,36 @@ Form.defaultProps = {
   submitPosition: 'center',
   openInNewTab: true,
   targetLink: 'https://myshop.com',
-  css: {
-    '@desktop': {
+}
+
+export let css: ElementCSS = {
+  '@desktop': {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 14,
+    width: '100%',
+    padding: '12px',
+    '& > div': {
       display: 'flex',
       flexDirection: 'column',
-      gap: 14,
+      gap: 4,
+    },
+    '& input, & textarea': {
+      px: 12,
+      py: 10,
+      border: '1px solid #ddd',
+    },
+    form: {
       width: '100%',
-      padding: '12px',
-      '& > div': {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 4,
-      },
-      '& input, & textarea': {
-        px: 12,
-        py: 10,
-        border: '1px solid #ddd',
-      },
-      button: {
-        alignSelf: 'var(--wv-form-submit-align)',
-        background: '#4B5563',
-        color: '#fff',
-        padding: '14px 30px',
-        border: 'none',
-        width: 'fit-content',
-      },
+      textAlign: 'var(--wv-form-submit-align)',
+    },
+    button: {
+      background: '#4B5563',
+      color: '#fff',
+      padding: '14px 30px',
+      border: 'none',
+      width: 'fit-content',
     },
   },
 }
-
 export default Form

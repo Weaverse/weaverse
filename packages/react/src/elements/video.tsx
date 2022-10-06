@@ -17,6 +17,7 @@ let Video = forwardRef<HTMLDivElement, VideoElementProps>((props, ref) => {
         disablePictureInPicture
       >
         <source src={src} type={type || 'video/mp4'} />
+        <source src={src} type="video/ogg" />
         Your browser does not support the video tag.
       </video>
     </div>
