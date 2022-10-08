@@ -66,39 +66,39 @@ export const Elements: ElementsMap = {
     type: 'video',
     defaultCss: Video.css,
   },
-  Accordion: {
-    Component: Accordion.default,
-    type: 'accordion',
-    defaultCss: Accordion.css,
-  },
-  AccordionWrapper: {
-    Component: AccordionWrapper.default,
-    type: 'accordion.wrapper',
-    defaultCss: AccordionWrapper.css,
-  },
-  AccordionContent: {
-    Component: AccordionContent.default,
-    type: 'accordion.content',
-    defaultCss: AccordionContent.css,
-  },
-  Tab: {
-    Component: Tab.default,
-    type: 'tab',
-    defaultCss: Tab.css,
-  },
-  TabContent: {
-    Component: TabContent.default,
-    type: 'tab.content',
-    defaultCss: TabContent.css,
-  },
-  Slider: {
-    Component: Slider.default,
-    type: 'slider',
-    defaultCss: Slider.css,
-  },
-  SliderContent: {
-    Component: SliderContent.default,
-    type: 'slider.content',
-    defaultCss: SliderContent.css,
-  },
+  // Accordion: {
+  //   Component: Accordion.default,
+  //   type: 'accordion',
+  //   defaultCss: Accordion.css,
+  // },
+  // AccordionWrapper: {
+  //   Component: AccordionWrapper.default,
+  //   type: 'accordion.wrapper',
+  //   defaultCss: AccordionWrapper.css,
+  // },
+  // AccordionContent: {
+  //   Component: AccordionContent.default,
+  //   type: 'accordion.content',
+  //   defaultCss: AccordionContent.css,
+  // },
+  // Tab: {
+  //   Component: Tab.default,
+  //   type: 'tab',
+  //   defaultCss: Tab.css,
+  // },
+  // TabContent: {
+  //   Component: TabContent.default,
+  //   type: 'tab.content',
+  //   defaultCss: TabContent.css,
+  // },
+  // Slider: {
+  //   Component: Slider.default,
+  //   type: 'slider',
+  //   defaultCss: Slider.css,
+  // },
+  // SliderContent: {
+  //   Component: SliderContent.default,
+  //   type: 'slider.content',
+  //   defaultCss: SliderContent.css,
+  // },
 }
