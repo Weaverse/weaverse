@@ -8,13 +8,13 @@ import * as Map from './map'
 import * as Text from './text'
 import * as Video from './video'
 import * as Instagram from './instagram'
-import * as Accordion from './accordion'
-import * as AccordionWrapper from './accordion/AccordionWrapper'
-import * as AccordionContent from './accordion/AccordionContent'
-import * as Tab from './tab'
-import * as TabContent from './tab/TabContent'
-import * as Slider from './slider'
-import * as SliderContent from './slider/SliderContent'
+// import * as Accordion from './accordion'
+// import * as AccordionWrapper from './accordion/AccordionWrapper'
+// import * as AccordionContent from './accordion/AccordionContent'
+// import * as Tab from './tab'
+// import * as TabContent from './tab/TabContent'
+// import * as Slider from './slider'
+// import * as SliderContent from './slider/SliderContent'
 import Placeholder from '~/elements/shared/Placeholder'
 
 export const SharedComponents = {
@@ -50,6 +50,7 @@ export const Elements: ElementsMap = {
     Component: Layout.default,
     type: 'layout',
     defaultCss: Layout.css,
+    permanentCss: Layout.permanentCss,
   },
   Map: {
     Component: Map.default,
