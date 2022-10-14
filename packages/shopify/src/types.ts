@@ -101,7 +101,7 @@ export interface ProductListProps extends WeaverseElementProps {
 export interface ProductBoxProps extends WeaverseElementProps {
   productId: number
   productHandle?: string
-  optionStyles?: 'combined' | 'custom'
+  optionsStyle?: 'combined' | 'custom'
 }
 
 export interface ProductTitleProps extends WeaverseElementProps {

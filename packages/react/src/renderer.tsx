@@ -8,13 +8,13 @@ import { generateItemClass } from './utils'
 export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
   let [, setData] = useState<ProjectDataType | unknown>(context.projectData)
   let rootRef = useRef<HTMLElement>()
-  let update = () => setData({})
+  let renderRoot = () => setData({})
 
   useEffect(() => {
-    context.subscribe(update)
+    context.subscribe(renderRoot)
     context.contentRootElement = rootRef.current
     return () => {
-      context.unsubscribe(update)
+      context.unsubscribe(renderRoot)
     }
   }, [])
 
@@ -39,15 +39,15 @@ const ItemComponent = ({ instance }: ItemComponentProps) => {
   let { id, type, childIds = [], css, className, ...rest } = data
 
   useEffect(() => {
-    let update = (data: ElementData) => setData({ ...data })
-    instance.subscribe(update)
+    let render = (data: ElementData) => setData({ ...data })
+    instance.subscribe(render)
     if (isBrowser && !instance.ref.current) {
       // fallback `ref` if component is not `forwardRef`
       Object.assign(instance.ref, {
         current: document.querySelector(`[data-wv-id="${id}"]`),
       })
     }
-    return () => instance.unsubscribe(update)
+    return () => instance.unsubscribe(render)
   }, [])
 
   let Element = elementInstances.get(type!)
