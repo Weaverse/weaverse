@@ -1,7 +1,7 @@
 import type { ElementCSS } from '@weaverse/core'
 import React, { forwardRef, useContext } from 'react'
 import { WeaverseContext } from '@weaverse/react'
-import { CollectionContext } from '~/elements/context'
+import { CollectionContext } from '~/context'
 
 let CollectionDescription = forwardRef<HTMLDivElement>((props, ref) => {
   let { ...rest } = props

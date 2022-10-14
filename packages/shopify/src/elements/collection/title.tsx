@@ -1,5 +1,5 @@
 import React, { forwardRef, useContext } from 'react'
-import { CollectionContext } from '~/elements/context'
+import { CollectionContext } from '~/context'
 import { WeaverseContext } from '@weaverse/react'
 import type { ElementCSS } from '@weaverse/core'
 

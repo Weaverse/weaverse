@@ -1,8 +1,9 @@
 import React, { forwardRef, useContext } from 'react'
-import { ProductListContext, weaverseShopifyProductLists } from '../context'
+import { ProductListContext } from '~/context'
 import type { ProductListProps } from '~/types'
 import { WeaverseContext } from '@weaverse/react'
 import * as Carousel from '~/elements/shared/Carousel'
+import { weaverseShopifyProductLists } from '~/proxy'
 
 let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
   let {

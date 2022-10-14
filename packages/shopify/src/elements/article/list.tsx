@@ -1,9 +1,10 @@
 import type { ElementCSS } from '@weaverse/core'
 import React, { forwardRef, useContext } from 'react'
-import { BlogContext, weaverseShopifyBlogs } from '../context'
+import { BlogContext } from '~/context'
 import type { ArticleListProps } from '~/types'
 import { WeaverseContext } from '@weaverse/react'
 import * as Carousel from '~/elements/shared/Carousel'
+import { weaverseShopifyBlogs } from '~/proxy'
 
 let ArticleList = forwardRef<HTMLDivElement, ArticleListProps>((props, ref) => {
   let {

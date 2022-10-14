@@ -1,7 +1,8 @@
 import React, { forwardRef, useContext } from 'react'
 import type { ElementCSS } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
-import { ProductContext, weaverseShopifyStoreData } from '../context'
+import { ProductContext } from '~/context'
+import { weaverseShopifyStoreData } from '~/proxy'
 
 function formatCurrency(price: string | undefined) {
   if (typeof price === 'undefined') return price

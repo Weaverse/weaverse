@@ -2,7 +2,7 @@ import React, { forwardRef, useContext } from 'react'
 import type { ElementCSS } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
 import { Swatch } from './swatch'
-import { ProductContext } from '~/elements/context'
+import { ProductContext } from '~/context'
 import type { ProductVariantProps } from '~/types'
 
 let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(

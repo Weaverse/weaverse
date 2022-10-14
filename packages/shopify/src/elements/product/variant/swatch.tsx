@@ -1,8 +1,5 @@
 import React from 'react'
-import {
-  weaversePresetsSettings,
-  weaverseSwatchesSettings,
-} from '~/elements/context'
+import { weaverseSwatchesSettings, weaversePresetsSettings } from '~/proxy'
 
 export let Swatch = (props: any) => {
   let { option, value: defaultValue, handleOptionChange } = props

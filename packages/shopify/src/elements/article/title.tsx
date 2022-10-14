@@ -1,5 +1,5 @@
 import React, { forwardRef, useContext } from 'react'
-import { ArticleContext } from '~/elements/context'
+import { ArticleContext } from '~/context'
 import { WeaverseContext } from '@weaverse/react'
 import type { ElementCSS } from '@weaverse/core'
 import type { ArticleTitleProps } from '~/types'

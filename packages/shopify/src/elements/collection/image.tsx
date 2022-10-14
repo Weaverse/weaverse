@@ -1,7 +1,7 @@
 import React, { forwardRef, useContext } from 'react'
 import type { ElementCSS } from '@weaverse/core'
 import { WeaverseContext } from '@weaverse/react'
-import { CollectionContext } from '~/elements/context'
+import { CollectionContext } from '~/context'
 let PLACEHOLDER_COLLECTION_SVG = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 525.5 525.5">
     <path d="M439.9 310.8c-.2.2-.1.5.1.7l13.2 8.7c.1.1.2.1.3.1.2 0 .3-.1.4-.2.2-.2.1-.5-.1-.7l-13.2-8.7c-.3-.2-.6-.1-.7.1z" />

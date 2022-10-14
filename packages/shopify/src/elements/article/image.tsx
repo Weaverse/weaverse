@@ -1,7 +1,7 @@
 import React, { forwardRef, useContext } from 'react'
 import type { ElementCSS } from '@weaverse/core'
 import { WeaverseContext } from '@weaverse/react'
-import { ArticleContext } from '~/elements/context'
+import { ArticleContext } from '~/context'
 import type { ArticleImageProps } from '~/types'
 let PLACEHOLDER_IMAGE_SVG = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 525.5 525.5">

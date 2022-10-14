@@ -1,5 +1,5 @@
 import React, { forwardRef, useContext, useState } from 'react'
-import { ProductContext } from '~/elements/context'
+import { ProductContext } from '~/context'
 import type { ElementCSS } from '@weaverse/core'
 
 let ProductQuantity = forwardRef<HTMLDivElement>((props, ref) => {

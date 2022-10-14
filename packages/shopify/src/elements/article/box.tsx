@@ -1,12 +1,9 @@
 import React, { forwardRef, useContext } from 'react'
-import {
-  ArticleContext,
-  weaverseShopifyArticles,
-  BlogContext,
-} from '../context'
+import { ArticleContext, BlogContext } from '~/context'
 import type { ElementCSS } from '@weaverse/core'
 import type { ArticleBoxProps } from '~/types'
 import { WeaverseContext } from '@weaverse/react'
+import { weaverseShopifyArticles } from '~/proxy'
 
 let ArticleBox = forwardRef<HTMLDivElement, ArticleBoxProps>((props, ref) => {
   let { children, articleId: aId, articleHandle, ...rest } = props
