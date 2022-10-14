@@ -1,7 +1,7 @@
+import type { PlaceholderProps } from '@weaverse/react'
 import React, { forwardRef } from 'react'
-import type { PlaceholderProps } from '~/types'
 
-const Placeholder = forwardRef<HTMLDivElement, PlaceholderProps>(
+export let Placeholder = forwardRef<HTMLDivElement, PlaceholderProps>(
   (props, ref) => {
     let { element, children, ...rest } = props
     return (
@@ -17,5 +17,3 @@ const Placeholder = forwardRef<HTMLDivElement, PlaceholderProps>(
     )
   }
 )
-
-export default Placeholder
