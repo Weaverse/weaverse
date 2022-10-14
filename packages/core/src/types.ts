@@ -44,9 +44,6 @@ export interface WeaverseElement {
   defaultCss?: ElementCSS
   permanentCss?: ElementCSS
 }
-export interface ElementsMap {
-  [key: string]: WeaverseElement
-}
 
 // Element types
 export type CatalogGroup = "essential" | "composition" | "shopify"
@@ -57,7 +54,7 @@ export interface ElementCatalog {
   data?: ElementData[]
 }
 
-export type FlagType = "draggable" | "resizable" | "sortable" | "droppable" | "ignoreShortcutKeys" | "hasContextMenu"
+export type FlagType = "draggable" | "resizable" | "sortable" | "ignoreShortcutKeys" | "hasContextMenu"
 export type ElementFlags = Partial<Record<FlagType, boolean>>
 
 export interface ChildElement {

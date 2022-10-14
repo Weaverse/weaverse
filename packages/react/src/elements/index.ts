@@ -1,4 +1,4 @@
-import type { ElementsMap } from '@weaverse/core'
+import type { WeaverseElement } from '@weaverse/core'
 import * as Button from './button'
 import * as Container from './container'
 import * as Countdown from './countdown'
@@ -20,7 +20,7 @@ import Placeholder from '~/elements/shared/Placeholder'
 export const SharedComponents = {
   Placeholder,
 }
-export const Elements: ElementsMap = {
+export const Elements: Record<string, WeaverseElement> = {
   Countdown: {
     Component: Countdown.default,
     type: 'countdown',

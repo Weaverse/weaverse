@@ -1,4 +1,4 @@
-import type { ElementsMap } from '@weaverse/core'
+import type { WeaverseElement } from '@weaverse/core'
 import * as ProductBox from './product/box'
 import * as ProductTitle from './product/title'
 import * as ProductPrice from './product/price'
@@ -24,7 +24,7 @@ import * as CollectionTitle from '~/elements/collection/title'
 import * as CollectionDescription from '~/elements/collection/description'
 import * as CollectionImage from '~/elements/collection/image'
 
-let elements: ElementsMap = {
+let elements: Record<string, WeaverseElement> = {
   ProductBox: {
     Component: ProductBox.default,
     type: 'product-box',
