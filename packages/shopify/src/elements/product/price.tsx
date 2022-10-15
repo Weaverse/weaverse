@@ -2,14 +2,14 @@ import React, { forwardRef, useContext } from 'react'
 import type { ElementCSS } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
 import { ProductContext } from '~/context'
-import { weaverseShopifyStoreData } from '~/proxy'
+import { weaverseShopifyConfigs } from '~/proxy'
 
 function formatCurrency(price: string | undefined) {
   if (typeof price === 'undefined') return price
   if (typeof price === 'number') {
     price = Number(price / 100).toFixed(0)
   }
-  let { money_format, primary_locale } = weaverseShopifyStoreData
+  let { money_format, primary_locale } = weaverseShopifyConfigs.shopData
 
   let formatPrice = new Intl.NumberFormat(primary_locale).format(Number(price))
   return money_format

@@ -1,10 +1,10 @@
 import React from 'react'
-import { weaverseSwatchesSettings, weaversePresetsSettings } from '~/proxy'
+import { weaverseShopifyConfigs } from '~/proxy'
 
 export let Swatch = (props: any) => {
   let { option, value: defaultValue, handleOptionChange } = props
-  let swatches = weaverseSwatchesSettings || []
-  let presets = weaversePresetsSettings || {}
+  let swatches = weaverseShopifyConfigs.swatches || []
+  let presets = weaverseShopifyConfigs.presets || {}
   let swatch = swatches.find((sw: any) => sw.name === option.name)
   let { colors, images } = presets
   if (swatch?.type) {
