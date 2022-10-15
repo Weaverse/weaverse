@@ -5,12 +5,7 @@ export let Placeholder = forwardRef<HTMLDivElement, PlaceholderProps>(
   (props, ref) => {
     let { element, children, ...rest } = props
     return (
-      <div
-        data-element-placeholder
-        style={{ display: 'none' }}
-        ref={ref}
-        {...rest}
-      >
+      <div data-wv-placeholder style={{ display: 'none' }} ref={ref} {...rest}>
         <div style={{ fontWeight: 600, marginBottom: '10px' }}>{element}</div>
         <div>{children}</div>
       </div>
