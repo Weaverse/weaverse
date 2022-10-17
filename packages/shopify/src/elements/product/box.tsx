@@ -1,34 +1,36 @@
 import React, { forwardRef, useContext, useId, useState } from 'react'
-import {
-  ProductContext,
-  ProductListContext,
-  weaverseShopifyProducts,
-} from '../context'
+import { ProductContext, ProductListContext } from '~/context'
 import type { ProductBoxProps } from '~/types'
 import { WeaverseContext } from '@weaverse/react'
+import { weaverseShopifyProducts } from '~/proxy'
+import { Placeholder } from '~/elements/shared'
 
 let ProductBox = forwardRef<HTMLDivElement, ProductBoxProps>((props, ref) => {
-  let { children, productId: pId, productHandle, optionStyles, ...rest } = props
+  let { children, productId: pId, productHandle, optionsStyle, ...rest } = props
   let { ssrMode } = useContext(WeaverseContext)
   let { productId: productAutoId } = useContext(ProductListContext)
+  let formId = useId()
+
   let productId = productAutoId || pId
   let product = weaverseShopifyProducts[productId]
-  let formId = useId()
   let [variantId, onChangeVariant] = useState(product?.variants[0].id || '')
-  if (ssrMode) {
+
+  if (productId) {
+    if (ssrMode) {
+      return (
+        <div {...rest} ref={ref}>
+          {`
+            {% unless wv_product %}
+              {% assign wv_product = product_${productId} %}
+            {% endunless %}
+          `}
+          {children}
+        </div>
+      )
+    }
+
     return (
       <div {...rest} ref={ref}>
-        {` {% unless wv_product %}
-          {% assign wv_product = product_${productId} %}
-        {% endunless %}
-        `}
-        {children}
-      </div>
-    )
-  }
-  return (
-    <div {...rest} ref={ref}>
-      {productId ? (
         <ProductContext.Provider
           value={{
             product,
@@ -40,16 +42,19 @@ let ProductBox = forwardRef<HTMLDivElement, ProductBoxProps>((props, ref) => {
         >
           {product && children}
         </ProductContext.Provider>
-      ) : (
-        'Select a product and start editing.'
-      )}
+      </div>
+    )
+  }
+
+  return (
+    <div {...rest} ref={ref}>
+      <Placeholder element="Product">
+        Select a product and start editing.
+      </Placeholder>
     </div>
   )
 })
 
-ProductBox.defaultProps = {
-  // productId: 7176137277624,
-  // productHandle: 'adidas-kids-stan-smith',
-}
+ProductBox.defaultProps = {}
 
 export default ProductBox

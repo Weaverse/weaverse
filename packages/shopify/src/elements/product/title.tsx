@@ -1,7 +1,7 @@
 import React, { forwardRef, useContext } from 'react'
 import type { ElementCSS } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
-import { ProductContext } from '../context'
+import { ProductContext } from '~/context'
 import type { ProductTitleProps } from '~/types'
 
 let ProductTitle = forwardRef<HTMLElement, ProductTitleProps>((props, ref) => {

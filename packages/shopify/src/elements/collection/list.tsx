@@ -1,6 +1,6 @@
 import type { ElementCSS } from '@weaverse/core'
 import React, { forwardRef } from 'react'
-import { CollectionListContext } from '../context'
+import { CollectionListContext } from '~/context'
 import * as Carousel from '~/elements/shared/Carousel'
 
 let CollectionList = forwardRef<HTMLDivElement, any>((props, ref) => {

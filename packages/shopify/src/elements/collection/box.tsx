@@ -1,12 +1,9 @@
 import React, { forwardRef, useContext } from 'react'
-import {
-  CollectionContext,
-  CollectionListContext,
-  weaverseShopifyCollections,
-} from '../context'
+import { CollectionContext, CollectionListContext } from '~/context'
 import type { ElementCSS } from '@weaverse/core'
 import type { CollectionBoxProps } from '~/types'
 import { WeaverseContext } from '@weaverse/react'
+import { weaverseShopifyCollections } from '~/proxy'
 
 let CollectionBox = forwardRef<HTMLDivElement, CollectionBoxProps>(
   (props, ref) => {
