@@ -65,8 +65,16 @@ export interface GridContentElementProps extends WeaverseElementProps {
   gap: number
   rowSize: number
 }
+
+interface BackgroundDataProps {
+  backgroundColor?: string
+  backgroundImage?: string
+  objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down'
+}
 // Layout
-export interface LayoutElementProps extends GridContentElementProps {
+export interface LayoutElementProps
+  extends BackgroundDataProps,
+    GridContentElementProps {
   gridSize: number
 }
 

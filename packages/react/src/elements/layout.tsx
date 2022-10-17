@@ -2,7 +2,18 @@ import React, { forwardRef } from 'react'
 import type { LayoutElementProps } from '~/types'
 
 let Layout = forwardRef<HTMLElement, LayoutElementProps>((props, ref) => {
-  let { children, rows, gap, rowSize, columns, gridSize, ...rest } = props
+  let {
+    children,
+    rows,
+    gap,
+    rowSize,
+    columns,
+    gridSize,
+    backgroundColor,
+    backgroundImage,
+    objectFit,
+    ...rest
+  } = props
   let style = {
     '--grid-size': gridSize + 'px',
     '--rows': rows,
@@ -12,13 +23,37 @@ let Layout = forwardRef<HTMLElement, LayoutElementProps>((props, ref) => {
     '--col-size':
       'calc((var(--grid-size) - calc(var(--columns) - 1) * var(--gap)) / var(--columns))',
   } as React.CSSProperties
-
   return (
     <section ref={ref} {...rest} style={style}>
+      <LayoutBackground
+        imgUrl={backgroundImage}
+        bgColor={backgroundColor}
+        objectFit={objectFit}
+      />
       <div data-layout-content>{children}</div>
     </section>
   )
 })
+
+let LayoutBackground = (props: any) => {
+  let { bgColor, imgUrl, objectFit } = props
+  let style = {
+    ['--bg-color' as any]: bgColor,
+    ['--object-fit' as any]: objectFit,
+  }
+  return imgUrl || bgColor ? (
+    <div data-wv-bg style={style}>
+      {imgUrl && (
+        <img
+          width="100%"
+          height="100%"
+          data-blink-src={imgUrl}
+          alt="wv-layout-background"
+        />
+      )}
+    </div>
+  ) : null
+}
 
 export let css = {
   '@desktop': {
@@ -40,6 +75,19 @@ export let css = {
     '> [data-layout-content]': {
       display: 'flex !important',
       flexDirection: 'column',
+    },
+  },
+}
+
+export let permanentCss = {
+  '@desktop': {
+    '[data-wv-bg]': {
+      position: 'absolute',
+      inset: 0,
+      backgroundColor: 'var(--bg-color)',
+    },
+    img: {
+      objectFit: 'var(--object-fit, cover)',
     },
   },
 }

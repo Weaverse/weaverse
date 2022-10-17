@@ -1,5 +1,5 @@
 import type * as Stitches from "@stitches/core"
-import type { ForwardRefExoticComponent, ReactElement } from "react"
+import type { ForwardRefExoticComponent } from "react"
 import type { stichesUtils } from "./utils"
 
 // Project types
@@ -118,6 +118,7 @@ export type AdvancedGroupType =
 export interface BasicInput {
   type: InputType
   label: string
+  binding?: "style" | "data"
   /**
    * The key of the value in the element data or css
    */
