@@ -1,9 +1,10 @@
+import { WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext } from 'react'
 import { ProductListContext } from '~/context'
-import type { ProductListProps } from '~/types'
-import { WeaverseContext } from '@weaverse/react'
+import { Placeholder } from '~/elements/shared'
 import * as Carousel from '~/elements/shared/Carousel'
 import { weaverseShopifyProductsByCollection } from '~/proxy'
+import type { ProductListProps } from '~/types'
 
 let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
   let {
@@ -29,7 +30,7 @@ let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
     )
   }
 
-  let renderContent = () => (
+  let Content = () => (
     <Carousel.default itemsPerSlide={itemsPerSlide} gap={itemsSpacing}>
       {productIds.slice(0, productNumber).map((productId: number) => (
         <ProductListContext.Provider
@@ -45,7 +46,13 @@ let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
   )
   return (
     <div ref={ref} {...rest}>
-      {productIds.length ? renderContent() : 'Select collection'}
+      {productIds.length ? (
+        <Content />
+      ) : (
+        <Placeholder element="Product List">
+          Select a collection and start editing.
+        </Placeholder>
+      )}
     </div>
   )
 })
@@ -53,8 +60,6 @@ let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
 export default ProductList
 
 ProductList.defaultProps = {
-  collectionId: 291152986296,
-  collectionHandle: 'men',
   productNumber: 12,
   itemsPerSlide: 4,
   itemsSpacing: 8,
