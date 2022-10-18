@@ -1,7 +1,7 @@
 import type { WeaverseElementProps } from '@weaverse/react'
 
 // Product
-type IProductImage = {
+type ShopifyProductImage = {
   created_at: string
   id: number
   position: number
@@ -20,7 +20,7 @@ type IProductImage = {
   }
 }
 
-interface IProductVariant {
+interface ShopifyProductVariant {
   barcode: string
   compare_at_price: string | null
   created_at: string
@@ -53,7 +53,7 @@ interface IProductVariant {
   featured_media: { id: number }
 }
 
-interface IProductOption {
+interface ShopifyProductOption {
   id: number
   name: string
   position: number
@@ -61,29 +61,29 @@ interface IProductOption {
   values: string[]
 }
 
-export type Product = {
+export type ShopifyProduct = {
   id: number
   title: string
   price: string
-  image: IProductImage
-  images: IProductImage[]
-  options: IProductOption[]
-  variants: IProductVariant[]
+  image: ShopifyProductImage
+  images: ShopifyProductImage[]
+  options: ShopifyProductOption[]
+  variants: ShopifyProductVariant[]
   body_html: string
   vendor: string
   handle: string
   // live view
   featured_image: string
-  media: IProductImage[]
+  media: ShopifyProductImage[]
   description: string
 }
 
 export type ProductContextProps = {
-  product: Product
+  product: ShopifyProduct
   productId?: string | number
   formId: string
   variantId: number
-  onChangeVariant: (id: number) => void
+  onVariantChange: (id: number) => void
 }
 
 export type ProductListContextProps = {
@@ -100,13 +100,19 @@ export interface ProductListProps extends WeaverseElementProps {
 
 export interface ProductBoxProps extends WeaverseElementProps {
   productId: number
-  productHandle?: string
-  optionsStyle?: 'combined' | 'custom'
+  // productHandle?: string
+  // optionsStyle?: 'combined' | 'custom'
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface ProductInfoProps extends WeaverseElementProps {}
+export type ProductMediaSize = 'small' | 'medium' | 'large'
+export interface ProductMediaProps extends WeaverseElementProps {
+  mediaSize: ProductMediaSize
 }
 
 export interface ProductTitleProps extends WeaverseElementProps {
   htmlTag: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p'
-  linkProduct: boolean
 }
 
 export interface ProductImageProps extends WeaverseElementProps {

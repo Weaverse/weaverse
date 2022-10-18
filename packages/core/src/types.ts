@@ -51,7 +51,10 @@ export interface ElementCatalog {
   name: string
   icon?: string
   group?: CatalogGroup
-  data?: ElementData[]
+  data?: ElementDataInCatalog[]
+}
+export interface ElementDataInCatalog extends Omit<ElementData, "id"> {
+  id: string | number
 }
 
 export type FlagType = "draggable" | "resizable" | "sortable" | "ignoreShortcutKeys" | "hasContextMenu"
@@ -61,12 +64,12 @@ export interface ChildElement {
   label: string
   selector: string
 }
-export type ParentType = "container" | "layout" | "root" | "product.content"
+export type ParentType = "container" | "layout" | "root" | "product-box" | "product-info"
 export type GridSize = {
   rowSpan: number
   colSpan: number
 }
-export type ToolbarAction = "duplicate" | "delete" | "copy-styles" | "paste-styles"
+export type ToolbarAction = "general-settings" | "duplicate" | "delete" | "copy-styles" | "paste-styles"
 export interface ElementSchema {
   title: string
   type: string
@@ -122,7 +125,7 @@ export interface BasicInput {
   /**
    * The key of the value in the element data or css
    */
-  name: string
+  name?: string
   defaultValue?: string
   placeholder?: string
   helpText?: string
