@@ -8,7 +8,7 @@ import type { ProductVariantProps } from '~/types'
 let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
   (props, ref) => {
     let { variantType, ...rest } = props
-    let { product, formId, variantId, onVariantChange } =
+    let { product, formId, variantId, onChangeVariant } =
       useContext(ProductContext)
     let { ssrMode } = useContext(WeaverseContext)
     if (ssrMode) {
@@ -29,7 +29,7 @@ let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
       <select
         name="id"
         value={variantId}
-        onChange={(e) => onVariantChange(Number.parseInt(e.target.value))}
+        onChange={(e) => onChangeVariant(Number.parseInt(e.target.value))}
         form={formId}
       >
         {product.variants.map((variant) => (
@@ -46,7 +46,7 @@ let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
         optArr[pos - 1] = val
         let newTitle = optArr.join(' / ')
         let newVariant = variants.find((variant) => variant.title === newTitle)
-        newVariant && onVariantChange(newVariant.id)
+        newVariant && onChangeVariant(newVariant.id)
       }
       let swatchesOptionComp = options.map((opt) => {
         // @ts-ignore
