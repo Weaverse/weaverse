@@ -1,6 +1,16 @@
-import React, { forwardRef, useContext, useId, useState } from 'react'
+import React, {
+  forwardRef,
+  useContext,
+  useEffect,
+  useId,
+  useState,
+} from 'react'
 import { ProductContext } from '~/context'
-import type { ProductBoxProps, ShopifyProduct } from '~/types'
+import type {
+  ProductBoxProps,
+  ShopifyProduct,
+  ShopifyProductVariant,
+} from '~/types'
 import { WeaverseContext } from '@weaverse/react'
 import { weaverseShopifyProducts } from '~/proxy'
 import { Placeholder } from '~/elements/shared'
@@ -10,7 +20,16 @@ let ProductBox = forwardRef<HTMLDivElement, ProductBoxProps>((props, ref) => {
   let { ssrMode } = useContext(WeaverseContext)
   let formId = useId()
   let product: ShopifyProduct = weaverseShopifyProducts[productId]
-  let [variantId, onVariantChange] = useState(product?.variants[0]?.id)
+  let [selectedVariant, setSelectedVariant] =
+    useState<ShopifyProductVariant | null>(null)
+
+  useEffect(() => {
+    if (product) {
+      // TODO
+      let selectedOrFirstAvailableVariant = product.variants[0]
+      setSelectedVariant(selectedOrFirstAvailableVariant)
+    }
+  }, [product])
 
   if (product) {
     if (ssrMode) {
@@ -40,10 +59,11 @@ let ProductBox = forwardRef<HTMLDivElement, ProductBoxProps>((props, ref) => {
       <div {...rest} ref={ref}>
         <ProductContext.Provider
           value={{
-            product,
+            ssrMode,
             formId,
-            variantId,
-            onVariantChange,
+            product,
+            selectedVariant,
+            setSelectedVariant,
           }}
         >
           {children}
