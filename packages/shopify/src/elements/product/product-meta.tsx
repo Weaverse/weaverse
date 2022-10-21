@@ -17,7 +17,7 @@ let ProductMeta = forwardRef<HTMLDivElement, ProductMetaProps>((props, ref) => {
               <div className="meta-label">SKU:</div>
               <div className="meta-value">
                 {ssrMode
-                  ? `{{ wv_product.selected_or_first_available_variant.sku | default: 'N/A' }}`
+                  ? `{{- wv_product.selected_or_first_available_variant.sku | default: 'N/A' -}}`
                   : selectedVariant?.sku || 'N/A'}
               </div>
             </li>
@@ -26,7 +26,7 @@ let ProductMeta = forwardRef<HTMLDivElement, ProductMetaProps>((props, ref) => {
             <li>
               <div className="meta-label">Tags:</div>
               <div className="meta-value">
-                {ssrMode ? `{{ wv_product.tags }}` : product.tags}
+                {ssrMode ? `{{- wv_product.tags -}}` : product.tags}
               </div>
             </li>
           ) : null}
@@ -34,7 +34,7 @@ let ProductMeta = forwardRef<HTMLDivElement, ProductMetaProps>((props, ref) => {
             <li>
               <div className="meta-label">Vendor:</div>
               <div className="meta-value">
-                {ssrMode ? `{{ wv_product.vendor }}` : product.vendor}
+                {ssrMode ? `{{- wv_product.vendor -}}` : product.vendor}
               </div>
             </li>
           ) : null}
@@ -42,7 +42,7 @@ let ProductMeta = forwardRef<HTMLDivElement, ProductMetaProps>((props, ref) => {
             <li>
               <div className="meta-label">Category:</div>
               <div className="meta-value">
-                {ssrMode ? `{{ wv_product.type }}` : product.product_type}
+                {ssrMode ? `{{- wv_product.type -}}` : product.product_type}
               </div>
             </li>
           ) : null}

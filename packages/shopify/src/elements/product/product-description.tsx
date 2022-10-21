@@ -18,7 +18,7 @@ let ProductDescription = forwardRef<HTMLDivElement, ProductDescriptionProps>(
       if (ssrMode) {
         return (
           <div ref={ref} {...rest} style={style}>
-            {`{{ wv_product.description }}`}
+            {`{{- wv_product.description -}}`}
           </div>
         )
       }

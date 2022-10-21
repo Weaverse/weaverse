@@ -12,7 +12,7 @@ let ProductVendor = forwardRef<HTMLDivElement, ProductVendorProps>(
       let { product, ssrMode } = context
       return (
         <div ref={ref} {...rest}>
-          {ssrMode ? '{{ wv_product.vendor }}' : product.vendor}
+          {ssrMode ? '{{- wv_product.vendor -}}' : product.vendor}
         </div>
       )
     }

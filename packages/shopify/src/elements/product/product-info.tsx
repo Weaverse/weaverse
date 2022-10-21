@@ -15,7 +15,8 @@ export let css: ElementCSS = {
   '@desktop': {
     flexGrow: 1,
     width: '50%',
-    padding: '10px',
+    paddingLeft: '10px',
+    paddingRight: '10px',
   },
 }
 
