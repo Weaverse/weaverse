@@ -11,7 +11,7 @@ let ProductPrice = forwardRef<HTMLDivElement, ProductPriceProps>(
     let context = useContext(ProductContext)
 
     if (context) {
-      let { product, selectedVariant, ssrMode } = context
+      let { selectedVariant, ssrMode } = context
       if (ssrMode) {
         return (
           <div ref={ref} className="wv-product-prices" {...rest}>
@@ -23,17 +23,21 @@ let ProductPrice = forwardRef<HTMLDivElement, ProductPriceProps>(
               <span class="wv-sale-price">{{- price | money -}}</span>
               ${
                 showCompareAt &&
-                `<span class="wv-compare-price">{{- compare_at_price | money -}}</span>`
+                `
+                {%- if compare_at_price > price -%}
+                  <span class="wv-compare-price">{{- compare_at_price | money -}}</span>
+                {%- endif -%}
+                `
               }
               ${
                 showSaleBadge &&
                 `
-                {%- assign saved_percentage = '' -%}
                 {%- if compare_at_price > price -%}
+                  {%- assign saved_percentage = '' -%}
                   {%- assign saved_percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | append: '%' -%}
                   <span className="wv-sale-badge">{{- saved_percentage -}}</span>
                 {%- endif -%}
-              `
+                `
               }
             `}
           </div>
