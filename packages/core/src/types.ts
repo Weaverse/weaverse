@@ -69,7 +69,16 @@ export type GridSize = {
   rowSpan: number
   colSpan: number
 }
-export type ToolbarAction = "general-settings" | "duplicate" | "delete" | "copy-styles" | "paste-styles"
+export type ToolbarAction =
+  | "general-settings"
+  | "edit-text"
+  | "duplicate"
+  | "delete"
+  | "copy-styles"
+  | "paste-styles"
+  | "move-up"
+  | "move-down"
+  | "toggle-visibility"
 export interface ElementSchema {
   title: string
   type: string
@@ -116,17 +125,17 @@ export interface BasicGroup {
 
 export type AdvancedGroupType =
   // Styles
-  "border" | "alignment" | "background" | "dimensions" | "spacing" | "typography" | "visibility"
+  "border" | "alignment" | "background" | "dimensions" | "spacing" | "typography" | "visibility" | "shadows-and-effects"
 
 export interface BasicInput {
   type: InputType
-  label: string
+  label?: string
   binding?: "style" | "data"
   /**
    * The key of the value in the element data or css
    */
   name?: string
-  defaultValue?: string
+  defaultValue?: string | number | boolean
   placeholder?: string
   helpText?: string
   /**

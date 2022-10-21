@@ -20,17 +20,21 @@ export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
 
   let eventHandlers = context?.studioBridge?.eventHandlers || {}
   let themeClass = context.stitchesInstance.theme.className
-  return context.projectData?.rootId ? (
-    <div
-      className={`weaverse-content-root ${themeClass}`}
-      {...eventHandlers}
-      ref={rootRef}
-    >
-      <WeaverseContextProvider value={context}>
-        <ItemInstance id={context.projectData.rootId} />
-      </WeaverseContextProvider>
-    </div>
-  ) : null
+
+  if (context.projectData?.rootId) {
+    return (
+      <div
+        className={`weaverse-content-root ${themeClass}`}
+        {...eventHandlers}
+        ref={rootRef}
+      >
+        <WeaverseContextProvider value={context}>
+          <ItemInstance id={context.projectData.rootId} />
+        </WeaverseContextProvider>
+      </div>
+    )
+  }
+  return null
 }
 
 const ItemComponent = ({ instance }: ItemComponentProps) => {
@@ -70,8 +74,10 @@ const ItemComponent = ({ instance }: ItemComponentProps) => {
         ))}
       </Component>
     )
+  } else {
+    console.log(`Unknown element: ${type}`)
+    return null
   }
-  return null
 }
 
 let ItemInstance = ({ id }: { id: string | number }) => {

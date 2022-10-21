@@ -1,7 +1,7 @@
 import type { WeaverseElementProps } from '@weaverse/react'
 
 // Product
-type ShopifyProductImage = {
+export interface ShopifyProductImage {
   created_at: string
   id: number
   position: number
@@ -12,15 +12,9 @@ type ShopifyProductImage = {
   height: number
   updated_at: string
   alt: string | null
-  //live view
-  media_type: string
-  external_id: string
-  preview_image: {
-    src: string
-  }
 }
 
-interface ShopifyProductVariant {
+export interface ShopifyProductVariant {
   barcode: string
   compare_at_price: string | null
   created_at: string
@@ -30,13 +24,13 @@ interface ShopifyProductVariant {
   image_id: number | null
   inventory_item_id: number
   inventory_management: string
-  // inventory_policy: ProductVariantInventoryPolicy;
+  inventory_policy: ProductVariantInventoryPolicy
   inventory_quantity: number
   old_inventory_quantity: number
   option1: string | null
   option2: string | null
   option3: string | null
-  // presentment_prices: IProductVariantPresentmentPriceSet[];
+  presentment_prices: ShopifyProductVariantPresentmentPriceSet[]
   position: number
   price: string
   product_id: number
@@ -47,13 +41,23 @@ interface ShopifyProductVariant {
   title: string
   updated_at: string
   weight: number
-  // weight_unit: ProductVariantWeightUnit;
-
-  // live view
-  featured_media: { id: number }
+  weight_unit: ProductVariantWeightUnit
 }
 
-interface ShopifyProductOption {
+export interface ShopifyProductVariantPresentmentPriceSet {
+  price: ShopifyMoney
+  compare_at_price: ShopifyMoney
+}
+
+export interface ShopifyMoney {
+  amount: number | string
+  currency_code: string
+}
+
+export type ProductVariantInventoryPolicy = 'deny' | 'continue'
+export type ProductVariantWeightUnit = 'g' | 'kg' | 'oz' | 'lb'
+
+export interface ShopifyProductOption {
   id: number
   name: string
   position: number
@@ -61,32 +65,38 @@ interface ShopifyProductOption {
   values: string[]
 }
 
-export type ShopifyProduct = {
+export interface ShopifyProduct {
+  body_html: string
+  created_at: string
+  handle: string
   id: number
-  title: string
-  price: string
   image: ShopifyProductImage
   images: ShopifyProductImage[]
   options: ShopifyProductOption[]
+  product_type: string
+  published_at: string
+  published_scope: string
+  tags: string
+  template_suffix: string | null
+  title: string
+  metafields_global_title_tag?: string
+  metafields_global_description_tag?: string
+  updated_at: string
   variants: ShopifyProductVariant[]
-  body_html: string
   vendor: string
-  handle: string
-  // live view
-  featured_image: string
-  media: ShopifyProductImage[]
-  description: string
+  status: 'active' | 'archived' | 'draft'
 }
 
-export type ProductContextProps = {
+export interface ProductContextProps {
   product: ShopifyProduct
+  ssrMode: boolean
   productId?: string | number
   formId: string
-  variantId: number
-  onVariantChange: (id: number) => void
+  selectedVariant: ShopifyProductVariant | null
+  setSelectedVariant: (variant: ShopifyProductVariant) => void
 }
 
-export type ProductListContextProps = {
+export interface ProductListContextProps {
   productId?: string | number
 }
 
@@ -106,6 +116,7 @@ export interface ProductBoxProps extends WeaverseElementProps {
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ProductInfoProps extends WeaverseElementProps {}
+
 export type ProductMediaSize = 'small' | 'medium' | 'large'
 export interface ProductMediaProps extends WeaverseElementProps {
   mediaSize: ProductMediaSize
@@ -113,6 +124,27 @@ export interface ProductMediaProps extends WeaverseElementProps {
 
 export interface ProductTitleProps extends WeaverseElementProps {
   htmlTag: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p'
+}
+
+export interface ProductDescriptionProps extends WeaverseElementProps {
+  lineClamp: number
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface ProductVendorProps extends WeaverseElementProps {}
+
+export interface ProductMetaProps extends WeaverseElementProps {
+  // showAvailability: boolean
+  showSKU: boolean
+  // showCollections: boolean
+  showTags: boolean
+  showVendor: boolean
+  showType: boolean
+}
+
+export interface ProductPriceProps extends WeaverseElementProps {
+  showCompareAt: boolean
+  showSaleBadge: boolean
 }
 
 export interface ProductImageProps extends WeaverseElementProps {
@@ -164,7 +196,7 @@ export interface ArticleImageProps extends WeaverseElementProps {
 }
 
 // Collection
-interface IImage {
+export interface ShopifyCollectionImage {
   created_at: string
   height: number
   src: string
@@ -173,16 +205,17 @@ interface IImage {
   alt: string | null
 }
 
-interface Collection {
+export interface ShopifyCollection {
+  admin_graphql_api_id: string
   body_html: string
-  disjunctive: boolean
+  collection_type: string
   handle: string
   id: number
-  image?: IImage
+  image: ShopifyCollectionImage
+  products_count: number
   published_at: string
   published_scope: string
-  // rules: ISmartCollectionRule[]
-  // sort_order: SmartCollectionSortOrder
+  sort_order: string
   template_suffix: string | null
   title: string
   updated_at: string
@@ -193,8 +226,8 @@ export interface CollectionBoxProps extends WeaverseElementProps {
   collectionHandle?: string
 }
 
-export type CollectionContextProps = {
-  collection: Collection
+export interface CollectionContextProps {
+  collection: ShopifyCollection
   collectionId: string | number
 }
 
@@ -209,7 +242,7 @@ export interface FormElementProps extends WeaverseElementProps {
 }
 
 export type FormFieldType = 'text' | 'email' | 'multiline'
-export type FormFieldProps = {
+export interface FormFieldProps {
   id: number
   type: FormFieldType
   placeholder: string
