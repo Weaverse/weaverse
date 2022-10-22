@@ -19,7 +19,6 @@ let ProductPrice = forwardRef<HTMLDivElement, ProductPriceProps>(
               {%- assign variant = product.selected_or_first_available_variant -%}
               {%- assign price = variant.price -%}
               {%- assign compare_at_price = variant.compare_at_price -%}
-
               <span class="wv-sale-price">{{- price | money -}}</span>
               ${
                 showCompareAt &&
