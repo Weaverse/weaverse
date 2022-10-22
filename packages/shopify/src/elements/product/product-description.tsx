@@ -40,6 +40,9 @@ export let css: ElementCSS = {
   '@desktop': {
     overflow: 'hidden',
     display: '-webkit-box',
+    img: {
+      maxWidth: '100%',
+    },
   },
 }
 

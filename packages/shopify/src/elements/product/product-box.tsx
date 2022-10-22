@@ -16,7 +16,7 @@ import { weaverseShopifyProducts } from '~/proxy'
 import { Placeholder } from '~/elements/shared'
 
 let ProductBox = forwardRef<HTMLDivElement, ProductBoxProps>((props, ref) => {
-  let { children, productId, ...rest } = props
+  let { children, productId, productHandle, ...rest } = props
   let { ssrMode } = useContext(WeaverseContext)
   let formId = useId()
   let product: ShopifyProduct = weaverseShopifyProducts[productId]

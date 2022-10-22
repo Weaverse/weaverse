@@ -12,7 +12,7 @@ let ProductMeta = forwardRef<HTMLDivElement, ProductMetaProps>((props, ref) => {
     return (
       <div ref={ref} {...rest}>
         <ul className="wv-product-meta">
-          {showSKU ? (
+          {showSKU && selectedVariant?.sku ? (
             <li>
               <div className="meta-label">SKU:</div>
               <div className="meta-value">
@@ -22,7 +22,7 @@ let ProductMeta = forwardRef<HTMLDivElement, ProductMetaProps>((props, ref) => {
               </div>
             </li>
           ) : null}
-          {showTags ? (
+          {showTags && product.tags.length ? (
             <li>
               <div className="meta-label">Tags:</div>
               <div className="meta-value">
@@ -30,7 +30,7 @@ let ProductMeta = forwardRef<HTMLDivElement, ProductMetaProps>((props, ref) => {
               </div>
             </li>
           ) : null}
-          {showVendor ? (
+          {showVendor && product.vendor ? (
             <li>
               <div className="meta-label">Vendor:</div>
               <div className="meta-value">

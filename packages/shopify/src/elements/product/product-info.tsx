@@ -14,9 +14,10 @@ let ProductInfo = forwardRef<HTMLDivElement, ProductInfoProps>((props, ref) => {
 export let css: ElementCSS = {
   '@desktop': {
     flexGrow: 1,
-    width: '50%',
-    paddingLeft: '10px',
-    paddingRight: '10px',
+    paddingLeft: '16px',
+  },
+  '@mobile': {
+    paddingLeft: '0px',
   },
 }
 
