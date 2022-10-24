@@ -2,6 +2,7 @@ import type { ElementCSS } from '@weaverse/react'
 import type { KeenSliderInstance, KeenSliderPlugin } from 'keen-slider/react'
 import { useKeenSlider } from 'keen-slider/react'
 import type { MutableRefObject } from 'react'
+import { useEffect } from 'react'
 import React, { forwardRef, useContext } from 'react'
 import { ProductContext } from '~/context'
 import type { ProductMediaProps, ProductMediaSize } from '~/types'
@@ -65,8 +66,23 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
       [ThumbnailPlugin(instanceRef)]
     )
 
+    useEffect(() => {
+      if (context) {
+        let { product, selectedVariant } = context
+        if (selectedVariant) {
+          let { featured_media } = selectedVariant
+          console.log('👉 --------> - featured_media', featured_media)
+          if (featured_media) {
+            if (instanceRef.current) {
+              instanceRef.current.moveToIdx(featured_media.position - 1)
+            }
+          }
+        }
+      }
+    }, [context])
+
     if (context) {
-      let { product } = context
+      let { product, selectedVariant } = context
       let style = {
         '--product-media-width': mediaSizesMap[mediaSize],
         '--media-aspect-ratio': aspectRatio,

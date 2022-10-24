@@ -8,9 +8,8 @@ let defaultMoneyFormat = '${{amount}}'
  * @return {String} value - formatted value
  */
 export function formatMoney(cents: string | number, format: string): string {
-  let _cents = cents + '00'
-  if (typeof _cents === 'string') {
-    _cents = _cents.replace('.', '')
+  if (typeof cents === 'string') {
+    cents = cents.replace('.', '')
   }
   let value: string | 0 = ''
   let placeholderRegex = /\{\{\s*(\w+)\s*\}\}/
@@ -41,16 +40,16 @@ export function formatMoney(cents: string | number, format: string): string {
   // @ts-ignore
   switch (formatString.match(placeholderRegex)[1]) {
     case 'amount':
-      value = formatWithDelimiters(_cents, 2)
+      value = formatWithDelimiters(cents, 2)
       break
     case 'amount_no_decimals':
-      value = formatWithDelimiters(_cents, 0)
+      value = formatWithDelimiters(cents, 0)
       break
     case 'amount_with_comma_separator':
-      value = formatWithDelimiters(_cents, 2, '.', ',')
+      value = formatWithDelimiters(cents, 2, '.', ',')
       break
     case 'amount_no_decimals_with_comma_separator':
-      value = formatWithDelimiters(_cents, 0, '.', ',')
+      value = formatWithDelimiters(cents, 0, '.', ',')
       break
   }
 

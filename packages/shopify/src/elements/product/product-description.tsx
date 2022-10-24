@@ -40,8 +40,13 @@ export let css: ElementCSS = {
   '@desktop': {
     overflow: 'hidden',
     display: '-webkit-box',
+    marginTop: '16px',
     img: {
       maxWidth: '100%',
+      display: 'none',
+    },
+    div: {
+      display: 'block',
     },
   },
 }

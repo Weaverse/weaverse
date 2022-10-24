@@ -3,6 +3,7 @@ import React, {
   useContext,
   useEffect,
   useId,
+  useRef,
   useState,
 } from 'react'
 import { ProductContext } from '~/context'
@@ -19,6 +20,7 @@ let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
   (props, ref) => {
     let { children, productId, productHandle, ...rest } = props
     let { ssrMode } = useContext(WeaverseContext)
+    let formRef = useRef<HTMLFormElement>(null)
     let formId = useId()
     let product: ShopifyProduct = weaverseShopifyProducts[productId]
     let [selectedVariant, setSelectedVariant] =
@@ -61,13 +63,15 @@ let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
           <ProductContext.Provider
             value={{
               ssrMode,
-              formId,
               product,
+              formId,
+              formRef,
               selectedVariant,
               setSelectedVariant,
             }}
           >
             <form
+              ref={formRef}
               method="post"
               action="/cart/add"
               id={formId}
@@ -80,7 +84,6 @@ let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
             >
               <input type="hidden" name="form_type" value="product" />
               <input type="hidden" name="utf8" value="✓" />
-              <input type="hidden" name="id" value={selectedVariant?.id} />
               {children}
             </form>
           </ProductContext.Provider>
@@ -105,12 +108,13 @@ ProductDetails.defaultProps = {}
 export let css = {
   '@desktop': {
     padding: '10px',
-    '.wv-product-form': {
+    overflow: 'hidden',
+    '& > form': {
       display: 'flex',
-      overflow: 'hidden',
     },
   },
   '@mobile': {
+    padding: '0px',
     '.wv-product-form': {
       display: 'block',
     },

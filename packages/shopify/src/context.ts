@@ -1,11 +1,11 @@
 import { createContext } from 'react'
 import type {
   CollectionContextProps,
-  ProductContextProps,
+  ProductContextType,
   ProductListContextProps,
 } from '~/types'
 
-export let ProductContext = createContext<ProductContextProps | null>(null)
+export let ProductContext = createContext<ProductContextType | null>(null)
 export let ProductListContext = createContext<ProductListContextProps>({})
 export let ArticleContext = createContext<any>({})
 export let BlogContext = createContext<any>({})
