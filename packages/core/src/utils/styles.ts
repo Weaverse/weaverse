@@ -1,4 +1,6 @@
-export const stichesUtils = {
+import type Stitches from "@stitches/core/types/stitches"
+
+export let stichesUtils = {
   // Abbreviated margin properties
   m: (value: string) => ({
     margin: value,
@@ -38,4 +40,23 @@ export const stichesUtils = {
     paddingTop: value,
     paddingBottom: value,
   }),
+}
+
+export function createGlobalStyles(stitches: Stitches) {
+  let globalStyles = stitches.globalCss({
+    "@keyframes spin": {
+      from: { transform: "rotate(0deg)" },
+      to: { transform: "rotate(360deg)" },
+    },
+    input: {
+      "&::-webkit-outer-spin-button, &::-webkit-inner-spin-button": {
+        "-webkit-appearance": "none",
+        margin: 0,
+      },
+      "&[type=number]": {
+        "-moz-appearance": "textfield",
+      },
+    },
+  })
+  globalStyles()
 }
