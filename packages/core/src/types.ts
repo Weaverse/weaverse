@@ -64,7 +64,7 @@ export interface ChildElement {
   label: string
   selector: string
 }
-export type ParentType = "container" | "layout" | "root" | "product-box" | "product-info"
+export type ParentType = "container" | "layout" | "root" | "product-details" | "product-info"
 export type GridSize = {
   rowSpan: number
   colSpan: number
@@ -182,13 +182,20 @@ export type InputType =
   // Element inputs
   | "form"
   | "product"
+  | "product-swatches"
   | "custom.html"
   | "instagram"
 
 declare global {
   interface Window {
     WeaverseStudioBridge: any
+    weaverseShopifyConfigs: any
     weaverseShopifyProducts: any
+    weaverseShopifyProductsByCollection: any
+    weaverseShopifyCollections: any
+    weaverseShopifyArticles: any
+    weaverseShopifyBlogs: any
+    weaverseCartHelpers: any
     Blinkloader: any
   }
 }

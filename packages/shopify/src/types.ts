@@ -42,6 +42,8 @@ export interface ShopifyProductVariant {
   updated_at: string
   weight: number
   weight_unit: ProductVariantWeightUnit
+  // Liquid props
+  featured_media?: ShopifyProductImage
 }
 
 export interface ShopifyProductVariantPresentmentPriceSet {
@@ -85,13 +87,17 @@ export interface ShopifyProduct {
   variants: ShopifyProductVariant[]
   vendor: string
   status: 'active' | 'archived' | 'draft'
+  // Liquid props
+  selected_or_first_available_variant?: ShopifyProductVariant
+  has_only_default_variant?: boolean
 }
 
-export interface ProductContextProps {
+export interface ProductContextType {
   product: ShopifyProduct
   ssrMode: boolean
   productId?: string | number
   formId: string
+  formRef: React.RefObject<HTMLFormElement>
   selectedVariant: ShopifyProductVariant | null
   setSelectedVariant: (variant: ShopifyProductVariant) => void
 }
@@ -108,18 +114,19 @@ export interface ProductListProps extends WeaverseElementProps {
   itemsSpacing: number
 }
 
-export interface ProductBoxProps extends WeaverseElementProps {
+export interface ProductDetailsProps extends WeaverseElementProps {
   productId: number
-  // productHandle?: string
-  // optionsStyle?: 'combined' | 'custom'
+  productHandle: string
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ProductInfoProps extends WeaverseElementProps {}
 
 export type ProductMediaSize = 'small' | 'medium' | 'large'
+export type AspectRatio = 'auto' | '1 / 1' | '3 / 4' | '4 / 3'
 export interface ProductMediaProps extends WeaverseElementProps {
   mediaSize: ProductMediaSize
+  aspectRatio: AspectRatio
 }
 
 export interface ProductTitleProps extends WeaverseElementProps {
@@ -147,28 +154,15 @@ export interface ProductPriceProps extends WeaverseElementProps {
   showSaleBadge: boolean
 }
 
-export interface ProductImageProps extends WeaverseElementProps {
-  aspectRatio: string
-  showThumbnails: boolean
-  thumbnailPosition: 'top' | 'right' | 'bottom' | 'left' | undefined
-  showBullets: boolean
-  showFullscreenButton: boolean
-  showPlayButton: boolean
-  showNav: boolean
-}
-
-export interface ProductAtcProps extends WeaverseElementProps {
+export interface ProductBuyButtonProps extends WeaverseElementProps {
+  showQuantitySelector: boolean
   buttonText: string
-  addingText: string
-  addedText: string
   soldOutText: string
   unavailableText: string
-  // cartAction: '' | 'cart'
-  goToCart: boolean
 }
 
 export interface ProductVariantProps extends WeaverseElementProps {
-  variantType: 'custom' | 'combined'
+  optionsStyle: 'combined' | 'custom'
 }
 
 // Article
