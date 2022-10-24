@@ -1,5 +1,5 @@
 {
-  "version": "0.7.16",
+  "version": "0.7.17",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -31,7 +31,7 @@
   "name": "@weaverse/shopify",
   "author": "Weaverse Team",
   "dependencies": {
-    "@weaverse/react": "0.7.16",
+    "@weaverse/react": "0.7.17",
     "clsx": "^1.2.1",
     "keen-slider": "^6.8.3",
     "nuka-carousel": "^5.4.0",
