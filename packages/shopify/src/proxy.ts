@@ -21,5 +21,5 @@ export let weaverseShopifyProductsByCollection = createProxy(
 export let weaverseShopifyCollections = createProxy(
   'weaverseShopifyCollections'
 )
-export let weaverseShopifyArticles = createProxy('weaverseShopifyArticles')
 export let weaverseShopifyBlogs = createProxy('weaverseShopifyBlogs')
+export let weaverseShopifyArticles = createProxy('weaverseShopifyArticles')

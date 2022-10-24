@@ -51,7 +51,10 @@ export interface ElementCatalog {
   name: string
   icon?: string
   group?: CatalogGroup
-  data?: ElementData[]
+  data?: ElementDataInCatalog[]
+}
+export interface ElementDataInCatalog extends Omit<ElementData, "id"> {
+  id: string | number
 }
 
 export type FlagType = "draggable" | "resizable" | "sortable" | "ignoreShortcutKeys" | "hasContextMenu"
@@ -61,12 +64,21 @@ export interface ChildElement {
   label: string
   selector: string
 }
-export type ParentType = "container" | "layout" | "root" | "product.content"
+export type ParentType = "container" | "layout" | "root" | "product-details" | "product-info"
 export type GridSize = {
   rowSpan: number
   colSpan: number
 }
-export type ToolbarAction = "duplicate" | "delete" | "copy-styles" | "paste-styles"
+export type ToolbarAction =
+  | "general-settings"
+  | "edit-text"
+  | "duplicate"
+  | "delete"
+  | "copy-styles"
+  | "paste-styles"
+  | "move-up"
+  | "move-down"
+  | "toggle-visibility"
 export interface ElementSchema {
   title: string
   type: string
@@ -113,17 +125,17 @@ export interface BasicGroup {
 
 export type AdvancedGroupType =
   // Styles
-  "border" | "alignment" | "background" | "dimensions" | "spacing" | "typography" | "visibility"
+  "border" | "alignment" | "background" | "dimensions" | "spacing" | "typography" | "visibility" | "shadows-and-effects"
 
 export interface BasicInput {
   type: InputType
-  label: string
+  label?: string
   binding?: "style" | "data"
   /**
    * The key of the value in the element data or css
    */
-  name: string
-  defaultValue?: string
+  name?: string
+  defaultValue?: string | number | boolean
   placeholder?: string
   helpText?: string
   /**
@@ -170,13 +182,20 @@ export type InputType =
   // Element inputs
   | "form"
   | "product"
+  | "product-swatches"
   | "custom.html"
   | "instagram"
 
 declare global {
   interface Window {
     WeaverseStudioBridge: any
+    weaverseShopifyConfigs: any
     weaverseShopifyProducts: any
+    weaverseShopifyProductsByCollection: any
+    weaverseShopifyCollections: any
+    weaverseShopifyArticles: any
+    weaverseShopifyBlogs: any
+    weaverseCartHelpers: any
     Blinkloader: any
   }
 }

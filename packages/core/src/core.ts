@@ -16,7 +16,7 @@ import type {
   WeaverseElement,
   WeaverseType,
 } from "./types"
-import { isIframe, stichesUtils } from "./utils"
+import { createGlobalStyles, isIframe, stichesUtils } from "./utils"
 
 /**
  * WeaverseItemStore is a store for Weaverse item, it can be used to subscribe/update the item data
@@ -244,6 +244,7 @@ export class Weaverse {
         media: this.mediaBreakPoints,
         utils: stichesUtils,
       })
+    createGlobalStyles(this.stitchesInstance)
   }
 
   subscribe(fn: any) {
@@ -282,24 +283,6 @@ export class Weaverse {
     this.initProjectItemData()
     this.triggerUpdate()
   }
-  /**
-   * fetch and update the project data, then trigger update to re-render the WeaverseRoot
-   */
-  // updateProjectData() {
-  //   if (this.projectKey && !this.projectData.rootId) {
-  //     Weaverse.fetchProjectData({ appUrl: this.appUrl, projectKey: this.projectKey })
-  //       .then((data: ProjectDataType) => {
-  //         if (data) {
-  //           this.projectData = data
-  //           this.initProjectItemData()
-  //           this.triggerUpdate()
-  //         }
-  //       })
-  //       .catch((err: Error) => {
-  //         console.error(err)
-  //       })
-  //   }
-  // }
 
   initProjectItemData() {
     const data = this.projectData
