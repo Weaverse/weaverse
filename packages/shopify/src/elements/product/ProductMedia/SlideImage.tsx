@@ -1,10 +1,5 @@
 import React from 'react'
-import type { ShopifyProductImage } from '~/types'
-
-export interface SlideImageProps {
-  image: ShopifyProductImage
-  className: string
-}
+import type { SlideImageProps } from '~/types'
 
 export function SlideImage({ image, className }: SlideImageProps) {
   return (
