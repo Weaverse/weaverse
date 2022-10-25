@@ -57,6 +57,19 @@ export function createGlobalStyles(stitches: Stitches) {
         "-moz-appearance": "textfield",
       },
     },
+    ".wv-spinner-wrapper": {
+      position: "absolute",
+      inset: "0px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "inherit",
+      ".wv-spinner": {
+        width: "20px",
+        height: "20px",
+        animation: "spin .75s linear infinite",
+      },
+    },
   })
   globalStyles()
 }
