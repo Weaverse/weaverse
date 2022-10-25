@@ -1,5 +1,5 @@
 import type { WeaverseElement } from '@weaverse/react'
-import * as ProductBuyButton from './product-buy-button'
+import * as ProductBuyButton from './ProductBuyButton'
 import * as ProductDescription from './product-description'
 import * as ProductDetails from './product-details'
 import * as ProductInfo from './product-info'
