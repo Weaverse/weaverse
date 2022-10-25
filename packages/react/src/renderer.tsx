@@ -87,5 +87,5 @@ let ItemInstance = ({ id }: { id: string | number }) => {
   if (!instance) {
     return <div style={{ display: 'none' }}>Item instance {id} not found</div>
   }
-  return <ItemComponent instance={instance} />
+  return <ItemComponent key={id} instance={instance} />
 }
