@@ -28,9 +28,9 @@ let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
 
     useEffect(() => {
       if (product) {
-        // TODO
-        let selectedOrFirstAvailableVariant = product.variants[0]
-        setSelectedVariant(selectedOrFirstAvailableVariant)
+        setSelectedVariant(
+          product.selected_or_first_available_variant || product.variants[0]
+        )
       }
     }, [product])
 
@@ -51,7 +51,7 @@ let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
               data-product-id: wv_product.id,
               data-product-handle: wv_product.handle,
             -%}
-          `}
+            `}
             {children}
             {`{%- endform -%}`}
           </div>
@@ -109,7 +109,7 @@ export let css = {
   '@desktop': {
     padding: '10px',
     overflow: 'hidden',
-    '& > form': {
+    '.wv-product-form': {
       display: 'flex',
     },
   },

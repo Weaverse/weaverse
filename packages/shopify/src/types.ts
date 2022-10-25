@@ -128,7 +128,10 @@ export interface ProductMediaProps extends WeaverseElementProps {
   mediaSize: ProductMediaSize
   aspectRatio: AspectRatio
 }
-
+export interface SlideImageProps {
+  image: ShopifyProductImage
+  className: string
+}
 export interface ProductTitleProps extends WeaverseElementProps {
   htmlTag: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p'
 }
@@ -156,6 +159,7 @@ export interface ProductPriceProps extends WeaverseElementProps {
 
 export interface ProductBuyButtonProps extends WeaverseElementProps {
   showQuantitySelector: boolean
+  quantityLabel: string
   buttonText: string
   soldOutText: string
   unavailableText: string
