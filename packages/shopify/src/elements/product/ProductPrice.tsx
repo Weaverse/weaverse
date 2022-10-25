@@ -24,7 +24,7 @@ let ProductPrice = forwardRef<HTMLDivElement, ProductPriceProps>(
                 showCompareAt &&
                 `
                 {%- if compare_at_price > price -%}
-                  <span class="wv-compare-price">{{- compare_at_price | money -}}</span>
+                  <s class="wv-compare-price">{{- compare_at_price | money -}}</s>
                 {%- endif -%}
                 `
               }
@@ -60,9 +60,9 @@ let ProductPrice = forwardRef<HTMLDivElement, ProductPriceProps>(
               {formatMoney(price, money_format)}
             </span>
             {showCompareAt && compare_at_price ? (
-              <span className="wv-compare-price">
+              <s className="wv-compare-price">
                 {formatMoney(compare_at_price, money_format)}
-              </span>
+              </s>
             ) : null}
             {showSaleBadge && savedPercentage > 0 ? (
               <span className="wv-sale-badge">Save {savedPercentage}%</span>
