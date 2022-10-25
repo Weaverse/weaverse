@@ -64,7 +64,20 @@ export interface ChildElement {
   label: string
   selector: string
 }
-export type ParentType = "container" | "layout" | "root" | "product-details" | "product-info"
+export type ParentType =
+  | "container"
+  | "layout"
+  | "root"
+  | "product-details"
+  | "product-info"
+  | "collection.box"
+  | "collection-box"
+  | "article-box"
+  | "article-list"
+  | "slider"
+  | "tab"
+  | "accordion"
+  | "accordion.wrapper"
 export type GridSize = {
   rowSpan: number
   colSpan: number
@@ -115,6 +128,7 @@ export interface ElementInspector {
 
 export interface AdvancedGroup {
   groupType: AdvancedGroupType
+  useData?: boolean
 }
 
 export interface BasicGroup {
@@ -165,6 +179,7 @@ export interface BasicInput {
    * `imagesPerRow.gt.1`
    */
   condition?: string
+  default?: string | number | boolean
 }
 
 export type InputType =
@@ -185,6 +200,9 @@ export type InputType =
   | "product-swatches"
   | "custom.html"
   | "instagram"
+  | "collection-list"
+  | "collection"
+  | "article-list"
 
 declare global {
   interface Window {
