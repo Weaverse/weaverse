@@ -48,13 +48,32 @@ export function createGlobalStyles(stitches: Stitches) {
       from: { transform: "rotate(0deg)" },
       to: { transform: "rotate(360deg)" },
     },
-    input: {
-      "&::-webkit-outer-spin-button, &::-webkit-inner-spin-button": {
-        "-webkit-appearance": "none",
-        margin: 0,
+    ".weaverse-content-root": {
+      input: {
+        "&::-webkit-outer-spin-button, &::-webkit-inner-spin-button": {
+          "-webkit-appearance": "none",
+          margin: 0,
+        },
+        "&[type=number]": {
+          "-moz-appearance": "textfield",
+        },
       },
-      "&[type=number]": {
-        "-moz-appearance": "textfield",
+      select: {
+        WebkitAppearance: "none",
+        MozAppearance: "none",
+        appearance: "none",
+        outline: "none",
+        boxShadow: "none",
+        color: "currentColor",
+        verticalAlign: "middle",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundImage: "url(https://ucarecdn.com/4bb6a6e7-1ce8-4201-8f2d-da00a50105f3/ardown.svg)",
+        backgroundSize: "10px",
+        backgroundPositionX: "calc(100% - 12px)",
+        paddingLeft: "12px",
+        paddingRight: "35px !important",
+        cursor: "pointer",
       },
     },
     ".wv-spinner-wrapper": {

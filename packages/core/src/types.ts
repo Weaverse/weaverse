@@ -207,13 +207,6 @@ export type InputType =
 declare global {
   interface Window {
     WeaverseStudioBridge: any
-    weaverseShopifyConfigs: any
-    weaverseShopifyProducts: any
-    weaverseShopifyProductsByCollection: any
-    weaverseShopifyCollections: any
-    weaverseShopifyArticles: any
-    weaverseShopifyBlogs: any
-    weaverseCartHelpers: any
     Blinkloader: any
   }
 }
