@@ -41,6 +41,7 @@ export let css: ElementCSS = {
     overflow: 'hidden',
     display: '-webkit-box',
     marginTop: '16px',
+    marginBottom: '24px',
     img: {
       maxWidth: '100%',
       display: 'none',

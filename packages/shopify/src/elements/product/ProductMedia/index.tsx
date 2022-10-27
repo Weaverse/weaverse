@@ -34,16 +34,15 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
             {images.map((image) => {
               let { id, src, alt = '' } = image
               return (
-                <>
+                <React.Fragment key={id}>
                   <SlideImage
-                    key={id}
                     image={image}
                     className="keen-slider__slide wv-product-slider__slide"
                   />
                   <noscript>
                     {`<img src="${src}&width=1000" alt="${alt || ''}"/>`}
                   </noscript>
-                </>
+                </React.Fragment>
               )
             })}
           </div>
@@ -51,16 +50,15 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
             {images.map((image) => {
               let { id, src, alt = '' } = image
               return (
-                <>
+                <React.Fragment key={id}>
                   <SlideImage
-                    key={id}
                     image={image}
                     className="keen-slider__slide wv-thumbnail__slide"
                   />
                   <noscript>
                     {`<img src="${src}&width=480" alt="${alt || ''}"/>`}
                   </noscript>
-                </>
+                </React.Fragment>
               )
             })}
           </div>
@@ -97,6 +95,7 @@ export let css: ElementCSS = {
       cursor: 'pointer',
       padding: '6px',
       border: '1px solid transparent',
+      boxSizing: 'content-box',
       '&.active': {
         border: '1px solid #000',
       },
