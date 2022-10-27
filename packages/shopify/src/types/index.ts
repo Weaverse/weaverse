@@ -1,5 +1,7 @@
 import type { WeaverseElementProps } from '@weaverse/react'
+import type { ShopifyGlobalConfigs, WeaverseCartHelpers } from './configs'
 import type {
+  ShopifyArticle,
   ShopifyCollection,
   ShopifyProduct,
   ShopifyProductImage,
@@ -142,15 +144,16 @@ export interface FormFieldProps {
 }
 
 export * from './shopify'
+export * from './configs'
 
 declare global {
   interface Window {
-    weaverseShopifyConfigs: any
-    weaverseShopifyProducts: any
-    weaverseShopifyProductsByCollection: any
-    weaverseShopifyCollections: any
-    weaverseShopifyArticles: any
-    weaverseShopifyBlogs: any
-    weaverseCartHelpers: any
+    weaverseShopifyConfigs: ShopifyGlobalConfigs
+    weaverseShopifyProducts: Record<number, ShopifyProduct>
+    weaverseShopifyProductsByCollection: Record<number, ShopifyProduct>
+    weaverseShopifyCollections: Record<number, ShopifyCollection>
+    weaverseShopifyArticles: Record<number, ShopifyArticle>
+    weaverseShopifyBlogs: Record<number, ShopifyArticle>
+    weaverseCartHelpers: WeaverseCartHelpers
   }
 }

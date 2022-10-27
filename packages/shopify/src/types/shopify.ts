@@ -41,6 +41,8 @@ export interface ShopifyProductVariant {
   weight: number
   weight_unit: ProductVariantWeightUnit
   // Liquid props
+  options?: string[]
+  featured_image?: ShopifyProductImage
   featured_media?: ShopifyProductImage
 }
 
@@ -116,4 +118,40 @@ export interface ShopifyCollection {
   template_suffix: string | null
   title: string
   updated_at: string
+}
+
+export interface ShopifyArticleImage {
+  created_at: string
+  height: number
+  src: string
+  updated_at?: string
+  width: number
+  alt: string | null
+}
+
+export interface ShopifyObjectMetafield {
+  key: string
+  namespace: string
+  value: string | number
+  value_type: 'string' | 'integer'
+  description: string | null
+}
+
+export interface ShopifyArticle {
+  author: string
+  blog_id: number
+  body_html: string
+  created_at: string
+  id: number
+  handle: string
+  image: ShopifyArticleImage
+  metafields: ShopifyObjectMetafield[]
+  published: boolean
+  published_at: string
+  summary_html: string | null
+  tags: string
+  template_suffix: string | null
+  title: string
+  updated_at: string
+  user_id: number
 }
