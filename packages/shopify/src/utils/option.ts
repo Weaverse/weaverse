@@ -60,11 +60,13 @@ export function getOptionItemStyle(
       let image = product.images.find((i) => i.id === variant?.image_id)
       variantImage = resizeImage(image?.src || '', '200x')
     }
-    bgImage = `url(${variantImage || imageSwatch})`
+    if (variantImage || imageSwatch) {
+      bgImage = `url(${variantImage || imageSwatch})`
+    }
   }
 
   return {
-    backgroundColor: colorSwatch,
+    backgroundColor: colorSwatch || value.toLocaleLowerCase(),
     backgroundImage: bgImage,
     '--aspect-ratio': product.aspect_ratio || 1,
   } as CSSProperties

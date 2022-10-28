@@ -155,12 +155,14 @@ export let css: ElementCSS = {
       marginRight: '10px',
       '&.wv-option__button': {
         padding: '0 10px',
-        height: 'var(--size, 40px)',
         lineHeight: 'var(--size, 40px)',
         textAlign: 'center',
       },
       '&.wv-option__variant-image': {
         aspectRatio: 'var(--aspect-ratio, 1/1)',
+      },
+      '&.wv-option__button, &.wv-option__color, &.wv-option__custom-image': {
+        height: 'var(--size, 40px)',
       },
       '&.wv-option__button, &.wv-option__variant-image': {
         border: '1px solid #cbcbcb',
