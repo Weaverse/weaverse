@@ -23,6 +23,7 @@ let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
         let hasOnlyDefaultVariant =
           product.has_only_default_variant ||
           (variants.length === 1 && variants[0].title === 'Default Title')
+
         let handleSelectOption = (position: number, value: string) => {
           let optionsArray = getVariantOptions(selectedVariant!)
           optionsArray[position - 1] = value
@@ -54,26 +55,26 @@ let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
                     className="wv-product-option"
                     style={style}
                   >
-                    <div className="wv-product-option__label">
-                      <span className="wv-product-option__display-name">
+                    <div className="wv-option__label">
+                      <span className="wv-option__display-name">
                         {optionDisplayName}:
                       </span>
-                      <span className="wv-product-option__selected">
+                      <span className="wv-option__selected-value">
                         {selectedValue}
                       </span>
                     </div>
-                    <div className="wv-product-option__values">
+                    <div className="wv-option__values">
                       {values.map((value, idx) => {
                         let className = clsx(
-                          'wv-product-option__value',
-                          `wv-product-option__${optionDesign}`,
-                          selectedValue === value &&
-                            'wv-product-option__value--selected'
+                          'wv-option__value',
+                          `wv-option__${optionDesign}`,
+                          selectedValue === value && 'selected'
                         )
                         let style = getOptionItemStyle(
                           value,
                           optionDesign,
-                          selectedVariant
+                          position,
+                          product
                         )
 
                         return (
@@ -122,7 +123,6 @@ export let css: ElementCSS = {
       border: '1px solid #ebebeb',
       borderRadius: '4px',
       lineHeight: '48px',
-      transition: '.3s all',
       fontSize: '16px',
       height: '48px',
       width: 'fit-content',
@@ -133,48 +133,55 @@ export let css: ElementCSS = {
         marginBottom: '20px',
       },
     },
-    '.wv-product-option__label': {},
-    '.wv-product-option__display-name': {
+    '.wv-option__label': {},
+    '.wv-option__display-name': {
       marginRight: '4px',
       fontWeight: 'bold',
     },
-    '.wv-product-option__values': {
+    '.wv-option__values': {
       marginTop: '8px',
       display: 'flex',
+      alignItems: 'flex-start',
       flexWrap: 'wrap',
     },
-    '.wv-product-option__value': {
+    '.wv-option__value': {
       display: 'inline-block',
       cursor: 'pointer',
       textTransform: 'capitalize',
-      border: '1px solid #cbcbcb',
       transition: '.3s all',
-      lineHeight: 'var(--size, 40px)',
-      height: 'var(--size, 40px)',
       minWidth: 'var(--size, 40px)',
-      textAlign: 'center',
       borderRadius: 'var(--radius, 0px)',
-      '&:not(:last-child)': {
-        marginBottom: '10px',
-        marginRight: '10px',
-      },
-      '&:hover, &.wv-product-option__value--selected': {
-        borderColor: '#222',
-      },
-      '&.wv-product-option__button': {
+      marginBottom: '10px',
+      marginRight: '10px',
+      '&.wv-option__button': {
         padding: '0 10px',
+        height: 'var(--size, 40px)',
+        lineHeight: 'var(--size, 40px)',
+        textAlign: 'center',
       },
-      '&.wv-product-option__color, &.wv-product-option__custom-image': {
+      '&.wv-option__variant-image': {
+        aspectRatio: 'var(--aspect-ratio, 1/1)',
+      },
+      '&.wv-option__button, &.wv-option__variant-image': {
+        border: '1px solid #cbcbcb',
+        '&:hover, &.selected': {
+          borderColor: '#222',
+        },
+      },
+      '&.wv-option__custom-image, &.wv-option__variant-image': {
         fontSize: '0',
-        border: 'none',
-        outline: '1px solid #cbcbcb',
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+      },
+      '&.wv-option__color, &.wv-option__custom-image': {
+        fontSize: '0',
         outlineOffset: '3px',
         marginLeft: '3px',
-        '&:not(:last-child)': {
-          marginBottom: '14px',
-          marginRight: '14px',
-        },
-        '&:hover, &.wv-product-option__value--selected': {
+        marginBottom: '14px',
+        marginRight: '14px',
+        outline: '1px solid #cbcbcb',
+        '&:hover, &.selected': {
           outlineColor: '#222',
         },
       },

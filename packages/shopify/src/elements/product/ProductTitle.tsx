@@ -27,7 +27,7 @@ export let css: ElementCSS = {
     letterSpacing: '0px',
     wordBreak: 'break-word',
     marginTop: '6px',
-    marginBottom: '30px',
+    marginBottom: '24px',
     marginLeft: '0px',
     marginRight: '0px',
   },

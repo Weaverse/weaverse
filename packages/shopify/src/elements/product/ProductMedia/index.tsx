@@ -95,7 +95,6 @@ export let css: ElementCSS = {
       cursor: 'pointer',
       padding: '6px',
       border: '1px solid transparent',
-      boxSizing: 'content-box',
       '&.active': {
         border: '1px solid #000',
       },
