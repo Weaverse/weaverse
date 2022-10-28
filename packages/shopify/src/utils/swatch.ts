@@ -6,7 +6,7 @@ export let optionSizeMap: Partial<
   button: { sm: '32px', md: '40px', lg: '48px' },
   color: { sm: '32px', md: '40px', lg: '48px' },
   'custom-image': { sm: '32px', md: '40px', lg: '48px' },
-  'variant-image': { sm: '32px', md: '40px', lg: '48px' },
+  'variant-image': { sm: '55px', md: '75px', lg: '85px' },
 }
 
 export let optionRadiusSizeMap: Record<OptionShape, string> = {

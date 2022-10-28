@@ -90,6 +90,7 @@ export interface ShopifyProduct {
   vendor: string
   status: 'active' | 'archived' | 'draft'
   // Liquid props
+  aspect_ratio?: number
   selected_or_first_available_variant?: ShopifyProductVariant
   has_only_default_variant?: boolean
 }
