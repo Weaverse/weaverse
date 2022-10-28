@@ -1,15 +1,14 @@
 import type { ElementCSS } from '@weaverse/react'
-import clsx from 'clsx'
 import React, { forwardRef, useContext } from 'react'
 import { ProductContext } from '~/context'
 import type { OptionKey, ProductVariantProps } from '~/types'
 import {
-  getOptionItemStyle,
   getOptionsGroupConfigs,
   getVariantFromOptionArray,
   getVariantOptions,
 } from '~/utils'
 import { CombinedVariantSelector } from './CombinedVariantSelector'
+import { OptionValues } from './OptionValues'
 
 let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
   (props, ref) => {
@@ -17,7 +16,7 @@ let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
     let context = useContext(ProductContext)
 
     if (context) {
-      let { product, selectedVariant, setSelectedVariant, ssrMode } = context
+      let { product, selectedVariant, setSelectedVariant } = context
       if (selectedVariant) {
         let { variants, options } = product
         let hasOnlyDefaultVariant =
@@ -43,9 +42,9 @@ let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
             <div ref={ref} {...rest}>
               <input type="hidden" name="id" value={selectedVariant.id} />
               {options.map((option) => {
-                let { name, position, values } = option
-                let selectedValue =
-                  selectedVariant?.[`option${position}` as OptionKey]
+                let { name, position } = option
+                let optionKey = `option${position}` as OptionKey
+                let selectedValue = selectedVariant?.[optionKey]
                 let { optionDisplayName, optionDesign, style } =
                   getOptionsGroupConfigs(option)
 
@@ -63,32 +62,13 @@ let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
                         {selectedValue}
                       </span>
                     </div>
-                    <div className="wv-option__values">
-                      {values.map((value, idx) => {
-                        let className = clsx(
-                          'wv-option__value',
-                          `wv-option__${optionDesign}`,
-                          selectedValue === value && 'selected'
-                        )
-                        let style = getOptionItemStyle(
-                          value,
-                          optionDesign,
-                          position,
-                          product
-                        )
-
-                        return (
-                          <div
-                            key={value + idx}
-                            className={className}
-                            style={style}
-                            onClick={() => handleSelectOption(position, value)}
-                          >
-                            {value}
-                          </div>
-                        )
-                      })}
-                    </div>
+                    <OptionValues
+                      product={product}
+                      option={option}
+                      type={optionDesign}
+                      selectedValue={selectedValue}
+                      onSelect={handleSelectOption}
+                    />
                   </div>
                 )
               })}
@@ -118,7 +98,7 @@ export let css: ElementCSS = {
     '.wv-combined-variant__label': {
       marginBottom: '5px',
     },
-    '.wv-combined-variant__selector': {
+    '.wv-combined-variant__selector, .wv-option__dropdown': {
       backgroundColor: '#fff',
       border: '1px solid #ebebeb',
       borderRadius: '4px',
@@ -133,13 +113,14 @@ export let css: ElementCSS = {
         marginBottom: '20px',
       },
     },
-    '.wv-option__label': {},
+    '.wv-option__label': {
+      marginBottom: '8px',
+    },
     '.wv-option__display-name': {
       marginRight: '4px',
       fontWeight: 'bold',
     },
     '.wv-option__values': {
-      marginTop: '8px',
       display: 'flex',
       alignItems: 'flex-start',
       flexWrap: 'wrap',

@@ -1,10 +1,15 @@
 import type { WeaverseElementProps } from '@weaverse/react'
-import type { ShopifyGlobalConfigs, WeaverseCartHelpers } from './configs'
+import type {
+  OptionDisplayType,
+  ShopifyGlobalConfigs,
+  WeaverseCartHelpers,
+} from './configs'
 import type {
   ShopifyArticle,
   ShopifyCollection,
   ShopifyProduct,
   ShopifyProductImage,
+  ShopifyProductOption,
   ShopifyProductVariant,
 } from './shopify'
 
@@ -88,7 +93,13 @@ export interface ProductVariantProps extends WeaverseElementProps {
 export interface CombinedVariantProps {
   context: ProductContextType
 }
-
+export interface OptionValuesProps {
+  product: ShopifyProduct
+  option: ShopifyProductOption
+  type: OptionDisplayType
+  selectedValue: string | null | undefined
+  onSelect: (position: number, value: string) => void
+}
 export interface ArticleBoxProps extends WeaverseElementProps {
   articleId: number
   articleHandle?: string

@@ -36,20 +36,20 @@ export function getOptionsGroupConfigs(option: ShopifyProductOption) {
 
 export function getOptionItemStyle(
   value: string,
-  design: OptionDisplayType,
+  type: OptionDisplayType,
   position: number,
   product: ShopifyProduct
 ) {
-  if (/button|dropdown/.test(design)) return {}
+  if (/button|dropdown/.test(type)) return {}
 
   let colorSwatch = getSwatchValue('color', value)
   let imageSwatch = getSwatchValue('image', value)
   let bgImage = ''
 
-  if (design === 'custom-image') {
+  if (type === 'custom-image') {
     bgImage = `url(${imageSwatch})`
   }
-  if (design === 'variant-image') {
+  if (type === 'variant-image') {
     let variantImage = ''
     let variant = product.variants.find(
       (v) => v[`option${position}` as OptionKey] === value
