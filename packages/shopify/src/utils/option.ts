@@ -1,9 +1,12 @@
 import type { CSSProperties } from 'react'
 import type {
   OptionDisplayType,
+  OptionKey,
+  ShopifyProduct,
   ShopifyProductOption,
   ShopifyProductVariant,
 } from '~/types'
+import { resizeImage } from './image'
 import { getSwatchValue, optionRadiusSizeMap, optionSizeMap } from './swatch'
 
 export function getOptionsGroupConfigs(option: ShopifyProductOption) {
@@ -34,25 +37,35 @@ export function getOptionsGroupConfigs(option: ShopifyProductOption) {
 export function getOptionItemStyle(
   value: string,
   design: OptionDisplayType,
-  selectedVariant: ShopifyProductVariant | null
+  position: number,
+  product: ShopifyProduct
 ) {
   if (/button|dropdown/.test(design)) return {}
 
   let colorSwatch = getSwatchValue('color', value)
   let imageSwatch = getSwatchValue('image', value)
   let bgImage = ''
+
   if (design === 'custom-image') {
     bgImage = `url(${imageSwatch})`
   }
   if (design === 'variant-image') {
-    let variantImage = selectedVariant?.featured_image?.src
-    let bgImage = variantImage || imageSwatch
-    bgImage = `url(${bgImage})`
-  }
-  let style: CSSProperties = {
-    backgroundColor: colorSwatch,
-    backgroundImage: bgImage,
+    let variantImage = ''
+    let variant = product.variants.find(
+      (v) => v[`option${position}` as OptionKey] === value
+    )
+    if (variant?.featured_image) {
+      variantImage = resizeImage(variant?.featured_image.src, '200x')
+    } else if (variant?.image_id) {
+      let image = product.images.find((i) => i.id === variant?.image_id)
+      variantImage = resizeImage(image?.src || '', '200x')
+    }
+    bgImage = `url(${variantImage || imageSwatch})`
   }
 
-  return style
+  return {
+    backgroundColor: colorSwatch,
+    backgroundImage: bgImage,
+    '--aspect-ratio': product.aspect_ratio || 1,
+  } as CSSProperties
 }

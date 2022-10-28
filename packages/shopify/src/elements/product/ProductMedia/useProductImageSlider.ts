@@ -20,13 +20,20 @@ export function useProductImageSlider(context: ProductContextType | null) {
 
   useEffect(() => {
     if (context) {
-      let { selectedVariant } = context
+      let { selectedVariant, product } = context
       if (selectedVariant) {
-        let { featured_media } = selectedVariant
+        let newMediaIndex = -1
+        let { featured_media, image_id } = selectedVariant
         if (featured_media) {
-          if (instanceRef.current) {
-            instanceRef.current.moveToIdx(featured_media.position - 1)
+          newMediaIndex = featured_media.position - 1
+        } else if (image_id) {
+          let image = product.images.find((image) => image.id === image_id)
+          if (image) {
+            newMediaIndex = image.position - 1
           }
+        }
+        if (newMediaIndex >= 0 && instanceRef.current) {
+          instanceRef.current.moveToIdx(newMediaIndex)
         }
       }
     }
