@@ -19,14 +19,13 @@ export function getSwatchValue(type: 'color' | 'image', value: string) {
   let { presets } = window.weaverseShopifyConfigs || {}
   let { colorSwatches = [], imageSwatches = [] } = presets
   if (type === 'color') {
-    let fallbackBgColor = value.toLocaleLowerCase()
     let colorSwatch = colorSwatches.find(
       ({ name }) => name.toLowerCase() === value.toLowerCase()
     )
-    return colorSwatch?.value || fallbackBgColor
+    return colorSwatch?.value
   }
   let imageSwatch = imageSwatches.find(
     ({ name }) => name.toLowerCase() === value.toLowerCase()
   )
-  return imageSwatch?.value || value
+  return imageSwatch?.value
 }
