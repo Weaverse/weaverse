@@ -109,14 +109,12 @@ ProductDetails.defaultProps = {}
 
 export let css = {
   '@desktop': {
-    padding: '10px',
     overflow: 'hidden',
     '.wv-product-form': {
       display: 'flex',
     },
   },
   '@mobile': {
-    padding: '0px',
     '.wv-product-form': {
       display: 'block',
     },

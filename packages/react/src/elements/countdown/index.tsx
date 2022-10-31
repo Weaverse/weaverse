@@ -1,3 +1,4 @@
+import type { ElementCSS } from '@weaverse/core'
 import React, { forwardRef, useContext, useEffect } from 'react'
 import { WeaverseContext } from '~/context'
 import type { CountdownElementProps } from '~/types'
@@ -69,13 +70,15 @@ const Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
   }
 )
 
-export let css = {
+export let css: ElementCSS = {
   '@desktop': {
     fontFamily: 'Inter',
-    fontSize: 36,
+    fontSize: '36px',
     fontWeight: 500,
-    display: 'grid',
-    gridAutoFlow: 'column',
+    display: 'flex',
+    alignItems: 'center',
+    overflow: 'hidden',
+    justifyContent: 'center',
     gap: 10,
     lineHeight: 'initial',
     '.wv-cd-block': {
