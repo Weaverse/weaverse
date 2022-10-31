@@ -118,7 +118,7 @@ export interface CountdownElementProps extends WeaverseElementProps {
 
 export type TimerBlockProps = {
   label: string
-  value: number
+  value: string | number
 }
 
 // Instagram
