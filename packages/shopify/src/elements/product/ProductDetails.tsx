@@ -15,6 +15,7 @@ import type {
 import { WeaverseContext } from '@weaverse/react'
 import { weaverseShopifyProducts } from '~/proxy'
 import { Placeholder } from '~/elements/shared'
+import { generateProductImageAspectRatio } from '~/utils/image'
 
 let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
   (props, ref) => {
@@ -31,6 +32,7 @@ let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
         setSelectedVariant(
           product.selected_or_first_available_variant || product.variants[0]
         )
+        generateProductImageAspectRatio(product)
       }
     }, [product])
 
@@ -107,14 +109,12 @@ ProductDetails.defaultProps = {}
 
 export let css = {
   '@desktop': {
-    padding: '10px',
     overflow: 'hidden',
     '.wv-product-form': {
       display: 'flex',
     },
   },
   '@mobile': {
-    padding: '0px',
     '.wv-product-form': {
       display: 'block',
     },

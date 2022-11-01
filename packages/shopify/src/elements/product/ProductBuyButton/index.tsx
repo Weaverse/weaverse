@@ -129,9 +129,9 @@ export let css: ElementCSS = {
       transition: 'background 0.2s ease-in-out',
       position: 'relative',
       overflow: 'hidden',
-    },
-    '.wv-product-atc-button:hover': {
-      backgroundColor: '#2c3e2f',
+      '&:hover': {
+        backgroundColor: '#2c3e2f',
+      },
     },
   },
   '@mobile': {

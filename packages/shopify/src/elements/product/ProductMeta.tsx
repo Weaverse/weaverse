@@ -12,7 +12,7 @@ let ProductMeta = forwardRef<HTMLDivElement, ProductMetaProps>((props, ref) => {
     return (
       <div ref={ref} {...rest}>
         <ul className="wv-product-meta">
-          {showSKU && selectedVariant?.sku ? (
+          {showSKU ? (
             <li>
               <div className="meta-label">SKU:</div>
               <div className="meta-value">
@@ -68,7 +68,7 @@ export let css: ElementCSS = {
       margin: 0,
       li: {
         listStyle: 'none',
-        lineHeight: '42px',
+        lineHeight: '32px',
         display: 'flex',
         alignItems: 'center',
         '.meta-label': {
