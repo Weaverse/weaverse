@@ -17,19 +17,22 @@ let ProductDescription = forwardRef<HTMLDivElement, ProductDescriptionProps>(
 
       if (ssrMode) {
         return (
-          <div ref={ref} {...rest} style={style}>
-            {`{{- wv_product.description -}}`}
+          <div ref={ref} {...rest}>
+            <div className="wv-product-description" style={style}>
+              {`{{- wv_product.description -}}`}
+            </div>
           </div>
         )
       }
 
       return (
-        <div
-          ref={ref}
-          {...rest}
-          style={style}
-          dangerouslySetInnerHTML={{ __html: product.body_html }}
-        />
+        <div ref={ref} {...rest}>
+          <div
+            className="wv-product-description"
+            style={style}
+            dangerouslySetInnerHTML={{ __html: product.body_html }}
+          />
+        </div>
       )
     }
     return null
@@ -38,16 +41,18 @@ let ProductDescription = forwardRef<HTMLDivElement, ProductDescriptionProps>(
 
 export let css: ElementCSS = {
   '@desktop': {
-    overflow: 'hidden',
-    display: '-webkit-box',
     marginTop: '16px',
     marginBottom: '24px',
-    img: {
-      maxWidth: '100%',
-      display: 'none',
-    },
-    div: {
-      display: 'block',
+    '.wv-product-description': {
+      overflow: 'hidden',
+      display: '-webkit-box',
+      img: {
+        maxWidth: '100%',
+        display: 'none',
+      },
+      div: {
+        display: 'block',
+      },
     },
   },
 }

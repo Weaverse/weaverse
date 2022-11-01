@@ -154,7 +154,7 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
   label?: string
   binding?: "style" | "data"
   /**
-   * The key of the value in the element data or styles
+   * The key of the value of the element data or styles
    * @example
    * // Bind to `element.data.title`
    * name: "title"
@@ -199,8 +199,9 @@ export interface RangeInputConfigs {
   step?: number
 }
 
+export type SortableItemAction = "add" | "edit" | "duplicate" | "delete" | "toggle-visibility"
 export interface SortableInputConfigs {
-  visibleType?: boolean
+  actions: SortableItemAction[]
 }
 
 export type InputType =
