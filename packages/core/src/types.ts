@@ -141,35 +141,27 @@ export type AdvancedGroupType =
   // Styles
   "border" | "alignment" | "background" | "dimensions" | "spacing" | "typography" | "visibility" | "shadows-and-effects"
 
-export interface BasicInput {
+export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
   type: InputType
   label?: string
   binding?: "style" | "data"
   /**
-   * The key of the value in the element data or css
+   * The key of the value in the element data or styles
+   * @example
+   * // Bind to `element.data.title`
+   * name: "title"
+   * // Bind to `element.css["@desktop"].backgroundColor`
+   * name: "backgroundColor"
    */
   name?: string
-  defaultValue?: string | number | boolean
-  placeholder?: string
-  helpText?: string
   /**
-   * For `select` or `toggle-group` input
+   * Additional options for inputs that require more configuration
    */
-  options?: { value: string; label: string; icon?: string; weight?: string }[]
-  /**
-   * For `range` input
-   */
-  min?: number
-  max?: number
-  step?: number
-  /**
-   * For `sortable` input
-   */
-  visibleType?: boolean
+  configs?: ConfigsType
   /**
    * Only display if condition matches.
    *
-   * Format: `bindingName.conditionalOperator.value`
+   * Format: `dataBindingKey.conditionalOperator.value`
    *
    * Supported operators: `eq`, `ne`, `gt`, `gte`, `lt`, `lte`
    *
@@ -179,7 +171,28 @@ export interface BasicInput {
    * `imagesPerRow.gt.1`
    */
   condition?: string
-  default?: string | number | boolean
+  defaultValue?: string | number | boolean
+  placeholder?: string
+}
+
+export type AdditionalInputConfigs = SelectInputConfigs | ToggleGroupConfigs | RangeInputConfigs | SortableInputConfigs
+
+export interface SelectInputConfigs {
+  options?: { value: string; label: string; icon?: string; weight?: string }[]
+}
+
+export interface ToggleGroupConfigs {
+  options?: { value: string; label: string; icon?: string; weight?: string }[]
+}
+
+export interface RangeInputConfigs {
+  min?: number
+  max?: number
+  step?: number
+}
+
+export interface SortableInputConfigs {
+  visibleType?: boolean
 }
 
 export type InputType =
