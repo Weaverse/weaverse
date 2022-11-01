@@ -139,7 +139,15 @@ export interface BasicGroup {
 
 export type AdvancedGroupType =
   // Styles
-  "border" | "alignment" | "background" | "dimensions" | "spacing" | "typography" | "visibility" | "shadows-and-effects"
+  | "border"
+  | "alignment"
+  | "background"
+  | "dimensions"
+  | "spacing"
+  | "typography"
+  | "visibility"
+  | "shadows-and-effects"
+  | "layoutBackground"
 
 export interface BasicInput {
   type: InputType
