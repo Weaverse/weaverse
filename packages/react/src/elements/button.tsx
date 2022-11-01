@@ -1,17 +1,20 @@
 import * as React from 'react'
 import type { ButtonElementProps } from '~/types'
 import type { ElementCSS } from '@weaverse/core'
+import { useContext } from 'react'
+import { WeaverseContext } from '~/context'
 
 export let Button = React.forwardRef<
   HTMLButtonElement | HTMLAnchorElement,
   ButtonElementProps
 >((props, ref) => {
+  let { isDesignMode } = useContext(WeaverseContext)
   let { text, clickAction, linkTo, openInNewTab, ...rest } = props
 
   if (clickAction && linkTo) {
     return (
       <a
-        href={linkTo}
+        href={!isDesignMode ? linkTo : undefined}
         target={openInNewTab ? '_blank' : '_self'}
         rel="noreferrer"
         {...rest}
