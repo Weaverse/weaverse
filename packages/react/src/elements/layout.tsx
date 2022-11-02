@@ -1,5 +1,6 @@
+import type { CSSProperties } from 'react'
 import React, { forwardRef } from 'react'
-import type { LayoutElementProps } from '~/types'
+import type { LayoutElementProps, LayoutBackgroundProps } from '~/types'
 
 let Layout = forwardRef<HTMLElement, LayoutElementProps>((props, ref) => {
   let {
@@ -23,6 +24,7 @@ let Layout = forwardRef<HTMLElement, LayoutElementProps>((props, ref) => {
     '--col-size':
       'calc((var(--grid-size) - calc(var(--columns) - 1) * var(--gap)) / var(--columns))',
   } as React.CSSProperties
+
   return (
     <section ref={ref} {...rest} style={style}>
       <LayoutBackground
@@ -35,12 +37,13 @@ let Layout = forwardRef<HTMLElement, LayoutElementProps>((props, ref) => {
   )
 })
 
-let LayoutBackground = (props: any) => {
+let LayoutBackground = (props: LayoutBackgroundProps) => {
   let { bgColor, imgUrl, objectFit } = props
   let style = {
-    ['--bg-color' as any]: bgColor,
-    ['--object-fit' as any]: objectFit,
-  }
+    ['--bg-color']: bgColor,
+    ['--object-fit']: objectFit,
+  } as CSSProperties
+
   return imgUrl || bgColor ? (
     <div data-wv-bg style={style}>
       {imgUrl && (

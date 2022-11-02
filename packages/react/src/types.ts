@@ -78,6 +78,12 @@ export interface LayoutElementProps
   gridSize: number
 }
 
+export interface LayoutBackgroundProps {
+  imgUrl?: string
+  bgColor?: string
+  objectFit?: CSSProperties['objectFit']
+}
+
 // Map
 export interface MapElementProps extends WeaverseElementProps {
   place: string
