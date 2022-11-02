@@ -147,7 +147,7 @@ export type AdvancedGroupType =
   | "typography"
   | "visibility"
   | "shadows-and-effects"
-  | "layoutBackground"
+  | "layout-background"
 
 export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
   type: InputType
