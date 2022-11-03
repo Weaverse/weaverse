@@ -40,16 +40,14 @@ export let css: ElementCSS = {
   '@desktop': {
     marginTop: '16px',
     marginBottom: '24px',
-    '.wv-product-description': {
-      overflow: 'hidden',
-      display: '-webkit-box',
-      img: {
-        maxWidth: '100%',
-        display: 'none',
-      },
-      div: {
-        display: 'block',
-      },
+    overflow: 'hidden',
+    display: '-webkit-box',
+    img: {
+      maxWidth: '100%',
+      display: 'none',
+    },
+    div: {
+      display: 'block',
     },
   },
 }
