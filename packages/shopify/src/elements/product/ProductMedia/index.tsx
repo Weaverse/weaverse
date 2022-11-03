@@ -1,5 +1,5 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef, useContext } from 'react'
+import React, { forwardRef, useContext, useEffect } from 'react'
 import { ProductContext } from '~/context'
 import type { ProductMediaProps, ProductMediaSize } from '~/types'
 import { SlideImage } from './SlideImage'
@@ -15,7 +15,13 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
   (props, ref) => {
     let { mediaSize, aspectRatio, ...rest } = props
     let context = useContext(ProductContext)
-    let [sliderRef, thumbnailRef] = useProductImageSlider(context)
+    let [sliderRef, thumbnailRef, instanceRef, thumbnailInstanceRef] =
+      useProductImageSlider(context)
+
+    useEffect(() => {
+      instanceRef?.current?.update()
+      thumbnailInstanceRef?.current?.update()
+    }, [mediaSize, aspectRatio])
 
     if (context) {
       let { images } = context.product

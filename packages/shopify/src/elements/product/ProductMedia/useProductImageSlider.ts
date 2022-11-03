@@ -7,7 +7,7 @@ export function useProductImageSlider(context: ProductContextType | null) {
   let [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
     initial: 0,
   })
-  let [thumbnailRef] = useKeenSlider<HTMLDivElement>(
+  let [thumbnailRef, thumbnailInstanceRef] = useKeenSlider<HTMLDivElement>(
     {
       initial: 0,
       slides: {
@@ -39,5 +39,5 @@ export function useProductImageSlider(context: ProductContextType | null) {
     }
   }, [context])
 
-  return [sliderRef, thumbnailRef] as const
+  return [sliderRef, thumbnailRef, instanceRef, thumbnailInstanceRef] as const
 }
