@@ -1,7 +1,9 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef, useContext } from 'react'
+import React, { forwardRef, useContext, useEffect, useState } from 'react'
 import { ProductContext } from '~/context'
 import type { ProductMediaProps, ProductMediaSize } from '~/types'
+import { Arrows } from './Arrows'
+import { Dots } from './Dots'
 import { SlideImage } from './SlideImage'
 import { useProductImageSlider } from './useProductImageSlider'
 
@@ -15,7 +17,23 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
   (props, ref) => {
     let { mediaSize, aspectRatio, ...rest } = props
     let context = useContext(ProductContext)
-    let [sliderRef, thumbnailRef] = useProductImageSlider(context)
+    let [currentSlide, setCurrentSlide] = React.useState(0)
+    let [loaded, setLoaded] = useState(false)
+    let [sliderRef, thumbnailRef, instanceRef, thumbnailInstanceRef] =
+      useProductImageSlider({
+        context,
+        onSlideChanged: (slider) => {
+          setCurrentSlide(slider.track.details.rel)
+        },
+        onSliderCreated: () => {
+          setLoaded(true)
+        },
+      })
+
+    useEffect(() => {
+      instanceRef?.current?.update()
+      thumbnailInstanceRef?.current?.update()
+    }, [mediaSize, aspectRatio])
 
     if (context) {
       let { images } = context.product
@@ -30,21 +48,29 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/keen-slider@latest/keen-slider.min.css"
           />
-          <div ref={sliderRef} className="keen-slider wv-product-slider">
-            {images.map((image) => {
-              let { id, src, alt = '' } = image
-              return (
-                <React.Fragment key={id}>
-                  <SlideImage
-                    image={image}
-                    className="keen-slider__slide wv-product-slider__slide"
-                  />
-                  <noscript>
-                    {`<img src="${src}&width=1000" alt="${alt || ''}"/>`}
-                  </noscript>
-                </React.Fragment>
-              )
-            })}
+          <div className="wv-product-slider__wrapper">
+            <div ref={sliderRef} className="keen-slider wv-product-slider">
+              {images.map((image) => {
+                let { id, src, alt = '' } = image
+                return (
+                  <React.Fragment key={id}>
+                    <SlideImage
+                      image={image}
+                      className="keen-slider__slide wv-product-slider__slide"
+                    />
+                    <noscript>
+                      {`<img src="${src}&width=1000" alt="${alt || ''}"/>`}
+                    </noscript>
+                  </React.Fragment>
+                )
+              })}
+            </div>
+            {loaded && instanceRef?.current && (
+              <Arrows currentSlide={currentSlide} instanceRef={instanceRef} />
+            )}
+            {loaded && instanceRef.current && (
+              <Dots currentSlide={currentSlide} instanceRef={instanceRef} />
+            )}
           </div>
           <div ref={thumbnailRef} className="keen-slider wv-thumbnail-slider">
             {images.map((image) => {
@@ -78,6 +104,9 @@ export let css: ElementCSS = {
   '@desktop': {
     width: 'var(--product-media-width, 50%)',
     paddingRight: '16px',
+    '.wv-product-slider__wrapper': {
+      position: 'relative',
+    },
     '.wv-product-slider': {
       aspectRatio: 'var(--media-aspect-ratio, 1/1)',
     },
@@ -85,6 +114,54 @@ export let css: ElementCSS = {
       cursor: 'pointer',
       height: '100%',
       objectFit: 'cover',
+    },
+    '.wv-slider-arrow': {
+      position: 'absolute',
+      top: '50%',
+      transform: 'translateY(-50%)',
+      width: '44px',
+      height: '44px',
+      padding: '8px',
+      color: '#191919',
+      backgroundColor: '#f2f2f2',
+      textAlign: 'center',
+      transition: 'all 0.2s ease-in-out',
+      borderRadius: '4px',
+      '&:hover': {
+        backgroundColor: '#191919',
+        color: '#f2f2f2',
+      },
+      svg: {
+        verticalAlign: 'middle',
+        width: '22px',
+        height: '22px',
+      },
+      '&.arrow--left': {
+        left: '10px',
+      },
+      '&.arrow--right': {
+        right: '10px',
+      },
+      '&.arrow--disabled': {
+        opacity: 0.5,
+      },
+    },
+    '.wv-slider-dots': {
+      display: 'none',
+      padding: '10px 0',
+      justifyContent: 'center',
+      '.dot': {
+        width: '9px',
+        height: '9px',
+        padding: '0',
+        margin: '0 5px',
+        borderRadius: '50%',
+        background: '#2125291a',
+        transition: 'all 0.2s ease-in-out',
+        '&.dot--active': {
+          background: '#212529',
+        },
+      },
     },
     '.wv-thumbnail-slider': {
       marginTop: '10px',
@@ -106,6 +183,15 @@ export let css: ElementCSS = {
     marginBottom: '32px',
     '.wv-thumbnail__slide': {
       padding: '4px',
+    },
+    '.wv-slider-arrow': {
+      display: 'none',
+    },
+    '.wv-slider-dots': {
+      display: 'flex',
+    },
+    '.wv-thumbnail-slider': {
+      display: 'none !important',
     },
   },
 }

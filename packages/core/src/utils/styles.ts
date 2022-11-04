@@ -75,6 +75,16 @@ export function createGlobalStyles(stitches: Stitches) {
         paddingRight: "35px !important",
         cursor: "pointer",
       },
+      button: {
+        outline: "none",
+        boxShadow: "none",
+        cursor: "pointer",
+        border: "none",
+        "&:focus": {
+          outline: "none",
+          boxShadow: "none",
+        },
+      },
     },
     ".wv-spinner-wrapper": {
       position: "absolute",
