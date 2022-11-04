@@ -3,6 +3,7 @@ import React, { forwardRef, useContext, useEffect, useState } from 'react'
 import { ProductContext } from '~/context'
 import type { ProductMediaProps, ProductMediaSize } from '~/types'
 import { Arrows } from './Arrows'
+import { Dots } from './Dots'
 import { SlideImage } from './SlideImage'
 import { useProductImageSlider } from './useProductImageSlider'
 
@@ -67,6 +68,9 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
             {loaded && instanceRef?.current && (
               <Arrows currentSlide={currentSlide} instanceRef={instanceRef} />
             )}
+            {loaded && instanceRef.current && (
+              <Dots currentSlide={currentSlide} instanceRef={instanceRef} />
+            )}
           </div>
           <div ref={thumbnailRef} className="keen-slider wv-thumbnail-slider">
             {images.map((image) => {
@@ -120,17 +124,12 @@ export let css: ElementCSS = {
       padding: '8px',
       color: '#191919',
       backgroundColor: '#f2f2f2',
-      border: 'none',
       textAlign: 'center',
-      cursor: 'pointer',
       transition: 'all 0.2s ease-in-out',
       borderRadius: '4px',
       '&:hover': {
         backgroundColor: '#191919',
         color: '#f2f2f2',
-      },
-      '&:focus': {
-        outline: 'none',
       },
       svg: {
         verticalAlign: 'middle',
@@ -145,6 +144,23 @@ export let css: ElementCSS = {
       },
       '&.arrow--disabled': {
         opacity: 0.5,
+      },
+    },
+    '.wv-slider-dots': {
+      display: 'none',
+      padding: '10px 0',
+      justifyContent: 'center',
+      '.dot': {
+        width: '9px',
+        height: '9px',
+        padding: '0',
+        margin: '0 5px',
+        borderRadius: '50%',
+        background: '#2125291a',
+        transition: 'all 0.2s ease-in-out',
+        '&.dot--active': {
+          background: '#212529',
+        },
       },
     },
     '.wv-thumbnail-slider': {
@@ -170,6 +186,12 @@ export let css: ElementCSS = {
     },
     '.wv-slider-arrow': {
       display: 'none',
+    },
+    '.wv-slider-dots': {
+      display: 'flex',
+    },
+    '.wv-thumbnail-slider': {
+      display: 'none !important',
     },
   },
 }

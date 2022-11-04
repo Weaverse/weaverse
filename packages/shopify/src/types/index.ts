@@ -60,6 +60,10 @@ export interface ProductMediaArrowsProps {
   currentSlide: number
   instanceRef: React.MutableRefObject<KeenSliderInstance | null>
 }
+export interface ProductMediaDotsProps {
+  currentSlide: number
+  instanceRef: React.MutableRefObject<KeenSliderInstance | null>
+}
 export interface SlideImageProps {
   image: ShopifyProductImage
   className: string

@@ -25,18 +25,18 @@ export function useProductImageSlider(input: ProductImageHooksInput) {
     if (context) {
       let { selectedVariant, product } = context
       if (selectedVariant) {
-        let newMediaIndex = -1
+        let targetMediaIndex = -1
         let { featured_media, image_id } = selectedVariant
         if (featured_media) {
-          newMediaIndex = featured_media.position - 1
+          targetMediaIndex = featured_media.position - 1
         } else if (image_id) {
           let image = product.images.find((image) => image.id === image_id)
           if (image) {
-            newMediaIndex = image.position - 1
+            targetMediaIndex = image.position - 1
           }
         }
-        if (newMediaIndex >= 0 && instanceRef.current) {
-          instanceRef.current.moveToIdx(newMediaIndex)
+        if (targetMediaIndex >= 0 && instanceRef.current) {
+          instanceRef.current.moveToIdx(targetMediaIndex)
         }
       }
     }
