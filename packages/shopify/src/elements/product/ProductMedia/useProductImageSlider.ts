@@ -1,11 +1,14 @@
 import { useKeenSlider } from 'keen-slider/react'
 import { useEffect } from 'react'
-import type { ProductContextType } from '~/types'
+import type { ProductImageHooksInput } from '~/types'
 import { ThumbnailPlugin } from './ThumbnailPlugin'
 
-export function useProductImageSlider(context: ProductContextType | null) {
+export function useProductImageSlider(input: ProductImageHooksInput) {
+  let { context, onSlideChanged, onSliderCreated } = input
   let [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
     initial: 0,
+    slideChanged: onSlideChanged,
+    created: onSliderCreated,
   })
   let [thumbnailRef, thumbnailInstanceRef] = useKeenSlider<HTMLDivElement>(
     {

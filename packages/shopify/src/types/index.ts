@@ -1,4 +1,5 @@
 import type { WeaverseElementProps } from '@weaverse/react'
+import type { KeenSliderInstance } from 'keen-slider'
 import type {
   OptionDisplayType,
   ShopifyGlobalConfigs,
@@ -49,6 +50,15 @@ export type AspectRatio = 'auto' | '1 / 1' | '3 / 4' | '4 / 3'
 export interface ProductMediaProps extends WeaverseElementProps {
   mediaSize: ProductMediaSize
   aspectRatio: AspectRatio
+}
+export interface ProductImageHooksInput {
+  context: ProductContextType | null
+  onSlideChanged?: (slider: KeenSliderInstance) => void
+  onSliderCreated?: (slider: KeenSliderInstance) => void
+}
+export interface ProductMediaArrowsProps {
+  currentSlide: number
+  instanceRef: React.MutableRefObject<KeenSliderInstance | null>
 }
 export interface SlideImageProps {
   image: ShopifyProductImage
