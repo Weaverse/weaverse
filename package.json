@@ -4,8 +4,8 @@
   "devDependencies": {
     "@commitlint/cli": "^17.2.0",
     "@commitlint/config-conventional": "^17.2.0",
-    "@types/node": "^18.11.8",
-    "@types/react": "^18.0.24",
+    "@types/node": "^18.11.9",
+    "@types/react": "^18.0.25",
     "@types/react-image-gallery": "^1.2.0",
     "@typescript-eslint/eslint-plugin": "^5.42.0",
     "@typescript-eslint/parser": "^5.42.0",
@@ -18,7 +18,7 @@
     "prettier": "2.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tsup": "^6.3.0",
+    "tsup": "^6.4.0",
     "turbo": "^1.6.3",
     "typescript": "^4.8.4"
   },
