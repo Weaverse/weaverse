@@ -20,8 +20,20 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
     let context = useContext(ProductContext)
     let [adding, setAdding] = useState(false)
 
-    if (context) {
-      let { formRef, ssrMode } = context
+    if (context?.selectedVariant) {
+      let { formRef, ssrMode, selectedVariant } = context
+      let {
+        available,
+        inventory_quantity,
+        inventory_policy,
+        inventory_management,
+      } = selectedVariant
+      if (!('available' in selectedVariant)) {
+        available =
+          inventory_quantity > 0 ||
+          inventory_policy === 'continue' ||
+          inventory_management === null
+      }
 
       let handleATC = (e: React.MouseEvent) => {
         e.preventDefault()
@@ -34,7 +46,12 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
       if (ssrMode) {
         return (
           <div ref={ref} {...rest}>
-            <button type="submit" name="add" className="wv-product-atc-button">
+            <button
+              type="submit"
+              name="add"
+              className="wv-product-atc-button"
+              disabled={!available}
+            >
               {`
                 <span>
                   {%- if product.available -%}
@@ -49,6 +66,10 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
         )
       }
 
+      let atcText = buttonText
+      if (!available) atcText = soldOutText
+      if (!selectedVariant) atcText = unavailableText
+
       return (
         <div ref={ref} {...rest}>
           {showQuantitySelector && (
@@ -58,12 +79,12 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
             {showQuantitySelector && <QuantitySelector />}
             <button
               ref={atcRef}
-              disabled={adding}
+              disabled={adding || !available || !selectedVariant}
               onClick={handleATC}
               type="submit"
               className="wv-product-atc-button"
             >
-              <span>{buttonText}</span>
+              <span>{atcText}</span>
               {adding && <Spinner />}
             </button>
           </div>
@@ -131,6 +152,10 @@ export let css: ElementCSS = {
       overflow: 'hidden',
       '&:hover': {
         backgroundColor: '#2c3e2f',
+      },
+      '&:disabled': {
+        opacity: '0.5',
+        cursor: 'not-allowed',
       },
     },
   },
