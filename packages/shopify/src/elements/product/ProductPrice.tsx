@@ -1,5 +1,5 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef, useContext } from 'react'
+import React, { forwardRef, useContext, useEffect, useState } from 'react'
 import { ProductContext } from '~/context'
 import { weaverseShopifyConfigs } from '~/proxy'
 import type { ProductPriceProps } from '~/types'
@@ -9,9 +9,16 @@ let ProductPrice = forwardRef<HTMLDivElement, ProductPriceProps>(
   (props, ref) => {
     let { showCompareAt, showSaleBadge, ...rest } = props
     let context = useContext(ProductContext)
+    let [variant, setVariant] = useState(context?.selectedVariant)
+
+    useEffect(() => {
+      if (context?.selectedVariant) {
+        setVariant(context.selectedVariant)
+      }
+    }, [context?.selectedVariant])
 
     if (context) {
-      let { selectedVariant, ssrMode } = context
+      let { ssrMode } = context
       if (ssrMode) {
         return (
           <div ref={ref} className="wv-product-prices" {...rest}>
@@ -43,9 +50,9 @@ let ProductPrice = forwardRef<HTMLDivElement, ProductPriceProps>(
         )
       }
 
-      if (selectedVariant) {
+      if (variant) {
         let { money_format } = weaverseShopifyConfigs.shopData
-        let { price, compare_at_price } = selectedVariant
+        let { price, compare_at_price } = variant
         let savedPercentage = 0
         if (compare_at_price && Number(compare_at_price) > Number(price)) {
           let savedAmount = Number(compare_at_price) - Number(price)
