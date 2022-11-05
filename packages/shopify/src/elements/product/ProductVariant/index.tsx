@@ -99,8 +99,7 @@ export let css: ElementCSS = {
       marginBottom: '5px',
     },
     '.wv-combined-variant__selector, .wv-option__dropdown': {
-      backgroundColor: '#fff',
-      border: '1px solid #ebebeb',
+      border: '1px solid #222',
       borderRadius: '4px',
       lineHeight: '48px',
       fontSize: '16px',
