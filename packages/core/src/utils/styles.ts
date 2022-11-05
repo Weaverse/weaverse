@@ -66,6 +66,7 @@ export function createGlobalStyles(stitches: Stitches) {
         boxShadow: "none",
         color: "currentColor",
         verticalAlign: "middle",
+        backgroundColor: "transparent",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundImage: "url(https://ucarecdn.com/4bb6a6e7-1ce8-4201-8f2d-da00a50105f3/ardown.svg)",

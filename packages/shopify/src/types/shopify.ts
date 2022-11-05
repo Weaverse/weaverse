@@ -41,6 +41,7 @@ export interface ShopifyProductVariant {
   weight: number
   weight_unit: ProductVariantWeightUnit
   // Liquid props
+  available?: boolean
   options?: string[]
   featured_image?: ShopifyProductImage
   featured_media?: ShopifyProductImage
