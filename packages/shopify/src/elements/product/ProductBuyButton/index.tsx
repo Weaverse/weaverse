@@ -20,19 +20,18 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
     let context = useContext(ProductContext)
     let [adding, setAdding] = useState(false)
 
-    if (context?.selectedVariant) {
+    if (context) {
       let { formRef, ssrMode, selectedVariant } = context
-      let {
-        available,
-        inventory_quantity,
-        inventory_policy,
-        inventory_management,
-      } = selectedVariant
-      if (!('available' in selectedVariant)) {
-        available =
-          inventory_quantity > 0 ||
-          inventory_policy === 'continue' ||
-          inventory_management === null
+      let available = false
+      if (selectedVariant) {
+        if ('available' in selectedVariant) {
+          available = Boolean(selectedVariant.available)
+        } else {
+          available =
+            selectedVariant.inventory_quantity > 0 ||
+            selectedVariant.inventory_policy === 'continue' ||
+            selectedVariant.inventory_management === null
+        }
       }
 
       let handleATC = (e: React.MouseEvent) => {
