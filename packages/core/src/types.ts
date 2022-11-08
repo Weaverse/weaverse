@@ -78,6 +78,7 @@ export type ParentType =
   | "tab"
   | "accordion"
   | "accordion.wrapper"
+
 export type GridSize = {
   rowSpan: number
   colSpan: number
@@ -95,7 +96,7 @@ export type ToolbarAction =
 export interface ElementSchema {
   title: string
   type: string
-  parentType: ParentType
+  parentTypes: ParentType[]
   gridSize?: GridSize
   inspector?: ElementInspector
   toolbar?: (ToolbarAction | ToolbarAction[])[]
