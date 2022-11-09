@@ -37,8 +37,10 @@ export interface ProductListProps extends WeaverseElementProps {
 }
 
 export interface ProductDetailsProps extends WeaverseElementProps {
-  productId: number
+  productId: number | 'default'
+  // For generating product liquid data by SSR
   productHandle: string
+  useDefaultProduct: boolean
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

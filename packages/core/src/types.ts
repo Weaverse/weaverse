@@ -182,6 +182,7 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
   condition?: string
   defaultValue?: string | number | boolean
   placeholder?: string
+  helpText?: string
 }
 
 export type AdditionalInputConfigs = SelectInputConfigs | ToggleGroupConfigs | RangeInputConfigs | SortableInputConfigs

@@ -100,6 +100,16 @@ export function createGlobalStyles(stitches: Stitches) {
         animation: "spin .75s linear infinite",
       },
     },
+    "[data-wv-placeholder]": {
+      height: "100%",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "rgba(236, 236, 236, 0.5)",
+      backgroundClip: "content-box",
+      padding: "10px",
+    },
   })
   globalStyles()
 }

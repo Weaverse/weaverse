@@ -18,7 +18,10 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
     let { mediaSize, aspectRatio, ...rest } = props
     let context = useContext(ProductContext)
     let [currentSlide, setCurrentSlide] = React.useState(0)
-    let [loaded, setLoaded] = useState(false)
+    let [created, setCreated] = useState(false)
+    let [cssLoaded, setCssLoaded] = useState(false)
+    let [opacity, setOpacity] = useState(0)
+
     let [sliderRef, thumbnailRef, instanceRef, thumbnailInstanceRef] =
       useProductImageSlider({
         context,
@@ -26,20 +29,24 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
           setCurrentSlide(slider.track.details.rel)
         },
         onSliderCreated: () => {
-          setLoaded(true)
+          setCreated(true)
         },
       })
 
     useEffect(() => {
-      instanceRef?.current?.update()
-      thumbnailInstanceRef?.current?.update()
-    }, [mediaSize, aspectRatio])
+      if (created && cssLoaded) {
+        instanceRef?.current?.update()
+        thumbnailInstanceRef?.current?.update()
+        setOpacity(1)
+      }
+    }, [mediaSize, aspectRatio, created, cssLoaded])
 
     if (context) {
       let { images } = context.product
       let style = {
-        '--product-media-width': mediaSizesMap[mediaSize],
+        '--media-width': mediaSizesMap[mediaSize],
         '--media-aspect-ratio': aspectRatio,
+        '--media-opacity': opacity,
       } as React.CSSProperties
 
       return (
@@ -47,6 +54,7 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
           <link
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/keen-slider@latest/keen-slider.min.css"
+            onLoad={() => setCssLoaded(true)}
           />
           <div className="wv-product-slider__wrapper">
             <div ref={sliderRef} className="keen-slider wv-product-slider">
@@ -65,10 +73,10 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
                 )
               })}
             </div>
-            {loaded && instanceRef?.current && (
+            {created && instanceRef?.current && (
               <Arrows currentSlide={currentSlide} instanceRef={instanceRef} />
             )}
-            {loaded && instanceRef.current && (
+            {created && instanceRef.current && (
               <Dots currentSlide={currentSlide} instanceRef={instanceRef} />
             )}
           </div>
@@ -102,8 +110,10 @@ ProductMedia.defaultProps = {
 
 export let css: ElementCSS = {
   '@desktop': {
-    width: 'var(--product-media-width, 50%)',
+    width: 'var(--media-width, 50%)',
     paddingRight: '16px',
+    transition: 'opacity 0.3s ease-in-out',
+    opacity: 'var(--media-opacity, 0)',
     '.wv-product-slider__wrapper': {
       position: 'relative',
     },
