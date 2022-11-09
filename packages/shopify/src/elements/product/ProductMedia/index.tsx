@@ -44,9 +44,9 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
     if (context) {
       let { images } = context.product
       let style = {
-        '--product-media-width': mediaSizesMap[mediaSize],
+        '--media-width': mediaSizesMap[mediaSize],
         '--media-aspect-ratio': aspectRatio,
-        '--product-media-opacity': opacity,
+        '--media-opacity': opacity,
       } as React.CSSProperties
 
       return (
@@ -110,10 +110,10 @@ ProductMedia.defaultProps = {
 
 export let css: ElementCSS = {
   '@desktop': {
-    width: 'var(--product-media-width, 50%)',
+    width: 'var(--media-width, 50%)',
     paddingRight: '16px',
     transition: 'opacity 0.3s ease-in-out',
-    opacity: 'var(--product-media-opacity, 0)',
+    opacity: 'var(--media-opacity, 0)',
     '.wv-product-slider__wrapper': {
       position: 'relative',
     },
