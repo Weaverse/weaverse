@@ -28,7 +28,7 @@ let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
     let product: ShopifyProduct = weaverseShopifyProducts[productId]
     if (useDefaultProduct && !isDesignMode) {
       let defaultProduct = weaverseShopifyProducts['default']
-      if (defaultProduct.id) {
+      if (defaultProduct?.id) {
         product = defaultProduct
       }
     }

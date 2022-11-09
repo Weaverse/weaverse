@@ -18,7 +18,7 @@ let ProductPrice = forwardRef<HTMLDivElement, ProductPriceProps>(
     }, [context?.selectedVariant])
 
     if (context) {
-      let { ssrMode } = context
+      let { ssrMode, product } = context
       if (ssrMode) {
         return (
           <div ref={ref} className="wv-product-prices" {...rest}>
@@ -50,33 +50,37 @@ let ProductPrice = forwardRef<HTMLDivElement, ProductPriceProps>(
         )
       }
 
+      let { money_format } = weaverseShopifyConfigs.shopData
+      let price: string | number = product?.price || 0
+      let compare_at_price: string | number = product?.compare_at_price || 0
       if (variant) {
-        let { money_format } = weaverseShopifyConfigs.shopData
-        let { price, compare_at_price } = variant
-        let savedPercentage = 0
-        if (compare_at_price && Number(compare_at_price) > Number(price)) {
-          let savedAmount = Number(compare_at_price) - Number(price)
-          savedPercentage = Math.round(
-            (savedAmount / Number(compare_at_price)) * 100
-          )
-        }
+        price = variant.price
+        compare_at_price = variant.compare_at_price || 0
+      }
 
-        return (
-          <div ref={ref} className="wv-product-prices" {...rest}>
-            <span className="wv-sale-price">
-              {formatMoney(price, money_format)}
-            </span>
-            {showCompareAt && compare_at_price ? (
-              <s className="wv-compare-price">
-                {formatMoney(compare_at_price, money_format)}
-              </s>
-            ) : null}
-            {showSaleBadge && savedPercentage > 0 ? (
-              <span className="wv-sale-badge">Save {savedPercentage}%</span>
-            ) : null}
-          </div>
+      let savedPercentage = 0
+      if (compare_at_price && Number(compare_at_price) > Number(price)) {
+        let savedAmount = Number(compare_at_price) - Number(price)
+        savedPercentage = Math.round(
+          (savedAmount / Number(compare_at_price)) * 100
         )
       }
+
+      return (
+        <div ref={ref} className="wv-product-prices" {...rest}>
+          <span className="wv-sale-price">
+            {formatMoney(price, money_format)}
+          </span>
+          {showCompareAt && compare_at_price ? (
+            <s className="wv-compare-price">
+              {formatMoney(compare_at_price, money_format)}
+            </s>
+          ) : null}
+          {showSaleBadge && savedPercentage > 0 ? (
+            <span className="wv-sale-badge">Save {savedPercentage}%</span>
+          ) : null}
+        </div>
+      )
     }
     return null
   }
