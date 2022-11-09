@@ -114,6 +114,7 @@ export interface OptionValuesProps {
   option: ShopifyProductOption
   type: OptionDisplayType
   selectedValue: string | null | undefined
+  selectedOptions: string[]
   onSelect: (position: number, value: string) => void
 }
 export interface ArticleBoxProps extends WeaverseElementProps {
