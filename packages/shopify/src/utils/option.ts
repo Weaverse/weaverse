@@ -8,6 +8,7 @@ import type {
 } from '~/types'
 import { resizeImage } from './image'
 import { getSwatchValue, optionRadiusSizeMap, optionSizeMap } from './swatch'
+import { getVariantFromOptionArray, getVariantOptions } from './variant'
 
 export function getOptionsGroupConfigs(option: ShopifyProductOption) {
   let { swatches } = window.weaverseShopifyConfigs || {}
@@ -70,4 +71,37 @@ export function getOptionItemStyle(
     backgroundImage: bgImage,
     '--aspect-ratio': product.aspect_ratio || 1,
   } as CSSProperties
+}
+
+export function getSoldOutAndUnavailableState(
+  value: string,
+  position: number,
+  product: ShopifyProduct,
+  selectedOptions: string[]
+) {
+  let state = { soldOut: false, unavailable: false }
+  if (selectedOptions.length) {
+    let maxOptions = product.options.length
+    let matchVariants = []
+    if (position === maxOptions) {
+      let options = Array.from(selectedOptions)
+      options[maxOptions - 1] = value
+      matchVariants.push(getVariantFromOptionArray(product, options))
+    } else {
+      matchVariants = product.variants.filter((v) => {
+        let variantOpts = getVariantOptions(v)
+        return (
+          variantOpts[position - 1] === value &&
+          variantOpts[position - 2] === selectedOptions[position - 2]
+        )
+      })
+    }
+    matchVariants = matchVariants.filter(Boolean)
+    if (matchVariants.length) {
+      state.soldOut = matchVariants.every((v) => v.available === false)
+    } else {
+      state.unavailable = true
+    }
+  }
+  return state
 }

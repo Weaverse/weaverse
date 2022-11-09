@@ -15,7 +15,7 @@ import type {
 import { WeaverseContext } from '@weaverse/react'
 import { weaverseShopifyProducts } from '~/proxy'
 import { Placeholder } from '~/elements/shared'
-import { generateProductImageAspectRatio } from '~/utils/image'
+import { updateProductData } from '~/utils'
 
 let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
   (props, ref) => {
@@ -28,7 +28,7 @@ let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
     let product: ShopifyProduct = weaverseShopifyProducts[productId]
     if (useDefaultProduct && !isDesignMode) {
       let defaultProduct = weaverseShopifyProducts['default']
-      if (defaultProduct.id) {
+      if (defaultProduct?.id) {
         product = defaultProduct
       }
     }
@@ -37,10 +37,10 @@ let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
       useState<ShopifyProductVariant | null>(null)
     useEffect(() => {
       if (product) {
+        updateProductData(product)
         setSelectedVariant(
           product.selected_or_first_available_variant || product.variants[0]
         )
-        generateProductImageAspectRatio(product)
       }
     }, [product])
 

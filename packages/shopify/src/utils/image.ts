@@ -26,15 +26,17 @@ export function resizeImage(imageURL: string, size: string): string {
 }
 
 /**
- * Generate product image aspect_ratio.
+ * Get product image aspect_ratio.
  *
  * @param product {ShopifyProduct} - Shopify product
  */
-export function generateProductImageAspectRatio(product: ShopifyProduct) {
-  if (!product?.aspect_ratio) {
+export function getProductImageAspectRatio(product: ShopifyProduct) {
+  let aspect_ratio = product?.aspect_ratio
+  if (!aspect_ratio) {
     let image = product?.image || product?.images[0]
     if (image) {
-      product.aspect_ratio = image.width / image.height
+      aspect_ratio = image.width / image.height
     }
   }
+  return aspect_ratio
 }

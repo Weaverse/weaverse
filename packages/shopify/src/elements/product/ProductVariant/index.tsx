@@ -49,8 +49,13 @@ let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
             </div>
           )
         }
+        let style = {
+          '--wv-option-border-color': '#cbcbcb',
+          '--wv-selected-option-border-color': '#232323',
+        } as React.CSSProperties
+
         return (
-          <div ref={ref} {...rest}>
+          <div ref={ref} style={style} {...rest}>
             <input type="hidden" name="id" value={selectedVariant?.id} />
             {options.map((option) => {
               let { name, position } = option
@@ -77,6 +82,7 @@ let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
                     option={option}
                     type={optionDesign}
                     selectedValue={selectedValue}
+                    selectedOptions={selectedOptions}
                     onSelect={handleSelectOption}
                   />
                 </div>
@@ -108,7 +114,7 @@ export let css: ElementCSS = {
       marginBottom: '5px',
     },
     '.wv-combined-variant__selector, .wv-option__dropdown': {
-      border: '1px solid #222',
+      border: '1px solid var(--wv-selected-option-border-color)',
       borderRadius: '4px',
       lineHeight: '48px',
       fontSize: '16px',
@@ -122,7 +128,7 @@ export let css: ElementCSS = {
       },
     },
     '.wv-option__label': {
-      marginBottom: '8px',
+      marginBottom: '6px',
     },
     '.wv-option__display-name': {
       marginRight: '4px',
@@ -142,6 +148,25 @@ export let css: ElementCSS = {
       borderRadius: 'var(--radius, 0px)',
       marginBottom: '10px',
       marginRight: '10px',
+      '&.sold-out, &.unavailable': {
+        opacity: '0.5',
+        overflow: 'hidden',
+        position: 'relative',
+        '&:after': {
+          content: '""',
+          top: '50%',
+          left: '-10px',
+          height: '1px',
+          opacity: '1',
+          zIndex: '1',
+          border: 'none',
+          position: 'absolute',
+          visibility: 'visible',
+          width: 'calc(100% + 20px)',
+          backgroundColor: 'var(--wv-option-border-color)',
+          transform: 'translateY(-50%) rotate(-45deg)',
+        },
+      },
       '&.wv-option__button': {
         padding: '0 10px',
         lineHeight: 'var(--size, 40px)',
@@ -154,9 +179,9 @@ export let css: ElementCSS = {
         height: 'var(--size, 40px)',
       },
       '&.wv-option__button, &.wv-option__variant-image': {
-        border: '1px solid #cbcbcb',
+        border: '1px solid var(--wv-option-border-color)',
         '&:hover, &.selected': {
-          borderColor: '#222',
+          borderColor: 'var(--wv-selected-option-border-color)',
         },
       },
       '&.wv-option__custom-image, &.wv-option__variant-image': {
@@ -171,9 +196,9 @@ export let css: ElementCSS = {
         marginLeft: '3px',
         marginBottom: '14px',
         marginRight: '14px',
-        outline: '1px solid #cbcbcb',
+        outline: '1px solid var(--wv-option-border-color)',
         '&:hover, &.selected': {
-          outlineColor: '#222',
+          outlineColor: 'var(--wv-selected-option-border-color)',
         },
       },
     },
