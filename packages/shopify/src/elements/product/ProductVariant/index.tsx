@@ -196,7 +196,7 @@ export let css: ElementCSS = {
             borderColor: 'var(--wv-selected-option-border-color)',
           },
         },
-      '&.wv-option__custom-image, &.wv-option__variant-image': {
+      '&.wv-option__variant-image, &.wv-option__custom-image > span': {
         fontSize: '0',
         backgroundColor: 'var(--background-color)',
         backgroundImage: 'var(--background-image)',
@@ -207,17 +207,6 @@ export let css: ElementCSS = {
       '&.wv-option__color, &.wv-option__custom-image': {
         fontSize: '0',
         padding: '3px',
-        // borderColor: 'var(--wv-selected-option-border-color)',
-        // outlineOffset: '3px',
-
-        // marginLeft: '3px',
-        // marginBottom: '14px',
-        // marginRight: '14px',
-        // outline: '1px solid var(--wv-option-border-color)',
-        '&:hover, &.selected': {
-          // outlineColor: 'var(--wv-selected-option-border-color)',
-          // borderColor: 'var(--wv-selected-option-border-color)',
-        },
       },
     },
   },
