@@ -19,7 +19,6 @@ let ProductVendor = forwardRef<HTMLDivElement, ProductVendorProps>(
           <a
             target="_self"
             href={`/collections/vendors?q=${vendor}`}
-            rel="noreferrer"
             className="wv-produt-vendor__link"
           >
             {vendor}
