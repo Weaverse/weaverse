@@ -95,15 +95,24 @@ export interface TextElementProps extends WeaverseElementProps {
   value: string
 }
 
-// Video
-export interface VideoElementProps extends WeaverseElementProps {
+export interface VideoCommonProps {
   src: string
+  type?: string
   poster: string
   loop: boolean
-  type: string
   controls: boolean
   autoPlay: boolean
   muted: boolean
+}
+// Video
+export type VideoElementProps = VideoCommonProps & WeaverseElementProps
+
+export interface YoutubeElementProps extends VideoCommonProps {
+  youtubeId: string
+}
+
+export interface VimeoElementProps extends VideoCommonProps {
+  vimeoId: string
 }
 
 // Countdown
