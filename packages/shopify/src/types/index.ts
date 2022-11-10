@@ -52,6 +52,7 @@ export type AspectRatio = 'auto' | '1/1' | '3/4' | '4/3'
 export interface ProductMediaProps extends WeaverseElementProps {
   mediaSize: ProductMediaSize
   aspectRatio: AspectRatio
+  fallbackImage: string
 }
 export interface ProductImageHooksInput {
   context: ProductContextType | null
@@ -66,9 +67,11 @@ export interface ProductMediaDotsProps {
   currentSlide: number
   instanceRef: React.MutableRefObject<KeenSliderInstance | null>
 }
-export interface SlideImageProps {
+export interface ProductImageProps {
   image: ShopifyProductImage
-  className: string
+  width: number
+  className?: string
+  onLoad?: () => void
 }
 export interface ProductTitleProps extends WeaverseElementProps {
   htmlTag: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p'
@@ -78,8 +81,10 @@ export interface ProductDescriptionProps extends WeaverseElementProps {
   lineClamp: number
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ProductVendorProps extends WeaverseElementProps {}
+export interface ProductVendorProps extends WeaverseElementProps {
+  showLabel: boolean
+  labelText: string
+}
 
 export interface ProductMetaProps extends WeaverseElementProps {
   // showAvailability: boolean

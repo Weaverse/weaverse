@@ -5,20 +5,36 @@ import type { ProductVendorProps } from '~/types'
 
 let ProductVendor = forwardRef<HTMLDivElement, ProductVendorProps>(
   (props, ref) => {
-    let { ...rest } = props
+    let { showLabel, labelText, ...rest } = props
     let context = useContext(ProductContext)
 
     if (context) {
       let { product, ssrMode } = context
+      let vendor = ssrMode ? '{{- wv_product.vendor -}}' : product.vendor
       return (
         <div ref={ref} {...rest}>
-          {ssrMode ? '{{- wv_product.vendor -}}' : product.vendor}
+          {showLabel && (
+            <span className="wv-product-vendor__label">{labelText}</span>
+          )}
+          <a
+            target="_self"
+            href={`/collections/vendors?q=${vendor}`}
+            rel="noreferrer"
+            className="wv-produt-vendor__link"
+          >
+            {vendor}
+          </a>
         </div>
       )
     }
     return null
   }
 )
+
+ProductVendor.defaultProps = {
+  showLabel: true,
+  labelText: 'By',
+}
 
 export let css: ElementCSS = {
   '@desktop': {
@@ -27,7 +43,19 @@ export let css: ElementCSS = {
     lineHeight: '20px',
     fontStyle: 'normal',
     fontWeight: 400,
-    textTransform: 'uppercase',
+    '.wv-product-vendor__label': {
+      fontSize: '15px',
+      lineHeight: '1.4em',
+      fontWeight: '600',
+      marginRight: '4px',
+    },
+    '.wv-produt-vendor__link': {
+      color: '#666666',
+      textDecoration: 'underline',
+      textUnderlineOffset: '2px',
+      textDecorationColor: 'rgba(193, 100, 82, 0.4)',
+      textDecorationThickness: '1px',
+    },
   },
 }
 
