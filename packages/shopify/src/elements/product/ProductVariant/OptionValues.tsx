@@ -4,15 +4,22 @@ import type { OptionValuesProps } from '~/types'
 import { getOptionItemStyle, getSoldOutAndUnavailableState } from '~/utils'
 
 export function OptionValues(props: OptionValuesProps) {
-  let { product, option, type, selectedValue, selectedOptions, onSelect } =
-    props
+  let {
+    product,
+    option,
+    type,
+    selectedValue,
+    selectedOptions,
+    hideUnavailableOptions,
+    onSelect,
+  } = props
   let { values, position } = option
 
   if (type === 'dropdown') {
     return (
       <select
         className="wv-option__dropdown"
-        defaultValue={selectedValue || values[0]}
+        value={selectedValue || values[0]}
         onChange={(e) => onSelect(position, e.target.value)}
       >
         {values.map((value, idx) => {
@@ -22,6 +29,10 @@ export function OptionValues(props: OptionValuesProps) {
             product,
             selectedOptions
           )
+          if (hideUnavailableOptions && state.unavailable) {
+            return null
+          }
+
           let className = clsx(
             state.soldOut && 'sold-out',
             state.unavailable && 'unavailable'
@@ -51,7 +62,10 @@ export function OptionValues(props: OptionValuesProps) {
           `wv-option__${type}`,
           selectedValue === value && 'selected',
           state.soldOut && 'sold-out',
-          state.unavailable && 'unavailable'
+          state.unavailable && [
+            'unavailable',
+            hideUnavailableOptions && 'hidden',
+          ]
         )
 
         return (
@@ -61,7 +75,7 @@ export function OptionValues(props: OptionValuesProps) {
             style={style}
             onClick={() => onSelect(position, value)}
           >
-            {value}
+            <span>{value}</span>
           </div>
         )
       })}
