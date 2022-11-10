@@ -12,7 +12,7 @@ import { OptionValues } from './OptionValues'
 
 let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
   (props, ref) => {
-    let { optionsStyle, ...rest } = props
+    let { optionsStyle, hideUnavailableOptions, ...rest } = props
     let context = useContext(ProductContext)
     let [selectedOptions, setSelectedOptions] = React.useState<string[]>(() => {
       if (context?.selectedVariant) {
@@ -29,19 +29,19 @@ let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
 
     if (context) {
       let { product, selectedVariant, setSelectedVariant } = context
-      let { variants, options } = product
-      let hasOnlyDefaultVariant =
-        product.has_only_default_variant ||
-        (variants.length === 1 && variants[0].title === 'Default Title')
-
       let handleSelectOption = (position: number, value: string) => {
         selectedOptions[position - 1] = value
         let newVariant = getVariantFromOptionArray(product, selectedOptions)
+        if (!newVariant && hideUnavailableOptions) {
+          let newOptions = selectedOptions.filter((_, idx) => idx < position)
+          newVariant = getVariantFromOptionArray(product, newOptions)
+          selectedOptions = newVariant.options
+        }
         setSelectedVariant(newVariant)
-        setSelectedOptions(selectedOptions)
+        setSelectedOptions([...selectedOptions])
       }
 
-      if (!hasOnlyDefaultVariant) {
+      if (!product.has_only_default_variant) {
         if (optionsStyle === 'combined') {
           return (
             <div ref={ref} {...rest}>
@@ -57,7 +57,7 @@ let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
         return (
           <div ref={ref} style={style} {...rest}>
             <input type="hidden" name="id" value={selectedVariant?.id} />
-            {options.map((option) => {
+            {product.options.map((option) => {
               let { name, position } = option
               let selectedValue = selectedOptions[position - 1]
               let { optionDisplayName, optionDesign, style } =
@@ -84,6 +84,7 @@ let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
                     selectedValue={selectedValue}
                     selectedOptions={selectedOptions}
                     onSelect={handleSelectOption}
+                    hideUnavailableOptions={hideUnavailableOptions}
                   />
                 </div>
               )
@@ -148,29 +149,39 @@ export let css: ElementCSS = {
       borderRadius: 'var(--radius, 0px)',
       marginBottom: '10px',
       marginRight: '10px',
+      '& > span': {
+        width: '100%',
+        height: '100%',
+        display: 'inline-block',
+        borderRadius: 'var(--radius, 0px)',
+      },
       '&.sold-out, &.unavailable': {
-        opacity: '0.5',
+        opacity: '0.6',
         overflow: 'hidden',
         position: 'relative',
         '&:after': {
           content: '""',
-          top: '50%',
-          left: '-10px',
-          height: '1px',
-          opacity: '1',
-          zIndex: '1',
-          border: 'none',
           position: 'absolute',
+          zIndex: '1',
+          inset: '0px',
+          opacity: '1',
+          border: 'none',
           visibility: 'visible',
-          width: 'calc(100% + 20px)',
-          backgroundColor: 'var(--wv-option-border-color)',
-          transform: 'translateY(-50%) rotate(-45deg)',
+          background: 'no-repeat center/100% 100% rgba(0,0,0,-2.95)',
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgba(112, 113, 115, 0.5)' stroke-width='0.4' preserveAspectRatio='none' %3E%3Cline x1='24' y1='0' x2='0' y2='24'%3E%3C/line%3E%3C/svg%3E\")",
         },
+      },
+      '&.unavailable.hidden': {
+        display: 'none',
       },
       '&.wv-option__button': {
         padding: '0 10px',
         lineHeight: 'var(--size, 40px)',
         textAlign: 'center',
+      },
+      '&.wv-option__color > span': {
+        backgroundColor: 'var(--background-color)',
       },
       '&.wv-option__variant-image': {
         aspectRatio: 'var(--aspect-ratio, 1/1)',
@@ -178,28 +189,24 @@ export let css: ElementCSS = {
       '&.wv-option__button, &.wv-option__color, &.wv-option__custom-image': {
         height: 'var(--size, 40px)',
       },
-      '&.wv-option__button, &.wv-option__variant-image': {
-        border: '1px solid var(--wv-option-border-color)',
-        '&:hover, &.selected': {
-          borderColor: 'var(--wv-selected-option-border-color)',
+      '&.wv-option__button, &.wv-option__color, &.wv-option__variant-image, &.wv-option__custom-image':
+        {
+          border: '1px solid var(--wv-option-border-color)',
+          '&:hover, &.selected': {
+            borderColor: 'var(--wv-selected-option-border-color)',
+          },
         },
-      },
-      '&.wv-option__custom-image, &.wv-option__variant-image': {
+      '&.wv-option__variant-image, &.wv-option__custom-image > span': {
         fontSize: '0',
+        backgroundColor: 'var(--background-color)',
+        backgroundImage: 'var(--background-image)',
         backgroundPosition: 'center',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
       },
       '&.wv-option__color, &.wv-option__custom-image': {
         fontSize: '0',
-        outlineOffset: '3px',
-        marginLeft: '3px',
-        marginBottom: '14px',
-        marginRight: '14px',
-        outline: '1px solid var(--wv-option-border-color)',
-        '&:hover, &.selected': {
-          outlineColor: 'var(--wv-selected-option-border-color)',
-        },
+        padding: '3px',
       },
     },
   },

@@ -105,6 +105,7 @@ export interface ProductBuyButtonProps extends WeaverseElementProps {
 
 export interface ProductVariantProps extends WeaverseElementProps {
   optionsStyle: 'combined' | 'custom'
+  hideUnavailableOptions: boolean
 }
 export interface CombinedVariantProps {
   context: ProductContextType
@@ -116,6 +117,7 @@ export interface OptionValuesProps {
   selectedValue: string | null | undefined
   selectedOptions: string[]
   onSelect: (position: number, value: string) => void
+  hideUnavailableOptions: boolean
 }
 export interface ArticleBoxProps extends WeaverseElementProps {
   articleId: number

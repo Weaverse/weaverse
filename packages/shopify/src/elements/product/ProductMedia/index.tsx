@@ -35,9 +35,11 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
 
     useEffect(() => {
       if (created && cssLoaded) {
-        instanceRef?.current?.update()
-        thumbnailInstanceRef?.current?.update()
-        setOpacity(1)
+        window.requestAnimationFrame(() => {
+          instanceRef?.current?.update()
+          thumbnailInstanceRef?.current?.update()
+          setOpacity(1)
+        })
       }
     }, [mediaSize, aspectRatio, created, cssLoaded])
 
