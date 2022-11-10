@@ -1,14 +1,12 @@
 import type { CSSProperties } from 'react'
 import type {
   OptionDisplayType,
-  OptionKey,
   ShopifyProduct,
   ShopifyProductOption,
-  ShopifyProductVariant,
 } from '~/types'
 import { resizeImage } from './image'
 import { getSwatchValue, optionRadiusSizeMap, optionSizeMap } from './swatch'
-import { getVariantFromOptionArray, getVariantOptions } from './variant'
+import { getVariantFromOptionArray } from './variant'
 
 export function getOptionsGroupConfigs(option: ShopifyProductOption) {
   let { swatches } = window.weaverseShopifyConfigs || {}
@@ -53,13 +51,10 @@ export function getOptionItemStyle(
   if (type === 'variant-image') {
     let variantImage = ''
     let variant = product.variants.find(
-      (v) => v[`option${position}` as OptionKey] === value
+      (v) => v.options[position - 1] === value
     )
     if (variant?.featured_image) {
       variantImage = resizeImage(variant?.featured_image.src, '200x')
-    } else if (variant?.image_id) {
-      let image = product.images.find((i) => i.id === variant?.image_id)
-      variantImage = resizeImage(image?.src || '', '200x')
     }
     if (variantImage || imageSwatch) {
       bgImage = `url(${variantImage || imageSwatch})`
@@ -67,8 +62,8 @@ export function getOptionItemStyle(
   }
 
   return {
-    backgroundColor: colorSwatch || value.toLocaleLowerCase(),
-    backgroundImage: bgImage,
+    '--background-color': colorSwatch || value.toLocaleLowerCase(),
+    '--background-image': bgImage,
     '--aspect-ratio': product.aspect_ratio || 1,
   } as CSSProperties
 }
@@ -89,10 +84,9 @@ export function getSoldOutAndUnavailableState(
       matchVariants.push(getVariantFromOptionArray(product, options))
     } else {
       matchVariants = product.variants.filter((v) => {
-        let variantOpts = getVariantOptions(v)
         return (
-          variantOpts[position - 1] === value &&
-          variantOpts[position - 2] === selectedOptions[position - 2]
+          v.options[position - 1] === value &&
+          v.options[position - 2] === selectedOptions[position - 2]
         )
       })
     }
