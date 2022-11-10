@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react'
+import { DEFAULT_OPTION_DESIGN } from '~/constant'
 import type {
   OptionDisplayType,
   ShopifyProduct,
@@ -12,7 +13,7 @@ export function getOptionsGroupConfigs(option: ShopifyProductOption) {
   let { swatches } = window.weaverseShopifyConfigs || {}
   let optionConfig = swatches?.find((sw) => sw.name === option.name)
   let optionDisplayName = option.name
-  let optionDesign: OptionDisplayType = 'button'
+  let optionDesign: OptionDisplayType = DEFAULT_OPTION_DESIGN
   let style = {}
   if (optionConfig) {
     let { displayName, type, size, shape } = optionConfig
