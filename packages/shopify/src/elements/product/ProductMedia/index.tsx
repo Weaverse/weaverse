@@ -44,10 +44,11 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
     }, [mediaSize, aspectRatio, created, cssLoaded])
 
     if (context) {
-      let { images } = context.product
+      let { images, aspect_ratio } = context.product
       let style = {
         '--media-width': mediaSizesMap[mediaSize],
-        '--media-aspect-ratio': aspectRatio,
+        '--media-aspect-ratio':
+          aspectRatio === 'auto' ? aspect_ratio || 'auto' : aspectRatio,
         '--media-opacity': opacity,
       } as React.CSSProperties
 
@@ -107,7 +108,7 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
 
 ProductMedia.defaultProps = {
   mediaSize: 'medium',
-  aspectRatio: '1 / 1',
+  aspectRatio: '1/1',
 }
 
 export let css: ElementCSS = {
@@ -120,7 +121,7 @@ export let css: ElementCSS = {
       position: 'relative',
     },
     '.wv-product-slider': {
-      aspectRatio: 'var(--media-aspect-ratio, 1/1)',
+      aspectRatio: 'var(--media-aspect-ratio, auto)',
     },
     '.wv-product-slider__slide': {
       cursor: 'pointer',
@@ -179,7 +180,7 @@ export let css: ElementCSS = {
       marginTop: '10px',
     },
     '.wv-thumbnail__slide': {
-      aspectRatio: 'var(--media-aspect-ratio, 1/1)',
+      aspectRatio: 'var(--media-aspect-ratio, auto)',
       height: '100%',
       cursor: 'pointer',
       padding: '6px',

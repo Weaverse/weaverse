@@ -167,7 +167,7 @@ export let css: ElementCSS = {
           opacity: '1',
           border: 'none',
           visibility: 'visible',
-          background: 'no-repeat center/100% 100% rgba(0,0,0,-2.95)',
+          background: 'no-repeat center/100% 100% rgba(0,0,0,0)',
           backgroundImage:
             "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgba(112, 113, 115, 0.5)' stroke-width='0.4' preserveAspectRatio='none' %3E%3Cline x1='24' y1='0' x2='0' y2='24'%3E%3C/line%3E%3C/svg%3E\")",
         },

@@ -47,7 +47,7 @@ export interface ProductDetailsProps extends WeaverseElementProps {
 export interface ProductInfoProps extends WeaverseElementProps {}
 
 export type ProductMediaSize = 'small' | 'medium' | 'large'
-export type AspectRatio = 'auto' | '1 / 1' | '3 / 4' | '4 / 3'
+export type AspectRatio = 'auto' | '1/1' | '3/4' | '4/3'
 
 export interface ProductMediaProps extends WeaverseElementProps {
   mediaSize: ProductMediaSize
