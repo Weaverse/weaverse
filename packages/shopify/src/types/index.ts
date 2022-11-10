@@ -1,4 +1,5 @@
 import type { WeaverseElementProps } from '@weaverse/react'
+import type { KeenSliderInstance } from 'keen-slider'
 import type {
   OptionDisplayType,
   ShopifyGlobalConfigs,
@@ -36,8 +37,10 @@ export interface ProductListProps extends WeaverseElementProps {
 }
 
 export interface ProductDetailsProps extends WeaverseElementProps {
-  productId: number
+  productId: number | 'default'
+  // For generating product liquid data by SSR
   productHandle: string
+  useDefaultProduct: boolean
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -49,6 +52,19 @@ export type AspectRatio = 'auto' | '1 / 1' | '3 / 4' | '4 / 3'
 export interface ProductMediaProps extends WeaverseElementProps {
   mediaSize: ProductMediaSize
   aspectRatio: AspectRatio
+}
+export interface ProductImageHooksInput {
+  context: ProductContextType | null
+  onSlideChanged?: (slider: KeenSliderInstance) => void
+  onSliderCreated?: (slider: KeenSliderInstance) => void
+}
+export interface ProductMediaArrowsProps {
+  currentSlide: number
+  instanceRef: React.MutableRefObject<KeenSliderInstance | null>
+}
+export interface ProductMediaDotsProps {
+  currentSlide: number
+  instanceRef: React.MutableRefObject<KeenSliderInstance | null>
 }
 export interface SlideImageProps {
   image: ShopifyProductImage
@@ -89,6 +105,7 @@ export interface ProductBuyButtonProps extends WeaverseElementProps {
 
 export interface ProductVariantProps extends WeaverseElementProps {
   optionsStyle: 'combined' | 'custom'
+  hideUnavailableOptions: boolean
 }
 export interface CombinedVariantProps {
   context: ProductContextType
@@ -98,7 +115,9 @@ export interface OptionValuesProps {
   option: ShopifyProductOption
   type: OptionDisplayType
   selectedValue: string | null | undefined
+  selectedOptions: string[]
   onSelect: (position: number, value: string) => void
+  hideUnavailableOptions: boolean
 }
 export interface ArticleBoxProps extends WeaverseElementProps {
   articleId: number

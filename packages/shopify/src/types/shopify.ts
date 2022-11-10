@@ -14,7 +14,7 @@ export interface ShopifyProductImage {
 
 export interface ShopifyProductVariant {
   barcode: string
-  compare_at_price: string | null
+  compare_at_price: string | number | null
   created_at: string
   fulfillment_service: string
   grams: number
@@ -30,7 +30,7 @@ export interface ShopifyProductVariant {
   option3: string | null
   presentment_prices: ShopifyProductVariantPresentmentPriceSet[]
   position: number
-  price: string
+  price: string | number
   product_id: number
   requires_shipping: boolean
   sku: string
@@ -41,7 +41,8 @@ export interface ShopifyProductVariant {
   weight: number
   weight_unit: ProductVariantWeightUnit
   // Liquid props
-  options?: string[]
+  available: boolean
+  options: string[]
   featured_image?: ShopifyProductImage
   featured_media?: ShopifyProductImage
 }
@@ -93,6 +94,14 @@ export interface ShopifyProduct {
   aspect_ratio?: number
   selected_or_first_available_variant?: ShopifyProductVariant
   has_only_default_variant?: boolean
+  price?: number
+  price_max?: number
+  price_min?: number
+  price_varies?: boolean
+  compare_at_price?: number
+  compare_at_price_max?: number
+  compare_at_price_min?: number
+  compare_at_price_varies?: boolean
 }
 
 // Collection

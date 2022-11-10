@@ -66,6 +66,7 @@ export function createGlobalStyles(stitches: Stitches) {
         boxShadow: "none",
         color: "currentColor",
         verticalAlign: "middle",
+        backgroundColor: "transparent",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundImage: "url(https://ucarecdn.com/4bb6a6e7-1ce8-4201-8f2d-da00a50105f3/ardown.svg)",
@@ -74,6 +75,16 @@ export function createGlobalStyles(stitches: Stitches) {
         paddingLeft: "12px",
         paddingRight: "35px !important",
         cursor: "pointer",
+      },
+      button: {
+        outline: "none",
+        boxShadow: "none",
+        cursor: "pointer",
+        border: "none",
+        "&:focus": {
+          outline: "none",
+          boxShadow: "none",
+        },
       },
     },
     ".wv-spinner-wrapper": {
@@ -88,6 +99,16 @@ export function createGlobalStyles(stitches: Stitches) {
         height: "20px",
         animation: "spin .75s linear infinite",
       },
+    },
+    "[data-wv-placeholder]": {
+      height: "100%",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "rgba(236, 236, 236, 0.5)",
+      backgroundClip: "content-box",
+      padding: "10px",
     },
   })
   globalStyles()
