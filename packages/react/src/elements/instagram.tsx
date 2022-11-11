@@ -64,6 +64,25 @@ let Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
   }
 )
 export let css = {
+  // '@desktop': {
+  //   '.wv-ig-media-container': {
+  //     overflow: 'hidden',
+  //     maxWidth: '100%',
+  //     maxHeight: '100%',
+  //     display: 'grid',
+  //     gridTemplateColumns: 'repeat(var(--wv-ig-images-per-row, 4), 1fr)',
+  //     gap: 'var(--wv-ig-images-gap, 0px)',
+  //     img: {
+  //       // aspectRatio: '1 / 1',
+  //       maxWidth: '100%',
+  //       maxHeight: '100%',
+  //       objectFit: 'cover',
+  //     },
+  //   },
+  // },
+}
+
+export let permanentCss = {
   '@desktop': {
     '.wv-ig-media-container': {
       overflow: 'hidden',
@@ -73,9 +92,9 @@ export let css = {
       gridTemplateColumns: 'repeat(var(--wv-ig-images-per-row, 4), 1fr)',
       gap: 'var(--wv-ig-images-gap, 0px)',
       img: {
-        aspectRatio: '1 / 1',
-        width: '100%',
-        height: '100%',
+        // aspectRatio: '1 / 1',
+        maxWidth: '100%',
+        maxHeight: '100%',
         objectFit: 'cover',
       },
     },
