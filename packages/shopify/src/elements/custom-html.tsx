@@ -37,6 +37,7 @@ export const CustomHTML = forwardRef<HTMLDivElement, CustomHTMLProps>(
 
 export let css: ElementCSS = {
   '@desktop': {
+    minHeight: '100px',
     '& > *': {
       pointerEvents: 'var(--pointer-events, unset)',
     },

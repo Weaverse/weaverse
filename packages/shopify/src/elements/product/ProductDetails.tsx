@@ -35,12 +35,17 @@ let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
 
     let [selectedVariant, setSelectedVariant] =
       useState<ShopifyProductVariant | null>(null)
+
     useEffect(() => {
       if (product) {
         updateProductData(product)
         setSelectedVariant(
           product.selected_or_first_available_variant || product.variants[0]
         )
+        window.weaverseCartHelpers?.notify('on_product_rendered', {
+          product,
+          formRef,
+        })
       }
     }, [product])
 

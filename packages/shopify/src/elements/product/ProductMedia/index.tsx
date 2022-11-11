@@ -211,7 +211,8 @@ export let css: ElementCSS = {
     },
   },
   '@mobile': {
-    width: '100%',
+    minWidth: 'var(--media-width, 100%)',
+    maxWidth: 'var(--media-width, 100%)',
     paddingRight: '0px',
     marginBottom: '32px',
     '.wv-thumbnail__slide': {
