@@ -1,13 +1,13 @@
 import type { WeaverseElement } from '@weaverse/core'
-import * as Button from './button'
-import * as Container from './container'
-import * as Countdown from './countdown'
-import * as Image from './image'
-import * as Layout from './layout'
-import * as Map from './map'
-import * as Text from './text'
-import * as Video from './video'
-import * as Instagram from './instagram'
+import * as Button from './Button'
+import * as Container from './Container'
+import * as Countdown from './Countdown'
+import * as Image from './Image'
+import * as Layout from './Layout'
+import * as Map from './Map'
+import * as Text from './Text'
+import * as Video from './Video'
+import * as Instagram from './Instagram'
 // import * as Accordion from './accordion'
 // import * as AccordionWrapper from './accordion/AccordionWrapper'
 // import * as AccordionContent from './accordion/AccordionContent'
@@ -20,6 +20,7 @@ import Placeholder from '~/elements/shared/Placeholder'
 export const SharedComponents = {
   Placeholder,
 }
+
 export const Elements: Record<string, WeaverseElement> = {
   Countdown: {
     Component: Countdown.default,
