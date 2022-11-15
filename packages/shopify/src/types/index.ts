@@ -18,7 +18,6 @@ export interface ProductContextType {
   product: ShopifyProduct
   ssrMode: boolean
   productId?: string | number
-  formId: string
   formRef: React.RefObject<HTMLFormElement>
   selectedVariant: ShopifyProductVariant | null
   setSelectedVariant: (variant: ShopifyProductVariant) => void

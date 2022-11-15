@@ -14,7 +14,7 @@ export function useProductImageSlider(input: ProductImageHooksInput) {
     {
       initial: 0,
       slides: {
-        perView: 5,
+        perView: 6,
         spacing: 10,
       },
     },
