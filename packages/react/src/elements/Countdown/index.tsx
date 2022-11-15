@@ -1,12 +1,12 @@
 import type { ElementCSS } from '@weaverse/core'
 import React, { forwardRef, useContext, useEffect } from 'react'
+import { COUNTDOWN_KEY, TIMES } from '~/constant'
 import { WeaverseContext } from '~/context'
 import type { CountdownElementProps } from '~/types'
-import { TimerBlock } from './timer-block'
-import { getTime, times } from './utils'
+import { getTime } from '~/utils'
+import { TimerBlock } from './TimerBlock'
 
-let countdownKey = 'wv-cd-evergreen-start'
-const Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
+let Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
   (props, ref) => {
     const { isDesignMode } = useContext(WeaverseContext)
     let {
@@ -32,17 +32,17 @@ const Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
     const getStartTime = (): number => {
       let startTime = startTimeProp
       if (timerType === 'evergreen') {
-        const start = localStorage.getItem(countdownKey)
+        const start = localStorage.getItem(COUNTDOWN_KEY)
         if (start) {
           startTime = Number.parseInt(start)
           if (startTime + periods < Date.now()) {
             // reset when end time
             startTime = Date.now()
-            localStorage.setItem(countdownKey, startTime.toString())
+            localStorage.setItem(COUNTDOWN_KEY, startTime.toString())
           }
         } else {
           startTime = Date.now()
-          localStorage.setItem(countdownKey, startTime.toString())
+          localStorage.setItem(COUNTDOWN_KEY, startTime.toString())
         }
       }
       return startTime
@@ -77,7 +77,7 @@ const Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
     const timer = getTime(remaining)
     return (
       <div ref={ref} {...rest}>
-        {times.map((time) => {
+        {TIMES.map((time) => {
           return (
             <React.Fragment key={time}>
               <TimerBlock

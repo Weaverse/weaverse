@@ -1,7 +1,7 @@
 import type { ElementCSS } from '@weaverse/react'
+import { Components } from '@weaverse/react'
 import React, { forwardRef, useContext, useRef, useState } from 'react'
 import { ProductContext } from '~/context'
-import { Spinner } from '~/elements/shared'
 import type { ProductBuyButtonProps } from '~/types'
 import { addProductToCart } from '~/utils'
 import { QuantitySelector } from './QuantitySelector'
@@ -53,7 +53,7 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
               className="wv-product-atc-button"
             >
               <span>{atcText}</span>
-              {adding && <Spinner />}
+              {adding && <Components.Spinner />}
             </button>
           </div>
         </div>

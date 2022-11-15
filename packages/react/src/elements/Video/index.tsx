@@ -1,10 +1,10 @@
 import React, { forwardRef, useContext } from 'react'
 import { WeaverseContext } from '~/context'
 import type { VideoElementProps } from '~/types'
-import { getVimeoId, getYoutubeEmbedId } from '~/elements/video/utils'
-import { Youtube } from '~/elements/video/Youtube'
-import { Vimeo } from '~/elements/video/vimeo'
-import { HtmlVideo } from '~/elements/video/html-video'
+import { getVimeoId, getYoutubeEmbedId } from '~/utils'
+import { HTMLVideo } from './HTMLVideo'
+import { Vimeo } from './Vimeo'
+import { Youtube } from './Youtube'
 
 let Video = forwardRef<HTMLDivElement, VideoElementProps>((props, ref) => {
   let { isDesignMode } = useContext(WeaverseContext)
@@ -29,7 +29,7 @@ let Video = forwardRef<HTMLDivElement, VideoElementProps>((props, ref) => {
   } else if (vimeoId) {
     content = <Vimeo {...videoProps} vimeoId={vimeoId} />
   } else {
-    content = <HtmlVideo {...videoProps} />
+    content = <HTMLVideo {...videoProps} />
   }
   return (
     <div ref={ref} {...rest}>
