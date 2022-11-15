@@ -15,11 +15,6 @@ import * as Instagram from './Instagram'
 // import * as TabContent from './tab/TabContent'
 // import * as Slider from './slider'
 // import * as SliderContent from './slider/SliderContent'
-import Placeholder from '~/elements/shared/Placeholder'
-
-export const SharedComponents = {
-  Placeholder,
-}
 
 export const Elements: Record<string, WeaverseElement> = {
   Countdown: {
