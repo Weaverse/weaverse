@@ -18,38 +18,7 @@ let ProductPrice = forwardRef<HTMLDivElement, ProductPriceProps>(
     }, [context?.selectedVariant])
 
     if (context) {
-      let { ssrMode, product } = context
-      if (ssrMode) {
-        return (
-          <div ref={ref} className="wv-product-prices" {...rest}>
-            {`
-              {%- assign variant = product.selected_or_first_available_variant -%}
-              {%- assign price = variant.price -%}
-              {%- assign compare_at_price = variant.compare_at_price -%}
-              <span class="wv-sale-price">{{- price | money -}}</span>
-              ${
-                showCompareAt &&
-                `
-                {%- if compare_at_price > price -%}
-                  <s class="wv-compare-price">{{- compare_at_price | money -}}</s>
-                {%- endif -%}
-                `
-              }
-              ${
-                showSaleBadge &&
-                `
-                {%- if compare_at_price > price -%}
-                  {%- assign saved_percentage = '' -%}
-                  {%- assign saved_percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | append: '%' -%}
-                  <span className="wv-sale-badge">{{- saved_percentage -}}</span>
-                {%- endif -%}
-                `
-              }
-            `}
-          </div>
-        )
-      }
-
+      let { product } = context
       let { money_format } = weaverseShopifyConfigs.shopData
       let price: string | number = product?.price || 0
       let compare_at_price: string | number = product?.compare_at_price || 0

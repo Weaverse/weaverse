@@ -48,6 +48,10 @@ export function createGlobalStyles(stitches: Stitches) {
       from: { transform: "rotate(0deg)" },
       to: { transform: "rotate(360deg)" },
     },
+    "@keyframes pulse": {
+      "0%, 100%": { opacity: 1 },
+      "50%": { opacity: 0.5 },
+    },
     ".weaverse-content-root": {
       input: {
         "&::-webkit-outer-spin-button, &::-webkit-inner-spin-button": {
@@ -85,6 +89,9 @@ export function createGlobalStyles(stitches: Stitches) {
           outline: "none",
           boxShadow: "none",
         },
+      },
+      ".animate-pulse": {
+        animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
     },
     ".wv-spinner-wrapper": {

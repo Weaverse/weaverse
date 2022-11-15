@@ -39,9 +39,52 @@ export interface PresetsData {
 
 export interface ShopifyGlobalConfigs {
   shopData: {
+    name: string
     currency: string
     money_format: string
+    money_with_currency_format: string
+    products_count: number
+    product_handle: string
+    product_id: number
+    template: string
+    template_name: string
+    request: {
+      design_mode: boolean
+      host: string
+      origin: string
+      page_type: string
+      path: string
+    }
+    url: string
+    secure_url: string
+    domain: string
+    permanent_domain: string
     primary_locale: string
+    shop_locale: {
+      published_locales: {
+        shop_locale: {
+          locale: string
+          enabled: boolean
+          primary: boolean
+          published: boolean
+        }
+      }[]
+      current: string
+      primary: string
+    }
+    routes: {
+      all_products_collection_url: string
+      cart_add_url: string
+      cart_change_url: string
+      cart_clear_url: string
+      cart_update_url: string
+      cart_url: string
+      collections_url: string
+      predictive_search_url: string
+      product_recommendations_url: string
+      root_url: string
+      search_url: string
+    }
   }
   swatches: OptionData[]
   presets: PresetsData

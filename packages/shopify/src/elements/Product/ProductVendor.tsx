@@ -9,8 +9,7 @@ let ProductVendor = forwardRef<HTMLDivElement, ProductVendorProps>(
     let context = useContext(ProductContext)
 
     if (context) {
-      let { product, ssrMode } = context
-      let vendor = ssrMode ? '{{- wv_product.vendor -}}' : product.vendor
+      let { product } = context
       return (
         <div ref={ref} {...rest}>
           {showLabel && (
@@ -18,11 +17,10 @@ let ProductVendor = forwardRef<HTMLDivElement, ProductVendorProps>(
           )}
           <a
             target="_self"
-            href={`/collections/vendors?q=${vendor}`}
-            rel="noreferrer"
+            href={`/collections/vendors?q=${product.vendor}`}
             className="wv-produt-vendor__link"
           >
-            {vendor}
+            {product.vendor}
           </a>
         </div>
       )
@@ -55,6 +53,7 @@ export let css: ElementCSS = {
       textUnderlineOffset: '2px',
       textDecorationColor: 'rgba(193, 100, 82, 0.4)',
       textDecorationThickness: '1px',
+      textTransform: 'capitalize',
     },
   },
 }
