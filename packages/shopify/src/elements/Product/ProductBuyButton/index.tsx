@@ -21,7 +21,7 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
     let [adding, setAdding] = useState(false)
 
     if (context) {
-      let { formRef, selectedVariant } = context
+      let { formRef, selectedVariant, ready } = context
       let available = selectedVariant?.available
 
       let handleATC = (e: React.MouseEvent) => {
@@ -33,8 +33,10 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
       }
 
       let atcText = buttonText
-      if (!available) atcText = soldOutText
-      if (!selectedVariant) atcText = unavailableText
+      if (ready) {
+        if (!available) atcText = soldOutText
+        if (!selectedVariant) atcText = unavailableText
+      }
 
       return (
         <div ref={ref} {...rest}>
