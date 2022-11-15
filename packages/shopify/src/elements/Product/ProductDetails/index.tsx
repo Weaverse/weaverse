@@ -12,10 +12,8 @@ let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
     let { children, productId, productHandle, useDefaultProduct, ...rest } =
       props
     let { ssrMode, isDesignMode } = useContext(WeaverseContext)
-    let { product, formRef, selectedVariant, setSelectedVariant } = useProduct(
-      productId,
-      useDefaultProduct
-    )
+    let { product, ready, formRef, selectedVariant, setSelectedVariant } =
+      useProduct(productId, useDefaultProduct)
 
     let shouldRenderSkeleton = Boolean(
       (isDesignMode && productId && !product) ||
@@ -37,6 +35,7 @@ let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
           <ProductContext.Provider
             value={{
               product,
+              ready,
               formRef,
               selectedVariant,
               setSelectedVariant,

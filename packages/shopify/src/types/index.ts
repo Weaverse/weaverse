@@ -20,6 +20,10 @@ export interface ProductContextType {
   formRef: React.RefObject<HTMLFormElement>
   selectedVariant: ShopifyProductVariant | null
   setSelectedVariant: (variant: ShopifyProductVariant) => void
+  /**
+   * Indicates whether the product element is ready for interaction.
+   */
+  ready: boolean
 }
 
 export interface ProductListContextProps {

@@ -9,6 +9,7 @@ export function useProduct(
   useDefaultProduct: boolean
 ) {
   let { isDesignMode } = useContext(WeaverseContext)
+  let [ready, setReady] = useState(false)
   let formRef = useRef<HTMLFormElement>(null)
 
   let product: ShopifyProduct = weaverseShopifyProducts[productId]
@@ -32,11 +33,13 @@ export function useProduct(
         product,
         formRef,
       })
+      setReady(true)
     }
   }, [product])
 
   return {
     product,
+    ready,
     formRef,
     selectedVariant,
     setSelectedVariant,
