@@ -98,6 +98,19 @@ export let permanentCss = {
       },
     },
   },
+  '@mobile': {
+    '.wv-ig-media-container': {
+      overflowX: 'auto',
+      display: 'flex',
+      scrollSnapType: 'x mandatory',
+    },
+    '.wv-ig-media-container a': {
+      scrollSnapAlign: 'start',
+      flexGrow: 0,
+      flexShrink: 0,
+      flexBasis: '100%',
+    },
+  },
 }
 
 Instagram.defaultProps = {
