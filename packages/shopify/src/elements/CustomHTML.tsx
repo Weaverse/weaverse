@@ -1,9 +1,7 @@
 import type { ElementCSS } from '@weaverse/react'
-import { SharedComponents, WeaverseContext } from '@weaverse/react'
+import { Components, WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext } from 'react'
 import type { CustomHTMLProps } from '~/types'
-
-let Placeholder = SharedComponents.Placeholder
 
 export let CustomHTML = forwardRef<HTMLDivElement, CustomHTMLProps>(
   (props, ref) => {
@@ -16,9 +14,9 @@ export let CustomHTML = forwardRef<HTMLDivElement, CustomHTMLProps>(
     if (!content)
       return (
         <div ref={ref} {...rest}>
-          <Placeholder element="Custom HTML">
+          <Components.Placeholder element="Custom HTML">
             Add your custom HTML code.
-          </Placeholder>
+          </Components.Placeholder>
         </div>
       )
     return (

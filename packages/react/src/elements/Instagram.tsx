@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useState } from 'react'
 import { INSTAGRAM_API } from '~/constant'
 import type { InstagramElementProps, InstagramMedia } from '~/types'
-import Placeholder from './shared/Placeholder'
+import Placeholder from '../components/Placeholder'
 
 let Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
   (props, ref) => {

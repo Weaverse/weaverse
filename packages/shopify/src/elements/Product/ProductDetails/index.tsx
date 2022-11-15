@@ -1,8 +1,8 @@
 import type { ElementCSS } from '@weaverse/react'
+import { Components } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext } from 'react'
 import { ProductContext } from '~/context'
-import { Placeholder } from '~/elements/shared'
 import type { ProductDetailsProps } from '~/types'
 import { ProductSkeleton, skeletonCss } from './Skeleton'
 import { useProduct } from './useProduct'
@@ -64,9 +64,9 @@ let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
 
     return (
       <div {...rest} ref={ref}>
-        <Placeholder element="Product">
+        <Components.Placeholder element="Product">
           Select a product and start editing.
-        </Placeholder>
+        </Components.Placeholder>
       </div>
     )
   }
