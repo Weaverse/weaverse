@@ -3,16 +3,22 @@ import { useEffect } from 'react'
 import type { ProductImageHooksInput } from '~/types'
 import { ThumbnailPlugin } from './ThumbnailPlugin'
 
-export function useProductImageSlider(input: ProductImageHooksInput) {
+export function useMediaSlider(input: ProductImageHooksInput) {
   let { context, onSlideChanged, onSliderCreated } = input
+  let initialIndex = 0
+  let featured_image = context?.selectedVariant?.featured_image
+  if (featured_image) {
+    initialIndex = featured_image.position - 1
+  }
+
   let [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
-    initial: 0,
+    initial: initialIndex,
     slideChanged: onSlideChanged,
     created: onSliderCreated,
   })
   let [thumbnailRef, thumbnailInstanceRef] = useKeenSlider<HTMLDivElement>(
     {
-      initial: 0,
+      initial: initialIndex,
       slides: {
         perView: 6,
         spacing: 10,
@@ -23,21 +29,13 @@ export function useProductImageSlider(input: ProductImageHooksInput) {
 
   useEffect(() => {
     if (context) {
-      let { selectedVariant, product } = context
-      if (selectedVariant) {
-        let targetMediaIndex = -1
-        let { featured_media, image_id } = selectedVariant
-        if (featured_media) {
-          targetMediaIndex = featured_media.position - 1
-        } else if (image_id) {
-          let image = product.images.find((image) => image.id === image_id)
-          if (image) {
-            targetMediaIndex = image.position - 1
-          }
-        }
-        if (targetMediaIndex >= 0 && instanceRef.current) {
-          instanceRef.current.moveToIdx(targetMediaIndex)
-        }
+      let targetMediaIndex = -1
+      let featured_image = context?.selectedVariant?.featured_image
+      if (featured_image) {
+        targetMediaIndex = featured_image.position - 1
+      }
+      if (targetMediaIndex >= 0 && instanceRef.current) {
+        instanceRef.current.moveToIdx(targetMediaIndex)
       }
     }
   }, [context])
