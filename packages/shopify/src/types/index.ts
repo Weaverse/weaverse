@@ -16,7 +16,6 @@ import type {
 
 export interface ProductContextType {
   product: ShopifyProduct
-  ssrMode: boolean
   productId?: string | number
   formRef: React.RefObject<HTMLFormElement>
   selectedVariant: ShopifyProductVariant | null

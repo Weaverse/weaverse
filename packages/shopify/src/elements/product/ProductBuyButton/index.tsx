@@ -21,7 +21,7 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
     let [adding, setAdding] = useState(false)
 
     if (context) {
-      let { formRef, ssrMode, selectedVariant } = context
+      let { formRef, selectedVariant } = context
       let available = selectedVariant?.available
 
       let handleATC = (e: React.MouseEvent) => {
@@ -29,29 +29,6 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
         setAdding(true)
         addProductToCart(formRef?.current as HTMLFormElement, () =>
           setAdding(false)
-        )
-      }
-
-      if (ssrMode) {
-        return (
-          <div ref={ref} {...rest}>
-            <button
-              type="submit"
-              name="add"
-              className="wv-product-atc-button"
-              disabled={!available}
-            >
-              {`
-                <span>
-                  {%- if product.available -%}
-                    ${buttonText}
-                  {%- else -%}
-                    ${soldOutText}
-                  {%- endif -%}
-                </span>
-              `}
-            </button>
-          </div>
         )
       }
 

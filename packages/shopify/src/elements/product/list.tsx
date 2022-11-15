@@ -17,19 +17,8 @@
 //     children,
 //     ...rest
 //   } = props
-//   let { ssrMode } = useContext(WeaverseContext)
 //   let productIds =
 //     weaverseShopifyProductsByCollection[collectionId || 'all'] || []
-
-//   if (ssrMode) {
-//     return (
-//       <div ref={ref} {...rest}>
-//         {` {% for wv_product in collections['${collectionHandle}'].products %} `}
-//         {children}
-//         {` {% endfor %} `}
-//       </div>
-//     )
-//   }
 
 //   let content: ReactNode = (
 //     <Carousel.default itemsPerSlide={itemsPerSlide} gap={itemsSpacing}>

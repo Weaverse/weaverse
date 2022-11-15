@@ -36,7 +36,6 @@ let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
         <div {...rest} ref={ref}>
           <ProductContext.Provider
             value={{
-              ssrMode,
               product,
               formRef,
               selectedVariant,
