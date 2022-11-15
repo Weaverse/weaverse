@@ -176,6 +176,10 @@ export interface FormFieldProps {
   required: boolean
 }
 
+export interface CustomHTMLProps extends WeaverseElementProps {
+  content: string
+}
+
 export * from './shopify'
 export * from './configs'
 
