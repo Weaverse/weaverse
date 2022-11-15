@@ -1,5 +1,5 @@
 import React, { forwardRef, useContext } from 'react'
-import Placeholder from '~/elements/shared/Placeholder'
+import Placeholder from '~/components/Placeholder'
 import { TabContext } from './index'
 import type { GridContentElementProps } from '~/types'
 

@@ -1,26 +1,22 @@
+import type { ElementCSS } from '@weaverse/react'
+import { Components, WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext } from 'react'
-import type { ElementCSS, WeaverseElementProps } from '@weaverse/react'
-import { SharedComponents, WeaverseContext } from '@weaverse/react'
+import type { CustomHTMLProps } from '~/types'
 
-let Placeholder = SharedComponents.Placeholder
-
-interface CustomHTMLProps extends WeaverseElementProps {
-  content: string
-}
-
-export const CustomHTML = forwardRef<HTMLDivElement, CustomHTMLProps>(
+export let CustomHTML = forwardRef<HTMLDivElement, CustomHTMLProps>(
   (props, ref) => {
-    const { content, children, ...rest } = props
-    const { isDesignMode } = useContext(WeaverseContext)
-    const style = {
+    let { content, children, ...rest } = props
+    let { isDesignMode } = useContext(WeaverseContext)
+    let style = {
       '--pointer-events': isDesignMode ? 'none' : 'auto',
     } as React.CSSProperties
+
     if (!content)
       return (
         <div ref={ref} {...rest}>
-          <Placeholder element="Custom HTML">
+          <Components.Placeholder element="Custom HTML">
             Add your custom HTML code.
-          </Placeholder>
+          </Components.Placeholder>
         </div>
       )
     return (
@@ -37,6 +33,7 @@ export const CustomHTML = forwardRef<HTMLDivElement, CustomHTMLProps>(
 
 export let css: ElementCSS = {
   '@desktop': {
+    minHeight: '100px',
     '& > *': {
       pointerEvents: 'var(--pointer-events, unset)',
     },

@@ -52,7 +52,7 @@ export function getOptionItemStyle(
   if (type === 'variant-image') {
     let variantImage = ''
     let variant = product.variants.find(
-      (v) => v.options[position - 1] === value
+      (v) => v?.options?.[position - 1] === value
     )
     if (variant?.featured_image) {
       variantImage = resizeImage(variant?.featured_image.src, '200x')

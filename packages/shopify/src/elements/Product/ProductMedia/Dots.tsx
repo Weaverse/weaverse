@@ -8,7 +8,7 @@ export function Dots({ currentSlide, instanceRef }: ProductMediaDotsProps) {
       <div className="wv-slider-dots">
         {[...Array(instanceRef.current.track.details.slides.length).keys()].map(
           (idx) => {
-            let className = clsx('dot', currentSlide === idx && ' dot--active')
+            let className = clsx('dot', currentSlide === idx && 'dot--active')
             return (
               <button
                 key={idx}

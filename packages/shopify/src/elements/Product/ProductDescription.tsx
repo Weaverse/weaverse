@@ -9,19 +9,11 @@ let ProductDescription = forwardRef<HTMLDivElement, ProductDescriptionProps>(
     let context = useContext(ProductContext)
 
     if (context) {
-      let { product, ssrMode } = context
+      let { product } = context
       let style = {
         WebkitBoxOrient: 'vertical',
         WebkitLineClamp: lineClamp,
       } as React.CSSProperties
-
-      if (ssrMode) {
-        return (
-          <div ref={ref} {...rest} style={style}>
-            {`{{- wv_product.description -}}`}
-          </div>
-        )
-      }
 
       return (
         <div

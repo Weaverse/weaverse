@@ -6,7 +6,7 @@ import type { ProductMediaProps, ProductMediaSize } from '~/types'
 import { Arrows } from './Arrows'
 import { Dots } from './Dots'
 import { Image } from './Image'
-import { useProductImageSlider } from './useProductImageSlider'
+import { useMediaSlider } from './useMediaSlider'
 
 let mediaSizesMap: Record<ProductMediaSize, string> = {
   small: '40%',
@@ -24,7 +24,7 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
     let [ready, setReady] = useState(false)
 
     let [sliderRef, thumbnailRef, instanceRef, thumbnailInstanceRef] =
-      useProductImageSlider({
+      useMediaSlider({
         context,
         onSlideChanged: (slider) => {
           setCurrentSlide(slider.track.details.rel)
@@ -37,8 +37,9 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
     useEffect(() => {
       if (created && cssLoaded) {
         window.requestAnimationFrame(() => {
-          instanceRef?.current?.update()
-          thumbnailInstanceRef?.current?.update()
+          let initialIndex = instanceRef?.current?.options?.initial || 0
+          instanceRef?.current?.update(undefined, initialIndex)
+          thumbnailInstanceRef?.current?.update(undefined, initialIndex)
           setReady(true)
         })
       }
@@ -211,7 +212,8 @@ export let css: ElementCSS = {
     },
   },
   '@mobile': {
-    width: '100%',
+    minWidth: '100%',
+    maxWidth: '100%',
     paddingRight: '0px',
     marginBottom: '32px',
     '.wv-thumbnail__slide': {

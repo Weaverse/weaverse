@@ -1,44 +1,32 @@
-import type { WeaverseItemStore } from '@weaverse/core'
+import type { CountdownTimeKey } from '~/types'
 
-// Make the css data formatted to correct order (desktop, tablet, mobile)
-function shortCssObject(css: { [key: string]: any }) {
-  return {
-    '@desktop': css['@desktop'],
-    '@mobile': css['@mobile'],
-  }
+export * from './css'
+
+export function getTime(_seconds: number): {
+  [key in CountdownTimeKey]: number
+} {
+  let ONE_MINUTE = 60 * 1000
+  let ONE_HOUR = 60 * ONE_MINUTE
+  let ONE_DAY = 24 * ONE_HOUR
+  let days = Math.floor(_seconds / ONE_DAY)
+  let hours = Math.floor((_seconds - days * ONE_DAY) / ONE_HOUR)
+  let minutes = Math.floor(
+    (_seconds - days * ONE_DAY - hours * ONE_HOUR) / ONE_MINUTE
+  )
+  let seconds = Math.floor(
+    (_seconds - days * ONE_DAY - hours * ONE_HOUR - minutes * ONE_MINUTE) / 1000
+  )
+  return { days, hours, minutes, seconds }
 }
-let permanentClasses: any = {}
-export function generateItemClass(
-  instance: WeaverseItemStore,
-  stitchesInstance: any
-) {
-  let { css, type, className: cls = '' } = instance.data
-  let className = ''
-  let permanentClass = ''
-  let perCss = instance.Element?.permanentCss
-  if (perCss) {
-    if (type in permanentClasses) {
-      permanentClass = permanentClasses[type]
-    } else {
-      let { className: perCls } = stitchesInstance.css(perCss)()
-      Object.assign(permanentClasses, { [type]: perCls })
-      permanentClass = perCls
-    }
-  }
-  className = permanentClass
-  if (css) {
-    // let stitches create the style from css object and
-    // then return the classname, so we can use it in the render
-    let formattedCss = shortCssObject(css)
-    let { className: newClass = '' } = stitchesInstance.css(formattedCss)()
-    let { stitchesClass } = instance
-    let otherClass = (instance.ref.current?.className || '')
-      .replace(stitchesClass, '')
-      .replace(cls, '')
-      .replace(permanentClass, '')
-      .trim()
-    className = `${permanentClass} ${cls} ${newClass} ${otherClass}`.trim()
-    instance.stitchesClass = newClass
-  }
-  return className
+
+export function getYoutubeEmbedId(url: string) {
+  const match = url.match(
+    /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?(.+)/
+  )
+  return match ? match[1] : null
+}
+
+export function getVimeoId(url: string) {
+  const match = url.match(/(?:https?:\/\/)?(?:www\.)?vimeo\.com\/(.+)/)
+  return match ? match[1] : null
 }

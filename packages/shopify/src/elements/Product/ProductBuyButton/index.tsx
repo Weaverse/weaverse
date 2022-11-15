@@ -1,7 +1,7 @@
 import type { ElementCSS } from '@weaverse/react'
+import { Components } from '@weaverse/react'
 import React, { forwardRef, useContext, useRef, useState } from 'react'
 import { ProductContext } from '~/context'
-import { Spinner } from '~/elements/shared'
 import type { ProductBuyButtonProps } from '~/types'
 import { addProductToCart } from '~/utils'
 import { QuantitySelector } from './QuantitySelector'
@@ -21,7 +21,7 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
     let [adding, setAdding] = useState(false)
 
     if (context) {
-      let { formRef, ssrMode, selectedVariant } = context
+      let { formRef, selectedVariant, ready } = context
       let available = selectedVariant?.available
 
       let handleATC = (e: React.MouseEvent) => {
@@ -32,32 +32,11 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
         )
       }
 
-      if (ssrMode) {
-        return (
-          <div ref={ref} {...rest}>
-            <button
-              type="submit"
-              name="add"
-              className="wv-product-atc-button"
-              disabled={!available}
-            >
-              {`
-                <span>
-                  {%- if product.available -%}
-                    ${buttonText}
-                  {%- else -%}
-                    ${soldOutText}
-                  {%- endif -%}
-                </span>
-              `}
-            </button>
-          </div>
-        )
-      }
-
       let atcText = buttonText
-      if (!available) atcText = soldOutText
-      if (!selectedVariant) atcText = unavailableText
+      if (ready) {
+        if (!available) atcText = soldOutText
+        if (!selectedVariant) atcText = unavailableText
+      }
 
       return (
         <div ref={ref} {...rest}>
@@ -74,7 +53,7 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
               className="wv-product-atc-button"
             >
               <span>{atcText}</span>
-              {adding && <Spinner />}
+              {adding && <Components.Spinner />}
             </button>
           </div>
         </div>
