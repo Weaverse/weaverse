@@ -67,12 +67,13 @@ export let css: ElementCSS = {
   '@desktop': {
     marginTop: '20px',
     '.wv-product-quantity-label': {
-      display: 'block',
+      alignSelf: 'flex-start',
       marginBottom: '5px',
       fontWeight: '500',
     },
     '.wv-product-buy-buttons': {
       display: 'flex',
+      flexDirection: 'column',
     },
     '.wv-quantity-selector': {
       display: 'flex',

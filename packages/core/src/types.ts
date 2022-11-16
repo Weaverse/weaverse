@@ -57,7 +57,13 @@ export interface ElementDataInCatalog extends Omit<ElementData, "id"> {
   id: string | number
 }
 
-export type FlagType = "draggable" | "resizable" | "sortable" | "ignoreShortcutKeys" | "hasContextMenu"
+export type FlagType =
+  | "draggable"
+  | "resizable"
+  | "sortable"
+  | "ignoreShortcutKeys"
+  | "hasContextMenu"
+  | "isSortableContext"
 export type ElementFlags = Partial<Record<FlagType, boolean>>
 
 export interface ChildElement {
