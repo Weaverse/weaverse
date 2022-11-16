@@ -1,8 +1,7 @@
 import React, { forwardRef, useEffect, useState } from 'react'
+import { INSTAGRAM_API } from '~/constant'
 import type { InstagramElementProps, InstagramMedia } from '~/types'
-import Placeholder from './shared/Placeholder'
-
-let INSTAGRAM_API = 'https://graph.instagram.com'
+import Placeholder from '../components/Placeholder'
 
 let Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
   (props, ref) => {
@@ -97,6 +96,19 @@ export let permanentCss = {
         maxHeight: '100%',
         objectFit: 'cover',
       },
+    },
+  },
+  '@mobile': {
+    '.wv-ig-media-container': {
+      overflowX: 'auto',
+      display: 'flex',
+      scrollSnapType: 'x mandatory',
+    },
+    '.wv-ig-media-container a': {
+      scrollSnapAlign: 'start',
+      flexGrow: 0,
+      flexShrink: 0,
+      flexBasis: '100%',
     },
   },
 }

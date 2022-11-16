@@ -1,5 +1,5 @@
 import React, { forwardRef, useContext } from 'react'
-import Placeholder from '~/elements/shared/Placeholder'
+import Placeholder from '~/components/Placeholder'
 import type { GridContentElementProps } from '~/types'
 import { WeaverseContext } from '~/context'
 

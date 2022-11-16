@@ -1,7 +1,7 @@
 import React from 'react'
 import type { VideoCommonProps } from '~/types'
 
-export function HtmlVideo(props: VideoCommonProps) {
+export function HTMLVideo(props: VideoCommonProps) {
   let { src, type, controls, autoPlay, loop, muted } = props
   return (
     <video

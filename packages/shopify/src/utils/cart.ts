@@ -2,8 +2,9 @@ export function addProductToCart(
   productForm: HTMLFormElement,
   onFinish: () => void
 ) {
-  fetch('/cart/add.js', {
-    method: 'post',
+  let { cart_add_url } = window.weaverseShopifyConfigs.shopData.routes
+  fetch(cart_add_url, {
+    method: 'POST',
     body: new FormData(productForm),
   })
     .then((res) => res.json())

@@ -27,7 +27,7 @@ export function updateProductData(product: ShopifyProduct) {
     if (!('featured_image' in variant)) {
       if (variant?.image_id) {
         variant.featured_image = product.images.find(
-          (i) => i.id === variant?.image_id
+          (i) => i.id === variant.image_id
         )
       }
     }

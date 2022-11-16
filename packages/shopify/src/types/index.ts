@@ -16,12 +16,14 @@ import type {
 
 export interface ProductContextType {
   product: ShopifyProduct
-  ssrMode: boolean
   productId?: string | number
-  formId: string
   formRef: React.RefObject<HTMLFormElement>
   selectedVariant: ShopifyProductVariant | null
   setSelectedVariant: (variant: ShopifyProductVariant) => void
+  /**
+   * Indicates whether the product element is ready for interaction.
+   */
+  ready: boolean
 }
 
 export interface ProductListContextProps {
@@ -176,6 +178,10 @@ export interface FormFieldProps {
   label: string
   name?: string
   required: boolean
+}
+
+export interface CustomHTMLProps extends WeaverseElementProps {
+  content: string
 }
 
 export * from './shopify'

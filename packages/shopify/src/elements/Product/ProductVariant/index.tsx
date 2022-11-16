@@ -1,31 +1,17 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef, useContext, useEffect } from 'react'
+import React, { forwardRef, useContext } from 'react'
 import { ProductContext } from '~/context'
 import type { ProductVariantProps } from '~/types'
-import {
-  getOptionsGroupConfigs,
-  getVariantFromOptionArray,
-  getVariantOptions,
-} from '~/utils'
+import { getOptionsGroupConfigs, getVariantFromOptionArray } from '~/utils'
 import { CombinedVariantSelector } from './CombinedVariantSelector'
 import { OptionValues } from './OptionValues'
+import { useOptions } from './useOptions'
 
 let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
   (props, ref) => {
     let { optionsStyle, hideUnavailableOptions, ...rest } = props
     let context = useContext(ProductContext)
-    let [selectedOptions, setSelectedOptions] = React.useState<string[]>(() => {
-      if (context?.selectedVariant) {
-        return getVariantOptions(context.selectedVariant)
-      }
-      return []
-    })
-
-    useEffect(() => {
-      if (context?.selectedVariant) {
-        setSelectedOptions(getVariantOptions(context.selectedVariant))
-      }
-    }, [context?.selectedVariant])
+    let [selectedOptions, setSelectedOptions] = useOptions(context)
 
     if (context) {
       let { product, selectedVariant, setSelectedVariant } = context

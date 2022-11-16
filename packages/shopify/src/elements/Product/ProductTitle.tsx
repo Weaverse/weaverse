@@ -8,12 +8,8 @@ let ProductTitle = forwardRef<HTMLElement, ProductTitleProps>((props, ref) => {
   let context = useContext(ProductContext)
 
   if (context) {
-    let { product, ssrMode } = context
-    return React.createElement(
-      htmlTag,
-      { ref, ...rest },
-      ssrMode ? '{{- wv_product.title -}}' : product.title
-    )
+    let { product } = context
+    return React.createElement(htmlTag, { ref, ...rest }, product.title)
   }
   return null
 })
