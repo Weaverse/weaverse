@@ -2,7 +2,7 @@ import type { CSSProperties } from 'react'
 import React, { forwardRef } from 'react'
 import type { LayoutElementProps, LayoutBackgroundProps } from '~/types'
 
-let Layout = forwardRef<HTMLElement, LayoutElementProps>((props, ref) => {
+let Layout = forwardRef<HTMLDivElement, LayoutElementProps>((props, ref) => {
   let {
     children,
     rows,
@@ -26,14 +26,14 @@ let Layout = forwardRef<HTMLElement, LayoutElementProps>((props, ref) => {
   } as React.CSSProperties
 
   return (
-    <section ref={ref} {...rest} style={style}>
+    <div ref={ref} {...rest} style={style}>
       <LayoutBackground
         imgUrl={backgroundImage}
         bgColor={backgroundColor}
         objectFit={objectFit}
       />
       <div data-layout-content>{children}</div>
-    </section>
+    </div>
   )
 })
 
