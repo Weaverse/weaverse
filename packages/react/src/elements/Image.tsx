@@ -39,8 +39,8 @@ let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
 export let css = {
   '@desktop': {
     img: {
-      width: '100%',
-      height: '100%',
+      maxWidth: '100%',
+      maxHeight: '100%',
       objectFit: 'var(--wv-img-object-fit, cover)',
       objectPosition: 'var(--wv-img-object-position, center)',
     },
