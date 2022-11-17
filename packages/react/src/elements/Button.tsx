@@ -44,7 +44,7 @@ export let css: ElementCSS = {
   '@desktop': {
     borderRadius: '72px',
     border: 'none',
-    backgroundColor: '#0F71FF',
+    backgroundColor: '#393e46',
     color: '#fff',
     fontSize: '13px',
     padding: '10px 20px',

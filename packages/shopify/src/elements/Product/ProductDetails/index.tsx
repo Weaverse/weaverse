@@ -81,6 +81,7 @@ export let css: ElementCSS = {
     overflow: 'hidden',
     '.wv-product-form': {
       display: 'flex',
+      maxHeight: '100%',
     },
     ...skeletonCss['@desktop'],
   },
