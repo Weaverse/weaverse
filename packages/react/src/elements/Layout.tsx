@@ -97,7 +97,7 @@ export let permanentCss = {
 
 Layout.defaultProps = {
   gridSize: 1224,
-  rows: 12,
+  rows: 16,
   columns: 12,
   gap: 16,
   rowSize: 48,
