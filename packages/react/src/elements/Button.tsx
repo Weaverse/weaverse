@@ -34,7 +34,7 @@ export let Button = React.forwardRef<
 
 Button.defaultProps = {
   type: 'button',
-  text: 'Shop now',
+  text: 'Button',
   clickAction: 'none',
   linkTo: '',
   openInNewTab: false,
@@ -42,13 +42,19 @@ Button.defaultProps = {
 
 export let css: ElementCSS = {
   '@desktop': {
-    borderRadius: '72px',
+    borderRadius: '8px',
     border: 'none',
     backgroundColor: '#393e46',
     color: '#fff',
-    fontSize: '13px',
+    fontSize: '14px',
+    fontWeight: 'medium',
     padding: '10px 20px',
+    height: '42px',
+    minWidth: '150px',
     textDecoration: 'none',
+    ':hover': {
+      backgroundColor: '#222831',
+    },
   },
 }
 
