@@ -74,8 +74,13 @@ interface BackgroundDataProps {
 // Layout
 export interface LayoutElementProps
   extends BackgroundDataProps,
-    GridContentElementProps {
+    WeaverseElementProps {
+  contentSize: number
   gridSize: number
+  rows: number
+  columns: number
+  gap: number
+  rowSize: number
 }
 
 export interface LayoutBackgroundProps {
