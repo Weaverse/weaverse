@@ -45,6 +45,14 @@ export let css = {
       width: '100%',
       aspectRatio: '16 / 9',
     },
+    iframe: {
+      border: 'none',
+    },
+  },
+  '@mobile': {
+    iframe: {
+      border: 'none',
+    },
   },
 }
 
