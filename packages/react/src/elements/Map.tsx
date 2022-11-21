@@ -8,7 +8,6 @@ let Map = forwardRef<HTMLDivElement, MapElementProps>((props, ref) => {
     <div ref={ref} {...rest}>
       <iframe
         loading="lazy"
-        scrolling="no"
         width="100%"
         height="100%"
         title="map"
@@ -19,7 +18,18 @@ let Map = forwardRef<HTMLDivElement, MapElementProps>((props, ref) => {
   )
 })
 
-export let css = {}
+export let css = {
+  '@desktop': {
+    iframe: {
+      border: 'none',
+    },
+  },
+  '@mobile': {
+    iframe: {
+      border: 'none',
+    },
+  },
+}
 
 Map.defaultProps = {
   place: 'Hanoi',
