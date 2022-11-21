@@ -50,7 +50,7 @@ export let css: ElementCSS = {
     fontWeight: 'medium',
     padding: '10px 20px',
     height: '42px',
-    minWidth: '150px',
+    minWidth: '120px',
     textDecoration: 'none',
     ':hover': {
       backgroundColor: '#222831',

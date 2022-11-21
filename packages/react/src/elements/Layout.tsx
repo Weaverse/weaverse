@@ -67,9 +67,9 @@ let LayoutBackground = (props: LayoutBackgroundProps) => {
 
 export let css: ElementCSS = {
   '@desktop': {
-    paddingTop: '16px',
-    paddingBottom: '16px',
     '> [data-layout-content]': {
+      paddingTop: 'var(--gap)',
+      paddingBottom: 'var(--gap)',
       margin: '0 auto',
       display: 'grid',
       gridTemplateRows: 'repeat(var(--rows), var(--row-size))',
