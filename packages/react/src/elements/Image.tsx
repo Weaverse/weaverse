@@ -1,3 +1,4 @@
+import type { ElementCSS } from '@weaverse/core'
 import React from 'react'
 import type { ImageElementProps } from '~/types'
 
@@ -36,8 +37,9 @@ let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
   }
 )
 
-export let css = {
+export let css: ElementCSS = {
   '@desktop': {
+    display: 'flex',
     overflow: 'hidden',
     img: {
       width: '100%',

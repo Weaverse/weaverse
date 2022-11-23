@@ -197,12 +197,13 @@ export let skeletonCss: ElementCSS = {
         '.wv-media-thumbnails': {
           display: 'flex',
           marginTop: '12px',
-          justifyContent: 'space-between',
+          gap: '12px',
           '.wv-media-thumbnail-item': {
             backgroundColor: '#D1D5DB',
             height: '120px',
             width: '90px',
             display: 'flex',
+            flexShrink: 0,
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: '4px',
@@ -279,6 +280,7 @@ export let skeletonCss: ElementCSS = {
           '.wv-line-1': {
             height: '8px',
             width: '500px',
+            maxWidth: '100%',
             backgroundColor: '#E5E7EB',
           },
           '.wv-line-2': {
@@ -311,6 +313,7 @@ export let skeletonCss: ElementCSS = {
             justifyContent: 'flex-start',
             gap: '16px',
             margin: '0 0 12px',
+            maxWidth: '100%',
           },
           '.wv-item-1': { width: '350px' },
           '.wv-item-2': { width: '300px' },

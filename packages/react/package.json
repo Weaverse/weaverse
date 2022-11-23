@@ -1,5 +1,5 @@
 {
-  "version": "0.7.31",
+  "version": "0.7.32",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -33,7 +33,7 @@
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.2",
     "@stitches/react": "^1.2.8",
-    "@weaverse/core": "0.7.31",
+    "@weaverse/core": "0.7.32",
     "nuka-carousel": "^5.4.1"
   }
 }
