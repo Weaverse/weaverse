@@ -73,7 +73,6 @@ export let css: ElementCSS = {
     },
     '.wv-product-buy-buttons': {
       display: 'flex',
-      flexDirection: 'column',
     },
     '.wv-quantity-selector': {
       display: 'flex',
