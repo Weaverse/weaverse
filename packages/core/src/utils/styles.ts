@@ -53,6 +53,12 @@ export function createGlobalStyles(stitches: Stitches) {
       "50%": { opacity: 0.5 },
     },
     ".weaverse-content-root": {
+      "*": {
+        WebkitFontSmoothing: "antialiased",
+        MozOsxFontSmoothing: "auto",
+        textRendering: "optimizeLegibility",
+        boxSizing: "border-box",
+      },
       input: {
         "&::-webkit-outer-spin-button, &::-webkit-inner-spin-button": {
           "-webkit-appearance": "none",
@@ -73,7 +79,7 @@ export function createGlobalStyles(stitches: Stitches) {
         backgroundColor: "transparent",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        backgroundImage: "url(https://ucarecdn.com/4bb6a6e7-1ce8-4201-8f2d-da00a50105f3/ardown.svg)",
+        backgroundImage: "url(https://ucarecdn.com/4bb6a6e7-1ce8-4201-8f2d-da00a50105f3/)",
         backgroundSize: "10px",
         backgroundPositionX: "calc(100% - 12px)",
         paddingLeft: "12px",
