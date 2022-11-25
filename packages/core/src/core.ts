@@ -204,7 +204,7 @@ export class Weaverse {
       if (isIframe && this.isDesignMode && !this.studioBridge) {
         const initStudio = () => {
           this.studioBridge = new window.WeaverseStudioBridge(this)
-          // trigger update to make event listener from studio work
+          // Make event listeners from studio work
           this.triggerUpdate()
         }
 
