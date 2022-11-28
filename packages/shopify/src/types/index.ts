@@ -81,6 +81,13 @@ export interface ProductTitleProps extends WeaverseElementProps {
 
 export interface ProductDescriptionProps extends WeaverseElementProps {
   lineClamp: number
+  showViewDetailsButton: boolean
+  viewDetailsText: string
+}
+
+export interface ProductDescriptionViewDetailsProps {
+  viewDetailsText: string
+  children: React.ReactNode
 }
 
 export interface ProductVendorProps extends WeaverseElementProps {
