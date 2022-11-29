@@ -234,6 +234,7 @@ export type InputType =
   | "collection"
   | "article-list"
   | "map-autocomplete"
+  | "layout-background"
 
 declare global {
   interface Window {
