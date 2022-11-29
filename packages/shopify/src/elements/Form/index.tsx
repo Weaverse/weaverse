@@ -114,6 +114,8 @@ export let css: ElementCSS = {
     padding: '12px',
     '.wv-form': {
       width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
       '.wv-form-field': {
         display: 'flex',
         flexDirection: 'column',
@@ -128,7 +130,7 @@ export let css: ElementCSS = {
         },
       },
       '.wv-form__submit': {
-        textAlign: 'var(--wv-form-submit-align)',
+        alignSelf: 'var(--wv-form-submit-align, flex-start)',
         background: '#4B5563',
         color: '#fff',
         padding: '14px 30px',
