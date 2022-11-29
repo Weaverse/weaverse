@@ -24,6 +24,7 @@ export let ModalContent = forwardRef<HTMLDivElement, DialogContentProps>(
         <StyledContent
           {...rest}
           onCloseAutoFocus={(e) => e.preventDefault()}
+          data-wv-modal
           ref={ref}
         >
           <ModalClose />
