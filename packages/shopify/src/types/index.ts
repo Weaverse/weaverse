@@ -194,6 +194,11 @@ export interface FormFieldProps {
   required: boolean
 }
 
+export interface FieldProps {
+  field: FormFieldProps
+  formId: string
+}
+
 export interface CustomHTMLProps extends WeaverseElementProps {
   content: string
 }
