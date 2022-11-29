@@ -68,7 +68,7 @@ export type ElementFlags = Partial<Record<FlagType, boolean>>
 
 export interface ChildElement {
   label: string
-  selector: string
+  selector: string | string[]
 }
 export type ParentType =
   | "container"
