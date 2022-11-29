@@ -38,7 +38,7 @@ export let ModalContent = forwardRef<HTMLDivElement, DialogContentProps>(
           ref={ref}
         >
           <ModalClose />
-          <div>{children}</div>
+          <div className="wv-modal-content">{children}</div>
         </StyledContent>
       </Portal>
     )

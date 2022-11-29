@@ -13,7 +13,7 @@ let contentShow = keyframes({
 
 export let StyledOverlay = styled(Overlay, {
   display: 'block !important',
-  backgroundColor: 'rgb(112 112 112 / 40%)',
+  backgroundColor: 'rgba(0, 0, 0, .3)',
   position: 'fixed',
   zIndex: 9999,
   inset: 0,
@@ -45,7 +45,7 @@ export let StyledContent = styled(Content, {
   animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
   '&:focus': { outline: 'none' },
   zIndex: 9999,
-  '[data-wv-modal-header] + *': {
+  '.wv-modal-content > *:not([data-wv-modal-header])': {
     maxHeight: '80vh',
     overflowY: 'auto',
   },
@@ -74,7 +74,7 @@ export let StyledCloseIcon = styled('button', {
   top: 10,
   right: 10,
   '&:hover': {
-    backgroundColor: 'rgb(112, 112, 112 / 10%)',
+    backgroundColor: 'rgba(112, 112, 112, .1)',
   },
   svg: {
     width: 18,
