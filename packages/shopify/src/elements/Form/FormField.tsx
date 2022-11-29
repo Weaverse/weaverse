@@ -5,7 +5,7 @@ export function FormField({ field, formId }: FieldProps) {
   let fieldName = `contact[${field.name || field.label}]`
   return (
     <div className="wv-form-field">
-      <label htmlFor={fieldName} className="wv-form=field__label">
+      <label htmlFor={fieldName} className="wv-form-field__label">
         {field.label}
       </label>
       {field.type !== 'multiline' ? (

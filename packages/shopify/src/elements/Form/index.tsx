@@ -117,15 +117,18 @@ export let css: ElementCSS = {
       '.wv-form-field': {
         display: 'flex',
         flexDirection: 'column',
-        gap: 4,
+        marginBottom: 12,
+        '.wv-form-field__label': {
+          marginBottom: 4,
+        },
         'input, textarea': {
           px: 12,
           py: 10,
           border: '1px solid #ddd',
         },
       },
-      textAlign: 'var(--wv-form-submit-align)',
       '.wv-form__submit': {
+        textAlign: 'var(--wv-form-submit-align)',
         background: '#4B5563',
         color: '#fff',
         padding: '14px 30px',
