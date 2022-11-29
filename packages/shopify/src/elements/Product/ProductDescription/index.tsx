@@ -48,18 +48,28 @@ export let css: ElementCSS = {
       overflow: 'hidden',
       display: '-webkit-box',
       img: {
-        maxWidth: '100%',
         display: 'none',
       },
       div: {
         display: 'block',
       },
+      '& > *:first-child': {
+        margin: 0,
+      },
     },
     '.wv-view-details-button': {
-      display: 'block',
-      marginTop: '16px',
-      padding: '8px 16px',
-      border: '1px solid #000',
+      outline: 'none',
+      boxShadow: 'none',
+      cursor: 'pointer',
+      border: 'none',
+      backgroundColor: 'transparent',
+      fontSize: '14px',
+      padding: '0',
+      color: 'rgb(56, 142, 255)',
+      '&:hover': {
+        textDecoration: 'underline',
+        color: 'rgb(0, 42, 140)',
+      },
     },
   },
 }

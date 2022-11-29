@@ -16,7 +16,7 @@ export function ViewDetails(props: ProductDescriptionViewDetailsProps) {
       </ModalTrigger>
       <ModalContent>
         <ModalHeader>Product decription</ModalHeader>
-        <div className="wv-modal-content-wrapper">{children}</div>
+        {children}
       </ModalContent>
     </Modal>
   )
