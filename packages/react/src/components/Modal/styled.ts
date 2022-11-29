@@ -17,7 +17,7 @@ export let StyledOverlay = styled(Overlay, {
   position: 'fixed',
   zIndex: 9999,
   inset: 0,
-  animation: `${overlayShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
+  animation: `${overlayShow} 300ms cubic-bezier(0.16, 1, 0.3, 1)`,
 })
 
 export let StyledTitle = styled(Title, {
@@ -39,22 +39,27 @@ export let StyledContent = styled(Content, {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
+  padding: 24,
+  animation: `${contentShow} 300ms cubic-bezier(0.16, 1, 0.3, 1)`,
+  zIndex: 9999,
   maxWidth: '90vw',
   width: 'auto',
-  padding: 24,
-  animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
+  '*': {
+    maxWidth: '100%',
+  },
   '&:focus': { outline: 'none' },
-  zIndex: 9999,
-  '.wv-modal-content > *:not([data-wv-modal-header])': {
-    maxHeight: '80vh',
-    overflowY: 'auto',
+  '&[data-size="fullscreen"]': {
+    width: '100vw',
+    height: '100vh',
+    maxWidth: '100vw',
+    borderRadius: 0,
   },
   '@media (max-width: 768px)': {
     width: '90vw',
     padding: 12,
-  },
-  '*': {
-    maxWidth: '100%',
+    '&[data-size="fullscreen"]': {
+      width: '100vw',
+    },
   },
 })
 
@@ -65,19 +70,19 @@ export let StyledCloseIcon = styled('button', {
   borderRadius: '100%',
   height: 25,
   width: 25,
-  padding: 2,
+  padding: 4,
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
   color: 'rgb(55, 65, 81)',
   position: 'absolute',
-  top: 10,
-  right: 10,
+  top: 8,
+  right: 8,
   '&:hover': {
     backgroundColor: 'rgba(112, 112, 112, .1)',
   },
   svg: {
-    width: 18,
-    height: 18,
+    width: 20,
+    height: 20,
   },
 })

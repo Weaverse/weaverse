@@ -1,10 +1,7 @@
-import type {
-  DialogCloseProps,
-  DialogContentProps,
-  DialogTitleProps,
-} from '@radix-ui/react-dialog'
+import type { DialogCloseProps, DialogTitleProps } from '@radix-ui/react-dialog'
 import { Close, Portal, Root, Trigger } from '@radix-ui/react-dialog'
 import React, { forwardRef } from 'react'
+import type { ModalContentProps } from '~/types'
 import {
   StyledCloseIcon,
   StyledContent,
@@ -25,25 +22,36 @@ export let ModalHeader = forwardRef<HTMLHeadingElement, DialogTitleProps>(
   }
 )
 
-export let ModalContent = forwardRef<HTMLDivElement, DialogContentProps>(
+export let ModalContent = forwardRef<HTMLDivElement, ModalContentProps>(
   (props, ref) => {
-    let { children, ...rest } = props
-    return (
-      <Portal>
+    let { children, size, portal, ...rest } = props
+    let modalContent = (
+      <>
         <StyledOverlay />
         <StyledContent
           {...rest}
           onCloseAutoFocus={(e) => e.preventDefault()}
           data-wv-modal
+          data-size={size}
           ref={ref}
         >
           <ModalClose />
           <div className="wv-modal-content">{children}</div>
         </StyledContent>
-      </Portal>
+      </>
     )
+
+    if (portal) {
+      return <Portal>{modalContent}</Portal>
+    }
+    return modalContent
   }
 )
+
+ModalContent.defaultProps = {
+  size: 'auto',
+  portal: false,
+}
 
 export let ModalClose = forwardRef<HTMLButtonElement, DialogCloseProps>(
   (props, ref) => {
@@ -52,8 +60,8 @@ export let ModalClose = forwardRef<HTMLButtonElement, DialogCloseProps>(
       <StyledCloseIcon>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="18"
-          height="18"
+          width="20"
+          height="20"
           fill="#000000"
           viewBox="0 0 256 256"
         >
