@@ -1,6 +1,7 @@
 import type {
   DialogCloseProps,
   DialogContentProps,
+  DialogTitleProps,
 } from '@radix-ui/react-dialog'
 import { Close, Portal, Root, Trigger } from '@radix-ui/react-dialog'
 import React, { forwardRef } from 'react'
@@ -13,7 +14,16 @@ import {
 
 export let Modal = Root
 export let ModalTrigger = Trigger
-export let ModalHeader = StyledTitle
+export let ModalHeader = forwardRef<HTMLHeadingElement, DialogTitleProps>(
+  (props, ref) => {
+    let { children, ...rest } = props
+    return (
+      <StyledTitle ref={ref} {...rest} data-wv-modal-header>
+        {children}
+      </StyledTitle>
+    )
+  }
+)
 
 export let ModalContent = forwardRef<HTMLDivElement, DialogContentProps>(
   (props, ref) => {

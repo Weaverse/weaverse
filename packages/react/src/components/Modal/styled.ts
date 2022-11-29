@@ -45,7 +45,7 @@ export let StyledContent = styled(Content, {
   animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
   '&:focus': { outline: 'none' },
   zIndex: 9999,
-  '.wv-modal-content-wrapper': {
+  '[data-wv-modal-header] + *': {
     maxHeight: '80vh',
     overflowY: 'auto',
   },
@@ -74,7 +74,7 @@ export let StyledCloseIcon = styled('button', {
   top: 10,
   right: 10,
   '&:hover': {
-    backgroundColor: 'rgb(112 112 112 / 10%)',
+    backgroundColor: 'rgb(112, 112, 112 / 10%)',
   },
   svg: {
     width: 18,
