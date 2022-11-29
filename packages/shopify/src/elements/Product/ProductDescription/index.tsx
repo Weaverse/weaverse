@@ -30,7 +30,10 @@ let ProductDescription = forwardRef<HTMLDivElement, ProductDescriptionProps>(
           />
           {showViewDetailsButton && (
             <ViewDetails viewDetailsText={viewDetailsText}>
-              <div dangerouslySetInnerHTML={{ __html: product.body_html }} />
+              <div
+                className="wv-product-description-details"
+                dangerouslySetInnerHTML={{ __html: product.body_html }}
+              />
             </ViewDetails>
           )}
         </div>
@@ -70,6 +73,14 @@ export let css: ElementCSS = {
         textDecoration: 'underline',
         color: 'rgb(0, 42, 140)',
       },
+    },
+    '.wv-product-description-details': {
+      maxHeight: '80vh',
+      overflowY: 'auto',
+      margin: '0 -24px',
+      padding: '0 24px',
+      width: 'calc(100% + 48px)',
+      maxWidth: 'unset',
     },
   },
 }
