@@ -6,6 +6,7 @@ import type { ProductMediaProps, ProductMediaSize } from '~/types'
 import { Arrows } from './Arrows'
 import { Dots } from './Dots'
 import { Image } from './Image'
+import { MediaFullscreenSlider } from './MediaFullscreenSlider'
 import { useMediaSlider } from './useMediaSlider'
 
 let mediaSizesMap: Record<ProductMediaSize, string> = {
@@ -18,10 +19,11 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
   (props, ref) => {
     let { mediaSize, aspectRatio, fallbackImage, ...rest } = props
     let context = useContext(ProductContext)
-    let [currentSlide, setCurrentSlide] = React.useState(0)
+    let [currentSlide, setCurrentSlide] = useState(0)
     let [created, setCreated] = useState(false)
     let [cssLoaded, setCssLoaded] = useState(false)
     let [ready, setReady] = useState(false)
+    let [zoomed, setZoomed] = useState(false)
 
     let [sliderRef, thumbnailRef, instanceRef, thumbnailInstanceRef] =
       useMediaSlider({
@@ -85,6 +87,7 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
                   image={image}
                   width={1000}
                   className="keen-slider__slide wv-product-slider__slide"
+                  onClick={() => setZoomed(true)}
                 />
               ))}
             </div>
@@ -105,6 +108,11 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
               />
             ))}
           </div>
+          <MediaFullscreenSlider
+            open={zoomed}
+            onOpenChange={setZoomed}
+            images={images}
+          />
         </div>
       )
     }
@@ -114,7 +122,7 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
 
 ProductMedia.defaultProps = {
   mediaSize: 'medium',
-  aspectRatio: '1/1',
+  aspectRatio: 'auto',
 }
 
 export let css: ElementCSS = {
@@ -210,6 +218,27 @@ export let css: ElementCSS = {
         border: '1px solid #000',
       },
     },
+    '.wv-product-media-fullscreen': {
+      padding: '80px 120px',
+      '.wv-modal-content': {
+        height: '100%',
+        '.wv-produt-media__fullscreen-slider': {
+          height: '100%',
+          '.keen-slider__slide': {
+            minWidth: 'min(var(--media-aspect-ratio) * (100vh - 12rem), 60vw)',
+            maxWidth: 'min(var(--media-aspect-ratio) * (100vh - 12rem), 60vw)',
+            display: 'flex',
+            alignItems: 'center',
+            img: {
+              aspectRatio: 'var(--media-aspect-ratio, auto)',
+              width: '100%',
+              cursor: 'pointer',
+              objectFit: 'cover',
+            },
+          },
+        },
+      },
+    },
   },
   '@mobile': {
     minWidth: '100%',
@@ -227,6 +256,9 @@ export let css: ElementCSS = {
     },
     '.wv-thumbnail-slider': {
       display: 'none !important',
+    },
+    '.wv-product-media-fullscreen': {
+      padding: '80px 10px',
     },
   },
 }
