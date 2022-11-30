@@ -53,6 +53,8 @@ export function createGlobalStyles(stitches: Stitches) {
       "50%": { opacity: 0.5 },
     },
     ".weaverse-content-root": {
+      position: "relative",
+      zIndex: 0,
       "*": {
         WebkitFontSmoothing: "antialiased",
         MozOsxFontSmoothing: "auto",
