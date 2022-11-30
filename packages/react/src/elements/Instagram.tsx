@@ -13,7 +13,7 @@ let Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
       if (token) {
         let params = new URLSearchParams({
           access_token: token,
-          fields: 'id,media_type,caption,media_url,permalink',
+          fields: 'id,media_type,caption,media_url,permalink,thumbnail_url',
         })
         fetch(`${INSTAGRAM_API}/me/media?${params.toString()}`)
           .then((res) => res.json())
@@ -50,7 +50,21 @@ let Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
       <div ref={ref} {...rest} style={style}>
         <div className="wv-ig-media-container">
           {media.slice(0, numberOfImages).map((item) => {
-            let { id, permalink, caption, media_url } = item
+            let {
+              id,
+              permalink,
+              caption,
+              media_url,
+              media_type,
+              thumbnail_url,
+            } = item
+            if (media_type === 'VIDEO') {
+              return (
+                <video key={id} controls poster={thumbnail_url}>
+                  <source src={media_url} type="video/mp4" />
+                </video>
+              )
+            }
             return (
               <a key={id} href={permalink} target="_blank" rel="noreferrer">
                 <img alt={caption} src={media_url} />
@@ -95,6 +109,10 @@ export let permanentCss = {
         maxWidth: '100%',
         maxHeight: '100%',
         objectFit: 'cover',
+      },
+      video: {
+        width: '100%',
+        height: '100%',
       },
     },
   },

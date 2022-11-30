@@ -152,8 +152,9 @@ export interface InstagramElementProps extends WeaverseElementProps {
 
 export type InstagramMedia = {
   id: string
-  media_type: 'IMAGE' | 'CAROUSEL_ALBUM'
+  media_type: 'IMAGE' | 'CAROUSEL_ALBUM' | 'VIDEO'
   media_url: string
   permalink: string
   caption: string
+  thumbnail_url: string
 }
