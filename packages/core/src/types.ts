@@ -66,9 +66,11 @@ export type FlagType =
   | "isSortableContext"
 export type ElementFlags = Partial<Record<FlagType, boolean>>
 
+export type ChildElementSelector = string | string[]
+
 export interface ChildElement {
   label: string
-  selector: string | string[]
+  selector: ChildElementSelector
 }
 export type ParentType =
   | "container"
