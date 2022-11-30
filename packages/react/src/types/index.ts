@@ -1,6 +1,8 @@
 import type { Weaverse, ElementCSS, WeaverseItemStore } from '@weaverse/core'
 import type { CSSProperties, ReactElement, ReactNode } from 'react'
 
+export * from './components'
+
 export interface WeaverseElementProps extends ReactElement {
   css?: ElementCSS
   ['data-wv-type']: string

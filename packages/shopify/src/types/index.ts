@@ -69,18 +69,32 @@ export interface ProductMediaDotsProps {
   currentSlide: number
   instanceRef: React.MutableRefObject<KeenSliderInstance | null>
 }
-export interface ProductImageProps {
+export interface ProductImageProps
+  extends React.DOMAttributes<HTMLImageElement> {
   image: ShopifyProductImage
   width: number
   className?: string
-  onLoad?: () => void
 }
+
+export interface MediaFullscreenSliderProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  images: ShopifyProductImage[]
+}
+
 export interface ProductTitleProps extends WeaverseElementProps {
   htmlTag: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p'
 }
 
 export interface ProductDescriptionProps extends WeaverseElementProps {
   lineClamp: number
+  showViewDetailsButton: boolean
+  viewDetailsText: string
+}
+
+export interface ProductDescriptionViewDetailsProps {
+  viewDetailsText: string
+  children: React.ReactNode
 }
 
 export interface ProductVendorProps extends WeaverseElementProps {
@@ -178,6 +192,11 @@ export interface FormFieldProps {
   label: string
   name?: string
   required: boolean
+}
+
+export interface FieldProps {
+  field: FormFieldProps
+  formId: string
 }
 
 export interface CustomHTMLProps extends WeaverseElementProps {

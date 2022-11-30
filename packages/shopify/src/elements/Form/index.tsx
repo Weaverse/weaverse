@@ -1,43 +1,12 @@
 import type { ElementCSS } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext, useId } from 'react'
-import type { FormElementProps, FormFieldProps } from '~/types'
+import type { FormElementProps } from '~/types'
+import { FormField } from './FormField'
 
-let InputField = ({
-  field,
-  formId,
-}: {
-  field: FormFieldProps
-  formId: string
-}) => {
-  let fieldName = `contact[${field.name || field.label}]`
-  return (
-    <div>
-      <label htmlFor={fieldName}>{field.label}</label>
-      {field.type !== 'multiline' ? (
-        <input
-          form={formId}
-          name={fieldName}
-          type={field.type}
-          placeholder={field.placeholder}
-          required={field.required}
-        />
-      ) : (
-        <textarea
-          form={formId}
-          name={fieldName}
-          placeholder={field.placeholder}
-          rows={4}
-          required={field.required}
-        ></textarea>
-      )}
-    </div>
-  )
-}
-
-const Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
-  const { ssrMode } = useContext(WeaverseContext)
-  const {
+let Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
+  let { ssrMode } = useContext(WeaverseContext)
+  let {
     fields,
     formType,
     submitText,
@@ -46,26 +15,29 @@ const Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
     openInNewTab,
     ...rest
   } = props
+
   let formId = useId()
   let style = {
     '--wv-form-submit-align': submitPosition,
   } as React.CSSProperties
 
-  const formContent = (
+  let formContent = (
     <div ref={ref} {...rest} style={style}>
-      {fields.map((field) => (
-        <InputField key={field.id} formId={formId} field={field} />
-      ))}
       <form
         method="post"
         action="/contact#contact_form"
         id={formId}
         acceptCharset="UTF-8"
-        className="contact-form"
+        className="contact-form wv-form"
       >
         <input type="hidden" name="form_type" value={formType} />
         <input type="hidden" name="utf8" value="✓" />
-        <button type="submit">{submitText}</button>
+        {fields.map((field) => (
+          <FormField key={field.id} formId={formId} field={field} />
+        ))}
+        <button type="submit" className="wv-form__submit">
+          {submitText}
+        </button>
       </form>
     </div>
   )
@@ -140,26 +112,31 @@ export let css: ElementCSS = {
     gap: 14,
     width: '100%',
     padding: '12px',
-    '& > div': {
+    '.wv-form': {
+      width: '100%',
       display: 'flex',
       flexDirection: 'column',
-      gap: 4,
-    },
-    '& input, & textarea': {
-      px: 12,
-      py: 10,
-      border: '1px solid #ddd',
-    },
-    form: {
-      width: '100%',
-      textAlign: 'var(--wv-form-submit-align)',
-    },
-    button: {
-      background: '#4B5563',
-      color: '#fff',
-      padding: '14px 30px',
-      border: 'none',
-      width: 'fit-content',
+      '.wv-form-field': {
+        display: 'flex',
+        flexDirection: 'column',
+        marginBottom: 12,
+        '.wv-form-field__label': {
+          marginBottom: 4,
+        },
+        'input, textarea': {
+          px: 12,
+          py: 10,
+          border: '1px solid #ddd',
+        },
+      },
+      '.wv-form__submit': {
+        alignSelf: 'var(--wv-form-submit-align, flex-start)',
+        background: '#4B5563',
+        color: '#fff',
+        padding: '14px 30px',
+        border: 'none',
+        width: 'fit-content',
+      },
     },
   },
 }

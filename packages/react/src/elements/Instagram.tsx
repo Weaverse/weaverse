@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useState } from 'react'
 import { INSTAGRAM_API } from '~/constant'
 import type { InstagramElementProps, InstagramMedia } from '~/types'
-import Placeholder from '../components/Placeholder'
+import { Components } from '~/components'
 
 let Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
   (props, ref) => {
@@ -32,11 +32,11 @@ let Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
     if (!token || error) {
       return (
         <div ref={ref} {...rest}>
-          <Placeholder element="Instagram">
+          <Components.Placeholder element="Instagram">
             {!token
               ? 'Connect to Instagram to display photos on your site.'
               : 'Invalid or expired token!'}
-          </Placeholder>
+          </Components.Placeholder>
         </div>
       )
     }
