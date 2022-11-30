@@ -16,7 +16,7 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "tsup src/index.ts --format esm,cjs --dts --outDir dist --watch --external react",
-    "build": "tsup src/index.ts --format esm,cjs --dts --outDir dist --external react",
+    "build": "tsup src/index.ts --format esm,cjs --dts --outDir dist --external react --minify",
     "prepublish": "npm run build"
   },
   "peerDependencies": {
