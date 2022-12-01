@@ -61,7 +61,6 @@ Video.defaultProps = {
   poster:
     'https://ucarecdn.com/c413b8fe-ceec-4948-9c42-a0434c4ca920/-/preview/-/quality/smart/-/format/auto/',
   loop: false,
-  // type: 'video/mp4',
   controls: false,
   autoPlay: true,
   muted: true,

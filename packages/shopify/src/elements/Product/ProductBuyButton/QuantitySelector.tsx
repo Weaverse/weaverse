@@ -1,5 +1,6 @@
+import { Components } from '@weaverse/react'
 import React, { useState } from 'react'
-import { MinusIcon, PlusIcon } from './Icon'
+let { Icon } = Components
 
 export function QuantitySelector() {
   let [quantity, setQuantity] = useState(1)
@@ -19,7 +20,7 @@ export function QuantitySelector() {
         onClick={() => setQuantity(quantity - 1)}
         disabled={quantity <= 1}
       >
-        <MinusIcon />
+        <Icon name="Minus" />
       </button>
       <input
         className="wv-quantity-input"
@@ -35,7 +36,7 @@ export function QuantitySelector() {
         aria-label="Increase quantity"
         onClick={() => setQuantity(quantity + 1)}
       >
-        <PlusIcon />
+        <Icon name="Plus" />
       </button>
     </div>
   )

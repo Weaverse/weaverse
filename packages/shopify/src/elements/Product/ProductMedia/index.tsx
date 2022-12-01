@@ -147,75 +147,75 @@ export let css: ElementCSS = {
     },
     '.wv-product-slider__wrapper': {
       position: 'relative',
-    },
-    '.wv-product-slider': {
-      aspectRatio: 'var(--media-aspect-ratio, auto)',
-    },
-    '.wv-product-slider__slide': {
-      cursor: 'pointer',
-      height: '100%',
-      objectFit: 'cover',
-    },
-    '.wv-slider-arrow': {
-      position: 'absolute',
-      top: '50%',
-      transform: 'translateY(-50%)',
-      width: '44px',
-      height: '44px',
-      padding: '8px',
-      color: '#191919',
-      backgroundColor: '#f2f2f2',
-      textAlign: 'center',
-      transition: 'all 0.2s ease-in-out',
-      borderRadius: '4px',
-      '&:hover': {
-        backgroundColor: '#191919',
-        color: '#f2f2f2',
+      '.wv-product-slider': {
+        aspectRatio: 'var(--media-aspect-ratio, auto)',
+        '.wv-product-slider__slide': {
+          cursor: 'pointer',
+          height: '100%',
+          objectFit: 'cover',
+        },
       },
-      svg: {
-        verticalAlign: 'middle',
-        width: '22px',
-        height: '22px',
-      },
-      '&.arrow--left': {
-        left: '10px',
-      },
-      '&.arrow--right': {
-        right: '10px',
-      },
-      '&.arrow--disabled': {
-        opacity: 0.5,
-      },
-    },
-    '.wv-slider-dots': {
-      display: 'none',
-      padding: '10px 0',
-      justifyContent: 'center',
-      '.dot': {
-        width: '9px',
-        height: '9px',
-        padding: '0',
-        margin: '0 5px',
-        borderRadius: '50%',
-        background: '#2125291a',
+      '.wv-slider-arrow': {
+        position: 'absolute',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        width: '44px',
+        height: '44px',
+        padding: '8px',
+        color: '#191919',
+        backgroundColor: '#f2f2f2',
+        textAlign: 'center',
         transition: 'all 0.2s ease-in-out',
-        '&.dot--active': {
-          background: '#212529',
+        borderRadius: '4px',
+        '&:hover': {
+          backgroundColor: '#191919',
+          color: '#f2f2f2',
+        },
+        svg: {
+          verticalAlign: 'middle',
+          width: '22px',
+          height: '22px',
+        },
+        '&.arrow--left': {
+          left: '10px',
+        },
+        '&.arrow--right': {
+          right: '10px',
+        },
+        '&.arrow--disabled': {
+          opacity: 0.5,
+        },
+      },
+      '.wv-slider-dots': {
+        display: 'none',
+        padding: '10px 0',
+        justifyContent: 'center',
+        '.dot': {
+          width: '9px',
+          height: '9px',
+          padding: '0',
+          margin: '0 5px',
+          borderRadius: '50%',
+          background: '#2125291a',
+          transition: 'all 0.2s ease-in-out',
+          '&.dot--active': {
+            background: '#212529',
+          },
         },
       },
     },
     '.wv-thumbnail-slider': {
       marginTop: '10px',
-    },
-    '.wv-thumbnail__slide': {
-      aspectRatio: 'var(--media-aspect-ratio, auto)',
-      height: '100%',
-      objectFit: 'cover',
-      cursor: 'pointer',
-      padding: '6px',
-      border: '1px solid transparent',
-      '&.active': {
-        border: '1px solid #000',
+      '.wv-thumbnail__slide': {
+        aspectRatio: 'var(--media-aspect-ratio, auto)',
+        height: '100%',
+        objectFit: 'cover',
+        cursor: 'pointer',
+        padding: '6px',
+        border: '1px solid transparent',
+        '&.active': {
+          border: '1px solid #000',
+        },
       },
     },
     '.wv-product-media-fullscreen': {
@@ -245,14 +245,13 @@ export let css: ElementCSS = {
     maxWidth: '100%',
     paddingRight: '0px',
     marginBottom: '32px',
-    '.wv-thumbnail__slide': {
-      padding: '4px',
-    },
-    '.wv-slider-arrow': {
-      display: 'none',
-    },
-    '.wv-slider-dots': {
-      display: 'flex',
+    '.wv-product-slider__wrapper': {
+      '.wv-slider-arrow': {
+        display: 'none',
+      },
+      '.wv-slider-dots': {
+        display: 'flex',
+      },
     },
     '.wv-thumbnail-slider': {
       display: 'none !important',

@@ -1,7 +1,12 @@
-import type { DialogCloseProps, DialogTitleProps } from '@radix-ui/react-dialog'
+import type {
+  DialogCloseProps,
+  DialogTitleProps,
+  DialogProps,
+} from '@radix-ui/react-dialog'
 import { Close, Portal, Root, Trigger } from '@radix-ui/react-dialog'
-import React, { forwardRef } from 'react'
+import React, { forwardRef, useEffect } from 'react'
 import type { ModalContentProps } from '~/types'
+import { Icon } from '../Icons'
 import {
   StyledCloseIcon,
   StyledContent,
@@ -9,7 +14,39 @@ import {
   StyledTitle,
 } from './styled'
 
-export let Modal = Root
+export let Modal = (props: DialogProps) => {
+  let { children, open, defaultOpen, onOpenChange, ...rest } = props
+
+  useEffect(() => {
+    let isOpen = open || defaultOpen
+    if (isOpen) {
+      document.body.classList.add('wv-modal-open')
+    } else {
+      document.body.classList.remove('wv-modal-open')
+    }
+  }, [open, defaultOpen])
+
+  let handleOpenChange = (open: boolean) => {
+    if (open) {
+      document.body.classList.add('wv-modal-open')
+    } else {
+      document.body.classList.remove('wv-modal-open')
+    }
+    onOpenChange?.(open)
+  }
+
+  return (
+    <Root
+      onOpenChange={handleOpenChange}
+      open={open}
+      defaultOpen={defaultOpen}
+      {...rest}
+    >
+      {children}
+    </Root>
+  )
+}
+
 export let ModalTrigger = Trigger
 export let ModalHeader = forwardRef<HTMLHeadingElement, DialogTitleProps>(
   (props, ref) => {
@@ -58,37 +95,7 @@ export let ModalClose = forwardRef<HTMLButtonElement, DialogCloseProps>(
     let { asChild, children, ...rest } = props
     let closeIcon = (
       <StyledCloseIcon>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          fill="#000000"
-          viewBox="0 0 256 256"
-        >
-          <rect width="256" height="256" fill="none" />
-          <line
-            x1="200"
-            y1="56"
-            x2="56"
-            y2="200"
-            fill="none"
-            stroke="#000000"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="12"
-          />
-          <line
-            x1="200"
-            y1="200"
-            x2="56"
-            y2="56"
-            fill="none"
-            stroke="#000000"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="12"
-          />
-        </svg>
+        <Icon name="X" />
       </StyledCloseIcon>
     )
     return (

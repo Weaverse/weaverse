@@ -1,5 +1,5 @@
 {
-  "version": "0.7.34",
+  "version": "0.7.37",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -15,8 +15,9 @@
   },
   "scripts": {
     "start": "npm run dev",
-    "dev": "tsup src/index.ts --format esm,cjs --dts --outDir dist --watch --external react",
-    "build": "tsup src/index.ts --format esm,cjs --dts --outDir dist --external react",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --outDir dist --watch --external react --sourcemap",
+    "build": "tsup src/index.ts --format esm,cjs --dts --outDir dist --external react --minify",
+    "clean": "rimraf dist",
     "prepublish": "npm run build"
   },
   "peerDependencies": {
@@ -33,7 +34,8 @@
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.2",
     "@stitches/react": "^1.2.8",
-    "@weaverse/core": "0.7.34",
+    "@weaverse/core": "0.7.37",
+    "clsx": "^1.2.1",
     "nuka-carousel": "^5.4.1"
   }
 }
