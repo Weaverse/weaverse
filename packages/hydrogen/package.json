@@ -1,5 +1,5 @@
 {
-  "version": "0.7.34",
+  "version": "0.7.35",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -17,6 +17,7 @@
     "start": "npm run dev",
     "dev": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --watch --external react --sourcemap",
     "build": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --external react --minify",
+    "clean": "rimraf dist",
     "prepublish": "npm run build"
   },
   "peerDependencies": {
@@ -31,6 +32,6 @@
   "name": "@weaverse/hydrogen",
   "author": "Weaverse Team",
   "dependencies": {
-    "@weaverse/react": "0.7.34"
+    "@weaverse/react": "0.7.35"
   }
 }

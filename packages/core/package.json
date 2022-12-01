@@ -1,5 +1,5 @@
 {
-  "version": "0.7.34",
+  "version": "0.7.35",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -17,6 +17,7 @@
     "start": "npm run dev",
     "dev": "tsup src/index.ts --format esm,cjs --dts --outDir dist --watch --sourcemap",
     "build": "tsup src/index.ts --format esm,cjs --dts --outDir dist --minify",
+    "clean": "rimraf dist",
     "prepublish": "npm run build"
   },
   "name": "@weaverse/core",
