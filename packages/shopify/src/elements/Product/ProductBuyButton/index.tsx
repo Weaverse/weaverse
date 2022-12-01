@@ -93,6 +93,10 @@ export let css: ElementCSS = {
       border: 'none',
       backgroundColor: 'transparent',
       cursor: 'pointer',
+      svg: {
+        width: '12px',
+        height: '12px',
+      },
     },
     '.wv-quantity-input': {
       width: '50px',

@@ -2,6 +2,7 @@ import type { DialogCloseProps, DialogTitleProps } from '@radix-ui/react-dialog'
 import { Close, Portal, Root, Trigger } from '@radix-ui/react-dialog'
 import React, { forwardRef } from 'react'
 import type { ModalContentProps } from '~/types'
+import { Icon } from '../Icons'
 import {
   StyledCloseIcon,
   StyledContent,
@@ -58,37 +59,7 @@ export let ModalClose = forwardRef<HTMLButtonElement, DialogCloseProps>(
     let { asChild, children, ...rest } = props
     let closeIcon = (
       <StyledCloseIcon>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          fill="#000000"
-          viewBox="0 0 256 256"
-        >
-          <rect width="256" height="256" fill="none" />
-          <line
-            x1="200"
-            y1="56"
-            x2="56"
-            y2="200"
-            fill="none"
-            stroke="#000000"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="12"
-          />
-          <line
-            x1="200"
-            y1="200"
-            x2="56"
-            y2="56"
-            fill="none"
-            stroke="#000000"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="12"
-          />
-        </svg>
+        <Icon name="X" />
       </StyledCloseIcon>
     )
     return (
