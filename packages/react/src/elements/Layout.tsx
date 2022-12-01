@@ -46,6 +46,7 @@ let LayoutBackground = (props: LayoutBackgroundProps) => {
   let style = {
     ['--bg-color']: bgColor,
     ['--object-fit']: objectFit,
+    display: 'block',
   } as CSSProperties
 
   if (imgUrl || bgColor) {
