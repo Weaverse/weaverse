@@ -36,7 +36,7 @@ let ProductPrice = forwardRef<HTMLDivElement, ProductPriceProps>(
       }
 
       return (
-        <div ref={ref} className="wv-product-prices" {...rest}>
+        <div ref={ref} {...rest}>
           <span className="wv-sale-price">
             {formatMoney(price, money_format)}
           </span>
