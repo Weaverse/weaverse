@@ -52,6 +52,36 @@ export function createGlobalStyles(stitches: Stitches) {
       "0%, 100%": { opacity: 1 },
       "50%": { opacity: 0.5 },
     },
+    ".wv-spinner-wrapper": {
+      position: "absolute",
+      inset: "0px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "inherit",
+      ".wv-spinner": {
+        width: "20px",
+        height: "20px",
+        animation: "spin .75s linear infinite",
+      },
+    },
+    "[data-wv-placeholder]": {
+      height: "100%",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "rgba(236, 236, 236, 0.5)",
+      backgroundClip: "content-box",
+      padding: "10px",
+    },
+    body: {
+      "&.wv-modal-open": {
+        ".weaverse-content-root": {
+          zIndex: 9999,
+        },
+      },
+    },
     ".weaverse-content-root": {
       position: "relative",
       zIndex: 0,
@@ -101,29 +131,6 @@ export function createGlobalStyles(stitches: Stitches) {
       ".animate-pulse": {
         animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
-    },
-    ".wv-spinner-wrapper": {
-      position: "absolute",
-      inset: "0px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: "inherit",
-      ".wv-spinner": {
-        width: "20px",
-        height: "20px",
-        animation: "spin .75s linear infinite",
-      },
-    },
-    "[data-wv-placeholder]": {
-      height: "100%",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: "rgba(236, 236, 236, 0.5)",
-      backgroundClip: "content-box",
-      padding: "10px",
     },
   })
   globalStyles()
