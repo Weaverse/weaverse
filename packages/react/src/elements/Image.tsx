@@ -46,9 +46,9 @@ export let css: ElementCSS = {
       height: '100%',
       objectFit: 'var(--wv-img-object-fit, cover)',
       objectPosition: 'var(--wv-img-object-position, center)',
-    },
-    '& [data-blink-src]': {
-      visibility: 'hidden',
+      '&[data-blink-src]': {
+        visibility: 'hidden',
+      },
     },
   },
 }
