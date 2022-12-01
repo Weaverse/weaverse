@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "npm run dev",
-    "dev": "tsup src/index.ts --format esm,cjs --dts --outDir dist --watch",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --outDir dist --watch --sourcemap",
     "build": "tsup src/index.ts --format esm,cjs --dts --outDir dist --minify",
     "prepublish": "npm run build"
   },
