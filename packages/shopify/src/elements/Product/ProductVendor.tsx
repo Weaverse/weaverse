@@ -1,31 +1,26 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef, useContext } from 'react'
-import { ProductContext } from '~/context'
+import React, { forwardRef } from 'react'
+import { useProductContext } from '~/hooks'
 import type { ProductVendorProps } from '~/types'
 
 let ProductVendor = forwardRef<HTMLDivElement, ProductVendorProps>(
   (props, ref) => {
     let { showLabel, labelText, ...rest } = props
-    let context = useContext(ProductContext)
-
-    if (context) {
-      let { product } = context
-      return (
-        <div ref={ref} {...rest}>
-          {showLabel && (
-            <span className="wv-product-vendor__label">{labelText}</span>
-          )}
-          <a
-            target="_self"
-            href={`/collections/vendors?q=${product.vendor}`}
-            className="wv-produt-vendor__link"
-          >
-            {product.vendor}
-          </a>
-        </div>
-      )
-    }
-    return null
+    let { product } = useProductContext()
+    return (
+      <div ref={ref} {...rest}>
+        {showLabel && (
+          <span className="wv-product-vendor__label">{labelText}</span>
+        )}
+        <a
+          target="_self"
+          href={`/collections/vendors?q=${product.vendor}`}
+          className="wv-produt-vendor__link"
+        >
+          {product.vendor}
+        </a>
+      </div>
+    )
   }
 )
 

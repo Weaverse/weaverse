@@ -1,7 +1,7 @@
 import type { ElementCSS } from '@weaverse/react'
 import { Components } from '@weaverse/react'
-import React, { forwardRef, useContext, useRef, useState } from 'react'
-import { ProductContext } from '~/context'
+import React, { forwardRef, useRef, useState } from 'react'
+import { useProductContext } from '~/hooks'
 import type { ProductBuyButtonProps } from '~/types'
 import { addProductToCart } from '~/utils'
 import { QuantitySelector } from './QuantitySelector'
@@ -17,49 +17,46 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
       ...rest
     } = props
     let atcRef = useRef<HTMLButtonElement>(null)
-    let context = useContext(ProductContext)
+    let context = useProductContext()
     let [adding, setAdding] = useState(false)
 
-    if (context) {
-      let { formRef, selectedVariant, ready } = context
-      let available = selectedVariant?.available
+    let { formRef, selectedVariant, ready } = context
+    let available = selectedVariant?.available
 
-      let handleATC = (e: React.MouseEvent) => {
-        e.preventDefault()
-        setAdding(true)
-        addProductToCart(formRef?.current as HTMLFormElement, () =>
-          setAdding(false)
-        )
-      }
-
-      let atcText = buttonText
-      if (ready) {
-        if (!available) atcText = soldOutText
-        if (!selectedVariant) atcText = unavailableText
-      }
-
-      return (
-        <div ref={ref} {...rest}>
-          {showQuantitySelector && (
-            <label className="wv-product-quantity-label">{quantityLabel}</label>
-          )}
-          <div className="wv-product-buy-buttons">
-            {showQuantitySelector && <QuantitySelector />}
-            <button
-              ref={atcRef}
-              disabled={adding || !available || !selectedVariant}
-              onClick={handleATC}
-              type="submit"
-              className="wv-product-atc-button"
-            >
-              <span>{atcText}</span>
-              {adding && <Components.Spinner />}
-            </button>
-          </div>
-        </div>
+    let handleATC = (e: React.MouseEvent) => {
+      e.preventDefault()
+      setAdding(true)
+      addProductToCart(formRef?.current as HTMLFormElement, () =>
+        setAdding(false)
       )
     }
-    return null
+
+    let atcText = buttonText
+    if (ready) {
+      if (!available) atcText = soldOutText
+      if (!selectedVariant) atcText = unavailableText
+    }
+
+    return (
+      <div ref={ref} {...rest}>
+        {showQuantitySelector && (
+          <label className="wv-product-quantity-label">{quantityLabel}</label>
+        )}
+        <div className="wv-product-buy-buttons">
+          {showQuantitySelector && <QuantitySelector />}
+          <button
+            ref={atcRef}
+            disabled={adding || !available || !selectedVariant}
+            onClick={handleATC}
+            type="submit"
+            className="wv-product-atc-button"
+          >
+            <span>{atcText}</span>
+            {adding && <Components.Spinner />}
+          </button>
+        </div>
+      </div>
+    )
   }
 )
 

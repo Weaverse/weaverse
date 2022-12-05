@@ -1,6 +1,6 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef, useContext } from 'react'
-import { ProductContext } from '~/context'
+import React, { forwardRef } from 'react'
+import { useProductContext } from '~/hooks'
 import type { ProductVariantProps } from '~/types'
 import { getOptionsGroupConfigs, getVariantFromOptionArray } from '~/utils'
 import { CombinedVariantSelector } from './CombinedVariantSelector'
@@ -10,82 +10,79 @@ import { useOptions } from './useOptions'
 let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
   (props, ref) => {
     let { optionsStyle, hideUnavailableOptions, ...rest } = props
-    let context = useContext(ProductContext)
+    let context = useProductContext()
     let [selectedOptions, setSelectedOptions] = useOptions(context)
+    let { product, selectedVariant, setSelectedVariant } = context
 
-    if (context) {
-      let { product, selectedVariant, setSelectedVariant } = context
-      let handleSelectOption = (position: number, value: string) => {
-        selectedOptions[position - 1] = value
-        let newVariant = getVariantFromOptionArray(product, selectedOptions)
-        if (!newVariant && hideUnavailableOptions) {
-          let newOptions = selectedOptions.filter((_, idx) => idx < position)
-          newVariant = getVariantFromOptionArray(product, newOptions)
-          selectedOptions = newVariant.options
-        }
-        setSelectedVariant(newVariant)
-        setSelectedOptions([...selectedOptions])
+    let handleSelectOption = (position: number, value: string) => {
+      selectedOptions[position - 1] = value
+      let newVariant = getVariantFromOptionArray(product, selectedOptions)
+      if (!newVariant && hideUnavailableOptions) {
+        let newOptions = selectedOptions.filter((_, idx) => idx < position)
+        newVariant = getVariantFromOptionArray(product, newOptions)
+        selectedOptions = newVariant.options
       }
+      setSelectedVariant(newVariant)
+      setSelectedOptions([...selectedOptions])
+    }
 
-      if (!product.has_only_default_variant) {
-        let style = {
-          '--wv-option-border-color': '#cbcbcb',
-          '--wv-selected-option-border-color': '#232323',
-        } as React.CSSProperties
+    if (!product.has_only_default_variant) {
+      let style = {
+        '--wv-option-border-color': '#cbcbcb',
+        '--wv-selected-option-border-color': '#232323',
+      } as React.CSSProperties
 
-        if (optionsStyle === 'combined') {
-          return (
-            <div ref={ref} style={style} {...rest}>
-              <CombinedVariantSelector context={context} />
-            </div>
-          )
-        }
-
+      if (optionsStyle === 'combined') {
         return (
           <div ref={ref} style={style} {...rest}>
-            <input type="hidden" name="id" value={selectedVariant?.id} />
-            {product.options.map((option) => {
-              let { name, position } = option
-              let selectedValue = selectedOptions[position - 1]
-              let { optionDisplayName, optionDesign, style } =
-                getOptionsGroupConfigs(option)
-
-              return (
-                <div
-                  key={name + position}
-                  className="wv-product-option"
-                  style={style}
-                >
-                  <div className="wv-option__label">
-                    <span className="wv-option__display-name">
-                      {optionDisplayName}:
-                    </span>
-                    <span className="wv-option__selected-value">
-                      {selectedValue}
-                    </span>
-                  </div>
-                  <OptionValues
-                    product={product}
-                    option={option}
-                    type={optionDesign}
-                    selectedValue={selectedValue}
-                    selectedOptions={selectedOptions}
-                    onSelect={handleSelectOption}
-                    hideUnavailableOptions={hideUnavailableOptions}
-                  />
-                </div>
-              )
-            })}
+            <CombinedVariantSelector context={context} />
           </div>
         )
       }
+
       return (
-        <div ref={ref} {...rest}>
+        <div ref={ref} style={style} {...rest}>
           <input type="hidden" name="id" value={selectedVariant?.id} />
+          {product.options.map((option) => {
+            let { name, position } = option
+            let selectedValue = selectedOptions[position - 1]
+            let { optionDisplayName, optionDesign, style } =
+              getOptionsGroupConfigs(option)
+
+            return (
+              <div
+                key={name + position}
+                className="wv-product-option"
+                style={style}
+              >
+                <div className="wv-option__label">
+                  <span className="wv-option__display-name">
+                    {optionDisplayName}:
+                  </span>
+                  <span className="wv-option__selected-value">
+                    {selectedValue}
+                  </span>
+                </div>
+                <OptionValues
+                  product={product}
+                  option={option}
+                  type={optionDesign}
+                  selectedValue={selectedValue}
+                  selectedOptions={selectedOptions}
+                  onSelect={handleSelectOption}
+                  hideUnavailableOptions={hideUnavailableOptions}
+                />
+              </div>
+            )
+          })}
         </div>
       )
     }
-    return null
+    return (
+      <div ref={ref} {...rest}>
+        <input type="hidden" name="id" value={selectedVariant?.id} />
+      </div>
+    )
   }
 )
 

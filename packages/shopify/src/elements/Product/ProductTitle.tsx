@@ -1,17 +1,14 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef, useContext } from 'react'
-import { ProductContext } from '~/context'
+import React, { forwardRef } from 'react'
+import { useProductContext } from '~/hooks'
 import type { ProductTitleProps } from '~/types'
 
 let ProductTitle = forwardRef<HTMLElement, ProductTitleProps>((props, ref) => {
   let { htmlTag, ...rest } = props
-  let context = useContext(ProductContext)
+  let context = useProductContext()
 
-  if (context) {
-    let { product } = context
-    return React.createElement(htmlTag, { ref, ...rest }, product.title)
-  }
-  return null
+  let { product } = context
+  return React.createElement(htmlTag, { ref, ...rest }, product.title)
 })
 
 export let css: ElementCSS = {

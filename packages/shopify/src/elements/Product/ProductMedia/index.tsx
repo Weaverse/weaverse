@@ -1,7 +1,7 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef, useContext, useEffect, useState } from 'react'
+import React, { forwardRef, useEffect, useState } from 'react'
 import { PRODUCT_IMAGE_PLACEHOLDER } from '~/constant'
-import { ProductContext } from '~/context'
+import { useProductContext } from '~/hooks'
 import type { ProductMediaProps, ProductMediaSize } from '~/types'
 import { Arrows } from './Arrows'
 import { Dots } from './Dots'
@@ -18,7 +18,7 @@ let mediaSizesMap: Record<ProductMediaSize, string> = {
 let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
   (props, ref) => {
     let { mediaSize, aspectRatio, fallbackImage, ...rest } = props
-    let context = useContext(ProductContext)
+    let context = useProductContext()
     let [currentSlide, setCurrentSlide] = useState(0)
     let [created, setCreated] = useState(false)
     let [cssLoaded, setCssLoaded] = useState(false)
@@ -47,76 +47,73 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
       }
     }, [mediaSize, aspectRatio, created, cssLoaded])
 
-    if (context) {
-      let { images, aspect_ratio } = context.product
-      let style = {
-        '--media-width': mediaSizesMap[mediaSize],
-        '--media-aspect-ratio':
-          aspectRatio === 'auto' ? aspect_ratio || 'auto' : aspectRatio,
-        '--media-opacity': ready ? 1 : 0,
-      } as React.CSSProperties
+    let { images, aspect_ratio } = context.product
+    let style = {
+      '--media-width': mediaSizesMap[mediaSize],
+      '--media-aspect-ratio':
+        aspectRatio === 'auto' ? aspect_ratio || 'auto' : aspectRatio,
+      '--media-opacity': ready ? 1 : 0,
+    } as React.CSSProperties
 
-      if (images.length <= 1) {
-        let image = images[0] || {
-          src: fallbackImage || PRODUCT_IMAGE_PLACEHOLDER,
-          alt: 'Product media placeholder',
-          width: 1000,
-          height: 1000,
-        }
-        return (
-          <div ref={ref} style={style} {...rest}>
-            <div className="wv-product-image__single">
-              <Image image={image} width={1000} onLoad={() => setReady(true)} />
-            </div>
-          </div>
-        )
+    if (images.length <= 1) {
+      let image = images[0] || {
+        src: fallbackImage || PRODUCT_IMAGE_PLACEHOLDER,
+        alt: 'Product media placeholder',
+        width: 1000,
+        height: 1000,
       }
-
       return (
         <div ref={ref} style={style} {...rest}>
-          <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/keen-slider@latest/keen-slider.min.css"
-            onLoad={() => setCssLoaded(true)}
-          />
-          <div className="wv-product-slider__wrapper">
-            <div ref={sliderRef} className="keen-slider wv-product-slider">
-              {images.map((image) => (
-                <Image
-                  key={image.id}
-                  image={image}
-                  width={1000}
-                  className="keen-slider__slide wv-product-slider__slide"
-                  onClick={() => setZoomed(true)}
-                />
-              ))}
-            </div>
-            {created && instanceRef?.current && (
-              <Arrows currentSlide={currentSlide} instanceRef={instanceRef} />
-            )}
-            {created && instanceRef.current && (
-              <Dots currentSlide={currentSlide} instanceRef={instanceRef} />
-            )}
+          <div className="wv-product-image__single">
+            <Image image={image} width={1000} onLoad={() => setReady(true)} />
           </div>
-          <div ref={thumbnailRef} className="keen-slider wv-thumbnail-slider">
+        </div>
+      )
+    }
+
+    return (
+      <div ref={ref} style={style} {...rest}>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/keen-slider@latest/keen-slider.min.css"
+          onLoad={() => setCssLoaded(true)}
+        />
+        <div className="wv-product-slider__wrapper">
+          <div ref={sliderRef} className="keen-slider wv-product-slider">
             {images.map((image) => (
               <Image
                 key={image.id}
                 image={image}
-                width={480}
-                className="keen-slider__slide wv-thumbnail__slide"
+                width={1000}
+                className="keen-slider__slide wv-product-slider__slide"
+                onClick={() => setZoomed(true)}
               />
             ))}
           </div>
-          <MediaFullscreenSlider
-            open={zoomed}
-            onOpenChange={setZoomed}
-            images={images}
-          />
+          {created && instanceRef?.current && (
+            <Arrows currentSlide={currentSlide} instanceRef={instanceRef} />
+          )}
+          {created && instanceRef.current && (
+            <Dots currentSlide={currentSlide} instanceRef={instanceRef} />
+          )}
         </div>
-      )
-    }
-    return null
+        <div ref={thumbnailRef} className="keen-slider wv-thumbnail-slider">
+          {images.map((image) => (
+            <Image
+              key={image.id}
+              image={image}
+              width={480}
+              className="keen-slider__slide wv-thumbnail__slide"
+            />
+          ))}
+        </div>
+        <MediaFullscreenSlider
+          open={zoomed}
+          onOpenChange={setZoomed}
+          images={images}
+        />
+      </div>
+    )
   }
 )
 

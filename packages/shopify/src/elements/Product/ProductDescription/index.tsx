@@ -1,6 +1,6 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef, useContext } from 'react'
-import { ProductContext } from '~/context'
+import React, { forwardRef } from 'react'
+import { useProductContext } from '~/hooks'
 import type { ProductDescriptionProps } from '~/types'
 import { ViewDetails } from './ViewDetails'
 
@@ -13,33 +13,29 @@ let ProductDescription = forwardRef<HTMLDivElement, ProductDescriptionProps>(
       children,
       ...rest
     } = props
-    let context = useContext(ProductContext)
+    let { product } = useProductContext()
+    let style = {
+      WebkitBoxOrient: 'vertical',
+      WebkitLineClamp: lineClamp,
+    } as React.CSSProperties
 
-    if (context) {
-      let { product } = context
-      let style = {
-        WebkitBoxOrient: 'vertical',
-        WebkitLineClamp: lineClamp,
-      } as React.CSSProperties
-      return (
-        <div ref={ref} {...rest}>
-          <div
-            className="wv-product-description"
-            style={style}
-            dangerouslySetInnerHTML={{ __html: product.body_html }}
-          />
-          {showViewDetailsButton && (
-            <ViewDetails viewDetailsText={viewDetailsText}>
-              <div
-                className="wv-product-description-details"
-                dangerouslySetInnerHTML={{ __html: product.body_html }}
-              />
-            </ViewDetails>
-          )}
-        </div>
-      )
-    }
-    return null
+    return (
+      <div ref={ref} {...rest}>
+        <div
+          className="wv-product-description"
+          style={style}
+          dangerouslySetInnerHTML={{ __html: product.body_html }}
+        />
+        {showViewDetailsButton && (
+          <ViewDetails viewDetailsText={viewDetailsText}>
+            <div
+              className="wv-product-description-details"
+              dangerouslySetInnerHTML={{ __html: product.body_html }}
+            />
+          </ViewDetails>
+        )}
+      </div>
+    )
   }
 )
 
