@@ -1,3 +1,4 @@
+import type { ElementCSS } from '@weaverse/core'
 import React, { forwardRef, useContext } from 'react'
 import { WeaverseContext } from '~/context'
 import type { VideoElementProps } from '~/types'
@@ -38,7 +39,7 @@ let Video = forwardRef<HTMLDivElement, VideoElementProps>((props, ref) => {
   )
 })
 
-export let css = {
+export let css: ElementCSS = {
   '@desktop': {
     video: {
       height: '100%',

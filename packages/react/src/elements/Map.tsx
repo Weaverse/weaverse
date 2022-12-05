@@ -1,3 +1,4 @@
+import type { ElementCSS } from '@weaverse/core'
 import React, { forwardRef } from 'react'
 import type { MapElementProps } from '~/types'
 
@@ -18,7 +19,7 @@ let Map = forwardRef<HTMLDivElement, MapElementProps>((props, ref) => {
   )
 })
 
-export let css = {
+export let css: ElementCSS = {
   '@desktop': {
     iframe: {
       border: 'none',
