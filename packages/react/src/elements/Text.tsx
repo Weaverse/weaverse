@@ -20,7 +20,7 @@ export let css = {
 }
 
 Text.defaultProps = {
-  value: 'The quick brown fox jumps over the lazy dog',
+  value: '<p>The quick brown fox jumps over the lazy dog</p>',
 }
 
 export default Text

@@ -1,3 +1,4 @@
+import type { ElementCSS } from '@weaverse/core'
 import React from 'react'
 import type { ImageElementProps } from '~/types'
 
@@ -36,22 +37,24 @@ let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
   }
 )
 
-export let css = {
+export let css: ElementCSS = {
   '@desktop': {
+    display: 'flex',
+    overflow: 'hidden',
     img: {
       width: '100%',
       height: '100%',
       objectFit: 'var(--wv-img-object-fit, cover)',
       objectPosition: 'var(--wv-img-object-position, center)',
-    },
-    '& [data-blink-src]': {
-      visibility: 'hidden',
+      '&[data-blink-src]': {
+        visibility: 'hidden',
+      },
     },
   },
 }
 
 Image.defaultProps = {
-  src: 'https://ucarecdn.com/c413b8fe-ceec-4948-9c42-a0434c4ca920/',
+  src: 'https://ucarecdn.com/cf54e41e-36a0-4547-a140-a302e0387890/',
   alt: 'Image alt text',
   objectFit: 'cover',
   objectPosition: 'center',

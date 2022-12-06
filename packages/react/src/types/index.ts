@@ -1,6 +1,8 @@
 import type { Weaverse, ElementCSS, WeaverseItemStore } from '@weaverse/core'
 import type { CSSProperties, ReactElement, ReactNode } from 'react'
 
+export * from './components'
+
 export interface WeaverseElementProps extends ReactElement {
   css?: ElementCSS
   ['data-wv-type']: string
@@ -74,8 +76,13 @@ interface BackgroundDataProps {
 // Layout
 export interface LayoutElementProps
   extends BackgroundDataProps,
-    GridContentElementProps {
+    WeaverseElementProps {
+  contentSize: number
   gridSize: number
+  rows: number
+  columns: number
+  gap: number
+  rowSize: number
 }
 
 export interface LayoutBackgroundProps {
@@ -147,8 +154,9 @@ export interface InstagramElementProps extends WeaverseElementProps {
 
 export type InstagramMedia = {
   id: string
-  media_type: 'IMAGE' | 'CAROUSEL_ALBUM'
+  media_type: 'IMAGE' | 'CAROUSEL_ALBUM' | 'VIDEO'
   media_url: string
   permalink: string
   caption: string
+  thumbnail_url: string
 }

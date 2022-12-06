@@ -57,12 +57,20 @@ export interface ElementDataInCatalog extends Omit<ElementData, "id"> {
   id: string | number
 }
 
-export type FlagType = "draggable" | "resizable" | "sortable" | "ignoreShortcutKeys" | "hasContextMenu"
+export type FlagType =
+  | "draggable"
+  | "resizable"
+  | "sortable"
+  | "ignoreShortcutKeys"
+  | "hasContextMenu"
+  | "isSortableContext"
 export type ElementFlags = Partial<Record<FlagType, boolean>>
+
+export type ChildElementSelector = string | string[]
 
 export interface ChildElement {
   label: string
-  selector: string
+  selector: ChildElementSelector
 }
 export type ParentType =
   | "container"
@@ -228,6 +236,7 @@ export type InputType =
   | "collection"
   | "article-list"
   | "map-autocomplete"
+  | "layout-background"
 
 declare global {
   interface Window {

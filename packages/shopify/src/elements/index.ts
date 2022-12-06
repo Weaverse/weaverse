@@ -1,5 +1,5 @@
 import type { WeaverseElement } from '@weaverse/core'
-import * as Form from './form'
+import * as Form from './Form'
 import * as CustomHTML from './CustomHTML'
 import * as ArticleList from '~/elements/article/list'
 import * as ArticleBox from '~/elements/article/box'

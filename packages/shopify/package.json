@@ -1,5 +1,5 @@
 {
-  "version": "0.7.27",
+  "version": "0.7.39",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -15,8 +15,9 @@
   },
   "scripts": {
     "start": "npm run dev",
-    "dev": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --watch --external react",
-    "build": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --external react",
+    "dev": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --watch --external react --sourcemap",
+    "build": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --external react --minify",
+    "clean": "rimraf dist",
     "prepublish": "npm run build"
   },
   "peerDependencies": {
@@ -31,10 +32,10 @@
   "name": "@weaverse/shopify",
   "author": "Weaverse Team",
   "dependencies": {
-    "@weaverse/react": "0.7.27",
+    "@weaverse/react": "0.7.39",
     "clsx": "^1.2.1",
-    "keen-slider": "^6.8.3",
-    "nuka-carousel": "^5.4.0",
+    "keen-slider": "^6.8.5",
+    "nuka-carousel": "^5.4.1",
     "react-image-gallery": "^1.2.11"
   }
 }

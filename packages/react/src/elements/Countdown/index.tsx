@@ -85,10 +85,8 @@ let Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
                 value={remaining === 0 ? '--' : timer[time]}
               />
               {time !== 'seconds' && (
-                <div>
-                  <span className={`wv-cd-number ${showColon ? '' : 'hidden'}`}>
-                    :
-                  </span>
+                <div className="wv-cd-separator">
+                  {showColon && <span>:</span>}
                 </div>
               )}
             </React.Fragment>
@@ -113,15 +111,17 @@ export let css: ElementCSS = {
     '.wv-cd-block': {
       width: 48,
       textAlign: 'center',
+      '.wv-cd-label': {
+        fontSize: 10,
+      },
     },
-    '.wv-cd-label': {
-      fontSize: 10,
-    },
-    '& > span': {
-      lineHeight: '100%',
-    },
-    '& .hidden': {
-      visibility: 'hidden',
+    '.wv-cd-separator': {
+      span: {
+        lineHeight: '100%',
+      },
+      '.hidden': {
+        visibility: 'hidden',
+      },
     },
   },
 }

@@ -1,6 +1,7 @@
 import { useKeenSlider } from 'keen-slider/react'
 import { useEffect } from 'react'
 import type { ProductImageHooksInput } from '~/types'
+import { MainSliderResizePlugin as ResizePlugin } from './ResizePlugin'
 import { ThumbnailPlugin } from './ThumbnailPlugin'
 
 export function useMediaSlider(input: ProductImageHooksInput) {
@@ -11,11 +12,14 @@ export function useMediaSlider(input: ProductImageHooksInput) {
     initialIndex = featured_image.position - 1
   }
 
-  let [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
-    initial: initialIndex,
-    slideChanged: onSlideChanged,
-    created: onSliderCreated,
-  })
+  let [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>(
+    {
+      initial: initialIndex,
+      slideChanged: onSlideChanged,
+      created: onSliderCreated,
+    },
+    [ResizePlugin]
+  )
   let [thumbnailRef, thumbnailInstanceRef] = useKeenSlider<HTMLDivElement>(
     {
       initial: initialIndex,
@@ -24,7 +28,7 @@ export function useMediaSlider(input: ProductImageHooksInput) {
         spacing: 10,
       },
     },
-    [ThumbnailPlugin(instanceRef)]
+    [ThumbnailPlugin(instanceRef), ResizePlugin]
   )
 
   useEffect(() => {

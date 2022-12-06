@@ -204,14 +204,15 @@ export class Weaverse {
       if (isIframe && this.isDesignMode && !this.studioBridge) {
         const initStudio = () => {
           this.studioBridge = new window.WeaverseStudioBridge(this)
-          // trigger update to make event listener from studio work
+          // Make event listeners from studio work
           this.triggerUpdate()
         }
 
         if (!window.WeaverseStudioBridge) {
           // load studio bridge script by url: https://weaverse.io/assets/studio/studio-bridge.js
-          const studioBridgeScript = document.createElement("script")
-          studioBridgeScript.src = `${this.appUrl}/assets/studio/studio-bridge.js`
+          let studioBridgeScript = document.createElement("script")
+          let timeStamp = new Date().getTime()
+          studioBridgeScript.src = `${this.appUrl}/assets/studio/studio-bridge.js?t=${timeStamp}`
           studioBridgeScript.type = "module"
           studioBridgeScript.onload = initStudio
           document.body.appendChild(studioBridgeScript)

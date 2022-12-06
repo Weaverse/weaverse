@@ -46,7 +46,7 @@ const ItemComponent = ({ instance }: ItemComponentProps) => {
     let render = (data: ElementData) => setData({ ...data })
     instance.subscribe(render)
     if (isBrowser && !instance.ref.current) {
-      // fallback `ref` if component is not `forwardRef`
+      // Fallback `ref` if the element isn't created by `React.forwardRef`
       Object.assign(instance.ref, {
         current: document.querySelector(`[data-wv-id="${id}"]`),
       })
