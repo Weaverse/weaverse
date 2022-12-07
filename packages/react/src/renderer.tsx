@@ -3,7 +3,7 @@ import { isBrowser } from '@weaverse/core'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { WeaverseContext, WeaverseContextProvider } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
-import { generateItemClass } from './utils'
+import { generateItemClassName } from './utils'
 
 export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
   let [, setData] = useState<ProjectDataType | unknown>(context.projectData)
@@ -66,7 +66,7 @@ const ItemComponent = ({ instance }: ItemComponentProps) => {
         key={id}
         data-wv-type={type}
         data-wv-id={id}
-        className={generateItemClass(instance, stitchesInstance)}
+        className={generateItemClassName(instance, stitchesInstance)}
         {...rest}
       >
         {childIds.map((id) => (
