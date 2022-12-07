@@ -9,19 +9,19 @@ let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
       alt,
       objectFit,
       objectPosition,
-      onClickAction,
+      clickAction,
       openLinkInNewTab,
       linkTo,
       ...rest
     } = props
 
     let style = {
-      '--wv-img-object-fit': objectFit,
-      '--wv-img-object-position': objectPosition,
+      '--img-object-fit': objectFit,
+      '--img-object-position': objectPosition,
     } as React.CSSProperties
 
     let content = <img alt={alt} data-blink-src={src} />
-    if (onClickAction === 'open-link' && linkTo) {
+    if (clickAction === 'openLink' && linkTo) {
       let target = openLinkInNewTab ? '_blank' : '_self'
       content = (
         <a href={linkTo} target={target}>
@@ -44,8 +44,8 @@ export let css: ElementCSS = {
     img: {
       width: '100%',
       height: '100%',
-      objectFit: 'var(--wv-img-object-fit, cover)',
-      objectPosition: 'var(--wv-img-object-position, center)',
+      objectFit: 'var(--img-object-fit, cover)',
+      objectPosition: 'var(--img-object-position, center)',
       '&[data-blink-src]': {
         visibility: 'hidden',
       },
@@ -58,7 +58,7 @@ Image.defaultProps = {
   alt: 'Image alt text',
   objectFit: 'cover',
   objectPosition: 'center',
-  onClickAction: 'open-link',
+  clickAction: 'openLink',
   openLinkInNewTab: false,
   linkTo: '',
 }

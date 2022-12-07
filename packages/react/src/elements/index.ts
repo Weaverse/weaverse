@@ -47,7 +47,6 @@ export const Elements: Record<string, WeaverseElement> = {
     Component: Layout.default,
     type: 'layout',
     defaultCss: Layout.css,
-    permanentCss: Layout.permanentCss,
   },
   Map: {
     Component: Map.default,

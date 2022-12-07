@@ -41,12 +41,11 @@ let Layout = forwardRef<HTMLDivElement, LayoutElementProps>((props, ref) => {
   )
 })
 
-let LayoutBackground = (props: LayoutBackgroundProps) => {
+function LayoutBackground(props: LayoutBackgroundProps) {
   let { bgColor, imgUrl, objectFit } = props
   let style = {
-    ['--bg-color']: bgColor,
-    ['--object-fit']: objectFit,
-    display: 'block',
+    ['--layout-bg-color']: bgColor,
+    ['--layout-bg-image-object-fit']: objectFit,
   } as CSSProperties
 
   if (imgUrl || bgColor) {
@@ -68,6 +67,7 @@ let LayoutBackground = (props: LayoutBackgroundProps) => {
 
 export let css: ElementCSS = {
   '@desktop': {
+    position: 'relative',
     '> [data-layout-content]': {
       paddingTop: 'var(--gap)',
       paddingBottom: 'var(--gap)',
@@ -80,25 +80,21 @@ export let css: ElementCSS = {
       gap: 'var(--gap)',
       maxWidth: 'var(--layout-content-width)',
     },
+    '.wv-layout-background': {
+      display: 'block',
+      position: 'absolute',
+      inset: 0,
+      backgroundColor: 'var(--layout-bg-color)',
+      img: {
+        objectFit: 'var(--layout-bg-image-object-fit, cover)',
+      },
+    },
   },
   '@mobile': {
     padding: '0 16px',
     '> [data-layout-content]': {
       display: 'flex',
       flexDirection: 'column',
-    },
-  },
-}
-
-export let permanentCss = {
-  '@desktop': {
-    '.wv-layout-background': {
-      position: 'absolute',
-      inset: 0,
-      backgroundColor: 'var(--bg-color)',
-    },
-    img: {
-      objectFit: 'var(--object-fit, cover)',
     },
   },
 }
