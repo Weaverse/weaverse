@@ -8,6 +8,7 @@ export interface WeaverseElementProps extends ReactElement {
   ['data-wv-type']: string
   ['data-wv-id']: string
   children?: ReactElement | ReactElement[] | ReactNode | ReactNode[]
+  className?: string
 }
 
 export type WeaverseRootPropsType = { context: Weaverse }
@@ -55,7 +56,7 @@ export interface ImageElementProps extends WeaverseElementProps {
     | 'top right'
     | 'bottom left'
     | 'bottom right'
-  onClickAction: 'none' | 'open-lightbox' | 'open-link'
+  clickAction: 'none' | 'openLightbox' | 'openLink'
   linkTo?: string
   openLinkInNewTab?: boolean
 }
