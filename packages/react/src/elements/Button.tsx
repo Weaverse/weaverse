@@ -10,25 +10,16 @@ export let Button = React.forwardRef<
 >((props, ref) => {
   let { isDesignMode } = useContext(WeaverseContext)
   let { text, clickAction, linkTo, openInNewTab, ...rest } = props
-
-  if (clickAction && linkTo) {
-    return (
-      <a
-        href={!isDesignMode ? linkTo : undefined}
-        target={openInNewTab ? '_blank' : '_self'}
-        rel="noreferrer"
-        {...rest}
-        ref={ref as React.Ref<HTMLAnchorElement>}
-      >
-        {text}
-      </a>
-    )
-  }
-
   return (
-    <button ref={ref as React.Ref<HTMLButtonElement>} {...rest}>
+    <a
+      href={!isDesignMode ? linkTo : undefined}
+      target={openInNewTab ? '_blank' : '_self'}
+      rel="noreferrer"
+      {...rest}
+      ref={ref as React.Ref<HTMLAnchorElement>}
+    >
       {text}
-    </button>
+    </a>
   )
 })
 
@@ -52,6 +43,7 @@ export let css: ElementCSS = {
     height: '42px',
     minWidth: '120px',
     textDecoration: 'none',
+    textAlign: 'center',
     ':hover': {
       backgroundColor: '#222831',
     },
