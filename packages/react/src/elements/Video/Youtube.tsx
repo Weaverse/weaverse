@@ -9,7 +9,7 @@ export function Youtube(props: YoutubeElementProps) {
     loop: loop ? '1' : '0',
     mute: muted ? '1' : '0',
   })
-  let youtubeSrc = `https://www.youtube.com/embed/${youtubeId}?${params.toString()}`
+  let youtubeSrc = `https://www.youtube.com/embed/${youtubeId}?playlist=${youtubeId}&${params.toString()}`
   let allow = `accelerometer;${
     autoPlay ? 'autoplay;' : ''
   } clipboard-write; encrypted-media; gyroscope; picture-in-picture`
