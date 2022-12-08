@@ -1,6 +1,6 @@
 import type { ElementCSS } from '@weaverse/react'
 import { Components } from '@weaverse/react'
-import React, { forwardRef, useRef, useState } from 'react'
+import React, { forwardRef, useState } from 'react'
 import { useProductContext } from '~/hooks'
 import type { ProductBuyButtonProps } from '~/types'
 import { addProductToCart } from '~/utils'
@@ -16,10 +16,8 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
       unavailableText,
       ...rest
     } = props
-    let atcRef = useRef<HTMLButtonElement>(null)
-    let context = useProductContext()
     let [adding, setAdding] = useState(false)
-
+    let context = useProductContext()
     let { formRef, selectedVariant, ready } = context
     let available = selectedVariant?.available
 
@@ -45,7 +43,6 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
         <div className="wv-product-buy-buttons">
           {showQuantitySelector && <QuantitySelector />}
           <button
-            ref={atcRef}
             disabled={adding || !available || !selectedVariant}
             onClick={handleATC}
             type="submit"
@@ -64,7 +61,7 @@ export let css: ElementCSS = {
   '@desktop': {
     marginTop: '20px',
     '.wv-product-quantity-label': {
-      alignSelf: 'flex-start',
+      display: 'inline-block',
       marginBottom: '5px',
       fontWeight: '500',
     },
@@ -115,7 +112,7 @@ export let css: ElementCSS = {
         fontSize: '1em',
         lineHeight: '1',
         textAlign: 'center',
-        transition: 'background 0.2s ease-in-out',
+        transition: 'background-color 0.2s ease-in-out',
         position: 'relative',
         overflow: 'hidden',
         '&:hover': {
