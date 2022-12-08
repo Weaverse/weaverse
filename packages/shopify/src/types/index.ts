@@ -91,6 +91,7 @@ export interface ProductDescriptionProps extends WeaverseElementProps {
   lineClamp: number
   showViewDetailsButton: boolean
   viewDetailsText: string
+  viewDetailsClickAction: 'viewDetails' | 'goToProductPage'
 }
 
 export interface ProductDescriptionViewDetailsProps {
