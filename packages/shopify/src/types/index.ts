@@ -116,6 +116,7 @@ export interface ProductMetaProps extends WeaverseElementProps {
 
 export interface ProductPriceProps extends WeaverseElementProps {
   showCompareAt: boolean
+  showComparePriceFirst: boolean
   showSaleBadge: boolean
 }
 

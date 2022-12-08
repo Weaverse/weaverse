@@ -7,7 +7,7 @@ import { formatMoney } from '~/utils'
 
 let ProductPrice = forwardRef<HTMLDivElement, ProductPriceProps>(
   (props, ref) => {
-    let { showCompareAt, showSaleBadge, ...rest } = props
+    let { showCompareAt, showComparePriceFirst, showSaleBadge, ...rest } = props
     let context = useProductContext()
     let [variant, setVariant] = useState(context.selectedVariant)
 
@@ -34,16 +34,20 @@ let ProductPrice = forwardRef<HTMLDivElement, ProductPriceProps>(
       )
     }
 
+    let comparePrice =
+      showCompareAt && compare_at_price ? (
+        <s className="wv-compare-price">
+          {formatMoney(compare_at_price, money_format)}
+        </s>
+      ) : null
+
     return (
       <div ref={ref} {...rest}>
+        {showComparePriceFirst ? comparePrice : null}
         <span className="wv-sale-price">
           {formatMoney(price, money_format)}
         </span>
-        {showCompareAt && compare_at_price ? (
-          <s className="wv-compare-price">
-            {formatMoney(compare_at_price, money_format)}
-          </s>
-        ) : null}
+        {showComparePriceFirst ? null : comparePrice}
         {showSaleBadge && savedPercentage > 0 ? (
           <span className="wv-sale-badge">Save {savedPercentage}%</span>
         ) : null}
@@ -54,6 +58,7 @@ let ProductPrice = forwardRef<HTMLDivElement, ProductPriceProps>(
 
 ProductPrice.defaultProps = {
   showCompareAt: true,
+  showComparePriceFirst: false,
   showSaleBadge: true,
 }
 
@@ -66,10 +71,10 @@ export let css: ElementCSS = {
       lineHeight: '32px',
     },
     '.wv-compare-price': {
-      color: '#666666',
-      marginLeft: '8px',
-      fontSize: '16px',
-      lineHeight: '24px',
+      color: 'rgba(33, 33, 33, .75)',
+      marginLeft: '12px',
+      fontSize: '24px',
+      lineHeight: '32px',
     },
     '.wv-sale-badge': {
       color: '#ffffff',
@@ -78,8 +83,8 @@ export let css: ElementCSS = {
       display: 'inline-flex',
       marginLeft: '12px',
       height: '22px',
-      borderRadius: '11px',
-      fontSize: '11px',
+      borderRadius: '20px',
+      fontSize: '12px',
       fontWeight: '600',
       lineHeight: '16px',
       padding: '2px 10px',
