@@ -79,7 +79,7 @@ let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
       )
     }
     return (
-      <div ref={ref} {...rest}>
+      <div ref={ref} data-has-only-default-variant {...rest}>
         <input type="hidden" name="id" value={selectedVariant?.id} />
       </div>
     )
@@ -193,6 +193,9 @@ export let css: ElementCSS = {
           },
         },
       },
+    },
+    '&[data-has-only-default-variant]': {
+      display: 'none',
     },
   },
 }
