@@ -1,37 +1,39 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef, useContext } from 'react'
-import { ProductContext } from '~/context'
+import React, { forwardRef } from 'react'
+import { useProductContext } from '~/hooks'
 import type { ProductVendorProps } from '~/types'
 
 let ProductVendor = forwardRef<HTMLDivElement, ProductVendorProps>(
   (props, ref) => {
-    let { showLabel, labelText, ...rest } = props
-    let context = useContext(ProductContext)
-
-    if (context) {
-      let { product } = context
-      return (
-        <div ref={ref} {...rest}>
-          {showLabel && (
-            <span className="wv-product-vendor__label">{labelText}</span>
-          )}
+    let { showLabel, labelText, clickAction, openInNewTab, ...rest } = props
+    let { product } = useProductContext()
+    return (
+      <div ref={ref} {...rest}>
+        {showLabel && (
+          <span className="wv-product-vendor__label">{labelText}</span>
+        )}
+        {clickAction === 'none' ? (
+          <span className="wv-produt-vendor__text">{product.vendor}</span>
+        ) : (
           <a
-            target="_self"
+            target={openInNewTab ? '_blank' : '_self'}
             href={`/collections/vendors?q=${product.vendor}`}
-            className="wv-produt-vendor__link"
+            className="wv-produt-vendor__text"
+            rel="noreferrer"
           >
             {product.vendor}
           </a>
-        </div>
-      )
-    }
-    return null
+        )}
+      </div>
+    )
   }
 )
 
 ProductVendor.defaultProps = {
   showLabel: true,
   labelText: 'By',
+  clickAction: 'openLink',
+  openInNewTab: true,
 }
 
 export let css: ElementCSS = {
@@ -44,15 +46,13 @@ export let css: ElementCSS = {
     '.wv-product-vendor__label': {
       fontSize: '15px',
       lineHeight: '1.4em',
-      fontWeight: '600',
+      fontWeight: 'bold',
       marginRight: '4px',
     },
-    '.wv-produt-vendor__link': {
+    '.wv-produt-vendor__text': {
       color: '#666666',
       textDecoration: 'underline',
       textUnderlineOffset: '2px',
-      textDecorationColor: 'rgba(193, 100, 82, 0.4)',
-      textDecorationThickness: '1px',
       textTransform: 'capitalize',
     },
   },

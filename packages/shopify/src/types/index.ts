@@ -84,12 +84,14 @@ export interface MediaFullscreenSliderProps {
 
 export interface ProductTitleProps extends WeaverseElementProps {
   htmlTag: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p'
+  clickAction: 'none' | 'goToProductPage'
 }
 
 export interface ProductDescriptionProps extends WeaverseElementProps {
   lineClamp: number
   showViewDetailsButton: boolean
   viewDetailsText: string
+  viewDetailsClickAction: 'viewDetails' | 'goToProductPage'
 }
 
 export interface ProductDescriptionViewDetailsProps {
@@ -100,6 +102,8 @@ export interface ProductDescriptionViewDetailsProps {
 export interface ProductVendorProps extends WeaverseElementProps {
   showLabel: boolean
   labelText: string
+  clickAction: 'none' | 'openLink'
+  openInNewTab: boolean
 }
 
 export interface ProductMetaProps extends WeaverseElementProps {
@@ -113,6 +117,7 @@ export interface ProductMetaProps extends WeaverseElementProps {
 
 export interface ProductPriceProps extends WeaverseElementProps {
   showCompareAt: boolean
+  showComparePriceFirst: boolean
   showSaleBadge: boolean
 }
 

@@ -1,6 +1,7 @@
 import type { ElementCSS } from '@weaverse/react'
+import { WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext } from 'react'
-import { ProductContext } from '~/context'
+import { useProductContext } from '~/hooks'
 import type { ProductDescriptionProps } from '~/types'
 import { ViewDetails } from './ViewDetails'
 
@@ -10,36 +11,63 @@ let ProductDescription = forwardRef<HTMLDivElement, ProductDescriptionProps>(
       lineClamp,
       showViewDetailsButton,
       viewDetailsText,
+      viewDetailsClickAction,
       children,
       ...rest
     } = props
-    let context = useContext(ProductContext)
+    let { product } = useProductContext()
+    let style = {
+      WebkitBoxOrient: 'vertical',
+      WebkitLineClamp: lineClamp,
+    } as React.CSSProperties
 
-    if (context) {
-      let { product } = context
-      let style = {
-        WebkitBoxOrient: 'vertical',
-        WebkitLineClamp: lineClamp,
-      } as React.CSSProperties
-      return (
-        <div ref={ref} {...rest}>
-          <div
-            className="wv-product-description"
-            style={style}
-            dangerouslySetInnerHTML={{ __html: product.body_html }}
-          />
-          {showViewDetailsButton && (
-            <ViewDetails viewDetailsText={viewDetailsText}>
-              <div
-                className="wv-product-description-details"
-                dangerouslySetInnerHTML={{ __html: product.body_html }}
-              />
-            </ViewDetails>
-          )}
-        </div>
-      )
+    let { isDesignMode } = useContext(WeaverseContext)
+    let shopData = window.weaverseShopifyConfigs?.shopData || {}
+    let isNotProductPage = shopData?.request?.page_type !== 'product'
+
+    let goToProductPage = () => {
+      if (!isDesignMode) {
+        let { root_url = '/' } =
+          window.weaverseShopifyConfigs?.shopData?.routes || {}
+        let url = `${root_url}products/${product.handle}`
+        window.location.href = url
+      }
     }
-    return null
+
+    let viewDetailsButton = null
+    if (showViewDetailsButton) {
+      if (viewDetailsClickAction === 'goToProductPage' && isNotProductPage) {
+        viewDetailsButton = (
+          <button
+            className="wv-view-details-button"
+            onClick={goToProductPage}
+            type="button"
+          >
+            {viewDetailsText}
+          </button>
+        )
+      } else {
+        viewDetailsButton = (
+          <ViewDetails viewDetailsText={viewDetailsText}>
+            <div
+              className="wv-product-description-details"
+              dangerouslySetInnerHTML={{ __html: product.body_html }}
+            />
+          </ViewDetails>
+        )
+      }
+    }
+
+    return (
+      <div ref={ref} {...rest}>
+        <div
+          className="wv-product-description"
+          style={style}
+          dangerouslySetInnerHTML={{ __html: product.body_html }}
+        />
+        {viewDetailsButton}
+      </div>
+    )
   }
 )
 

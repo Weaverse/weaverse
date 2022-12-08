@@ -1,16 +1,19 @@
-import type { WeaverseItemStore } from '@weaverse/core'
+import type Stitches from '@stitches/react/types/stitches'
+import type { ElementCSS, WeaverseItemStore } from '@weaverse/core'
+import clsx from 'clsx'
 
 // Make the css data formatted to correct order (desktop, tablet, mobile)
-function shortCssObject(css: { [key: string]: any }) {
+function formatCSS(css: ElementCSS) {
   return {
     '@desktop': css['@desktop'],
     '@mobile': css['@mobile'],
   }
 }
-let permanentClasses: any = {}
-export function generateItemClass(
+
+let permanentClasses: Record<string, string> = {}
+export function generateItemClassName(
   instance: WeaverseItemStore,
-  stitchesInstance: any
+  stitchesInstance: Stitches
 ) {
   let { css, type, className: cls = '' } = instance.data
   let className = ''
@@ -20,6 +23,7 @@ export function generateItemClass(
     if (type in permanentClasses) {
       permanentClass = permanentClasses[type]
     } else {
+      // @ts-ignore
       let { className: perCls } = stitchesInstance.css(perCss)()
       Object.assign(permanentClasses, { [type]: perCls })
       permanentClass = perCls
@@ -29,16 +33,16 @@ export function generateItemClass(
   if (css) {
     // let stitches create the style from css object and
     // then return the classname, so we can use it in the render
-    let formattedCss = shortCssObject(css)
-    let { className: newClass = '' } = stitchesInstance.css(formattedCss)()
+    let formattedCss = formatCSS(css)
+    let newStitchesClass = stitchesInstance.css(formattedCss)().className || ''
     let { stitchesClass } = instance
     let otherClass = (instance.ref.current?.className || '')
       .replace(stitchesClass, '')
       .replace(cls, '')
       .replace(permanentClass, '')
       .trim()
-    className = `${permanentClass} ${cls} ${newClass} ${otherClass}`.trim()
-    instance.stitchesClass = newClass
+    className = clsx(permanentClass, cls, newStitchesClass, otherClass)
+    instance.stitchesClass = newStitchesClass
   }
   return className
 }

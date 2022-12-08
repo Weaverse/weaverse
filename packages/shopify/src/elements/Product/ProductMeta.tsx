@@ -1,46 +1,41 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef, useContext } from 'react'
-import { ProductContext } from '~/context'
+import React, { forwardRef } from 'react'
+import { useProductContext } from '~/hooks'
 import type { ProductMetaProps } from '~/types'
 
 let ProductMeta = forwardRef<HTMLDivElement, ProductMetaProps>((props, ref) => {
   let { showSKU, showTags, showVendor, showType, ...rest } = props
-  let context = useContext(ProductContext)
-
-  if (context) {
-    let { product, selectedVariant } = context
-    return (
-      <div ref={ref} {...rest}>
-        <ul className="wv-product-meta">
-          {showSKU ? (
-            <li>
-              <div className="meta-label">SKU:</div>
-              <div className="meta-value">{selectedVariant?.sku || 'N/A'}</div>
-            </li>
-          ) : null}
-          {showTags && product.tags.length ? (
-            <li>
-              <div className="meta-label">Tags:</div>
-              <div className="meta-value">{product.tags}</div>
-            </li>
-          ) : null}
-          {showVendor && product.vendor ? (
-            <li>
-              <div className="meta-label">Vendor:</div>
-              <div className="meta-value">{product.vendor}</div>
-            </li>
-          ) : null}
-          {showType && product.product_type ? (
-            <li>
-              <div className="meta-label">Category:</div>
-              <div className="meta-value">{product.product_type}</div>
-            </li>
-          ) : null}
-        </ul>
-      </div>
-    )
-  }
-  return null
+  let { product, selectedVariant } = useProductContext()
+  return (
+    <div ref={ref} {...rest}>
+      <ul className="wv-product-meta">
+        {showSKU ? (
+          <li>
+            <div className="meta-label">SKU:</div>
+            <div className="meta-value">{selectedVariant?.sku || 'N/A'}</div>
+          </li>
+        ) : null}
+        {showTags && product.tags.length ? (
+          <li>
+            <div className="meta-label">Tags:</div>
+            <div className="meta-value">{product.tags}</div>
+          </li>
+        ) : null}
+        {showVendor && product.vendor ? (
+          <li>
+            <div className="meta-label">Vendor:</div>
+            <div className="meta-value">{product.vendor}</div>
+          </li>
+        ) : null}
+        {showType && product.product_type ? (
+          <li>
+            <div className="meta-label">Category:</div>
+            <div className="meta-value">{product.product_type}</div>
+          </li>
+        ) : null}
+      </ul>
+    </div>
+  )
 })
 
 ProductMeta.defaultProps = {

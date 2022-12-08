@@ -1,17 +1,39 @@
 import type { ElementCSS } from '@weaverse/react'
+import { WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext } from 'react'
-import { ProductContext } from '~/context'
+import { useProductContext } from '~/hooks'
 import type { ProductTitleProps } from '~/types'
 
 let ProductTitle = forwardRef<HTMLElement, ProductTitleProps>((props, ref) => {
-  let { htmlTag, ...rest } = props
-  let context = useContext(ProductContext)
+  let { htmlTag, clickAction, ...rest } = props
+  let { isDesignMode } = useContext(WeaverseContext)
+  let { product } = useProductContext()
 
-  if (context) {
-    let { product } = context
-    return React.createElement(htmlTag, { ref, ...rest }, product.title)
+  let shopData = window.weaverseShopifyConfigs?.shopData || {}
+  let isNotProductPage = shopData?.request?.page_type !== 'product'
+
+  let handleClick = () => {
+    if (!isDesignMode) {
+      if (clickAction === 'goToProductPage' && isNotProductPage) {
+        let { root_url = '/' } =
+          window.weaverseShopifyConfigs?.shopData?.routes || {}
+        let url = `${root_url}products/${product.handle}`
+        window.location.href = url
+      }
+    }
   }
-  return null
+
+  return React.createElement(
+    htmlTag,
+    {
+      ref,
+      onClick: handleClick,
+      'data-go-to-product':
+        clickAction === 'goToProductPage' && isNotProductPage,
+      ...rest,
+    },
+    product.title
+  )
 })
 
 export let css: ElementCSS = {
@@ -26,6 +48,9 @@ export let css: ElementCSS = {
     marginBottom: '24px',
     marginLeft: '0px',
     marginRight: '0px',
+    '&[data-go-to-product="true"]': {
+      cursor: 'pointer',
+    },
   },
 }
 

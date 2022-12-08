@@ -132,6 +132,15 @@ export function createGlobalStyles(stitches: Stitches) {
         animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
     },
+    ".wv-error-boundary": {
+      textAlign: "center",
+      padding: "32px 0",
+      button: {
+        cursor: "pointer",
+        fontSize: "14px",
+        padding: "4px 10px",
+      },
+    },
   })
   globalStyles()
 }

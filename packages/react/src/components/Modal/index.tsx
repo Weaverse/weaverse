@@ -13,33 +13,17 @@ import {
   StyledOverlay,
   StyledTitle,
 } from './styled'
+import { useOpenChangeEffect } from './useOpenChangeEffect'
 
 export let Modal = (props: DialogProps) => {
   let { children, open, defaultOpen, onOpenChange, ...rest } = props
-
-  useEffect(() => {
-    let isOpen = open || defaultOpen
-    if (isOpen) {
-      document.body.classList.add('wv-modal-open')
-    } else {
-      document.body.classList.remove('wv-modal-open')
-    }
-  }, [open, defaultOpen])
-
-  let handleOpenChange = (open: boolean) => {
-    if (open) {
-      document.body.classList.add('wv-modal-open')
-    } else {
-      document.body.classList.remove('wv-modal-open')
-    }
-    onOpenChange?.(open)
-  }
+  let handleOpenChange = useOpenChangeEffect(props)
 
   return (
     <Root
-      onOpenChange={handleOpenChange}
       open={open}
       defaultOpen={defaultOpen}
+      onOpenChange={handleOpenChange}
       {...rest}
     >
       {children}
