@@ -79,8 +79,9 @@ export let css: ElementCSS = {
     '.wv-sale-badge': {
       color: '#ffffff',
       backgroundColor: '#da3f3f',
-      alignItems: 'center',
       display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
       marginLeft: '12px',
       height: '22px',
       borderRadius: '20px',
