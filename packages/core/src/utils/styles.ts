@@ -79,6 +79,9 @@ export function createGlobalStyles(stitches: Stitches) {
       "&.wv-modal-open": {
         ".weaverse-content-root": {
           zIndex: 9999,
+          '[data-wv-type="product-details"]': {
+            zIndex: 999,
+          },
         },
       },
     },
