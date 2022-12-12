@@ -1,5 +1,5 @@
 {
-  "version": "0.7.40",
+  "version": "0.7.41",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -32,6 +32,6 @@
   "name": "@weaverse/hydrogen",
   "author": "Weaverse Team",
   "dependencies": {
-    "@weaverse/react": "0.7.40"
+    "@weaverse/react": "0.7.41"
   }
 }
