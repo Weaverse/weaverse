@@ -10,13 +10,21 @@ export let Button = React.forwardRef<
 >((props, ref) => {
   let { isDesignMode } = useContext(WeaverseContext)
   let { text, clickAction, linkTo, openInNewTab, ...rest } = props
+
+  if (clickAction === 'none') {
+    return (
+      <button ref={ref as React.MutableRefObject<HTMLButtonElement>} {...rest}>
+        {text}
+      </button>
+    )
+  }
   return (
     <a
+      ref={ref as React.MutableRefObject<HTMLAnchorElement>}
       href={!isDesignMode ? linkTo : undefined}
       target={openInNewTab ? '_blank' : '_self'}
       rel="noreferrer"
       {...rest}
-      ref={ref as React.Ref<HTMLAnchorElement>}
     >
       {text}
     </a>

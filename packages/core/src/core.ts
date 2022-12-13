@@ -16,7 +16,7 @@ import type {
   WeaverseElement,
   WeaverseType,
 } from "./types"
-import { createGlobalStyles, isIframe, stichesUtils } from "./utils"
+import { createGlobalStyles, isIframe, merge, stichesUtils } from "./utils"
 
 /**
  * WeaverseItemStore is a store for Weaverse item, it can be used to subscribe/update the item data
@@ -68,9 +68,11 @@ export class WeaverseItemStore {
   }
 
   get data(): ElementData {
-    let css = this.Element?.defaultCss
-    let defaultData = { ...this.Element?.Component?.defaultProps, ...(css && { css }) }
-    return { ...defaultData, ...this._data }
+    let defaultCss = this.Element?.defaultCss || {}
+    let currentCss = this._data.css || {}
+    let css = merge(defaultCss, currentCss)
+    let defaultData = { ...this.Element?.Component?.defaultProps }
+    return { ...defaultData, ...this._data, css }
   }
 
   setData = (data: Omit<ElementData, "id" | "type">) => {
@@ -276,8 +278,8 @@ export class Weaverse {
     projectKey?: string
   }) {
     return fetch(appUrl + `/api/public/project/${projectKey}`)
-      .then((r: Response) => r.json())
-      .catch(console.error)
+      .then((res: Response) => res.json())
+      .catch((err: Error) => console.log("Error fetching project data:", err))
   }
   setProjectData(projectData: ProjectDataType) {
     this.projectData = projectData
