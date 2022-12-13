@@ -69,9 +69,6 @@ export class WeaverseItemStore {
   }
 
   get data(): ElementData {
-    // let css = this.Element?.defaultCss
-    // let defaultData = { ...this.Element?.Component?.defaultProps, ...(css && { css }) }
-    // return { ...defaultData, ...this._data }
     let defaultCss = this.Element?.defaultCss || {}
     let currentCss = this._data.css || {}
     let css = merge(defaultCss, currentCss)
