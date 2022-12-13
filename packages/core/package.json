@@ -23,7 +23,6 @@
   "name": "@weaverse/core",
   "author": "Weaverse Team",
   "dependencies": {
-    "@stitches/core": "^1.2.8",
-    "deepmerge": "^4.2.2"
+    "@stitches/core": "^1.2.8"
   }
 }

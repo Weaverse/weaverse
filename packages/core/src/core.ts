@@ -6,7 +6,6 @@
 // using stitches core only for framework-agnostic code
 import * as stitches from "@stitches/core"
 import type Stitches from "@stitches/core/types/stitches"
-import merge from "deepmerge"
 import type { RefObject } from "react"
 import type {
   BreakPoints,
@@ -17,7 +16,7 @@ import type {
   WeaverseElement,
   WeaverseType,
 } from "./types"
-import { createGlobalStyles, isIframe, stichesUtils } from "./utils"
+import { createGlobalStyles, isIframe, merge, stichesUtils } from "./utils"
 
 /**
  * WeaverseItemStore is a store for Weaverse item, it can be used to subscribe/update the item data
