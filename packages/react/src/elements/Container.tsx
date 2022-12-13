@@ -15,15 +15,11 @@ let Container = forwardRef<HTMLDivElement, ContainerElementProps>(
 
 export let css: ElementCSS = {
   '@desktop': {
-    alignItems: 'flex-start',
     display: 'flex',
-    flexDirection: 'column',
-    gridArea: '1 / 1 / 3 / 6',
-    height: 'fit-content',
+    alignItems: 'flex-start',
     justifyContent: 'flex-start',
+    gridArea: '1 / 1 / 3 / 6',
     overflow: 'hidden',
-    textAlign: 'left',
-    width: '100%',
   },
 }
 
