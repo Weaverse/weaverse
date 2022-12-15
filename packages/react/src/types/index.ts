@@ -84,6 +84,8 @@ export interface LayoutElementProps
   columns: number
   gap: number
   rowSize: number
+  enableOverlay: boolean
+  overlayOpacity: number
 }
 
 export interface LayoutBackgroundProps {

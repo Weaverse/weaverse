@@ -1,7 +1,8 @@
 import type { ElementCSS } from '@weaverse/core'
-import type { CSSProperties } from 'react'
 import React, { forwardRef } from 'react'
-import type { LayoutElementProps, LayoutBackgroundProps } from '~/types'
+import type { LayoutElementProps } from '~/types'
+import { Background } from './Background'
+import { Overlay } from './Overlay'
 
 let Layout = forwardRef<HTMLDivElement, LayoutElementProps>((props, ref) => {
   let {
@@ -15,6 +16,8 @@ let Layout = forwardRef<HTMLDivElement, LayoutElementProps>((props, ref) => {
     backgroundColor,
     backgroundImage,
     objectFit,
+    enableOverlay,
+    overlayOpacity,
     ...rest
   } = props
   let style = {
@@ -31,39 +34,16 @@ let Layout = forwardRef<HTMLDivElement, LayoutElementProps>((props, ref) => {
 
   return (
     <div ref={ref} {...rest} style={style}>
-      <LayoutBackground
+      <Background
         imgUrl={backgroundImage}
         bgColor={backgroundColor}
         objectFit={objectFit}
       />
+      <Overlay enableOverlay={enableOverlay} overlayOpacity={overlayOpacity} />
       <div data-layout-content>{children}</div>
     </div>
   )
 })
-
-function LayoutBackground(props: LayoutBackgroundProps) {
-  let { bgColor, imgUrl, objectFit } = props
-  let style = {
-    ['--layout-bg-color']: bgColor,
-    ['--layout-bg-image-object-fit']: objectFit,
-  } as CSSProperties
-
-  if (imgUrl || bgColor) {
-    return (
-      <div style={style} className="wv-layout-background">
-        {imgUrl && (
-          <img
-            width="100%"
-            height="100%"
-            data-blink-src={imgUrl}
-            alt="Section background"
-          />
-        )}
-      </div>
-    )
-  }
-  return null
-}
 
 export let css: ElementCSS = {
   '@desktop': {
@@ -88,6 +68,12 @@ export let css: ElementCSS = {
       img: {
         objectFit: 'var(--layout-bg-image-object-fit, cover)',
       },
+    },
+    '.wv-layout-overlay': {
+      display: 'block',
+      position: 'absolute',
+      inset: 0,
+      backgroundColor: 'rgba(0, 0, 0, var(--layout-overlay-opacity, 0.5))',
     },
   },
   '@mobile': {
