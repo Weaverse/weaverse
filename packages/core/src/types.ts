@@ -229,14 +229,15 @@ export type InputType =
   // Element inputs
   | "form"
   | "product"
+  | "product-list"
   | "product-swatches"
+  | "text-editor"
   | "custom.html"
   | "instagram"
   | "collection-list"
   | "collection"
   | "article-list"
   | "map-autocomplete"
-  | "layout-background"
 
 declare global {
   interface Window {
