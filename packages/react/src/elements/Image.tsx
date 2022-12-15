@@ -58,7 +58,7 @@ Image.defaultProps = {
   alt: 'Image alt text',
   objectFit: 'cover',
   objectPosition: 'center',
-  clickAction: 'openLink',
+  clickAction: 'none',
   openLinkInNewTab: false,
   linkTo: '',
 }
