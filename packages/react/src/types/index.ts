@@ -135,6 +135,7 @@ export interface CountdownElementProps extends WeaverseElementProps {
   startTime: number
   endTime: number
   periods: number
+  redirectWhenTimerStops: boolean
   redirectUrl: string
   openInNewTab: boolean
   showLabel: boolean
