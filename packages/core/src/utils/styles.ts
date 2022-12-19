@@ -75,6 +75,9 @@ export function createGlobalStyles(stitches: Stitches) {
       backgroundClip: "content-box",
       padding: "10px",
     },
+    "[data-blink-src]": {
+      visibility: "hidden",
+    },
     body: {
       "&.wv-modal-open": {
         ".weaverse-content-root": {
