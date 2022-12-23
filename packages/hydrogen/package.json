@@ -32,6 +32,6 @@
   "name": "@weaverse/hydrogen",
   "author": "Weaverse Team",
   "dependencies": {
-    "@weaverse/react": "0.7.44"
+    "@weaverse/react": "0.7.45"
   }
 }

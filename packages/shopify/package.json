@@ -32,11 +32,9 @@
   "name": "@weaverse/shopify",
   "author": "Weaverse Team",
   "dependencies": {
-    "@weaverse/react": "0.7.44",
+    "@weaverse/react": "0.7.45",
     "clsx": "^1.2.1",
     "keen-slider": "^6.8.5",
-    "nuka-carousel": "^5.4.1",
-    "react-error-boundary": "^3.1.4",
-    "react-image-gallery": "^1.2.11"
+    "react-error-boundary": "^3.1.4"
   }
 }
