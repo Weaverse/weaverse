@@ -3,10 +3,8 @@ import type { CSSProperties, ReactElement, ReactNode } from 'react'
 
 export * from './components'
 
-export interface WeaverseElementProps extends ReactElement {
+export interface WeaverseElementProps extends Partial<ReactElement> {
   css?: ElementCSS
-  ['data-wv-type']: string
-  ['data-wv-id']: string
   children?: ReactElement | ReactElement[] | ReactNode | ReactNode[]
   className?: string
 }

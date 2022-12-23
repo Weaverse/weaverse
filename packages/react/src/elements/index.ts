@@ -37,12 +37,12 @@ export const Elements: Record<string, WeaverseElement> = {
     type: 'image',
     defaultCss: Image.css,
   },
-  Instagram: {
-    Component: Instagram.default,
-    type: 'instagram',
-    defaultCss: Instagram.css,
-    permanentCss: Instagram.permanentCss,
-  },
+  // Instagram: {
+  //   Component: Instagram.default,
+  //   type: 'instagram',
+  //   defaultCss: Instagram.css,
+  //   permanentCss: Instagram.permanentCss,
+  // },
   Layout: {
     Component: Layout.default,
     type: 'layout',
