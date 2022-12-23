@@ -3,10 +3,11 @@ import React from 'react'
 import type { LayoutBackgroundProps } from '~/types'
 
 export function Background(props: LayoutBackgroundProps) {
-  let { bgColor, imgUrl, objectFit } = props
+  let { bgColor, imgUrl, objectFit, objectPosition } = props
   let style = {
     ['--layout-bg-color']: bgColor,
     ['--layout-bg-image-object-fit']: objectFit,
+    ['--layout-bg-image-position']: objectPosition,
   } as CSSProperties
 
   if (imgUrl || bgColor) {

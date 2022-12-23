@@ -71,6 +71,7 @@ interface BackgroundDataProps {
   backgroundColor?: string
   backgroundImage?: string
   objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down'
+  objectPosition?: string
 }
 // Layout
 export interface LayoutElementProps
@@ -90,6 +91,7 @@ export interface LayoutBackgroundProps {
   imgUrl?: string
   bgColor?: string
   objectFit?: CSSProperties['objectFit']
+  objectPosition?: CSSProperties['objectPosition']
 }
 
 // Map
