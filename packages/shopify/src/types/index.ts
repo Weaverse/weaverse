@@ -30,18 +30,41 @@ export interface ProductListContextProps {
   productId?: string | number
 }
 
-export interface ProductListProps extends WeaverseElementProps {
+export interface ProductCardProps {
+  product: ShopifyProduct
+  imageAspectRatio: AspectRatio
+  showSecondImageOnHover: boolean
+  showSaleBadge: boolean
+  showViewDetailsButton: boolean
+  viewDetailsButtonText: string
+  showQuickViewButton: boolean
+  className?: string
+}
+
+export interface ProductCardButtonsProps
+  extends Pick<
+    ProductCardProps,
+    'showViewDetailsButton' | 'viewDetailsButtonText' | 'showQuickViewButton'
+  > {
+  product: ShopifyProduct
+}
+
+export interface ProductListProps
+  extends WeaverseElementProps,
+    ProductCardProps {
+  source: 'recommended' | 'recentlyView' | 'collection' | 'fixedProducts'
   collectionId: number
   collectionHandle: string
-  productNumber: number
-  itemsPerSlide: number
-  itemsSpacing: number
+  productIds: number[]
+  layout: 'grid' | 'slider'
+  productCount: number
+  productsPerRow: number
+  gap: number
 }
 
 export interface ProductDetailsProps extends WeaverseElementProps {
   productId: number | 'default'
-  // For generating product liquid data by SSR
-  productHandle: string
+  productHandle: string // For generating product liquid data in SSR
   useDefaultProduct: boolean
 }
 
@@ -55,9 +78,12 @@ export interface ProductMediaProps extends WeaverseElementProps {
   mediaSize: ProductMediaSize
   aspectRatio: AspectRatio
   fallbackImage: string
+  allowFullscreen: boolean
+  thumbnailSlidePerView: number
 }
 export interface ProductImageHooksInput {
   context: ProductContextType | null
+  thumbnailSlidePerView: number
   onSlideChanged?: (slider: KeenSliderInstance) => void
   onSliderCreated?: (slider: KeenSliderInstance) => void
 }
@@ -131,19 +157,20 @@ export interface ProductBuyButtonProps extends WeaverseElementProps {
 
 export interface ProductVariantProps extends WeaverseElementProps {
   optionsStyle: 'combined' | 'custom'
+  showTooltip: boolean
   hideUnavailableOptions: boolean
 }
 export interface CombinedVariantProps {
   context: ProductContextType
 }
-export interface OptionValuesProps {
+export interface OptionValuesProps
+  extends Pick<ProductVariantProps, 'showTooltip' | 'hideUnavailableOptions'> {
   product: ShopifyProduct
   option: ShopifyProductOption
   type: OptionDisplayType
   selectedValue: string | null | undefined
   selectedOptions: string[]
   onSelect: (position: number, value: string) => void
-  hideUnavailableOptions: boolean
 }
 export interface ArticleBoxProps extends WeaverseElementProps {
   articleId: number
@@ -215,7 +242,7 @@ declare global {
   interface Window {
     weaverseShopifyConfigs: ShopifyGlobalConfigs
     weaverseShopifyProducts: Record<number, ShopifyProduct>
-    weaverseShopifyProductsByCollection: Record<number, ShopifyProduct>
+    weaverseShopifyProductsByCollection: Record<number, number[]>
     weaverseShopifyCollections: Record<number, ShopifyCollection>
     weaverseShopifyArticles: Record<number, ShopifyArticle>
     weaverseShopifyBlogs: Record<number, ShopifyArticle>

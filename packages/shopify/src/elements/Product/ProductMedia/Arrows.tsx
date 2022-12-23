@@ -1,6 +1,7 @@
+import type { ElementCSS } from '@weaverse/react'
 import { Components } from '@weaverse/react'
 import clsx from 'clsx'
-import type { HTMLAttributes, MouseEvent } from 'react'
+import type { MouseEvent } from 'react'
 import React from 'react'
 import type { ProductMediaArrowsProps } from '~/types'
 let { Icon } = Components
@@ -45,4 +46,47 @@ export function Arrows({ currentSlide, instanceRef }: ProductMediaArrowsProps) {
       </button>
     </>
   )
+}
+
+export let css: ElementCSS = {
+  '@desktop': {
+    '.wv-slider-arrow': {
+      position: 'absolute',
+      top: '50%',
+      transform: 'translateY(-50%)',
+      width: '44px',
+      height: '44px',
+      padding: '8px',
+      color: '#191919',
+      backgroundColor: '#f2f2f2',
+      textAlign: 'center',
+      transition: 'all 0.2s ease-in-out',
+      borderRadius: '4px',
+      border: 'none',
+      cursor: 'pointer',
+      '&:hover': {
+        backgroundColor: '#191919',
+        color: '#f2f2f2',
+      },
+      svg: {
+        verticalAlign: 'middle',
+        width: '22px',
+        height: '22px',
+      },
+      '&.arrow--left': {
+        left: '10px',
+      },
+      '&.arrow--right': {
+        right: '10px',
+      },
+      '&.arrow--disabled': {
+        opacity: 0.5,
+      },
+    },
+  },
+  '@mobile': {
+    '.wv-slider-arrow': {
+      display: 'none',
+    },
+  },
 }

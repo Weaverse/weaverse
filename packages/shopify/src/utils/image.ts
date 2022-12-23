@@ -24,19 +24,3 @@ export function resizeImage(imageURL: string, size: string): string {
     return imageURL
   }
 }
-
-/**
- * Get product image aspect_ratio.
- *
- * @param product {ShopifyProduct} - Shopify product
- */
-export function getProductImageAspectRatio(product: ShopifyProduct) {
-  let aspect_ratio = product?.aspect_ratio
-  if (!aspect_ratio) {
-    let image = product?.image || product?.images[0]
-    if (image) {
-      aspect_ratio = image.width / image.height
-    }
-  }
-  return aspect_ratio
-}

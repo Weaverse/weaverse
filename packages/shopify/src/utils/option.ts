@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react'
 import { DEFAULT_OPTION_DESIGN } from '~/constant'
 import type {
   OptionDisplayType,
+  OptionStyle,
   ShopifyProduct,
   ShopifyProductOption,
 } from '~/types'
@@ -14,7 +15,7 @@ export function getOptionsGroupConfigs(option: ShopifyProductOption) {
   let optionConfig = swatches?.find((sw) => sw.name === option.name)
   let optionDisplayName = option.name
   let optionDesign: OptionDisplayType = DEFAULT_OPTION_DESIGN
-  let style = {}
+  let style: OptionStyle = {}
   if (optionConfig) {
     let { displayName, type, size, shape } = optionConfig
     optionDisplayName = displayName
@@ -52,7 +53,7 @@ export function getOptionItemStyle(
   if (type === 'variant-image') {
     let variantImage = ''
     let variant = product.variants.find(
-      (v) => v?.options?.[position - 1] === value
+      (v) => v.options[position - 1] === value
     )
     if (variant?.featured_image) {
       variantImage = resizeImage(variant?.featured_image.src, '200x')

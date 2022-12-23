@@ -1,3 +1,4 @@
+import type { ElementCSS } from '@weaverse/react'
 import { Components } from '@weaverse/react'
 import { useKeenSlider } from 'keen-slider/react'
 import React from 'react'
@@ -34,4 +35,35 @@ export function MediaFullscreenSlider(props: MediaFullscreenSliderProps) {
       </ModalContent>
     </Modal>
   )
+}
+
+export let css: ElementCSS = {
+  '@desktop': {
+    '.wv-product-media-fullscreen': {
+      padding: '80px 120px',
+      '.wv-modal-content': {
+        height: '100%',
+        '.wv-produt-media__fullscreen-slider': {
+          height: '100%',
+          '.keen-slider__slide': {
+            minWidth: 'min(var(--media-aspect-ratio) * (100vh - 12rem), 60vw)',
+            maxWidth: 'min(var(--media-aspect-ratio) * (100vh - 12rem), 60vw)',
+            display: 'flex',
+            alignItems: 'center',
+            img: {
+              aspectRatio: 'var(--media-aspect-ratio, auto)',
+              width: '100%',
+              cursor: 'pointer',
+              objectFit: 'cover',
+            },
+          },
+        },
+      },
+    },
+  },
+  '@mobile': {
+    '.wv-product-media-fullscreen': {
+      padding: '80px 10px',
+    },
+  },
 }

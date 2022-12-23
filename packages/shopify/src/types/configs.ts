@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react'
+
 export type OptionDisplayType =
   | 'dropdown'
   | 'button'
@@ -6,6 +8,11 @@ export type OptionDisplayType =
   | 'custom-image'
 export type OptionSize = 'sm' | 'md' | 'lg'
 export type OptionShape = 'square' | 'round' | 'circle'
+
+export interface OptionStyle extends CSSProperties {
+  '--size'?: string
+  '--radius'?: string
+}
 
 export interface OptionData {
   id: string

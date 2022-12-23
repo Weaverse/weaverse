@@ -3,10 +3,13 @@ import React, { forwardRef, useEffect, useState } from 'react'
 import { PRODUCT_IMAGE_PLACEHOLDER } from '~/constant'
 import { useProductContext } from '~/hooks'
 import type { ProductMediaProps, ProductMediaSize } from '~/types'
-import { Arrows } from './Arrows'
-import { Dots } from './Dots'
+import { Arrows, css as arrowsCss } from './Arrows'
+import { Dots, css as dotsCss } from './Dots'
 import { Image } from './Image'
-import { MediaFullscreenSlider } from './MediaFullscreenSlider'
+import {
+  MediaFullscreenSlider,
+  css as fullscreenSliderCss,
+} from './MediaFullscreenSlider'
 import { useMediaSlider } from './useMediaSlider'
 
 let mediaSizesMap: Record<ProductMediaSize, string> = {
@@ -17,7 +20,14 @@ let mediaSizesMap: Record<ProductMediaSize, string> = {
 
 let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
   (props, ref) => {
-    let { mediaSize, aspectRatio, fallbackImage, ...rest } = props
+    let {
+      mediaSize,
+      aspectRatio,
+      fallbackImage,
+      allowFullscreen,
+      thumbnailSlidePerView,
+      ...rest
+    } = props
     let context = useProductContext()
     let [currentSlide, setCurrentSlide] = useState(0)
     let [created, setCreated] = useState(false)
@@ -28,6 +38,7 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
     let [sliderRef, thumbnailRef, instanceRef, thumbnailInstanceRef] =
       useMediaSlider({
         context,
+        thumbnailSlidePerView,
         onSlideChanged: (slider) => {
           setCurrentSlide(slider.track.details.rel)
         },
@@ -86,7 +97,7 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
                 image={image}
                 width={1000}
                 className="keen-slider__slide wv-product-slider__slide"
-                onClick={() => setZoomed(true)}
+                onClick={() => allowFullscreen && setZoomed(true)}
               />
             ))}
           </div>
@@ -107,11 +118,13 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
             />
           ))}
         </div>
-        <MediaFullscreenSlider
-          open={zoomed}
-          onOpenChange={setZoomed}
-          images={images}
-        />
+        {allowFullscreen && (
+          <MediaFullscreenSlider
+            open={zoomed}
+            onOpenChange={setZoomed}
+            images={images}
+          />
+        )}
       </div>
     )
   }
@@ -120,6 +133,8 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
 ProductMedia.defaultProps = {
   mediaSize: 'medium',
   aspectRatio: 'auto',
+  allowFullscreen: true,
+  thumbnailSlidePerView: 6,
 }
 
 export let css: ElementCSS = {
@@ -152,54 +167,8 @@ export let css: ElementCSS = {
           objectFit: 'cover',
         },
       },
-      '.wv-slider-arrow': {
-        position: 'absolute',
-        top: '50%',
-        transform: 'translateY(-50%)',
-        width: '44px',
-        height: '44px',
-        padding: '8px',
-        color: '#191919',
-        backgroundColor: '#f2f2f2',
-        textAlign: 'center',
-        transition: 'all 0.2s ease-in-out',
-        borderRadius: '4px',
-        '&:hover': {
-          backgroundColor: '#191919',
-          color: '#f2f2f2',
-        },
-        svg: {
-          verticalAlign: 'middle',
-          width: '22px',
-          height: '22px',
-        },
-        '&.arrow--left': {
-          left: '10px',
-        },
-        '&.arrow--right': {
-          right: '10px',
-        },
-        '&.arrow--disabled': {
-          opacity: 0.5,
-        },
-      },
-      '.wv-slider-dots': {
-        display: 'none',
-        padding: '10px 0',
-        justifyContent: 'center',
-        '.dot': {
-          width: '9px',
-          height: '9px',
-          padding: '0',
-          margin: '0 5px',
-          borderRadius: '50%',
-          background: '#2125291a',
-          transition: 'all 0.2s ease-in-out',
-          '&.dot--active': {
-            background: '#212529',
-          },
-        },
-      },
+      ...arrowsCss['@desktop'],
+      ...dotsCss['@desktop'],
     },
     '.wv-thumbnail-slider': {
       marginTop: '10px',
@@ -215,27 +184,7 @@ export let css: ElementCSS = {
         },
       },
     },
-    '.wv-product-media-fullscreen': {
-      padding: '80px 120px',
-      '.wv-modal-content': {
-        height: '100%',
-        '.wv-produt-media__fullscreen-slider': {
-          height: '100%',
-          '.keen-slider__slide': {
-            minWidth: 'min(var(--media-aspect-ratio) * (100vh - 12rem), 60vw)',
-            maxWidth: 'min(var(--media-aspect-ratio) * (100vh - 12rem), 60vw)',
-            display: 'flex',
-            alignItems: 'center',
-            img: {
-              aspectRatio: 'var(--media-aspect-ratio, auto)',
-              width: '100%',
-              cursor: 'pointer',
-              objectFit: 'cover',
-            },
-          },
-        },
-      },
-    },
+    ...fullscreenSliderCss['@desktop'],
   },
   '@mobile': {
     minWidth: '100%',
@@ -243,19 +192,13 @@ export let css: ElementCSS = {
     paddingRight: '0px',
     marginBottom: '32px',
     '.wv-product-slider__wrapper': {
-      '.wv-slider-arrow': {
-        display: 'none',
-      },
-      '.wv-slider-dots': {
-        display: 'flex',
-      },
+      ...arrowsCss['@mobile'],
+      ...dotsCss['@mobile'],
     },
     '.wv-thumbnail-slider': {
       display: 'none !important',
     },
-    '.wv-product-media-fullscreen': {
-      padding: '80px 10px',
-    },
+    ...fullscreenSliderCss['@mobile'],
   },
 }
 

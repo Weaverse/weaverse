@@ -43,8 +43,7 @@ export interface ShopifyProductVariant {
   // Liquid props
   available: boolean
   options: string[]
-  featured_image?: ShopifyProductImage
-  featured_media?: ShopifyProductImage
+  featured_image: ShopifyProductImage
 }
 
 export interface ShopifyProductVariantPresentmentPriceSet {
@@ -91,17 +90,19 @@ export interface ShopifyProduct {
   vendor: string
   status: 'active' | 'archived' | 'draft'
   // Liquid props
-  aspect_ratio?: number
-  selected_or_first_available_variant?: ShopifyProductVariant
-  has_only_default_variant?: boolean
-  price?: number
-  price_max?: number
-  price_min?: number
-  price_varies?: boolean
-  compare_at_price?: number
-  compare_at_price_max?: number
-  compare_at_price_min?: number
-  compare_at_price_varies?: boolean
+  featured_image: string
+  aspect_ratio: number
+  selected_or_first_available_variant: ShopifyProductVariant
+  has_only_default_variant: boolean
+  price: string | number
+  price_max: string | number
+  price_min: string | number
+  price_varies: boolean
+  compare_at_price: string | number
+  compare_at_price_max: string | number
+  compare_at_price_min: string | number
+  compare_at_price_varies: boolean
+  url: string
 }
 
 // Collection
