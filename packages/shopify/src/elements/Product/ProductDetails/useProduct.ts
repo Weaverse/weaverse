@@ -2,7 +2,6 @@ import { WeaverseContext } from '@weaverse/react'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { weaverseShopifyProducts } from '~/proxy'
 import type { ShopifyProduct, ShopifyProductVariant } from '~/types'
-import { updateProductData } from '~/utils'
 
 export function useProduct(
   productId: number | 'default',
@@ -25,7 +24,6 @@ export function useProduct(
 
   useEffect(() => {
     if (product) {
-      updateProductData(product)
       setSelectedVariant(
         product.selected_or_first_available_variant || product.variants[0]
       )

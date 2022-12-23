@@ -1,12 +1,16 @@
+import clsx from 'clsx'
 import React from 'react'
 import type { ProductImageProps } from '~/types'
 
 export function Image(props: ProductImageProps) {
   let { image, width, className, onLoad, onClick } = props
+  let [loaded, setLoaded] = React.useState(false)
+  let _class = clsx('wv-image', loaded && 'image-loaded', className)
+
   return (
     <>
       <img
-        className={className}
+        className={_class}
         src={`${image.src}&crop=center&width=${width}`}
         srcSet={`
           ${image.src}&width=550 550w,
@@ -21,7 +25,10 @@ export function Image(props: ProductImageProps) {
         width={image.width}
         height={image.height}
         alt={image.alt || ''}
-        onLoad={onLoad}
+        onLoad={(e) => {
+          setLoaded(true)
+          onLoad?.(e)
+        }}
         onClick={onClick}
       />
       <noscript

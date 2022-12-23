@@ -168,7 +168,7 @@ export let skeletonCss: ElementCSS = {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          svg: { width: '28px', height: '28px' },
+          svg: { width: '28px', height: '28px', color: '#FFF' },
         },
         '.wv-info-description': {
           display: 'flex',

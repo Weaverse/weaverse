@@ -5,7 +5,8 @@ import { MainSliderResizePlugin as ResizePlugin } from './ResizePlugin'
 import { ThumbnailPlugin } from './ThumbnailPlugin'
 
 export function useMediaSlider(input: ProductImageHooksInput) {
-  let { context, onSlideChanged, onSliderCreated } = input
+  let { context, thumbnailSlidePerView, onSlideChanged, onSliderCreated } =
+    input
   let initialIndex = 0
   let featured_image = context?.selectedVariant?.featured_image
   if (featured_image) {
@@ -23,9 +24,11 @@ export function useMediaSlider(input: ProductImageHooksInput) {
   let [thumbnailRef, thumbnailInstanceRef] = useKeenSlider<HTMLDivElement>(
     {
       initial: initialIndex,
-      slides: {
-        perView: 6,
-        spacing: 10,
+      slides: { perView: thumbnailSlidePerView, spacing: 10 },
+      breakpoints: {
+        '(max-width: 1024px)': {
+          slides: { perView: 5 },
+        },
       },
     },
     [ThumbnailPlugin(instanceRef), ResizePlugin]
