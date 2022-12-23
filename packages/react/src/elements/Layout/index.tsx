@@ -16,6 +16,7 @@ let Layout = forwardRef<HTMLDivElement, LayoutElementProps>((props, ref) => {
     backgroundColor,
     backgroundImage,
     objectFit,
+    objectPosition,
     enableOverlay,
     overlayOpacity,
     ...rest
@@ -38,6 +39,7 @@ let Layout = forwardRef<HTMLDivElement, LayoutElementProps>((props, ref) => {
         imgUrl={backgroundImage}
         bgColor={backgroundColor}
         objectFit={objectFit}
+        objectPosition={objectPosition}
       />
       <Overlay enableOverlay={enableOverlay} overlayOpacity={overlayOpacity} />
       <div data-layout-content>{children}</div>
@@ -67,6 +69,7 @@ export let css: ElementCSS = {
       backgroundColor: 'var(--layout-bg-color)',
       img: {
         objectFit: 'var(--layout-bg-image-object-fit, cover)',
+        objectPosition: 'var(--layout-bg-image-position, 50% 50%)',
       },
     },
     '.wv-layout-overlay': {

@@ -193,10 +193,19 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
   helpText?: string
 }
 
-export type AdditionalInputConfigs = SelectInputConfigs | ToggleGroupConfigs | RangeInputConfigs | SortableInputConfigs
+export type AdditionalInputConfigs =
+  | SelectInputConfigs
+  | ToggleGroupConfigs
+  | RangeInputConfigs
+  | SortableInputConfigs
+  | PositionInputConfigs
 
 export interface SelectInputConfigs {
   options?: { value: string; label: string; icon?: string; weight?: string }[]
+}
+
+export interface PositionInputConfigs {
+  positionValues: string[]
 }
 
 export interface ToggleGroupConfigs {
@@ -226,6 +235,7 @@ export type InputType =
   | "text"
   | "textarea"
   | "toggle-group"
+  | "position"
   // Element inputs
   | "form"
   | "product"
