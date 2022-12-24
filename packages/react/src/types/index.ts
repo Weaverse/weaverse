@@ -3,10 +3,8 @@ import type { CSSProperties, ReactElement, ReactNode } from 'react'
 
 export * from './components'
 
-export interface WeaverseElementProps extends ReactElement {
+export interface WeaverseElementProps extends Partial<ReactElement> {
   css?: ElementCSS
-  ['data-wv-type']: string
-  ['data-wv-id']: string
   children?: ReactElement | ReactElement[] | ReactNode | ReactNode[]
   className?: string
 }
@@ -73,6 +71,7 @@ interface BackgroundDataProps {
   backgroundColor?: string
   backgroundImage?: string
   objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down'
+  objectPosition?: string
 }
 // Layout
 export interface LayoutElementProps
@@ -92,6 +91,7 @@ export interface LayoutBackgroundProps {
   imgUrl?: string
   bgColor?: string
   objectFit?: CSSProperties['objectFit']
+  objectPosition?: CSSProperties['objectPosition']
 }
 
 // Map
@@ -135,6 +135,7 @@ export interface CountdownElementProps extends WeaverseElementProps {
   startTime: number
   endTime: number
   periods: number
+  redirectWhenTimerStops: boolean
   redirectUrl: string
   openInNewTab: boolean
   showLabel: boolean

@@ -14,6 +14,7 @@ let Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
       startTime: startTimeProp,
       endTime: endTimeProp,
       periods: periodsProp,
+      redirectWhenTimerStops,
       redirectUrl,
       openInNewTab,
       showColon,
@@ -25,7 +26,7 @@ let Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
     let periods = periodsProp * 60 * 1000 // convert into milliseconds
 
     const handleEnd = () => {
-      if (!isDesignMode && redirectUrl)
+      if (!isDesignMode && redirectWhenTimerStops && redirectUrl)
         window.open(redirectUrl, openInNewTab ? '_blank' : '_self')
     }
 
@@ -131,6 +132,7 @@ Countdown.defaultProps = {
   startTime: Date.now(),
   endTime: Date.now() + 1000 * 60 * 60 * 24,
   periods: 90,
+  redirectWhenTimerStops: false,
   redirectUrl: '',
   openInNewTab: false,
   showLabel: true,

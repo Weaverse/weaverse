@@ -10,3 +10,7 @@ export type WeaverseIcon = keyof typeof PhosphorIcons
 export interface WeaverseIconProps extends HTMLAttributes<SVGElement> {
   name: WeaverseIcon
 }
+
+export interface TooltipProps {
+  children: React.ReactNode
+}

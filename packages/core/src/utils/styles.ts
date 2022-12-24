@@ -52,6 +52,48 @@ export function createGlobalStyles(stitches: Stitches) {
       "0%, 100%": { opacity: 1 },
       "50%": { opacity: 0.5 },
     },
+    ".wv-tooltip-container": {
+      position: "relative !important",
+      display: "inline-flex !important",
+      ".wv-tooltip": {
+        position: "absolute",
+        color: "#fff !important",
+        backgroundColor: "#000 !important",
+        fontSize: "13px",
+        textAlign: "center",
+        transition: ".3s all",
+        borderRadius: "5px !important",
+        lineHeight: "12px",
+        bottom: "calc(100% + 5px)",
+        left: "50%",
+        transform: "translateX(-50%)",
+        padding: "8px 12px",
+        opacity: 0,
+        visibility: "hidden",
+        textTransform: "initial",
+        width: "max-content !important",
+        maxWidth: "initial !important",
+        height: "auto !important",
+        display: "inline-block !important",
+        "&:after": {
+          content: '""',
+          position: "absolute",
+          width: "10px",
+          height: "10px",
+          backgroundColor: "#000",
+          bottom: "-4px",
+          left: "50%",
+          transform: "translateX(-50%) rotate(45deg)",
+        },
+      },
+      "&:hover": {
+        ".wv-tooltip": {
+          opacity: 1,
+          visibility: "visible",
+          bottom: "calc(100% + 10px)",
+        },
+      },
+    },
     ".wv-spinner-wrapper": {
       position: "absolute",
       inset: "0px",
@@ -67,6 +109,7 @@ export function createGlobalStyles(stitches: Stitches) {
     },
     "[data-wv-placeholder]": {
       height: "100%",
+      width: "100%",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
@@ -74,6 +117,10 @@ export function createGlobalStyles(stitches: Stitches) {
       backgroundColor: "rgba(236, 236, 236, 0.5)",
       backgroundClip: "content-box",
       padding: "10px",
+    },
+    ".wv-pcard__quickview": {
+      borderRadius: "0px !important",
+      width: "950px !important",
     },
     "[data-blink-src]": {
       visibility: "hidden",
@@ -145,6 +192,13 @@ export function createGlobalStyles(stitches: Stitches) {
         cursor: "pointer",
         fontSize: "14px",
         padding: "4px 10px",
+      },
+    },
+    "@media (max-width: 768px)": {
+      ".wv-tooltip-container": {
+        ".wv-tooltip": {
+          display: "none !important",
+        },
       },
     },
   })

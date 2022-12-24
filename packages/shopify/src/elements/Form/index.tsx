@@ -54,7 +54,7 @@ let Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
                 openInNewTab ? '_blank' : '_self'
               })`,
             }}
-          ></script>
+          />
         )}
         {` {%- endif -%} `}
         {`{% if form.errors %}`}
