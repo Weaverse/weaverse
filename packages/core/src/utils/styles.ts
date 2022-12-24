@@ -122,6 +122,9 @@ export function createGlobalStyles(stitches: Stitches) {
       borderRadius: "0px !important",
       width: "950px !important",
     },
+    "[data-blink-src]": {
+      visibility: "hidden",
+    },
     body: {
       "&.wv-modal-open": {
         ".weaverse-content-root": {
