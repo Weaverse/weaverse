@@ -1,13 +1,12 @@
 import type { ElementCSS } from '@weaverse/react'
-import { Components } from '@weaverse/react'
-import React, { forwardRef } from 'react'
-import {
-  weaverseShopifyProducts,
-  weaverseShopifyProductsByCollection,
-} from '~/proxy'
-import type { ProductListProps, ShopifyProduct } from '~/types'
+import { Components, WeaverseContext } from '@weaverse/react'
+import React, { forwardRef, useContext } from 'react'
+import type { ProductListProps } from '~/types'
 import { ProductCard, productCardCss } from './ProductCard'
+import { css as skeletonCss, Skeleton } from './Skeleton'
 import { SliderContainer } from './SliderContainer'
+import { useProducts } from './useProducts'
+let { Placeholder } = Components
 
 let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
   let {
@@ -28,6 +27,8 @@ let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
     children,
     ...rest
   } = props
+  let { ssrMode, isDesignMode } = useContext(WeaverseContext)
+  let products = useProducts({ source, collectionId, productIds })
 
   let shouldShowPlaceholder =
     (source === 'collection' && !collectionId) ||
@@ -40,26 +41,34 @@ let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
         : 'Select some products and start editing.'
     return (
       <div ref={ref} {...rest}>
-        <Components.Placeholder element="Product List">
-          {placeholderText}
-        </Components.Placeholder>
+        <Placeholder element="Product List">{placeholderText}</Placeholder>
       </div>
     )
   }
 
-  let productsByCollection: number[] =
-    weaverseShopifyProductsByCollection[collectionId] || []
-  productsByCollection.splice(productCount)
-  let products: ShopifyProduct[] = productsByCollection.map(
-    (pId) => weaverseShopifyProducts[pId]
-  )
   let rows = Math.ceil(productCount / productsPerRow)
+  let shouldRenderSkeleton = ssrMode || !products.length
+  let display = 'grid'
+  if (!shouldRenderSkeleton && layout === 'slider') {
+    display = 'block'
+  }
   let style = {
     '--gap': `${gap}px`,
     '--product-per-row': productsPerRow,
-    '--display': layout === 'grid' ? 'grid' : 'block',
+    '--display': display,
     '--rows': rows,
   } as React.CSSProperties
+
+  if (shouldRenderSkeleton) {
+    return (
+      <div ref={ref} {...rest} style={style}>
+        <Skeleton
+          productCount={productCount}
+          imageAspectRatio={imageAspectRatio}
+        />
+      </div>
+    )
+  }
 
   let productCards = products.map((product) => (
     <ProductCard
@@ -78,7 +87,9 @@ let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
   if (layout === 'slider') {
     return (
       <div ref={ref} {...rest} style={style}>
-        <SliderContainer>{productCards}</SliderContainer>
+        <SliderContainer className="wv-product-list__slider">
+          {productCards}
+        </SliderContainer>
       </div>
     )
   }
@@ -112,11 +123,12 @@ export let css: ElementCSS = {
     gridTemplateColumns: 'repeat(var(--product-per-row), 1fr)',
     gap: 'var(--gap, 16px)',
     overflow: 'hidden',
-    ...productCardCss['@desktop'],
     '@media (max-width: 1024px)': {
       gridTemplateColumns: 'repeat(3, 1fr)',
-      gridTemplateRows: 'repeat(--rows, 1fr) 0',
+      gridTemplateRows: 'repeat(var(--rows), 1fr) 0',
     },
+    ...productCardCss['@desktop'],
+    ...skeletonCss['@desktop'],
   },
   '@mobile': {
     display: 'flex',
