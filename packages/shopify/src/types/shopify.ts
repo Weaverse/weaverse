@@ -103,6 +103,8 @@ export interface ShopifyProduct {
   compare_at_price_min: string | number
   compare_at_price_varies: boolean
   url: string
+  // Recommendation props
+  media?: ShopifyProductImage[]
 }
 
 // Collection

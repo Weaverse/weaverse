@@ -73,7 +73,7 @@ export function ProductSkeleton() {
   )
 }
 
-export let skeletonCss: ElementCSS = {
+export let css: ElementCSS = {
   '@desktop': {
     '.wv-product-details-skeleton': {
       display: 'flex',

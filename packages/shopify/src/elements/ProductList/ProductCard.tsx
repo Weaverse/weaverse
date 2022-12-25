@@ -21,14 +21,16 @@ export function ProductCard(props: ProductCardProps) {
     showQuickViewButton,
     className,
   } = props
-  let { images, compare_at_price, aspect_ratio, url } = product
-
+  let { images, media, compare_at_price, aspect_ratio, url } = product
   let style = {
-    '--media-aspect-ratio':
+    '--image-aspect-ratio':
       imageAspectRatio === 'auto' ? aspect_ratio || 'auto' : imageAspectRatio,
   } as React.CSSProperties
-  let mainImage = images[0]
-  let secondImage = images[1]
+
+  let isRecommendedProduct = Array.isArray(media)
+  let imageSource = isRecommendedProduct ? media! : images
+  let mainImage = imageSource[0]
+  let secondImage = imageSource[1]
   let imagesClass = clsx(
     'wv-pcard__images',
     showSecondImageOnHover && secondImage && 'show-second-image-on-hover'
@@ -79,7 +81,7 @@ export let productCardCss: ElementCSS = {
         display: 'block',
         width: '100%',
         overflow: 'hidden',
-        aspectRatio: 'var(--media-aspect-ratio, auto)',
+        aspectRatio: 'var(--image-aspect-ratio, auto)',
         ...productCardSaleBadgeCss['@desktop'],
         '.pcard-image': {
           width: '100%',
