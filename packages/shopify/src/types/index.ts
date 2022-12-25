@@ -62,6 +62,11 @@ export interface ProductListProps
   gap: number
 }
 
+export interface ProductSkeletonProps {
+  productCount: number
+  imageAspectRatio: AspectRatio
+}
+
 export interface ProductDetailsProps extends WeaverseElementProps {
   productId: number | 'default'
   productHandle: string // For generating product liquid data in SSR
