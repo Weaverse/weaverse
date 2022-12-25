@@ -3,7 +3,7 @@ import { Components, WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext } from 'react'
 import { ProductContext } from '~/context'
 import type { ProductDetailsProps } from '~/types'
-import { ProductSkeleton, skeletonCss } from './Skeleton'
+import { ProductSkeleton, css as skeletonCss } from './Skeleton'
 import { useProduct } from './useProduct'
 
 let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
