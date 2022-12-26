@@ -1,5 +1,5 @@
 {
-  "version": "0.7.52",
+  "version": "0.7.53",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -16,7 +16,7 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --watch --external react --sourcemap",
-    "build": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --external react --minify",
+    "build": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --external react",
     "clean": "rimraf dist",
     "prepublish": "npm run build"
   },
@@ -32,7 +32,7 @@
   "name": "@weaverse/shopify",
   "author": "Weaverse Team",
   "dependencies": {
-    "@weaverse/react": "0.7.52",
+    "@weaverse/react": "0.7.53",
     "clsx": "^1.2.1",
     "keen-slider": "^6.8.5",
     "react-error-boundary": "^3.1.4"
