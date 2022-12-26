@@ -16,7 +16,7 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "tsup src/index.ts --format esm,cjs --dts --outDir dist --watch --sourcemap",
-    "build": "tsup src/index.ts --format esm,cjs --dts --outDir dist --minify",
+    "build": "tsup src/index.ts --format esm,cjs --dts --outDir dist",
     "clean": "rimraf dist",
     "prepublish": "npm run build"
   },
