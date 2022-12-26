@@ -96,6 +96,7 @@ export let css: ElementCSS = {
           display: 'flex',
           marginTop: '12px',
           gap: '12px',
+          overflow: 'hidden',
           '.wv-media-thumbnail-item': {
             backgroundColor: '#D1D5DB',
             height: '120px',

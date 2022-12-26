@@ -3,11 +3,14 @@ import clsx from 'clsx'
 import React from 'react'
 import { Image } from '~/elements/Product/ProductMedia/Image'
 import type { ProductCardProps } from '~/types'
-import { ProductCardButtons, productCardButtonsCss } from './ProductCardButtons'
-import { ProductCardInfo, productCardInfoCss } from './ProductCardInfo'
 import {
+  css as productCardButtonsCss,
+  ProductCardButtons,
+} from './ProductCardButtons'
+import { css as productCardInfoCss, ProductCardInfo } from './ProductCardInfo'
+import {
+  css as productCardSaleBadgeCss,
   ProductCardSaleBadge,
-  productCardSaleBadgeCss,
 } from './ProductCardSaleBadge'
 
 export function ProductCard(props: ProductCardProps) {
@@ -71,7 +74,7 @@ export function ProductCard(props: ProductCardProps) {
   )
 }
 
-export let productCardCss: ElementCSS = {
+export let css: ElementCSS = {
   '@desktop': {
     '.wv-product-card': {
       textDecoration: 'none',
