@@ -56,7 +56,7 @@ export function ProductCardOptions(props: { product: ShopifyProduct }) {
   return null
 }
 
-export let productCardOptionsCss: ElementCSS = {
+export let css: ElementCSS = {
   '@desktop': {
     '.wv-pcard__options': {
       display: 'flex',

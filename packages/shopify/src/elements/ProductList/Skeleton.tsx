@@ -91,4 +91,13 @@ export let css: ElementCSS = {
       },
     },
   },
+  '@mobile': {
+    '.wv-pcard-skeleton': {
+      textDecoration: 'none',
+      width: '66vw',
+      scrollSnapAlign: 'start',
+      flex: '0 0 auto',
+      padding: '8px',
+    },
+  },
 }

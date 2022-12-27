@@ -38,7 +38,7 @@ export function ProductCardButtons(props: ProductCardButtonsProps) {
   return null
 }
 
-export let productCardButtonsCss: ElementCSS = {
+export let css: ElementCSS = {
   '@desktop': {
     '.wv-pcard__buttons': {
       position: 'absolute',
