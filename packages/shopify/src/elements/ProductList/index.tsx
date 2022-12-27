@@ -2,18 +2,17 @@ import type { ElementCSS } from '@weaverse/react'
 import { Components, WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext } from 'react'
 import type { ProductListProps } from '~/types'
-import { ProductCard, productCardCss } from './ProductCard'
+import { ProductCard, css as productCardCss } from './ProductCard'
 import { css as skeletonCss, Skeleton } from './Skeleton'
-import { SliderContainer } from './SliderContainer'
 import { useProducts } from './useProducts'
-let { Placeholder } = Components
+let { Placeholder, Slider } = Components
 
 let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
   let {
     source,
     collectionId,
     collectionHandle,
-    productIds,
+    fixedProducts,
     layout,
     productCount,
     productsPerRow,
@@ -28,17 +27,32 @@ let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
     ...rest
   } = props
   let { ssrMode, isDesignMode } = useContext(WeaverseContext)
-  let products = useProducts({ source, collectionId, productIds })
+  let products = useProducts({
+    source,
+    collectionId,
+    fixedProducts,
+    isDesignMode,
+  })
 
+  let mainProductId = 0
+  if (!ssrMode && !isDesignMode) {
+    mainProductId = window.weaverseShopifyConfigs.shopData.product_id
+  }
   let shouldShowPlaceholder =
     (source === 'collection' && !collectionId) ||
-    (source === 'fixedProducts' && !productIds?.length)
+    (source === 'fixedProducts' && !fixedProducts?.length) ||
+    (source === 'recommended' && !ssrMode && !isDesignMode && !mainProductId)
 
   if (shouldShowPlaceholder) {
-    let placeholderText =
-      source === 'collection'
-        ? 'Select a collection and start editing.'
-        : 'Select some products and start editing.'
+    let placeholderText = 'Select a collection and start editing.'
+    if (source === 'fixedProducts') {
+      placeholderText = 'Select some products and start editing.'
+    }
+    if (source === 'recommended') {
+      placeholderText =
+        'Recommended Product List must be used on a product page.'
+    }
+
     return (
       <div ref={ref} {...rest}>
         <Placeholder element="Product List">{placeholderText}</Placeholder>
@@ -46,16 +60,21 @@ let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
     )
   }
 
-  let rows = Math.ceil(productCount / productsPerRow)
+  let totalProducts =
+    source === 'fixedProducts' ? fixedProducts.length : productCount
+  let rows = Math.ceil(totalProducts / productsPerRow)
   let shouldRenderSkeleton = ssrMode || !products.length
   let display = 'grid'
+  let overflow = 'hidden'
   if (!shouldRenderSkeleton && layout === 'slider') {
     display = 'block'
+    overflow = '0'
   }
   let style = {
+    '--display': display,
+    '--overflow': overflow,
     '--gap': `${gap}px`,
     '--product-per-row': productsPerRow,
-    '--display': display,
     '--rows': rows,
   } as React.CSSProperties
 
@@ -63,33 +82,34 @@ let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
     return (
       <div ref={ref} {...rest} style={style}>
         <Skeleton
-          productCount={productCount}
+          productCount={layout === 'slider' ? productsPerRow : productCount}
           imageAspectRatio={imageAspectRatio}
         />
       </div>
     )
   }
 
-  let productCards = products.map((product) => (
-    <ProductCard
-      key={product.id}
-      product={product}
-      imageAspectRatio={imageAspectRatio}
-      showSecondImageOnHover={showSecondImageOnHover}
-      showSaleBadge={showSaleBadge}
-      showViewDetailsButton={showViewDetailsButton}
-      viewDetailsButtonText={viewDetailsButtonText}
-      showQuickViewButton={showQuickViewButton}
-      className={layout === 'slider' ? 'keen-slider__slide' : ''}
-    />
-  ))
+  let productCards = products
+    .filter((p) => p && p.id !== mainProductId)
+    .slice(0, productCount)
+    .map((product) => (
+      <ProductCard
+        key={product.id}
+        product={product}
+        imageAspectRatio={imageAspectRatio}
+        showSecondImageOnHover={showSecondImageOnHover}
+        showSaleBadge={showSaleBadge}
+        showViewDetailsButton={showViewDetailsButton}
+        viewDetailsButtonText={viewDetailsButtonText}
+        showQuickViewButton={showQuickViewButton}
+        className={layout === 'slider' ? 'keen-slider__slide' : ''}
+      />
+    ))
 
   if (layout === 'slider') {
     return (
       <div ref={ref} {...rest} style={style}>
-        <SliderContainer className="wv-product-list__slider">
-          {productCards}
-        </SliderContainer>
+        <Slider className="wv-product-list__slider">{productCards}</Slider>
       </div>
     )
   }
@@ -122,7 +142,8 @@ export let css: ElementCSS = {
     display: 'var(--display, grid)',
     gridTemplateColumns: 'repeat(var(--product-per-row), 1fr)',
     gap: 'var(--gap, 16px)',
-    overflow: 'hidden',
+    overflow: 'var(--overflow, hidden)',
+    position: 'relative',
     '@media (max-width: 1024px)': {
       gridTemplateColumns: 'repeat(3, 1fr)',
       gridTemplateRows: 'repeat(var(--rows), 1fr) 0',
@@ -137,11 +158,12 @@ export let css: ElementCSS = {
     flexDirection: 'row',
     flexWrap: 'nowrap',
     gap: 0,
-    ...productCardCss['@mobile'],
     '.wv-product-list__slider': {
       '.wv-product-card': {
         padding: '0 32px',
       },
     },
+    ...productCardCss['@mobile'],
+    ...skeletonCss['@mobile'],
   },
 }
