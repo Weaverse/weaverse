@@ -2,14 +2,14 @@ import type { ElementCSS } from '@weaverse/react'
 import { Components } from '@weaverse/react'
 import clsx from 'clsx'
 import React from 'react'
-import type { ShopifyProduct } from '~/types'
+import type { ProductCardOptionsProps } from '~/types'
 import { getOptionItemStyle, getOptionsGroupConfigs } from '~/utils'
 let { Tooltip } = Components
 
-export function ProductCardOptions(props: { product: ShopifyProduct }) {
-  let { product } = props
+export function ProductCardOptions(props: ProductCardOptionsProps) {
+  let { product, optionName } = props
   let { options, url, variants } = product
-  let foundOption = options.find((option) => option.name === 'Color')
+  let foundOption = options.find((option) => option.name === optionName)
   if (foundOption) {
     let { values, position } = foundOption
     let { optionDesign, style } = getOptionsGroupConfigs(foundOption)
@@ -73,6 +73,7 @@ export let css: ElementCSS = {
         borderRadius: 'var(--radius, 0px)',
         marginBottom: '6px',
         marginRight: '6px',
+        color: '#222',
         '& > span': {
           width: '100%',
           height: '100%',
