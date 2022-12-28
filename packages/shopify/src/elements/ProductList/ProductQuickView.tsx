@@ -88,6 +88,7 @@ export function ProductQuickView({ product }: { product: ShopifyProduct }) {
             <ProductDescription
               lineClamp={3}
               showViewDetailsButton
+              isInsideProductQuickView
               viewDetailsText="View full details"
               viewDetailsClickAction="goToProductPage"
               className="wv-pcard__description"

@@ -134,6 +134,7 @@ export interface ProductDescriptionProps extends WeaverseElementProps {
   showViewDetailsButton: boolean
   viewDetailsText: string
   viewDetailsClickAction: 'viewDetails' | 'goToProductPage'
+  isInsideProductQuickView: boolean
 }
 
 export interface ProductDescriptionViewDetailsProps {
