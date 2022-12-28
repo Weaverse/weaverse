@@ -68,8 +68,8 @@ export let StyledCloseIcon = styled('button', {
   cursor: 'pointer',
   fontFamily: 'inherit',
   borderRadius: '100%',
-  height: 25,
-  width: 25,
+  height: 32,
+  width: 32,
   padding: 4,
   display: 'inline-flex',
   alignItems: 'center',
@@ -82,7 +82,7 @@ export let StyledCloseIcon = styled('button', {
     backgroundColor: 'rgba(112, 112, 112, .1)',
   },
   svg: {
-    width: 20,
-    height: 20,
+    width: 24,
+    height: 24,
   },
 })
