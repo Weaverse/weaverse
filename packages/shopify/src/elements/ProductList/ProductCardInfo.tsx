@@ -9,7 +9,7 @@ import {
 } from './ProductCardOptions'
 
 export function ProductCardInfo(props: ProductCardInfoProps) {
-  let { product, showProductOption, optionName } = props
+  let { product, showProductOption, optionName, optionLimit } = props
   let { title, price, compare_at_price, url } = product
   let { money_format } = weaverseShopifyConfigs.shopData
 
@@ -29,7 +29,11 @@ export function ProductCardInfo(props: ProductCardInfoProps) {
         )}
       </div>
       {showProductOption && (
-        <ProductCardOptions product={product} optionName={optionName} />
+        <ProductCardOptions
+          product={product}
+          optionName={optionName}
+          optionLimit={optionLimit}
+        />
       )}
     </div>
   )

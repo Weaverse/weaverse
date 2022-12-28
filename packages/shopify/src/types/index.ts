@@ -40,17 +40,18 @@ export interface ProductCardProps {
   showQuickViewButton: boolean
   showProductOption: boolean
   optionName: string
+  optionLimit: number
   className?: string
 }
 
 export type ProductCardInfoProps = Pick<
   ProductCardProps,
-  'product' | 'showProductOption' | 'optionName'
+  'product' | 'showProductOption' | 'optionName' | 'optionLimit'
 >
 
 export type ProductCardOptionsProps = Pick<
   ProductCardProps,
-  'product' | 'optionName'
+  'product' | 'optionName' | 'optionLimit'
 >
 
 export interface ProductCardButtonsProps

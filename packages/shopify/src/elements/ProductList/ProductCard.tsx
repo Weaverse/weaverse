@@ -24,6 +24,7 @@ export function ProductCard(props: ProductCardProps) {
     showQuickViewButton,
     showProductOption,
     optionName,
+    optionLimit,
     className,
   } = props
   let { images, media, compare_at_price, aspect_ratio, url } = product
@@ -75,6 +76,7 @@ export function ProductCard(props: ProductCardProps) {
         product={product}
         showProductOption={showProductOption}
         optionName={optionName}
+        optionLimit={optionLimit}
       />
     </div>
   )
