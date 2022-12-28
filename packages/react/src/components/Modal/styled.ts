@@ -15,7 +15,7 @@ export let StyledOverlay = styled(Overlay, {
   display: 'block !important',
   backgroundColor: 'rgba(0, 0, 0, .3)',
   position: 'fixed',
-  zIndex: 9999,
+  zIndex: 99999,
   inset: 0,
   animation: `${overlayShow} 300ms cubic-bezier(0.16, 1, 0.3, 1)`,
 })
@@ -41,7 +41,7 @@ export let StyledContent = styled(Content, {
   transform: 'translate(-50%, -50%)',
   padding: 24,
   animation: `${contentShow} 300ms cubic-bezier(0.16, 1, 0.3, 1)`,
-  zIndex: 9999,
+  zIndex: 99999,
   maxWidth: '90vw',
   width: 'auto',
   '*': {
