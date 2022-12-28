@@ -13,7 +13,6 @@ export function ProductCardOptions(props: ProductCardOptionsProps) {
   if (foundOption) {
     let { values, position } = foundOption
     let { optionDesign, style } = getOptionsGroupConfigs(foundOption)
-    style['--size'] = '30px'
 
     return (
       <div className="wv-pcard__options" style={style}>
