@@ -78,6 +78,9 @@ ProductDetails.defaultProps = {
 export let css: ElementCSS = {
   '@desktop': {
     overflow: 'hidden',
+    '&.image-zoomed': {
+      zIndex: 999,
+    },
     '.wv-product-form': {
       display: 'flex',
       maxHeight: '100%',

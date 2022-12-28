@@ -12,6 +12,7 @@ let ProductDescription = forwardRef<HTMLDivElement, ProductDescriptionProps>(
       showViewDetailsButton,
       viewDetailsText,
       viewDetailsClickAction,
+      isInsideProductQuickView,
       children,
       ...rest
     } = props
@@ -27,16 +28,16 @@ let ProductDescription = forwardRef<HTMLDivElement, ProductDescriptionProps>(
 
     let goToProductPage = () => {
       if (!isDesignMode) {
-        let { root_url = '/' } =
-          window.weaverseShopifyConfigs?.shopData?.routes || {}
-        let url = `${root_url}products/${product.handle}`
-        window.location.href = url
+        window.location.href = product.url
       }
     }
 
     let viewDetailsButton = null
     if (showViewDetailsButton) {
-      if (viewDetailsClickAction === 'goToProductPage' && isNotProductPage) {
+      if (
+        viewDetailsClickAction === 'goToProductPage' &&
+        (isNotProductPage || isInsideProductQuickView)
+      ) {
         viewDetailsButton = (
           <button
             className="wv-view-details-button"
@@ -97,6 +98,7 @@ export let css: ElementCSS = {
       fontSize: '14px',
       padding: '0',
       color: 'rgb(56, 142, 255)',
+      marginTop: '16px',
       '&:hover': {
         textDecoration: 'underline',
         color: 'rgb(0, 42, 140)',
@@ -116,6 +118,7 @@ export let css: ElementCSS = {
 ProductDescription.defaultProps = {
   lineClamp: 3,
   showViewDetailsButton: true,
+  isInsideProductQuickView: false,
   viewDetailsText: 'View details',
 }
 

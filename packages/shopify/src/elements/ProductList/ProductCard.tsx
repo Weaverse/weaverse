@@ -22,6 +22,9 @@ export function ProductCard(props: ProductCardProps) {
     showViewDetailsButton,
     viewDetailsButtonText,
     showQuickViewButton,
+    showProductOption,
+    optionName,
+    optionLimit,
     className,
   } = props
   let { images, media, compare_at_price, aspect_ratio, url } = product
@@ -69,7 +72,12 @@ export function ProductCard(props: ProductCardProps) {
           </>
         ) : null}
       </div>
-      <ProductCardInfo product={product} />
+      <ProductCardInfo
+        product={product}
+        showProductOption={showProductOption}
+        optionName={optionName}
+        optionLimit={optionLimit}
+      />
     </div>
   )
 }

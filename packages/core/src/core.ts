@@ -16,7 +16,7 @@ import type {
   WeaverseElement,
   WeaverseType,
 } from "./types"
-import { createGlobalStyles, isIframe, merge, stichesUtils } from "./utils"
+import { isIframe, merge, stichesUtils } from "./utils"
 
 /**
  * WeaverseItemStore is a store for Weaverse item, it can be used to subscribe/update the item data
@@ -247,7 +247,6 @@ export class Weaverse {
         media: this.mediaBreakPoints,
         utils: stichesUtils,
       })
-    createGlobalStyles(this.stitchesInstance)
   }
 
   subscribe(fn: any) {

@@ -1,7 +1,7 @@
 import { useKeenSlider } from 'keen-slider/react'
 import { useEffect } from 'react'
 import type { ProductImageHooksInput } from '~/types'
-import { MainSliderResizePlugin as ResizePlugin } from './ResizePlugin'
+import { ResizePlugin } from './ResizePlugin'
 import { ThumbnailPlugin } from './ThumbnailPlugin'
 
 export function useMediaSlider(input: ProductImageHooksInput) {

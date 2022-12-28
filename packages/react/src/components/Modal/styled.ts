@@ -15,7 +15,7 @@ export let StyledOverlay = styled(Overlay, {
   display: 'block !important',
   backgroundColor: 'rgba(0, 0, 0, .3)',
   position: 'fixed',
-  zIndex: 9999,
+  zIndex: 99999,
   inset: 0,
   animation: `${overlayShow} 300ms cubic-bezier(0.16, 1, 0.3, 1)`,
 })
@@ -41,7 +41,7 @@ export let StyledContent = styled(Content, {
   transform: 'translate(-50%, -50%)',
   padding: 24,
   animation: `${contentShow} 300ms cubic-bezier(0.16, 1, 0.3, 1)`,
-  zIndex: 9999,
+  zIndex: 99999,
   maxWidth: '90vw',
   width: 'auto',
   '*': {
@@ -68,8 +68,8 @@ export let StyledCloseIcon = styled('button', {
   cursor: 'pointer',
   fontFamily: 'inherit',
   borderRadius: '100%',
-  height: 25,
-  width: 25,
+  height: 32,
+  width: 32,
   padding: 4,
   display: 'inline-flex',
   alignItems: 'center',
@@ -82,7 +82,7 @@ export let StyledCloseIcon = styled('button', {
     backgroundColor: 'rgba(112, 112, 112, .1)',
   },
   svg: {
-    width: 20,
-    height: 20,
+    width: 24,
+    height: 24,
   },
 })

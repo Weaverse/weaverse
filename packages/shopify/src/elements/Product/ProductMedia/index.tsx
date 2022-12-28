@@ -4,13 +4,14 @@ import { PRODUCT_IMAGE_PLACEHOLDER } from '~/constant'
 import { useProductContext } from '~/hooks'
 import type { ProductMediaProps, ProductMediaSize } from '~/types'
 import { Arrows, css as arrowsCss } from './Arrows'
-import { Dots, css as dotsCss } from './Dots'
+import { css as dotsCss, Dots } from './Dots'
 import { Image } from './Image'
 import {
-  MediaFullscreenSlider,
   css as fullscreenSliderCss,
+  MediaFullscreenSlider,
 } from './MediaFullscreenSlider'
 import { useMediaSlider } from './useMediaSlider'
+import { useMediaZoomInEffect } from './useMediaZoomInEffect'
 
 let mediaSizesMap: Record<ProductMediaSize, string> = {
   small: '40%',
@@ -34,6 +35,8 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
     let [cssLoaded, setCssLoaded] = useState(false)
     let [ready, setReady] = useState(false)
     let [zoomed, setZoomed] = useState(false)
+
+    useMediaZoomInEffect(zoomed, context)
 
     let [sliderRef, thumbnailRef, instanceRef, thumbnailInstanceRef] =
       useMediaSlider({
