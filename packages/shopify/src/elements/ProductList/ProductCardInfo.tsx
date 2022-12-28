@@ -3,7 +3,10 @@ import React from 'react'
 import { weaverseShopifyConfigs } from '~/proxy'
 import type { ShopifyProduct } from '~/types'
 import { formatMoney } from '~/utils'
-import { ProductCardOptions, productCardOptionsCss } from './ProductCardOptions'
+import {
+  ProductCardOptions,
+  css as productCardOptionsCss,
+} from './ProductCardOptions'
 
 export function ProductCardInfo({ product }: { product: ShopifyProduct }) {
   let { title, price, compare_at_price, url } = product
@@ -29,7 +32,7 @@ export function ProductCardInfo({ product }: { product: ShopifyProduct }) {
   )
 }
 
-export let productCardInfoCss: ElementCSS = {
+export let css: ElementCSS = {
   '@desktop': {
     '.wv-pcard__info': {
       marginTop: '20px',

@@ -5,7 +5,7 @@ export function ProductCardSaleBadge() {
   return <span className="wv-pcard__sale-badge">Sale</span>
 }
 
-export let productCardSaleBadgeCss: ElementCSS = {
+export let css: ElementCSS = {
   '@desktop': {
     '.wv-pcard__sale-badge': {
       position: 'absolute',

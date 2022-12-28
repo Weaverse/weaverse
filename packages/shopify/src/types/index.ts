@@ -49,17 +49,28 @@ export interface ProductCardButtonsProps
   product: ShopifyProduct
 }
 
+export type ProductListSource = 'collection' | 'recommended' | 'fixedProducts'
+export type FixedProduct = {
+  productId: string
+  productHandle: string
+}
+
 export interface ProductListProps
   extends WeaverseElementProps,
     ProductCardProps {
-  source: 'recommended' | 'recentlyView' | 'collection' | 'fixedProducts'
+  source: ProductListSource
   collectionId: number
   collectionHandle: string
-  productIds: number[]
+  fixedProducts: FixedProduct[]
   layout: 'grid' | 'slider'
   productCount: number
   productsPerRow: number
   gap: number
+}
+
+export interface UseProductHookInput
+  extends Pick<ProductListProps, 'source' | 'collectionId' | 'fixedProducts'> {
+  isDesignMode: boolean
 }
 
 export interface ProductSkeletonProps {
