@@ -101,6 +101,8 @@ export type ToolbarAction =
   | "move-up"
   | "move-down"
   | "toggle-visibility"
+  | "more-actions"
+
 export interface ElementSchema {
   title: string
   type: string
