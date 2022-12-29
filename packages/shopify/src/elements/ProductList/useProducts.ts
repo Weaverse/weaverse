@@ -40,6 +40,19 @@ export function useProducts(input: UseProductHookInput) {
             throw new Error(`${data.message} - (${data.description})`)
           } else {
             setRecommendedProducts(data.products)
+            data.products.forEach((p: ShopifyProduct) => {
+              if (!weaverseShopifyProducts[p.id]) {
+                weaverseShopifyProducts[p.id] = {
+                  ...p,
+                  images: p.media,
+                  has_only_default_variant:
+                    p.variants.length === 1 &&
+                    p.variants[0].title === 'Default Title',
+                  selected_or_first_available_variant:
+                    p.variants.find((v) => v.available) || null,
+                }
+              }
+            })
           }
         })
         .catch((err) => {

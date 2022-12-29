@@ -2,22 +2,23 @@ import type { ElementCSS } from '@weaverse/react'
 import { Components } from '@weaverse/react'
 import clsx from 'clsx'
 import React from 'react'
-import type { ShopifyProduct } from '~/types'
+import type { ProductCardOptionsProps } from '~/types'
 import { getOptionItemStyle, getOptionsGroupConfigs } from '~/utils'
 let { Tooltip } = Components
 
-export function ProductCardOptions(props: { product: ShopifyProduct }) {
-  let { product } = props
+export function ProductCardOptions(props: ProductCardOptionsProps) {
+  let { product, optionName, optionLimit } = props
   let { options, url, variants } = product
-  let foundOption = options.find((option) => option.name === 'Color')
+  let foundOption = options.find((option) => option.name === optionName)
   if (foundOption) {
     let { values, position } = foundOption
     let { optionDesign, style } = getOptionsGroupConfigs(foundOption)
-    style['--size'] = '30px'
+    let valuesToDisplay = values.slice(0, optionLimit)
+    let valuesLeft = values.length - valuesToDisplay.length
 
     return (
       <div className="wv-pcard__options" style={style}>
-        {values.map((value, idx) => {
+        {valuesToDisplay.map((value, idx) => {
           let style = getOptionItemStyle(value, optionDesign, position, product)
           let shouldShowTooltip = [
             'color',
@@ -50,6 +51,16 @@ export function ProductCardOptions(props: { product: ShopifyProduct }) {
             </a>
           )
         })}
+        {valuesLeft > 0 && (
+          <a
+            href={url}
+            target="_self"
+            className="wv-option__value wv-option__left wv-tooltip-container"
+          >
+            <span>+{valuesLeft}</span>
+            <Tooltip>More options</Tooltip>
+          </a>
+        )}
       </div>
     )
   }
@@ -60,7 +71,7 @@ export let css: ElementCSS = {
   '@desktop': {
     '.wv-pcard__options': {
       display: 'flex',
-      alignItems: 'flex-start',
+      alignItems: 'center',
       justifyContent: 'center',
       flexWrap: 'wrap',
       marginTop: '12px',
@@ -73,6 +84,7 @@ export let css: ElementCSS = {
         borderRadius: 'var(--radius, 0px)',
         marginBottom: '6px',
         marginRight: '6px',
+        color: '#222',
         '& > span': {
           width: '100%',
           height: '100%',
@@ -113,6 +125,10 @@ export let css: ElementCSS = {
           '&:hover': {
             padding: '2px',
           },
+        },
+        '&.wv-option__left': {
+          color: '#666',
+          textDecoration: 'none',
         },
       },
     },

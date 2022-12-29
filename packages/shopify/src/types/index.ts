@@ -38,8 +38,21 @@ export interface ProductCardProps {
   showViewDetailsButton: boolean
   viewDetailsButtonText: string
   showQuickViewButton: boolean
+  showProductOption: boolean
+  optionName: string
+  optionLimit: number
   className?: string
 }
+
+export type ProductCardInfoProps = Pick<
+  ProductCardProps,
+  'product' | 'showProductOption' | 'optionName' | 'optionLimit'
+>
+
+export type ProductCardOptionsProps = Pick<
+  ProductCardProps,
+  'product' | 'optionName' | 'optionLimit'
+>
 
 export interface ProductCardButtonsProps
   extends Pick<
@@ -134,6 +147,7 @@ export interface ProductDescriptionProps extends WeaverseElementProps {
   showViewDetailsButton: boolean
   viewDetailsText: string
   viewDetailsClickAction: 'viewDetails' | 'goToProductPage'
+  isInsideProductQuickView: boolean
 }
 
 export interface ProductDescriptionViewDetailsProps {

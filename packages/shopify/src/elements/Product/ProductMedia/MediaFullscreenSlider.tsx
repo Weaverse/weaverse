@@ -3,21 +3,19 @@ import { Components } from '@weaverse/react'
 import { useKeenSlider } from 'keen-slider/react'
 import React from 'react'
 import type { MediaFullscreenSliderProps } from '~/types'
-import { FullscreenSliderResizePlugin as ResizePlugin } from './ResizePlugin'
 
 let { Modal, ModalContent } = Components.ModalComponents
 
 export function MediaFullscreenSlider(props: MediaFullscreenSliderProps) {
   let { open, onOpenChange, images } = props
-  let [sliderRef] = useKeenSlider<HTMLDivElement>(
-    {
-      loop: false,
-      mode: 'snap',
-      rtl: false,
-      slides: { perView: 'auto', spacing: 20 },
+  let [sliderRef] = useKeenSlider<HTMLDivElement>({
+    slides: { perView: 'auto', spacing: 20 },
+    breakpoints: {
+      '(max-width: 768px)': {
+        slides: { perView: 1, spacing: 0 },
+      },
     },
-    [ResizePlugin]
-  )
+  })
 
   return (
     <Modal open={open} onOpenChange={onOpenChange}>

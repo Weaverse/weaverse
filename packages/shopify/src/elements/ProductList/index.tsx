@@ -23,6 +23,9 @@ let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
     showViewDetailsButton,
     viewDetailsButtonText,
     showQuickViewButton,
+    showProductOption,
+    optionName,
+    optionLimit,
     children,
     ...rest
   } = props
@@ -102,6 +105,9 @@ let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
         showViewDetailsButton={showViewDetailsButton}
         viewDetailsButtonText={viewDetailsButtonText}
         showQuickViewButton={showQuickViewButton}
+        showProductOption={showProductOption}
+        optionName={optionName}
+        optionLimit={optionLimit}
         className={layout === 'slider' ? 'keen-slider__slide' : ''}
       />
     ))
@@ -135,6 +141,9 @@ ProductList.defaultProps = {
   viewDetailsButtonText: 'View details',
   showQuickViewButton: true,
   showSaleBadge: true,
+  showProductOption: true,
+  optionName: 'Color',
+  optionLimit: 4,
 }
 
 export let css: ElementCSS = {

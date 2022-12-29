@@ -1,14 +1,15 @@
 import type { ElementCSS } from '@weaverse/react'
 import React from 'react'
 import { weaverseShopifyConfigs } from '~/proxy'
-import type { ShopifyProduct } from '~/types'
+import type { ProductCardInfoProps } from '~/types'
 import { formatMoney } from '~/utils'
 import {
-  ProductCardOptions,
   css as productCardOptionsCss,
+  ProductCardOptions,
 } from './ProductCardOptions'
 
-export function ProductCardInfo({ product }: { product: ShopifyProduct }) {
+export function ProductCardInfo(props: ProductCardInfoProps) {
+  let { product, showProductOption, optionName, optionLimit } = props
   let { title, price, compare_at_price, url } = product
   let { money_format } = weaverseShopifyConfigs.shopData
 
@@ -27,7 +28,13 @@ export function ProductCardInfo({ product }: { product: ShopifyProduct }) {
           </s>
         )}
       </div>
-      <ProductCardOptions product={product} />
+      {showProductOption && (
+        <ProductCardOptions
+          product={product}
+          optionName={optionName}
+          optionLimit={optionLimit}
+        />
+      )}
     </div>
   )
 }
