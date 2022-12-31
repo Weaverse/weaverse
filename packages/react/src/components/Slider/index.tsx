@@ -5,15 +5,15 @@ import type { SliderProps } from '~/types'
 import { Arrows } from './Arrows'
 import { ResizePlugin } from './ResizePlugin'
 
-export function Slider({ children, className }: SliderProps) {
+export function Slider({ children, className, gap }: SliderProps) {
   let [currentSlide, setCurrentSlide] = useState(0)
   let [created, setCreated] = useState(false)
   let [ref, instanceRef] = useKeenSlider<HTMLDivElement>(
     {
-      slides: { perView: 4, spacing: 16 },
+      slides: { perView: 4, spacing: gap },
       breakpoints: {
         '(max-width: 1024px)': {
-          slides: { perView: 3, spacing: 16 },
+          slides: { perView: 3, spacing: gap },
         },
         '(max-width: 768px)': {
           slides: {
