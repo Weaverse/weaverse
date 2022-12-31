@@ -70,8 +70,8 @@ export interface GridContentElementProps extends WeaverseElementProps {
 interface BackgroundDataProps {
   backgroundColor?: string
   backgroundImage?: string
-  objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down'
-  objectPosition?: string
+  objectFit?: CSSProperties['objectFit']
+  objectPosition?: CSSProperties['objectPosition']
 }
 // Layout
 export interface LayoutElementProps
