@@ -19,6 +19,7 @@ export interface TooltipProps {
 export interface SliderProps {
   children: React.ReactNode
   className?: string
+  gap?: number
 }
 
 export interface SliderArrowsProps {

@@ -54,7 +54,7 @@ Image.defaultProps = {
   src: 'https://ucarecdn.com/cf54e41e-36a0-4547-a140-a302e0387890/',
   alt: 'Image alt text',
   objectFit: 'cover',
-  objectPosition: 'center',
+  objectPosition: 'center center',
   clickAction: 'none',
   openLinkInNewTab: false,
   linkTo: '',
