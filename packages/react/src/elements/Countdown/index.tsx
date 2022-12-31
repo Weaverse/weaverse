@@ -100,7 +100,6 @@ let Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
 
 export let css: ElementCSS = {
   '@desktop': {
-    fontFamily: 'Inter',
     fontSize: '36px',
     fontWeight: 500,
     display: 'flex',
