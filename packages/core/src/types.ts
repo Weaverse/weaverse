@@ -218,6 +218,7 @@ export interface RangeInputConfigs {
   min?: number
   max?: number
   step?: number
+  unit?: string
 }
 
 export type SortableItemAction = "add" | "edit" | "duplicate" | "delete" | "toggle-visibility"
