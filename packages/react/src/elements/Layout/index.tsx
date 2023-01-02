@@ -95,6 +95,10 @@ Layout.defaultProps = {
   columns: 12,
   gap: 16,
   rowSize: 48,
+  objectFit: 'cover',
+  objectPosition: 'center center',
+  enableOverlay: false,
+  overlayOpacity: 30,
 }
 
 export default Layout

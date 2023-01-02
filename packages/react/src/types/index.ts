@@ -41,19 +41,8 @@ export interface ContainerElementProps extends WeaverseElementProps {
 export interface ImageElementProps extends WeaverseElementProps {
   src: string
   alt: string
-  objectFit: 'contain' | 'cover'
-  objectPosition:
-    | 'left'
-    | 'right'
-    | 'top'
-    | 'bottom'
-    | 'center'
-    | 'center left'
-    | 'center right'
-    | 'top left'
-    | 'top right'
-    | 'bottom left'
-    | 'bottom right'
+  objectFit: CSSProperties['objectFit']
+  objectPosition: CSSProperties['objectPosition']
   clickAction: 'none' | 'openLightbox' | 'openLink'
   linkTo?: string
   openLinkInNewTab?: boolean
@@ -70,8 +59,8 @@ export interface GridContentElementProps extends WeaverseElementProps {
 interface BackgroundDataProps {
   backgroundColor?: string
   backgroundImage?: string
-  objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down'
-  objectPosition?: string
+  objectFit?: CSSProperties['objectFit']
+  objectPosition?: CSSProperties['objectPosition']
 }
 // Layout
 export interface LayoutElementProps
