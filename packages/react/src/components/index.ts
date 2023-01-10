@@ -6,6 +6,9 @@ import { Tooltip } from './Tooltip'
 import { Slider } from './Slider'
 import { Background } from './Background'
 import { Overlay } from './Overlay'
+import { Arrows } from './Slider/Arrows'
+import { Dots } from './Slider/Dots'
+import { ResizePlugin } from './Slider/ResizePlugin'
 
 export let Components = {
   Background,
@@ -16,4 +19,10 @@ export let Components = {
   Spinner,
   Slider,
   Tooltip,
+}
+
+export let SliderComponents = {
+  Arrows,
+  Dots,
+  ResizePlugin,
 }
