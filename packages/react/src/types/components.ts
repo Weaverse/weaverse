@@ -1,6 +1,6 @@
 import type { DialogContentProps } from '@radix-ui/react-dialog'
 import type { KeenSliderInstance } from 'keen-slider'
-import type { HTMLAttributes } from 'react'
+import type { CSSProperties, HTMLAttributes } from 'react'
 import type * as PhosphorIcons from '~/components/Icons/Phosphor'
 export interface ModalContentProps extends DialogContentProps {
   size?: 'auto' | 'fullscreen'
@@ -25,5 +25,25 @@ export interface SliderProps {
 export interface SliderArrowsProps {
   currentSlide: number
   instanceRef: React.MutableRefObject<KeenSliderInstance | null>
+  className?: string
+}
+
+export interface SliderDotsProps {
+  currentSlide: number
+  instanceRef: React.MutableRefObject<KeenSliderInstance | null>
+  className?: string
+}
+
+export interface OverlayProps {
+  enableOverlay: boolean
+  overlayOpacity: number
+  className?: string
+}
+
+export interface BackgroundProps {
+  backgroundColor?: string
+  backgroundImage?: string
+  backgroundFit?: CSSProperties['objectFit']
+  backgroundPosition?: CSSProperties['objectPosition']
   className?: string
 }
