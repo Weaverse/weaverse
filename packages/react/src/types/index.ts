@@ -1,5 +1,6 @@
 import type { Weaverse, ElementCSS, WeaverseItemStore } from '@weaverse/core'
 import type { CSSProperties, ReactElement, ReactNode } from 'react'
+import type { BackgroundProps, OverlayProps } from './components'
 
 export * from './components'
 
@@ -152,4 +153,22 @@ export type InstagramMedia = {
   permalink: string
   caption: string
   thumbnail_url: string
+}
+
+export interface SlideshowProps extends WeaverseElementProps {
+  animation: 'slide' | 'fade'
+  slidesPerView: number
+  spacing: number
+  showArrows: boolean
+  showDots: boolean
+  dotsPosition: 'top' | 'bottom' | 'left' | 'right'
+  autoRotate: boolean
+  changeSlidesEvery: number
+}
+
+export interface SlideProps
+  extends WeaverseElementProps,
+    BackgroundProps,
+    OverlayProps {
+  contentPosition: string
 }
