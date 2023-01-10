@@ -115,7 +115,7 @@ let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
   if (layout === 'slider') {
     return (
       <div ref={ref} {...rest} style={style}>
-        <Slider className="wv-product-list__slider" gap={gap}>
+        <Slider className="wv-product-list__slider" gap={gap} arrowOffset={-80}>
           {productCards}
         </Slider>
       </div>

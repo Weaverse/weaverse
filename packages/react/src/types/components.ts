@@ -20,11 +20,13 @@ export interface SliderProps {
   children: React.ReactNode
   className?: string
   gap?: number
+  arrowOffset: number
 }
 
 export interface SliderArrowsProps {
   currentSlide: number
   instanceRef: React.MutableRefObject<KeenSliderInstance | null>
+  offset: number
   className?: string
 }
 

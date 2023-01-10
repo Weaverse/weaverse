@@ -66,6 +66,7 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
           instanceRef={instanceRef}
           currentSlide={currentSlide}
           className="wv-slideshow--arrows"
+          offset={20}
         />
       )}
       {showDots && created && instanceRef?.current && (
@@ -83,6 +84,7 @@ export let css: ElementCSS = {
   '@desktop': {
     opacity: 'var(--slider-opacity, 0)',
     padding: '32px 0',
+    position: 'relative',
     '.keen-slider': {
       height: '100%',
     },
