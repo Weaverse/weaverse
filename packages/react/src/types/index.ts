@@ -22,6 +22,7 @@ export interface PlaceholderProps {
   element: string
   children: ReactElement | ReactElement[] | ReactNode | ReactNode[]
   style?: CSSProperties
+  className?: string
 }
 
 // Button
@@ -163,6 +164,7 @@ export interface SlideshowProps extends WeaverseElementProps {
   showDots: boolean
   dotsPosition: 'top' | 'bottom' | 'left' | 'right'
   dotsColor: 'light' | 'dark'
+  loop: boolean
   autoRotate: boolean
   changeSlidesEvery: number
 }
