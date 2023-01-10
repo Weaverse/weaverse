@@ -162,6 +162,7 @@ export interface SlideshowProps extends WeaverseElementProps {
   showArrows: boolean
   showDots: boolean
   dotsPosition: 'top' | 'bottom' | 'left' | 'right'
+  dotsColor: 'light' | 'dark'
   autoRotate: boolean
   changeSlidesEvery: number
 }
@@ -171,4 +172,5 @@ export interface SlideProps
     BackgroundProps,
     OverlayProps {
   contentPosition: string
+  children: ReactElement[]
 }

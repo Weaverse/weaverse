@@ -1,12 +1,16 @@
 import { useKeenSlider } from 'keen-slider/react'
 import { useEffect } from 'react'
 import type { ProductImageHooksInput } from '~/types'
-import { ResizePlugin } from './ResizePlugin'
 import { ThumbnailPlugin } from './ThumbnailPlugin'
 
 export function useMediaSlider(input: ProductImageHooksInput) {
-  let { context, thumbnailSlidePerView, onSlideChanged, onSliderCreated } =
-    input
+  let {
+    context,
+    thumbnailSlidePerView,
+    onSlideChanged,
+    onSliderCreated,
+    ResizePlugin,
+  } = input
   let initialIndex = 0
   let featured_image = context?.selectedVariant?.featured_image
   if (featured_image) {

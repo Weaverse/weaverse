@@ -6,26 +6,21 @@ import type { SliderArrowsProps } from '~/types'
 import { Icon } from '../Icons'
 
 export function Arrows(props: SliderArrowsProps) {
-  let { currentSlide, instanceRef, className } = props
-  let isFirstSlide = currentSlide === 0
-  let isLastSlide = false
+  let { currentSlide, instanceRef, className, offset } = props
+  let isFirst = currentSlide === 0
+  let isLast = false
   if (instanceRef.current) {
-    isLastSlide = currentSlide === instanceRef?.current?.track?.details?.maxIdx
+    isLast = currentSlide === instanceRef?.current?.track?.details?.maxIdx
   }
-  let arrowLeftClass = clsx(
-    'wv-slider-arrow arrow--left',
-    isFirstSlide && 'arrow--disabled'
-  )
-  let arrowRightClass = clsx(
-    'wv-slider-arrow arrow--right',
-    isLastSlide && 'arrow--disabled'
-  )
+  let style = {
+    '--offset': `${offset}px`,
+  } as React.CSSProperties
 
   return (
-    <StyledArrows className={className}>
+    <StyledArrows className={className} style={style}>
       <button
         type="button"
-        className={arrowLeftClass}
+        className={clsx('arrow arrow--left', isFirst && 'arrow--disabled')}
         onClick={(e: MouseEvent) => {
           e.stopPropagation()
           instanceRef?.current?.prev()
@@ -35,7 +30,7 @@ export function Arrows(props: SliderArrowsProps) {
       </button>
       <button
         type="button"
-        className={arrowRightClass}
+        className={clsx('arrow arrow--right', isLast && 'arrow--disabled')}
         onClick={(e: MouseEvent) => {
           e.stopPropagation()
           instanceRef?.current?.next()
@@ -48,7 +43,7 @@ export function Arrows(props: SliderArrowsProps) {
 }
 
 let StyledArrows = styled('div', {
-  '.wv-slider-arrow': {
+  '.arrow': {
     position: 'absolute',
     top: '50%',
     transform: 'translateY(-50%)',
@@ -72,17 +67,17 @@ let StyledArrows = styled('div', {
       height: '22px',
     },
     '&.arrow--left': {
-      left: '-80px',
+      left: 'var(--offset, 0px)',
     },
     '&.arrow--right': {
-      right: '-80px',
+      right: 'var(--offset, 0px)',
     },
     '&.arrow--disabled': {
       opacity: 0.5,
     },
   },
   '@media (max-width: 768px)': {
-    '.wv-slider-arrow': {
+    '.arrow': {
       display: 'none',
     },
   },

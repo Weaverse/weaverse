@@ -20,11 +20,13 @@ export interface SliderProps {
   children: React.ReactNode
   className?: string
   gap?: number
+  arrowOffset: number
 }
 
 export interface SliderArrowsProps {
   currentSlide: number
   instanceRef: React.MutableRefObject<KeenSliderInstance | null>
+  offset: number
   className?: string
 }
 
@@ -32,6 +34,9 @@ export interface SliderDotsProps {
   currentSlide: number
   instanceRef: React.MutableRefObject<KeenSliderInstance | null>
   className?: string
+  absolute?: boolean
+  position?: 'top' | 'bottom' | 'left' | 'right'
+  color: 'light' | 'dark'
 }
 
 export interface OverlayProps {

@@ -5,7 +5,8 @@ import type { SliderProps } from '~/types'
 import { Arrows } from './Arrows'
 import { ResizePlugin } from './ResizePlugin'
 
-export function Slider({ children, className, gap }: SliderProps) {
+export function Slider(props: SliderProps) {
+  let { children, className, gap, arrowOffset } = props
   let [currentSlide, setCurrentSlide] = useState(0)
   let [created, setCreated] = useState(false)
   let [ref, instanceRef] = useKeenSlider<HTMLDivElement>(
@@ -48,6 +49,7 @@ export function Slider({ children, className, gap }: SliderProps) {
           currentSlide={currentSlide}
           instanceRef={instanceRef}
           className={arrowsClass}
+          offset={arrowOffset}
         />
       )}
     </>
