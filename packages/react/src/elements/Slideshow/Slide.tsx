@@ -1,8 +1,10 @@
 import type { ElementCSS } from '@weaverse/core'
+import clsx from 'clsx'
 import React, { forwardRef } from 'react'
 import { Background } from '~/components/Background'
 import { Overlay } from '~/components/Overlay'
 import type { SlideProps } from '~/types'
+import { useSlideshowContext } from './context'
 import { slidePositionMap } from './position'
 
 let Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
@@ -17,9 +19,12 @@ let Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
     children,
     ...rest
   } = props
-  let style = slidePositionMap[contentPosition]
+  let { animation } = useSlideshowContext()
+  let className = clsx(
+    animation === 'slide' ? 'keen-slider__slide' : 'fader__slide'
+  )
   return (
-    <div className="keen-slider__slide">
+    <div className={className}>
       <Background
         backgroundColor={backgroundColor}
         backgroundImage={backgroundImage}
@@ -32,8 +37,7 @@ let Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
         overlayOpacity={overlayOpacity}
         className="slide-overlay"
       />
-      <div ref={ref} style={style} {...rest}>
-        {/* @ts-ignore */}
+      <div ref={ref} style={slidePositionMap[contentPosition]} {...rest}>
         {children?.length ? children : 'Add element here'}
       </div>
     </div>
@@ -42,7 +46,6 @@ let Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
 
 export let css: ElementCSS = {
   '@desktop': {
-    position: 'relative',
     height: '100%',
     width: '1224px',
     margin: '0 auto',

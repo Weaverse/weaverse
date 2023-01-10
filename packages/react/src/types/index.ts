@@ -172,4 +172,5 @@ export interface SlideProps
     BackgroundProps,
     OverlayProps {
   contentPosition: string
+  children: ReactElement[]
 }
