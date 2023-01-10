@@ -72,20 +72,14 @@ export interface ChildElement {
   label: string
   selector: ChildElementSelector
 }
-export type ParentType =
-  | "container"
-  | "layout"
-  | "root"
-  | "product-details"
-  | "product-info"
-  | "collection.box"
-  | "collection-box"
-  | "article-box"
-  | "article-list"
-  | "slider"
-  | "tab"
-  | "accordion"
-  | "accordion.wrapper"
+export type ParentType = "container" | "layout" | "root" | "product-details" | "product-info" | "slideshow" | "slide"
+// | "collection.box"
+// | "collection-box"
+// | "article-box"
+// | "article-list"
+// | "tab"
+// | "accordion"
+// | "accordion.wrapper"
 
 export type GridSize = {
   rowSpan: number
