@@ -1,6 +1,7 @@
 import type Stitches from '@stitches/react/types/stitches'
 import type { ElementCSS, WeaverseItemStore } from '@weaverse/core'
 import clsx from 'clsx'
+import type { LinkHTMLAttributes } from 'react'
 
 // Make the css data formatted to correct order (desktop, tablet, mobile)
 function formatCSS(css: ElementCSS) {
@@ -45,4 +46,18 @@ export function generateItemClassName(
     instance.stitchesClass = newStitchesClass
   }
   return className
+}
+
+export function loadCSS(attrs: LinkHTMLAttributes<HTMLLinkElement>) {
+  return new Promise((resolve, reject) => {
+    let found = document.querySelector(`link[href="${attrs.href}"]`)
+    if (found) {
+      return resolve(true)
+    }
+    let link = document.createElement('link')
+    Object.assign(link, attrs)
+    link.addEventListener('load', () => resolve(true))
+    link.onerror = reject
+    document.head.appendChild(link)
+  })
 }

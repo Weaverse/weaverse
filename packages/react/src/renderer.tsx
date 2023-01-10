@@ -3,7 +3,7 @@ import { isBrowser } from '@weaverse/core'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { WeaverseContext, WeaverseContextProvider } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
-import { generateItemClassName } from './utils'
+import { generateItemClassName } from './utils/css'
 
 export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
   let [, setData] = useState<ProjectDataType | unknown>(context.projectData)
