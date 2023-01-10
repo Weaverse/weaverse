@@ -15,6 +15,7 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
     showArrows,
     showDots,
     dotsPosition,
+    dotsColor,
     autoRotate,
     changeSlidesEvery,
     children,
@@ -74,6 +75,9 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
           instanceRef={instanceRef}
           currentSlide={currentSlide}
           className="wv-slideshow--dots"
+          position={dotsPosition}
+          color={dotsColor}
+          absolute
         />
       )}
     </div>
@@ -98,6 +102,7 @@ Slideshow.defaultProps = {
   showArrows: true,
   showDots: true,
   dotsPosition: 'bottom',
+  dotsColor: 'light',
   autoRotate: false,
   changeSlidesEvery: 5,
 }
