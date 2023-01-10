@@ -1,7 +1,7 @@
 import type { ElementCSS } from '@weaverse/core'
 import clsx from 'clsx'
 import { useKeenSlider } from 'keen-slider/react'
-import React, { forwardRef, useEffect, useState } from 'react'
+import React, { forwardRef, useContext, useEffect, useState } from 'react'
 import { Arrows } from '~/components/Slider/Arrows'
 import { Dots } from '~/components/Slider/Dots'
 import { ResizePlugin } from '~/components/Slider/ResizePlugin'
@@ -9,6 +9,7 @@ import type { SlideshowProps } from '~/types'
 import { loadCSS } from '~/utils/css'
 import { SlideshowContext } from './context'
 import { css as stitchesCss } from '@stitches/react'
+import { WeaverseContext } from '~/context'
 
 let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
   let {
@@ -19,11 +20,13 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
     showDots,
     dotsPosition,
     dotsColor,
+    loop,
     autoRotate,
     changeSlidesEvery,
     children,
     ...rest
   } = props
+  let { isDesignMode } = useContext(WeaverseContext)
   let [opacities, setOpacities] = React.useState<number[]>([])
   let [cssLoaded, setCssLoaded] = useState(false)
   let [created, setCreated] = useState(false)
@@ -35,7 +38,8 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
         animation === 'fade'
           ? React.Children.count(children)
           : { perView: slidesPerView },
-      loop: true,
+      drag: !isDesignMode,
+      loop,
       created: () => {
         setCreated(true)
       },
@@ -143,6 +147,7 @@ Slideshow.defaultProps = {
   showDots: true,
   dotsPosition: 'bottom',
   dotsColor: 'light',
+  loop: true,
   autoRotate: false,
   changeSlidesEvery: 5,
 }

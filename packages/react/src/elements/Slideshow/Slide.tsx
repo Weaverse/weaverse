@@ -3,6 +3,7 @@ import clsx from 'clsx'
 import React, { forwardRef } from 'react'
 import { Background } from '~/components/Background'
 import { Overlay } from '~/components/Overlay'
+import Placeholder from '~/components/Placeholder'
 import type { SlideProps } from '~/types'
 import { useSlideshowContext } from './context'
 import { slidePositionMap } from './position'
@@ -38,7 +39,13 @@ let Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
         className="slide-overlay"
       />
       <div ref={ref} style={slidePositionMap[contentPosition]} {...rest}>
-        {children?.length ? children : 'Add element here'}
+        {children?.length ? (
+          children
+        ) : (
+          <Placeholder element="Slide" className="wv-slide-placeholder">
+            Drag and drop elements here
+          </Placeholder>
+        )}
       </div>
     </div>
   )
@@ -46,12 +53,17 @@ let Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
 
 export let css: ElementCSS = {
   '@desktop': {
+    position: 'relative',
     height: '100%',
     width: '1224px',
     margin: '0 auto',
     display: 'flex',
     flexDirection: 'column',
     padding: '100px 20px',
+    '.wv-slide-placeholder': {
+      height: '200px',
+      zIndex: 1,
+    },
   },
 }
 
