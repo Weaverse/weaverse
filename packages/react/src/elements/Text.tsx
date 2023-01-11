@@ -25,10 +25,6 @@ export let css: ElementCSS = {
       wordBreak: 'break-word',
       overflowWrap: 'break-word',
       whiteSpace: 'break-spaces',
-      '& *': {
-        margin: 0,
-        padding: 0,
-      },
     },
   },
 }
