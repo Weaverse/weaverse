@@ -1,11 +1,9 @@
 import type { ElementCSS } from '@weaverse/core'
-import clsx from 'clsx'
 import React, { forwardRef } from 'react'
 import { Background } from '~/components/Background'
 import { Overlay } from '~/components/Overlay'
 import Placeholder from '~/components/Placeholder'
 import type { SlideProps } from '~/types'
-import { useSlideshowContext } from './context'
 import { slidePositionMap } from './position'
 
 let Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
@@ -20,12 +18,9 @@ let Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
     children,
     ...rest
   } = props
-  let { animation } = useSlideshowContext()
-  let className = clsx(
-    animation === 'slide' ? 'keen-slider__slide' : 'fader__slide'
-  )
+
   return (
-    <div className={className}>
+    <div className="keen-slider__slide">
       <Background
         backgroundColor={backgroundColor}
         backgroundImage={backgroundImage}

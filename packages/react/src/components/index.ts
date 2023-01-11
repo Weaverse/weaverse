@@ -9,6 +9,7 @@ import { Overlay } from './Overlay'
 import { Arrows } from './Slider/Arrows'
 import { Dots } from './Slider/Dots'
 import { ResizePlugin } from './Slider/ResizePlugin'
+import { AutoplayPlugin } from './Slider/AutoplayPlugin'
 
 export let Components = {
   Background,
@@ -25,4 +26,5 @@ export let SliderComponents = {
   Arrows,
   Dots,
   ResizePlugin,
+  AutoplayPlugin,
 }

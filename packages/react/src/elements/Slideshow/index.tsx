@@ -1,73 +1,24 @@
+import { css as stitchesCss } from '@stitches/react'
 import type { ElementCSS } from '@weaverse/core'
 import clsx from 'clsx'
-import { useKeenSlider } from 'keen-slider/react'
-import React, { forwardRef, useContext, useEffect, useState } from 'react'
+import React, { forwardRef } from 'react'
 import { Arrows } from '~/components/Slider/Arrows'
 import { Dots } from '~/components/Slider/Dots'
-import { ResizePlugin } from '~/components/Slider/ResizePlugin'
 import type { SlideshowProps } from '~/types'
-import { loadCSS } from '~/utils/css'
-import { SlideshowContext } from './context'
-import { css as stitchesCss } from '@stitches/react'
-import { WeaverseContext } from '~/context'
+import { useSlideshowConfigs } from './useSlideshowConfigs'
 
 let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
   let {
     animation,
-    slidesPerView,
-    spacing,
     showArrows,
     showDots,
     dotsPosition,
     dotsColor,
-    loop,
-    autoRotate,
-    changeSlidesEvery,
     children,
     ...rest
   } = props
-  let { isDesignMode } = useContext(WeaverseContext)
-  let [opacities, setOpacities] = React.useState<number[]>([])
-  let [cssLoaded, setCssLoaded] = useState(false)
-  let [created, setCreated] = useState(false)
-  let [ready, setReady] = useState(false)
-  let [currentSlide, setCurrentSlide] = useState(0)
-  let [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>(
-    {
-      slides:
-        animation === 'fade'
-          ? React.Children.count(children)
-          : { perView: slidesPerView },
-      drag: !isDesignMode,
-      loop,
-      created: () => {
-        setCreated(true)
-      },
-      slideChanged: (slider) => {
-        setCurrentSlide(slider.track.details.rel)
-      },
-      detailsChanged: (slider) => {
-        let newOpacities = slider.track?.details?.slides?.map(
-          (slide) => slide.portion
-        )
-        setOpacities(newOpacities)
-      },
-    },
-    [ResizePlugin]
-  )
-
-  useEffect(() => {
-    loadCSS({
-      rel: 'stylesheet',
-      href: 'https://cdn.jsdelivr.net/npm/keen-slider@latest/keen-slider.min.css',
-    }).then(() => setCssLoaded(true))
-  }, [])
-
-  useEffect(() => {
-    if (created && cssLoaded) {
-      setReady(true)
-    }
-  }, [created, cssLoaded])
+  let { sliderRef, instanceRef, currentSlide, opacities, ready, created } =
+    useSlideshowConfigs(props)
 
   let style = {
     '--slider-opacity': ready ? 1 : 0,
@@ -75,15 +26,14 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
   let faderClass = ''
   if (animation === 'fade') {
     faderClass = stitchesCss({
-      '.fader__slide': opacities.reduce<Record<string, { opacity: number }>>(
-        (acc, opacity, index) => {
-          acc[`&:nth-child(${index + 1})`] = {
-            opacity,
-          }
-          return acc
-        },
-        {}
-      ),
+      '.keen-slider__slide': opacities.reduce<
+        Record<string, { opacity: number }>
+      >((acc, opacity, index) => {
+        acc[`&:nth-child(${index + 1})`] = {
+          opacity,
+        }
+        return acc
+      }, {}),
     })().className
   }
   let _className = clsx(
@@ -94,9 +44,7 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
   return (
     <div ref={ref} style={style} {...rest}>
       <div ref={sliderRef} className={_className}>
-        <SlideshowContext.Provider value={{ animation }}>
-          {children}
-        </SlideshowContext.Provider>
+        {children}
       </div>
       {showArrows && created && instanceRef?.current && (
         <Arrows
@@ -131,7 +79,7 @@ export let css: ElementCSS = {
     '.keen-fader': {
       position: 'relative',
       height: '100%',
-      '.fader__slide': {
+      '.keen-slider__slide': {
         position: 'absolute',
         inset: 0,
       },
