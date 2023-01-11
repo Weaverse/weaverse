@@ -18,12 +18,17 @@ const Text = React.forwardRef<HTMLDivElement, TextElementProps>(
 
 export let css: ElementCSS = {
   '@desktop': {
+    display: 'flex',
     padding: '10px',
     overflow: 'hidden',
     '.wv-text-content': {
       wordBreak: 'break-word',
       overflowWrap: 'break-word',
       whiteSpace: 'break-spaces',
+      '& *': {
+        margin: 0,
+        padding: 0,
+      },
     },
   },
 }
