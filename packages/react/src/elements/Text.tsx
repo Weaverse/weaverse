@@ -18,6 +18,7 @@ const Text = React.forwardRef<HTMLDivElement, TextElementProps>(
 
 export let css: ElementCSS = {
   '@desktop': {
+    display: 'flex',
     padding: '10px',
     overflow: 'hidden',
     '.wv-text-content': {

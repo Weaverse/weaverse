@@ -51,6 +51,7 @@ export let css: ElementCSS = {
     position: 'relative',
     height: '100%',
     width: '1224px',
+    maxWidth: '100%',
     margin: '0 auto',
     display: 'flex',
     flexDirection: 'column',
