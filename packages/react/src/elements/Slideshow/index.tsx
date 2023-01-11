@@ -1,3 +1,4 @@
+import { css as stitchesCss } from '@stitches/react'
 import type { ElementCSS } from '@weaverse/core'
 import clsx from 'clsx'
 import { useKeenSlider } from 'keen-slider/react'
@@ -5,11 +6,9 @@ import React, { forwardRef, useContext, useEffect, useState } from 'react'
 import { Arrows } from '~/components/Slider/Arrows'
 import { Dots } from '~/components/Slider/Dots'
 import { ResizePlugin } from '~/components/Slider/ResizePlugin'
+import { WeaverseContext } from '~/context'
 import type { SlideshowProps } from '~/types'
 import { loadCSS } from '~/utils/css'
-import { SlideshowContext } from './context'
-import { css as stitchesCss } from '@stitches/react'
-import { WeaverseContext } from '~/context'
 
 let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
   let {
@@ -40,6 +39,7 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
           : { perView: slidesPerView },
       drag: !isDesignMode,
       loop,
+      selector: animation === 'fade' ? null : '.keen-slider__slide',
       created: () => {
         setCreated(true)
       },
@@ -75,15 +75,14 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
   let faderClass = ''
   if (animation === 'fade') {
     faderClass = stitchesCss({
-      '.fader__slide': opacities.reduce<Record<string, { opacity: number }>>(
-        (acc, opacity, index) => {
-          acc[`&:nth-child(${index + 1})`] = {
-            opacity,
-          }
-          return acc
-        },
-        {}
-      ),
+      '.keen-slider__slide': opacities.reduce<
+        Record<string, { opacity: number }>
+      >((acc, opacity, index) => {
+        acc[`&:nth-child(${index + 1})`] = {
+          opacity,
+        }
+        return acc
+      }, {}),
     })().className
   }
   let _className = clsx(
@@ -94,9 +93,7 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
   return (
     <div ref={ref} style={style} {...rest}>
       <div ref={sliderRef} className={_className}>
-        <SlideshowContext.Provider value={{ animation }}>
-          {children}
-        </SlideshowContext.Provider>
+        {children}
       </div>
       {showArrows && created && instanceRef?.current && (
         <Arrows
@@ -131,7 +128,7 @@ export let css: ElementCSS = {
     '.keen-fader': {
       position: 'relative',
       height: '100%',
-      '.fader__slide': {
+      '.keen-slider__slide': {
         position: 'absolute',
         inset: 0,
       },
