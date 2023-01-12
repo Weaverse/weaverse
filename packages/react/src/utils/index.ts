@@ -1,7 +1,5 @@
 import type { CountdownTimeKey } from '~/types'
 
-export * from './css'
-
 export function getTime(_seconds: number): {
   [key in CountdownTimeKey]: number
 } {

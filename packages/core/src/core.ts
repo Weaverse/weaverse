@@ -129,17 +129,23 @@ export class Weaverse {
     script: { css: "", js: "" },
   }
   /**
-   * storing subscribe callback function for any component that want to listen to the change of WeaverseRoot
+   * Storing subscribe callback function for any component that want to listen to the change of WeaverseRoot
    * @type {Map<string, (data: any) => void>}
    */
   listeners: Set<any> = new Set()
   /**
-   * check whether the sdk is isDesignMode or not
-   * if isDesignMode is true, it means the sdk is isDesignMode mode, render the editor UI
+   * Check whether the sdk is in editor or not.
+   * If isDesignMode is true, it means the sdk is isDesignMode mode, render the editor UI,
    * else render the preview UI, plain HTML + CSS + React hydrate
    * @type {boolean}
    */
   isDesignMode = false
+
+  /**
+   * Check whether the sdk is in preview mode or not
+   * @type {boolean}
+   */
+  isPreviewMode = false
 
   /**
    * Use in element to optionally render special HTML for hydration
@@ -147,7 +153,7 @@ export class Weaverse {
    */
   ssrMode = false
   /**
-   * stitches instance for handling CSS stylesheet, media, theme for Weaverse project
+   * Stitches instance for handling CSS stylesheet, media, theme for Weaverse project
    */
   stitchesInstance: Stitches | any
 
@@ -224,8 +230,9 @@ export class Weaverse {
       }
     }, 2000)
   }
+
   /**
-   * register the custom React Component to Weaverse, store it into Weaverse.elementInstances
+   * Register the custom React Component to Weaverse, store it into Weaverse.elementInstances
    * @param element {WeaverseElement} custom React Component
    */
   registerElement(element: WeaverseElement) {
@@ -262,7 +269,7 @@ export class Weaverse {
   }
 
   /**
-   * fetch data from Weaverse API (https://weaverse.io/api/v1/project/:projectKey)
+   * Fetch data from Weaverse API (https://weaverse.io/api/v1/project/:projectKey)
    * @param fetch {fetch} custom fetch function, pass in custom fetch function if you want to use your own fetch function
    * @param appUrl
    * @param projectKey

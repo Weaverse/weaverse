@@ -1,5 +1,5 @@
 import type { WeaverseElementProps } from '@weaverse/react'
-import type { KeenSliderInstance } from 'keen-slider'
+import type { KeenSliderInstance, KeenSliderPlugin } from 'keen-slider'
 import type {
   OptionDisplayType,
   ShopifyGlobalConfigs,
@@ -115,6 +115,7 @@ export interface ProductImageHooksInput {
   thumbnailSlidePerView: number
   onSlideChanged?: (slider: KeenSliderInstance) => void
   onSliderCreated?: (slider: KeenSliderInstance) => void
+  ResizePlugin: KeenSliderPlugin
 }
 export interface ProductMediaArrowsProps {
   currentSlide: number

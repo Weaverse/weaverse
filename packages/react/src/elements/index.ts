@@ -7,14 +7,14 @@ import * as Layout from './Layout'
 import * as Map from './Map'
 import * as Text from './Text'
 import * as Video from './Video'
-import * as Instagram from './Instagram'
+// import * as Instagram from './Instagram'
 // import * as Accordion from './accordion'
 // import * as AccordionWrapper from './accordion/AccordionWrapper'
 // import * as AccordionContent from './accordion/AccordionContent'
 // import * as Tab from './tab'
 // import * as TabContent from './tab/TabContent'
-// import * as Slider from './slider'
-// import * as SliderContent from './slider/SliderContent'
+import * as Slideshow from './Slideshow'
+import * as Slide from './Slideshow/Slide'
 
 export const Elements: Record<string, WeaverseElement> = {
   Countdown: {
@@ -88,14 +88,14 @@ export const Elements: Record<string, WeaverseElement> = {
   //   type: 'tab.content',
   //   defaultCss: TabContent.css,
   // },
-  // Slider: {
-  //   Component: Slider.default,
-  //   type: 'slider',
-  //   defaultCss: Slider.css,
-  // },
-  // SliderContent: {
-  //   Component: SliderContent.default,
-  //   type: 'slider.content',
-  //   defaultCss: SliderContent.css,
-  // },
+  Slideshow: {
+    Component: Slideshow.default,
+    type: 'slideshow',
+    defaultCss: Slideshow.css,
+  },
+  Slide: {
+    Component: Slide.default,
+    type: 'slide',
+    defaultCss: Slide.css,
+  },
 }

@@ -1,10 +1,9 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef, useEffect, useState } from 'react'
+import { SliderComponents } from '@weaverse/react'
+import React, { Component, forwardRef, useEffect, useState } from 'react'
 import { PRODUCT_IMAGE_PLACEHOLDER } from '~/constant'
 import { useProductContext } from '~/hooks'
 import type { ProductMediaProps, ProductMediaSize } from '~/types'
-import { Arrows, css as arrowsCss } from './Arrows'
-import { css as dotsCss, Dots } from './Dots'
 import { Image } from './Image'
 import {
   css as fullscreenSliderCss,
@@ -18,6 +17,7 @@ let mediaSizesMap: Record<ProductMediaSize, string> = {
   medium: '50%',
   large: '60%',
 }
+let { Arrows, Dots, ResizePlugin } = SliderComponents
 
 let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
   (props, ref) => {
@@ -48,6 +48,7 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
         onSliderCreated: () => {
           setCreated(true)
         },
+        ResizePlugin,
       })
 
     useEffect(() => {
@@ -105,10 +106,20 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
             ))}
           </div>
           {created && instanceRef?.current && (
-            <Arrows currentSlide={currentSlide} instanceRef={instanceRef} />
+            <Arrows
+              currentSlide={currentSlide}
+              instanceRef={instanceRef}
+              offset={10}
+              className="wv-pmedia-slider__arrows"
+            />
           )}
           {created && instanceRef.current && (
-            <Dots currentSlide={currentSlide} instanceRef={instanceRef} />
+            <Dots
+              currentSlide={currentSlide}
+              instanceRef={instanceRef}
+              color="dark"
+              className="wv-pmedia-slider__dots"
+            />
           )}
         </div>
         <div ref={thumbnailRef} className="keen-slider wv-thumbnail-slider">
@@ -170,8 +181,9 @@ export let css: ElementCSS = {
           objectFit: 'cover',
         },
       },
-      ...arrowsCss['@desktop'],
-      ...dotsCss['@desktop'],
+      '.wv-pmedia-slider__dots': {
+        display: 'none',
+      },
     },
     '.wv-thumbnail-slider': {
       marginTop: '10px',
@@ -195,8 +207,9 @@ export let css: ElementCSS = {
     paddingRight: '0px',
     marginBottom: '32px',
     '.wv-product-slider__wrapper': {
-      ...arrowsCss['@mobile'],
-      ...dotsCss['@mobile'],
+      '.wv-pmedia-slider__dots': {
+        display: 'flex',
+      },
     },
     '.wv-thumbnail-slider': {
       display: 'none !important',
