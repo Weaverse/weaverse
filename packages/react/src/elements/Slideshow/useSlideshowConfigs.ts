@@ -16,7 +16,7 @@ export function useSlideshowConfigs(props: SlideshowProps) {
     children,
   } = props
 
-  let { isDesignMode } = useContext(WeaverseContext)
+  let { isDesignMode, isPreviewMode } = useContext(WeaverseContext)
   let [opacities, setOpacities] = React.useState<number[]>([])
   let [cssLoaded, setCssLoaded] = useState(false)
   let [created, setCreated] = useState(false)
@@ -24,7 +24,7 @@ export function useSlideshowConfigs(props: SlideshowProps) {
   let [currentSlide, setCurrentSlide] = useState(0)
 
   let sliderPlugins = [ResizePlugin]
-  if (autoRotate && !isDesignMode) {
+  if (autoRotate && (isPreviewMode || !isDesignMode)) {
     sliderPlugins.push(AutoplayPlugin(changeSlidesEvery))
   }
   let [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>(
@@ -33,7 +33,7 @@ export function useSlideshowConfigs(props: SlideshowProps) {
         animation === 'fade'
           ? React.Children.count(children)
           : { perView: slidesPerView },
-      drag: !isDesignMode,
+      drag: isPreviewMode || !isDesignMode,
       loop,
       selector: animation === 'fade' ? null : '.keen-slider__slide',
       created: () => {
