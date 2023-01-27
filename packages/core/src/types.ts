@@ -13,14 +13,14 @@ export interface ProjectDataType {
   pageId?: string // for standalone app, we have pageId for the page that we're editing
 }
 
-export interface InitializeData {
-  id: string
-  handle: string
-  data: ProjectDataType
-  published: boolean
-  projectKey?: string
-  studioUrl?: string
-}
+// export interface InitializeData {
+//   id: string
+//   handle: string
+//   data: ProjectDataType
+//   published: boolean
+//   projectKey?: string
+//   studioUrl?: string
+// }
 
 export interface BreakPoints {
   mobile: string
