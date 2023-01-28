@@ -90,6 +90,7 @@ export let css: ElementCSS = {
           height: '100%',
           display: 'inline-block',
           borderRadius: 'var(--radius, 0px)',
+          lineHeight: 1,
         },
         '&.wv-option__button': {
           padding: '0 10px',
