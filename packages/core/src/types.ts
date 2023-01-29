@@ -94,6 +94,8 @@ export type ToolbarAction =
   | "paste-styles"
   | "move-up"
   | "move-down"
+  | "next-slide"
+  | "prev-slide"
   | "change-background"
   | "toggle-visibility"
   | "more-actions"

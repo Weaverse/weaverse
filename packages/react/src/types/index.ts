@@ -1,4 +1,5 @@
 import type { Weaverse, ElementCSS, WeaverseItemStore } from '@weaverse/core'
+import type { KeenSliderInstance } from 'keen-slider'
 import type { CSSProperties, ReactElement, ReactNode } from 'react'
 import type { BackgroundProps, OverlayProps } from './components'
 
@@ -175,4 +176,10 @@ export interface SlideProps
     OverlayProps {
   contentPosition: string
   children: ReactElement[]
+}
+
+declare global {
+  interface Window {
+    weaverseSlideshowInstances: Record<string, KeenSliderInstance>
+  }
 }
