@@ -36,8 +36,20 @@ export function useSlideshowConfigs(props: SlideshowProps) {
       drag: isPreviewMode || !isDesignMode,
       loop,
       selector: animation === 'fade' ? null : '.keen-slider__slide',
-      created: () => {
+      created: (slider) => {
         setCreated(true)
+        if (isDesignMode) {
+          // Save instance to window so we can access it inside the editor
+          let slideshowElement = slider.container.closest(
+            '[data-wv-type="slideshow"]'
+          )
+          let elementId = slideshowElement?.getAttribute('data-wv-id')
+          if (elementId) {
+            window.weaverseSlideshowInstances = {
+              [elementId]: slider,
+            }
+          }
+        }
       },
       slideChanged: (slider) => {
         setCurrentSlide(slider.track.details.rel)

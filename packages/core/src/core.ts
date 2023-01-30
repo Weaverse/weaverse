@@ -7,15 +7,7 @@
 import * as stitches from "@stitches/core"
 import type Stitches from "@stitches/core/types/stitches"
 import type { RefObject } from "react"
-import type {
-  BreakPoints,
-  ElementData,
-  ElementFlags,
-  InitializeData,
-  ProjectDataType,
-  WeaverseElement,
-  WeaverseType,
-} from "./types"
+import type { BreakPoints, ElementData, ElementFlags, ProjectDataType, WeaverseElement, WeaverseType } from "./types"
 import { isIframe, merge, stichesUtils } from "./utils"
 
 /**
@@ -190,24 +182,25 @@ export class Weaverse {
     this.initStitches()
     this.initProjectItemData()
   }
-  initialized = false
-  initializeData = (data: InitializeData) => {
-    if (!this.initialized) {
-      let { data: pageData, published, id, projectKey, studioUrl } = data
-      this.projectKey = projectKey || this.projectKey
-      this.appUrl = studioUrl || this.appUrl
-      this.projectData = { ...pageData, pageId: id }
-      this.isDesignMode = !published
-      this.initProjectItemData()
-      if (this.isDesignMode) {
-        this.triggerUpdate()
-        this.loadStudio()
-      }
-    }
-    this.initialized = true
-  }
 
-  loadStudio() {
+  // initialized = false
+  // initializeData = (data: InitializeData) => {
+  //   if (!this.initialized) {
+  //     let { data: pageData, published, id, projectKey, studioUrl } = data
+  //     this.projectKey = projectKey || this.projectKey
+  //     this.appUrl = studioUrl || this.appUrl
+  //     this.projectData = { ...pageData, pageId: id }
+  //     this.isDesignMode = !published
+  //     this.initProjectItemData()
+  //     if (this.isDesignMode) {
+  //       this.triggerUpdate()
+  //       this.loadStudio()
+  //     }
+  //   }
+  //   this.initialized = true
+  // }
+
+  loadStudio(version: string) {
     setTimeout(() => {
       if (isIframe && this.isDesignMode && !this.studioBridge) {
         const initStudio = () => {
@@ -217,10 +210,9 @@ export class Weaverse {
         }
 
         if (!window.WeaverseStudioBridge) {
-          // load studio bridge script by url: https://weaverse.io/assets/studio/studio-bridge.js
+          // Studio bridge script source -> https://weaverse.io/assets/studio/studio-bridge.js
           let studioBridgeScript = document.createElement("script")
-          let timeStamp = new Date().getTime()
-          studioBridgeScript.src = `${this.appUrl}/assets/studio/studio-bridge.js?t=${timeStamp}`
+          studioBridgeScript.src = `${this.appUrl}/assets/studio/studio-bridge.js?v=${version}`
           studioBridgeScript.type = "module"
           studioBridgeScript.onload = initStudio
           document.body.appendChild(studioBridgeScript)
@@ -287,6 +279,7 @@ export class Weaverse {
       .then((res: Response) => res.json())
       .catch((err: Error) => console.log("Error fetching project data:", err))
   }
+
   setProjectData(projectData: ProjectDataType) {
     this.projectData = projectData
     this.initProjectItemData()
