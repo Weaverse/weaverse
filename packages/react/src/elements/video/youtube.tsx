@@ -13,13 +13,5 @@ export function Youtube(props: YoutubeElementProps) {
   let allow = `accelerometer;${
     autoPlay ? 'autoplay;' : ''
   } clipboard-write; encrypted-media; gyroscope; picture-in-picture`
-  return (
-    <iframe
-      src={youtubeSrc}
-      width="100%"
-      height="100%"
-      allowFullScreen
-      allow={allow}
-    />
-  )
+  return <iframe src={youtubeSrc} width="100%" height="100%" allow={allow} />
 }
