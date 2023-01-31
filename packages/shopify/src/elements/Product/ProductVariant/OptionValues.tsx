@@ -3,7 +3,10 @@ import { Components } from '@weaverse/react'
 import clsx from 'clsx'
 import React from 'react'
 import type { OptionValuesProps } from '~/types'
-import { getOptionItemStyle, getSoldOutAndUnavailableState } from '~/utils'
+import {
+  getSoldOutAndUnavailableState,
+  getOptionItemStyle,
+} from '~/utils/option'
 
 let { Tooltip } = Components
 

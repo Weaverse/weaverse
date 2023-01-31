@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import type { ProductContextType } from '~/types'
-import { getVariantOptions } from '~/utils'
+import { getVariantOptions } from '~/utils/variant'
 
 export function useOptions(context: ProductContextType) {
   let [selectedOptions, setSelectedOptions] = React.useState<string[]>(() => {
