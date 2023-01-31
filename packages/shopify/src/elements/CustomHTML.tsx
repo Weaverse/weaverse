@@ -15,7 +15,7 @@ export let CustomHTML = forwardRef<HTMLDivElement, CustomHTMLProps>(
       return (
         <div ref={ref} {...rest}>
           <Components.Placeholder element="Custom HTML">
-            Click <em>Add code</em> to add your custom HTML & Liquid code.
+            Click <strong>Add code</strong> to add your custom HTML & Liquid.
           </Components.Placeholder>
         </div>
       )
