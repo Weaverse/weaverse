@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import type { MouseEvent } from 'react'
 import React from 'react'
 import type { SliderArrowsProps } from '~/types/components'
-import { Icon } from '../Icons'
+import { Icon } from '../_icons'
 
 export function Arrows(props: SliderArrowsProps) {
   let { currentSlide, instanceRef, className, offset } = props

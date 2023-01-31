@@ -1,8 +1,8 @@
 import type { ElementCSS } from '@weaverse/core'
 import React, { forwardRef } from 'react'
-import { Background } from '~/components/Background'
-import { Overlay } from '~/components/Overlay'
-import Placeholder from '~/components/Placeholder'
+import { Background } from '~/components/background'
+import { Overlay } from '~/components/overlay'
+import Placeholder from '~/components/placeholder'
 import type { SlideProps } from '~/types'
 import { slidePositionMap } from './position'
 

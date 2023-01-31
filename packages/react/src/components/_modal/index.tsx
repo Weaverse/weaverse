@@ -6,14 +6,14 @@ import type {
 import { Close, Portal, Root, Trigger } from '@radix-ui/react-dialog'
 import React, { forwardRef } from 'react'
 import type { ModalContentProps } from '~/types/components'
-import { Icon } from '../Icons'
+import { Icon } from '../_icons'
 import {
   StyledCloseIcon,
   StyledContent,
   StyledOverlay,
   StyledTitle,
 } from './styled'
-import { useOpenChangeEffect } from './useOpenChangeEffect'
+import { useOpenChangeEffect } from './use-open-change-effect'
 
 export let Modal = (props: DialogProps) => {
   let { children, open, defaultOpen, onOpenChange, ...rest } = props

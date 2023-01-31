@@ -1,7 +1,7 @@
 import type { DialogContentProps } from '@radix-ui/react-dialog'
 import type { KeenSliderInstance } from 'keen-slider'
 import type { CSSProperties, HTMLAttributes } from 'react'
-import type * as PhosphorIcons from '~/components/Icons/Phosphor'
+import type * as PhosphorIcons from '~/components/_icons/_phosphor'
 export interface ModalContentProps extends DialogContentProps {
   size?: 'auto' | 'fullscreen'
   portal?: boolean

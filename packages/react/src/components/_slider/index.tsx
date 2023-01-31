@@ -2,8 +2,8 @@ import clsx from 'clsx'
 import { useKeenSlider } from 'keen-slider/react'
 import React, { useState } from 'react'
 import type { SliderProps } from '~/types/components'
-import { Arrows } from './Arrows'
-import { ResizePlugin } from './ResizePlugin'
+import { Arrows } from './_arrows'
+import { ResizePlugin } from './resize-plugin'
 
 export function Slider(props: SliderProps) {
   let { children, className, gap, arrowOffset } = props
