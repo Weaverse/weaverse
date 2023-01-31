@@ -1,5 +1,5 @@
 import React from 'react'
-import { Icon } from './_icons'
+import { Icon } from './icons'
 
 export function Spinner() {
   return (
