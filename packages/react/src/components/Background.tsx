@@ -1,7 +1,7 @@
 import { styled } from '@stitches/react'
 import type { CSSProperties } from 'react'
 import React from 'react'
-import type { BackgroundProps } from '~/types'
+import type { BackgroundProps } from '~/types/components'
 
 export function Background(props: BackgroundProps) {
   let {

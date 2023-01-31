@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import { useKeenSlider } from 'keen-slider/react'
 import React, { useState } from 'react'
-import type { SliderProps } from '~/types'
+import type { SliderProps } from '~/types/components'
 import { Arrows } from './Arrows'
 import { ResizePlugin } from './ResizePlugin'
 

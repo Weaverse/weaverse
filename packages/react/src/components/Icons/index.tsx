@@ -1,5 +1,5 @@
 import React from 'react'
-import type { WeaverseIconProps } from '~/types'
+import type { WeaverseIconProps } from '~/types/components'
 import * as PhosphorIcons from './Phosphor'
 import clsx from 'clsx'
 

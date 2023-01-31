@@ -1,11 +1,11 @@
 import type {
   DialogCloseProps,
-  DialogTitleProps,
   DialogProps,
+  DialogTitleProps,
 } from '@radix-ui/react-dialog'
 import { Close, Portal, Root, Trigger } from '@radix-ui/react-dialog'
-import React, { forwardRef, useEffect } from 'react'
-import type { ModalContentProps } from '~/types'
+import React, { forwardRef } from 'react'
+import type { ModalContentProps } from '~/types/components'
 import { Icon } from '../Icons'
 import {
   StyledCloseIcon,

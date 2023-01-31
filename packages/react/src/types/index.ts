@@ -3,8 +3,6 @@ import type { KeenSliderInstance } from 'keen-slider'
 import type { CSSProperties, ReactElement, ReactNode } from 'react'
 import type { BackgroundProps, OverlayProps } from './components'
 
-export * from './components'
-
 export interface WeaverseElementProps extends Partial<ReactElement> {
   css?: ElementCSS
   children?: ReactElement | ReactElement[] | ReactNode | ReactNode[]

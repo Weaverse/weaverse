@@ -1,4 +1,4 @@
-import type { TooltipProps } from '~/types'
+import type { TooltipProps } from '~/types/components'
 import React from 'react'
 
 export function Tooltip({ children }: TooltipProps) {
