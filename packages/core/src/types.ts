@@ -1,6 +1,6 @@
 import type * as Stitches from "@stitches/core"
 import type { ForwardRefExoticComponent } from "react"
-import type { stichesUtils } from "./utils"
+import type { stichesUtils } from "./utils/styles"
 
 // Project types
 export interface ProjectDataType {

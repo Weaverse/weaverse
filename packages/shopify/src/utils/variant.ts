@@ -1,4 +1,4 @@
-import type { ShopifyProduct, ShopifyProductVariant } from '~/types'
+import type { ShopifyProduct, ShopifyProductVariant } from '~/types/shopify'
 
 /**
  * Find a match in the project JSON (using Array with option values) and return the variant (as an Object)

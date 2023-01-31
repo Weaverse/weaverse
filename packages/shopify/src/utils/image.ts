@@ -1,5 +1,3 @@
-import type { ShopifyProduct } from '~/types'
-
 /**
  * Resize an image to the specified dimensions.
  *
