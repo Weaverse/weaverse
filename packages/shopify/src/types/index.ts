@@ -266,9 +266,6 @@ export interface CustomHTMLProps extends WeaverseElementProps {
   content: string
 }
 
-export * from './shopify'
-export * from './configs'
-
 declare global {
   interface Window {
     weaverseShopifyConfigs: ShopifyGlobalConfigs

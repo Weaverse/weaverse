@@ -8,9 +8,9 @@ import { Image } from './Image'
 import {
   css as fullscreenSliderCss,
   MediaFullscreenSlider,
-} from './MediaFullscreenSlider'
-import { useMediaSlider } from './useMediaSlider'
-import { useMediaZoomInEffect } from './useMediaZoomInEffect'
+} from './media-fullscreen-slider'
+import { useMediaSlider } from './use-media-slider'
+import { useMediaZoomInEffect } from './use-media-zoom-in-effect'
 
 let mediaSizesMap: Record<ProductMediaSize, string> = {
   small: '40%',

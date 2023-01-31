@@ -4,9 +4,9 @@ import { useProductContext } from '~/hooks/use-product-context'
 import type { ProductVariantProps } from '~/types'
 import { getOptionsGroupConfigs } from '~/utils/option'
 import { getVariantFromOptionArray } from '~/utils/variant'
-import { CombinedVariantSelector } from './CombinedVariantSelector'
-import { OptionValues, css as optionValuesCss } from './OptionValues'
-import { useOptions } from './useOptions'
+import { CombinedVariantSelector } from './combined-variant-selector'
+import { OptionValues, css as optionValuesCss } from './option-values'
+import { useOptions } from './use-options'
 
 let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
   (props, ref) => {

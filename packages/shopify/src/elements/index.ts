@@ -1,5 +1,5 @@
 import type { WeaverseElement } from '@weaverse/core'
-import * as Form from './_form'
+import * as Form from './form'
 import * as CustomHTML from './custom-html'
 // import * as ArticleList from '~/elements/article/list'
 import * as ArticleBox from '~/elements/article/box'
@@ -12,7 +12,7 @@ import * as CollectionBox from '~/elements/collection/box'
 import * as CollectionTitle from '~/elements/collection/title'
 import * as CollectionDescription from '~/elements/collection/description'
 import * as CollectionImage from '~/elements/collection/image'
-import { productElements } from './_product'
+import { productElements } from './product'
 import * as ProductList from './product-list'
 
 let elements: Record<string, WeaverseElement> = {

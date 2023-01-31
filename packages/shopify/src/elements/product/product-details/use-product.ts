@@ -1,7 +1,7 @@
 import { WeaverseContext } from '@weaverse/react'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { weaverseShopifyProducts } from '~/proxy'
-import type { ShopifyProduct, ShopifyProductVariant } from '~/types'
+import type { ShopifyProduct, ShopifyProductVariant } from '~/types/shopify'
 
 export function useProduct(
   productId: number | 'default',

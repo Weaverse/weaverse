@@ -4,7 +4,7 @@ import React, { forwardRef, useState } from 'react'
 import { useProductContext } from '~/hooks/use-product-context'
 import type { ProductBuyButtonProps } from '~/types'
 import { addProductToCart } from '~/utils/cart'
-import { QuantitySelector } from './QuantitySelector'
+import { QuantitySelector } from './quantity-selector'
 
 let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
   (props, ref) => {
