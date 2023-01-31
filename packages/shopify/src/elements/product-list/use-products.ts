@@ -3,7 +3,8 @@ import {
   weaverseShopifyProducts,
   weaverseShopifyProductsByCollection,
 } from '~/proxy'
-import type { ShopifyProduct, UseProductHookInput } from '~/types'
+import type { UseProductHookInput } from '~/types'
+import type { ShopifyProduct } from '~/types/shopify'
 
 export function useProducts(input: UseProductHookInput) {
   let { source, collectionId, fixedProducts, isDesignMode } = input

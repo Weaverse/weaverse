@@ -12,7 +12,7 @@ let CollectionDescription = forwardRef<HTMLDivElement>((props, ref) => {
   let html = ssrMode ? `{{ wv_collection.description }}` : collection?.body_html
   return (
     <div ref={ref} {...rest}>
-      <span dangerouslySetInnerHTML={{ __html: html }} />
+      {html && <span dangerouslySetInnerHTML={{ __html: html }} />}
     </div>
   )
 })

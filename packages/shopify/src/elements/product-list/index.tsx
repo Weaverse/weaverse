@@ -4,7 +4,7 @@ import React, { forwardRef, useContext } from 'react'
 import type { ProductListProps } from '~/types'
 import { ProductCard, css as productCardCss } from './product-card'
 import { css as skeletonCss, Skeleton } from './skeleton'
-import { useProducts } from './useProducts'
+import { useProducts } from './use-products'
 let { Placeholder, Slider } = Components
 
 let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {

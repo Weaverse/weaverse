@@ -24,7 +24,7 @@ import ProductVariant, {
 import ProductVendor, {
   css as vendorCss,
 } from '~/elements/product/product-vendor'
-import type { ShopifyProduct } from '~/types'
+import type { ShopifyProduct } from '~/types/shopify'
 
 let { Icon, ModalComponents } = Components
 let { Modal, ModalContent, ModalTrigger } = ModalComponents

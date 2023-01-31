@@ -4,7 +4,7 @@ import React, { Component, forwardRef, useEffect, useState } from 'react'
 import { PRODUCT_IMAGE_PLACEHOLDER } from '~/constant'
 import { useProductContext } from '~/hooks/use-product-context'
 import type { ProductMediaProps, ProductMediaSize } from '~/types'
-import { Image } from './Image'
+import { Image } from './_image'
 import {
   css as fullscreenSliderCss,
   MediaFullscreenSlider,
