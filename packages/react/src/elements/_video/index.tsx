@@ -3,9 +3,9 @@ import React, { forwardRef, useContext } from 'react'
 import { WeaverseContext } from '~/context'
 import type { VideoElementProps } from '~/types'
 import { getVimeoId, getYoutubeEmbedId } from '~/utils'
-import { HTMLVideo } from './HTMLVideo'
-import { Vimeo } from './Vimeo'
-import { Youtube } from './Youtube'
+import { HTMLVideo } from './html-video'
+import { Vimeo } from './_vimeo'
+import { Youtube } from './_youtube'
 
 let Video = forwardRef<HTMLDivElement, VideoElementProps>((props, ref) => {
   let { isDesignMode } = useContext(WeaverseContext)

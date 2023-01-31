@@ -4,7 +4,7 @@ import { COUNTDOWN_KEY, TIMES } from '~/constant'
 import { WeaverseContext } from '~/context'
 import type { CountdownElementProps } from '~/types'
 import { getTime } from '~/utils'
-import { TimerBlock } from './TimerBlock'
+import { TimerBlock } from './timer-block'
 
 let Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
   (props, ref) => {

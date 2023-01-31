@@ -1,6 +1,6 @@
 import React, { createContext, forwardRef, useState } from 'react'
 import type { WeaverseElementProps } from '~/types'
-import { TabHeaderWrapper } from './TabHeaderWrapper'
+import { TabHeaderWrapper } from './tab-header-wrapper'
 
 interface TabProps extends WeaverseElementProps {
   fullWidthTabHeader: boolean

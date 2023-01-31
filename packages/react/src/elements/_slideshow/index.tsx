@@ -5,7 +5,7 @@ import React, { forwardRef } from 'react'
 import { Arrows } from '~/components/slider/arrows'
 import { Dots } from '~/components/slider/dots'
 import type { SlideshowProps } from '~/types'
-import { useSlideshowConfigs } from './useSlideshowConfigs'
+import { useSlideshowConfigs } from './use-slideshow-configs'
 
 let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
   let {
