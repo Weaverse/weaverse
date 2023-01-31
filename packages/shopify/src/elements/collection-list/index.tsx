@@ -113,10 +113,6 @@ export let css: ElementCSS = {
     gap: 'var(--gap, 16px)',
     overflow: 'var(--overflow, hidden)',
     position: 'relative',
-    '@media (max-width: 1024px)': {
-      gridTemplateColumns: 'repeat(3, 1fr)',
-      gridTemplateRows: 'repeat(var(--rows), 1fr) 0',
-    },
     ...collectionCardCss['@desktop'],
     ...skeletonCss['@desktop'],
   },
