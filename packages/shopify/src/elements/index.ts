@@ -7,11 +7,11 @@ import * as ArticleTitle from '~/elements/article/title'
 import * as ArticleDescription from '~/elements/article/description'
 import * as ArticleImage from '~/elements/article/image'
 import * as ArticleMeta from '~/elements/article/meta'
-// import * as CollectionList from '~/elements/collection/list'
-import * as CollectionBox from '~/elements/collection/box'
-import * as CollectionTitle from '~/elements/collection/title'
-import * as CollectionDescription from '~/elements/collection/description'
-import * as CollectionImage from '~/elements/collection/image'
+import * as CollectionList from '~/elements/collection-list'
+// import * as CollectionBox from '~/elements/collection/box'
+// import * as CollectionTitle from '~/elements/collection/title'
+// import * as CollectionDescription from '~/elements/collection/description'
+// import * as CollectionImage from '~/elements/collection/image'
 import { productElements } from './product'
 import * as ProductList from './product-list'
 
@@ -50,34 +50,33 @@ let elements: Record<string, WeaverseElement> = {
     defaultCss: ArticleImage.css,
     permanentCss: ArticleImage.permanentCss,
   },
-  // CollectionList: {
-  //   Component: CollectionList.default,
-  //   type: 'collection-list',
-  //   defaultCss: CollectionList.css,
-  //   permanentCss: CollectionList.permanentCss,
+  CollectionList: {
+    Component: CollectionList.default,
+    type: 'collection-list',
+    defaultCss: CollectionList.css,
+  },
+  // CollectionBox: {
+  //   Component: CollectionBox.default,
+  //   type: 'collection-box',
+  //   defaultCss: CollectionBox.css,
+  //   permanentCss: CollectionBox.permanentCss,
   // },
-  CollectionBox: {
-    Component: CollectionBox.default,
-    type: 'collection-box',
-    defaultCss: CollectionBox.css,
-    permanentCss: CollectionBox.permanentCss,
-  },
-  CollectionTitle: {
-    Component: CollectionTitle.default,
-    type: 'collection-title',
-    defaultCss: CollectionTitle.css,
-  },
-  CollectionDescription: {
-    Component: CollectionDescription.default,
-    type: 'collection-description',
-    defaultCss: CollectionDescription.css,
-  },
-  CollectionImage: {
-    Component: CollectionImage.default,
-    type: 'collection-image',
-    defaultCss: CollectionImage.css,
-    permanentCss: CollectionImage.permanentCss,
-  },
+  // CollectionTitle: {
+  //   Component: CollectionTitle.default,
+  //   type: 'collection-title',
+  //   defaultCss: CollectionTitle.css,
+  // },
+  // CollectionDescription: {
+  //   Component: CollectionDescription.default,
+  //   type: 'collection-description',
+  //   defaultCss: CollectionDescription.css,
+  // },
+  // CollectionImage: {
+  //   Component: CollectionImage.default,
+  //   type: 'collection-image',
+  //   defaultCss: CollectionImage.css,
+  //   permanentCss: CollectionImage.permanentCss,
+  // },
   Form: {
     Component: Form.default,
     type: 'form',
