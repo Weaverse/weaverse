@@ -2,8 +2,8 @@ import type { ElementCSS } from '@weaverse/react'
 import { Components, WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext } from 'react'
 import type { ProductListProps } from '~/types'
-import { ProductCard, css as productCardCss } from './ProductCard'
-import { css as skeletonCss, Skeleton } from './Skeleton'
+import { ProductCard, css as productCardCss } from './product-card'
+import { css as skeletonCss, Skeleton } from './_skeleton'
 import { useProducts } from './useProducts'
 let { Placeholder, Slider } = Components
 

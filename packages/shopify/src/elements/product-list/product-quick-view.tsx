@@ -5,23 +5,29 @@ import React, { useContext } from 'react'
 import { PRODUCT_IMAGE_PLACEHOLDER } from '~/constant'
 import ProductBuyButton, {
   css as buyButtonCss,
-} from '~/elements/Product/ProductBuyButton'
+} from '~/elements/_product/product-buy-button'
 import ProductDescription, {
   css as descriptionCss,
-} from '~/elements/Product/ProductDescription'
+} from '~/elements/_product/product-description'
 import ProductDetails, {
   css as detailsCss,
-} from '~/elements/Product/ProductDetails'
-import ProductInfo, { css as infoCss } from '~/elements/Product/ProductInfo'
-import ProductMedia, { css as mediasCss } from '~/elements/Product/ProductMedia'
-import ProductPrice, { css as priceCss } from '~/elements/Product/ProductPrice'
-import ProductTitle, { css as titleCss } from '~/elements/Product/ProductTitle'
+} from '~/elements/_product/product-details'
+import ProductInfo, { css as infoCss } from '~/elements/_product/product-info'
+import ProductMedia, {
+  css as mediasCss,
+} from '~/elements/_product/product-media'
+import ProductPrice, {
+  css as priceCss,
+} from '~/elements/_product/product-price'
+import ProductTitle, {
+  css as titleCss,
+} from '~/elements/_product/product-title'
 import ProductVariant, {
   css as variantCss,
-} from '~/elements/Product/ProductVariant'
+} from '~/elements/_product/product-variant'
 import ProductVendor, {
   css as vendorCss,
-} from '~/elements/Product/ProductVendor'
+} from '~/elements/_product/product-vendor'
 import type { ShopifyProduct } from '~/types'
 
 let { Icon, ModalComponents } = Components

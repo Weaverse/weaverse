@@ -6,7 +6,7 @@ import { formatMoney } from '~/utils/money'
 import {
   css as productCardOptionsCss,
   ProductCardOptions,
-} from './ProductCardOptions'
+} from './product-card-options'
 
 export function ProductCardInfo(props: ProductCardInfoProps) {
   let { product, showProductOption, optionName, optionLimit } = props

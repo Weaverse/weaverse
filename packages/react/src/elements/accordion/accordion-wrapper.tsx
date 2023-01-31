@@ -13,11 +13,11 @@ const AccordionWrapper = forwardRef<
 >((props, ref) => {
   const { ['data-wv-id']: wvId, name, children, ...rest } = props
   const { iconName, active, setActive } = useContext(AccordionContext)
-  const isActive = active.includes(wvId)
+  const isActive = active.includes(wvId!)
   return (
     <div ref={ref} {...rest}>
       <div
-        onClick={() => setActive(wvId)}
+        onClick={() => setActive(wvId!)}
         className={`wv-acc-header ${isActive ? 'active' : ''}`}
       >
         <span>{name}</span>

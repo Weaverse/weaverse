@@ -1,7 +1,7 @@
 import type { ElementCSS } from '@weaverse/react'
 import React from 'react'
 import type { ProductCardButtonsProps } from '~/types'
-import { ProductQuickView } from './ProductQuickView'
+import { ProductQuickView } from './product-quick-view'
 
 export function ProductCardButtons(props: ProductCardButtonsProps) {
   let {
