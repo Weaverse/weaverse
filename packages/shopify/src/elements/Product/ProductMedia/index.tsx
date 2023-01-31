@@ -2,7 +2,7 @@ import type { ElementCSS } from '@weaverse/react'
 import { SliderComponents } from '@weaverse/react'
 import React, { Component, forwardRef, useEffect, useState } from 'react'
 import { PRODUCT_IMAGE_PLACEHOLDER } from '~/constant'
-import { useProductContext } from '~/hooks'
+import { useProductContext } from '~/hooks/use-product-context'
 import type { ProductMediaProps, ProductMediaSize } from '~/types'
 import { Image } from './Image'
 import {

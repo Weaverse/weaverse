@@ -2,7 +2,7 @@ import type { ElementCSS } from '@weaverse/react'
 import React from 'react'
 import { weaverseShopifyConfigs } from '~/proxy'
 import type { ProductCardInfoProps } from '~/types'
-import { formatMoney } from '~/utils'
+import { formatMoney } from '~/utils/money'
 import {
   css as productCardOptionsCss,
   ProductCardOptions,

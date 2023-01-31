@@ -1,6 +1,6 @@
 import type { ElementCSS } from '@weaverse/react'
 import React, { forwardRef } from 'react'
-import { useProductContext } from '~/hooks'
+import { useProductContext } from '~/hooks/use-product-context'
 import type { ProductMetaProps } from '~/types'
 
 let ProductMeta = forwardRef<HTMLDivElement, ProductMetaProps>((props, ref) => {

@@ -3,7 +3,7 @@ import { Components } from '@weaverse/react'
 import clsx from 'clsx'
 import React from 'react'
 import type { ProductCardOptionsProps } from '~/types'
-import { getOptionItemStyle, getOptionsGroupConfigs } from '~/utils'
+import { getOptionsGroupConfigs, getOptionItemStyle } from '~/utils/option'
 let { Tooltip } = Components
 
 export function ProductCardOptions(props: ProductCardOptionsProps) {

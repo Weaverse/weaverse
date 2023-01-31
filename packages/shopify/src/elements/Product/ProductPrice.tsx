@@ -1,9 +1,9 @@
 import type { ElementCSS } from '@weaverse/react'
 import React, { forwardRef, useEffect, useState } from 'react'
-import { useProductContext } from '~/hooks'
+import { useProductContext } from '~/hooks/use-product-context'
 import { weaverseShopifyConfigs } from '~/proxy'
 import type { ProductPriceProps } from '~/types'
-import { formatMoney } from '~/utils'
+import { formatMoney } from '~/utils/money'
 
 let ProductPrice = forwardRef<HTMLDivElement, ProductPriceProps>(
   (props, ref) => {
