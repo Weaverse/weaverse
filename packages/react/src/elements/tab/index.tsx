@@ -40,7 +40,7 @@ const Tab = forwardRef<HTMLDivElement, TabProps>((props, ref) => {
       }
     >
       <TabContext.Provider value={{ active, setActive: setOpenTab }}>
-        <TabHeaderWrapper wvId={wvId} />
+        <TabHeaderWrapper wvId={wvId!} />
         {children}
       </TabContext.Provider>
     </div>
