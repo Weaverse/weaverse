@@ -1,7 +1,7 @@
 import type { ElementCSS } from '@weaverse/react'
 import clsx from 'clsx'
 import React from 'react'
-import { Image } from '~/elements/product/product-media/_image'
+import { Image } from '~/elements/product/product-media/image'
 import type { ProductCardProps } from '~/types'
 import {
   css as productCardButtonsCss,
