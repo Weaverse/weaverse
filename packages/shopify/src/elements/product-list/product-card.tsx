@@ -138,7 +138,7 @@ export let css: ElementCSS = {
   '@mobile': {
     '.wv-product-card': {
       textDecoration: 'none',
-      width: '66vw',
+      width: '80vw',
       scrollSnapAlign: 'start',
       flex: '0 0 auto',
       padding: '8px',
