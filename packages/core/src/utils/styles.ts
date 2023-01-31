@@ -1,5 +1,3 @@
-import type Stitches from "@stitches/core/types/stitches"
-
 export let stichesUtils = {
   // Abbreviated margin properties
   m: (value: string) => ({
