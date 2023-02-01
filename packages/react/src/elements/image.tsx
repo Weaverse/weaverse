@@ -1,4 +1,5 @@
 import type { ElementCSS } from '@weaverse/core'
+import type { ForwardedRef } from 'react'
 import React from 'react'
 import type { ImageElementProps } from '~/types'
 
@@ -22,15 +23,19 @@ let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
 
     let content = <img alt={alt} data-blink-src={src} />
     if (clickAction === 'openLink' && linkTo) {
-      let target = openLinkInNewTab ? '_blank' : '_self'
       content = (
-        <a href={linkTo} target={target}>
-          {content}
+        <a
+          href={linkTo}
+          target={openLinkInNewTab ? '_blank' : '_self'}
+          rel="noreferrer"
+        >
+          <img alt={alt} data-blink-src={src} />
         </a>
       )
     }
+
     return (
-      <div ref={ref} {...rest} style={style}>
+      <div ref={ref} style={style} {...rest}>
         {content}
       </div>
     )
@@ -41,6 +46,8 @@ export let css: ElementCSS = {
   '@desktop': {
     display: 'flex',
     overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
     img: {
       width: '100%',
       height: '100%',
@@ -51,8 +58,8 @@ export let css: ElementCSS = {
 }
 
 Image.defaultProps = {
-  src: 'https://ucarecdn.com/cf54e41e-36a0-4547-a140-a302e0387890/',
-  alt: 'Image alt text',
+  src: 'https://ucarecdn.com/dac0f414-2b1f-46df-99ce-41554f0f653a/',
+  alt: 'Alternative information',
   objectFit: 'cover',
   objectPosition: 'center center',
   clickAction: 'none',
