@@ -20,7 +20,7 @@ export function Skeleton(props: ProductSkeletonProps) {
           style={style}
         >
           <div className="wv-pcard-skeleton__image">
-            <Icon name="Image" />
+            <Icon name="Backpack" />
           </div>
           <div className="wv-pcard-skeleton__price">
             <div className="wv-pcard-skeleton__price-value" />
