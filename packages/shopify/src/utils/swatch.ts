@@ -1,4 +1,8 @@
-import type { OptionDisplayType, OptionShape, OptionSize } from '~/types'
+import type {
+  OptionDisplayType,
+  OptionShape,
+  OptionSize,
+} from '~/types/configs'
 
 export let optionSizeMap: Partial<
   Record<OptionDisplayType, Record<OptionSize, string>>

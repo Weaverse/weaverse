@@ -1,11 +1,7 @@
 import type { CSSProperties } from 'react'
 import { DEFAULT_OPTION_DESIGN } from '~/constant'
-import type {
-  OptionDisplayType,
-  OptionStyle,
-  ShopifyProduct,
-  ShopifyProductOption,
-} from '~/types'
+import type { OptionDisplayType, OptionStyle } from '~/types/configs'
+import type { ShopifyProductOption, ShopifyProduct } from '~/types/shopify'
 import { resizeImage } from './image'
 import { getSwatchValue, optionRadiusSizeMap, optionSizeMap } from './swatch'
 import { getVariantFromOptionArray } from './variant'

@@ -1,4 +1,4 @@
-import type { OptionDisplayType } from '~/types'
+import type { OptionDisplayType } from '~/types/configs'
 
 export let DEFAULT_OPTION_DESIGN: OptionDisplayType = 'dropdown'
 

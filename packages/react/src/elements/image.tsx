@@ -1,0 +1,70 @@
+import type { ElementCSS } from '@weaverse/core'
+import type { ForwardedRef } from 'react'
+import React from 'react'
+import type { ImageElementProps } from '~/types'
+
+let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
+  (props, ref) => {
+    let {
+      src,
+      alt,
+      objectFit,
+      objectPosition,
+      clickAction,
+      openLinkInNewTab,
+      linkTo,
+      ...rest
+    } = props
+
+    let style = {
+      '--img-object-fit': objectFit,
+      '--img-object-position': objectPosition,
+    } as React.CSSProperties
+
+    let content = <img alt={alt} data-blink-src={src} />
+    if (clickAction === 'openLink' && linkTo) {
+      content = (
+        <a
+          href={linkTo}
+          target={openLinkInNewTab ? '_blank' : '_self'}
+          rel="noreferrer"
+        >
+          <img alt={alt} data-blink-src={src} />
+        </a>
+      )
+    }
+
+    return (
+      <div ref={ref} style={style} {...rest}>
+        {content}
+      </div>
+    )
+  }
+)
+
+export let css: ElementCSS = {
+  '@desktop': {
+    display: 'flex',
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
+    img: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'var(--img-object-fit, cover)',
+      objectPosition: 'var(--img-object-position, center)',
+    },
+  },
+}
+
+Image.defaultProps = {
+  src: 'https://ucarecdn.com/dac0f414-2b1f-46df-99ce-41554f0f653a/',
+  alt: 'Alternative information',
+  objectFit: 'cover',
+  objectPosition: 'center center',
+  clickAction: 'none',
+  openLinkInNewTab: false,
+  linkTo: '',
+}
+
+export default Image

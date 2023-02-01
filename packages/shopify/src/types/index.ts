@@ -81,6 +81,23 @@ export interface ProductListProps
   gap: number
 }
 
+export interface CollectionCardProps {
+  collection: ShopifyCollection
+  imageAspectRatio: AspectRatio
+  showProductCount: boolean
+  zoomInOnHover: boolean
+  className?: string
+}
+
+export interface CollectionListProps
+  extends WeaverseElementProps,
+    CollectionCardProps {
+  collections: { collectionId: number; collectionHandle: string }[]
+  layout: 'grid' | 'slider'
+  collectionsPerRow: number
+  gap: number
+}
+
 export interface UseProductHookInput
   extends Pick<ProductListProps, 'source' | 'collectionId' | 'fixedProducts'> {
   isDesignMode: boolean
@@ -88,6 +105,11 @@ export interface UseProductHookInput
 
 export interface ProductSkeletonProps {
   productCount: number
+  imageAspectRatio: AspectRatio
+}
+
+export interface CollectionSkeletonProps {
+  collectionCount: number
   imageAspectRatio: AspectRatio
 }
 
@@ -265,9 +287,6 @@ export interface FieldProps {
 export interface CustomHTMLProps extends WeaverseElementProps {
   content: string
 }
-
-export * from './shopify'
-export * from './configs'
 
 declare global {
   interface Window {
