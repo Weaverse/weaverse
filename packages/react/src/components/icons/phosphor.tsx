@@ -187,7 +187,7 @@ export let ShoppingCart = (props: HTMLAttributes<SVGElement>) => {
       viewBox="0 0 256 256"
       {...props}
     >
-      <rect width="256" height="256" fill="none"></rect>
+      <rect width="256" height="256" fill="none" />
       <path
         d="M184,184H69.8L41.9,30.6A8,8,0,0,0,34.1,24H16"
         fill="none"
@@ -238,14 +238,14 @@ export let Storefront = (props: HTMLAttributes<SVGElement>) => {
       viewBox="0 0 256 256"
       {...props}
     >
-      <rect width="256" height="256" fill="none"></rect>
+      <rect width="256" height="256" fill="none" />
       <path
         d="M48,139.6V208a8,8,0,0,0,8,8H200a8,8,0,0,0,8-8V139.6"
         fill="none"
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="8"
+        strokeWidth="12"
       />
       <path
         d="M54,40H202a8.1,8.1,0,0,1,7.7,5.8L224,96H32L46.3,45.8A8.1,8.1,0,0,1,54,40Z"
@@ -253,7 +253,7 @@ export let Storefront = (props: HTMLAttributes<SVGElement>) => {
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="8"
+        strokeWidth="12"
       />
       <path
         d="M96,96v16a32,32,0,0,1-64,0V96"
@@ -261,7 +261,7 @@ export let Storefront = (props: HTMLAttributes<SVGElement>) => {
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="8"
+        strokeWidth="12"
       />
       <path
         d="M160,96v16a32,32,0,0,1-64,0V96"
@@ -269,7 +269,7 @@ export let Storefront = (props: HTMLAttributes<SVGElement>) => {
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="8"
+        strokeWidth="12"
       />
       <path
         d="M224,96v16a32,32,0,0,1-64,0V96"
@@ -277,7 +277,129 @@ export let Storefront = (props: HTMLAttributes<SVGElement>) => {
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
+        strokeWidth="12"
+      />
+    </svg>
+  )
+}
+
+export let Package = (props: HTMLAttributes<SVGElement>) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="192"
+      height="192"
+      fill="currentColor"
+      viewBox="0 0 256 256"
+      {...props}
+    >
+      <rect width="256" height="256" fill="none" />
+      <path
+        d="M224,177.3V78.7a8.1,8.1,0,0,0-4.1-7l-88-49.5a7.8,7.8,0,0,0-7.8,0l-88,49.5a8.1,8.1,0,0,0-4.1,7v98.6a8.1,8.1,0,0,0,4.1,7l88,49.5a7.8,7.8,0,0,0,7.8,0l88-49.5A8.1,8.1,0,0,0,224,177.3Z"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         strokeWidth="8"
+      />
+      <polyline
+        points="177 152.5 177 100.5 80 47"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="8"
+      />
+      <polyline
+        points="222.9 74.6 128.9 128 33.1 74.6"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="8"
+      />
+      <line
+        x1="128.9"
+        y1="128"
+        x2="128"
+        y2="234.8"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="8"
+      />
+    </svg>
+  )
+}
+
+export let Backpack = (props: HTMLAttributes<SVGElement>) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="192"
+      height="192"
+      fill="currentColor"
+      viewBox="0 0 256 256"
+      {...props}
+    >
+      <rect width="256" height="256" fill="none" />
+      <path
+        d="M96,48h64a48,48,0,0,1,48,48V216a8,8,0,0,1-8,8H56a8,8,0,0,1-8-8V96A48,48,0,0,1,96,48Z"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="12"
+      />
+      <path
+        d="M80,224V152a16,16,0,0,1,16-16h64a16,16,0,0,1,16,16v72"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="12"
+      />
+      <path
+        d="M96,48V32a16,16,0,0,1,16-16h32a16,16,0,0,1,16,16V48"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="12"
+      />
+      <line
+        x1="112"
+        y1="88"
+        x2="144"
+        y2="88"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="12"
+      />
+      <line
+        x1="80"
+        y1="168"
+        x2="176"
+        y2="168"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="12"
+      />
+      <line
+        x1="144"
+        y1="168"
+        x2="144"
+        y2="184"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="12"
       />
     </svg>
   )
@@ -293,7 +415,7 @@ export let Eye = (props: HTMLAttributes<SVGElement>) => {
       viewBox="0 0 256 256"
       {...props}
     >
-      <rect width="256" height="256" fill="none"></rect>
+      <rect width="256" height="256" fill="none" />
       <path
         d="M128,56C48,56,16,128,16,128s32,72,112,72,112-72,112-72S208,56,128,56Z"
         fill="none"
