@@ -25,9 +25,10 @@ export function CollectionCard(props: CollectionCardProps) {
 
   return (
     <div className={cardClass} style={style}>
-      <div className="wv-col-card__image">
-        <img
-          srcSet={`
+      {image && (
+        <div className="wv-col-card__image">
+          <img
+            srcSet={`
             ${image.src}&width=165 165w,
             ${image.src}&width=330 330w,
             ${image.src}&width=535 535w,
@@ -35,14 +36,15 @@ export function CollectionCard(props: CollectionCardProps) {
             ${image.src}&width=1000 1000w,
             ${image.src} 1200w
           `}
-          src={`${image.src}&width=1500`}
-          sizes="(min-width: 1200px) 366px, (min-width: 750px) calc((100vw - 10rem) / 2), calc(100vw - 3rem)"
-          alt={image.alt || title}
-          height="1600"
-          width="1200"
-          loading="lazy"
-        />
-      </div>
+            src={`${image.src}&width=1500`}
+            sizes="(min-width: 1200px) 366px, (min-width: 750px) calc((100vw - 10rem) / 2), calc(100vw - 3rem)"
+            alt={image.alt || title}
+            height="1600"
+            width="1200"
+            loading="lazy"
+          />
+        </div>
+      )}
       <div className="wv-col-card__content">
         <h3 className="wv-col-card__title">
           <a href={`/collections/${handle}`} target="_self">

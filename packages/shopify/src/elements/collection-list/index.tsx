@@ -69,6 +69,7 @@ let CollectionList = forwardRef<HTMLDivElement, CollectionListProps>(
         imageAspectRatio={imageAspectRatio}
         showProductCount={showProductCount}
         zoomInOnHover={zoomInOnHover}
+        className={layout === 'slider' ? 'keen-slider__slide' : ''}
       />
     ))
 
@@ -79,6 +80,7 @@ let CollectionList = forwardRef<HTMLDivElement, CollectionListProps>(
             className="wv-collection-list__slider"
             gap={gap}
             arrowOffset={-80}
+            slidesPerView={collectionsPerRow}
           >
             {collectionCards}
           </Slider>

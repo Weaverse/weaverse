@@ -21,6 +21,7 @@ export interface SliderProps {
   className?: string
   gap?: number
   arrowOffset: number
+  slidesPerView: number
 }
 
 export interface SliderArrowsProps {
