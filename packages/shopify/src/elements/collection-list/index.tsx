@@ -27,7 +27,7 @@ let CollectionList = forwardRef<HTMLDivElement, CollectionListProps>(
       return (
         <div ref={ref} {...rest}>
           <Placeholder element="Collection List">
-            Select collections to show in your storefront.
+            Select collections and start editing.
           </Placeholder>
         </div>
       )
@@ -45,7 +45,7 @@ let CollectionList = forwardRef<HTMLDivElement, CollectionListProps>(
       '--display': display,
       '--overflow': overflow,
       '--gap': `${gap}px`,
-      '--product-per-row': collectionsPerRow,
+      '--collection-per-row': collectionsPerRow,
       '--rows': rows,
     } as React.CSSProperties
 
@@ -111,7 +111,7 @@ CollectionList.defaultProps = {
 export let css: ElementCSS = {
   '@desktop': {
     display: 'var(--display, grid)',
-    gridTemplateColumns: 'repeat(var(--product-per-row), 1fr)',
+    gridTemplateColumns: 'repeat(var(--collection-per-row), 1fr)',
     gap: 'var(--gap, 16px)',
     overflow: 'var(--overflow, hidden)',
     position: 'relative',
