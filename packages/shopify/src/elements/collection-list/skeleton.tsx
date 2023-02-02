@@ -43,7 +43,7 @@ export let css: ElementCSS = {
         alignItems: 'center',
         backgroundColor: '#D1D5DB',
         borderRadius: '4px',
-        svg: { width: '48px', height: '48px', color: '#E5E7EB' },
+        svg: { width: '48px', height: '48px', color: '#FFFFFF' },
       },
       '.wv-col-card-skeleton__title': {
         display: 'block',

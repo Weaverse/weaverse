@@ -49,7 +49,7 @@ let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
   if (shouldShowPlaceholder) {
     let placeholderText = 'Select a collection and start editing.'
     if (source === 'fixedProducts') {
-      placeholderText = 'Select some products and start editing.'
+      placeholderText = 'Select products and start editing.'
     }
     if (source === 'recommended') {
       placeholderText =

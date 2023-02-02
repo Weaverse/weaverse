@@ -1,121 +1,132 @@
 import type { ElementCSS } from '@weaverse/react'
 import { Components, WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext } from 'react'
-import type { CollectionListProps } from '~/types'
-import { CollectionCard, css as collectionCardCss } from './collection-card'
+import type { ArticleListProps } from '~/types'
+import { ArticleCard, css as articleCardCss } from './article-card'
 import { css as skeletonCss, Skeleton } from './skeleton'
-import { useCollections } from './use-collections'
 let { Placeholder, Slider } = Components
 
-let CollectionList = forwardRef<HTMLDivElement, CollectionListProps>(
-  (props, ref) => {
-    let {
-      collections,
-      layout,
-      collectionsPerRow,
-      gap,
-      imageAspectRatio,
-      showProductCount,
-      zoomInOnHover,
-      children,
-      ...rest
-    } = props
-    let { ssrMode } = useContext(WeaverseContext)
-    let collectionsInfo = useCollections(collections)
+let ArticleList = forwardRef<HTMLDivElement, ArticleListProps>((props, ref) => {
+  let {
+    blogId,
+    blogHandle,
+    layout,
+    articleCount,
+    articlesPerRow,
+    gap,
+    imageAspectRatio,
+    showFeaturedImage,
+    showDate,
+    showAuthor,
+    showExcerpt,
+    excerptLineClamp,
+    showTags,
+    children,
+    ...rest
+  } = props
+  let { ssrMode } = useContext(WeaverseContext)
+  let articles = window.weaverseShopifyBlogs?.[blogId] || []
 
-    if (!collections.length) {
-      return (
-        <div ref={ref} {...rest}>
-          <Placeholder element="Collection List">
-            Select collections to show in your storefront.
-          </Placeholder>
-        </div>
-      )
-    }
+  if (!blogId) {
+    return (
+      <div ref={ref} {...rest}>
+        <Placeholder element="Article List">
+          Select a blog and start editing.
+        </Placeholder>
+      </div>
+    )
+  }
 
-    let rows = Math.ceil(collectionsInfo.length / collectionsPerRow)
-    let shouldRenderSkeleton = ssrMode || !collectionsInfo.length
-    let display = 'grid'
-    let overflow = 'hidden'
-    if (!shouldRenderSkeleton && layout === 'slider') {
-      display = 'block'
-      overflow = '0'
-    }
-    let style = {
-      '--display': display,
-      '--overflow': overflow,
-      '--gap': `${gap}px`,
-      '--product-per-row': collectionsPerRow,
-      '--rows': rows,
-    } as React.CSSProperties
+  let rows = Math.ceil(articles.length / articlesPerRow)
+  let shouldRenderSkeleton = ssrMode || !articles.length
+  let display = 'grid'
+  let overflow = 'hidden'
+  if (!shouldRenderSkeleton && layout === 'slider') {
+    display = 'block'
+    overflow = '0'
+  }
+  let style = {
+    '--display': display,
+    '--overflow': overflow,
+    '--gap': `${gap}px`,
+    '--article-per-row': articlesPerRow,
+    '--rows': rows,
+  } as React.CSSProperties
 
-    if (shouldRenderSkeleton) {
-      return (
-        <div ref={ref} {...rest} style={style}>
-          <Skeleton
-            collectionCount={
-              layout === 'slider' ? collectionsPerRow : collections.length
-            }
-            imageAspectRatio={imageAspectRatio}
-          />
-        </div>
-      )
-    }
+  if (shouldRenderSkeleton) {
+    return (
+      <div ref={ref} {...rest} style={style}>
+        <Skeleton
+          articleCount={layout === 'slider' ? articlesPerRow : articleCount}
+          imageAspectRatio={imageAspectRatio}
+        />
+      </div>
+    )
+  }
 
-    let collectionCards = collectionsInfo.map((collection) => (
-      <CollectionCard
-        key={collection.id}
-        collection={collection}
+  let collectionCards = articles
+    .slice(0, articleCount)
+    .map((article) => (
+      <ArticleCard
+        key={article.id}
+        article={article}
         imageAspectRatio={imageAspectRatio}
-        showProductCount={showProductCount}
-        zoomInOnHover={zoomInOnHover}
+        showFeaturedImage={showFeaturedImage}
+        showAuthor={showAuthor}
+        showDate={showDate}
+        showExcerpt={showExcerpt}
+        excerptLineClamp={excerptLineClamp}
+        showTags={showTags}
         className={layout === 'slider' ? 'keen-slider__slide' : ''}
       />
     ))
 
-    if (layout === 'slider') {
-      return (
-        <div ref={ref} {...rest} style={style}>
-          <Slider
-            className="wv-collection-list__slider"
-            gap={gap}
-            arrowOffset={-80}
-            slidesPerView={collectionsPerRow}
-          >
-            {collectionCards}
-          </Slider>
-        </div>
-      )
-    }
-
+  if (layout === 'slider') {
     return (
       <div ref={ref} {...rest} style={style}>
-        {collectionCards}
+        <Slider
+          className="wv-article-list__slider"
+          gap={gap}
+          arrowOffset={-80}
+          slidesPerView={articlesPerRow}
+        >
+          {collectionCards}
+        </Slider>
       </div>
     )
   }
-)
 
-export default CollectionList
+  return (
+    <div ref={ref} {...rest} style={style}>
+      {collectionCards}
+    </div>
+  )
+})
 
-CollectionList.defaultProps = {
-  collections: [],
+export default ArticleList
+
+ArticleList.defaultProps = {
   layout: 'grid',
-  collectionsPerRow: 4,
+  articleCount: 4,
+  articlesPerRow: 4,
   gap: 16,
   imageAspectRatio: 'auto',
-  zoomInOnHover: true,
-  showProductCount: true,
+  showFeaturedImage: true,
+  showDate: true,
+  showAuthor: true,
+  showTags: true,
+  showExcerpt: true,
+  excerptLineClamp: 3,
 }
 
 export let css: ElementCSS = {
   '@desktop': {
     display: 'var(--display, grid)',
-    gridTemplateColumns: 'repeat(var(--product-per-row), 1fr)',
+    gridTemplateColumns: 'repeat(var(--article-per-row), 1fr)',
     gap: 'var(--gap, 16px)',
     overflow: 'var(--overflow, hidden)',
     position: 'relative',
-    ...collectionCardCss['@desktop'],
+    ...articleCardCss['@desktop'],
     ...skeletonCss['@desktop'],
   },
   '@mobile': {
@@ -125,12 +136,12 @@ export let css: ElementCSS = {
     flexDirection: 'row',
     flexWrap: 'nowrap',
     gap: 0,
-    '.wv-collection-list__slider': {
-      '.wv-collection-card': {
+    '.wv-article-list__slider': {
+      '.wv-article-card': {
         padding: '0 32px',
       },
     },
-    ...collectionCardCss['@mobile'],
+    ...articleCardCss['@mobile'],
     ...skeletonCss['@mobile'],
   },
 }

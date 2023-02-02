@@ -1,11 +1,11 @@
 import type { ElementCSS } from '@weaverse/react'
 import { Components } from '@weaverse/react'
 import React from 'react'
-import type { CollectionSkeletonProps } from '~/types'
+import type { ArticleSkeletonProps } from '~/types'
 let { Icon } = Components
 
-export function Skeleton(props: CollectionSkeletonProps) {
-  let { collectionCount, imageAspectRatio } = props
+export function Skeleton(props: ArticleSkeletonProps) {
+  let { articleCount, imageAspectRatio } = props
   let aspectRatio = imageAspectRatio === 'auto' ? '1/1' : imageAspectRatio
   let style = {
     '--image-aspect-ratio': aspectRatio,
@@ -13,17 +13,17 @@ export function Skeleton(props: CollectionSkeletonProps) {
 
   return (
     <>
-      {Array.from({ length: collectionCount }).map((_, index) => (
+      {Array.from({ length: articleCount }).map((_, index) => (
         <div
           key={index}
-          className="wv-col-card-skeleton animate-pulse"
+          className="wv-article-card-skeleton animate-pulse"
           style={style}
         >
-          <div className="wv-col-card-skeleton__image">
-            <Icon name="Storefront" />
+          <div className="wv-article-card-skeleton__image">
+            <Icon name="Newspaper" />
           </div>
-          <div className="wv-col-card-skeleton__title" />
-          <div className="wv-col-card-skeleton__items-count" />
+          <div className="wv-article-card-skeleton__title" />
+          <div className="wv-article-card-skeleton__items-count" />
         </div>
       ))}
     </>
@@ -32,20 +32,20 @@ export function Skeleton(props: CollectionSkeletonProps) {
 
 export let css: ElementCSS = {
   '@desktop': {
-    '.wv-col-card-skeleton': {
+    '.wv-article-card-skeleton': {
       display: 'block',
       width: '100%',
       padding: '16px',
-      '.wv-col-card-skeleton__image': {
+      '.wv-article-card-skeleton__image': {
         aspectRatio: 'var(--image-aspect-ratio, auto)',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#D1D5DB',
         borderRadius: '4px',
-        svg: { width: '48px', height: '48px', color: '#E5E7EB' },
+        svg: { width: '48px', height: '48px', color: '#FFFFFF' },
       },
-      '.wv-col-card-skeleton__title': {
+      '.wv-article-card-skeleton__title': {
         display: 'block',
         height: '20px',
         backgroundColor: '#D1D5DB',
@@ -53,7 +53,7 @@ export let css: ElementCSS = {
         margin: '12px 0',
         width: '80%',
       },
-      '.wv-col-card-skeleton__items-count': {
+      '.wv-article-card-skeleton__items-count': {
         margin: '12px 0',
         height: '12px',
         display: 'block',
@@ -64,7 +64,7 @@ export let css: ElementCSS = {
     },
   },
   '@mobile': {
-    '.wv-col-card-skeleton': {
+    '.wv-article-card-skeleton': {
       textDecoration: 'none',
       width: '80vw',
       scrollSnapAlign: 'start',
