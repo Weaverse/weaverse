@@ -101,12 +101,14 @@ export interface CollectionListProps
 export interface ArticleCardProps {
   article: ShopifyArticle
   imageAspectRatio: AspectRatio
-  showFeaturedImage: boolean
+  zoomInOnHover: boolean
   showDate: boolean
+  dateFormat?: string
   showAuthor: boolean
   showExcerpt: boolean
   excerptLineClamp: number
-  showTags: boolean
+  showReadMoreButton: boolean
+  readMoreButtonText: string
   className?: string
 }
 
@@ -289,8 +291,8 @@ declare global {
     weaverseShopifyProducts: Record<number, ShopifyProduct>
     weaverseShopifyProductsByCollection: Record<number, number[]>
     weaverseShopifyCollections: Record<number, ShopifyCollection>
+    weaverseShopifyArticlesByBlog: Record<number, number[]>
     weaverseShopifyArticles: Record<number, ShopifyArticle>
-    weaverseShopifyBlogs: Record<number, ShopifyArticle[]>
     weaverseCartHelpers: WeaverseCartHelpers
   }
 }
