@@ -76,6 +76,7 @@ export let css: ElementCSS = {
         width: '100%',
         overflow: 'hidden',
         aspectRatio: 'var(--image-aspect-ratio, auto)',
+        borderRadius: '6px',
         img: {
           width: '100%',
           height: '100%',
