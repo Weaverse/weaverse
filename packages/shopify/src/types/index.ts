@@ -98,6 +98,29 @@ export interface CollectionListProps
   gap: number
 }
 
+export interface ArticleCardProps {
+  article: ShopifyArticle
+  imageAspectRatio: AspectRatio
+  showFeaturedImage: boolean
+  showDate: boolean
+  showAuthor: boolean
+  showExcerpt: boolean
+  excerptLineClamp: number
+  showTags: boolean
+  className?: string
+}
+
+export interface ArticleListProps
+  extends WeaverseElementProps,
+    ArticleCardProps {
+  blogId: number
+  blogHandle: string
+  layout: 'grid' | 'slider'
+  articleCount: number
+  articlesPerRow: number
+  gap: number
+}
+
 export interface UseProductHookInput
   extends Pick<ProductListProps, 'source' | 'collectionId' | 'fixedProducts'> {
   isDesignMode: boolean
@@ -110,6 +133,10 @@ export interface ProductSkeletonProps {
 
 export interface CollectionSkeletonProps {
   collectionCount: number
+  imageAspectRatio: AspectRatio
+}
+export interface ArticleSkeletonProps {
+  articleCount: number
   imageAspectRatio: AspectRatio
 }
 
@@ -225,38 +252,6 @@ export interface OptionValuesProps
   selectedOptions: string[]
   onSelect: (position: number, value: string) => void
 }
-export interface ArticleBoxProps extends WeaverseElementProps {
-  articleId: number
-  articleHandle?: string
-}
-
-export interface ArticleTitleProps extends WeaverseElementProps {
-  htmlTag: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p'
-  linkArticle: boolean
-}
-
-export interface ArticleImageProps extends WeaverseElementProps {
-  linkArticle: boolean
-  aspectRatio: string
-}
-
-export interface CollectionBoxProps extends WeaverseElementProps {
-  collectionId: number
-  collectionHandle?: string
-}
-
-export interface ArticleListProps extends WeaverseElementProps {
-  blogId: string | number
-  blogHandle: string
-  itemsPerSlide: number
-  articleNumber: number
-  itemsSpacing: number
-}
-
-export interface CollectionContextProps {
-  collection: ShopifyCollection
-  collectionId: string | number
-}
 
 // Form
 export interface FormElementProps extends WeaverseElementProps {
@@ -295,7 +290,7 @@ declare global {
     weaverseShopifyProductsByCollection: Record<number, number[]>
     weaverseShopifyCollections: Record<number, ShopifyCollection>
     weaverseShopifyArticles: Record<number, ShopifyArticle>
-    weaverseShopifyBlogs: Record<number, ShopifyArticle>
+    weaverseShopifyBlogs: Record<number, ShopifyArticle[]>
     weaverseCartHelpers: WeaverseCartHelpers
   }
 }
