@@ -103,6 +103,7 @@ export interface ArticleCardProps {
   imageAspectRatio: AspectRatio
   zoomInOnHover: boolean
   showDate: boolean
+  dateFormat?: string
   showAuthor: boolean
   showExcerpt: boolean
   excerptLineClamp: number
@@ -290,8 +291,8 @@ declare global {
     weaverseShopifyProducts: Record<number, ShopifyProduct>
     weaverseShopifyProductsByCollection: Record<number, number[]>
     weaverseShopifyCollections: Record<number, ShopifyCollection>
+    weaverseShopifyArticlesByBlog: Record<number, number[]>
     weaverseShopifyArticles: Record<number, ShopifyArticle>
-    weaverseShopifyBlogs: Record<number, ShopifyArticle[]>
     weaverseCartHelpers: WeaverseCartHelpers
   }
 }

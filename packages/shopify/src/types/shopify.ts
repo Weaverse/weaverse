@@ -160,7 +160,7 @@ export interface ShopifyArticle {
   created_at: string
   id: number
   handle: string
-  image: ShopifyArticleImage
+  image: string | ShopifyArticleImage | null
   metafields: ShopifyObjectMetafield[]
   published: boolean
   published_at: string
@@ -172,4 +172,5 @@ export interface ShopifyArticle {
   user_id: number
   // Liquid props
   url: string
+  excerpt: string | null
 }
