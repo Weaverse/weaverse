@@ -1,7 +1,6 @@
 import type { ElementCSS } from '@weaverse/react'
-import { WeaverseContext } from '@weaverse/react'
 import clsx from 'clsx'
-import React, { useContext } from 'react'
+import React from 'react'
 import type { ArticleCardProps } from '~/types'
 
 export function ArticleCard(props: ArticleCardProps) {
