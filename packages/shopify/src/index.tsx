@@ -7,6 +7,8 @@ import { ErrorBoundary } from 'react-error-boundary'
 
 export * from '@weaverse/react'
 export * from './types'
+export * from './types/configs'
+export * from './types/shopify'
 
 function createWeaverseShopifyContext(configs: WeaverseType) {
   let context = createRootContext(configs)
