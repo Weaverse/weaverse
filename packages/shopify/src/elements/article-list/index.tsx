@@ -1,7 +1,9 @@
 import type { ElementCSS } from '@weaverse/react'
 import { Components, WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext } from 'react'
+import { weaverseShopifyArticles, weaverseShopifyArticlesByBlog } from '~/proxy'
 import type { ArticleListProps } from '~/types'
+import type { ShopifyArticle } from '~/types/shopify'
 import { ArticleCard, css as articleCardCss } from './article-card'
 import { css as skeletonCss, Skeleton } from './skeleton'
 let { Placeholder, Slider } = Components
@@ -15,17 +17,22 @@ let ArticleList = forwardRef<HTMLDivElement, ArticleListProps>((props, ref) => {
     articlesPerRow,
     gap,
     imageAspectRatio,
-    showFeaturedImage,
+    zoomInOnHover,
     showDate,
+    dateFormat,
     showAuthor,
     showExcerpt,
     excerptLineClamp,
-    showTags,
+    showReadMoreButton,
+    readMoreButtonText,
     children,
     ...rest
   } = props
   let { ssrMode } = useContext(WeaverseContext)
-  let articles = window.weaverseShopifyBlogs?.[blogId] || []
+  let articleIds: number[] = weaverseShopifyArticlesByBlog[blogId] || []
+  let articles: ShopifyArticle[] = articleIds.map(
+    (id) => weaverseShopifyArticles[id]
+  )
 
   if (!blogId) {
     return (
@@ -71,12 +78,13 @@ let ArticleList = forwardRef<HTMLDivElement, ArticleListProps>((props, ref) => {
         key={article.id}
         article={article}
         imageAspectRatio={imageAspectRatio}
-        showFeaturedImage={showFeaturedImage}
+        zoomInOnHover={zoomInOnHover}
         showAuthor={showAuthor}
         showDate={showDate}
         showExcerpt={showExcerpt}
         excerptLineClamp={excerptLineClamp}
-        showTags={showTags}
+        showReadMoreButton={showReadMoreButton}
+        readMoreButtonText={readMoreButtonText}
         className={layout === 'slider' ? 'keen-slider__slide' : ''}
       />
     ))
@@ -111,12 +119,14 @@ ArticleList.defaultProps = {
   articlesPerRow: 4,
   gap: 16,
   imageAspectRatio: 'auto',
-  showFeaturedImage: true,
+  zoomInOnHover: true,
   showDate: true,
+  dateFormat: '%B %d, %Y',
   showAuthor: true,
-  showTags: true,
   showExcerpt: true,
   excerptLineClamp: 3,
+  showReadMoreButton: true,
+  readMoreButtonText: 'Read more',
 }
 
 export let css: ElementCSS = {

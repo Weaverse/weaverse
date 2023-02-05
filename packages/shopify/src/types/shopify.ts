@@ -123,7 +123,7 @@ export interface ShopifyCollection {
   collection_type: string
   handle: string
   id: number
-  image: ShopifyCollectionImage
+  image: string | ShopifyCollectionImage | null
   products_count: number
   published_at: string
   published_scope: string
@@ -131,6 +131,9 @@ export interface ShopifyCollection {
   template_suffix: string | null
   title: string
   updated_at: string
+  // Liquid props
+  url: string
+  featured_image: string | ShopifyCollectionImage | null
 }
 
 export interface ShopifyArticleImage {
@@ -157,7 +160,7 @@ export interface ShopifyArticle {
   created_at: string
   id: number
   handle: string
-  image: ShopifyArticleImage
+  image: string | ShopifyArticleImage | null
   metafields: ShopifyObjectMetafield[]
   published: boolean
   published_at: string
@@ -167,4 +170,7 @@ export interface ShopifyArticle {
   title: string
   updated_at: string
   user_id: number
+  // Liquid props
+  url: string
+  excerpt: string | null
 }
