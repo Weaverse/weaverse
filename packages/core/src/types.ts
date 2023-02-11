@@ -88,6 +88,7 @@ export type GridSize = {
 export type ToolbarAction =
   | "general-settings"
   | "settings-level-2"
+  | "text-presets"
   | "duplicate"
   | "delete"
   | "copy-styles"
