@@ -25,6 +25,11 @@ export let css: ElementCSS = {
       wordBreak: 'break-word',
       overflowWrap: 'break-word',
       whiteSpace: 'break-spaces',
+      width: '100%',
+      height: '100%',
+      '> p': {
+        margin: '0',
+      },
     },
   },
 }
