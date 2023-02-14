@@ -89,6 +89,7 @@ export type ToolbarAction =
   | "general-settings"
   | "settings-level-2"
   | "text-presets"
+  | "ai-trigger"
   | "duplicate"
   | "delete"
   | "copy-styles"
