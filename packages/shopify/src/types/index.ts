@@ -280,7 +280,9 @@ export interface FieldProps {
   field: FormFieldProps
   formId: string
 }
-
+export interface CollectionContextProps {
+  [key: string]: any
+}
 export interface CustomHTMLProps extends WeaverseElementProps {
   content: string
 }

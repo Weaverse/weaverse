@@ -1,4 +1,4 @@
-import type { ProjectDataType, ElementData } from '@weaverse/core'
+import type { WeaverseProjectDataType, ElementData } from '@weaverse/core'
 import { isBrowser } from '@weaverse/core'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { WeaverseContext, WeaverseContextProvider } from './context'
@@ -6,7 +6,7 @@ import type { ItemComponentProps, WeaverseRootPropsType } from './types'
 import { generateItemClassName } from './utils/css'
 
 export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
-  let [, setData] = useState<ProjectDataType | unknown>(context.projectData)
+  let [, setData] = useState<WeaverseProjectDataType | unknown>(context.data)
   let rootRef = useRef<HTMLElement>()
   let renderRoot = () => setData({})
 
@@ -21,7 +21,7 @@ export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
   let eventHandlers = context?.studioBridge?.eventHandlers || {}
   let themeClass = context.stitchesInstance.theme.className
 
-  if (context.projectData?.rootId) {
+  if (context.data?.rootId) {
     return (
       <div
         className={`weaverse-content-root ${themeClass}`}
@@ -29,7 +29,7 @@ export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
         ref={rootRef}
       >
         <WeaverseContextProvider value={context}>
-          <ItemInstance id={context.projectData.rootId} />
+          <ItemInstance id={context.data.rootId} />
         </WeaverseContextProvider>
       </div>
     )
@@ -89,25 +89,3 @@ let ItemInstance = ({ id }: { id: string | number }) => {
   }
   return <ItemComponent key={id} instance={instance} />
 }
-
-async function initUploadCareAdaptiveDelivery() {
-  if (isBrowser && !window.Blinkloader) {
-    ;(function (src, cb) {
-      let s = document.createElement('script')
-      s.setAttribute('src', src)
-      s.onload = cb
-      ;(document.head || document.body).appendChild(s)
-    })('https://studio.weaverse.io/static/blinkloader.min.js', function () {
-      window.Blinkloader.optimize({
-        pubkey: '1a22133d1a1bdc089d4c',
-        fadeIn: true,
-        lazyload: true,
-        smartCompression: true,
-        responsive: true,
-        retina: true,
-        webp: true,
-      })
-    })
-  }
-}
-initUploadCareAdaptiveDelivery().catch()

@@ -1,22 +1,22 @@
 export type WHFetchConfigs = {
-  studioUrl?: string
-  projectKey: string
+  weaverseHost?: string
+  projectId: string
   url: URL
 }
 export let fetchPageData = async ({
-  studioUrl = 'https://studio.weaverse.io',
-  projectKey,
+  weaverseHost = 'https://studio.weaverse.io',
+  projectId,
   url,
 }: WHFetchConfigs) => {
   let handle = url.pathname
   let isDesignMode = url.searchParams.get('isDesignMode') === 'true'
 
-  let data = await fetch(studioUrl + '/api/public/project', {
+  let data = await fetch(weaverseHost + '/api/public/project', {
     method: 'POST',
     body: JSON.stringify({
-      projectKey,
+      projectId,
       handle,
-      published: !isDesignMode,
+      isDesignMode,
     }),
   })
     .then((res) => res.json())
@@ -24,5 +24,5 @@ export let fetchPageData = async ({
       console.error(e)
       return {}
     })
-  return { ...data, studioUrl, isDesignMode }
+  return { ...data, weaverseHost, isDesignMode }
 }

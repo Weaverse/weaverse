@@ -3,7 +3,7 @@ import type { ForwardRefExoticComponent } from "react"
 import type { stichesUtils } from "./utils/styles"
 
 // Project types
-export interface ProjectDataType {
+export interface WeaverseProjectDataType {
   items: ElementData[]
   rootId: string
   script: {
@@ -16,10 +16,10 @@ export interface ProjectDataType {
 // export interface InitializeData {
 //   id: string
 //   handle: string
-//   data: ProjectDataType
-//   published: boolean
-//   projectKey?: string
-//   studioUrl?: string
+//   data: WeaverseProjectDataType
+//   isDesignMode: boolean
+//   projectId?: string
+//   weaverseHost?: string
 // }
 
 export interface BreakPoints {
@@ -30,11 +30,12 @@ export interface BreakPoints {
 // Weaverse types
 export interface WeaverseType {
   mediaBreakPoints?: BreakPoints
-  appUrl?: string
-  projectKey?: string
-  projectData?: ProjectDataType
+  weaverseHost?: string
+  projectId?: string
+  data?: WeaverseProjectDataType
   isDesignMode?: boolean
   ssrMode?: boolean
+  elementSchemas?: ElementSchema[]
 }
 
 export interface WeaverseElement {
