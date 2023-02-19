@@ -20,7 +20,7 @@ export let createWeaverseHydrogenContext = (configs: WeaverseType) => {
 }
 
 export let WeaverseHydrogenRoot = ({ context }: WeaverseRootProps) => {
-  return context?.projectData?.items ? (
+  return context?.data?.items ? (
     <WeaverseRoot context={context} />
   ) : (
     <>No Weaverse data found!</>

@@ -7,7 +7,15 @@
 import * as stitches from "@stitches/core"
 import type Stitches from "@stitches/core/types/stitches"
 import type { RefObject } from "react"
-import type { BreakPoints, ElementData, ElementFlags, ProjectDataType, WeaverseElement, WeaverseType } from "./types"
+import type {
+  BreakPoints,
+  ElementData,
+  ElementFlags,
+  WeaverseProjectDataType,
+  WeaverseElement,
+  WeaverseType,
+  ElementSchema,
+} from "./types"
 import { isIframe, merge } from "./utils"
 import { stichesUtils } from "./utils/styles"
 
@@ -106,17 +114,17 @@ export class Weaverse {
    * Weaverse base URL that can provide by user/developer. for local development, use localhost:3000
    * @type {string}
    */
-  appUrl: string = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://studio.weaverse.io"
+  weaverseHost: string = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://studio.weaverse.io"
   /**
    * Weaverse project key to access project data via API
    * @type {string}
    */
-  projectKey = ""
+  projectId = ""
   /**
    * Weaverse project data, by default, user can provide project data via React Component:
-   * <WeaverseRoot defaultData={projectData} /> it will be used to server-side rendering
+   * <WeaverseRoot data={data} /> it will be used to server-side rendering
    */
-  projectData: ProjectDataType = {
+  data: WeaverseProjectDataType = {
     rootId: "",
     items: [],
     script: { css: "", js: "" },
@@ -151,6 +159,7 @@ export class Weaverse {
   stitchesInstance: Stitches | any
 
   studioBridge?: any
+  elementSchemas?: ElementSchema[]
   static WeaverseItemStore: typeof WeaverseItemStore = WeaverseItemStore
 
   mediaBreakPoints: BreakPoints = {
@@ -162,38 +171,50 @@ export class Weaverse {
 
   /**
    * constructor
-   * @param appUrl {string} Weaverse base URL that can provide by user/developer. for local development, use localhost:3000
-   * @param projectKey {string} Weaverse project key to access project data via API
-   * @param projectData {ProjectDataType} Weaverse project data, by default, user can provide project data via React Component.
+   * @param weaverseHost {string} Weaverse base URL that can provide by user/developer. for local development, use localhost:3000
+   * @param projectId {string} Weaverse project key to access project data via API
+   * @param data {WeaverseProjectDataType} Weaverse project data, by default, user can provide project data via React Component.
    * @param mediaBreakPoints {object} Pass down custom media query breakpoints or just use the default.
    * @param isDesignMode {boolean} check whether the sdk is isDesignMode or not
    * @param ssrMode {boolean} Use in element to optionally render special HTML for hydration
+   * @param elementSchemas {Array<ElementSchema>} List of element schemas
    */
-  constructor({ appUrl, projectKey, projectData, mediaBreakPoints, isDesignMode, ssrMode }: WeaverseType = {}) {
-    this.init({ appUrl, projectKey, projectData, mediaBreakPoints, isDesignMode, ssrMode })
+  constructor({
+    weaverseHost,
+    projectId,
+    data,
+    mediaBreakPoints,
+    isDesignMode,
+    ssrMode,
+    elementSchemas,
+  }: WeaverseType = {}) {
+    this.init({ weaverseHost, projectId, data, mediaBreakPoints, isDesignMode, ssrMode, elementSchemas })
   }
 
-  init({ appUrl, projectKey, projectData, mediaBreakPoints, isDesignMode, ssrMode }: WeaverseType = {}) {
-    this.appUrl = appUrl || this.appUrl
-    this.projectKey = projectKey || this.projectKey
+  init({ weaverseHost, elementSchemas, projectId, data, mediaBreakPoints, isDesignMode, ssrMode }: WeaverseType = {}) {
+    this.elementSchemas = elementSchemas || this.elementSchemas
+    this.weaverseHost = weaverseHost || this.weaverseHost
+    this.projectId = projectId || this.projectId
     this.mediaBreakPoints = mediaBreakPoints || this.mediaBreakPoints
     this.isDesignMode = isDesignMode || this.isDesignMode
     this.ssrMode = ssrMode || this.ssrMode
-    this.projectData = projectData || this.projectData
+    this.data = data || this.data
     this.initStitches()
     this.initProjectItemData()
   }
 
   initialized = false
   initializeData = (data: any) => {
+    console.log("initializeData", data)
     if (!this.initialized) {
-      let { projectData, published, id, projectKey, studioUrl } = data
-      this.projectKey = projectKey || this.projectKey
-      this.appUrl = studioUrl || this.appUrl
-      this.projectData = { ...projectData, pageId: id }
-      this.isDesignMode = !published
+      let { data: d, isDesignMode, id, projectId, weaverseHost } = data
+      this.projectId = projectId || this.projectId
+      this.weaverseHost = weaverseHost || this.weaverseHost
+      this.data = { ...d, pageId: id }
+      this.isDesignMode = isDesignMode
       this.initProjectItemData()
       if (this.isDesignMode) {
+        this.initStitches()
         this.triggerUpdate()
         this.loadStudio()
       }
@@ -215,7 +236,7 @@ export class Weaverse {
         if (!window.WeaverseStudioBridge) {
           // Studio bridge script source -> https://weaverse.io/assets/studio/studio-bridge.js
           let studioBridgeScript = document.createElement("script")
-          studioBridgeScript.src = `${this.appUrl}/assets/studio/studio-bridge.js?v=${version}`
+          studioBridgeScript.src = `${this.weaverseHost}/assets/studio/studio-bridge.js?v=${version}`
           studioBridgeScript.type = "module"
           studioBridgeScript.onload = initStudio
           document.body.appendChild(studioBridgeScript)
@@ -263,34 +284,14 @@ export class Weaverse {
     this.listeners.forEach((fn) => fn())
   }
 
-  /**
-   * Fetch data from Weaverse API (https://weaverse.io/api/v1/project/:projectKey)
-   * @param fetch {fetch} custom fetch function, pass in custom fetch function if you want to use your own fetch function
-   * @param appUrl
-   * @param projectKey
-   */
-  static fetchProjectData({
-    fetch = globalThis.fetch,
-    appUrl,
-    projectKey,
-  }: {
-    fetch?: any
-    appUrl?: string
-    projectKey?: string
-  }) {
-    return fetch(appUrl + `/api/public/project/${projectKey}`)
-      .then((res: Response) => res.json())
-      .catch((err: Error) => console.log("Error fetching project data:", err))
-  }
-
-  setProjectData(projectData: ProjectDataType) {
-    this.projectData = projectData
+  setProjectData(data: WeaverseProjectDataType) {
+    this.data = data
     this.initProjectItemData()
     this.triggerUpdate()
   }
 
   initProjectItemData() {
-    const data = this.projectData
+    const data = this.data
     if (data?.items) {
       data.items.forEach((item) => {
         if (!this.itemInstances.get(item.id as string | number)) {
