@@ -4,12 +4,13 @@ import { createRootContext, WeaverseRoot } from '@weaverse/react'
 import React from 'react'
 
 export * from '@weaverse/react'
+export * from './utils'
 
 export type WeaverseRootProps = WeaverseRootPropsType & {
   data?: any
 }
 
-let createWeaverseHydrogenContext = (configs: WeaverseType) => {
+export let createWeaverseHydrogenContext = (configs: WeaverseType) => {
   let context = createRootContext(configs)
 
   Object.keys(elements).forEach((key) => {
@@ -18,36 +19,10 @@ let createWeaverseHydrogenContext = (configs: WeaverseType) => {
   return context
 }
 
-let WeaverseHydrogenRoot = ({ context }: WeaverseRootProps) => {
-  return context?.projectData?.items ? <WeaverseRoot context={context} /> : null
+export let WeaverseHydrogenRoot = ({ context }: WeaverseRootProps) => {
+  return context?.projectData?.items ? (
+    <WeaverseRoot context={context} />
+  ) : (
+    <>No Weaverse data found!</>
+  )
 }
-export type WHFetchConfigs = {
-  studioUrl?: string
-  projectKey: string
-  url: URL
-}
-let fetchPageData = async ({
-  studioUrl = 'https://studio.weaverse.io',
-  projectKey,
-  url,
-}: WHFetchConfigs) => {
-  let handle = url.pathname
-  let isDesignMode = url.searchParams.get('isDesignMode') === 'true'
-
-  let data = await fetch(studioUrl + '/api/public/project', {
-    method: 'POST',
-    body: JSON.stringify({
-      projectKey,
-      handle,
-      published: !isDesignMode,
-    }),
-  })
-    .then((res) => res.json())
-    .catch((e) => {
-      console.error(e)
-      return {}
-    })
-  return { ...data, studioUrl }
-}
-
-export { WeaverseHydrogenRoot, createWeaverseHydrogenContext, fetchPageData }

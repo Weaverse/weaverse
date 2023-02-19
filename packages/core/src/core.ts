@@ -184,32 +184,34 @@ export class Weaverse {
     this.initProjectItemData()
   }
 
-  // initialized = false
-  // initializeData = (data: InitializeData) => {
-  //   if (!this.initialized) {
-  //     let { data: pageData, published, id, projectKey, studioUrl } = data
-  //     this.projectKey = projectKey || this.projectKey
-  //     this.appUrl = studioUrl || this.appUrl
-  //     this.projectData = { ...pageData, pageId: id }
-  //     this.isDesignMode = !published
-  //     this.initProjectItemData()
-  //     if (this.isDesignMode) {
-  //       this.triggerUpdate()
-  //       this.loadStudio()
-  //     }
-  //   }
-  //   this.initialized = true
-  // }
+  initialized = false
+  initializeData = (data: any) => {
+    if (!this.initialized) {
+      let { projectData, published, id, projectKey, studioUrl } = data
+      this.projectKey = projectKey || this.projectKey
+      this.appUrl = studioUrl || this.appUrl
+      this.projectData = { ...projectData, pageId: id }
+      this.isDesignMode = !published
+      this.initProjectItemData()
+      if (this.isDesignMode) {
+        this.triggerUpdate()
+        this.loadStudio()
+      }
+    }
+    this.initialized = true
+  }
 
-  loadStudio(version: string) {
-    setTimeout(() => {
-      if (isIframe && this.isDesignMode && !this.studioBridge) {
-        const initStudio = () => {
-          this.studioBridge = new window.WeaverseStudioBridge(this)
-          // Make event listeners from studio work
-          this.triggerUpdate()
-        }
-
+  loadStudio(version?: string) {
+    console.log("load studio")
+    if (isIframe && this.isDesignMode && !this.studioBridge) {
+      const initStudio = () => {
+        this.studioBridge = new window.WeaverseStudioBridge(this)
+        // Make event listeners from studio work
+        this.triggerUpdate()
+        console.log("Studio loaded", this)
+        clearInterval(i)
+      }
+      let i = setInterval(() => {
         if (!window.WeaverseStudioBridge) {
           // Studio bridge script source -> https://weaverse.io/assets/studio/studio-bridge.js
           let studioBridgeScript = document.createElement("script")
@@ -220,8 +222,8 @@ export class Weaverse {
         } else {
           initStudio()
         }
-      }
-    }, 2000)
+      }, 2000)
+    }
   }
 
   /**
