@@ -11,13 +11,14 @@ import type {
   BreakPoints,
   ElementData,
   ElementFlags,
-  WeaverseProjectDataType,
-  WeaverseElement,
-  WeaverseType,
   ElementSchema,
+  PlatformTypeEnum,
+  WeaverseElement,
+  WeaverseProjectDataType,
+  WeaverseType,
 } from "./types"
 import { isIframe, merge } from "./utils"
-import { stichesUtils } from "./utils/styles"
+import { stitchesUtils } from "./utils/styles"
 
 /**
  * WeaverseItemStore is a store for Weaverse item, it can be used to subscribe/update the item data
@@ -143,6 +144,11 @@ export class Weaverse {
   isDesignMode = false
 
   /**
+   * Check the platform, shopify-section or react-ssr(hydrogen)
+   */
+  platformType: PlatformTypeEnum = "shopify-section"
+
+  /**
    * Check whether the sdk is in preview mode or not
    * @type {boolean}
    */
@@ -178,6 +184,7 @@ export class Weaverse {
    * @param isDesignMode {boolean} check whether the sdk is isDesignMode or not
    * @param ssrMode {boolean} Use in element to optionally render special HTML for hydration
    * @param elementSchemas {Array<ElementSchema>} List of element schemas
+   * @param platformType {PlatformTypeEnum} Check the platform, shopify-section or react-ssr(hydrogen)
    */
   constructor({
     weaverseHost,
@@ -187,49 +194,56 @@ export class Weaverse {
     isDesignMode,
     ssrMode,
     elementSchemas,
+    platformType,
   }: WeaverseType = {}) {
-    this.init({ weaverseHost, projectId, data, mediaBreakPoints, isDesignMode, ssrMode, elementSchemas })
+    this.init({ weaverseHost, projectId, data, platformType, mediaBreakPoints, isDesignMode, ssrMode, elementSchemas })
   }
 
-  init({ weaverseHost, elementSchemas, projectId, data, mediaBreakPoints, isDesignMode, ssrMode }: WeaverseType = {}) {
+  init({
+    weaverseHost,
+    elementSchemas,
+    platformType,
+    projectId,
+    data,
+    mediaBreakPoints,
+    isDesignMode,
+    ssrMode,
+  }: WeaverseType = {}) {
     this.elementSchemas = elementSchemas || this.elementSchemas
     this.weaverseHost = weaverseHost || this.weaverseHost
     this.projectId = projectId || this.projectId
     this.mediaBreakPoints = mediaBreakPoints || this.mediaBreakPoints
     this.isDesignMode = isDesignMode || this.isDesignMode
     this.ssrMode = ssrMode || this.ssrMode
+    this.platformType = platformType || this.platformType
     this.data = data || this.data
-    this.initStitches()
     this.initProjectItemData()
+    this.initStitches()
   }
 
-  initialized = false
-  initializeData = (data: any) => {
-    console.log("initializeData", data)
-    if (!this.initialized) {
-      let { data: d, isDesignMode, id, projectId, weaverseHost } = data
-      this.projectId = projectId || this.projectId
-      this.weaverseHost = weaverseHost || this.weaverseHost
-      this.data = { ...d, pageId: id }
-      this.isDesignMode = isDesignMode
-      this.initProjectItemData()
-      if (this.isDesignMode) {
-        this.initStitches()
-        this.triggerUpdate()
-        this.loadStudio()
-      }
-    }
-    this.initialized = true
-  }
+  // initialized = false
+  // initializeData = (data: any) => {
+  //   if (!this.initialized) {
+  //     let { data: d, isDesignMode, id, projectId, weaverseHost } = data
+  //     this.projectId = projectId || this.projectId
+  //     this.weaverseHost = weaverseHost || this.weaverseHost
+  //     this.data = { ...d, pageId: id }
+  //     this.isDesignMode = isDesignMode
+  //     this.initProjectItemData()
+  //     if (this.isDesignMode) {
+  //       this.triggerUpdate()
+  //       this.loadStudio()
+  //     }
+  //   }
+  //   this.initialized = true
+  // }
 
   loadStudio(version?: string) {
-    console.log("load studio")
     if (isIframe && this.isDesignMode && !this.studioBridge) {
       const initStudio = () => {
         this.studioBridge = new window.WeaverseStudioBridge(this)
         // Make event listeners from studio work
         this.triggerUpdate()
-        console.log("Studio loaded", this)
         clearInterval(i)
       }
       let i = setInterval(() => {
@@ -268,7 +282,7 @@ export class Weaverse {
       stitches.createStitches({
         prefix: "weaverse",
         media: this.mediaBreakPoints,
-        utils: stichesUtils,
+        utils: stitchesUtils,
       })
   }
 
