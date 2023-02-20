@@ -31,6 +31,9 @@ export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
         <WeaverseContextProvider value={context}>
           <ItemInstance id={context.data.rootId} />
         </WeaverseContextProvider>
+        {context.platformType === 'react-ssr' ? (
+          <StitchesSSR stitchesInstance={context.stitchesInstance} />
+        ) : null}
       </div>
     )
   }
@@ -61,7 +64,6 @@ const ItemComponent = ({ instance }: ItemComponentProps) => {
       rest.ref = instance.ref
     }
     return (
-      // @ts-ignore
       <Component
         key={id}
         data-wv-type={type}
@@ -78,6 +80,18 @@ const ItemComponent = ({ instance }: ItemComponentProps) => {
     console.log(`Unknown element: ${type}`)
     return null
   }
+}
+const StitchesSSR = ({ stitchesInstance }: any) => {
+  // this should put below outlet so stitches can have data from rendered components
+  const stitchesCss = stitchesInstance.getCssText()
+  return (
+    <style
+      id={'stitches'}
+      data-style={'weaverse-stitches'}
+      dangerouslySetInnerHTML={{ __html: stitchesCss }}
+      suppressHydrationWarning
+    />
+  )
 }
 
 let ItemInstance = ({ id }: { id: string | number }) => {

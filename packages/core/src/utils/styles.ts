@@ -1,4 +1,4 @@
-export let stichesUtils = {
+export let stitchesUtils = {
   // Abbreviated margin properties
   m: (value: string) => ({
     margin: value,
