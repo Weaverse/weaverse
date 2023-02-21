@@ -4,6 +4,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { WeaverseContext, WeaverseContextProvider } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
 import { generateItemClassName } from './utils/css'
+import { initUploadCareAdaptiveDelivery } from '~/utils/uploadcare'
 
 export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
   let [, setData] = useState<WeaverseProjectDataType | unknown>(context.data)
@@ -13,6 +14,7 @@ export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
   useEffect(() => {
     context.subscribe(renderRoot)
     context.contentRootElement = rootRef.current
+    initUploadCareAdaptiveDelivery(context.weaverseHost as string)
     return () => {
       context.unsubscribe(renderRoot)
     }
