@@ -110,6 +110,7 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
               currentSlide={currentSlide}
               instanceRef={instanceRef}
               offset={10}
+              icon="arrow"
               className="wv-pmedia-slider__arrows"
             />
           )}

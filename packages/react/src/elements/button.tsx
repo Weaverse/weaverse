@@ -46,6 +46,8 @@ export let css: ElementCSS = {
     backgroundColor: '#393e46',
     color: '#fff',
     fontSize: '14px',
+    lineHeight: '1.5',
+    letterSpacing: '0',
     fontWeight: 'medium',
     padding: '10px 20px',
     height: '42px',

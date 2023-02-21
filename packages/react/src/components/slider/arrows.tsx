@@ -6,7 +6,7 @@ import type { SliderArrowsProps } from '~/types/components'
 import { Icon } from '../icons'
 
 export function Arrows(props: SliderArrowsProps) {
-  let { currentSlide, instanceRef, className, offset } = props
+  let { currentSlide, instanceRef, className, icon, offset } = props
   let isFirst = currentSlide === 0
   let isLast = false
   if (instanceRef.current) {
@@ -26,7 +26,7 @@ export function Arrows(props: SliderArrowsProps) {
           instanceRef?.current?.prev()
         }}
       >
-        <Icon name="ArrowLeft" />
+        <Icon name={icon === 'caret' ? 'CaretLeft' : 'ArrowLeft'} />
       </button>
       <button
         type="button"
@@ -36,7 +36,7 @@ export function Arrows(props: SliderArrowsProps) {
           instanceRef?.current?.next()
         }}
       >
-        <Icon name="ArrowRight" />
+        <Icon name={icon === 'caret' ? 'CaretRight' : 'ArrowRight'} />
       </button>
     </StyledArrows>
   )
