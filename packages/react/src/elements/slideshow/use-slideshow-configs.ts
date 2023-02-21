@@ -32,7 +32,7 @@ export function useSlideshowConfigs(props: SlideshowProps) {
       slides:
         animation === 'fade'
           ? React.Children.count(children)
-          : { perView: slidesPerView },
+          : { perView: slidesPerView, number: React.Children.count(children) },
       drag: isPreviewMode || !isDesignMode,
       loop,
       selector: animation === 'fade' ? null : '.keen-slider__slide',
