@@ -16,10 +16,11 @@ export function fetchProjectData({
   projectId?: string
   isDesignMode?: boolean
 }) {
-  console.log('fetchProjectData', weaverseHost, projectId, isDesignMode)
   return fetch(
     weaverseHost +
-      `/api/public/project/${projectId}?isDesignMode=${isDesignMode}`
+      `/api/public/project/${projectId}${
+        isDesignMode ? `?isDesignMode=true` : ''
+      }`
   )
     .then((res: Response) => res.json())
     .catch((err: Error) => console.log('Error fetching project data:', err))
