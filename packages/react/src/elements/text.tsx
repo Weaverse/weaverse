@@ -29,6 +29,8 @@ export let css: ElementCSS = {
         margin: '0',
         wordBreak: 'break-word',
         overflowWrap: 'break-word',
+        width: 'auto',
+        height: 'auto',
       },
     },
   },
