@@ -95,6 +95,52 @@ export let Plus = (props: HTMLAttributes<SVGElement>) => {
   )
 }
 
+export let CaretLeft = (props: HTMLAttributes<SVGElement>) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="192"
+      height="192"
+      fill="currentColor"
+      viewBox="0 0 256 256"
+      {...props}
+    >
+      <rect width="256" height="256" fill="none" />
+      <polyline
+        points="160 208 80 128 160 48"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="16"
+      />
+    </svg>
+  )
+}
+
+export let CaretRight = (props: HTMLAttributes<SVGElement>) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="192"
+      height="192"
+      fill="currentColor"
+      viewBox="0 0 256 256"
+      {...props}
+    >
+      <rect width="256" height="256" fill="none" />
+      <polyline
+        points="96 48 176 128 96 208"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="16"
+      />
+    </svg>
+  )
+}
+
 export let ArrowLeft = (props: HTMLAttributes<SVGElement>) => {
   return (
     <svg

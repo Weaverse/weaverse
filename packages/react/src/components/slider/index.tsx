@@ -50,6 +50,7 @@ export function Slider(props: SliderProps) {
           instanceRef={instanceRef}
           className={arrowsClass}
           offset={arrowOffset}
+          icon="arrow"
         />
       )}
     </>

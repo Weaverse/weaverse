@@ -161,6 +161,9 @@ export interface SlideshowProps extends WeaverseElementProps {
   slidesPerView: number
   spacing: number
   showArrows: boolean
+  showArrowsOnHover: boolean
+  arrowIcon: 'caret' | 'arrow'
+  arrowsColor: 'light' | 'dark'
   showDots: boolean
   dotsPosition: 'top' | 'bottom' | 'left' | 'right'
   dotsColor: 'light' | 'dark'
