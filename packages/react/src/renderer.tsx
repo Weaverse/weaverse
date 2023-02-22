@@ -1,18 +1,20 @@
-import type { ProjectDataType, ElementData } from '@weaverse/core'
+import type { WeaverseProjectDataType, ElementData } from '@weaverse/core'
 import { isBrowser } from '@weaverse/core'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { WeaverseContext, WeaverseContextProvider } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
 import { generateItemClassName } from './utils/css'
+import { initUploadCareAdaptiveDelivery } from '~/utils/uploadcare'
 
 export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
-  let [, setData] = useState<ProjectDataType | unknown>(context.projectData)
+  let [, setData] = useState<WeaverseProjectDataType | unknown>(context.data)
   let rootRef = useRef<HTMLElement>()
   let renderRoot = () => setData({})
 
   useEffect(() => {
     context.subscribe(renderRoot)
     context.contentRootElement = rootRef.current
+    initUploadCareAdaptiveDelivery(context.weaverseHost as string)
     return () => {
       context.unsubscribe(renderRoot)
     }
@@ -21,7 +23,7 @@ export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
   let eventHandlers = context?.studioBridge?.eventHandlers || {}
   let themeClass = context.stitchesInstance.theme.className
 
-  if (context.projectData?.rootId) {
+  if (context.data?.rootId) {
     return (
       <div
         className={`weaverse-content-root ${themeClass}`}
@@ -29,8 +31,11 @@ export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
         ref={rootRef}
       >
         <WeaverseContextProvider value={context}>
-          <ItemInstance id={context.projectData.rootId} />
+          <ItemInstance id={context.data.rootId} />
         </WeaverseContextProvider>
+        {context.platformType === 'react-ssr' ? (
+          <StitchesSSR stitchesInstance={context.stitchesInstance} />
+        ) : null}
       </div>
     )
   }
@@ -61,7 +66,6 @@ const ItemComponent = ({ instance }: ItemComponentProps) => {
       rest.ref = instance.ref
     }
     return (
-      // @ts-ignore
       <Component
         key={id}
         data-wv-type={type}
@@ -78,6 +82,18 @@ const ItemComponent = ({ instance }: ItemComponentProps) => {
     console.log(`Unknown element: ${type}`)
     return null
   }
+}
+const StitchesSSR = ({ stitchesInstance }: any) => {
+  // this should put below outlet so stitches can have data from rendered components
+  const stitchesCss = stitchesInstance.getCssText()
+  return (
+    <style
+      id={'stitches'}
+      data-style={'weaverse-stitches'}
+      dangerouslySetInnerHTML={{ __html: stitchesCss }}
+      suppressHydrationWarning
+    />
+  )
 }
 
 let ItemInstance = ({ id }: { id: string | number }) => {

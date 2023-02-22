@@ -9,6 +9,7 @@ export * from '@weaverse/react'
 export * from './types'
 export * from './types/configs'
 export * from './types/shopify'
+export * from './utils/fetch-project-data'
 
 function createWeaverseShopifyContext(configs: WeaverseType) {
   let context = createRootContext(configs)

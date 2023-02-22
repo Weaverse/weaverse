@@ -22,9 +22,16 @@ export let css: ElementCSS = {
     padding: '10px',
     overflow: 'hidden',
     '.wv-text-content': {
-      wordBreak: 'break-word',
-      overflowWrap: 'break-word',
-      whiteSpace: 'break-spaces',
+      width: '100%',
+      height: '100%',
+      '> p, > h1, > h2, > h3, > h4, > h5, > h6': {
+        all: 'inherit',
+        margin: '0',
+        wordBreak: 'break-word',
+        overflowWrap: 'break-word',
+        width: 'auto',
+        height: 'auto',
+      },
     },
   },
 }

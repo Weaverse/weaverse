@@ -28,6 +28,7 @@ export interface SliderArrowsProps {
   currentSlide: number
   instanceRef: React.MutableRefObject<KeenSliderInstance | null>
   offset: number
+  icon: 'caret' | 'arrow'
   className?: string
 }
 

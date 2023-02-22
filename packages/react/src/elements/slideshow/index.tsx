@@ -11,6 +11,9 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
   let {
     animation,
     showArrows,
+    showArrowsOnHover,
+    arrowIcon,
+    arrowsColor,
     showDots,
     dotsPosition,
     dotsColor,
@@ -40,6 +43,11 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
     faderClass,
     animation === 'slide' ? 'keen-slider' : 'keen-fader'
   )
+  let arrowsClass = clsx(
+    'wv-slideshow--arrows',
+    showArrowsOnHover && 'show-on-hover',
+    `arrows--${arrowsColor}`
+  )
 
   return (
     <div ref={ref} style={style} {...rest}>
@@ -50,7 +58,8 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
         <Arrows
           instanceRef={instanceRef}
           currentSlide={currentSlide}
-          className="wv-slideshow--arrows"
+          className={arrowsClass}
+          icon={arrowIcon}
           offset={20}
         />
       )}
@@ -84,6 +93,39 @@ export let css: ElementCSS = {
         inset: 0,
       },
     },
+    '.wv-slideshow--arrows': {
+      '.arrow': {
+        borderRadius: '100%',
+        backgroundColor: 'transparent',
+        padding: '6px',
+        '&:hover': {
+          backgroundColor: '#fff',
+        },
+        svg: {
+          width: '28px',
+          height: '28px',
+        },
+      },
+      '&.show-on-hover': {
+        opacity: 0,
+        transition: 'opacity 0.3s ease',
+      },
+      '&.arrows--dark': {
+        '.arrow': {
+          color: '#000',
+        },
+      },
+      '&.arrows--light': {
+        '.arrow': {
+          color: '#fff',
+        },
+      },
+    },
+    '&:hover': {
+      '.wv-slideshow--arrows': {
+        opacity: 1,
+      },
+    },
   },
 }
 
@@ -92,9 +134,12 @@ Slideshow.defaultProps = {
   slidesPerView: 1,
   spacing: 0,
   showArrows: true,
+  showArrowsOnHover: false,
+  arrowIcon: 'caret',
+  arrowsColor: 'dark',
   showDots: true,
   dotsPosition: 'bottom',
-  dotsColor: 'light',
+  dotsColor: 'dark',
   loop: true,
   autoRotate: false,
   changeSlidesEvery: 5,

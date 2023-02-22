@@ -1,9 +1,9 @@
 import type * as Stitches from "@stitches/core"
 import type { ForwardRefExoticComponent } from "react"
-import type { stichesUtils } from "./utils/styles"
+import type { stitchesUtils } from "./utils/styles"
 
 // Project types
-export interface ProjectDataType {
+export interface WeaverseProjectDataType {
   items: ElementData[]
   rootId: string
   script: {
@@ -16,25 +16,28 @@ export interface ProjectDataType {
 // export interface InitializeData {
 //   id: string
 //   handle: string
-//   data: ProjectDataType
-//   published: boolean
-//   projectKey?: string
-//   studioUrl?: string
+//   data: WeaverseProjectDataType
+//   isDesignMode: boolean
+//   projectId?: string
+//   weaverseHost?: string
 // }
 
 export interface BreakPoints {
   mobile: string
   desktop: string
 }
+export type PlatformTypeEnum = "shopify-section" | "react-ssr"
 
 // Weaverse types
 export interface WeaverseType {
   mediaBreakPoints?: BreakPoints
-  appUrl?: string
-  projectKey?: string
-  projectData?: ProjectDataType
+  weaverseHost?: string
+  projectId?: string
+  data?: WeaverseProjectDataType
   isDesignMode?: boolean
   ssrMode?: boolean
+  elementSchemas?: ElementSchema[]
+  platformType?: PlatformTypeEnum
 }
 
 export interface WeaverseElement {
@@ -122,7 +125,7 @@ export interface ElementData {
   [key: string]: any
 }
 
-export type WeaverseCSSProperties = Stitches.CSS & Partial<Record<keyof typeof stichesUtils, string | number>>
+export type WeaverseCSSProperties = Stitches.CSS & Partial<Record<keyof typeof stitchesUtils, string | number>>
 export type ChildElementCSS = Partial<{
   [selector: string]: WeaverseCSSProperties & ChildElementCSS
 }>
