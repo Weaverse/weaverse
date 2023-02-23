@@ -1,26 +1,28 @@
 import type { ElementCSS } from '@weaverse/core'
-import * as React from 'react'
+import type { CSSProperties } from 'react'
+import React from 'react'
+import { useState } from 'react'
 import type { ScrollingTextElementProps } from '~/types'
+
+type AnimationPlayState = 'running' | 'paused'
 
 const ScrollingText = React.forwardRef<
   HTMLDivElement,
   ScrollingTextElementProps
 >((props, ref) => {
   let { children, value, gap, speed, pauseOnHover, ...rest } = props
-  let [animationPlayState, setAnimationPlayState] = React.useState<
-    'running' | 'paused'
-  >('running')
+  let [playState, setPlayState] = useState<AnimationPlayState>('running')
   let style = {
-    '--move-speed': `${speed}s`,
     '--gap': `${gap}px`,
-    '--animation-play-state': animationPlayState,
-  } as React.CSSProperties
+    '--speed': `${speed}s`,
+    '--play-state': playState,
+  } as CSSProperties
 
   let events = {}
   if (pauseOnHover) {
     events = {
-      onMouseEnter: () => setAnimationPlayState('paused'),
-      onMouseLeave: () => setAnimationPlayState('running'),
+      onMouseEnter: () => setPlayState('paused'),
+      onMouseLeave: () => setPlayState('running'),
     }
   }
 
@@ -47,9 +49,9 @@ export let css: ElementCSS = {
       visibility: 'visible',
       whiteSpace: 'nowrap',
       display: 'flex',
-      animation: 'wv-scrolling-text var(--move-speed, 100s) linear infinite',
       gap: 'var(--gap, 40px)',
-      animationPlayState: 'var(--animation-play-state, running)',
+      animation: 'wv-scrolling-text var(--speed, 100s) linear infinite',
+      animationPlayState: 'var(--play-state, running)',
       '.wv-text-content': {
         width: '100%',
         height: 'fit-content',
