@@ -7,7 +7,7 @@ import * as Layout from './layout'
 import * as Map from './map'
 import * as Text from './text'
 import * as Video from './video'
-// import * as Instagram from './Instagram'
+import * as Instagram from './instagram'
 // import * as Accordion from './accordion'
 // import * as AccordionWrapper from './accordion/AccordionWrapper'
 // import * as AccordionContent from './accordion/AccordionContent'
@@ -37,12 +37,12 @@ export const Elements: Record<string, WeaverseElement> = {
     type: 'image',
     defaultCss: Image.css,
   },
-  // Instagram: {
-  //   Component: Instagram.default,
-  //   type: 'instagram',
-  //   defaultCss: Instagram.css,
-  //   permanentCss: Instagram.permanentCss,
-  // },
+  Instagram: {
+    Component: Instagram.default,
+    type: 'instagram',
+    defaultCss: Instagram.css,
+    permanentCss: Instagram.permanentCss,
+  },
   Layout: {
     Component: Layout.default,
     type: 'layout',
