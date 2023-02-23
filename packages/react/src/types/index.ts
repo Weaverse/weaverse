@@ -95,6 +95,12 @@ export interface MapElementProps extends WeaverseElementProps {
 export interface TextElementProps extends WeaverseElementProps {
   value: string
 }
+export interface ScrollingTextElementProps extends WeaverseElementProps {
+  value: string
+  gap: number
+  speed: number
+  pauseOnHover: boolean
+}
 
 export interface VideoCommonProps {
   src: string

@@ -6,13 +6,9 @@ import * as Image from './image'
 import * as Layout from './layout'
 import * as Map from './map'
 import * as Text from './text'
+import * as ScrollingText from './scrolling-text'
 import * as Video from './video'
 // import * as Instagram from './Instagram'
-// import * as Accordion from './accordion'
-// import * as AccordionWrapper from './accordion/AccordionWrapper'
-// import * as AccordionContent from './accordion/AccordionContent'
-// import * as Tab from './tab'
-// import * as TabContent from './tab/TabContent'
 import * as Slideshow from './slideshow'
 import * as Slide from './slideshow/slide'
 
@@ -58,36 +54,16 @@ export const Elements: Record<string, WeaverseElement> = {
     type: 'text',
     defaultCss: Text.css,
   },
+  ScrollingText: {
+    Component: ScrollingText.default,
+    type: 'scrolling-text',
+    defaultCss: ScrollingText.css,
+  },
   Video: {
     Component: Video.default,
     type: 'video',
     defaultCss: Video.css,
   },
-  // Accordion: {
-  //   Component: Accordion.default,
-  //   type: 'accordion',
-  //   defaultCss: Accordion.css,
-  // },
-  // AccordionWrapper: {
-  //   Component: AccordionWrapper.default,
-  //   type: 'accordion.wrapper',
-  //   defaultCss: AccordionWrapper.css,
-  // },
-  // AccordionContent: {
-  //   Component: AccordionContent.default,
-  //   type: 'accordion.content',
-  //   defaultCss: AccordionContent.css,
-  // },
-  // Tab: {
-  //   Component: Tab.default,
-  //   type: 'tab',
-  //   defaultCss: Tab.css,
-  // },
-  // TabContent: {
-  //   Component: TabContent.default,
-  //   type: 'tab.content',
-  //   defaultCss: TabContent.css,
-  // },
   Slideshow: {
     Component: Slideshow.default,
     type: 'slideshow',
