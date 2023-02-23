@@ -8,7 +8,7 @@ import * as Map from './map'
 import * as Text from './text'
 import * as ScrollingText from './scrolling-text'
 import * as Video from './video'
-// import * as Instagram from './Instagram'
+import * as Instagram from './instagram'
 import * as Slideshow from './slideshow'
 import * as Slide from './slideshow/slide'
 
@@ -33,12 +33,12 @@ export const Elements: Record<string, WeaverseElement> = {
     type: 'image',
     defaultCss: Image.css,
   },
-  // Instagram: {
-  //   Component: Instagram.default,
-  //   type: 'instagram',
-  //   defaultCss: Instagram.css,
-  //   permanentCss: Instagram.permanentCss,
-  // },
+  Instagram: {
+    Component: Instagram.default,
+    type: 'instagram',
+    defaultCss: Instagram.css,
+    permanentCss: Instagram.permanentCss,
+  },
   Layout: {
     Component: Layout.default,
     type: 'layout',
