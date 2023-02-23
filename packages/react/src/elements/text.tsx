@@ -23,7 +23,7 @@ export let css: ElementCSS = {
     overflow: 'hidden',
     '.wv-text-content': {
       width: '100%',
-      height: '100%',
+      height: 'fit-content',
       '> p, > h1, > h2, > h3, > h4, > h5, > h6': {
         all: 'inherit',
         margin: '0',
