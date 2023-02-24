@@ -45,6 +45,7 @@ export let css: ElementCSS = {
   '@desktop': {
     display: 'flex',
     padding: '10px',
+    overflow: 'hidden',
     '.wv-scrolling-text__container': {
       visibility: 'visible',
       whiteSpace: 'nowrap',
