@@ -1,4 +1,4 @@
-import type { WeaverseElementProps } from '@weaverse/react'
+import type { WeaverseElementProps, WeaverseIcon } from '@weaverse/react'
 import type { KeenSliderInstance, KeenSliderPlugin } from 'keen-slider'
 import type {
   OptionDisplayType,
@@ -285,6 +285,20 @@ export interface CollectionContextProps {
 }
 export interface CustomHTMLProps extends WeaverseElementProps {
   content: string
+}
+
+type Hotspot = {
+  productId: number
+  offsetX: number
+  offsetY: number
+}
+
+export interface HotspotsProps extends WeaverseElementProps {
+  image: string
+  aspectRatio: AspectRatio
+  icon: WeaverseIcon
+  color: 'light' | 'dark'
+  hotspots: Hotspot[]
 }
 
 declare global {
