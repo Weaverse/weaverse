@@ -11,7 +11,7 @@ export let CustomHTML = forwardRef<HTMLDivElement, CustomHTMLProps>(
       '--pointer-events': isDesignMode ? 'none' : 'auto',
     } as React.CSSProperties
 
-    if (!content)
+    if (!content) {
       return (
         <div ref={ref} {...rest}>
           <Components.Placeholder element="Custom HTML">
@@ -19,6 +19,7 @@ export let CustomHTML = forwardRef<HTMLDivElement, CustomHTMLProps>(
           </Components.Placeholder>
         </div>
       )
+    }
     return (
       <div
         data-prevent-hydration="true"
@@ -42,7 +43,6 @@ export let css: ElementCSS = {
 
 CustomHTML.defaultProps = {
   content: '',
-  type: 'custom.html',
 }
 
 export default CustomHTML

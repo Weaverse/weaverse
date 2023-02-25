@@ -1,5 +1,4 @@
 import type { ElementCSS } from '@weaverse/core'
-import type { ForwardedRef } from 'react'
 import React from 'react'
 import type { ImageElementProps } from '~/types'
 
