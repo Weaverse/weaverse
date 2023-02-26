@@ -40,10 +40,13 @@ export let Hotspots = forwardRef<HTMLDivElement, HotspotsProps>(
               <div
                 key={hotspot.productId}
                 className="animate-ping hotspots__button"
-                style={{
-                  top: `${hotspot.offsetY}%`,
-                  left: `${hotspot.offsetX}%`,
-                }}
+                style={
+                  {
+                    top: `${hotspot.offsetY}%`,
+                    left: `${hotspot.offsetX}%`,
+                    '--translate-ratio': hotspot.offsetY > 50 ? 1 : -1,
+                  } as CSSProperties
+                }
               >
                 <Icon name={icon} />
                 <div
@@ -102,9 +105,18 @@ export let css: ElementCSS = {
       transform: 'translate(-50%, -50%)',
       backgroundColor: 'var(--bg-color)',
       color: 'var(--color)',
+      cursor: 'pointer',
       svg: {
         width: '18px',
         height: '18px',
+      },
+      '&:hover': {
+        '.hotspot__product': {
+          opacity: '1',
+          visibility: 'visible',
+          transform:
+            'translate3d(calc(var(--translate-ratio) * 28px), calc(var(--translate-ratio) * -6px), 0)',
+        },
       },
       '.hotspot__product': {
         width: '280px',
@@ -112,20 +124,21 @@ export let css: ElementCSS = {
         backgroundColor: '#fff',
         overflow: 'hidden',
         transition: '.3s all',
-        // opacity: '0',
-        visibility: 'visible',
-        transform: 'translate3d(0, 10px, 0)',
-        // pointerEvents: 'none',
+        opacity: '0',
+        visibility: 'hidden',
+        transform:
+          'translate3d(calc(var(--translate-ratio) * 28px), calc(var(--translate-ratio) * -16px), 0)',
         boxShadow: '2px 7px 15px rgba(0,0,0,.04)',
         position: 'absolute',
         display: 'flex',
         '.hotspot__product-image': {
           width: '80px',
-          aspectRatio: '1/1',
+          display: 'flex',
           img: {
             width: '100%',
             height: 'auto',
             objectFit: 'contain',
+            objectPosition: 'center',
           },
         },
         '.hotspot__product-info': {
@@ -144,8 +157,9 @@ export let css: ElementCSS = {
           '.hotspot__product-price': {
             fontSize: '15px',
             fontWeight: '500',
+            marginTop: '8px',
             marginBottom: '10px',
-            marginTop: '10px',
+            color: '#222',
           },
           '.hotspot__view-details': {
             fontSize: '14px',
@@ -169,7 +183,7 @@ Hotspots.defaultProps = {
   aspectRatio: '1/1',
   icon: 'HandBag',
   color: 'light',
-  hotspots: [{ productId: 7970468036904, offsetX: 50, offsetY: 50 }],
+  hotspots: [{ productId: 7970468036904, offsetX: 20, offsetY: 20 }],
 }
 
 export default Hotspots
