@@ -183,7 +183,14 @@ Hotspots.defaultProps = {
   aspectRatio: '1/1',
   icon: 'HandBag',
   color: 'light',
-  hotspots: [{ productId: 7970468036904, offsetX: 20, offsetY: 20 }],
+  hotspots: [
+    {
+      id: 'default',
+      productId: 7970468036904,
+      offsetX: 50,
+      offsetY: 50,
+    },
+  ],
 }
 
 export default Hotspots

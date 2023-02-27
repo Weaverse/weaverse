@@ -258,7 +258,7 @@ export interface OptionValuesProps
 // Form
 export interface FormElementProps extends WeaverseElementProps {
   formType: string
-  fields: FormFieldProps[]
+  fields: FormField[]
   submitText: string
   submitPosition: 'left' | 'right' | 'center'
   openInNewTab: boolean
@@ -266,7 +266,7 @@ export interface FormElementProps extends WeaverseElementProps {
 }
 
 export type FormFieldType = 'text' | 'email' | 'multiline'
-export interface FormFieldProps {
+export interface FormField {
   id: number
   type: FormFieldType
   placeholder: string
@@ -277,7 +277,7 @@ export interface FormFieldProps {
 }
 
 export interface FieldProps {
-  field: FormFieldProps
+  field: FormField
   formId: string
 }
 export interface CollectionContextProps {
@@ -287,7 +287,8 @@ export interface CustomHTMLProps extends WeaverseElementProps {
   content: string
 }
 
-type Hotspot = {
+export type Hotspot = {
+  id: string
   productId: number
   offsetX: number
   offsetY: number

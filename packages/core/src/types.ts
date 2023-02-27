@@ -76,13 +76,6 @@ export interface ChildElement {
   selector: ChildElementSelector
 }
 export type ParentType = "container" | "layout" | "root" | "product-details" | "product-info" | "slideshow" | "slide"
-// | "collection.box"
-// | "collection-box"
-// | "article-box"
-// | "article-list"
-// | "tab"
-// | "accordion"
-// | "accordion.wrapper"
 
 export type GridSize = {
   rowSpan: number
@@ -197,7 +190,12 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
   helpText?: string
 }
 
-export type AdditionalInputConfigs = SelectInputConfigs | ToggleGroupConfigs | RangeInputConfigs | SortableInputConfigs
+export type AdditionalInputConfigs =
+  | SelectInputConfigs
+  | ToggleGroupConfigs
+  | RangeInputConfigs
+  | ChildrenSortInputConfigs
+  | DataSortInputConfigs
 
 export interface SelectInputConfigs {
   options?: { value: string; label: string; icon?: string; weight?: string }[]
@@ -215,8 +213,14 @@ export interface RangeInputConfigs {
 }
 
 export type SortableItemAction = "add" | "edit" | "duplicate" | "delete" | "toggle-visibility"
-export interface SortableInputConfigs {
+export interface ChildrenSortInputConfigs {
   actions: SortableItemAction[]
+}
+
+export interface DataSortInputConfigs {
+  prop: string
+  defaultData: object
+  inspector: string
 }
 
 export type InputType =
@@ -226,7 +230,8 @@ export type InputType =
   | "image"
   | "range"
   | "select"
-  | "sortable"
+  | "children-sort"
+  | "data-sort"
   | "switch"
   | "text"
   | "textarea"
