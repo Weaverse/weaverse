@@ -267,7 +267,7 @@ export interface FormElementProps extends WeaverseElementProps {
 
 export type FormFieldType = 'text' | 'email' | 'multiline'
 export interface FormField {
-  id: number
+  id: string
   type: FormFieldType
   placeholder: string
   showLabel: boolean

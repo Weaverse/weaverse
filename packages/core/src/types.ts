@@ -238,7 +238,6 @@ export type InputType =
   | "toggle-group"
   | "position"
   // Element inputs
-  | "form"
   | "product"
   | "product-list"
   | "product-swatches"
