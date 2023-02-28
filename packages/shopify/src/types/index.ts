@@ -289,7 +289,8 @@ export interface CustomHTMLProps extends WeaverseElementProps {
 
 export type Hotspot = {
   id: string
-  productId: number
+  productId: number | null
+  productHandle: string
   offsetX: number
   offsetY: number
 }
