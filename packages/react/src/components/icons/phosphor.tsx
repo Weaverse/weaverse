@@ -1,6 +1,22 @@
 import type { HTMLAttributes } from 'react'
 import React from 'react'
 
+export let Circle = (props: HTMLAttributes<SVGElement>) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="192"
+      height="192"
+      fill="currentColor"
+      viewBox="0 0 256 256"
+      {...props}
+    >
+      <rect width="256" height="256" fill="none"></rect>
+      <circle cx="128" cy="128" r="104"></circle>
+    </svg>
+  )
+}
+
 export let CircleNotch = (props: HTMLAttributes<SVGElement>) => {
   return (
     <svg
@@ -66,15 +82,25 @@ export let X = (props: HTMLAttributes<SVGElement>) => {
 export let Minus = (props: HTMLAttributes<SVGElement>) => {
   return (
     <svg
-      width="196"
-      height="196"
-      fill="currentColor"
-      stroke="currentColor"
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 384 512"
+      width="192"
+      height="192"
+      fill="currentColor"
+      viewBox="0 0 256 256"
       {...props}
     >
-      <path d="M376 232H8c-4.42 0-8 3.58-8 8v32c0 4.42 3.58 8 8 8h368c4.42 0 8-3.58 8-8v-32c0-4.42-3.58-8-8-8z" />
+      <rect width="256" height="256" fill="none" />
+      <line
+        x1="40"
+        y1="128"
+        x2="216"
+        y2="128"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="16"
+      />
     </svg>
   )
 }
@@ -82,15 +108,36 @@ export let Minus = (props: HTMLAttributes<SVGElement>) => {
 export let Plus = (props: HTMLAttributes<SVGElement>) => {
   return (
     <svg
-      width="196"
-      height="196"
-      fill="currentColor"
-      stroke="currentColor"
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 384 512"
+      width="192"
+      height="192"
+      fill="currentColor"
+      viewBox="0 0 256 256"
       {...props}
     >
-      <path d="M376 232H216V72c0-4.42-3.58-8-8-8h-32c-4.42 0-8 3.58-8 8v160H8c-4.42 0-8 3.58-8 8v32c0 4.42 3.58 8 8 8h160v160c0 4.42 3.58 8 8 8h32c4.42 0 8-3.58 8-8V280h160c4.42 0 8-3.58 8-8v-32c0-4.42-3.58-8-8-8z" />
+      <rect width="256" height="256" fill="none" />
+      <line
+        x1="40"
+        y1="128"
+        x2="216"
+        y2="128"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="16"
+      />
+      <line
+        x1="128"
+        y1="40"
+        x2="128"
+        y2="216"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="16"
+      />
     </svg>
   )
 }
@@ -375,6 +422,61 @@ export let Package = (props: HTMLAttributes<SVGElement>) => {
         strokeLinejoin="round"
         strokeWidth="8"
       />
+    </svg>
+  )
+}
+
+export let HandBag = (props: HTMLAttributes<SVGElement>) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="192"
+      height="192"
+      fill="currentColor"
+      viewBox="0 0 256 256"
+      {...props}
+    >
+      <rect width="256" height="256" fill="none"></rect>
+      <path
+        d="M208.8,72H47.2a8.1,8.1,0,0,0-8,7.1L25,207.1a8,8,0,0,0,7.9,8.9H223.1a8,8,0,0,0,7.9-8.9l-14.2-128A8.1,8.1,0,0,0,208.8,72Z"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="16"
+      ></path>
+      <path
+        d="M88,104V72a40,40,0,0,1,80,0v32"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="16"
+      ></path>
+    </svg>
+  )
+}
+
+export let Tag = (props: HTMLAttributes<SVGElement>) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="192"
+      height="192"
+      fill="currentColor"
+      viewBox="0 0 256 256"
+      {...props}
+    >
+      <rect width="256" height="256" fill="none"></rect>
+      <path
+        d="M122.7,25.9,42,42,25.9,122.7a8,8,0,0,0,2.2,7.2L132.5,234.3a7.9,7.9,0,0,0,11.3,0l90.5-90.5a7.9,7.9,0,0,0,0-11.3L129.9,28.1A8,8,0,0,0,122.7,25.9Z"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="16"
+      ></path>
+      <circle cx="84" cy="84" r="12"></circle>
     </svg>
   )
 }
