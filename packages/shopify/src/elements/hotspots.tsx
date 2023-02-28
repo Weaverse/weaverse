@@ -12,7 +12,7 @@ let { Icon } = Components
 export let Hotspots = forwardRef<HTMLDivElement, HotspotsProps>(
   (props, ref) => {
     let { image, aspectRatio, icon, color, hotspots, ...rest } = props
-    let { money_format } = weaverseShopifyConfigs.shopData
+    let { money_format } = weaverseShopifyConfigs.shopData || {}
     let products: ShopifyProduct[] = hotspots.map(
       (hotspot) => weaverseShopifyProducts[hotspot.productId]
     )
@@ -44,7 +44,8 @@ export let Hotspots = forwardRef<HTMLDivElement, HotspotsProps>(
                   {
                     top: `${hotspot.offsetY}%`,
                     left: `${hotspot.offsetX}%`,
-                    '--translate-ratio': hotspot.offsetY > 50 ? 1 : -1,
+                    '--translate-x-ratio': hotspot.offsetX > 50 ? 1 : -1,
+                    '--translate-y-ratio': hotspot.offsetY > 50 ? 1 : -1,
                   } as CSSProperties
                 }
               >
@@ -58,13 +59,11 @@ export let Hotspots = forwardRef<HTMLDivElement, HotspotsProps>(
                     right: hotspot.offsetX > 50 ? '100%' : 'auto',
                   }}
                 >
-                  <a
-                    href={url}
-                    target="_self"
-                    className="hotspot__product-image"
-                  >
-                    <Image image={image} width={500} />
-                  </a>
+                  <div className="hotspot__product-image">
+                    <a href={url} target="_self">
+                      <Image image={image} width={500} />
+                    </a>
+                  </div>
                   <div className="hotspot__product-info">
                     <div>
                       <a href={url} className="hotspot__product-title">
@@ -91,6 +90,7 @@ export let Hotspots = forwardRef<HTMLDivElement, HotspotsProps>(
 export let css: ElementCSS = {
   '@desktop': {
     position: 'relative',
+    display: 'flex',
     '.hotspots__image': {
       width: '100%',
       height: '100%',
@@ -115,7 +115,7 @@ export let css: ElementCSS = {
           opacity: '1',
           visibility: 'visible',
           transform:
-            'translate3d(calc(var(--translate-ratio) * 28px), calc(var(--translate-ratio) * -6px), 0)',
+            'translate3d(calc(var(--translate-x-ratio) * 28px), calc(var(--translate-y-ratio) * -6px), 0)',
         },
       },
       '.hotspot__product': {
@@ -127,23 +127,28 @@ export let css: ElementCSS = {
         opacity: '0',
         visibility: 'hidden',
         transform:
-          'translate3d(calc(var(--translate-ratio) * 28px), calc(var(--translate-ratio) * -16px), 0)',
-        boxShadow: '2px 7px 15px rgba(0,0,0,.04)',
+          'translate3d(calc(var(--translate-x-ratio) * 28px), calc(var(--translate-y-ratio) * -16px), 0)',
+        boxShadow: '2px 7px 15px rgba(0, 0, 0, .04)',
         position: 'absolute',
         display: 'flex',
+        gap: '16px',
         '.hotspot__product-image': {
-          width: '80px',
           display: 'flex',
-          img: {
-            width: '100%',
-            height: 'auto',
-            objectFit: 'contain',
-            objectPosition: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+          a: {
+            width: '80px',
+            display: 'flex',
+            img: {
+              width: '100%',
+              height: 'auto',
+              objectFit: 'contain',
+              objectPosition: 'center',
+            },
           },
         },
         '.hotspot__product-info': {
           flex: '1',
-          marginLeft: '16px',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
@@ -175,12 +180,18 @@ export let css: ElementCSS = {
   },
   '@mobile': {
     aspectRatio: 'var(--aspect-ratio, 1/1)',
+    '.hotspots__button': {
+      '.hotspot__product': {
+        flexDirection: 'column',
+        width: '150px',
+      },
+    },
   },
 }
 
 Hotspots.defaultProps = {
   image: 'https://ucarecdn.com/dac0f414-2b1f-46df-99ce-41554f0f653a/',
-  aspectRatio: '1/1',
+  aspectRatio: 'auto',
   icon: 'HandBag',
   color: 'light',
   hotspots: [
