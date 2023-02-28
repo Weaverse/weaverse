@@ -35,7 +35,7 @@ export let Hotspots = forwardRef<HTMLDivElement, HotspotsProps>(
               (product) => product?.id === hotspot.productId
             )
             if (!product) return null
-            let { image, url, price, title } = product
+            let { images, url, price, title } = product
             return (
               <div
                 key={hotspot.productId}
@@ -61,7 +61,7 @@ export let Hotspots = forwardRef<HTMLDivElement, HotspotsProps>(
                 >
                   <div className="hotspot__product-image">
                     <a href={url} target="_self">
-                      <Image image={image} width={500} />
+                      <Image image={images[0]} width={500} />
                     </a>
                   </div>
                   <div className="hotspot__product-info">
