@@ -13,9 +13,9 @@ export let Hotspots = forwardRef<HTMLDivElement, HotspotsProps>(
   (props, ref) => {
     let { image, aspectRatio, icon, color, hotspots, ...rest } = props
     let { money_format } = weaverseShopifyConfigs.shopData || {}
-    let products: ShopifyProduct[] = hotspots.map(
-      (hotspot) => weaverseShopifyProducts[hotspot.productId]
-    )
+    let products: ShopifyProduct[] = hotspots
+      .filter((hotspot) => hotspot.productId)
+      .map((hotspot) => weaverseShopifyProducts[hotspot.productId!])
     let style = {
       '--aspect-ratio': aspectRatio,
       '--color': color === 'light' ? '#000' : '#fff',
@@ -153,7 +153,9 @@ export let css: ElementCSS = {
           flexDirection: 'column',
           justifyContent: 'space-between',
           '.hotspot__product-title': {
+            display: 'flex',
             fontSize: '14px',
+            lineHeight: '1.5',
             fontWeight: '600',
             color: '#222',
             textDecoration: 'none',
@@ -197,7 +199,8 @@ Hotspots.defaultProps = {
   hotspots: [
     {
       id: 'default',
-      productId: 7970468036904,
+      productId: null,
+      productHandle: '',
       offsetX: 50,
       offsetY: 50,
     },
