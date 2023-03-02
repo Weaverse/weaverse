@@ -86,8 +86,8 @@ export let css: ElementCSS = {
           backgroundColor: 'transparent',
           cursor: 'pointer',
           svg: {
-            width: '12px',
-            height: '12px',
+            width: '16px',
+            height: '16px',
           },
         },
         '.wv-quantity-input': {

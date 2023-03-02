@@ -1,4 +1,4 @@
-import type { WeaverseElementProps } from '@weaverse/react'
+import type { WeaverseElementProps, WeaverseIcon } from '@weaverse/react'
 import type { KeenSliderInstance, KeenSliderPlugin } from 'keen-slider'
 import type {
   OptionDisplayType,
@@ -258,7 +258,7 @@ export interface OptionValuesProps
 // Form
 export interface FormElementProps extends WeaverseElementProps {
   formType: string
-  fields: FormFieldProps[]
+  fields: FormField[]
   submitText: string
   submitPosition: 'left' | 'right' | 'center'
   openInNewTab: boolean
@@ -266,8 +266,8 @@ export interface FormElementProps extends WeaverseElementProps {
 }
 
 export type FormFieldType = 'text' | 'email' | 'multiline'
-export interface FormFieldProps {
-  id: number
+export interface FormField {
+  id: string
   type: FormFieldType
   placeholder: string
   showLabel: boolean
@@ -277,7 +277,7 @@ export interface FormFieldProps {
 }
 
 export interface FieldProps {
-  field: FormFieldProps
+  field: FormField
   formId: string
 }
 export interface CollectionContextProps {
@@ -285,6 +285,22 @@ export interface CollectionContextProps {
 }
 export interface CustomHTMLProps extends WeaverseElementProps {
   content: string
+}
+
+export type Hotspot = {
+  id: string
+  productId: number | null
+  productHandle: string
+  offsetX: number
+  offsetY: number
+}
+
+export interface HotspotsProps extends WeaverseElementProps {
+  image: string
+  aspectRatio: AspectRatio
+  icon: WeaverseIcon
+  color: 'light' | 'dark'
+  hotspots: Hotspot[]
 }
 
 declare global {

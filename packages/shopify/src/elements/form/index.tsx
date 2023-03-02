@@ -72,7 +72,7 @@ Form.defaultProps = {
   formType: 'customer',
   fields: [
     {
-      id: 1,
+      id: 'field-1',
       type: 'text',
       placeholder: 'Enter your name',
       showLabel: true,
@@ -81,7 +81,7 @@ Form.defaultProps = {
       required: false,
     },
     {
-      id: 2,
+      id: 'field-2',
       showLabel: true,
       label: 'Your email',
       name: 'email',
@@ -90,7 +90,7 @@ Form.defaultProps = {
       required: true,
     },
     {
-      id: 3,
+      id: 'field-3',
       showLabel: true,
       label: 'Your message',
       name: 'message',

@@ -2,6 +2,7 @@ import type { WeaverseElement } from '@weaverse/core'
 import * as ArticleList from '~/elements/article-list'
 import * as CollectionList from '~/elements/collection-list'
 import * as CustomHTML from './custom-html'
+import * as Hotspots from './hotspots'
 import * as Form from './form'
 import { productElements } from './product'
 import * as ProductList from './product-list'
@@ -27,6 +28,11 @@ let elements: Record<string, WeaverseElement> = {
     Component: CustomHTML.default,
     type: 'custom.html',
     defaultCss: CustomHTML.css,
+  },
+  Hotspots: {
+    Component: Hotspots.default,
+    type: 'hotspots',
+    defaultCss: Hotspots.css,
   },
   ProductList: {
     Component: ProductList.default,

@@ -1,8 +1,8 @@
 import type { ElementCSS } from '@weaverse/core'
 import React, { forwardRef } from 'react'
 import type { LayoutElementProps } from '~/types'
-import { Background } from './Background'
-import { Overlay } from './Overlay'
+import { Background } from '~/components/background'
+import { Overlay } from '~/components/overlay'
 
 let Layout = forwardRef<HTMLDivElement, LayoutElementProps>((props, ref) => {
   let {
@@ -36,10 +36,10 @@ let Layout = forwardRef<HTMLDivElement, LayoutElementProps>((props, ref) => {
   return (
     <div ref={ref} {...rest} style={style}>
       <Background
-        imgUrl={backgroundImage}
-        bgColor={backgroundColor}
-        objectFit={objectFit}
-        objectPosition={objectPosition}
+        backgroundImage={backgroundImage}
+        backgroundColor={backgroundColor}
+        backgroundFit={objectFit}
+        backgroundPosition={objectPosition}
       />
       <Overlay enableOverlay={enableOverlay} overlayOpacity={overlayOpacity} />
       <div data-layout-content>{children}</div>
@@ -61,22 +61,6 @@ export let css: ElementCSS = {
       gridAutoRows: 'var(--row-size)',
       gap: 'var(--gap)',
       maxWidth: 'var(--layout-content-width)',
-    },
-    '.wv-layout-background': {
-      display: 'block',
-      position: 'absolute',
-      inset: 0,
-      backgroundColor: 'var(--layout-bg-color)',
-      img: {
-        objectFit: 'var(--layout-bg-image-object-fit, cover)',
-        objectPosition: 'var(--layout-bg-image-position, 50% 50%)',
-      },
-    },
-    '.wv-layout-overlay': {
-      display: 'block',
-      position: 'absolute',
-      inset: 0,
-      backgroundColor: 'rgba(0, 0, 0, var(--layout-overlay-opacity, 0.5))',
     },
   },
   '@mobile': {
