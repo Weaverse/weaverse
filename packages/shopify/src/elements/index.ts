@@ -6,6 +6,7 @@ import * as Hotspots from './hotspots'
 import * as Form from './form'
 import { productElements } from './product'
 import * as ProductList from './product-list'
+import * as AppBlock from './app-block'
 
 let elements: Record<string, WeaverseElement> = {
   ...productElements,
@@ -38,6 +39,11 @@ let elements: Record<string, WeaverseElement> = {
     Component: ProductList.default,
     type: 'product-list',
     defaultCss: ProductList.css,
+  },
+  AppBlock: {
+    Component: AppBlock.default,
+    type: 'app-block',
+    defaultCss: AppBlock.css,
   },
 }
 
