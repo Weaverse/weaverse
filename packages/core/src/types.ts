@@ -86,6 +86,7 @@ export type ToolbarAction =
   | "settings-level-2"
   | "text-presets"
   | "ai-assistant"
+  | "scale-text"
   | "duplicate"
   | "delete"
   | "copy-styles"
