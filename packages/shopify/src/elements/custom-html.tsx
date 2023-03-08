@@ -3,6 +3,8 @@ import { Components, WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext } from 'react'
 import type { CustomHTMLProps } from '~/types'
 
+let { Placeholder, NoHydrate } = Components
+
 export let CustomHTML = forwardRef<HTMLDivElement, CustomHTMLProps>(
   (props, ref) => {
     let { content, children, ...rest } = props
@@ -14,20 +16,17 @@ export let CustomHTML = forwardRef<HTMLDivElement, CustomHTMLProps>(
     if (!content) {
       return (
         <div ref={ref} {...rest}>
-          <Components.Placeholder element="Custom HTML">
+          <Placeholder element="Custom HTML">
             Click <strong>Add code</strong> to add your custom HTML & Liquid.
-          </Components.Placeholder>
+          </Placeholder>
         </div>
       )
     }
+
     return (
-      <div
-        data-prevent-hydration="true"
-        ref={ref}
-        {...rest}
-        style={style}
-        dangerouslySetInnerHTML={{ __html: content }}
-      />
+      <div ref={ref} {...rest} style={style}>
+        <NoHydrate getHTML={() => content} />
+      </div>
     )
   }
 )
