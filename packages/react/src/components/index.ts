@@ -10,6 +10,7 @@ import { Dots } from './slider/dots'
 import { ResizePlugin } from './slider/resize-plugin'
 import { AutoplayPlugin } from './slider/autoplay-plugin'
 import Placeholder from './placeholder'
+import { NoHydrate } from './no-hydrate'
 
 export let Components = {
   Background,
@@ -20,6 +21,7 @@ export let Components = {
   Spinner,
   Slider,
   Tooltip,
+  NoHydrate,
 }
 
 export let SliderComponents = {
