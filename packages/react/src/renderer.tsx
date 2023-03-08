@@ -28,6 +28,7 @@ export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
       <div
         className={`weaverse-content-root ${themeClass}`}
         {...eventHandlers}
+        suppressHydrationWarning
         ref={rootRef}
       >
         <WeaverseContextProvider value={context}>
