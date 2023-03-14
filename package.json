@@ -2,7 +2,7 @@
   "name": "root",
   "private": true,
   "devDependencies": {
-    "@types/node": "^18.14.1",
+    "@types/node": "^18.14.6",
     "@types/react": "^18.0.28",
     "@types/react-image-gallery": "^1.2.0",
     "@typescript-eslint/eslint-plugin": "^5.53.0",
@@ -12,7 +12,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "husky": "^8.0.3",
-    "lint-staged": "^13.1.2",
+    "lint-staged": "^13.1.4",
     "prettier": "2.8.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
