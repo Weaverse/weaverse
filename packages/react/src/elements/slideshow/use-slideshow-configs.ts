@@ -1,4 +1,4 @@
-import { useKeenSlider } from 'keen-slider/react.es'
+import { useKeenSlider } from 'keen-slider/react'
 import React, { useContext, useEffect, useState } from 'react'
 import { AutoplayPlugin } from '~/components/slider/autoplay-plugin'
 import { ResizePlugin } from '~/components/slider/resize-plugin'

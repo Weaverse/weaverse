@@ -1,6 +1,6 @@
 import type { ElementCSS } from '@weaverse/react'
 import { Components } from '@weaverse/react'
-import { useKeenSlider } from 'keen-slider/react.es'
+import { useKeenSlider } from 'keen-slider/react'
 import React from 'react'
 import type { MediaFullscreenSliderProps } from '~/types'
 
