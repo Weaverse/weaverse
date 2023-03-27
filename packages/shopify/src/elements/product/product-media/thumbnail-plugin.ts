@@ -1,4 +1,4 @@
-import type { KeenSliderInstance, KeenSliderPlugin } from 'keen-slider/react'
+import type { KeenSliderInstance, KeenSliderPlugin } from 'keen-slider/react.es'
 import type { MutableRefObject } from 'react'
 
 export function ThumbnailPlugin(
