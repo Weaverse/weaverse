@@ -1,4 +1,4 @@
-import type { KeenSliderPlugin } from 'keen-slider/react'
+import type { KeenSliderPlugin } from 'keen-slider/react.es'
 
 export let ResizePlugin: KeenSliderPlugin = (slider) => {
   let observer = new ResizeObserver(() => slider.update())

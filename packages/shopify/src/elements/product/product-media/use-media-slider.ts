@@ -1,4 +1,4 @@
-import { useKeenSlider } from 'keen-slider/react'
+import { useKeenSlider } from 'keen-slider/react.es'
 import { useEffect } from 'react'
 import type { ProductImageHooksInput } from '~/types'
 import { ThumbnailPlugin } from './thumbnail-plugin'

@@ -1,4 +1,4 @@
-import type { KeenSliderInstance, KeenSliderPlugin } from 'keen-slider/react'
+import type { KeenSliderInstance, KeenSliderPlugin } from 'keen-slider/react.es'
 
 export function AutoplayPlugin(changeSlidesEvery: number): KeenSliderPlugin {
   return (slider: KeenSliderInstance) => {
