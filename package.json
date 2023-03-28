@@ -3,7 +3,7 @@
   "private": true,
   "devDependencies": {
     "@types/node": "^18.15.10",
-    "@types/react": "^18.0.29",
+    "@types/react": "^18.0.30",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
     "@typescript-eslint/parser": "^5.57.0",
     "eslint": "8.36.0",
@@ -16,7 +16,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tsup": "^6.7.0",
-    "turbo": "^1.8.5",
+    "turbo": "^1.8.6",
     "typescript": "^5.0.2"
   },
   "scripts": {
