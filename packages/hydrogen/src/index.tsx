@@ -1,17 +1,24 @@
 import elements from './elements'
-import type { WeaverseRootPropsType, WeaverseType } from '@weaverse/react'
-import { createRootContext, WeaverseRoot } from '@weaverse/react'
+import type { WeaverseElement, WeaverseType } from '@weaverse/core'
+import { Weaverse } from '@weaverse/core'
 import React from 'react'
-
-export * from '@weaverse/react'
 export * from './utils'
-
-export type WeaverseRootProps = WeaverseRootPropsType & {
-  data?: any
+export let createHydrogenRootContext = (
+  configs: WeaverseType,
+  elements: {
+    [key: string]: WeaverseElement
+  } = {}
+) => {
+  let rootContext = new Weaverse(configs)
+  // Register the element components
+  Object.keys(elements).forEach((key) => {
+    rootContext.registerElement(elements[key])
+  })
+  return rootContext
 }
 
 export let createWeaverseHydrogenContext = (configs: WeaverseType) => {
-  let context = createRootContext(configs)
+  let context = createHydrogenRootContext(configs)
 
   Object.keys(elements).forEach((key) => {
     context.registerElement(elements[key])
@@ -19,10 +26,10 @@ export let createWeaverseHydrogenContext = (configs: WeaverseType) => {
   return context
 }
 
-export let WeaverseHydrogenRoot = ({ context }: WeaverseRootProps) => {
-  return context?.data?.items ? (
-    <WeaverseRoot context={context} />
-  ) : (
-    <>No Weaverse data found!</>
+export let WeaverseHydrogenRoot = () => {
+  return (
+    <div>
+      <div>hello world from weaverse hydrogen</div>
+    </div>
   )
 }
