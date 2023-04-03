@@ -1,11 +1,33 @@
 {
-  "name": "root",
+  "name": "weaverse-sdks",
   "private": true,
+  "scripts": {
+    "dev": "npm run dev:pkg -- --filter=./templates/weaverse-hydrogen",
+    "dev:pkg": "cross-env LOCAL_DEV=true turbo dev --parallel --filter=./packages/*",
+    "up": "bash ./upgrade.sh",
+    "test": "turbo run test",
+    "build": "turbo run build",
+    "build:graph": "turbo run build --graph=repo-graph.svg",
+    "prepare": "turbo run build",
+    "preprepare": "husky install",
+    "lint": "eslint packages",
+    "lint:fix": "eslint packages --fix",
+    "clean-all": "rimraf node_modules/.bin && rimraf node_modules/.cache && rimraf packages/core/dist && rimraf packages/hydrogen/dist && rimraf packages/react/dist && rimraf templates/weaverse-hydrogen/.cache"
+  },
+  "workspaces": [
+    "templates/weaverse-hydrogen",
+    "templates/weaverse-hydrogen-express",
+    "packages/core",
+    "packages/react",
+    "packages/shopify",
+    "packages/hydrogen"
+  ],
   "devDependencies": {
     "@types/node": "^18.15.11",
     "@types/react": "^18.0.31",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
     "@typescript-eslint/parser": "^5.57.0",
+    "cross-env": "^7.0.3",
     "eslint": "8.37.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -15,28 +37,14 @@
     "prettier": "2.8.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "rimraf": "^3.0.2",
     "tsup": "^6.7.0",
     "turbo": "^1.8.6",
-    "typescript": "^5.0.2"
+    "typescript": "^4.9.5"
   },
-  "scripts": {
-    "dev": "turbo run dev --no-cache",
-    "up": "bash ./upgrade.sh",
-    "test": "turbo run test",
-    "build": "turbo run build",
-    "build:graph": "turbo run build --graph=repo-graph.svg",
-    "prepare": "turbo run build",
-    "preprepare": "husky install",
-    "lint": "eslint packages",
-    "lint:fix": "eslint packages --fix"
+  "engines": {
+    "node": ">=16.13"
   },
-  "workspaces": [
-    "packages/core",
-    "packages/react",
-    "packages/shopify",
-    "packages/hydrogen"
-  ],
-  "packageManager": "npm@8.1.2",
   "version": "0.0.3",
   "prettier": {
     "semi": false,

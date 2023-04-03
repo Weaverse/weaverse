@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "npm run dev",
-    "dev": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --watch --external react --sourcemap",
+    "dev": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --watch --external react",
     "build": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --external react",
     "clean": "rimraf dist",
     "prepublish": "npm run build"

@@ -221,23 +221,6 @@ export class Weaverse {
     this.initStitches()
   }
 
-  // initialized = false
-  // initializeData = (data: any) => {
-  //   if (!this.initialized) {
-  //     let { data: d, isDesignMode, id, projectId, weaverseHost } = data
-  //     this.projectId = projectId || this.projectId
-  //     this.weaverseHost = weaverseHost || this.weaverseHost
-  //     this.data = { ...d, pageId: id }
-  //     this.isDesignMode = isDesignMode
-  //     this.initProjectItemData()
-  //     if (this.isDesignMode) {
-  //       this.triggerUpdate()
-  //       this.loadStudio()
-  //     }
-  //   }
-  //   this.initialized = true
-  // }
-
   loadStudio(version?: string) {
     if (isIframe && this.isDesignMode && !this.studioBridge) {
       const initStudio = () => {
@@ -259,6 +242,27 @@ export class Weaverse {
         }
       }, 2000)
     }
+  }
+  injectScript(scriptData: {
+    src: string
+    async?: boolean
+    defer?: boolean
+    type?: string
+    integrity?: string
+    crossOrigin?: string
+  }) {
+    return new Promise((resolve, reject) => {
+      let script = document.createElement("script")
+      script.src = scriptData.src
+      script.async = scriptData.async || true
+      script.defer = scriptData.defer || true
+      script.type = scriptData.type || "text/javascript"
+      script.integrity = scriptData.integrity || ""
+      script.crossOrigin = scriptData.crossOrigin || "anonymous"
+      script.onload = resolve
+      script.onerror = reject
+      document.body.appendChild(script)
+    })
   }
 
   /**
