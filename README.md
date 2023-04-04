@@ -14,6 +14,8 @@
 * If you need git to track that file again, use the command:
 `git update-index --no-assume-unchanged ./remix.config.js`
 
+### Note for commiting git project with submodule:
+* We should commit & push the submodule update first then after the submodule got latest commit code => commit the sdks packages with the latest submodule signature
 
 ### Upgrade all packages
 
