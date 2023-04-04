@@ -1,6 +1,7 @@
 import elements from './elements'
 import type { WeaverseElement, WeaverseType } from '@weaverse/core'
 import { Weaverse } from '@weaverse/core'
+import { useStudio } from './utils'
 import React from 'react'
 export * from './utils'
 export let createHydrogenRootContext = (
@@ -27,9 +28,14 @@ export let createWeaverseHydrogenContext = (configs: WeaverseType) => {
 }
 
 export let WeaverseHydrogenRoot = () => {
+  let weaverse = createHydrogenRootContext({
+    isDesignMode: true,
+    platformType: 'shopify-hydrogen',
+  })
+  useStudio(weaverse)
   return (
     <div>
-      <div>hello world from weaverse hydrogen</div>
+      <div id="weaverse-test">hello world from weaverse hydrogen</div>
     </div>
   )
 }

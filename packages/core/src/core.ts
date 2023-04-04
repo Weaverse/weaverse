@@ -17,7 +17,7 @@ import type {
   WeaverseProjectDataType,
   WeaverseType,
 } from "./types"
-import { isIframe, merge } from "./utils"
+import { merge } from "./utils"
 import { stitchesUtils } from "./utils/styles"
 
 /**
@@ -219,50 +219,6 @@ export class Weaverse {
     this.data = data || this.data
     this.initProjectItemData()
     this.initStitches()
-  }
-
-  loadStudio(version?: string) {
-    if (isIframe && this.isDesignMode && !this.studioBridge) {
-      const initStudio = () => {
-        this.studioBridge = new window.WeaverseStudioBridge(this)
-        // Make event listeners from studio work
-        this.triggerUpdate()
-        clearInterval(i)
-      }
-      let i = setInterval(() => {
-        if (!window.WeaverseStudioBridge) {
-          // Studio bridge script source -> https://weaverse.io/assets/studio/studio-bridge.js
-          let studioBridgeScript = document.createElement("script")
-          studioBridgeScript.src = `${this.weaverseHost}/assets/studio/studio-bridge.js?v=${version}`
-          studioBridgeScript.type = "module"
-          studioBridgeScript.onload = initStudio
-          document.body.appendChild(studioBridgeScript)
-        } else {
-          initStudio()
-        }
-      }, 2000)
-    }
-  }
-  injectScript(scriptData: {
-    src: string
-    async?: boolean
-    defer?: boolean
-    type?: string
-    integrity?: string
-    crossOrigin?: string
-  }) {
-    return new Promise((resolve, reject) => {
-      let script = document.createElement("script")
-      script.src = scriptData.src
-      script.async = scriptData.async || true
-      script.defer = scriptData.defer || true
-      script.type = scriptData.type || "text/javascript"
-      script.integrity = scriptData.integrity || ""
-      script.crossOrigin = scriptData.crossOrigin || "anonymous"
-      script.onload = resolve
-      script.onerror = reject
-      document.body.appendChild(script)
-    })
   }
 
   /**

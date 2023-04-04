@@ -4,6 +4,7 @@ import { createRootContext, WeaverseRoot } from '@weaverse/react'
 import React from 'react'
 import type { FallbackProps } from 'react-error-boundary'
 import { ErrorBoundary } from 'react-error-boundary'
+import { useStudio } from './hooks/use-studio'
 
 export * from '@weaverse/react'
 export * from './types'
@@ -30,6 +31,7 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
 }
 
 function ShopifyRoot({ context }: WeaverseRootPropsType) {
+  useStudio(context)
   return (
     <ErrorBoundary
       FallbackComponent={ErrorFallback}
