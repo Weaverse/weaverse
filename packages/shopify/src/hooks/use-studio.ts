@@ -12,7 +12,9 @@ export let useStudio = (weaverseCore: Weaverse) => {
       !window.weaverseStudioInitialized
     ) {
       loadScript(
-        `${weaverseCore.weaverseHost}/assets/studio/studio-bridge.js`
+        `${
+          weaverseCore.weaverseHost
+        }/assets/studio/studio-bridge.js?t=${Date.now()}`
       ).then(() => {
         // @ts-ignore
         window?.createWeaverseStudioBridge(weaverseCore)
