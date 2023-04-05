@@ -34,7 +34,11 @@ export let fetchPageData = async ({
 // TODO: make @weaverse/react framework agnostic and then move this code to @weaverse/react
 export let useStudio = (weaverseCore: Weaverse) => {
   useEffect(() => {
-    if (weaverseCore.isDesignMode && isIframe) {
+    if (
+      weaverseCore.isDesignMode &&
+      isIframe &&
+      !window.weaverseStudioInitialized
+    ) {
       loadScript(
         `${weaverseCore.weaverseHost}/assets/studio/studio-bridge.js`
       ).then(() => {
