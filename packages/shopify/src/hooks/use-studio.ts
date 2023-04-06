@@ -4,7 +4,6 @@ import { isIframe, loadScript } from '@weaverse/core'
 import { useEffect } from 'react'
 
 export let useStudio = (weaverseCore: Weaverse) => {
-  console.log('useStudio', weaverseCore)
   useEffect(() => {
     if (
       weaverseCore.isDesignMode &&

@@ -39,6 +39,8 @@ export let useStudio = (weaverseCore: Weaverse) => {
       isIframe &&
       !window.weaverseStudioInitialized
     ) {
+      window.weaverseStudioInitialized = true
+
       loadScript(
         `${
           weaverseCore.weaverseHost

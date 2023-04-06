@@ -4,6 +4,7 @@ import { Weaverse } from '@weaverse/core'
 import { useStudio } from './utils'
 import React from 'react'
 export * from './utils'
+export * from './weaverse-loader'
 export let createHydrogenRootContext = (
   configs: WeaverseType,
   elements: {
