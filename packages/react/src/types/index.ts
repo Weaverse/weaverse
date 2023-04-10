@@ -180,7 +180,7 @@ export interface SlideshowProps extends WeaverseElementProps {
 
 export interface SlideProps
   extends WeaverseElementProps,
-    BackgroundProps,
+    BackgroundDataProps,
     OverlayProps {
   contentPosition: string
   children: ReactElement[]
