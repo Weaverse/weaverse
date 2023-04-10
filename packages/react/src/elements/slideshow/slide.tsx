@@ -11,8 +11,8 @@ let Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
     contentPosition,
     backgroundColor,
     backgroundImage,
-    backgroundFit,
-    backgroundPosition,
+    objectFit,
+    objectPosition,
     enableOverlay,
     overlayOpacity,
     children,
@@ -24,8 +24,8 @@ let Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
       <Background
         backgroundColor={backgroundColor}
         backgroundImage={backgroundImage}
-        backgroundFit={backgroundFit}
-        backgroundPosition={backgroundPosition}
+        backgroundFit={objectFit}
+        backgroundPosition={objectPosition}
         className="slide-background"
       />
       <Overlay
@@ -65,8 +65,8 @@ export let css: ElementCSS = {
 
 Slide.defaultProps = {
   contentPosition: 'center center',
-  backgroundFit: 'cover',
-  backgroundPosition: 'center center',
+  objectFit: 'cover',
+  objectPosition: 'center center',
   enableOverlay: false,
   overlayOpacity: 30,
 }
