@@ -25,7 +25,7 @@ export let CustomHTML = forwardRef<HTMLDivElement, CustomHTMLProps>(
 
     return (
       <div ref={ref} {...rest} style={style}>
-        <NoHydrate getHTML={() => content} />
+        {isDesignMode ? content : <NoHydrate getHTML={() => content} />}
       </div>
     )
   }

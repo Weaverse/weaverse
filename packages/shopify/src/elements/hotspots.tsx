@@ -98,6 +98,7 @@ export let css: ElementCSS = {
     },
     '.hotspots__button': {
       position: 'absolute',
+      display: 'flex',
       width: '28px',
       height: '28px',
       padding: '5px',
