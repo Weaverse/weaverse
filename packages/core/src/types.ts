@@ -1,6 +1,7 @@
 import type * as Stitches from "@stitches/core"
 import type { ForwardRefExoticComponent } from "react"
 import type { stitchesUtils } from "./utils/styles"
+import type { Weaverse } from "./core"
 
 // Project types
 export interface WeaverseProjectDataType {
@@ -26,7 +27,7 @@ export interface BreakPoints {
   mobile: string
   desktop: string
 }
-export type PlatformTypeEnum = "shopify-section" | "react-ssr"
+export type PlatformTypeEnum = "shopify-section" | "shopify-hydrogen" | "nextjs"
 
 // Weaverse types
 export interface WeaverseType {
@@ -252,7 +253,8 @@ export type InputType =
 
 declare global {
   interface Window {
-    WeaverseStudioBridge: any
+    createWeaverseStudioBridge: (weaverse: Weaverse) => any
+    weaverseStudioInitialized: boolean
     Blinkloader: any
   }
 }

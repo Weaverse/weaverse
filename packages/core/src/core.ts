@@ -17,7 +17,7 @@ import type {
   WeaverseProjectDataType,
   WeaverseType,
 } from "./types"
-import { isIframe, merge } from "./utils"
+import { merge } from "./utils"
 import { stitchesUtils } from "./utils/styles"
 
 /**
@@ -219,46 +219,6 @@ export class Weaverse {
     this.data = data || this.data
     this.initProjectItemData()
     this.initStitches()
-  }
-
-  // initialized = false
-  // initializeData = (data: any) => {
-  //   if (!this.initialized) {
-  //     let { data: d, isDesignMode, id, projectId, weaverseHost } = data
-  //     this.projectId = projectId || this.projectId
-  //     this.weaverseHost = weaverseHost || this.weaverseHost
-  //     this.data = { ...d, pageId: id }
-  //     this.isDesignMode = isDesignMode
-  //     this.initProjectItemData()
-  //     if (this.isDesignMode) {
-  //       this.triggerUpdate()
-  //       this.loadStudio()
-  //     }
-  //   }
-  //   this.initialized = true
-  // }
-
-  loadStudio(version?: string) {
-    if (isIframe && this.isDesignMode && !this.studioBridge) {
-      const initStudio = () => {
-        this.studioBridge = new window.WeaverseStudioBridge(this)
-        // Make event listeners from studio work
-        this.triggerUpdate()
-        clearInterval(i)
-      }
-      let i = setInterval(() => {
-        if (!window.WeaverseStudioBridge) {
-          // Studio bridge script source -> https://weaverse.io/assets/studio/studio-bridge.js
-          let studioBridgeScript = document.createElement("script")
-          studioBridgeScript.src = `${this.weaverseHost}/assets/studio/studio-bridge.js?v=${version}`
-          studioBridgeScript.type = "module"
-          studioBridgeScript.onload = initStudio
-          document.body.appendChild(studioBridgeScript)
-        } else {
-          initStudio()
-        }
-      }, 2000)
-    }
   }
 
   /**

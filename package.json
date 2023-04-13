@@ -1,27 +1,9 @@
 {
-  "name": "root",
+  "name": "weaverse-sdks",
   "private": true,
-  "devDependencies": {
-    "@types/node": "^18.14.6",
-    "@types/react": "^18.0.28",
-    "@types/react-image-gallery": "^1.2.0",
-    "@typescript-eslint/eslint-plugin": "^5.53.0",
-    "@typescript-eslint/parser": "^5.53.0",
-    "eslint": "8.34.0",
-    "eslint-config-prettier": "^8.6.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "^7.32.2",
-    "husky": "^8.0.3",
-    "lint-staged": "^13.1.4",
-    "prettier": "2.8.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "tsup": "^6.6.3",
-    "turbo": "^1.8.3",
-    "typescript": "^4.9.5"
-  },
   "scripts": {
-    "dev": "turbo run dev --no-cache",
+    "dev": "npm run dev:pkg -- --filter=./templates/weaverse-hydrogen",
+    "dev:pkg": "cross-env LOCAL_DEV=true turbo dev --parallel --filter=./packages/*",
     "up": "bash ./upgrade.sh",
     "test": "turbo run test",
     "build": "turbo run build",
@@ -29,15 +11,40 @@
     "prepare": "turbo run build",
     "preprepare": "husky install",
     "lint": "eslint packages",
-    "lint:fix": "eslint packages --fix"
+    "lint:fix": "eslint packages --fix",
+    "clean-all": "rimraf node_modules/.bin && rimraf node_modules/.cache && rimraf packages/core/dist && rimraf packages/hydrogen/dist && rimraf packages/react/dist && rimraf templates/weaverse-hydrogen/.cache"
   },
   "workspaces": [
+    "templates/weaverse-hydrogen",
+    "templates/weaverse-hydrogen-express",
     "packages/core",
     "packages/react",
     "packages/shopify",
     "packages/hydrogen"
   ],
-  "packageManager": "npm@8.1.2",
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "@types/react": "^18.0.34",
+    "@typescript-eslint/eslint-plugin": "^5.58.0",
+    "@typescript-eslint/parser": "^5.58.0",
+    "cross-env": "^7.0.3",
+    "eslint": "8.38.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.1",
+    "prettier": "2.8.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "rimraf": "^3.0.2",
+    "tsup": "^6.7.0",
+    "turbo": "^1.9.0",
+    "typescript": "^4.9.5"
+  },
+  "engines": {
+    "node": ">=16.13"
+  },
   "version": "0.0.3",
   "prettier": {
     "semi": false,

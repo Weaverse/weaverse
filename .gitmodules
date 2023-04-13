@@ -1,0 +1,6 @@
+[submodule "templates/weaverse-hydrogen"]
+	path = templates/weaverse-hydrogen
+	url = https://github.com/Weaverse/weaverse-hydrogen
+[submodule "templates/weaverse-hydrogen-express"]
+	path = templates/weaverse-hydrogen-express
+	url = https://github.com/Weaverse/weaverse-hydrogen-express

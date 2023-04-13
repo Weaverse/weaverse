@@ -20,3 +20,5 @@ export function merge(target: Record<string, any>, source: Record<string, any>) 
   Object.assign(t || {}, source)
   return t
 }
+
+export { loadScript } from "./load-script"

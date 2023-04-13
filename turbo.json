@@ -1,14 +1,19 @@
 {
+  "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", "build/**"]
     },
     "test": {
       "outputs": []
     },
     "dev": {
       "cache": false,
+      "dependsOn": ["@weaverse/hydrogen#build", "@weaverse/core#build"]
+    },
+    "weaverse-hydrogen#build": {
+      "dependsOn": ["@weaverse/hydrogen#build", "@weaverse/core#build"],
       "outputs": ["dist/**"]
     }
   }
