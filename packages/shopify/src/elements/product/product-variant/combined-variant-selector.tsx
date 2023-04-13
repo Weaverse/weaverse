@@ -3,6 +3,9 @@ import type { CombinedVariantProps } from '~/types'
 
 export function CombinedVariantSelector({ context }: CombinedVariantProps) {
   let { product, selectedVariant, setSelectedVariant } = context
+
+  if (!product.variants) return null
+
   return (
     <>
       <label htmlFor="id" className="wv-combined-variant__label">
