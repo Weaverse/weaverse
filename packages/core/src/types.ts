@@ -68,6 +68,7 @@ export type FlagType =
   | "ignoreShortcutKeys"
   | "hasContextMenu"
   | "isSortableContext"
+  | "mustHaveChildren"
 export type ElementFlags = Partial<Record<FlagType, boolean>>
 
 export type ChildElementSelector = string | string[]

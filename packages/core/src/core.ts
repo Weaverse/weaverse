@@ -43,7 +43,6 @@ export class WeaverseItemStore {
   weaverse: Weaverse
   stitchesClass = ""
   _data: ElementData = { id: "", type: "" }
-  _flags: ElementFlags = {}
 
   constructor(itemData: ElementData, weaverse: Weaverse) {
     let { type, id } = itemData
@@ -59,6 +58,9 @@ export class WeaverseItemStore {
   }
   get _element() {
     return this.ref.current
+  }
+  get _flags() {
+    return this.Element?.schema?.flags || {}
   }
 
   get Element() {
