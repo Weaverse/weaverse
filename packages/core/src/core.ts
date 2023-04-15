@@ -119,6 +119,11 @@ export class Weaverse {
    */
   weaverseHost: string = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://studio.weaverse.io"
   /**
+   * Weaverse version, it can be used to load the correct version of Weaverse SDK
+   * @type {string}
+   */
+  weaverseVersion = ""
+  /**
    * Weaverse project key to access project data via API
    * @type {string}
    */
@@ -190,6 +195,7 @@ export class Weaverse {
    */
   constructor({
     weaverseHost,
+    weaverseVersion,
     projectId,
     data,
     mediaBreakPoints,
@@ -198,11 +204,22 @@ export class Weaverse {
     elementSchemas,
     platformType,
   }: WeaverseType = {}) {
-    this.init({ weaverseHost, projectId, data, platformType, mediaBreakPoints, isDesignMode, ssrMode, elementSchemas })
+    this.init({
+      weaverseHost,
+      weaverseVersion,
+      projectId,
+      data,
+      platformType,
+      mediaBreakPoints,
+      isDesignMode,
+      ssrMode,
+      elementSchemas,
+    })
   }
 
   init({
     weaverseHost,
+    weaverseVersion,
     elementSchemas,
     platformType,
     projectId,
@@ -213,6 +230,7 @@ export class Weaverse {
   }: WeaverseType = {}) {
     this.elementSchemas = elementSchemas || this.elementSchemas
     this.weaverseHost = weaverseHost || this.weaverseHost
+    this.weaverseVersion = weaverseVersion || this.weaverseVersion
     this.projectId = projectId || this.projectId
     this.mediaBreakPoints = mediaBreakPoints || this.mediaBreakPoints
     this.isDesignMode = isDesignMode || this.isDesignMode

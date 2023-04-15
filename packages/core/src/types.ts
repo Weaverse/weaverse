@@ -33,6 +33,7 @@ export type PlatformTypeEnum = "shopify-section" | "shopify-hydrogen" | "nextjs"
 export interface WeaverseType {
   mediaBreakPoints?: BreakPoints
   weaverseHost?: string
+  weaverseVersion?: string
   projectId?: string
   data?: WeaverseProjectDataType
   isDesignMode?: boolean
