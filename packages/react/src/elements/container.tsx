@@ -21,6 +21,9 @@ export let css: ElementCSS = {
     gridArea: '1 / 1 / 3 / 6',
     overflow: 'hidden',
   },
+  '@mobile': {
+    minHeight: '100px',
+  },
 }
 
 Container.defaultProps = {}
