@@ -1,7 +1,7 @@
-import type { Weaverse, ElementCSS, WeaverseItemStore } from '@weaverse/core'
+import type { ElementCSS, Weaverse, WeaverseItemStore } from '@weaverse/core'
 import type { KeenSliderInstance } from 'keen-slider'
 import type { CSSProperties, ReactElement, ReactNode } from 'react'
-import type { BackgroundProps, OverlayProps } from './components'
+import type { OverlayProps } from './components'
 
 export interface WeaverseElementProps extends Partial<ReactElement> {
   css?: ElementCSS

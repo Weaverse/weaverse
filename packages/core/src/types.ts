@@ -33,6 +33,7 @@ export type PlatformTypeEnum = "shopify-section" | "shopify-hydrogen" | "nextjs"
 export interface WeaverseType {
   mediaBreakPoints?: BreakPoints
   weaverseHost?: string
+  weaverseVersion?: string
   projectId?: string
   data?: WeaverseProjectDataType
   isDesignMode?: boolean
@@ -68,6 +69,7 @@ export type FlagType =
   | "ignoreShortcutKeys"
   | "hasContextMenu"
   | "isSortableContext"
+  | "mustHaveChildren"
 export type ElementFlags = Partial<Record<FlagType, boolean>>
 
 export type ChildElementSelector = string | string[]

@@ -51,8 +51,8 @@ export let css: ElementCSS = {
   '@desktop': {
     position: 'relative',
     '> [data-layout-content]': {
-      paddingTop: 'var(--gap)',
-      paddingBottom: 'var(--gap)',
+      // paddingTop: 'var(--gap)',
+      // paddingBottom: 'var(--gap)',
       margin: '0 auto',
       display: 'grid',
       gridTemplateRows: 'repeat(var(--rows), var(--row-size))',
