@@ -15,8 +15,8 @@
   },
   "scripts": {
     "start": "npm run dev",
-    "dev": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --watch --external react @shopify/hydrogen",
-    "build": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --external react @shopify/hydrogen",
+    "dev": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --watch --external react",
+    "build": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --external react",
     "clean": "rimraf dist",
     "prepublish": "npm run build"
   },
@@ -32,6 +32,7 @@
   "name": "@weaverse/hydrogen",
   "author": "Weaverse Team",
   "dependencies": {
+    "@weaverse/react": "1.0.23",
     "@weaverse/core": "1.0.23",
     "@shopify/hydrogen": "2023.1.6"
   }

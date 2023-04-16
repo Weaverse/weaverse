@@ -1,9 +1,25 @@
 import type { LoaderArgs } from '@remix-run/server-runtime'
-export async function weaverseLoader({
-  request,
-  context,
-  params,
-}: LoaderArgs): Promise<any> {
+export async function weaverseLoader(
+  { request, context, params }: LoaderArgs,
+  weaverseConfig: {
+    projectId: string
+    studioHost: string
+  }
+): Promise<any> {
+  let fetchBody = {
+    projectId: weaverseConfig.projectId,
+    url: request.url,
+  }
+  let response = await fetch(
+    `${weaverseConfig.studioHost}/api/public/project`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(fetchBody),
+    }
+  ).then((res) => res.json())
   /**
    * @todo read the url and params from the request => JSON DATA (items, installed add-ons)
    * @todo load the weaverse project page data by current url and projectId
@@ -13,6 +29,6 @@ export async function weaverseLoader({
    * @todo the returned data format will be {weaversePageData: {}, 3rdPartyData: {}, products: [], collections: [], product: {}, collection: {}, etc}
    */
   return {
-    foo: 'bar',
+    weaversePageData: response,
   }
 }
