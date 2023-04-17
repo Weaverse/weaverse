@@ -91,6 +91,7 @@ const ItemComponent = ({ instance }: ItemComponentProps) => {
         className={generateItemClassName(instance, stitchesInstance)}
         {...rest}
       >
+        {/* // TODO: refactor this, migrate to `children` prop */}
         {childIds.map((cid) => (
           <ItemInstance key={cid} id={cid} />
         ))}

@@ -29,6 +29,7 @@ export let useWeaverseHydrogen = (
   let weaverse = createHydrogenRootContext({
     ...rest,
     data: weaversePageData,
+    pageId: weaversePageData?.pageId,
     platformType: 'shopify-hydrogen',
   })
   Object.keys(components).forEach((key) => {

@@ -183,8 +183,6 @@ export class Weaverse {
     mobile: "(max-width: 767.98px)",
   }
 
-  components: any = {}
-
   /**
    * constructor
    * @param weaverseHost {string} Weaverse base URL that can provide by user/developer. for local development, use localhost:3000
