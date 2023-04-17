@@ -1,24 +1,28 @@
 import React, { forwardRef, useContext } from 'react'
 import type { ElementCSS } from '@weaverse/core'
+import type { WeaverseElementProps } from '@weaverse/react'
 import { Components, WeaverseContext } from '@weaverse/react'
 
 let { Placeholder, NoHydrate } = Components
 
-export let AppBlock = forwardRef<HTMLDivElement>((props, ref) => {
-  let { isDesignMode } = useContext(WeaverseContext)
-  if (isDesignMode) {
+export let AppBlock = forwardRef<HTMLDivElement, WeaverseElementProps>(
+  (props, ref) => {
+    let id = props['data-wv-id']!
+    let { isDesignMode } = useContext(WeaverseContext)
+    if (isDesignMode) {
+      return (
+        <div ref={ref} {...props}>
+          <Placeholder element="App Block">
+            Add an App Block inside Shopify Theme Customizer to show here.
+          </Placeholder>
+        </div>
+      )
+    }
     return (
       <div ref={ref} {...props}>
-        <Placeholder element="App Block">
-          Add an App Block inside Shopify Theme Customizer to show here.
-        </Placeholder>
-      </div>
-    )
-  }
-  return (
-    <div ref={ref} {...props}>
-      <NoHydrate
-        getHTML={() => `
+        <NoHydrate
+          id={id}
+          getHTML={() => `
           {%- unless app_block_index -%}
             {%- assign app_block_index = 0 -%}
           {%- endunless -%}
@@ -31,10 +35,11 @@ export let AppBlock = forwardRef<HTMLDivElement>((props, ref) => {
             {%- endcase -%}
           {%- endif -%}
         `}
-      />
-    </div>
-  )
-})
+        />
+      </div>
+    )
+  }
+)
 
 export let css: ElementCSS = {
   '@desktop': {
