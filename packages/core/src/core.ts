@@ -206,7 +206,6 @@ export class Weaverse {
     ssrMode,
     elementSchemas,
     platformType,
-    components,
     pageId,
   }: WeaverseType = {}) {
     this.init({
@@ -219,7 +218,6 @@ export class Weaverse {
       isDesignMode,
       ssrMode,
       elementSchemas,
-      components,
       pageId,
     })
   }
@@ -234,7 +232,6 @@ export class Weaverse {
     mediaBreakPoints,
     isDesignMode,
     ssrMode,
-    components,
     pageId,
   }: WeaverseType = {}) {
     this.elementSchemas = elementSchemas || this.elementSchemas
@@ -245,7 +242,6 @@ export class Weaverse {
     this.mediaBreakPoints = mediaBreakPoints || this.mediaBreakPoints
     this.isDesignMode = isDesignMode || this.isDesignMode
     this.ssrMode = ssrMode || this.ssrMode
-    this.components = components || this.components
     this.platformType = platformType || this.platformType
     this.data = data || this.data
     this.initProjectItemData()

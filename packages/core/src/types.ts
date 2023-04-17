@@ -32,7 +32,6 @@ export interface WeaverseType {
   ssrMode?: boolean
   elementSchemas?: ElementSchema[]
   platformType?: PlatformTypeEnum
-  components?: any
 }
 
 export interface WeaverseElement {
