@@ -1,17 +1,15 @@
 import type { LoaderArgs } from '@remix-run/server-runtime'
+import type { WeaverseHydrogenConfigs } from './types'
 export async function weaverseLoader(
   { request, context, params }: LoaderArgs,
-  weaverseConfig: {
-    projectId: string
-    studioHost: string
-  }
+  weaverseConfig: WeaverseHydrogenConfigs
 ): Promise<any> {
   let fetchBody = {
     projectId: weaverseConfig.projectId,
     url: request.url,
   }
   let response = await fetch(
-    `${weaverseConfig.studioHost}/api/public/project`,
+    `${weaverseConfig.weaverseHost}/api/public/project`,
     {
       method: 'POST',
       headers: {

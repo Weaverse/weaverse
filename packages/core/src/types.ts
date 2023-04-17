@@ -14,15 +14,6 @@ export interface WeaverseProjectDataType {
   pageId?: string // for standalone app, we have pageId for the page that we're editing
 }
 
-// export interface InitializeData {
-//   id: string
-//   handle: string
-//   data: WeaverseProjectDataType
-//   isDesignMode: boolean
-//   projectId?: string
-//   weaverseHost?: string
-// }
-
 export interface BreakPoints {
   mobile: string
   desktop: string
@@ -35,11 +26,13 @@ export interface WeaverseType {
   weaverseHost?: string
   weaverseVersion?: string
   projectId?: string
+  pageId?: string
   data?: WeaverseProjectDataType
   isDesignMode?: boolean
   ssrMode?: boolean
   elementSchemas?: ElementSchema[]
   platformType?: PlatformTypeEnum
+  components?: any
 }
 
 export interface WeaverseElement {

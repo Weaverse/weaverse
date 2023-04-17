@@ -10,7 +10,6 @@ import type { RefObject } from "react"
 import type {
   BreakPoints,
   ElementData,
-  ElementFlags,
   ElementSchema,
   PlatformTypeEnum,
   WeaverseElement,
@@ -117,7 +116,7 @@ export class Weaverse {
    * Weaverse base URL that can provide by user/developer. for local development, use localhost:3000
    * @type {string}
    */
-  weaverseHost: string = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://studio.weaverse.io"
+  weaverseHost = "https://studio.weaverse.io"
   /**
    * Weaverse version, it can be used to load the correct version of Weaverse SDK
    * @type {string}
@@ -128,6 +127,8 @@ export class Weaverse {
    * @type {string}
    */
   projectId = ""
+
+  pageId = ""
   /**
    * Weaverse project data, by default, user can provide project data via React Component:
    * <WeaverseRoot data={data} /> it will be used to server-side rendering
@@ -182,6 +183,8 @@ export class Weaverse {
     mobile: "(max-width: 767.98px)",
   }
 
+  components: any = {}
+
   /**
    * constructor
    * @param weaverseHost {string} Weaverse base URL that can provide by user/developer. for local development, use localhost:3000
@@ -203,6 +206,8 @@ export class Weaverse {
     ssrMode,
     elementSchemas,
     platformType,
+    components,
+    pageId,
   }: WeaverseType = {}) {
     this.init({
       weaverseHost,
@@ -214,6 +219,8 @@ export class Weaverse {
       isDesignMode,
       ssrMode,
       elementSchemas,
+      components,
+      pageId,
     })
   }
 
@@ -227,14 +234,18 @@ export class Weaverse {
     mediaBreakPoints,
     isDesignMode,
     ssrMode,
+    components,
+    pageId,
   }: WeaverseType = {}) {
     this.elementSchemas = elementSchemas || this.elementSchemas
     this.weaverseHost = weaverseHost || this.weaverseHost
     this.weaverseVersion = weaverseVersion || this.weaverseVersion
     this.projectId = projectId || this.projectId
+    this.pageId = pageId || this.pageId
     this.mediaBreakPoints = mediaBreakPoints || this.mediaBreakPoints
     this.isDesignMode = isDesignMode || this.isDesignMode
     this.ssrMode = ssrMode || this.ssrMode
+    this.components = components || this.components
     this.platformType = platformType || this.platformType
     this.data = data || this.data
     this.initProjectItemData()
@@ -248,11 +259,12 @@ export class Weaverse {
   registerElement(element: WeaverseElement) {
     if (element?.type) {
       if (this.elementInstances.has(element.type)) {
-        throw new Error(`Weaverse: Element '${element.type}' already registered`)
+        console.error(`Weaverse: Element '${element.type}' already registered`)
+        return
       }
       this.elementInstances.set(element?.type, element)
     } else {
-      throw new Error("Weaverse: registerElement: `type` is required")
+      console.error("Weaverse: registerElement: `type` is required")
     }
   }
 
