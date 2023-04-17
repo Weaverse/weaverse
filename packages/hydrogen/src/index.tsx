@@ -1,17 +1,18 @@
-import elements from './elements'
 import type { WeaverseElement, WeaverseType } from '@weaverse/core'
 import { Weaverse } from '@weaverse/core'
 import { useStudio } from './utils'
 import React from 'react'
+import type { WeaverseHydrogenConfigs } from './types'
+import { WeaverseRoot, createRootContext } from '@weaverse/react'
 export * from './utils'
 export * from './weaverse-loader'
-export let createHydrogenRootContext = (
+let createHydrogenRootContext = (
   configs: WeaverseType,
   elements: {
     [key: string]: WeaverseElement
   } = {}
 ) => {
-  let rootContext = new Weaverse(configs)
+  let rootContext = createRootContext(configs)
   // Register the element components
   Object.keys(elements).forEach((key) => {
     rootContext.registerElement(elements[key])
@@ -19,26 +20,43 @@ export let createHydrogenRootContext = (
   return rootContext
 }
 
-export let createWeaverseHydrogenContext = (configs: WeaverseType) => {
-  let context = createHydrogenRootContext(configs)
-
-  Object.keys(elements).forEach((key) => {
-    context.registerElement(elements[key])
+export let useWeaverseHydrogen = (
+  weaverseHydrogenConfigs: WeaverseHydrogenConfigs,
+  data: any
+) => {
+  let weaversePageData = data?.weaverseData?.weaversePageData
+  let { components, ...rest } = weaverseHydrogenConfigs
+  let weaverse = createHydrogenRootContext({
+    ...rest,
+    data: weaversePageData,
+    pageId: weaversePageData?.pageId,
+    platformType: 'shopify-hydrogen',
   })
-  return context
-}
-
-export let useWeaverseHydrogen = (configs: WeaverseType) => {
-  let weaverse = createWeaverseHydrogenContext(configs)
+  Object.keys(components).forEach((key) => {
+    let component = components[key]
+    weaverse.registerElement({
+      type: components[key]?.schema?.type || key,
+      Component: component?.default,
+      schema: component?.schema,
+      defaultCss: component?.defaultCss,
+      permanentCss: component?.permanentCss,
+    })
+  })
   useStudio(weaverse)
+  console.log('weaverse', weaverse)
   return weaverse
 }
 
-export let WeaverseHydrogenRoot = ({ configs }: { configs: WeaverseType }) => {
-  let weaverse = useWeaverseHydrogen(configs)
-  return (
-    <div>
-      <div id="weaverse-test">hello world from weaverse hydrogen</div>
-    </div>
-  )
+export let WeaverseHydrogenRoot = ({
+  configs,
+  data,
+}: {
+  configs: WeaverseHydrogenConfigs
+  data: any
+}) => {
+  let weaverse = useWeaverseHydrogen(configs, data)
+  if (!weaverse?.data) {
+    return <div>404</div>
+  }
+  return <WeaverseRoot context={weaverse} />
 }

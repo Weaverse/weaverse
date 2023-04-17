@@ -16,7 +16,7 @@ export function generateItemClassName(
   instance: WeaverseItemStore,
   stitchesInstance: Stitches
 ) {
-  let { css, type, className: cls = '' } = instance.data
+  let { css, type, className: cls = '', tailwindClasses } = instance.data
   let className = ''
   let permanentClass = ''
   let perCss = instance.Element?.permanentCss
@@ -42,7 +42,13 @@ export function generateItemClassName(
       .replace(cls, '')
       .replace(permanentClass, '')
       .trim()
-    className = clsx(permanentClass, cls, newStitchesClass, otherClass)
+    className = clsx(
+      permanentClass,
+      cls,
+      tailwindClasses,
+      newStitchesClass,
+      otherClass
+    )
     instance.stitchesClass = newStitchesClass
   }
   return className

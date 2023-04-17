@@ -1,4 +1,10 @@
-import type { WeaverseProjectDataType, ElementData } from '@weaverse/core'
+/* eslint-disable react/no-children-prop */
+import type {
+  WeaverseProjectDataType,
+  ElementData,
+  WeaverseItemStore,
+  Weaverse,
+} from '@weaverse/core'
 import { isBrowser } from '@weaverse/core'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { WeaverseContext, WeaverseContextProvider } from './context'
@@ -40,9 +46,23 @@ export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
 }
 
 const ItemComponent = ({ instance }: ItemComponentProps) => {
-  let { stitchesInstance, elementInstances } = useContext(WeaverseContext)
+  let context = useContext(WeaverseContext)
+  let { stitchesInstance, elementInstances } = context
   let [data, setData] = useState<ElementData>(instance.data)
-  let { id, type, childIds = [], css, className, ...rest } = data
+  let {
+    id,
+    type,
+    childIds = [],
+    children = [],
+    parentId,
+    createdAt,
+    updatedAt,
+    deletedAt,
+    tailwindClasses,
+    css,
+    className,
+    ...rest
+  } = data
 
   useEffect(() => {
     let render = (data: ElementData) => setData({ ...data })
@@ -57,6 +77,7 @@ const ItemComponent = ({ instance }: ItemComponentProps) => {
   }, [])
 
   let Element = elementInstances.get(type!)
+
   if (Element?.Component) {
     let Component = Element.Component
     if (Component.$$typeof === Symbol.for('react.forward_ref')) {
@@ -70,8 +91,12 @@ const ItemComponent = ({ instance }: ItemComponentProps) => {
         className={generateItemClassName(instance, stitchesInstance)}
         {...rest}
       >
-        {childIds.map((id) => (
-          <ItemInstance key={id} id={id} />
+        {/* // TODO: refactor this, migrate to `children` prop */}
+        {childIds.map((cid) => (
+          <ItemInstance key={cid} id={cid} />
+        ))}
+        {children.map((item: any) => (
+          <ItemInstance key={item.id} id={item.id} />
         ))}
       </Component>
     )
