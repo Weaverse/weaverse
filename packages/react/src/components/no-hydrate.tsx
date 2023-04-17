@@ -1,10 +1,11 @@
-import React, { useId, useState } from 'react'
+import React, { useState } from 'react'
 
-export function NoHydrate({
-  getHTML,
-  ...rest
-}: { getHTML?: () => string } & JSX.IntrinsicElements['div']) {
-  let id = useId()
+type NoHydrateProps = {
+  id: string
+  getHTML?: () => string
+} & JSX.IntrinsicElements['div']
+
+export function NoHydrate({ id, getHTML, ...rest }: NoHydrateProps) {
   let [html] = useState(() => {
     if (typeof document === 'undefined') {
       return getHTML?.() ?? ''
