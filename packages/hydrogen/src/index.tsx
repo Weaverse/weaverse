@@ -28,12 +28,14 @@ export let createWeaverseHydrogenContext = (configs: WeaverseType) => {
   return context
 }
 
-export let WeaverseHydrogenRoot = () => {
-  let weaverse = createHydrogenRootContext({
-    isDesignMode: true,
-    platformType: 'shopify-hydrogen',
-  })
+export let useWeaverseHydrogen = (configs: WeaverseType) => {
+  let weaverse = createWeaverseHydrogenContext(configs)
   useStudio(weaverse)
+  return weaverse
+}
+
+export let WeaverseHydrogenRoot = ({ configs }: { configs: WeaverseType }) => {
+  let weaverse = useWeaverseHydrogen(configs)
   return (
     <div>
       <div id="weaverse-test">hello world from weaverse hydrogen</div>
