@@ -30,6 +30,7 @@ export let useWeaverseHydrogen = (
     ...rest,
     data: weaversePageData,
     pageId: weaversePageData?.pageId,
+    isDesignMode: true,
     platformType: 'shopify-hydrogen',
   })
   Object.keys(components).forEach((key) => {
@@ -38,12 +39,11 @@ export let useWeaverseHydrogen = (
       type: components[key]?.schema?.type || key,
       Component: component?.default,
       schema: component?.schema,
-      defaultCss: component?.defaultCss,
+      defaultCss: component?.css,
       permanentCss: component?.permanentCss,
     })
   })
   useStudio(weaverse)
-  console.log('weaverse', weaverse)
   return weaverse
 }
 
