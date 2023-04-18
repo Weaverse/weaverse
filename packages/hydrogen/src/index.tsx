@@ -38,7 +38,7 @@ export let useWeaverseHydrogen = (
       type: components[key]?.schema?.type || key,
       Component: component?.default,
       schema: component?.schema,
-      defaultCss: component?.defaultCss,
+      defaultCss: component?.css,
       permanentCss: component?.permanentCss,
     })
   })
