@@ -14,18 +14,16 @@ let createHydrogenRootContext = (
 ) => {
   let rootContext = createRootContext(configs)
   // Register the element components
-  Object.keys(elements).forEach((key) => {
-    rootContext.registerElement(elements[key])
+  Object.values(elements).forEach((element) => {
+    rootContext.registerElement(element)
   })
   return rootContext
 }
 
 export let useWeaverseHydrogen = (
-  weaverseHydrogenConfigs: WeaverseHydrogenConfigs,
-  data: any
+  { components, ...rest }: WeaverseHydrogenConfigs,
+  { weaverseData: { weaversePageData } = { weaversePageData: {} } }: any
 ) => {
-  let weaversePageData = data?.weaverseData?.weaversePageData
-  let { components, ...rest } = weaverseHydrogenConfigs
   let weaverse = createHydrogenRootContext({
     ...rest,
     data: weaversePageData,
@@ -33,16 +31,16 @@ export let useWeaverseHydrogen = (
     isDesignMode: true,
     platformType: 'shopify-hydrogen',
   })
-  Object.keys(components).forEach((key) => {
-    let component = components[key]
+  Object.entries(components).forEach(([key, component]) => {
     weaverse.registerElement({
-      type: components[key]?.schema?.type || key,
+      type: component?.schema?.type || key,
       Component: component?.default,
       schema: component?.schema,
       defaultCss: component?.css,
       permanentCss: component?.permanentCss,
     })
   })
+
   useStudio(weaverse)
   return weaverse
 }
