@@ -17,7 +17,12 @@ export async function weaverseLoader(
       },
       body: JSON.stringify(fetchBody),
     }
-  ).then((res) => res.json())
+  )
+    .then((res) => res.json())
+    .catch((err) => {
+      console.error(err)
+      return {}
+    })
   /**
    * @todo read the url and params from the request => JSON DATA (items, installed add-ons)
    * @todo load the weaverse project page data by current url and projectId
