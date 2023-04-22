@@ -2,19 +2,19 @@ import type { WeaverseElement, WeaverseType } from '@weaverse/core'
 import { Weaverse } from '@weaverse/core'
 import { useStudio } from './utils'
 import React from 'react'
-import type { WeaverseHydrogenConfigs } from './types'
+import type { WeaverseComponentsType } from './types'
 import { WeaverseRoot } from '@weaverse/react'
 import { createWeaverseHydrogenContext } from './context'
 export * from './utils'
 export * from './weaverse-loader'
 export let WeaverseHydrogenRoot = ({
-  configs,
+  components,
   data,
 }: {
-  configs: WeaverseHydrogenConfigs
+  components: WeaverseComponentsType
   data: any
 }) => {
-  let weaverse = createWeaverseHydrogenContext(configs, data)
+  let weaverse = createWeaverseHydrogenContext(data, components)
   useStudio(weaverse)
   if (!weaverse?.data) {
     return <div>404</div>

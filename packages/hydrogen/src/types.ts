@@ -1,7 +1,3 @@
-export type WeaverseHydrogenConfigs = {
-  projectId: string
-  weaverseHost: string
-  components: {
-    [key: string]: any
-  }
+export type WeaverseComponentsType = {
+  [key: string]: any
 }

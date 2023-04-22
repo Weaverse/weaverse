@@ -1,12 +1,17 @@
 import { createRootContext } from '@weaverse/react'
-import type { WeaverseHydrogenConfigs } from './types'
+import type { WeaverseComponentsType } from './types'
 
 export let createWeaverseHydrogenContext = (
-  { components, ...rest }: WeaverseHydrogenConfigs,
-  { weaverseData: { weaversePageData } = { weaversePageData: {} } }: any
+  {
+    weaverseData: { weaversePageData, weaverseConfig } = {
+      weaversePageData: {},
+      weaverseConfig: {},
+    },
+  }: any,
+  components: WeaverseComponentsType
 ) => {
   let weaverse = createRootContext({
-    ...rest,
+    ...weaverseConfig,
     data: weaversePageData,
     pageId: weaversePageData?.pageId,
     isDesignMode: true,
