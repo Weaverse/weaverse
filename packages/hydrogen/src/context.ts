@@ -3,17 +3,17 @@ import type { WeaverseComponentsType } from './types'
 
 export let createWeaverseHydrogenContext = (
   {
-    weaverseData: { weaversePageData, weaverseConfig } = {
-      weaversePageData: {},
-      weaverseConfig: {},
+    weaverseData: { pageData, config } = {
+      pageData: {},
+      config: {},
     },
   }: any,
   components: WeaverseComponentsType
 ) => {
   let weaverse = createRootContext({
-    ...weaverseConfig,
-    data: weaversePageData,
-    pageId: weaversePageData?.pageId,
+    ...config,
+    data: pageData,
+    pageId: pageData?.pageId,
     isDesignMode: true,
     platformType: 'shopify-hydrogen',
   })
