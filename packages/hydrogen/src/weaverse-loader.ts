@@ -1,6 +1,10 @@
 import type { LoaderArgs } from '@shopify/remix-oxygen'
 type QueryKey = string | readonly unknown[]
-
+import {
+  CacheLong,
+  CacheShort,
+  generateCacheControlHeader,
+} from '@shopify/hydrogen'
 export function hashKey(queryKey: QueryKey): string {
   const rawKeys = Array.isArray(queryKey) ? queryKey : [queryKey]
   let hash = ''
@@ -28,16 +32,16 @@ export function hashKey(queryKey: QueryKey): string {
   return hash
 }
 
-let fetchWithServerCache = async ({
+export let fetchWithServerCache = async ({
   url,
-  options,
+  options = {},
   storefront,
   waitUntil,
 }: {
   url: string
   options: RequestInit | Request
   storefront: any
-  waitUntil: any
+  waitUntil?: any
 }) => {
   const cacheUrl = new URL(url)
   cacheUrl.pathname = '/cache' + cacheUrl.pathname + hashKey([options.body])
@@ -46,10 +50,14 @@ let fetchWithServerCache = async ({
   let response = await storefront.cache.match(cacheKey)
   if (!response) {
     // Since there's no match, fetch a fresh response.
+    let cacheControl = generateCacheControlHeader({
+      ...CacheShort(),
+    })
+    console.log('fetchWithServerCache', cacheControl)
     response = await fetch(url, {
       ...options,
       headers: {
-        'cache-control': 'public, max-age=1, stale-while-revalidate=9',
+        'cache-control': cacheControl,
         ...options.headers,
       },
     })
@@ -116,19 +124,27 @@ export async function weaverseLoader(
         console.error(err)
         return {}
       })
-    let items = pageData.items
-    pageData.items = await Promise.all(
-      items.map(async (item: any) => {
-        let loader = components[item.type]?.loader
-        if (loader) {
-          return {
-            ...item,
-            ...(await loader({ data: item, context, params, request, config })),
+    if (pageData?.items) {
+      let items = pageData.items
+      pageData.items = await Promise.all(
+        items.map(async (item: any) => {
+          let loader = components[item.type]?.loader
+          if (loader) {
+            return {
+              ...item,
+              ...(await loader({
+                data: item,
+                context,
+                params,
+                request,
+                config,
+              })),
+            }
           }
-        }
-        return item
-      })
-    )
+          return item
+        })
+      )
+    }
     return {
       pageData,
       config,
