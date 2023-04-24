@@ -2,7 +2,7 @@
   "name": "weaverse-sdks",
   "private": true,
   "scripts": {
-    "dev": "npm run dev:pkg -- --filter=./templates/pilot-ts",
+    "dev": "npm run dev:pkg -- --filter=./templates/pilot",
     "dev:pkg": "cross-env LOCAL_DEV=true turbo dev --parallel --filter=./packages/*",
     "up": "bash ./upgrade.sh",
     "test": "turbo run test",
@@ -13,10 +13,10 @@
     "lint": "eslint packages",
     "lint:fix": "eslint packages --fix",
     "clean": "bash ./clean.sh",
-    "clean-all": "rimraf node_modules/.bin && rimraf node_modules/.cache && rimraf packages/core/dist && rimraf packages/hydrogen/dist && rimraf packages/react/dist && rimraf templates/pilot-ts/.cache"
+    "clean-all": "rimraf node_modules/.bin && rimraf node_modules/.cache && rimraf packages/core/dist && rimraf packages/hydrogen/dist && rimraf packages/react/dist && rimraf templates/pilot/.cache"
   },
   "workspaces": [
-    "templates/pilot-ts",
+    "templates/pilot",
     "packages/core",
     "packages/react",
     "packages/shopify",
