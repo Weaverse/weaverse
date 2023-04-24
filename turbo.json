@@ -10,10 +10,10 @@
     },
     "dev": {
       "cache": false,
-      "dependsOn": ["@weaverse/react#build", "@weaverse/core#build"]
+      "dependsOn": ["@weaverse/core#build", "@weaverse/react#build"]
     },
     "pilot#build": {
-      "dependsOn": ["@weaverse/react#build", "@weaverse/core#build"],
+      "dependsOn": ["@weaverse/core#build", "@weaverse/react#build", "@weaverse/hydrogen#build"],
       "outputs": ["dist/**"]
     }
   }

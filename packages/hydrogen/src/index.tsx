@@ -22,28 +22,23 @@ export let WeaverseHydrogenRoot = memo(
     if (!weaverse?.data) {
       return <div>404</div>
     }
-    return (
-      <>
-        <WeaverseRoot context={weaverse} />
-        <RenderStitchesStyles weaverse={weaverse} />
-      </>
-    )
+    return <WeaverseRoot context={weaverse} />
   }
 )
 
-export function useIsHydrated() {
-  const [isHydrated, setHydrated] = useState<boolean>(false)
+// export function useIsHydrated() {
+//   const [isHydrated, setHydrated] = useState<boolean>(false)
 
-  useEffect(() => {
-    setHydrated(true)
-  }, [])
+//   useEffect(() => {
+//     setHydrated(true)
+//   }, [])
 
-  return isHydrated
-}
-let RenderStitchesStyles = ({ weaverse }: { weaverse: Weaverse }) => {
-  let h = useIsHydrated()
-  useEffect(() => {
-    h && !weaverse.isDesignMode && weaverse.triggerUpdate()
-  }, [h])
-  return null
-}
+//   return isHydrated
+// }
+// let RenderStitchesStyles = ({ weaverse }: { weaverse: Weaverse }) => {
+//   // let h = useIsHydrated()
+//   // useEffect(() => {
+//   //   h && !weaverse.isDesignMode && weaverse.triggerUpdate()
+//   // }, [h])
+//   return null
+// }

@@ -1,6 +1,17 @@
-import { createRootContext } from '@weaverse/react'
+import type { WeaverseType } from '@weaverse/react'
+import { createRootContext, isBrowser } from '@weaverse/react'
 import type { WeaverseComponentsType } from './types'
 
+const createCachedWeaverseContext = (init: WeaverseType) => {
+  if (isBrowser && init.pageId) {
+    window.__weaverses = window.__weaverses || {}
+    if (!window.__weaverses[init.pageId]) {
+      window.__weaverses[init.pageId] = createRootContext(init)
+    }
+    return window.__weaverses[init.pageId]
+  }
+  return createRootContext(init)
+}
 export let createWeaverseHydrogenContext = (
   {
     weaverseData: { pageData, config } = {
@@ -10,10 +21,10 @@ export let createWeaverseHydrogenContext = (
   }: any,
   components: WeaverseComponentsType
 ) => {
-  let weaverse = createRootContext({
+  let weaverse = createCachedWeaverseContext({
     ...config,
     data: pageData,
-    pageId: pageData?.pageId,
+    pageId: pageData?.id,
     isDesignMode: true,
     platformType: 'shopify-hydrogen',
   })
