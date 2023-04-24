@@ -1,3 +1,6 @@
+[submodule "templates/pilot"]
+	path = templates/pilot
+	url = https://github.com/Weaverse/pilot
 [submodule "templates/weaverse-hydrogen"]
 	path = templates/weaverse-hydrogen
 	url = https://github.com/Weaverse/weaverse-hydrogen

@@ -1,16 +1,10 @@
-/* eslint-disable react/no-children-prop */
-import type {
-  WeaverseProjectDataType,
-  ElementData,
-  WeaverseItemStore,
-  Weaverse,
-} from '@weaverse/core'
+import type { ElementData, WeaverseProjectDataType } from '@weaverse/core'
 import { isBrowser } from '@weaverse/core'
 import React, { memo, useContext, useEffect, useRef, useState } from 'react'
+import { initUploadCareAdaptiveDelivery } from '~/utils/uploadcare'
 import { WeaverseContext, WeaverseContextProvider } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
 import { generateItemClassName } from './utils/css'
-import { initUploadCareAdaptiveDelivery } from '~/utils/uploadcare'
 
 export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
   let [, setData] = useState<WeaverseProjectDataType | unknown>(context.data)
@@ -76,7 +70,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     return () => instance.unsubscribe(render)
   }, [])
 
-  let Element = elementInstances.get(type!)
+  let Element = elementInstances.get(type)
 
   if (Element?.Component) {
     let Component = Element.Component
