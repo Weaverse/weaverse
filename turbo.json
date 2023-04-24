@@ -13,7 +13,7 @@
       "dependsOn": ["@weaverse/react#build", "@weaverse/core#build"]
     },
     "pilot#build": {
-      "dependsOn": ["@weaverse/react#build", "@weaverse/core#build", "@weaverse/hydrogen#build"],
+      "dependsOn": ["@weaverse/react#build", "@weaverse/core#build"],
       "outputs": ["dist/**"]
     }
   }
