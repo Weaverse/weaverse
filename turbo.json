@@ -12,8 +12,8 @@
       "cache": false,
       "dependsOn": ["@weaverse/react#build", "@weaverse/core#build"]
     },
-    "pilot-ts#build": {
-      "dependsOn": ["@weaverse/react#build", "@weaverse/core#build"],
+    "pilot#build": {
+      "dependsOn": ["@weaverse/react#build", "@weaverse/core#build", "@weaverse/hydrogen#build"],
       "outputs": ["dist/**"]
     }
   }
