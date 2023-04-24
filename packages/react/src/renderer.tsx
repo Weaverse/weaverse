@@ -1,12 +1,12 @@
 import type { ElementData, WeaverseProjectDataType } from '@weaverse/core'
 import { isBrowser } from '@weaverse/core'
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { memo, useContext, useEffect, useRef, useState } from 'react'
 import { initUploadCareAdaptiveDelivery } from '~/utils/uploadcare'
 import { WeaverseContext, WeaverseContextProvider } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
 import { generateItemClassName } from './utils/css'
 
-export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
+export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
   let [, setData] = useState<WeaverseProjectDataType | unknown>(context.data)
   let rootRef = useRef<HTMLElement>()
   let renderRoot = () => setData({})
@@ -37,9 +37,9 @@ export let WeaverseRoot = ({ context }: WeaverseRootPropsType) => {
     )
   }
   return null
-}
+})
 
-const ItemComponent = ({ instance }: ItemComponentProps) => {
+const ItemComponent = memo(({ instance }: ItemComponentProps) => {
   let context = useContext(WeaverseContext)
   let { stitchesInstance, elementInstances } = context
   let [data, setData] = useState<ElementData>(instance.data)
@@ -95,16 +95,17 @@ const ItemComponent = ({ instance }: ItemComponentProps) => {
       </Component>
     )
   } else {
-    console.log(`Unknown element: ${type}`)
+    console.warn(`Unknown element: ${type}`)
     return null
   }
-}
-let ItemInstance = ({ id }: { id: string | number }) => {
+})
+let ItemInstance = memo(({ id }: { id: string | number }) => {
   let context = useContext(WeaverseContext)
   let { itemInstances } = context
   let instance = itemInstances.get(id)
   if (!instance) {
+    console.warn(`Item instance ${id} not found`)
     return <div style={{ display: 'none' }}>Item instance {id} not found</div>
   }
   return <ItemComponent key={id} instance={instance} />
-}
+})

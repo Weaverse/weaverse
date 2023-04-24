@@ -1,5 +1,3 @@
-import type { WeaverseElement, WeaverseType } from '@weaverse/core'
-import { Weaverse } from '@weaverse/core'
 import { useStudio } from './utils'
 import React from 'react'
 import type { WeaverseComponentsType } from './types'
@@ -12,7 +10,10 @@ export let WeaverseHydrogenRoot = ({
   data,
 }: {
   components: WeaverseComponentsType
-  data: any
+  data: {
+    weaverseData: any
+    [key: string]: any
+  }
 }) => {
   let weaverse = createWeaverseHydrogenContext(data, components)
   useStudio(weaverse)
