@@ -12,7 +12,7 @@
       "cache": false,
       "dependsOn": ["@weaverse/react#build", "@weaverse/core#build"]
     },
-    "pilot-ts#build": {
+    "pilot#build": {
       "dependsOn": ["@weaverse/react#build", "@weaverse/core#build"],
       "outputs": ["dist/**"]
     }
