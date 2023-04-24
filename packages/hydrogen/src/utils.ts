@@ -23,5 +23,10 @@ export let useStudio = (weaverseCore: Weaverse) => {
         }
       )
     }
+    setTimeout(() => {
+      // weaverseCore.stitchesInstance?.reset()
+
+      window.__weaverse = weaverseCore
+    }, 1)
   }, [])
 }
