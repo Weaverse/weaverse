@@ -12,6 +12,7 @@
     "preprepare": "husky install",
     "lint": "eslint packages",
     "lint:fix": "eslint packages --fix",
+    "clean": "bash ./clean.sh",
     "clean-all": "rimraf node_modules/.bin && rimraf node_modules/.cache && rimraf packages/core/dist && rimraf packages/hydrogen/dist && rimraf packages/react/dist && rimraf templates/weaverse-hydrogen/.cache"
   },
   "workspaces": [
