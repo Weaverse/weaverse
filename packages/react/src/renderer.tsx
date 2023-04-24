@@ -1,3 +1,4 @@
+/* eslint-disable react/no-children-prop */
 import type { ElementData, WeaverseProjectDataType } from '@weaverse/core'
 import { isBrowser } from '@weaverse/core'
 import React, { memo, useContext, useEffect, useRef, useState } from 'react'

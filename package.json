@@ -2,7 +2,7 @@
   "name": "weaverse-sdks",
   "private": true,
   "scripts": {
-    "dev": "npm run dev:pkg -- --filter=./templates/weaverse-hydrogen",
+    "dev": "npm run dev:pkg -- --filter=./templates/pilot-ts",
     "dev:pkg": "cross-env LOCAL_DEV=true turbo dev --parallel --filter=./packages/*",
     "up": "bash ./upgrade.sh",
     "test": "turbo run test",
@@ -13,11 +13,10 @@
     "lint": "eslint packages",
     "lint:fix": "eslint packages --fix",
     "clean": "bash ./clean.sh",
-    "clean-all": "rimraf node_modules/.bin && rimraf node_modules/.cache && rimraf packages/core/dist && rimraf packages/hydrogen/dist && rimraf packages/react/dist && rimraf templates/weaverse-hydrogen/.cache"
+    "clean-all": "rimraf node_modules/.bin && rimraf node_modules/.cache && rimraf packages/core/dist && rimraf packages/hydrogen/dist && rimraf packages/react/dist && rimraf templates/pilot-ts/.cache"
   },
   "workspaces": [
-    "templates/weaverse-hydrogen",
-    "templates/weaverse-hydrogen-express",
+    "templates/pilot-ts",
     "packages/core",
     "packages/react",
     "packages/shopify",
@@ -41,7 +40,8 @@
     "rimraf": "^5.0.0",
     "tsup": "^6.7.0",
     "turbo": "1.9.3",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "@weaverse/hydrogen": "1.0.25"
   },
   "engines": {
     "node": ">=16.13"
