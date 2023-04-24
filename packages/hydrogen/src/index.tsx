@@ -46,15 +46,4 @@ let RenderStitchesStyles = ({ weaverse }: { weaverse: Weaverse }) => {
     h && !weaverse.isDesignMode && weaverse.triggerUpdate()
   }, [h])
   return null
-  // return h ? null : (
-  //   <style
-  //     data-hydrated={h}
-  //     id="stitches"
-  //     key={'stitches-server'}
-  //     dangerouslySetInnerHTML={{
-  //       __html: weaverse.stitchesInstance.getCssText(),
-  //     }}
-  //     suppressHydrationWarning
-  //   />
-  // )
 }
