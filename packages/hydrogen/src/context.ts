@@ -8,8 +8,11 @@ const createCachedWeaverseContext = (init: WeaverseType) => {
     if (!window.__weaverses[init.pageId]) {
       window.__weaverses[init.pageId] = createRootContext(init)
     }
+    console.log('createRootContext cached', window.__weaverses[init.pageId])
     return window.__weaverses[init.pageId]
   }
+  console.log('createRootContext not cached')
+
   return createRootContext(init)
 }
 export let createWeaverseHydrogenContext = (

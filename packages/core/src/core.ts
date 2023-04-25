@@ -260,13 +260,14 @@ export class Weaverse {
     }
   }
 
-  initStitches = () => {
+  initStitches = (externalConfig = {}) => {
     this.stitchesInstance =
       this.stitchesInstance ||
       stitches.createStitches({
         prefix: "weaverse",
         media: this.mediaBreakPoints,
         utils: stitchesUtils,
+        ...externalConfig,
       })
   }
 
@@ -280,6 +281,11 @@ export class Weaverse {
 
   triggerUpdate() {
     this.listeners.forEach((fn) => fn())
+  }
+  refreshAllItems() {
+    this.itemInstances.forEach((item) => {
+      item.triggerUpdate()
+    })
   }
 
   setProjectData(data: WeaverseProjectDataType) {
