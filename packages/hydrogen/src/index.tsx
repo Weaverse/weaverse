@@ -19,25 +19,53 @@ export let WeaverseHydrogenRoot = memo(
   }) => {
     let weaverse = createWeaverseHydrogenContext(data, components)
     useStudio(weaverse)
-    useEnsureStitchesWorking(weaverse)
     if (!weaverse?.data) {
       return <div>404</div>
     }
-    return <WeaverseRoot context={weaverse} />
+    return (
+      <>
+        <WeaverseRoot context={weaverse} />
+        {weaverse.isDesignMode ? null : <StitchesStyle weaverse={weaverse} />}
+      </>
+    )
   }
 )
 
-let useEnsureStitchesWorking = (weaverse: Weaverse) => {
-  useEffect(() => {
-    let stitchesInstance = weaverse.stitchesInstance
-    if (stitchesInstance && !stitchesInstance.sheet?.sheet?.ownerNode) {
-      console.warn('stitches instance is not working, re-creating it')
-      //this means that the stitches instance is not working
-      // we will re-create it
-      delete weaverse.stitchesInstance
-      weaverse.initStitches({ nounce: Date.now() })
-      weaverse.triggerUpdate()
-      weaverse.refreshAllItems()
-    }
-  }, [])
-}
+/**
+ * Stitches or CSS-in-JS framework might not working properly with React/Remix defered hydration
+ * but we need to make sure that the stitches instance is working
+ * temporarily we will render the stitches css manually
+ * in some case it might broken on production if we use production URL to our editor
+ * therefore we'll encourage to create tailwind style input instead of stitches
+ */
+let StitchesStyle = memo(
+  ({ weaverse }: { weaverse: Weaverse }) => {
+    console.log('stitches', weaverse.stitchesInstance?.getCssText())
+
+    return (
+      <style
+        id="stitches"
+        key={'stitches'}
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{
+          __html: weaverse.stitchesInstance?.getCssText() || '',
+        }}
+      />
+    )
+  },
+  () => true
+)
+
+// let useEnsureStitchesWorking = (weaverse: Weaverse) => {
+//   useEffect(() => {
+//     let stitchesInstance = weaverse.stitchesInstance
+//     if (stitchesInstance && !stitchesInstance.sheet?.sheet?.ownerNode) {
+//       console.warn('stitches instance is not working, re-creating it')
+//       //this means that the stitches instance is not working
+//       // we will re-create it
+//       // weaverse.stitchesInstance.reset()
+//       // weaverse.triggerUpdate()
+//       // weaverse.refreshAllItems()
+//     }
+//   }, [])
+// }
