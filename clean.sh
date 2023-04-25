@@ -7,7 +7,5 @@ cd ../hydrogen
 rm -rf node_modules package-lock.json .turbo dist .cache build public/build
 cd ../shopify
 rm -rf node_modules package-lock.json .turbo dist .cache build public/build
-cd ../../templates/weaverse-hydrogen
-rm -rf node_modules package-lock.json .turbo dist .cache build public/build
-cd ../weaverse-hydrogen-express
+cd ../../templates/pilot
 rm -rf node_modules package-lock.json .turbo dist .cache build public/build
