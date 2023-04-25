@@ -10,7 +10,6 @@ export let useStudio = (weaverseCore: Weaverse) => {
       isIframe &&
       !window.weaverseStudioInitialized
     ) {
-      console.log('useStudio', weaverseCore)
       window.weaverseStudioInitialized = true
       let host = weaverseCore.weaverseHost
       let version = weaverseCore.weaverseVersion || Date.now()
@@ -24,5 +23,10 @@ export let useStudio = (weaverseCore: Weaverse) => {
         }
       )
     }
+    setTimeout(() => {
+      // weaverseCore.stitchesInstance?.reset()
+
+      window.__weaverse = weaverseCore
+    }, 1)
   }, [])
 }

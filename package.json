@@ -2,7 +2,7 @@
   "name": "weaverse-sdks",
   "private": true,
   "scripts": {
-    "dev": "npm run dev:pkg -- --filter=./templates/weaverse-hydrogen",
+    "dev": "npm run dev:pkg -- --filter=./templates/pilot",
     "dev:pkg": "cross-env LOCAL_DEV=true turbo dev --parallel --filter=./packages/*",
     "up": "bash ./upgrade.sh",
     "test": "turbo run test",
@@ -12,34 +12,34 @@
     "preprepare": "husky install",
     "lint": "eslint packages",
     "lint:fix": "eslint packages --fix",
-    "clean-all": "rimraf node_modules/.bin && rimraf node_modules/.cache && rimraf packages/core/dist && rimraf packages/hydrogen/dist && rimraf packages/react/dist && rimraf templates/weaverse-hydrogen/.cache"
+    "clean": "bash ./clean.sh",
+    "clean-all": "rimraf node_modules/.bin && rimraf node_modules/.cache && rimraf packages/core/dist && rimraf packages/hydrogen/dist && rimraf packages/react/dist && rimraf templates/pilot/.cache"
   },
   "workspaces": [
-    "templates/weaverse-hydrogen",
-    "templates/weaverse-hydrogen-express",
+    "templates/pilot",
     "packages/core",
     "packages/react",
     "packages/shopify",
     "packages/hydrogen"
   ],
   "devDependencies": {
-    "@types/node": "^18.15.11",
-    "@types/react": "^18.0.35",
-    "@typescript-eslint/eslint-plugin": "^5.58.0",
-    "@typescript-eslint/parser": "^5.58.0",
+    "@types/node": "^18.16.0",
+    "@types/react": "^18.0.38",
+    "@typescript-eslint/eslint-plugin": "^5.59.1",
+    "@typescript-eslint/parser": "^5.59.1",
     "cross-env": "^7.0.3",
-    "eslint": "8.38.0",
+    "eslint": "8.39.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.1",
-    "prettier": "2.8.7",
+    "prettier": "2.8.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rimraf": "^5.0.0",
     "tsup": "^6.7.0",
-    "turbo": "^1.9.1",
+    "turbo": "1.9.3",
     "typescript": "^5.0.4"
   },
   "engines": {

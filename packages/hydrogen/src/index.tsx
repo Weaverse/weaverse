@@ -1,62 +1,71 @@
-import type { WeaverseElement, WeaverseType } from '@weaverse/core'
-import { Weaverse } from '@weaverse/core'
 import { useStudio } from './utils'
-import React from 'react'
-import type { WeaverseHydrogenConfigs } from './types'
-import { WeaverseRoot, createRootContext } from '@weaverse/react'
+import React, { memo, useEffect } from 'react'
+import type { WeaverseComponentsType } from './types'
+import { WeaverseRoot } from '@weaverse/react'
+import type { Weaverse } from '@weaverse/core'
+import { createWeaverseHydrogenContext } from './context'
 export * from './utils'
 export * from './weaverse-loader'
-let createHydrogenRootContext = (
-  configs: WeaverseType,
-  elements: {
-    [key: string]: WeaverseElement
-  } = {}
-) => {
-  let rootContext = createRootContext(configs)
-  // Register the element components
-  Object.keys(elements).forEach((key) => {
-    rootContext.registerElement(elements[key])
-  })
-  return rootContext
-}
-
-export let useWeaverseHydrogen = (
-  weaverseHydrogenConfigs: WeaverseHydrogenConfigs,
-  data: any
-) => {
-  let weaversePageData = data?.weaverseData?.weaversePageData
-  let { components, ...rest } = weaverseHydrogenConfigs
-  let weaverse = createHydrogenRootContext({
-    ...rest,
-    data: weaversePageData,
-    pageId: weaversePageData?.pageId,
-    isDesignMode: true,
-    platformType: 'shopify-hydrogen',
-  })
-  Object.keys(components).forEach((key) => {
-    let component = components[key]
-    weaverse.registerElement({
-      type: components[key]?.schema?.type || key,
-      Component: component?.default,
-      schema: component?.schema,
-      defaultCss: component?.css,
-      permanentCss: component?.permanentCss,
-    })
-  })
-  useStudio(weaverse)
-  return weaverse
-}
-
-export let WeaverseHydrogenRoot = ({
-  configs,
-  data,
-}: {
-  configs: WeaverseHydrogenConfigs
-  data: any
-}) => {
-  let weaverse = useWeaverseHydrogen(configs, data)
-  if (!weaverse?.data) {
-    return <div>404</div>
+export let WeaverseHydrogenRoot = memo(
+  ({
+    components,
+    data,
+  }: {
+    components: WeaverseComponentsType
+    data: {
+      weaverseData: any
+      [key: string]: any
+    }
+  }) => {
+    let weaverse = createWeaverseHydrogenContext(data, components)
+    useStudio(weaverse)
+    if (!weaverse?.data) {
+      return <div>404</div>
+    }
+    return (
+      <>
+        <WeaverseRoot context={weaverse} />
+        {weaverse.isDesignMode ? null : <StitchesStyle weaverse={weaverse} />}
+      </>
+    )
   }
-  return <WeaverseRoot context={weaverse} />
-}
+)
+
+/**
+ * Stitches or CSS-in-JS framework might not working properly with React/Remix defered hydration
+ * but we need to make sure that the stitches instance is working
+ * temporarily we will render the stitches css manually
+ * in some case it might broken on production if we use production URL to our editor
+ * therefore we'll encourage to create tailwind style input instead of stitches
+ */
+let StitchesStyle = memo(
+  ({ weaverse }: { weaverse: Weaverse }) => {
+    console.log('stitches', weaverse.stitchesInstance?.getCssText())
+
+    return (
+      <style
+        id="stitches"
+        key={'stitches'}
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{
+          __html: weaverse.stitchesInstance?.getCssText() || '',
+        }}
+      />
+    )
+  },
+  () => true
+)
+
+// let useEnsureStitchesWorking = (weaverse: Weaverse) => {
+//   useEffect(() => {
+//     let stitchesInstance = weaverse.stitchesInstance
+//     if (stitchesInstance && !stitchesInstance.sheet?.sheet?.ownerNode) {
+//       console.warn('stitches instance is not working, re-creating it')
+//       //this means that the stitches instance is not working
+//       // we will re-create it
+//       // weaverse.stitchesInstance.reset()
+//       // weaverse.triggerUpdate()
+//       // weaverse.refreshAllItems()
+//     }
+//   }, [])
+// }

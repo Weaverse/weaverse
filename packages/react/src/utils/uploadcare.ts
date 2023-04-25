@@ -1,9 +1,10 @@
 import { isBrowser } from '@weaverse/core'
-
+let initialized = false
 export function initUploadCareAdaptiveDelivery(baseUrl: string) {
   try {
     Promise.resolve().then(() => {
-      if (isBrowser && !window.Blinkloader) {
+      if (!initialized && isBrowser && !window.Blinkloader) {
+        initialized = true
         ;(function (src, cb) {
           let s = document.createElement('script')
           s.setAttribute('src', src)

@@ -252,23 +252,22 @@ export class Weaverse {
    */
   registerElement(element: WeaverseElement) {
     if (element?.type) {
-      if (this.elementInstances.has(element.type)) {
-        console.error(`Weaverse: Element '${element.type}' already registered`)
-        return
+      if (!this.elementInstances.has(element.type)) {
+        this.elementInstances.set(element?.type, element)
       }
-      this.elementInstances.set(element?.type, element)
     } else {
       console.error("Weaverse: registerElement: `type` is required")
     }
   }
 
-  initStitches = () => {
+  initStitches = (externalConfig = {}) => {
     this.stitchesInstance =
       this.stitchesInstance ||
       stitches.createStitches({
         prefix: "weaverse",
         media: this.mediaBreakPoints,
         utils: stitchesUtils,
+        ...externalConfig,
       })
   }
 
@@ -282,6 +281,11 @@ export class Weaverse {
 
   triggerUpdate() {
     this.listeners.forEach((fn) => fn())
+  }
+  refreshAllItems() {
+    this.itemInstances.forEach((item) => {
+      item.triggerUpdate()
+    })
   }
 
   setProjectData(data: WeaverseProjectDataType) {
