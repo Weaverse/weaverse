@@ -18,35 +18,56 @@ export async function fetchProjectData({
   isDesignMode?: boolean
   timestamp?: number
 }) {
-  let data
-  if (timestamp && !isDesignMode) {
-    data = localStorage.getItem(`weaverse-${projectId}-${timestamp}`)
-    if (data) {
-      return JSON.parse(data)
-    }
-  }
-
   let params = new URLSearchParams()
 
   timestamp && params.append('timestamp', timestamp.toString())
   isDesignMode && params.append('isDesignMode', 'true')
-
   let paramString = params.toString()
 
-  data = await fetch(
+  if (timestamp && !isDesignMode) {
+    return fetchWithCache.fetchJson(
+      weaverseHost +
+        `/api/public/project/${projectId}${
+          paramString ? '?' + paramString : ''
+        }`,
+      timestamp.toString()
+    )
+  }
+
+  return await fetch(
     weaverseHost +
       `/api/public/project/${projectId}${paramString ? '?' + paramString : ''}`
   )
     .then((res: Response) => res.json())
-    .catch((err: Error) => console.log('Error fetching project data:', err))
-  if (data) {
-    if (timestamp && !isDesignMode) {
-      localStorage.setItem(
-        `weaverse-${projectId}-${timestamp}`,
-        JSON.stringify(data)
-      )
+    .catch((err: Error) => {
+      console.error('Error fetching project data:', err)
+      return null
+    })
+}
+class FetchWithCache {
+  private generateCacheKey(url: string, nonce: string): string {
+    return `${url}_${nonce}`
+  }
+
+  public async fetchJson(url: string, nonce = ''): Promise<any> {
+    const cacheKey = this.generateCacheKey(url, nonce)
+    const cacheEntry = sessionStorage.getItem(cacheKey)
+
+    if (cacheEntry) {
+      return JSON.parse(cacheEntry)
     }
+
+    const response = await fetch(url)
+
+    if (!response.ok) {
+      throw new Error(`Error fetching ${url}: ${response.statusText}`)
+    }
+
+    const data = await response.json()
+    sessionStorage.setItem(cacheKey, JSON.stringify(data))
+
     return data
   }
-  return null
 }
+
+const fetchWithCache = new FetchWithCache()
