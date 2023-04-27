@@ -1,13 +1,21 @@
 import type { ElementCSS } from '@weaverse/core'
-import React, { forwardRef } from 'react'
+import React, { Children, forwardRef } from 'react'
 import type { ContainerElementProps } from '~/types'
+import { Components } from '~/components'
 
 let Container = forwardRef<HTMLDivElement, ContainerElementProps>(
   (props, ref) => {
     let { children, ...rest } = props
+
     return (
       <div ref={ref} {...rest}>
-        {children}
+        {Children.count(children) ? (
+          children
+        ) : (
+          <Components.Placeholder element={'Container'}>
+            Drop element here
+          </Components.Placeholder>
+        )}
       </div>
     )
   }
