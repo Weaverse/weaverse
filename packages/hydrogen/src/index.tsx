@@ -1,35 +1,36 @@
-import { useStudio } from './utils'
-import React, { memo, useEffect } from 'react'
-import type { WeaverseComponentsType } from './types'
-import { WeaverseRoot } from '@weaverse/react'
 import type { Weaverse } from '@weaverse/core'
+import { WeaverseRoot } from '@weaverse/react'
+import React, { memo } from 'react'
 import { createWeaverseHydrogenContext } from './context'
+import type { WeaverseComponentsType } from './types'
+import { useStudio } from './utils'
 export * from './utils'
 export * from './weaverse-loader'
-export let WeaverseHydrogenRoot = memo(
-  ({
-    components,
-    data,
-  }: {
-    components: WeaverseComponentsType
-    data: {
-      weaverseData: any
-      [key: string]: any
-    }
-  }) => {
-    let weaverse = createWeaverseHydrogenContext(data, components)
-    useStudio(weaverse)
-    if (!weaverse?.data) {
-      return <div>404</div>
-    }
-    return (
-      <>
-        <WeaverseRoot context={weaverse} />
-        {weaverse.isDesignMode ? null : <StitchesStyle weaverse={weaverse} />}
-      </>
-    )
+
+export let WeaverseHydrogenRoot = ({
+  components,
+  data,
+}: {
+  components: WeaverseComponentsType
+  data: {
+    weaverseData: any
+    [key: string]: any
   }
-)
+}) => {
+  let weaverse = createWeaverseHydrogenContext(data, components)
+  useStudio(weaverse)
+
+  if (!weaverse?.data) {
+    return <div>404</div>
+  }
+  return (
+    <>
+      <div>Render weaverse root</div>
+      <WeaverseRoot context={weaverse} />
+      {weaverse.isDesignMode ? null : <StitchesStyle weaverse={weaverse} />}
+    </>
+  )
+}
 
 /**
  * Stitches or CSS-in-JS framework might not working properly with React/Remix defered hydration
