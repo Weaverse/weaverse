@@ -12,7 +12,7 @@ export let useStudio = (weaverseCore: Weaverse) => {
     ) {
       window.weaverseStudioInitialized = true
       let host = weaverseCore.weaverseHost
-      let version = weaverseCore.weaverseVersion || Date.now()
+      let version = Date.now()
       loadScript(`${host}/assets/studio/studio-bridge.js?v=${version}`).then(
         () => {
           // @ts-ignore
@@ -25,7 +25,6 @@ export let useStudio = (weaverseCore: Weaverse) => {
     }
     setTimeout(() => {
       // weaverseCore.stitchesInstance?.reset()
-
       window.__weaverse = weaverseCore
     }, 1)
   }, [])
