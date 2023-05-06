@@ -247,7 +247,7 @@ export type InputType =
 
 declare global {
   interface Window {
-    createWeaverseStudioBridge: (weaverse: Weaverse) => any
+    createWeaverseStudioBridge: (weaverse: Weaverse) => Promise<any>
     weaverseStudioInitialized: boolean
     Blinkloader: any
     __weaverse: Weaverse
