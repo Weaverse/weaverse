@@ -1,10 +1,6 @@
 import type { LoaderArgs } from '@shopify/remix-oxygen'
 type QueryKey = string | readonly unknown[]
-import {
-  CacheLong,
-  CacheShort,
-  generateCacheControlHeader,
-} from '@shopify/hydrogen'
+import { CacheShort, generateCacheControlHeader } from '@shopify/hydrogen'
 
 export function hashKey(queryKey: QueryKey): string {
   const rawKeys = Array.isArray(queryKey) ? queryKey : [queryKey]
@@ -32,7 +28,7 @@ export function hashKey(queryKey: QueryKey): string {
 
   return hash
 }
-
+let cacheControl = generateCacheControlHeader(CacheShort())
 export let fetchWithServerCache = async ({
   url,
   options = {},
@@ -51,9 +47,7 @@ export let fetchWithServerCache = async ({
   let response = await storefront.cache.match(cacheKey)
   if (!response) {
     // Since there's no match, fetch a fresh response.
-    let cacheControl = generateCacheControlHeader({
-      ...CacheShort(),
-    })
+
     response = await fetch(url, {
       ...options,
       headers: {
