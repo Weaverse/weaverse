@@ -8,22 +8,16 @@ const createCachedWeaverseContext = (init: WeaverseType) => {
     if (!window.__weaverses[init.pageId]) {
       window.__weaverses[init.pageId] = createRootContext(init)
     }
-    console.log('createRootContext cached', window.__weaverses[init.pageId])
     return window.__weaverses[init.pageId]
   }
-  console.log('createRootContext not cached')
-
   return createRootContext(init)
 }
+
 export let createWeaverseHydrogenContext = (
-  {
-    weaverseData: { pageData, config } = {
-      pageData: {},
-      config: {},
-    },
-  }: any,
+  { weaverseData }: any,
   components: WeaverseComponentsType
 ) => {
+  let { pageData = {}, config = {} } = weaverseData || {}
   let weaverse = createCachedWeaverseContext({
     ...config,
     data: pageData,
@@ -31,6 +25,7 @@ export let createWeaverseHydrogenContext = (
     isDesignMode: true,
     platformType: 'shopify-hydrogen',
   })
+
   Object.entries(components).forEach(([key, component]) => {
     weaverse.registerElement({
       type: component?.schema?.type || key,

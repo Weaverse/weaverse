@@ -15,6 +15,8 @@ let Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
     objectPosition,
     enableOverlay,
     overlayOpacity,
+    backgroundFit,
+    backgroundPosition,
     children,
     ...rest
   } = props

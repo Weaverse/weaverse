@@ -5,7 +5,6 @@ import { Elements } from './elements'
 
 export let createRootContext = (configs: WeaverseType) => {
   let rootContext = new Weaverse(configs)
-  // Register the element components
   Object.keys(Elements).forEach((key) => {
     rootContext.registerElement(Elements[key])
   })

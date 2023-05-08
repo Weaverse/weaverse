@@ -1,10 +1,7 @@
 import type { LoaderArgs } from '@shopify/remix-oxygen'
 type QueryKey = string | readonly unknown[]
-import {
-  CacheLong,
-  CacheShort,
-  generateCacheControlHeader,
-} from '@shopify/hydrogen'
+import { CacheShort, generateCacheControlHeader } from '@shopify/hydrogen'
+
 export function hashKey(queryKey: QueryKey): string {
   const rawKeys = Array.isArray(queryKey) ? queryKey : [queryKey]
   let hash = ''
@@ -31,7 +28,7 @@ export function hashKey(queryKey: QueryKey): string {
 
   return hash
 }
-
+let cacheControl = generateCacheControlHeader(CacheShort())
 export let fetchWithServerCache = async ({
   url,
   options = {},
@@ -50,10 +47,7 @@ export let fetchWithServerCache = async ({
   let response = await storefront.cache.match(cacheKey)
   if (!response) {
     // Since there's no match, fetch a fresh response.
-    let cacheControl = generateCacheControlHeader({
-      ...CacheShort(),
-    })
-    console.log('fetchWithServerCache', cacheControl)
+
     response = await fetch(url, {
       ...options,
       headers: {
@@ -70,6 +64,7 @@ export type WeaverseComponentLoaderArgs = LoaderArgs & {
   data: any
   config: { projectId: string; weaverseHost: string }
 }
+
 export async function weaverseLoader(
   {
     request,
@@ -94,10 +89,6 @@ export async function weaverseLoader(
     projectId,
     weaverseHost,
   }
-  let fetchBody = {
-    projectId,
-    url: request.url,
-  }
   try {
     /**
      * @todo read the url and params from the request => JSON DATA (items, installed add-ons)
@@ -114,14 +105,17 @@ export async function weaverseLoader(
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(fetchBody),
+        body: JSON.stringify({
+          projectId,
+          url: request.url,
+        }),
       },
       storefront,
       waitUntil,
     })
       .then((r) => r.json())
       .catch((err) => {
-        console.error(err)
+        console.log(`❌ Error fetching page data: ${err?.toString()}`)
         return {}
       })
     if (pageData?.items) {

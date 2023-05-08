@@ -63,6 +63,10 @@ interface BackgroundDataProps {
   backgroundImage?: string
   objectFit?: CSSProperties['objectFit']
   objectPosition?: CSSProperties['objectPosition']
+  /** @deprecated no more use but still reserved for old element */
+  backgroundPosition?: CSSProperties['backgroundPosition']
+  /** @deprecated no more use but still reserved for old element */
+  backgroundFit?: CSSProperties['objectFit']
 }
 // Layout
 export interface LayoutElementProps
