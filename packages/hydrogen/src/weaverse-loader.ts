@@ -65,6 +65,19 @@ export type WeaverseComponentLoaderArgs = LoaderArgs & {
   config: { projectId: string; weaverseHost: string }
 }
 
+export function getRequestQueries<T = Record<string, string>>(
+  request: Request
+) {
+  let url = new URL(request.url)
+  return Array.from(url.searchParams.entries()).reduce(
+    (q: Record<string, unknown>, [k, v]) => {
+      q[k] = v === 'true' ? true : v === 'false' ? false : v
+      return q
+    },
+    {}
+  ) as T
+}
+
 export async function weaverseLoader(
   {
     request,
@@ -79,6 +92,7 @@ export async function weaverseLoader(
     }
   }
 ): Promise<any> {
+  let queries = getRequestQueries(request)
   let projectId = env?.WEAVERSE_PROJECT_ID
   let weaverseHost = env?.WEAVERSE_HOST
   if (!projectId || !weaverseHost) {
@@ -88,6 +102,7 @@ export async function weaverseLoader(
   let config = {
     projectId,
     weaverseHost,
+    ...queries,
   }
   try {
     /**
