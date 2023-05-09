@@ -22,7 +22,7 @@ export let createWeaverseHydrogenContext = (
     ...config,
     data: pageData,
     pageId: pageData?.id,
-    isDesignMode: true,
+    // isDesignMode: true,
     platformType: 'shopify-hydrogen',
   })
 
