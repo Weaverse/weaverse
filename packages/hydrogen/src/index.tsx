@@ -25,7 +25,6 @@ export let WeaverseHydrogenRoot = ({
   }
   return (
     <>
-      <div>Render weaverse root</div>
       <WeaverseRoot context={weaverse} />
       {weaverse.isDesignMode ? null : <StitchesStyle weaverse={weaverse} />}
     </>
@@ -41,8 +40,6 @@ export let WeaverseHydrogenRoot = ({
  */
 let StitchesStyle = memo(
   ({ weaverse }: { weaverse: Weaverse }) => {
-    console.log('stitches', weaverse.stitchesInstance?.getCssText())
-
     return (
       <style
         id="stitches"
