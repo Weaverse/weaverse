@@ -19,13 +19,19 @@ export function ProductCardInfo(props: ProductCardInfoProps) {
         {title}
       </a>
       <div className="wv-pcard__prices">
-        <span className="wv-pcard__price sale-price">
-          {formatMoney(price, money_format)}
-        </span>
+        <span
+          className="wv-pcard__price sale-price"
+          dangerouslySetInnerHTML={{ __html: formatMoney(price, money_format) }}
+          suppressHydrationWarning
+        />
         {compare_at_price && (
-          <s className="wv-pcard__price compare-price">
-            {formatMoney(compare_at_price, money_format)}
-          </s>
+          <s
+            className="wv-pcard__price compare-price"
+            dangerouslySetInnerHTML={{
+              __html: formatMoney(compare_at_price, money_format),
+            }}
+            suppressHydrationWarning
+          />
         )}
       </div>
       {showProductOption && (
