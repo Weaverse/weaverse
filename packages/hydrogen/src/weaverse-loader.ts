@@ -31,6 +31,7 @@ export function hashKey(queryKey: QueryKey): string {
 let cacheControl = generateCacheControlHeader(CacheShort())
 export let fetchWithServerCache = async ({
   url,
+
   options = {},
   storefront,
   waitUntil,
@@ -137,17 +138,18 @@ export async function weaverseLoader(
       let items = pageData.items
       pageData.items = await Promise.all(
         items.map(async (item: any) => {
+          console.log('👉 --------> - item123:', item)
           let loader = components[item.type]?.loader
           if (loader) {
             return {
               ...item,
-              ...(await loader({
+              loaderData: await loader({
                 data: item,
                 context,
                 params,
                 request,
                 config,
-              })),
+              }),
             }
           }
           return item
