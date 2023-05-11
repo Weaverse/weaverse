@@ -60,7 +60,6 @@ export let css: ElementCSS = {
         outline: 'none',
         backgroundColor: 'rgb(255, 255, 255)',
         color: 'rgb(0, 0, 0)',
-        height: '44px',
         minWidth: '44px',
         padding: '12px 4px',
         transition: 'all .3s ease',
@@ -79,7 +78,7 @@ export let css: ElementCSS = {
         },
         '&.quick-view': {
           position: 'relative',
-          '.wv-pcard__quickview': {},
+          height: '44px',
         },
         '&:hover': {
           backgroundColor: '#121212',

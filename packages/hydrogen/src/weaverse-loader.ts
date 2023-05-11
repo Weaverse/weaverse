@@ -31,6 +31,7 @@ export function hashKey(queryKey: QueryKey): string {
 let cacheControl = generateCacheControlHeader(CacheShort())
 export let fetchWithServerCache = async ({
   url,
+
   options = {},
   storefront,
   waitUntil,
@@ -65,6 +66,19 @@ export type WeaverseComponentLoaderArgs = LoaderArgs & {
   config: { projectId: string; weaverseHost: string }
 }
 
+export function getRequestQueries<T = Record<string, string>>(
+  request: Request
+) {
+  let url = new URL(request.url)
+  return Array.from(url.searchParams.entries()).reduce(
+    (q: Record<string, unknown>, [k, v]) => {
+      q[k] = v === 'true' ? true : v === 'false' ? false : v
+      return q
+    },
+    {}
+  ) as T
+}
+
 export async function weaverseLoader(
   {
     request,
@@ -79,6 +93,7 @@ export async function weaverseLoader(
     }
   }
 ): Promise<any> {
+  let queries = getRequestQueries(request)
   let projectId = env?.WEAVERSE_PROJECT_ID
   let weaverseHost = env?.WEAVERSE_HOST
   if (!projectId || !weaverseHost) {
@@ -88,6 +103,7 @@ export async function weaverseLoader(
   let config = {
     projectId,
     weaverseHost,
+    ...queries,
   }
   try {
     /**
@@ -122,17 +138,18 @@ export async function weaverseLoader(
       let items = pageData.items
       pageData.items = await Promise.all(
         items.map(async (item: any) => {
+          console.log('👉 --------> - item123:', item)
           let loader = components[item.type]?.loader
           if (loader) {
             return {
               ...item,
-              ...(await loader({
+              loaderData: await loader({
                 data: item,
                 context,
                 params,
                 request,
                 config,
-              })),
+              }),
             }
           }
           return item
