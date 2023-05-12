@@ -2,7 +2,7 @@ import type { WeaverseType } from '@weaverse/react'
 import { createRootContext, isBrowser } from '@weaverse/react'
 import type { WeaverseComponentsType } from './types'
 
-const createCachedWeaverseContext = (init: WeaverseType) => {
+function createCachedContext(init: WeaverseType) {
   if (isBrowser && init.pageId) {
     window.__weaverses = window.__weaverses || {}
     if (!window.__weaverses[init.pageId]) {
@@ -13,12 +13,12 @@ const createCachedWeaverseContext = (init: WeaverseType) => {
   return createRootContext(init)
 }
 
-export let createWeaverseHydrogenContext = (
+export function createWeaverseHydrogenContext(
   { weaverseData }: any,
   components: WeaverseComponentsType
-) => {
+) {
   let { pageData = {}, config = {} } = weaverseData || {}
-  let weaverse = createCachedWeaverseContext({
+  let weaverse = createCachedContext({
     ...config,
     data: pageData,
     pageId: pageData?.id,
@@ -31,7 +31,6 @@ export let createWeaverseHydrogenContext = (
       Component: component?.default,
       schema: component?.schema,
       defaultCss: component?.css,
-      permanentCss: component?.permanentCss,
     })
   })
 
