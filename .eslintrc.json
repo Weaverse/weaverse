@@ -26,7 +26,8 @@
     "prefer-const": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
-    "@typescript-eslint/consistent-type-imports": "warn"
+    "@typescript-eslint/consistent-type-imports": "warn",
+    "@typescript-eslint/triple-slash-reference": "off"
   },
   "settings": {
     "react": {
