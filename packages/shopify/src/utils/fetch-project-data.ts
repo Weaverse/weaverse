@@ -35,7 +35,7 @@ export async function fetchProjectData({
 
   data = await fetch(
     weaverseHost +
-      `/api/public/project/${sectionId}${paramString ? '?' + paramString : ''}`
+      `/api/public/section/${sectionId}${paramString ? '?' + paramString : ''}`
   )
     .then((res: Response) => res.json())
     .catch((err: Error) => console.log('Error fetching project data:', err))
