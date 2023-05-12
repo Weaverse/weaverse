@@ -38,9 +38,6 @@ export async function weaverseLoader(
       url: `${weaverseHost}/api/public/project`,
       options: {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify({
           projectId,
           url: request.url,
