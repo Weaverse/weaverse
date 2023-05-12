@@ -2,27 +2,25 @@ import type { Weaverse } from '@weaverse/core'
 import { WeaverseRoot } from '@weaverse/react'
 import React, { memo } from 'react'
 import { createWeaverseHydrogenContext } from './context'
+import { useStudio } from './hooks/use-studio'
 import type { WeaverseComponentsType } from './types'
-import { useStudio } from './utils'
-export * from './utils'
-export * from './weaverse-loader'
+export * from './loader'
+export * from './fetch'
 
-export let WeaverseHydrogenRoot = ({
-  components,
-  data,
-}: {
+interface WeaverseHydrogenRootProps {
   components: WeaverseComponentsType
   data: {
     weaverseData: any
     [key: string]: any
   }
-}) => {
+}
+
+export let WeaverseHydrogenRoot = (props: WeaverseHydrogenRootProps) => {
+  let { components, data } = props
   let weaverse = createWeaverseHydrogenContext(data, components)
   useStudio(weaverse)
 
-  if (!weaverse?.data) {
-    return <div>404</div>
-  }
+  if (!weaverse?.data) return <div>No Weaverse data!</div>
   return (
     <>
       <WeaverseRoot context={weaverse} />
