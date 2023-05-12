@@ -1,21 +1,16 @@
 import type { LoaderArgs } from '@shopify/remix-oxygen'
 import { fetchWithServerCache } from './fetch'
+import type {
+  HydrogenComponent,
+  HydrogenPageConfigs,
+  HydrogenPageData,
+} from './types'
 import { getRequestQueries } from './utils'
-
-export type WeaverseLoaderArgs = LoaderArgs & {
-  data: any
-  config: { projectId: string; weaverseHost: string }
-}
 
 export async function weaverseLoader(
   args: LoaderArgs,
-  components: {
-    [key: string]: {
-      [key: string]: any
-      loader?: (args: WeaverseLoaderArgs) => Promise<unknown>
-    }
-  }
-): Promise<unknown> {
+  components: Record<string, HydrogenComponent>
+): Promise<HydrogenPageData | null> {
   let { request, context, params } = args
   let { env, storefront, waitUntil } = context
   let queries = getRequestQueries(request)
@@ -23,9 +18,9 @@ export async function weaverseLoader(
   let weaverseHost = env?.WEAVERSE_HOST
   if (!projectId || !weaverseHost) {
     console.log('❌ Missing `WEAVERSE_PROJECT_ID` or `WEAVERSE_HOST`!')
-    return {}
+    return null
   }
-  let config = {
+  let configs: HydrogenPageConfigs = {
     projectId,
     weaverseHost,
     ...queries,
@@ -39,7 +34,7 @@ export async function weaverseLoader(
      * @todo if items data need 3rd party api call, call the api and return the data
      * @todo the returned data format will be {weaversePageData: {}, 3rdPartyData: {}, products: [], collections: [], product: {}, collection: {}, etc}
      */
-    let pageData = await fetchWithServerCache({
+    let page = await fetchWithServerCache({
       url: `${weaverseHost}/api/public/project`,
       options: {
         method: 'POST',
@@ -60,9 +55,9 @@ export async function weaverseLoader(
         return {}
       })
 
-    if (pageData?.items) {
-      let items = pageData.items
-      pageData.items = await Promise.all(
+    if (page?.items) {
+      let items = page.items
+      page.items = await Promise.all(
         items.map(async (item: any) => {
           let loader = components[item.type]?.loader
           if (loader && typeof loader === 'function') {
@@ -73,7 +68,7 @@ export async function weaverseLoader(
                 context,
                 params,
                 request,
-                config,
+                config: configs,
               }).catch((e) => {
                 console.log(
                   `❌ Loader run failed! Item: ${item.type}: ${e?.toString()}`
@@ -86,13 +81,9 @@ export async function weaverseLoader(
         })
       )
     }
-    return {
-      pageData,
-      config,
-      components: {},
-    }
+    return { page, configs }
   } catch (err) {
     console.log(`❌ Error fetching Weaverse data: ${err?.toString()}`)
-    return {}
+    return null
   }
 }
