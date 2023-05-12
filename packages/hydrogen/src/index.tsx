@@ -3,14 +3,15 @@ import { WeaverseRoot } from '@weaverse/react'
 import React, { memo } from 'react'
 import { createWeaverseHydrogenContext } from './context'
 import { useStudio } from './hooks/use-studio'
-import type { WeaverseComponentsType } from './types'
-export * from './loader'
+import type { HydrogenComponent, HydrogenPageData } from './types'
 export * from './fetch'
+export * from './loader'
+export * from './types'
 
 interface WeaverseHydrogenRootProps {
-  components: WeaverseComponentsType
+  components: Record<string, HydrogenComponent>
   data: {
-    weaverseData: any
+    weaverseData: HydrogenPageData
     [key: string]: any
   }
 }

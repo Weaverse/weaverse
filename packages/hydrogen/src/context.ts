@@ -1,6 +1,6 @@
 import type { WeaverseType } from '@weaverse/react'
 import { createRootContext, isBrowser } from '@weaverse/react'
-import type { WeaverseComponentsType } from './types'
+import type { HydrogenComponent, HydrogenPageData } from './types'
 
 function createCachedContext(init: WeaverseType) {
   if (isBrowser && init.pageId) {
@@ -14,14 +14,14 @@ function createCachedContext(init: WeaverseType) {
 }
 
 export function createWeaverseHydrogenContext(
-  { weaverseData }: any,
-  components: WeaverseComponentsType
+  { weaverseData }: { weaverseData: HydrogenPageData },
+  components: Record<string, HydrogenComponent>
 ) {
-  let { pageData = {}, config = {} } = weaverseData || {}
+  let { page = {}, configs = {} } = weaverseData || {}
   let weaverse = createCachedContext({
-    ...config,
-    data: pageData,
-    pageId: pageData?.id,
+    ...configs,
+    data: page,
+    pageId: page?.id,
     platformType: 'shopify-hydrogen',
   })
 
@@ -30,7 +30,7 @@ export function createWeaverseHydrogenContext(
       type: component?.schema?.type || key,
       Component: component?.default,
       schema: component?.schema,
-      defaultCss: component?.css,
+      // defaultCss: component?.css,
     })
   })
 
