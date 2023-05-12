@@ -12,7 +12,7 @@ export async function weaverseLoader(
   components: Record<string, HydrogenComponent>
 ): Promise<HydrogenPageData | null> {
   let { request, context, params } = args
-  let { env, storefront, waitUntil } = context
+  let { env } = context
   let queries = getRequestQueries(request)
   let projectId = env?.WEAVERSE_PROJECT_ID
   let weaverseHost = env?.WEAVERSE_HOST
@@ -46,8 +46,7 @@ export async function weaverseLoader(
           url: request.url,
         }),
       },
-      storefront,
-      waitUntil,
+      context,
     })
       .then((r) => r.json())
       .catch((err) => {
@@ -61,20 +60,20 @@ export async function weaverseLoader(
         items.map(async (item: any) => {
           let loader = components[item.type]?.loader
           if (loader && typeof loader === 'function') {
-            return {
-              ...item,
-              loaderData: await loader({
-                data: item,
-                context,
-                params,
-                request,
-                config: configs,
-              }).catch((e) => {
-                console.log(
-                  `❌ Loader run failed! Item: ${item.type}: ${e?.toString()}`
-                )
-                return {}
-              }),
+            try {
+              return {
+                ...item,
+                loaderData: await loader({
+                  data: item,
+                  context,
+                  params,
+                  request,
+                  config: configs,
+                }),
+              }
+            } catch (err) {
+              console.log(`❌ Loader run failed! Item: ${item}: ${err}`)
+              return item
             }
           }
           return item
