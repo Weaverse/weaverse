@@ -1,31 +1,41 @@
-import type { Weaverse } from '@weaverse/core'
-import { isIframe, loadScript } from '@weaverse/core'
-import { useEffect } from 'react'
+type QueryKey = string | readonly unknown[]
 
-// TODO: make @weaverse/react framework agnostic and then move this code to @weaverse/react
-export let useStudio = (weaverseCore: Weaverse) => {
-  useEffect(() => {
-    if (
-      weaverseCore.isDesignMode &&
-      isIframe &&
-      !window.weaverseStudioInitialized
-    ) {
-      window.weaverseStudioInitialized = true
-      let host = weaverseCore.weaverseHost
-      let version = Date.now()
-      loadScript(`${host}/assets/studio/studio-bridge.js?v=${version}`).then(
-        () => {
-          // @ts-ignore
-          window?.createWeaverseStudioBridge(weaverseCore)
-          setTimeout(() => {
-            weaverseCore.triggerUpdate()
-          }, 2000)
+export function hashKey(queryKey: QueryKey): string {
+  const rawKeys = Array.isArray(queryKey) ? queryKey : [queryKey]
+  let hash = ''
+
+  // Keys from `storefront.query` are in the following shape:
+  // ['prefix', 'api-endpoint', {body:'query',headers:{}}]
+  // Since the API endpoint already contains the shop domain and api version,
+  // we can ignore the headers and only use the `body` from the payload.
+  for (const key of rawKeys) {
+    if (key != null) {
+      if (typeof key === 'object') {
+        // Queries from useQuery might not have a `body`. In that case,
+        // fallback to a safer (but slower) stringify.
+        if (!!key.body && typeof key.body === 'string') {
+          hash += key.body
+        } else {
+          hash += JSON.stringify(key)
         }
-      )
+      } else {
+        hash += key
+      }
     }
-    setTimeout(() => {
-      // weaverseCore.stitchesInstance?.reset()
-      window.__weaverse = weaverseCore
-    }, 1)
-  }, [])
+  }
+
+  return hash
+}
+
+export function getRequestQueries<T = Record<string, string>>(
+  request: Request
+) {
+  let url = new URL(request.url)
+  return Array.from(url.searchParams.entries()).reduce(
+    (q: Record<string, unknown>, [k, v]) => {
+      q[k] = v === 'true' ? true : v === 'false' ? false : v
+      return q
+    },
+    {}
+  ) as T
 }

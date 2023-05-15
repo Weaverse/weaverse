@@ -1,6 +1,10 @@
 /// <reference types="@remix-run/dev" />
 /// <reference types="@shopify/remix-oxygen" />
 /// <reference types="@shopify/oxygen-workers-types" />
+import type { ElementSchema, WeaverseElement } from '@weaverse/react'
+import type React from 'react'
+import type { LoaderArgs } from '@shopify/remix-oxygen'
+import type { ForwardRefExoticComponent } from 'react'
 
 // import type { Storefront as HydrogenStorefront } from '@shopify/hydrogen'
 // import type {
@@ -57,6 +61,7 @@
 /**
  * Declare local additions to `AppLoadContext` to include the session utilities we injected in `server.ts`.
  */
+export type TODO = any
 declare module '@shopify/remix-oxygen' {
   export interface AppLoadContext {
     waitUntil: ExecutionContext['waitUntil']
@@ -66,7 +71,34 @@ declare module '@shopify/remix-oxygen' {
   }
 }
 
-export type WeaverseComponentsType = {
+export type WeaverseLoaderArgs = LoaderArgs & {
+  data: any
+  config: { projectId: string; weaverseHost: string }
+}
+
+export interface HydrogenComponentSchema extends ElementSchema {
+  isSection?: boolean
+}
+
+export interface HydrogenComponentProps<T = unknown> extends WeaverseElement {
+  loaderData?: T
+  children?: React.JSX.Element[]
+}
+
+export interface HydrogenComponent<T = HydrogenComponentProps> {
+  default: ForwardRefExoticComponent<T>
+  schema: ElementSchema
+  loader?: (args: WeaverseLoaderArgs) => Promise<unknown>
+}
+
+export type HydrogenPageConfigs = {
+  projectId: string
+  weaverseHost: string
+  isDesignMode?: boolean
   [key: string]: any
 }
-export type TODO = any
+
+export interface HydrogenPageData {
+  page: any
+  configs: HydrogenPageConfigs
+}

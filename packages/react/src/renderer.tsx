@@ -100,6 +100,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     return null
   }
 })
+
 let ItemInstance = memo(({ id }: { id: string | number }) => {
   let context = useContext(WeaverseContext)
   let { itemInstances } = context
