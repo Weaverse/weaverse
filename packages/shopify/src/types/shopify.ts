@@ -1,4 +1,13 @@
 // Product
+import type {
+  ElementCatalog,
+  ElementFlags,
+  ElementInspector,
+  GridSize,
+  ParentType,
+  ToolbarAction,
+} from '@weaverse/core'
+
 export interface ShopifyProductImage {
   created_at: string
   id: number
@@ -173,4 +182,36 @@ export interface ShopifyArticle {
   // Liquid props
   url: string
   excerpt: string | null
+}
+
+// 3rd Integration
+
+type InformationThirdParty = {
+  developer: string
+  image: string
+  rating: number
+  description: string
+  available?: string
+  hyperlink: string
+}
+
+type CatalogThirdParty = {
+  title: string
+  type: string
+  extraData: Record<string, unknown>
+  inspector: ElementInspector
+  flags?: ElementFlags
+  parentTypes?: ParentType[]
+  toolbar?: (ToolbarAction | ToolbarAction[])[]
+  gridSize?: GridSize
+  catalog?: ElementCatalog
+}
+
+export interface ThirdPartyIntegration {
+  appType: string
+  id: string
+  name: string
+  information: InformationThirdParty
+  elements: CatalogThirdParty[]
+  order: number
 }

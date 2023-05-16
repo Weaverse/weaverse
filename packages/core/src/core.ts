@@ -74,7 +74,7 @@ export class WeaverseItemStore {
     let defaultCss = this.Element?.defaultCss || {}
     let currentCss = this._data.css || {}
     let css = merge(defaultCss, currentCss)
-    let defaultData = { ...this.Element?.Component?.defaultProps }
+    let defaultData = { ...this.Element?.Component?.defaultProps, ...(this.Element?.extraData || {}) }
     return { ...defaultData, ...this._data, css }
   }
 
@@ -173,7 +173,7 @@ export class Weaverse {
   stitchesInstance: Stitches | any
 
   studioBridge?: any
-  elementSchemas?: ElementSchema[]
+  elementSchemas: ElementSchema[] = []
   static WeaverseItemStore: typeof WeaverseItemStore = WeaverseItemStore
 
   mediaBreakPoints: BreakPoints = {

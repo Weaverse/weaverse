@@ -287,6 +287,15 @@ export interface CustomHTMLProps extends WeaverseElementProps {
   content: string
 }
 
+export interface ThirdPartyProps extends WeaverseElementProps {
+  snippet_code: string
+  information: unknown
+  placeholder: {
+    name: string
+    content: string
+  }
+}
+
 export type Hotspot = {
   id: string
   productId: number | null
