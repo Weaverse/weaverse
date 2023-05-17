@@ -73,7 +73,7 @@ declare module '@shopify/remix-oxygen' {
 
 export type WeaverseLoaderArgs = LoaderArgs & {
   data: any
-  config: { projectId: string; weaverseHost: string }
+  configs: { projectId: string; weaverseHost: string }
 }
 
 export interface HydrogenComponentSchema extends ElementSchema {
@@ -94,6 +94,7 @@ export interface HydrogenComponent<T = HydrogenComponentProps> {
 export type HydrogenPageConfigs = {
   projectId: string
   weaverseHost: string
+  version?: string
   isDesignMode?: boolean
   [key: string]: any
 }
