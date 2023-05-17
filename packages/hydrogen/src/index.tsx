@@ -7,6 +7,7 @@ import type { HydrogenComponent, HydrogenPageData } from './types'
 export * from './fetch'
 export * from './loader'
 export * from './types'
+export * from '@weaverse/react'
 
 interface WeaverseHydrogenRootProps {
   components: Record<string, HydrogenComponent>

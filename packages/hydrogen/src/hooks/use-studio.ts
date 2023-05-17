@@ -11,7 +11,7 @@ export function useStudio(weaverseCore: Weaverse) {
     ) {
       window.weaverseStudioInitialized = true
       let host = weaverseCore.weaverseHost
-      let version = Date.now()
+      let version = weaverseCore.weaverseVersion || Date.now()
       loadScript(`${host}/assets/studio/studio-bridge.js?v=${version}`).then(
         () => {
           window?.createWeaverseStudioBridge(weaverseCore)

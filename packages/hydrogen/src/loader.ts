@@ -65,7 +65,7 @@ export async function weaverseLoader(
                   context,
                   params,
                   request,
-                  config: configs,
+                  configs,
                 }),
               }
             } catch (err) {
