@@ -1,9 +1,14 @@
 /// <reference types="@remix-run/dev" />
 /// <reference types="@shopify/remix-oxygen" />
 /// <reference types="@shopify/oxygen-workers-types" />
-import type { ElementSchema, WeaverseElement } from '@weaverse/react'
-import type React from 'react'
 import type { LoaderArgs } from '@shopify/remix-oxygen'
+import type {
+  ElementSchema,
+  Weaverse,
+  WeaverseElement,
+  WeaverseItemStore,
+} from '@weaverse/react'
+import type React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
 
 // import type { Storefront as HydrogenStorefront } from '@shopify/hydrogen'
@@ -76,8 +81,11 @@ export type WeaverseLoaderArgs = LoaderArgs & {
   configs: { projectId: string; weaverseHost: string }
 }
 
-export interface HydrogenComponentSchema extends ElementSchema {
-  isSection?: boolean
+export type ComponentFlags = Partial<Record<'isSection', boolean>>
+
+export interface HydrogenComponentSchema
+  extends Omit<ElementSchema, 'parentTypes' | 'flags'> {
+  flags?: ComponentFlags
 }
 
 export interface HydrogenComponentProps<T = unknown> extends WeaverseElement {
@@ -85,9 +93,20 @@ export interface HydrogenComponentProps<T = unknown> extends WeaverseElement {
   children?: React.JSX.Element[]
 }
 
+export interface WeaverseHydrogen extends Omit<Weaverse, 'itemInstances'> {
+  itemInstances: Map<string | number, HydrogenComponentInstance>
+}
+
+export interface HydrogenComponentInstance
+  extends Omit<WeaverseItemStore, '_flags'> {
+  get _element(): HTMLElement | null
+  get _flags(): ComponentFlags
+  get Element(): WeaverseElement | undefined
+}
+
 export interface HydrogenComponent<T = HydrogenComponentProps> {
   default: ForwardRefExoticComponent<T>
-  schema: ElementSchema
+  schema: HydrogenComponentSchema
   loader?: (args: WeaverseLoaderArgs) => Promise<unknown>
 }
 
