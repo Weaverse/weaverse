@@ -42,7 +42,6 @@ main() {
     for package in "${packages[@]}"; do
       upgrade "@weaverse/$package"
     done
-    npm run clean
     cd ..
     echo ''
   done
