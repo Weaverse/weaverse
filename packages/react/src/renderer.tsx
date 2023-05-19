@@ -96,7 +96,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
       </Component>
     )
   } else {
-    console.warn(`Unknown element: ${type}`)
+    console.log(`❌ Unknown element: ${type}`)
     return null
   }
 })

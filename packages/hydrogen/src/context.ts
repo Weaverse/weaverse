@@ -25,12 +25,14 @@ export function createWeaverseHydrogenContext(
     platformType: 'shopify-hydrogen',
   })
 
+  // Clear the element instances from @weaverse/react package to register the new ones from @weaverse/hydrogen only
+  weaverse.elementInstances.clear()
   Object.entries(components).forEach(([key, component]) => {
     weaverse.registerElement({
       type: component?.schema?.type || key,
       Component: component?.default,
+      // @ts-ignore
       schema: component?.schema,
-      // defaultCss: component?.css,
     })
   })
 
