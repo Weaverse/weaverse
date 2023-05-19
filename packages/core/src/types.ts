@@ -40,6 +40,7 @@ export interface WeaverseElement {
   schema?: ElementSchema
   defaultCss?: ElementCSS
   permanentCss?: ElementCSS
+  extraData?: ElementExtraData
 }
 
 // Element types
@@ -112,6 +113,10 @@ export interface ElementData {
   childIds?: (string | number)[]
   css?: ElementCSS
   [key: string]: any
+}
+
+export interface ElementExtraData {
+  [key: string]: unknown
 }
 
 export type WeaverseCSSProperties = Stitches.CSS & Partial<Record<keyof typeof stitchesUtils, string | number>>
@@ -233,6 +238,7 @@ export type InputType =
   | "textarea"
   | "toggle-group"
   | "position"
+  | "information"
   // Element inputs
   | "product"
   | "product-list"
