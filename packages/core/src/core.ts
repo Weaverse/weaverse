@@ -66,20 +66,41 @@ export class WeaverseItemStore {
     return this.weaverse.elementInstances.get(this._data.type!)
   }
 
-  set data(data: Omit<ElementData, "id" | "type">) {
-    this._data = { ...this.data, ...data }
+  set data(update: Omit<ElementData, "id" | "type">) {
+    let platformType = this.weaverse.platformType
+    if (platformType === "shopify-hydrogen") {
+      this._data!.data = merge(this.data, update)
+    } else {
+      this._data = { ...this.data, ...update }
+    }
   }
 
   get data(): ElementData {
+    let platformType = this.weaverse.platformType
+    if (platformType === "shopify-hydrogen") {
+      let defaultData = { ...this.Element?.Component?.defaultProps }
+      return {
+        ...this._data,
+        ...defaultData,
+        ...this._data.data,
+      }
+    }
+
     let defaultCss = this.Element?.defaultCss || {}
     let currentCss = this._data.css || {}
     let css = merge(defaultCss, currentCss)
     let defaultData = { ...this.Element?.Component?.defaultProps, ...(this.Element?.extraData || {}) }
+
     return { ...defaultData, ...this._data, css }
   }
 
-  setData = (data: Omit<ElementData, "id" | "type">) => {
-    this.data = Object.assign(this.data, data)
+  setData = (update: Omit<ElementData, "id" | "type">) => {
+    let platformType = this.weaverse.platformType
+    if (platformType === "shopify-hydrogen") {
+      this.data = update
+    } else {
+      this.data = Object.assign(this.data, update)
+    }
     this.triggerUpdate()
     return this.data
   }

@@ -6,6 +6,7 @@ import { initUploadCareAdaptiveDelivery } from '~/utils/uploadcare'
 import { WeaverseContext, WeaverseContextProvider } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
 import { generateItemClassName } from './utils/css'
+import clsx from 'clsx'
 
 export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
   let [, setData] = useState<WeaverseProjectDataType | unknown>(context.data)
@@ -83,7 +84,10 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
         key={id}
         data-wv-type={type}
         data-wv-id={id}
-        className={generateItemClassName(instance, stitchesInstance)}
+        className={clsx(
+          generateItemClassName(instance, stitchesInstance),
+          className
+        )}
         {...rest}
       >
         {/* // TODO: refactor this, migrate to `children` prop */}
