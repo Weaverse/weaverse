@@ -36,17 +36,21 @@ let ProductPrice = forwardRef<HTMLDivElement, ProductPriceProps>(
 
     let comparePrice =
       showCompareAt && compare_at_price ? (
-        <s className="wv-compare-price">
-          {formatMoney(compare_at_price, money_format)}
-        </s>
+        <s
+          className="wv-compare-price"
+          dangerouslySetInnerHTML={{
+            __html: formatMoney(compare_at_price, money_format),
+          }}
+        />
       ) : null
 
     return (
       <div ref={ref} {...rest}>
         {showComparePriceFirst ? comparePrice : null}
-        <span className="wv-sale-price">
-          {formatMoney(price, money_format)}
-        </span>
+        <span
+          className="wv-sale-price"
+          dangerouslySetInnerHTML={{ __html: formatMoney(price, money_format) }}
+        />
         {showComparePriceFirst ? null : comparePrice}
         {showSaleBadge && savedPercentage > 0 ? (
           <span className="wv-sale-badge">Save {savedPercentage}%</span>

@@ -30,7 +30,6 @@ export async function fetchProjectData({
 
   timestamp && params.append('timestamp', timestamp.toString())
   isDesignMode && params.append('isDesignMode', 'true')
-
   let paramString = params.toString()
 
   data = await fetch(
@@ -48,5 +47,4 @@ export async function fetchProjectData({
     }
     return data
   }
-  return null
 }
