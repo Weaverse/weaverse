@@ -88,8 +88,12 @@ export interface HydrogenComponentSchema
   flags?: ComponentFlags
 }
 
-export interface HydrogenComponentProps<T = unknown> extends WeaverseElement {
-  loaderData?: T
+export interface HydrogenComponentProps<D = unknown, L = unknown>
+  extends WeaverseElement {
+  data: D & {
+    className?: string
+  }
+  loaderData?: L
   children?: React.JSX.Element[]
 }
 
