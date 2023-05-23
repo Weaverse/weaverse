@@ -165,7 +165,7 @@ export class Weaverse {
    */
   stitchesInstance: Stitches | any
 
-  studioBridge?: unknown
+  studioBridge?: any
   elementSchemas: ElementSchema[] = []
   static WeaverseItemStore: typeof WeaverseItemStore = WeaverseItemStore
 
