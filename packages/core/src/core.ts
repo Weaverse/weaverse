@@ -195,10 +195,6 @@ export class Weaverse {
    * @param platformType {PlatformTypeEnum} Check the platform, shopify-section or react-ssr(hydrogen)
    */
   constructor(params: WeaverseType = {}) {
-    this.init(params)
-  }
-
-  init(params: WeaverseType = {}) {
     Object.entries(params).forEach(([k, v]) => {
       let key = k as keyof typeof this
       this[key] = v || this[key]
