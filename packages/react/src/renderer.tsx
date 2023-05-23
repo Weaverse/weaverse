@@ -16,7 +16,7 @@ export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
   useEffect(() => {
     context.subscribe(renderRoot)
     context.contentRootElement = rootRef.current
-    initUploadCareAdaptiveDelivery(context.weaverseHost as string)
+    initUploadCareAdaptiveDelivery(context.weaverseHost)
     return () => {
       context.unsubscribe(renderRoot)
     }
@@ -56,7 +56,6 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     deletedAt,
     tailwindClasses,
     css,
-    className,
     ...rest
   } = data
 
@@ -86,7 +85,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
         data-wv-id={id}
         className={clsx(
           generateItemClassName(instance, stitchesInstance),
-          className
+          rest?.data?.className
         )}
         {...rest}
       >
