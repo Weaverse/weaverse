@@ -114,17 +114,14 @@ export class Weaverse {
   itemInstances = new Map<string | number, WeaverseItemStore>()
   /**
    * Weaverse base URL that can provide by user/developer. for local development, use localhost:3000
-   * @type {string}
    */
   weaverseHost = "https://studio.weaverse.io"
   /**
    * Weaverse version, it can be used to load the correct version of Weaverse SDK
-   * @type {string}
    */
   weaverseVersion = ""
   /**
    * Weaverse project key to access project data via API
-   * @type {string}
    */
   projectId = ""
 
@@ -140,14 +137,12 @@ export class Weaverse {
   }
   /**
    * Storing subscribe callback function for any component that want to listen to the change of WeaverseRoot
-   * @type {Map<string, (data: any) => void>}
    */
-  listeners: Set<any> = new Set()
+  listeners: Set<() => void> = new Set()
   /**
    * Check whether the sdk is in editor or not.
    * If isDesignMode is true, it means the sdk is isDesignMode mode, render the editor UI,
    * else render the preview UI, plain HTML + CSS + React hydrate
-   * @type {boolean}
    */
   isDesignMode = false
 
@@ -158,13 +153,11 @@ export class Weaverse {
 
   /**
    * Check whether the sdk is in preview mode or not
-   * @type {boolean}
    */
   isPreviewMode = false
 
   /**
    * Use in element to optionally render special HTML for hydration
-   * @type {boolean}
    */
   ssrMode = false
   /**
@@ -172,7 +165,7 @@ export class Weaverse {
    */
   stitchesInstance: Stitches | any
 
-  studioBridge?: any
+  studioBridge?: unknown
   elementSchemas: ElementSchema[] = []
   static WeaverseItemStore: typeof WeaverseItemStore = WeaverseItemStore
 
