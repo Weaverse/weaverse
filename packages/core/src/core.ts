@@ -19,41 +19,26 @@ import type {
 import { merge } from "./utils"
 import { stitchesUtils } from "./utils/styles"
 
-/**
- * WeaverseItemStore is a store for Weaverse item, it can be used to subscribe/update the item data
- * @param itemData {ElementData} Weaverse item data
- * @param weaverse {Weaverse} Weaverse instance
- * @example
- * useEffect(() => {
- *     let handleUpdate = (update: any) => {
- *       setData({...update})
- *     }
- *     itemInstance.subscribe(handleUpdate)
- *     return () => {
- *       itemInstance.unsubscribe(handleUpdate)
- *     }
- * }, [])
- */
 export class WeaverseItemStore {
-  listeners: Set<any> = new Set()
-  ref: RefObject<HTMLElement> = {
-    current: null,
-  }
   weaverse: Weaverse
+  listeners: Set<(_: ElementData) => void> = new Set()
+  ref: RefObject<HTMLElement> = { current: null }
+  platformType: PlatformTypeEnum = "shopify-section"
   stitchesClass = ""
-  _data: ElementData = { id: "", type: "" }
+  _store: ElementData = { id: "", type: "" }
 
   constructor(itemData: ElementData, weaverse: Weaverse) {
     let { type, id } = itemData
     this.weaverse = weaverse
+    this.platformType = weaverse.platformType
     if (id && type) {
       weaverse.itemInstances.set(id, this)
-      this.data = { ...itemData }
+      this._store = { ...itemData }
     }
   }
 
   get _id() {
-    return this._data.id
+    return this._store.id
   }
   get _element() {
     return this.ref.current
@@ -61,42 +46,36 @@ export class WeaverseItemStore {
   get _flags() {
     return this.Element?.schema?.flags || {}
   }
-
   get Element() {
-    return this.weaverse.elementInstances.get(this._data.type!)
+    return this.weaverse.elementInstances.get(this._store.type)
   }
 
   set data(update: Omit<ElementData, "id" | "type">) {
-    let platformType = this.weaverse.platformType
-    if (platformType === "shopify-hydrogen") {
-      this._data!.data = merge(this.data, update)
+    if (this.platformType === "shopify-hydrogen") {
+      this._store.data = merge(this._store.data, update)
     } else {
-      this._data = { ...this.data, ...update }
+      this._store = { ...this.data, ...update }
     }
   }
 
   get data(): ElementData {
-    let platformType = this.weaverse.platformType
-    if (platformType === "shopify-hydrogen") {
-      let defaultData = { ...this.Element?.Component?.defaultProps }
+    let defaultProps = { ...this.Element?.Component?.defaultProps }
+    if (this.platformType === "shopify-hydrogen") {
       return {
-        ...this._data,
-        ...defaultData,
-        ...this._data.data,
+        ...this._store,
+        data: { ...defaultProps?.data, ...this._store.data },
       }
+    } else {
+      let defaultCss = this.Element?.defaultCss || {}
+      let currentCss = this._store.css || {}
+      let css = merge(defaultCss, currentCss)
+      let extraData = this.Element?.extraData
+      return { ...defaultProps, ...extraData, ...this._store, css }
     }
-
-    let defaultCss = this.Element?.defaultCss || {}
-    let currentCss = this._data.css || {}
-    let css = merge(defaultCss, currentCss)
-    let defaultData = { ...this.Element?.Component?.defaultProps, ...(this.Element?.extraData || {}) }
-
-    return { ...defaultData, ...this._data, css }
   }
 
   setData = (update: Omit<ElementData, "id" | "type">) => {
-    let platformType = this.weaverse.platformType
-    if (platformType === "shopify-hydrogen") {
+    if (this.platformType === "shopify-hydrogen") {
       this.data = update
     } else {
       this.data = Object.assign(this.data, update)
@@ -105,11 +84,11 @@ export class WeaverseItemStore {
     return this.data
   }
 
-  subscribe = (fn: any) => {
+  subscribe = (fn: (_: ElementData) => void) => {
     this.listeners.add(fn)
   }
 
-  unsubscribe = (fn: any) => {
+  unsubscribe = (fn: (_: ElementData) => void) => {
     this.listeners.delete(fn)
   }
 
@@ -135,17 +114,14 @@ export class Weaverse {
   itemInstances = new Map<string | number, WeaverseItemStore>()
   /**
    * Weaverse base URL that can provide by user/developer. for local development, use localhost:3000
-   * @type {string}
    */
   weaverseHost = "https://studio.weaverse.io"
   /**
    * Weaverse version, it can be used to load the correct version of Weaverse SDK
-   * @type {string}
    */
   weaverseVersion = ""
   /**
    * Weaverse project key to access project data via API
-   * @type {string}
    */
   projectId = ""
 
@@ -161,14 +137,12 @@ export class Weaverse {
   }
   /**
    * Storing subscribe callback function for any component that want to listen to the change of WeaverseRoot
-   * @type {Map<string, (data: any) => void>}
    */
-  listeners: Set<any> = new Set()
+  listeners: Set<() => void> = new Set()
   /**
    * Check whether the sdk is in editor or not.
    * If isDesignMode is true, it means the sdk is isDesignMode mode, render the editor UI,
    * else render the preview UI, plain HTML + CSS + React hydrate
-   * @type {boolean}
    */
   isDesignMode = false
 
@@ -179,13 +153,11 @@ export class Weaverse {
 
   /**
    * Check whether the sdk is in preview mode or not
-   * @type {boolean}
    */
   isPreviewMode = false
 
   /**
    * Use in element to optionally render special HTML for hydration
-   * @type {boolean}
    */
   ssrMode = false
   /**
@@ -215,55 +187,12 @@ export class Weaverse {
    * @param elementSchemas {Array<ElementSchema>} List of element schemas
    * @param platformType {PlatformTypeEnum} Check the platform, shopify-section or react-ssr(hydrogen)
    */
-  constructor({
-    weaverseHost,
-    weaverseVersion,
-    projectId,
-    data,
-    mediaBreakPoints,
-    isDesignMode,
-    ssrMode,
-    elementSchemas,
-    platformType,
-    pageId,
-  }: WeaverseType = {}) {
-    this.init({
-      weaverseHost,
-      weaverseVersion,
-      projectId,
-      data,
-      platformType,
-      mediaBreakPoints,
-      isDesignMode,
-      ssrMode,
-      elementSchemas,
-      pageId,
+  constructor(params: WeaverseType = {}) {
+    Object.entries(params).forEach(([k, v]) => {
+      let key = k as keyof typeof this
+      this[key] = v || this[key]
     })
-  }
-
-  init({
-    weaverseHost,
-    weaverseVersion,
-    elementSchemas,
-    platformType,
-    projectId,
-    data,
-    mediaBreakPoints,
-    isDesignMode,
-    ssrMode,
-    pageId,
-  }: WeaverseType = {}) {
-    this.elementSchemas = elementSchemas || this.elementSchemas
-    this.weaverseHost = weaverseHost || this.weaverseHost
-    this.weaverseVersion = weaverseVersion || this.weaverseVersion
-    this.projectId = projectId || this.projectId
-    this.pageId = pageId || this.pageId
-    this.mediaBreakPoints = mediaBreakPoints || this.mediaBreakPoints
-    this.isDesignMode = isDesignMode || this.isDesignMode
-    this.ssrMode = ssrMode || this.ssrMode
-    this.platformType = platformType || this.platformType
-    this.data = data || this.data
-    this.initProjectItemData()
+    this.initProject()
     this.initStitches()
   }
 
@@ -309,13 +238,21 @@ export class Weaverse {
     })
   }
 
+  /**
+   * When applying new template,
+   * we need to reset the project data and re-initialize the project item data
+   * @param data {WeaverseProjectDataType}
+   */
   setProjectData(data: WeaverseProjectDataType) {
     this.data = data
-    this.initProjectItemData()
+    this.initProject()
     this.triggerUpdate()
   }
 
-  initProjectItemData() {
+  /**
+   * Create new WeaverseItemStore instance for each item in project data
+   */
+  initProject() {
     const data = this.data
     if (data?.items) {
       data.items.forEach((item) => {
