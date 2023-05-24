@@ -86,6 +86,7 @@ export type ComponentFlags = Partial<Record<'isSection', boolean>>
 export interface HydrogenComponentSchema
   extends Omit<ElementSchema, 'parentTypes' | 'flags'> {
   flags?: ComponentFlags
+  childTypes?: string[]
 }
 
 export interface HydrogenComponentProps<D = unknown, L = unknown>
