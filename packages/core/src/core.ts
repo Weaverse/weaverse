@@ -52,7 +52,11 @@ export class WeaverseItemStore {
 
   set data(update: Omit<ElementData, "id" | "type">) {
     if (this.platformType === "shopify-hydrogen") {
-      this._store.data = merge(this._store.data, update)
+      let { children, ...rest } = update
+      if (children) {
+        this._store.children = children
+      }
+      this._store.data = merge(this._store.data, rest)
     } else {
       this._store = { ...this.data, ...update }
     }
