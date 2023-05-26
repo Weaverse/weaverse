@@ -33,8 +33,10 @@ export function createWeaverseHydrogenContext(
       Component: component?.default,
       // @ts-ignore
       schema: component?.schema,
+      // @ts-ignore
+      template: component?.template,
     })
   })
-
+  //
   return weaverse
 }
