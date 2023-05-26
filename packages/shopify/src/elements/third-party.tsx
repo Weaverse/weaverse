@@ -1,5 +1,6 @@
 import React, { forwardRef, useContext } from 'react'
 import type { ThirdPartyProps } from '~/types'
+import type { ElementCSS } from '@weaverse/react'
 import { Components } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
 
@@ -27,5 +28,13 @@ let ThirdParty = forwardRef<HTMLDivElement, ThirdPartyProps>((props, ref) => {
     </div>
   )
 })
+
+export let css: ElementCSS = {
+  '@desktop': {
+    '> *': {
+      pointerEvents: 'var(--pointer-events, unset)',
+    },
+  },
+}
 
 export default ThirdParty

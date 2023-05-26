@@ -10,6 +10,7 @@ const initElement = (integrations: ThirdPartyIntegration[]) => {
     for (let element of elements) {
       list[element.type] = {
         Component: ThirdParty.default,
+        defaultCss: ThirdParty.css,
         type: element.type,
         extraData: element.extraData,
       }
