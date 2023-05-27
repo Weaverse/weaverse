@@ -3,6 +3,7 @@
 /// <reference types="@shopify/oxygen-workers-types" />
 import type { LoaderArgs } from '@shopify/remix-oxygen'
 import type {
+  ElementData,
   ElementSchema,
   Weaverse,
   WeaverseElement,
@@ -81,6 +82,18 @@ export type WeaverseLoaderArgs = LoaderArgs & {
   configs: { projectId: string; weaverseHost: string }
 }
 
+export interface HydrogenComponentData
+  extends Omit<ElementData, 'childIds' | 'css'> {
+  id: string
+  createdAt: string
+  updatedAt: string
+  deletedAt: string
+  parentId: string
+  children: { id: string }[]
+  loaderData: unknown
+  data: Record<string, unknown>
+}
+
 export type ComponentFlags = Partial<Record<'isSection', boolean>>
 
 export interface HydrogenComponentSchema
@@ -102,11 +115,21 @@ export interface WeaverseHydrogen extends Omit<Weaverse, 'itemInstances'> {
   itemInstances: Map<string | number, HydrogenComponentInstance>
 }
 
+export type HydrogenComponentTemplate = any
+
+export interface HydrogenElement {
+  Component: ForwardRefExoticComponent<any>
+  type: string
+  schema?: HydrogenComponentSchema
+  template?: HydrogenComponentTemplate
+}
+
 export interface HydrogenComponentInstance
-  extends Omit<WeaverseItemStore, '_flags'> {
+  extends Omit<WeaverseItemStore, '_flags' | 'data' | 'Element'> {
   get _element(): HTMLElement | null
   get _flags(): ComponentFlags
-  get Element(): WeaverseElement | undefined
+  get Element(): HydrogenElement | undefined
+  get data(): HydrogenComponentData
 }
 
 export interface HydrogenComponent<T = HydrogenComponentProps> {
