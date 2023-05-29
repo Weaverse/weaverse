@@ -115,7 +115,12 @@ export interface WeaverseHydrogen extends Omit<Weaverse, 'itemInstances'> {
   itemInstances: Map<string | number, HydrogenComponentInstance>
 }
 
-export type HydrogenComponentTemplate = any
+export type HydrogenComponentTemplate = {
+  type: string
+  data?: Record<string, unknown>
+  parentId?: string
+  children?: HydrogenComponentTemplate[]
+}
 
 export interface HydrogenElement {
   Component: ForwardRefExoticComponent<any>
