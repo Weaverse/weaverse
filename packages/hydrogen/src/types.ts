@@ -111,8 +111,10 @@ export interface HydrogenComponentProps<D = unknown, L = unknown>
   children?: React.JSX.Element[]
 }
 
-export interface WeaverseHydrogen extends Omit<Weaverse, 'itemInstances'> {
+export interface WeaverseHydrogen
+  extends Omit<Weaverse, 'itemInstances' | 'elementInstances'> {
   itemInstances: Map<string | number, HydrogenComponentInstance>
+  elementInstances: Map<string, HydrogenElement>
 }
 
 export type HydrogenComponentTemplate = {
