@@ -1,5 +1,5 @@
 {
-  "version": "1.0.45",
+  "version": "1.0.46",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -32,9 +32,9 @@
   "name": "@weaverse/react",
   "author": "Weaverse Team",
   "dependencies": {
-    "@radix-ui/react-dialog": "^1.0.3",
+    "@radix-ui/react-dialog": "^1.0.4",
     "@stitches/react": "^1.2.8",
-    "@weaverse/core": "1.0.45",
+    "@weaverse/core": "1.0.46",
     "clsx": "^1.2.1",
     "keen-slider": "^6.8.5"
   }
