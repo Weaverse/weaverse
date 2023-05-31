@@ -109,7 +109,6 @@ export let css: ElementCSS = {
     gap: 10,
     lineHeight: 'initial',
     '.wv-cd-block': {
-      width: 48,
       textAlign: 'center',
       '.wv-cd-label': {
         fontSize: 10,
