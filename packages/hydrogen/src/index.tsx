@@ -1,6 +1,5 @@
-import type { Weaverse } from '@weaverse/core'
 import { WeaverseRoot } from '@weaverse/react'
-import React, { memo } from 'react'
+import React from 'react'
 import { createWeaverseHydrogenContext } from './context'
 import { useStudio } from './hooks/use-studio'
 import type { HydrogenComponent, HydrogenPageData } from './types'
@@ -23,12 +22,13 @@ export let WeaverseHydrogenRoot = (props: WeaverseHydrogenRootProps) => {
   useStudio(weaverse)
 
   if (!weaverse?.data) return <div>No Weaverse data!</div>
-  return (
-    <>
-      <WeaverseRoot context={weaverse} />
-      {weaverse.isDesignMode ? null : <StitchesStyle weaverse={weaverse} />}
-    </>
-  )
+  return <WeaverseRoot context={weaverse} />
+  // return (
+  //   <>
+  //     <WeaverseRoot context={weaverse} />
+  //     {weaverse.isDesignMode ? null : <StitchesStyle weaverse={weaverse} />}
+  //   </>
+  // )
 }
 
 /**
@@ -38,32 +38,18 @@ export let WeaverseHydrogenRoot = (props: WeaverseHydrogenRootProps) => {
  * in some case it might broken on production if we use production URL to our editor
  * therefore we'll encourage to create tailwind style input instead of stitches
  */
-let StitchesStyle = memo(
-  ({ weaverse }: { weaverse: Weaverse }) => {
-    return (
-      <style
-        id="stitches"
-        key={'stitches'}
-        suppressHydrationWarning
-        dangerouslySetInnerHTML={{
-          __html: weaverse.stitchesInstance?.getCssText() || '',
-        }}
-      />
-    )
-  },
-  () => true
-)
-
-// let useEnsureStitchesWorking = (weaverse: Weaverse) => {
-//   useEffect(() => {
-//     let stitchesInstance = weaverse.stitchesInstance
-//     if (stitchesInstance && !stitchesInstance.sheet?.sheet?.ownerNode) {
-//       console.warn('stitches instance is not working, re-creating it')
-//       //this means that the stitches instance is not working
-//       // we will re-create it
-//       // weaverse.stitchesInstance.reset()
-//       // weaverse.triggerUpdate()
-//       // weaverse.refreshAllItems()
-//     }
-//   }, [])
-// }
+// let StitchesStyle = memo(
+//   ({ weaverse }: { weaverse: Weaverse }) => {
+//     return (
+//       <style
+//         id="stitches"
+//         key={'stitches'}
+//         suppressHydrationWarning
+//         dangerouslySetInnerHTML={{
+//           __html: weaverse.stitchesInstance?.getCssText() || '',
+//         }}
+//       />
+//     )
+//   },
+//   () => true
+// )
