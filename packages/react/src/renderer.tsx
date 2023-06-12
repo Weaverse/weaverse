@@ -54,7 +54,6 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     createdAt,
     updatedAt,
     deletedAt,
-    tailwindClasses,
     css,
     ...rest
   } = data
@@ -78,6 +77,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     if (Component.$$typeof === Symbol.for('react.forward_ref')) {
       rest.ref = instance.ref
     }
+
     return (
       <Component
         key={id}

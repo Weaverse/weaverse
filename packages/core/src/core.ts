@@ -23,17 +23,20 @@ export class WeaverseItemStore {
   weaverse: Weaverse
   listeners: Set<(_: ElementData) => void> = new Set()
   ref: RefObject<HTMLElement> = { current: null }
-  platformType: PlatformTypeEnum = "shopify-section"
   stitchesClass = ""
   _store: ElementData = { id: "", type: "" }
 
   constructor(itemData: ElementData, weaverse: Weaverse) {
     let { type, id } = itemData
     this.weaverse = weaverse
-    this.platformType = weaverse.platformType
     if (id && type) {
       weaverse.itemInstances.set(id, this)
-      this._store = { ...itemData }
+      if (weaverse.platformType === "shopify-hydrogen") {
+        let { data, ...rest } = itemData
+        this._store = { ...data, ...rest }
+      } else {
+        this._store = { ...itemData }
+      }
     }
   }
 
@@ -51,39 +54,48 @@ export class WeaverseItemStore {
   }
 
   set data(update: Omit<ElementData, "id" | "type">) {
-    if (this.platformType === "shopify-hydrogen") {
-      let { children, ...rest } = update
-      if (children) {
-        this._store.children = children
-      }
-      this._store.data = merge(this._store.data, rest)
-    } else {
-      this._store = { ...this.data, ...update }
-    }
+    // if (this.weaverse.platformType === "shopify-hydrogen") {
+    //   let { children, ...rest } = update
+    //   if (children) {
+    //     this._store.children = children
+    //   }
+    //   this._store.data = merge(this._store.data, rest)
+    // } else {
+    //   this._store = { ...this.data, ...update }
+    // }
+    this._store = { ...this.data, ...update }
   }
 
   get data(): ElementData {
     let defaultProps = { ...this.Element?.Component?.defaultProps }
-    if (this.platformType === "shopify-hydrogen") {
-      return {
-        ...this._store,
-        data: { ...defaultProps?.data, ...this._store.data },
-      }
-    } else {
-      let defaultCss = this.Element?.defaultCss || {}
-      let currentCss = this._store.css || {}
-      let css = merge(defaultCss, currentCss)
-      let extraData = this.Element?.extraData
-      return { ...defaultProps, ...extraData, ...this._store, css }
-    }
+    // if (this.platformType === "shopify-hydrogen") {
+    //   return {
+    //     ...defaultProps,
+    //     ...this._store,
+    //     data: { ...defaultProps?.data, ...this._store.data },
+    //   }
+    // } else {
+    //   let defaultCss = this.Element?.defaultCss || {}
+    //   let currentCss = this._store.css || {}
+    //   let css = merge(defaultCss, currentCss)
+    //   let extraData = this.Element?.extraData
+    //   return { ...defaultProps, ...extraData, ...this._store, css }
+    // }
+    let defaultCss = this.Element?.defaultCss || {}
+    let currentCss = this._store.css || {}
+    let css = merge(defaultCss, currentCss)
+    let extraData = this.Element?.extraData
+    return { ...defaultProps, ...extraData, ...this._store, css }
   }
 
   setData = (update: Omit<ElementData, "id" | "type">) => {
-    if (this.platformType === "shopify-hydrogen") {
-      this.data = update
-    } else {
-      this.data = Object.assign(this.data, update)
-    }
+    // if (this.weaverse.platformType === "shopify-hydrogen") {
+    //   this.data = update
+    // } else {
+    //   this.data = Object.assign(this.data, update)
+    // }
+    this.data = Object.assign(this.data, update)
+
     this.triggerUpdate()
     return this.data
   }
@@ -119,7 +131,7 @@ export class Weaverse {
   /**
    * Weaverse base URL that can provide by user/developer. for local development, use localhost:3000
    */
-  weaverseHost = "https://studio.weaverse.io"
+  weaverseHost = "https://weaverse.io"
   /**
    * Weaverse version, it can be used to load the correct version of Weaverse SDK
    */
@@ -261,7 +273,7 @@ export class Weaverse {
     if (data?.items) {
       data.items.forEach((item) => {
         if (!this.itemInstances.get(item.id as string | number)) {
-          new WeaverseItemStore(item, this)
+          return new WeaverseItemStore(item, this)
         }
       })
     }
