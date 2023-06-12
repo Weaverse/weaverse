@@ -150,3 +150,11 @@ export interface HydrogenPageData {
   page: any
   configs: HydrogenPageConfigs
 }
+
+export interface WeaverseHydrogenRootProps {
+  components: Record<string, HydrogenComponent>
+  data: {
+    weaverseData?: HydrogenPageData
+    [key: string]: any
+  }
+}

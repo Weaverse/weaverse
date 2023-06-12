@@ -2,19 +2,11 @@ import { WeaverseRoot } from '@weaverse/react'
 import React from 'react'
 import { createWeaverseHydrogenContext } from './context'
 import { useStudio } from './hooks/use-studio'
-import type { HydrogenComponent, HydrogenPageData } from './types'
+import type { WeaverseHydrogenRootProps } from './types'
 export * from './fetch'
 export * from './loader'
 export * from './types'
 export * from '@weaverse/react'
-
-interface WeaverseHydrogenRootProps {
-  components: Record<string, HydrogenComponent>
-  data: {
-    weaverseData: HydrogenPageData
-    [key: string]: any
-  }
-}
 
 export let WeaverseHydrogenRoot = (props: WeaverseHydrogenRootProps) => {
   let { components, data } = props

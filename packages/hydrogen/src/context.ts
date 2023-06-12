@@ -14,7 +14,7 @@ function createCachedContext(init: WeaverseType) {
 }
 
 export function createWeaverseHydrogenContext(
-  { weaverseData }: { weaverseData: HydrogenPageData },
+  { weaverseData }: { weaverseData?: HydrogenPageData },
   components: Record<string, HydrogenComponent>
 ) {
   let { page = {}, configs = {} } = weaverseData || {}
