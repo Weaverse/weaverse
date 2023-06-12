@@ -78,16 +78,6 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
       rest.ref = instance.ref
     }
 
-    let propsToPass = rest
-    if (context.platformType === 'shopify-hydrogen') {
-      let { data: data2, ...rest2 } = rest
-      propsToPass = {
-        ...data2,
-        ...rest2,
-      }
-    }
-    console.log('propsToPass', { propsToPass, rest })
-
     return (
       <Component
         key={id}
@@ -97,7 +87,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
           generateItemClassName(instance, stitchesInstance),
           rest?.data?.className
         )}
-        {...propsToPass}
+        {...rest}
       >
         {/* // TODO: refactor this, migrate to `children` prop */}
         {childIds.map((cid) => (

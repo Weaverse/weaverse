@@ -32,8 +32,6 @@ export class WeaverseItemStore {
     if (id && type) {
       weaverse.itemInstances.set(id, this)
       if (weaverse.platformType === "shopify-hydrogen") {
-        console.log("itemData", itemData)
-
         let { data, ...rest } = itemData
         this._store = { ...data, ...rest }
       } else {
