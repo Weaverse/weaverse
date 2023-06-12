@@ -1,5 +1,5 @@
 import type { ElementCSS } from '@weaverse/react'
-import { Components } from '@weaverse/react'
+import { Components } from '~/components'
 import React, { forwardRef, useState } from 'react'
 import { useProductContext } from '~/hooks/use-product-context'
 import type { ProductBuyButtonProps } from '~/types'

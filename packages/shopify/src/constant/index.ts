@@ -1,4 +1,9 @@
 import type { OptionDisplayType } from '~/types/configs'
+import type { CountdownTimeKey } from '~/types/components'
+
+export let TIMES: CountdownTimeKey[] = ['days', 'hours', 'minutes', 'seconds']
+export let COUNTDOWN_KEY = 'wv-cd-evergreen-start'
+export let INSTAGRAM_API = 'https://graph.instagram.com'
 
 export let DEFAULT_OPTION_DESIGN: OptionDisplayType = 'dropdown'
 

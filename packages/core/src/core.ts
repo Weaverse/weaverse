@@ -24,7 +24,7 @@ export class WeaverseItemStore {
   listeners: Set<(_: ElementData) => void> = new Set()
   ref: RefObject<HTMLElement> = { current: null }
   stitchesClass = ""
-  _store: ElementData = { id: "", type: "" }
+  private _store: ElementData = { id: "", type: "" }
 
   constructor(itemData: ElementData, weaverse: Weaverse) {
     let { type, id } = itemData

@@ -1,12 +1,13 @@
 import elements from './elements'
 import type { WeaverseRootPropsType, WeaverseType } from '@weaverse/react'
-import { createRootContext, Weaverse, WeaverseRoot } from '@weaverse/react'
-import React from 'react'
+import { Weaverse, WeaverseRoot } from '@weaverse/react'
+import React, { useEffect } from 'react'
 import type { FallbackProps } from 'react-error-boundary'
 import { ErrorBoundary } from 'react-error-boundary'
 import { useStudio } from './hooks/use-studio'
 import { registerThirdPartyElement } from '~/utils/register-integration'
 import type { ThirdPartyIntegration } from '~/types/shopify'
+import { initUploadCareAdaptiveDelivery } from './utils/uploadcare'
 
 export * from '@weaverse/react'
 export * from './types'
@@ -14,6 +15,7 @@ export * from './types/configs'
 export * from './types/shopify'
 export * from './utils/fetch-project-data'
 
+let createRootContext = (configs: WeaverseType) => new Weaverse(configs)
 class ShopifyWeaverse extends Weaverse {
   thirdPartyIntegration = [] as ThirdPartyIntegration[]
   constructor() {
@@ -48,6 +50,9 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
 
 function ShopifyRoot({ context }: WeaverseRootPropsType) {
   useStudio(context)
+  useEffect(() => {
+    initUploadCareAdaptiveDelivery(context.weaverseHost)
+  }, [])
   return (
     <ErrorBoundary
       FallbackComponent={ErrorFallback}

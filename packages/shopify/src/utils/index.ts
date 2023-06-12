@@ -1,4 +1,5 @@
-import type { CountdownTimeKey } from '~/types'
+import type { LinkHTMLAttributes } from 'react'
+import type { CountdownTimeKey } from '~/types/components'
 
 export function getTime(_seconds: number): {
   [key in CountdownTimeKey]: number
@@ -27,4 +28,18 @@ export function getYoutubeEmbedId(url: string) {
 export function getVimeoId(url: string) {
   const match = url.match(/(?:https?:\/\/)?(?:www\.)?vimeo\.com\/(.+)/)
   return match ? match[1] : null
+}
+
+export function loadCSS(attrs: LinkHTMLAttributes<HTMLLinkElement>) {
+  return new Promise((resolve, reject) => {
+    let found = document.querySelector(`link[href="${attrs.href}"]`)
+    if (found) {
+      return resolve(true)
+    }
+    let link = document.createElement('link')
+    Object.assign(link, attrs)
+    link.addEventListener('load', () => resolve(true))
+    link.onerror = reject
+    document.head.appendChild(link)
+  })
 }

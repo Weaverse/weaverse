@@ -1,11 +1,13 @@
 import type { ElementCSS } from '@weaverse/react'
-import { Components, WeaverseContext } from '@weaverse/react'
+import { WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext } from 'react'
 import { weaverseShopifyArticles, weaverseShopifyArticlesByBlog } from '~/proxy'
 import type { ArticleListProps } from '~/types'
 import type { ShopifyArticle } from '~/types/shopify'
 import { ArticleCard, css as articleCardCss } from './article-card'
 import { css as skeletonCss, Skeleton } from './skeleton'
+import { Components } from '~/components'
+
 let { Placeholder, Slider } = Components
 
 let ArticleList = forwardRef<HTMLDivElement, ArticleListProps>((props, ref) => {

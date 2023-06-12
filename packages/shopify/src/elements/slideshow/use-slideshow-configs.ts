@@ -2,9 +2,9 @@ import { useKeenSlider } from 'keen-slider/react'
 import React, { useContext, useEffect, useState } from 'react'
 import { AutoplayPlugin } from '~/components/slider/autoplay-plugin'
 import { ResizePlugin } from '~/components/slider/resize-plugin'
-import { WeaverseContext } from '~/context'
-import type { SlideshowProps } from '~/types'
-import { loadCSS } from '~/utils/css'
+import { WeaverseContext } from '@weaverse/react'
+import type { SlideshowProps } from '~/types/components'
+import { loadCSS } from '~/utils'
 
 export function useSlideshowConfigs(props: SlideshowProps) {
   let {

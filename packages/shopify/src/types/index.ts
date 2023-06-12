@@ -1,4 +1,4 @@
-import type { WeaverseElementProps, WeaverseIcon } from '@weaverse/react'
+import type { WeaverseElementProps } from '@weaverse/react'
 import type { KeenSliderInstance, KeenSliderPlugin } from 'keen-slider'
 import type {
   OptionDisplayType,
@@ -13,6 +13,7 @@ import type {
   ShopifyProductOption,
   ShopifyProductVariant,
 } from './shopify'
+import type { WeaverseIcon } from './components'
 
 export interface ProductContextType {
   product: ShopifyProduct
@@ -321,5 +322,6 @@ declare global {
     weaverseShopifyArticlesByBlog: Record<number, number[]>
     weaverseShopifyArticles: Record<number, ShopifyArticle>
     weaverseCartHelpers: WeaverseCartHelpers
+    weaverseSlideshowInstances: Record<string, KeenSliderInstance>
   }
 }

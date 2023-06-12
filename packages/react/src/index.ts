@@ -1,7 +1,4 @@
 export * from '@weaverse/core'
 export * from './context'
-export * from './components'
-export * from './elements'
 export * from './renderer'
 export * from './types'
-export * from './types/components'

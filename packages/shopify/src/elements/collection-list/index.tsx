@@ -1,10 +1,12 @@
 import type { ElementCSS } from '@weaverse/react'
-import { Components, WeaverseContext } from '@weaverse/react'
+import { WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext } from 'react'
 import type { CollectionListProps } from '~/types'
 import { CollectionCard, css as collectionCardCss } from './collection-card'
 import { css as skeletonCss, Skeleton } from './skeleton'
 import { useCollections } from './use-collections'
+import { Components } from '~/components'
+
 let { Placeholder, Slider } = Components
 
 let CollectionList = forwardRef<HTMLDivElement, CollectionListProps>(
