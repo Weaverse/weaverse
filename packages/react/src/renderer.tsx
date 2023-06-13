@@ -2,7 +2,6 @@
 import type { ElementData, WeaverseProjectDataType } from '@weaverse/core'
 import { isBrowser } from '@weaverse/core'
 import React, { memo, useContext, useEffect, useRef, useState } from 'react'
-import { initUploadCareAdaptiveDelivery } from '~/utils/uploadcare'
 import { WeaverseContext, WeaverseContextProvider } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
 import { generateItemClassName } from './utils/css'
@@ -16,7 +15,6 @@ export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
   useEffect(() => {
     context.subscribe(renderRoot)
     context.contentRootElement = rootRef.current
-    initUploadCareAdaptiveDelivery(context.weaverseHost)
     return () => {
       context.unsubscribe(renderRoot)
     }

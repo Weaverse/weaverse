@@ -1,5 +1,5 @@
 import type { ElementCSS } from '@weaverse/react'
-import { Components } from '@weaverse/react'
+import { Components } from '~/components'
 import type { CSSProperties } from 'react'
 import React, { forwardRef } from 'react'
 import { weaverseShopifyConfigs, weaverseShopifyProducts } from '~/proxy'

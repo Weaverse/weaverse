@@ -1,7 +1,8 @@
 import type { WeaverseType } from '@weaverse/react'
-import { createRootContext, isBrowser } from '@weaverse/react'
+import { Weaverse, isBrowser } from '@weaverse/react'
 import type { HydrogenComponent, HydrogenPageData } from './types'
 
+let createRootContext = (init: WeaverseType) => new Weaverse(init)
 function createCachedContext(init: WeaverseType) {
   if (isBrowser && init.pageId) {
     window.__weaverses = window.__weaverses || {}

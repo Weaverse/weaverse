@@ -1,5 +1,5 @@
 import type { ElementCSS } from '@weaverse/react'
-import { Components } from '@weaverse/react'
+import { Components } from '~/components'
 import clsx from 'clsx'
 import React from 'react'
 import type { ProductCardOptionsProps } from '~/types'

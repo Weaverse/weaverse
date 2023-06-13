@@ -1,5 +1,5 @@
 import React from 'react'
-import type { TimerBlockProps } from '~/types'
+import type { TimerBlockProps } from '~/types/components'
 
 export function TimerBlock({ value, label }: TimerBlockProps) {
   return (

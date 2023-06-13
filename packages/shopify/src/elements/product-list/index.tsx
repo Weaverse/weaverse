@@ -1,5 +1,7 @@
 import type { ElementCSS } from '@weaverse/react'
-import { Components, WeaverseContext } from '@weaverse/react'
+import { WeaverseContext } from '@weaverse/react'
+import { Components } from '~/components'
+
 import React, { forwardRef, useContext } from 'react'
 import type { ProductListProps } from '~/types'
 import { ProductCard, css as productCardCss } from './product-card'

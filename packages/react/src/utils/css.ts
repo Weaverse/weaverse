@@ -47,17 +47,3 @@ export function generateItemClassName(
   }
   return className
 }
-
-export function loadCSS(attrs: LinkHTMLAttributes<HTMLLinkElement>) {
-  return new Promise((resolve, reject) => {
-    let found = document.querySelector(`link[href="${attrs.href}"]`)
-    if (found) {
-      return resolve(true)
-    }
-    let link = document.createElement('link')
-    Object.assign(link, attrs)
-    link.addEventListener('load', () => resolve(true))
-    link.onerror = reject
-    document.head.appendChild(link)
-  })
-}

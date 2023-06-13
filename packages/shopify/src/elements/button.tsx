@@ -1,8 +1,8 @@
 import * as React from 'react'
-import type { ButtonElementProps } from '~/types'
+import type { ButtonElementProps } from '~/types/components'
 import type { ElementCSS } from '@weaverse/core'
 import { useContext } from 'react'
-import { WeaverseContext } from '~/context'
+import { WeaverseContext } from '@weaverse/react'
 
 export let Button = React.forwardRef<
   HTMLButtonElement | HTMLAnchorElement,

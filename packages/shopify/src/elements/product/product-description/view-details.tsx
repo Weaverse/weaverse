@@ -1,4 +1,4 @@
-import { Components } from '@weaverse/react'
+import { Components } from '~/components'
 import React from 'react'
 import type { ProductDescriptionViewDetailsProps } from '~/types'
 

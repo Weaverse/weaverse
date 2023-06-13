@@ -1,8 +1,8 @@
 import type { ElementCSS } from '@weaverse/core'
 import React, { forwardRef, useContext, useEffect } from 'react'
 import { COUNTDOWN_KEY, TIMES } from '~/constant'
-import { WeaverseContext } from '~/context'
-import type { CountdownElementProps } from '~/types'
+import { WeaverseContext } from '@weaverse/react'
+import type { CountdownElementProps } from '~/types/components'
 import { getTime } from '~/utils'
 import { TimerBlock } from './timer-block'
 

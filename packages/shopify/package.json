@@ -1,5 +1,5 @@
 {
-  "version": "1.0.47",
+  "version": "1.0.48",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -32,8 +32,11 @@
   "name": "@weaverse/shopify",
   "author": "Weaverse Team",
   "dependencies": {
-    "@weaverse/react": "1.0.47",
+    "@radix-ui/react-dialog": "^1.0.4",
+    "@stitches/react": "^1.2.8",
+    "@weaverse/react": "1.0.48",
     "clsx": "^1.2.1",
-    "react-error-boundary": "^4.0.9"
+    "keen-slider": "^6.8.5",
+    "react-error-boundary": "^4.0.10"
   }
 }
