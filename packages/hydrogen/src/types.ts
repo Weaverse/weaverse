@@ -1,8 +1,10 @@
 /// <reference types="@remix-run/dev" />
 /// <reference types="@shopify/remix-oxygen" />
 /// <reference types="@shopify/oxygen-workers-types" />
+
 import type { LoaderArgs } from '@shopify/remix-oxygen'
 import type {
+  BasicInput,
   ElementData,
   ElementSchema,
   Weaverse,
@@ -12,61 +14,6 @@ import type {
 import type React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
 
-// import type { Storefront as HydrogenStorefront } from '@shopify/hydrogen'
-// import type {
-//   CountryCode,
-//   CurrencyCode,
-//   LanguageCode,
-// } from '@shopify/hydrogen/storefront-api-types'
-
-// export type Locale = {
-//   language: LanguageCode
-//   country: CountryCode
-//   label: string
-//   currency: CurrencyCode
-// }
-
-// export type Localizations = Record<string, Locale>
-
-// export type I18nLocale = Locale & {
-//   pathPrefix: string
-// }
-
-// export type Storefront = HydrogenStorefront<I18nLocale>
-
-// export enum CartAction {
-//   ADD_TO_CART = 'ADD_TO_CART',
-//   REMOVE_FROM_CART = 'REMOVE_FROM_CART',
-//   UPDATE_CART = 'UPDATE_CART',
-//   UPDATE_DISCOUNT = 'UPDATE_DISCOUNT',
-//   UPDATE_BUYER_IDENTITY = 'UPDATE_BUYER_IDENTITY',
-// }
-// export type CartActions = keyof typeof CartAction
-
-// declare global {
-//   /**
-//    * A global `process` object is only available during build to access NODE_ENV.
-//    */
-//   // const process: { env: { NODE_ENV: 'production' | 'development' } }
-
-//   /**
-//    * Declare expected Env parameter in fetch handler.
-//    */
-//   interface Env {
-//     SESSION_SECRET: string
-//     PUBLIC_STOREFRONT_API_TOKEN: string
-//     PRIVATE_STOREFRONT_API_TOKEN: string
-//     PUBLIC_STOREFRONT_API_VERSION: string
-//     PUBLIC_STORE_DOMAIN: string
-//     PUBLIC_STOREFRONT_ID: string
-//     WEAVERSE_PROJECT_ID: string
-//     WEAVERSE_HOST: string
-//   }
-// }
-
-/**
- * Declare local additions to `AppLoadContext` to include the session utilities we injected in `server.ts`.
- */
 export type TODO = any
 declare module '@shopify/remix-oxygen' {
   export interface AppLoadContext {
@@ -94,41 +41,46 @@ export interface HydrogenComponentData
   data: Record<string, unknown>
 }
 
-export type ComponentFlags = Partial<Record<'isSection', boolean>>
+export type ComponentFlags = Partial<Record<string, boolean>>
 
 export interface HydrogenComponentSchema
-  extends Omit<ElementSchema, 'parentTypes' | 'flags'> {
+  extends Omit<ElementSchema, 'parentTypes' | 'flags' | 'inspector'> {
   flags?: ComponentFlags
   childTypes?: string[]
+  inspector: InspectorGroup[]
+  presets?: Omit<HydrogenComponentPresets, 'type'>
 }
 
-export interface HydrogenComponentProps<D = unknown, L = unknown>
-  extends WeaverseElement {
-  data: D & {
-    className?: string
-  }
+export interface InspectorGroup {
+  group: string
+  inputs: BasicInput[]
+}
+
+export interface HydrogenComponentProps<L = unknown> extends WeaverseElement {
+  className?: string
   loaderData?: L
   children?: React.JSX.Element[]
 }
 
 export interface WeaverseHydrogen
-  extends Omit<Weaverse, 'itemInstances' | 'elementInstances'> {
+  extends Omit<
+    Weaverse,
+    'itemInstances' | 'elementInstances' | 'registerElement'
+  > {
   itemInstances: Map<string | number, HydrogenComponentInstance>
   elementInstances: Map<string, HydrogenElement>
+  registerElement(element: HydrogenElement): void
 }
 
-export type HydrogenComponentTemplate = {
+export type HydrogenComponentPresets = {
   type: string
-  data?: Record<string, unknown>
-  parentId?: string
-  children?: HydrogenComponentTemplate[]
+  children?: HydrogenComponentPresets[]
 }
 
 export interface HydrogenElement {
-  Component: ForwardRefExoticComponent<any>
+  Component: ForwardRefExoticComponent<HydrogenComponentProps>
   type: string
   schema?: HydrogenComponentSchema
-  template?: HydrogenComponentTemplate
 }
 
 export interface HydrogenComponentInstance
