@@ -1,8 +1,8 @@
-import type { Weaverse } from '@weaverse/core'
 import { isIframe, loadScript } from '@weaverse/core'
 import { useEffect } from 'react'
+import type { WeaverseHydrogen } from '..'
 
-export function useStudio(weaverseCore: Weaverse) {
+export function useStudio(weaverseCore: WeaverseHydrogen) {
   useEffect(() => {
     if (
       weaverseCore.isDesignMode &&
