@@ -1,15 +1,22 @@
 import type { WeaverseType } from '@weaverse/react'
 import { Weaverse, isBrowser } from '@weaverse/react'
-import type { HydrogenComponent, HydrogenPageData } from './types'
+import type {
+  HydrogenComponent,
+  HydrogenPageData,
+  WeaverseHydrogen,
+} from './types'
 
-let createRootContext = (init: WeaverseType) => new Weaverse(init)
-function createCachedContext(init: WeaverseType) {
+function createRootContext(init: WeaverseType) {
+  return new Weaverse(init) as unknown as WeaverseHydrogen
+}
+
+function createCachedContext(init: WeaverseType): WeaverseHydrogen {
   if (isBrowser && init.pageId) {
-    window.__weaverses = window.__weaverses || {}
-    if (!window.__weaverses[init.pageId]) {
-      window.__weaverses[init.pageId] = createRootContext(init)
+    window.__weaverse = window.__weaverse || {}
+    if (!window.__weaverse[init.pageId]) {
+      window.__weaverse[init.pageId] = createRootContext(init)
     }
-    return window.__weaverses[init.pageId]
+    return window.__weaverse[init.pageId]
   }
   return createRootContext(init)
 }
@@ -32,12 +39,8 @@ export function createWeaverseHydrogenContext(
     weaverse.registerElement({
       type: component?.schema?.type || key,
       Component: component?.default,
-      // @ts-ignore
       schema: component?.schema,
-      // @ts-ignore
-      template: component?.template,
     })
   })
-  //
   return weaverse
 }
