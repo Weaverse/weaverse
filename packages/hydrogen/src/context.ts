@@ -12,11 +12,11 @@ function createRootContext(init: WeaverseType) {
 
 function createCachedContext(init: WeaverseType): WeaverseHydrogen {
   if (isBrowser && init.pageId) {
-    window.__weaverse = window.__weaverse || {}
-    if (!window.__weaverse[init.pageId]) {
-      window.__weaverse[init.pageId] = createRootContext(init)
+    window.__weaverses = window.__weaverses || {}
+    if (!window.__weaverses[init.pageId]) {
+      window.__weaverses[init.pageId] = createRootContext(init)
     }
-    return window.__weaverse[init.pageId]
+    return window.__weaverses[init.pageId]
   }
   return createRootContext(init)
 }

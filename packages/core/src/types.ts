@@ -255,6 +255,9 @@ declare global {
     weaverseStudioInitialized: boolean
     Blinkloader: any
     __weaverse: any
+    __weaverses: {
+      [key: string]: any
+    }
     createWeaverseStudioBridge: (weaverse: any) => Promise<any>
   }
 }
