@@ -14,6 +14,7 @@ export let WeaverseHydrogenRoot = (props: WeaverseHydrogenRootProps) => {
   useStudio(weaverse)
 
   if (!weaverse?.data) return <div>No Weaverse data!</div>
+  // @ts-ignore
   return <WeaverseRoot context={weaverse} />
   // return (
   //   <>

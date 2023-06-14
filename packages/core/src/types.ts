@@ -1,7 +1,6 @@
 import type * as Stitches from "@stitches/core"
 import type { ForwardRefExoticComponent } from "react"
 import type { stitchesUtils } from "./utils/styles"
-import type { Weaverse } from "./core"
 
 // Project types
 export interface WeaverseProjectDataType {
@@ -186,7 +185,7 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
    * `imagesPerRow.gt.1`
    */
   condition?: string
-  defaultValue?: string | number | boolean
+  defaultValue: string | number | boolean
   placeholder?: string
   helpText?: string
 }
@@ -253,12 +252,12 @@ export type InputType =
 
 declare global {
   interface Window {
-    createWeaverseStudioBridge: (weaverse: Weaverse) => Promise<any>
     weaverseStudioInitialized: boolean
     Blinkloader: any
-    __weaverse: Weaverse
+    __weaverse: any
     __weaverses: {
-      [key: string]: Weaverse
+      [key: string]: any
     }
+    createWeaverseStudioBridge: (weaverse: any) => Promise<any>
   }
 }
