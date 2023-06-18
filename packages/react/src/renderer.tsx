@@ -23,15 +23,16 @@ export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
   let eventHandlers = context?.studioBridge?.eventHandlers || {}
   let themeClass = context.stitchesInstance.theme.className
 
-  if (context.data?.rootId) {
+  if (context.projectId) {
     return (
       <div
         className={`weaverse-content-root ${themeClass}`}
         {...eventHandlers}
         ref={rootRef}
+        data-weaverse-project-id={context.projectId}
       >
         <WeaverseContextProvider value={context}>
-          <ItemInstance id={context.data.rootId} />
+          <ItemInstance id={context.data.rootId || context.projectId} />
         </WeaverseContextProvider>
       </div>
     )
@@ -75,7 +76,11 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     if (Component.$$typeof === Symbol.for('react.forward_ref')) {
       rest.ref = instance.ref
     }
-
+    let renderChildren = children?.length
+      ? children.map((item: any) => <ItemInstance key={item.id} id={item.id} />)
+      : childIds.length
+      ? childIds.map((cid) => <ItemInstance key={cid} id={cid} />)
+      : null
     return (
       <Component
         key={id}
@@ -86,15 +91,8 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
           rest?.data?.className
         )}
         {...rest}
-      >
-        {/* // TODO: refactor this, migrate to `children` prop */}
-        {childIds.map((cid) => (
-          <ItemInstance key={cid} id={cid} />
-        ))}
-        {children.map((item: any) => (
-          <ItemInstance key={item.id} id={item.id} />
-        ))}
-      </Component>
+        children={renderChildren}
+      />
     )
   } else {
     console.log(`❌ Unknown element: ${type}`)

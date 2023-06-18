@@ -15,9 +15,9 @@ export async function weaverseLoader(
   let { env } = context
   let queries = getRequestQueries(request)
   let projectId = env?.WEAVERSE_PROJECT_ID
-  let weaverseHost = env?.WEAVERSE_HOST
-  if (!projectId || !weaverseHost) {
-    console.log('❌ Missing `WEAVERSE_PROJECT_ID` or `WEAVERSE_HOST`!')
+  let weaverseHost = env?.WEAVERSE_HOST || 'https://weaverse.io'
+  if (!projectId) {
+    console.log('❌ Missing `WEAVERSE_PROJECT_ID` env variable')
     return null
   }
   let configs: HydrogenPageConfigs = {
