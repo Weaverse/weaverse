@@ -21,12 +21,6 @@ export function useStudio(weaverseCore: WeaverseHydrogen) {
         }
       )
     }
-    window.requestAnimationFrame(() => {
-      window.__weaverse = weaverseCore
-    })
-    // setTimeout(() => {
-    //   // weaverseCore.stitchesInstance?.reset()
-    //   window.__weaverse = weaverseCore
-    // }, 1)
-  }, [])
+    window.__weaverse = weaverseCore
+  }, [weaverseCore])
 }

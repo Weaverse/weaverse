@@ -13,36 +13,6 @@ export let WeaverseHydrogenRoot = (props: WeaverseHydrogenRootProps) => {
   let weaverse = createWeaverseHydrogenContext(data, components)
   useStudio(weaverse)
 
-  if (!weaverse?.data) return <div>No Weaverse data!</div>
   // @ts-ignore
   return <WeaverseRoot context={weaverse} />
-  // return (
-  //   <>
-  //     <WeaverseRoot context={weaverse} />
-  //     {weaverse.isDesignMode ? null : <StitchesStyle weaverse={weaverse} />}
-  //   </>
-  // )
 }
-
-/**
- * Stitches or CSS-in-JS framework might not working properly with React/Remix defered hydration
- * but we need to make sure that the stitches instance is working
- * temporarily we will render the stitches css manually
- * in some case it might broken on production if we use production URL to our editor
- * therefore we'll encourage to create tailwind style input instead of stitches
- */
-// let StitchesStyle = memo(
-//   ({ weaverse }: { weaverse: Weaverse }) => {
-//     return (
-//       <style
-//         id="stitches"
-//         key={'stitches'}
-//         suppressHydrationWarning
-//         dangerouslySetInnerHTML={{
-//           __html: weaverse.stitchesInstance?.getCssText() || '',
-//         }}
-//       />
-//     )
-//   },
-//   () => true
-// )
