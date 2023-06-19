@@ -56,7 +56,7 @@ export interface InspectorGroup {
   inputs: BasicInput[]
 }
 
-export interface HydrogenComponentProps<L = unknown> extends WeaverseElement {
+export interface HydrogenComponentProps<L = any> extends WeaverseElement {
   className?: string
   loaderData?: L
   children?: React.JSX.Element[]
