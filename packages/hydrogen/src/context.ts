@@ -11,12 +11,13 @@ function createRootContext(init: WeaverseType) {
 }
 
 function createCachedContext(init: WeaverseType): WeaverseHydrogen {
-  if (isBrowser && init.pageId) {
+  if (isBrowser) {
     window.__weaverses = window.__weaverses || {}
-    if (!window.__weaverses[init.pageId]) {
-      window.__weaverses[init.pageId] = createRootContext(init)
+    let pathname = window.location.pathname
+    if (!window.__weaverses[pathname]) {
+      window.__weaverses[pathname] = createRootContext(init)
     }
-    return window.__weaverses[init.pageId]
+    return window.__weaverses[pathname]
   }
   return createRootContext(init)
 }
@@ -33,8 +34,6 @@ export function createWeaverseHydrogenContext(
     platformType: 'shopify-hydrogen',
   })
 
-  // Clear the element instances from @weaverse/react package to register the new ones from @weaverse/hydrogen only
-  weaverse.elementInstances.clear()
   Object.entries(components).forEach(([key, component]) => {
     weaverse.registerElement({
       type: component?.schema?.type || key,
