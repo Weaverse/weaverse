@@ -14,10 +14,10 @@ export async function weaverseLoader(
   let { request, context, params } = args
   let { env } = context
   let queries = getRequestQueries(request)
-  let projectId = env?.WEAVERSE_PROJECT_ID
+  let projectId = queries?.projectId || env?.WEAVERSE_PROJECT_ID
   let weaverseHost = env?.WEAVERSE_HOST || 'https://weaverse.io'
   if (!projectId) {
-    console.log('❌ Missing `WEAVERSE_PROJECT_ID` env variable')
+    console.log('❌ Missing `projectId`!')
     return null
   }
   let configs: HydrogenPageConfigs = {
@@ -34,14 +34,13 @@ export async function weaverseLoader(
      * @todo if items data need 3rd party api call, call the api and return the data
      * @todo the returned data format will be {weaversePageData: {}, 3rdPartyData: {}, products: [], collections: [], product: {}, collection: {}, etc}
      */
+    let projectAPI = `${weaverseHost}/api/public/project`
+    let url = request.url
     let page = await fetchWithServerCache({
-      url: `${weaverseHost}/api/public/project`,
+      url: projectAPI,
       options: {
         method: 'POST',
-        body: JSON.stringify({
-          projectId,
-          url: request.url,
-        }),
+        body: JSON.stringify({ projectId, url }),
       },
       context,
     })
