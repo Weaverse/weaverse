@@ -35,7 +35,7 @@ export async function fetchProjectData({
   data = await fetch(
     weaverseHost +
       `/api/public/section?id=${sectionId}${
-        paramString ? '?' + paramString : ''
+        paramString ? '&' + paramString : ''
       }`
   )
     .then((res: Response) => res.json())
