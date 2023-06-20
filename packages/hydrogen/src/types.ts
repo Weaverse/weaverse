@@ -110,10 +110,12 @@ export interface HydrogenPageData {
   configs: HydrogenPageConfigs
 }
 
+export type WeaverseHydrogenLoaderData = {
+  weaverseData?: HydrogenPageData
+  [key: string]: any
+}
 export interface WeaverseHydrogenRootProps {
   components: Record<string, HydrogenComponent>
-  data: {
-    weaverseData?: HydrogenPageData
-    [key: string]: any
-  }
+  data: WeaverseHydrogenLoaderData
+  themeSchema?: InspectorGroup[]
 }

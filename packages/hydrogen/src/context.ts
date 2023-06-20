@@ -4,6 +4,7 @@ import type {
   HydrogenComponent,
   HydrogenPageData,
   WeaverseHydrogen,
+  WeaverseHydrogenLoaderData,
 } from './types'
 
 function createRootContext(init: WeaverseType) {
@@ -23,10 +24,11 @@ function createCachedContext(init: WeaverseType): WeaverseHydrogen {
 }
 
 export function createWeaverseHydrogenContext(
-  { weaverseData }: { weaverseData?: HydrogenPageData },
+  data: WeaverseHydrogenLoaderData,
   components: Record<string, HydrogenComponent>
 ) {
-  let { page = {}, configs = {} } = weaverseData || {}
+  let weaverseData = (data?.weaverseData || {}) as HydrogenPageData
+  let { page = {}, configs = {} } = weaverseData
   let weaverse = createCachedContext({
     ...configs,
     data: page,
