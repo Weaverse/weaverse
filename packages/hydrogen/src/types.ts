@@ -32,6 +32,7 @@ export type WeaverseLoaderArgs = LoaderArgs & {
 export interface HydrogenComponentData
   extends Omit<ElementData, 'childIds' | 'css'> {
   id: string
+  type: string
   createdAt: string
   updatedAt: string
   deletedAt: string
