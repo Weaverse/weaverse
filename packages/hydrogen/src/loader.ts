@@ -12,7 +12,10 @@ export async function weaverseLoader(
   components: Record<string, HydrogenComponent>
 ): Promise<HydrogenPageData | null> {
   let { request, context, params } = args
-  let { env } = context
+  let {
+    env,
+    storefront: { i18n },
+  } = context
   let queries = getRequestQueries(request)
   let projectId = queries?.projectId || env?.WEAVERSE_PROJECT_ID
   let weaverseHost = env?.WEAVERSE_HOST || 'https://weaverse.io'
@@ -40,7 +43,7 @@ export async function weaverseLoader(
       url: projectAPI,
       options: {
         method: 'POST',
-        body: JSON.stringify({ projectId, url }),
+        body: JSON.stringify({ projectId, url, i18n }),
       },
       context,
     })

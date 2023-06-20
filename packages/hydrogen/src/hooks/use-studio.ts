@@ -2,7 +2,7 @@ import { isIframe, loadScript } from '@weaverse/core'
 import { useEffect } from 'react'
 import type { WeaverseHydrogen } from '..'
 
-export function useStudio(weaverseCore: WeaverseHydrogen) {
+export function useStudio(weaverseCore: WeaverseHydrogen, themeSchema?: any) {
   useEffect(() => {
     if (
       weaverseCore.isDesignMode &&
@@ -10,6 +10,7 @@ export function useStudio(weaverseCore: WeaverseHydrogen) {
       !window.weaverseStudioInitialized
     ) {
       window.weaverseStudioInitialized = true
+      weaverseCore.themeSchema = themeSchema
       let host = weaverseCore.weaverseHost
       let version = weaverseCore.weaverseVersion || Date.now()
       loadScript(`${host}/assets/studio/studio-bridge.js?v=${version}`).then(
