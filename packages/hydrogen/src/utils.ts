@@ -27,7 +27,7 @@ export function hashKey(queryKey: QueryKey): string {
   return hash
 }
 
-export function getRequestQueries<T = Record<string, string>>(
+export function getRequestQueries<T = Record<string, string | boolean>>(
   request: Request
 ) {
   let url = new URL(request.url)
