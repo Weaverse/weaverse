@@ -42,7 +42,7 @@ export interface HydrogenComponentData
   data: Record<string, unknown>
 }
 
-export type ComponentFlags = Partial<Record<string, boolean>>
+export type ComponentFlags = Partial<Record<'isSection', boolean>>
 
 export interface HydrogenComponentSchema
   extends Omit<ElementSchema, 'parentTypes' | 'flags' | 'inspector'> {
@@ -90,6 +90,7 @@ export interface HydrogenComponentInstance
   get _flags(): ComponentFlags
   get Element(): HydrogenElement | undefined
   get data(): HydrogenComponentData
+  _store: HydrogenComponentData
 }
 
 export interface HydrogenComponent<T = HydrogenComponentProps> {
