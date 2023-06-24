@@ -42,7 +42,7 @@ export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
 
 const ItemComponent = memo(({ instance }: ItemComponentProps) => {
   let context = useContext(WeaverseContext)
-  let { stitchesInstance, elementInstances } = context
+  let { stitchesInstance, elementInstances, platformType } = context
   let [data, setData] = useState<ElementData>(instance.data)
   let {
     id,
@@ -87,7 +87,8 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
         data-wv-type={type}
         data-wv-id={id}
         className={clsx(
-          generateItemClassName(instance, stitchesInstance),
+          platformType !== 'shopify-hydrogen' &&
+            generateItemClassName(instance, stitchesInstance),
           rest?.data?.className
         )}
         {...rest}
