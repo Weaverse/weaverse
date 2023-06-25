@@ -28,13 +28,15 @@ export function createWeaverseHydrogenContext(
   components: Record<string, HydrogenComponent>
 ) {
   let weaverseData = (data?.weaverseData || {}) as HydrogenPageData
-  let { page = {}, configs = {} } = weaverseData
+  let { page = {}, configs = {}, project, pageTemplate } = weaverseData
   let weaverse = createCachedContext({
     ...configs,
     data: page,
     pageId: page?.id,
     platformType: 'shopify-hydrogen',
   })
+  weaverse.internal.project = project
+  weaverse.internal.pageTemplate = pageTemplate
 
   Object.entries(components).forEach(([key, component]) => {
     weaverse.registerElement({

@@ -110,6 +110,8 @@ export type HydrogenPageConfigs = {
 export interface HydrogenPageData {
   page: any
   configs: HydrogenPageConfigs
+  project: any
+  pageTemplate: any
 }
 
 export type WeaverseHydrogenLoaderData = {

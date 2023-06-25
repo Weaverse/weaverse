@@ -101,8 +101,13 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
   }
 })
 
-let ItemInstance = memo(({ id }: { id: string | number }) => {
+export let useWeaverse = () => {
   let context = useContext(WeaverseContext)
+  return context
+}
+
+let ItemInstance = memo(({ id }: { id: string | number }) => {
+  let context = useWeaverse()
   let { itemInstances } = context
   let instance = itemInstances.get(id)
   if (!instance) {

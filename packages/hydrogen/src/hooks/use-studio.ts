@@ -10,7 +10,9 @@ export function useStudio(weaverseCore: WeaverseHydrogen, themeSchema?: any) {
       !window.weaverseStudioInitialized
     ) {
       window.weaverseStudioInitialized = true
-      weaverseCore.themeSchema = themeSchema
+      console.log('themeSchema', themeSchema)
+
+      weaverseCore.internal.themeSchema = themeSchema
       let host = weaverseCore.weaverseHost
       let version = weaverseCore.weaverseVersion || Date.now()
       loadScript(`${host}/assets/studio/studio-bridge.js?v=${version}`).then(

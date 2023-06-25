@@ -6,7 +6,7 @@ import type { stitchesUtils } from "./utils/styles"
 export interface WeaverseProjectDataType {
   items: ElementData[]
   rootId: string
-  script: {
+  script?: {
     css: string
     js: string
   }
