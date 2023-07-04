@@ -6,16 +6,26 @@ import type {
   HydrogenPageData,
 } from './types'
 import { getRequestQueries } from './utils'
+import type { PageType } from './context'
 
+export type LoaderCustomConfig = {
+  language?: string
+  type?: PageType
+  handle?: string
+}
 export async function weaverseLoader(
   args: LoaderArgs,
-  components: Record<string, HydrogenComponent>
+  components: Record<string, HydrogenComponent>,
+  loaderConfig: LoaderCustomConfig = {}
 ): Promise<HydrogenPageData | null> {
   let { request, context, params } = args
   let {
     env,
     storefront: { i18n },
   } = context
+  let language = loaderConfig?.language
+  let type = loaderConfig?.type
+  let handle = loaderConfig?.handle
   let queries = getRequestQueries(request)
   let projectId = queries?.projectId || env?.WEAVERSE_PROJECT_ID
   let weaverseHost = env?.WEAVERSE_HOST || 'https://weaverse.io'
@@ -43,7 +53,7 @@ export async function weaverseLoader(
       url: projectAPI,
       options: {
         method: 'POST',
-        body: JSON.stringify({ projectId, url, i18n }),
+        body: JSON.stringify({ projectId, url, i18n, language, type, handle }),
       },
       context,
     })

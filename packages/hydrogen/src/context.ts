@@ -47,3 +47,15 @@ export function createWeaverseHydrogenContext(
   })
   return weaverse
 }
+
+export const PageType = {
+  INDEX: 'INDEX',
+  PAGE: 'PAGE',
+  COLLECTION: 'COLLECTION',
+  PRODUCT: 'PRODUCT',
+  ARTICLE: 'ARTICLE',
+  NOT_FOUND: 'NOT_FOUND',
+  CUSTOM: 'CUSTOM',
+}
+
+export type PageType = (typeof PageType)[keyof typeof PageType]
