@@ -10,8 +10,6 @@ export function useStudio(weaverseCore: WeaverseHydrogen, themeSchema?: any) {
       !window.weaverseStudioInitialized
     ) {
       window.weaverseStudioInitialized = true
-      console.log('themeSchema', themeSchema)
-
       weaverseCore.internal.themeSchema = themeSchema
       let host = weaverseCore.weaverseHost
       let version = weaverseCore.weaverseVersion || Date.now()

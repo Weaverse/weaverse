@@ -9,13 +9,11 @@ export * from './loader'
 export * from './types'
 export * from '@weaverse/react'
 
-export let WeaverseHydrogenRoot = (props: WeaverseHydrogenRootProps) => {
+export function WeaverseHydrogenRoot(props: WeaverseHydrogenRootProps) {
+  console.log('💿 WeaverseHydrogenRoot props', props)
   let { components, data, themeSchema } = props
-  console.log('WeaverseHydrogenRoot', props)
-
   let weaverse = createWeaverseHydrogenContext(data, components)
   useStudio(weaverse, themeSchema)
-
   // @ts-ignore
   return <WeaverseRoot context={weaverse} />
 }

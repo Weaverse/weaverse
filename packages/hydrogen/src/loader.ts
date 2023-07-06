@@ -62,7 +62,6 @@ export async function weaverseLoader(
         console.log(`❌ Error fetching project data: ${err?.toString()}`)
         return {}
       })
-    console.log('page', { page, project, pageTemplateAssignment })
 
     if (page?.items) {
       let items = page.items
