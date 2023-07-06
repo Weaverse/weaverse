@@ -49,7 +49,7 @@ export async function weaverseLoader(
      */
     let projectAPI = `${weaverseHost}/api/public/project`
     let url = request.url
-    let { page, project, pageTemplateAssignment } = await fetchWithServerCache({
+    let { page, project, pageAssignment } = await fetchWithServerCache({
       url: projectAPI,
       options: {
         method: 'POST',
@@ -89,7 +89,7 @@ export async function weaverseLoader(
         })
       )
     }
-    return { page, configs, project, pageTemplate: pageTemplateAssignment }
+    return { page, configs, project, pageTemplate: pageAssignment }
   } catch (err) {
     console.log(`❌ Error fetching Weaverse data: ${err?.toString()}`)
     return null
