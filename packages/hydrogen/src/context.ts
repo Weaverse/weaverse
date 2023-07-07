@@ -4,39 +4,34 @@ import type {
   HydrogenComponent,
   HydrogenPageData,
   WeaverseHydrogen,
-  WeaverseHydrogenLoaderData,
 } from './types'
 
-function createRootContext(init: WeaverseType) {
-  return new Weaverse(init) as unknown as WeaverseHydrogen
-}
-
-function createCachedContext(init: WeaverseType): WeaverseHydrogen {
+function createCachedWeaverseInstance(init: WeaverseType): WeaverseHydrogen {
   if (isBrowser) {
     window.__weaverses = window.__weaverses || {}
     let pathname = window.location.pathname
     if (!window.__weaverses[pathname]) {
-      window.__weaverses[pathname] = createRootContext(init)
+      window.__weaverses[pathname] = new Weaverse(init)
     }
     return window.__weaverses[pathname]
   }
-  return createRootContext(init)
+  return new Weaverse(init) as unknown as WeaverseHydrogen
 }
 
-export function createWeaverseHydrogenContext(
-  data: WeaverseHydrogenLoaderData,
+export function createWeaverseInstance(
+  weaverseData: HydrogenPageData,
   components: Record<string, HydrogenComponent>
 ) {
-  let weaverseData = (data?.weaverseData || {}) as HydrogenPageData
-  let { page = {}, configs = {}, project, pageTemplate } = weaverseData
-  let weaverse = createCachedContext({
+  console.log('💿 Weaverse data', weaverseData)
+  let { page, configs = {}, project, pageAssignment } = weaverseData || {}
+  let weaverse = createCachedWeaverseInstance({
     ...configs,
-    data: page,
+    data: page || {},
     pageId: page?.id,
     platformType: 'shopify-hydrogen',
   })
   weaverse.internal.project = project
-  weaverse.internal.pageTemplate = pageTemplate
+  weaverse.internal.pageAssignment = pageAssignment
 
   Object.entries(components).forEach(([key, component]) => {
     weaverse.registerElement({
@@ -57,5 +52,3 @@ export const PageType = {
   NOT_FOUND: 'NOT_FOUND',
   CUSTOM: 'CUSTOM',
 }
-
-export type PageType = (typeof PageType)[keyof typeof PageType]
