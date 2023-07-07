@@ -1,5 +1,5 @@
 import React from 'react'
-import type { VideoCommonProps } from '~/types'
+import type { VideoCommonProps } from '~/types/components'
 
 export function HTMLVideo(props: VideoCommonProps) {
   let { src, type, controls, autoPlay, loop, muted } = props

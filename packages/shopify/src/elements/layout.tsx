@@ -1,6 +1,6 @@
 import type { ElementCSS } from '@weaverse/core'
 import React, { forwardRef } from 'react'
-import type { LayoutElementProps } from '~/types'
+import type { LayoutElementProps } from '~/types/components'
 import { Background } from '~/components/background'
 import { Overlay } from '~/components/overlay'
 

@@ -1,6 +1,6 @@
 import type { ElementCSS } from '@weaverse/core'
 import React, { forwardRef } from 'react'
-import type { MapElementProps } from '~/types'
+import type { MapElementProps } from '~/types/components'
 
 let Map = forwardRef<HTMLDivElement, MapElementProps>((props, ref) => {
   let { place, zoom, ...rest } = props
