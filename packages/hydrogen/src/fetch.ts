@@ -22,6 +22,7 @@ export let fetchWithServerCache = async ({
   let cacheUrl = new URL(url)
   cacheUrl.pathname = '/cache' + cacheUrl.pathname + hashKey([options.body])
   let cacheKey = new Request(cacheUrl.toString())
+
   // Check if there's a match for this key.
   let response = await storefront.cache.match(cacheKey)
   if (!response) {

@@ -8,7 +8,7 @@ import { generateItemClassName } from './utils/css'
 import clsx from 'clsx'
 
 export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
-  console.log('💿 WeaverseRoot context', context)
+  console.log('💿 Weaverse root', context)
   let [, setData] = useState<WeaverseProjectDataType | unknown>(context.data)
   let rootRef = useRef<HTMLElement>()
   let renderRoot = () => setData({})
@@ -103,13 +103,13 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
 })
 
 export let useWeaverse = () => {
-  let context = useContext(WeaverseContext)
-  return context
+  let weaverse = useContext(WeaverseContext)
+  return weaverse
 }
 
 let ItemInstance = memo(({ id }: { id: string | number }) => {
-  let context = useWeaverse()
-  let { itemInstances } = context
+  let weaverse = useWeaverse()
+  let { itemInstances } = weaverse
   let instance = itemInstances.get(id)
   if (!instance) {
     console.warn(`Item instance ${id} not found`)
