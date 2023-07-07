@@ -13,6 +13,7 @@ import type {
 } from '@weaverse/react'
 import type React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
+import type { PageType } from './context'
 
 export type TODO = any
 declare module '@shopify/remix-oxygen' {
@@ -25,7 +26,7 @@ declare module '@shopify/remix-oxygen' {
 }
 
 export type WeaverseLoaderArgs = LoaderArgs & {
-  data: any
+  itemData: HydrogenComponentData
   configs: { projectId: string; weaverseHost: string }
 }
 
@@ -93,7 +94,7 @@ export interface HydrogenComponentInstance
   _store: HydrogenComponentData
 }
 
-export interface HydrogenComponent<T = HydrogenComponentProps> {
+export interface HydrogenComponent<T extends HydrogenComponentProps = any> {
   default: ForwardRefExoticComponent<T>
   schema: HydrogenComponentSchema
   loader?: (args: WeaverseLoaderArgs) => Promise<unknown>
@@ -108,18 +109,35 @@ export type HydrogenPageConfigs = {
 }
 
 export interface HydrogenPageData {
-  page: any
   configs: HydrogenPageConfigs
+  page: any
   project: any
-  pageTemplate: any
+  pageAssignment: any
 }
 
-export type WeaverseHydrogenLoaderData = {
-  weaverseData?: HydrogenPageData
-  [key: string]: any
-}
 export interface WeaverseHydrogenRootProps {
+  weaverseData: HydrogenPageData
   components: Record<string, HydrogenComponent>
-  data: WeaverseHydrogenLoaderData
-  themeSchema?: InspectorGroup[]
+  themeSchema: HydrogenThemeSchema
+}
+
+export type HydrogenThemeInfo = {
+  name: string
+  version: string
+  author: string
+  documentationUrl: string
+  supportUrl: string
+}
+
+export interface HydrogenThemeSchema {
+  info: HydrogenThemeInfo
+  inspector: InspectorGroup[]
+}
+
+export type PageType = (typeof PageType)[keyof typeof PageType]
+
+export type WeaverseLoaderConfigs = {
+  language?: string
+  type?: PageType
+  handle?: string
 }
