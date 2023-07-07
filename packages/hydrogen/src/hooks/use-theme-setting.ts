@@ -1,15 +1,15 @@
 import { useWeaverse } from '@weaverse/react'
 
-export let useThemeSetting = () => {
-  let weaverseCore = useWeaverse()
-  let themeSetting = weaverseCore?.internal?.project?.config?.theme
-  let updateThemeSetting = (settings: any) => {
-    weaverseCore.internal.project.config.theme = Object.assign(
+export function useThemeSettings() {
+  let weaverse = useWeaverse()
+  let settings = weaverse?.internal?.project?.config?.theme
+  let updateSettings = (newSettings: any) => {
+    weaverse.internal.project.config.theme = Object.assign(
       {},
-      themeSetting,
-      settings
+      settings,
+      newSettings
     )
-    weaverseCore.triggerUpdate()
+    weaverse.triggerUpdate()
   }
-  return { themeSetting, updateThemeSetting }
+  return [settings, updateSettings]
 }
