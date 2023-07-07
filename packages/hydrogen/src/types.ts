@@ -72,6 +72,18 @@ export interface WeaverseHydrogen
   itemInstances: Map<string | number, HydrogenComponentInstance>
   elementInstances: Map<string, HydrogenElement>
   registerElement(element: HydrogenElement): void
+  internal: WeaverseInternal
+}
+
+export type WeaverseInternal = {
+  themeSchema: HydrogenThemeSchema
+  pageAssignment: any
+  project: {
+    config: {
+      theme: Record<string, any>
+    }
+    [key: string]: any
+  }
 }
 
 export type HydrogenComponentPresets = {
