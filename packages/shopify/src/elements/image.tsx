@@ -1,6 +1,6 @@
 import type { ElementCSS } from '@weaverse/core'
 import React from 'react'
-import type { ImageElementProps } from '~/types'
+import type { ImageElementProps } from '~/types/components'
 
 let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
   (props, ref) => {

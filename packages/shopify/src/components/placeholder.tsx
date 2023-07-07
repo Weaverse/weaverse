@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react'
-import type { PlaceholderProps } from '~/types'
+import type { PlaceholderProps } from '~/types/components'
 
 const Placeholder = forwardRef<HTMLDivElement, PlaceholderProps>(
   (props, ref) => {

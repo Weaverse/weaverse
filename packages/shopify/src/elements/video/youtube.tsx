@@ -1,5 +1,5 @@
 import React from 'react'
-import type { YoutubeElementProps } from '~/types'
+import type { YoutubeElementProps } from '~/types/components'
 
 export function Youtube(props: YoutubeElementProps) {
   let { youtubeId, controls, autoPlay, loop, muted } = props

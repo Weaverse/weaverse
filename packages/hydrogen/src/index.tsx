@@ -1,6 +1,6 @@
 import { WeaverseRoot } from '@weaverse/react'
 import React from 'react'
-import { createWeaverseHydrogenContext } from './context'
+import { createWeaverseInstance } from './context'
 import { useStudio } from './hooks/use-studio'
 import type { WeaverseHydrogenRootProps } from './types'
 export * from './hooks/use-theme-setting'
@@ -9,13 +9,10 @@ export * from './loader'
 export * from './types'
 export * from '@weaverse/react'
 
-export let WeaverseHydrogenRoot = (props: WeaverseHydrogenRootProps) => {
-  let { components, data, themeSchema } = props
-  console.log('WeaverseHydrogenRoot', props)
-
-  let weaverse = createWeaverseHydrogenContext(data, components)
+export function WeaverseHydrogenRoot(props: WeaverseHydrogenRootProps) {
+  let { components, weaverseData, themeSchema } = props
+  let weaverse = createWeaverseInstance(weaverseData, components)
   useStudio(weaverse, themeSchema)
-
   // @ts-ignore
   return <WeaverseRoot context={weaverse} />
 }

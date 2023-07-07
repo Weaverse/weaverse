@@ -1,29 +1,30 @@
 import { isIframe, loadScript } from '@weaverse/core'
 import { useEffect } from 'react'
-import type { WeaverseHydrogen } from '..'
+import type { HydrogenThemeSchema, WeaverseHydrogen } from '~/types'
 
-export function useStudio(weaverseCore: WeaverseHydrogen, themeSchema?: any) {
+export function useStudio(
+  weaverse: WeaverseHydrogen,
+  themeSchema: HydrogenThemeSchema
+) {
   useEffect(() => {
     if (
-      weaverseCore.isDesignMode &&
       isIframe &&
+      weaverse.isDesignMode &&
       !window.weaverseStudioInitialized
     ) {
       window.weaverseStudioInitialized = true
-      console.log('themeSchema', themeSchema)
-
-      weaverseCore.internal.themeSchema = themeSchema
-      let host = weaverseCore.weaverseHost
-      let version = weaverseCore.weaverseVersion || Date.now()
+      weaverse.internal.themeSchema = themeSchema
+      let host = weaverse.weaverseHost
+      let version = weaverse.weaverseVersion || Date.now()
       loadScript(`${host}/assets/studio/studio-bridge.js?v=${version}`).then(
         () => {
-          window?.createWeaverseStudioBridge(weaverseCore)
+          window?.createWeaverseStudioBridge(weaverse)
           setTimeout(() => {
-            weaverseCore.triggerUpdate()
+            weaverse.triggerUpdate()
           }, 2000)
         }
       )
     }
-    window.__weaverse = weaverseCore
-  }, [weaverseCore])
+    window.__weaverse = weaverse
+  }, [weaverse])
 }
