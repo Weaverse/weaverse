@@ -20,9 +20,11 @@ function createCachedWeaverseInstance(init: WeaverseType): WeaverseHydrogen {
 
 export function createWeaverseInstance(
   weaverseData: HydrogenPageData,
-  components: Record<string, HydrogenComponent>
+  components: HydrogenComponent[]
 ) {
-  console.log('💿 Weaverse data', weaverseData)
+  if (isBrowser) {
+    console.log('💿 Weaverse data', weaverseData)
+  }
   let { page, configs = {}, project, pageAssignment } = weaverseData || {}
   let weaverse = createCachedWeaverseInstance({
     ...configs,
@@ -33,11 +35,11 @@ export function createWeaverseInstance(
   weaverse.internal.project = project
   weaverse.internal.pageAssignment = pageAssignment
 
-  Object.entries(components).forEach(([key, component]) => {
+  components.forEach((comp) => {
     weaverse.registerElement({
-      type: component?.schema?.type || key,
-      Component: component?.default,
-      schema: component?.schema,
+      type: comp?.schema?.type,
+      Component: comp?.default,
+      schema: comp?.schema,
     })
   })
   return weaverse

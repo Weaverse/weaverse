@@ -2,6 +2,7 @@ import type { LoaderArgs } from '@shopify/remix-oxygen'
 import { fetchWithServerCache } from './fetch'
 import type {
   HydrogenComponent,
+  HydrogenComponentData,
   HydrogenPageConfigs,
   HydrogenPageData,
   WeaverseLoaderConfigs,
@@ -10,7 +11,7 @@ import { getRequestQueries } from './utils'
 
 export async function weaverseLoader(
   args: LoaderArgs,
-  components: Record<string, HydrogenComponent>,
+  components: HydrogenComponent[],
   loaderConfigs: WeaverseLoaderConfigs = {}
 ): Promise<HydrogenPageData | null> {
   let { request, context } = args
@@ -54,8 +55,10 @@ export async function weaverseLoader(
     if (page?.items) {
       let items = page.items
       page.items = await Promise.all(
-        items.map(async (itemData: any) => {
-          let loader = components[itemData.type]?.loader
+        items.map(async (itemData: HydrogenComponentData) => {
+          let type = itemData.type
+          let { loader } =
+            components.find(({ schema }) => schema?.type === type) || {}
           if (loader && typeof loader === 'function') {
             try {
               return {

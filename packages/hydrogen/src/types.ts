@@ -37,7 +37,6 @@ export interface HydrogenComponentData
   createdAt: string
   updatedAt: string
   deletedAt: string
-  parentId: string
   children: { id: string }[]
   loaderData: unknown
   data: Record<string, unknown>
@@ -129,7 +128,7 @@ export interface HydrogenPageData {
 
 export interface WeaverseHydrogenRootProps {
   weaverseData: HydrogenPageData
-  components: Record<string, HydrogenComponent>
+  components: HydrogenComponent[]
   themeSchema: HydrogenThemeSchema
 }
 

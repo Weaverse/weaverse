@@ -8,7 +8,9 @@ import { generateItemClassName } from './utils/css'
 import clsx from 'clsx'
 
 export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
-  console.log('💿 Weaverse root', context)
+  if (isBrowser) {
+    console.log('💿 Weaverse root', context)
+  }
   let [, setData] = useState<WeaverseProjectDataType | unknown>(context.data)
   let rootRef = useRef<HTMLElement>()
   let renderRoot = () => setData({})
