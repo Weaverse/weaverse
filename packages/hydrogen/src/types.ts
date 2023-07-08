@@ -37,7 +37,6 @@ export interface HydrogenComponentData
   createdAt: string
   updatedAt: string
   deletedAt: string
-  parentId: string
   children: { id: string }[]
   loaderData: unknown
   data: Record<string, unknown>
