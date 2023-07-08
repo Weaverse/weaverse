@@ -128,7 +128,7 @@ export interface HydrogenPageData {
 
 export interface WeaverseHydrogenRootProps {
   weaverseData: HydrogenPageData
-  components: Record<string, HydrogenComponent>
+  components: HydrogenComponent[]
   themeSchema: HydrogenThemeSchema
 }
 
