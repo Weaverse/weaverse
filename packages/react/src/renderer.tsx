@@ -57,6 +57,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     updatedAt,
     deletedAt,
     css,
+    __hidden,
     ...rest
   } = data
 
@@ -84,6 +85,9 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
       : childIds.length
       ? childIds.map((cid) => <ItemInstance key={cid} id={cid} />)
       : null
+    let style = rest.style || {}
+    if (__hidden) style.display = 'none'
+
     return (
       <Component
         key={id}
@@ -94,6 +98,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
             generateItemClassName(instance, stitchesInstance),
           rest?.data?.className
         )}
+        style={style}
         {...rest}
         children={renderChildren}
       />
