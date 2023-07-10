@@ -42,11 +42,19 @@ export interface HydrogenComponentData
   data: Record<string, unknown>
 }
 
-export type ComponentFlags = Partial<Record<'isSection', boolean>>
+// export type ComponentFlags = Partial<Record<'customFlag', boolean>>
 
 export interface HydrogenComponentSchema
-  extends Omit<ElementSchema, 'parentTypes' | 'flags' | 'inspector'> {
-  flags?: ComponentFlags
+  extends Omit<
+    ElementSchema,
+    | 'parentTypes'
+    | 'flags'
+    | 'inspector'
+    | 'gridSize'
+    | 'childElements'
+    | 'catalog'
+  > {
+  // flags?: ComponentFlags
   childTypes?: string[]
   inspector: InspectorGroup[]
   presets?: Omit<HydrogenComponentPresets, 'type'>
