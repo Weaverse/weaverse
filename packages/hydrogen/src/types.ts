@@ -42,11 +42,19 @@ export interface HydrogenComponentData
   data: Record<string, unknown>
 }
 
-export type ComponentFlags = Partial<Record<'isSection', boolean>>
+// export type ComponentFlags = Partial<Record<'customFlag', boolean>>
 
 export interface HydrogenComponentSchema
-  extends Omit<ElementSchema, 'parentTypes' | 'flags' | 'inspector'> {
-  flags?: ComponentFlags
+  extends Omit<
+    ElementSchema,
+    | 'parentTypes'
+    | 'flags'
+    | 'inspector'
+    | 'gridSize'
+    | 'childElements'
+    | 'catalog'
+  > {
+  // flags?: ComponentFlags
   childTypes?: string[]
   inspector: InspectorGroup[]
   presets?: Omit<HydrogenComponentPresets, 'type'>
@@ -99,7 +107,6 @@ export interface HydrogenElement {
 export interface HydrogenComponentInstance
   extends Omit<WeaverseItemStore, '_flags' | 'data' | 'Element'> {
   get _element(): HTMLElement | null
-  get _flags(): ComponentFlags
   get Element(): HydrogenElement | undefined
   get data(): HydrogenComponentData
   _store: HydrogenComponentData
