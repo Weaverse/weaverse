@@ -107,7 +107,6 @@ export interface HydrogenElement {
 export interface HydrogenComponentInstance
   extends Omit<WeaverseItemStore, '_flags' | 'data' | 'Element'> {
   get _element(): HTMLElement | null
-  get _flags(): ComponentFlags
   get Element(): HydrogenElement | undefined
   get data(): HydrogenComponentData
   _store: HydrogenComponentData
