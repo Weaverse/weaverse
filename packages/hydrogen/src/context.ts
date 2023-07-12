@@ -2,7 +2,7 @@ import type { WeaverseType } from '@weaverse/react'
 import { Weaverse, isBrowser } from '@weaverse/react'
 import type {
   HydrogenComponent,
-  HydrogenPageData,
+  WeaverseLoaderData,
   WeaverseHydrogen,
 } from './types'
 
@@ -19,13 +19,13 @@ function createCachedWeaverseInstance(init: WeaverseType): WeaverseHydrogen {
 }
 
 export function createWeaverseInstance(
-  weaverseData: HydrogenPageData,
+  weaverseData: WeaverseLoaderData,
   components: HydrogenComponent[]
 ) {
   if (isBrowser) {
     console.log('💿 Weaverse data', weaverseData)
   }
-  let { page, configs = {}, project, pageAssignment } = weaverseData || {}
+  let { page, configs, project, pageAssignment } = weaverseData || {}
   let weaverse = createCachedWeaverseInstance({
     ...configs,
     data: page || {},
@@ -45,12 +45,18 @@ export function createWeaverseInstance(
   return weaverse
 }
 
-export const PageType = {
+export let STORE_PAGES = {
   INDEX: 'INDEX',
-  PAGE: 'PAGE',
-  COLLECTION: 'COLLECTION',
   PRODUCT: 'PRODUCT',
+  COLLECTION: 'COLLECTION',
+  COLLECTION_LIST: 'COLLECTION_LIST',
+  PAGE: 'PAGE',
+  BLOG: 'BLOG',
   ARTICLE: 'ARTICLE',
+  CART: 'CART',
+  CUSTOMER: 'CUSTOMER',
   NOT_FOUND: 'NOT_FOUND',
+  PASSWORD: 'PASSWORD',
+  SEARCH: 'SEARCH',
   CUSTOM: 'CUSTOM',
 }
