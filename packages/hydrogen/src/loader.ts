@@ -4,23 +4,32 @@ import type {
   HydrogenComponent,
   HydrogenComponentData,
   HydrogenPageConfigs,
-  HydrogenPageData,
+  WeaverseLoaderData,
   WeaverseLoaderConfigs,
+  HydrogenPageData,
+  HydrogenProjectType,
+  HydrogenPageAssignment,
 } from './types'
 import { getRequestQueries } from './utils'
+
+type FetchProjectPayload = {
+  page: HydrogenPageData
+  project: HydrogenProjectType
+  pageAssignment: HydrogenPageAssignment
+}
 
 export async function weaverseLoader(
   args: LoaderArgs,
   components: HydrogenComponent[],
-  loaderConfigs: WeaverseLoaderConfigs = {}
-): Promise<HydrogenPageData | null> {
+  loaderConfigs?: WeaverseLoaderConfigs
+): Promise<WeaverseLoaderData | null> {
   let { request, context } = args
-  let queries = getRequestQueries(request)
+  let queries = getRequestQueries<Record<string, string>>(request)
 
   let { WEAVERSE_PROJECT_ID, WEAVERSE_HOST } = context?.env || {}
-  let { weaverseProjectId, weaverseHost: hostInQueries } = queries
+  let { weaverseProjectId, weaverseHost } = queries
   let projectId = weaverseProjectId || WEAVERSE_PROJECT_ID
-  let weaverseHost = hostInQueries || WEAVERSE_HOST || 'https://weaverse.io'
+  weaverseHost = weaverseHost || WEAVERSE_HOST || 'https://weaverse.io'
 
   if (!projectId) {
     console.log('❌ Missing `projectId`!')
@@ -33,7 +42,7 @@ export async function weaverseLoader(
   }
 
   try {
-    let { page, project, pageAssignment } = await fetchWithServerCache({
+    let payload: FetchProjectPayload = await fetchWithServerCache({
       url: `${weaverseHost}/api/public/project`,
       options: {
         method: 'POST',
@@ -41,17 +50,13 @@ export async function weaverseLoader(
           projectId,
           url: request.url,
           i18n: context?.storefront?.i18n,
-          ...loaderConfigs,
+          loaderConfigs,
         }),
       },
       context,
-    })
-      .then((r) => r.json())
-      .catch((err) => {
-        console.log(`❌ Error fetching project data: ${err?.toString()}`)
-        return {}
-      })
+    }).then((r) => r.json())
 
+    let { page, project, pageAssignment } = payload
     if (page?.items) {
       let items = page.items
       page.items = await Promise.all(
@@ -80,7 +85,7 @@ export async function weaverseLoader(
     }
     return { page, configs, project, pageAssignment }
   } catch (err) {
-    console.log(`❌ Error fetching Weaverse data: ${err?.toString()}`)
+    console.log(`❌ Error fetching project data: ${err?.toString()}`)
     return null
   }
 }
