@@ -13,7 +13,7 @@ import type {
 } from '@weaverse/react'
 import type React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
-import type { PageType } from './context'
+import type { STORE_PAGES } from './context'
 
 export type TODO = any
 declare module '@shopify/remix-oxygen' {
@@ -38,8 +38,8 @@ export interface HydrogenComponentData
   updatedAt: string
   deletedAt: string
   children: { id: string }[]
-  loaderData: unknown
-  data: Record<string, unknown>
+  loaderData?: any
+  data: Record<string, any>
 }
 
 // export type ComponentFlags = Partial<Record<'customFlag', boolean>>
@@ -82,15 +82,22 @@ export interface WeaverseHydrogen
   internal: WeaverseInternal
 }
 
+export type HydrogenProjectConfig = {
+  theme: Record<string, any>
+}
+
+export type HydrogenProjectType = {
+  id: string
+  weaverseShopId: string
+  name: string
+  config: HydrogenProjectConfig
+  [key: string]: any
+}
+
 export type WeaverseInternal = {
   themeSchema: HydrogenThemeSchema
-  pageAssignment: any
-  project: {
-    config: {
-      theme: Record<string, any>
-    }
-    [key: string]: any
-  }
+  pageAssignment: HydrogenPageAssignment
+  project: HydrogenProjectType
 }
 
 export type HydrogenComponentPresets = {
@@ -126,15 +133,30 @@ export type HydrogenPageConfigs = {
   [key: string]: any
 }
 
-export interface HydrogenPageData {
+export type HydrogenPageAssignment = {
+  projectId: string
+  type: PageType
+  handle: string
+  locale: string
+}
+
+export interface WeaverseLoaderData {
   configs: HydrogenPageConfigs
-  page: any
-  project: any
-  pageAssignment: any
+  page: HydrogenPageData
+  project: HydrogenProjectType
+  pageAssignment: HydrogenPageAssignment
+}
+
+export type HydrogenPageData = {
+  id: string
+  name: string
+  rootId: string
+  items: HydrogenComponentData[]
+  [key: string]: any
 }
 
 export interface WeaverseHydrogenRootProps {
-  weaverseData: HydrogenPageData
+  weaverseData: WeaverseLoaderData
   components: HydrogenComponent[]
   themeSchema: HydrogenThemeSchema
 }
@@ -152,10 +174,10 @@ export interface HydrogenThemeSchema {
   inspector: InspectorGroup[]
 }
 
-export type PageType = (typeof PageType)[keyof typeof PageType]
+export type PageType = keyof typeof STORE_PAGES
 
 export type WeaverseLoaderConfigs = {
-  language?: string
-  type?: PageType
+  type: PageType
+  locale?: string
   handle?: string
 }
