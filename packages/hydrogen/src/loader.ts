@@ -23,25 +23,24 @@ export async function weaverseLoader(
   components: HydrogenComponent[],
   loaderConfigs?: WeaverseLoaderConfigs
 ): Promise<WeaverseLoaderData | null> {
-  let { request, context } = args
-  let queries = getRequestQueries<Record<string, string>>(request)
-
-  let { WEAVERSE_PROJECT_ID, WEAVERSE_HOST } = context?.env || {}
-  let { weaverseProjectId, weaverseHost } = queries
-  let projectId = weaverseProjectId || WEAVERSE_PROJECT_ID
-  weaverseHost = weaverseHost || WEAVERSE_HOST || 'https://weaverse.io'
-
-  if (!projectId) {
-    console.log('❌ Missing `projectId`!')
-    return null
-  }
-  let configs: HydrogenPageConfigs = {
-    projectId,
-    weaverseHost,
-    ...queries,
-  }
-
   try {
+    let { request, context } = args
+    let queries = getRequestQueries<Record<string, string>>(request)
+
+    let { WEAVERSE_PROJECT_ID, WEAVERSE_HOST } = context?.env || {}
+    let { weaverseProjectId, weaverseHost } = queries
+    let projectId = weaverseProjectId || WEAVERSE_PROJECT_ID
+    weaverseHost = weaverseHost || WEAVERSE_HOST || 'https://weaverse.io'
+
+    if (!projectId) {
+      throw new Error('Missing project id')
+    }
+    let configs: HydrogenPageConfigs = {
+      projectId,
+      weaverseHost,
+      ...queries,
+    }
+
     let res = await fetchWithServerCache({
       url: `${weaverseHost}/api/public/project`,
       options: {
@@ -59,7 +58,7 @@ export async function weaverseLoader(
     let { page, project, pageAssignment } = payload
     if (!page || !project || !pageAssignment) {
       // @ts-ignore
-      throw payload?.error
+      throw new Error(payload?.error || 'Invalid payload')
     }
     if (page?.items) {
       let items = page.items
