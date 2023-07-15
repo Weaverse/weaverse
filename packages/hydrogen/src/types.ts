@@ -38,7 +38,6 @@ export interface HydrogenComponentData
   updatedAt: string
   deletedAt: string
   children: { id: string }[]
-  loaderData?: any
   data: Record<string, any>
 }
 
@@ -74,12 +73,20 @@ export interface HydrogenComponentProps<L = any> extends WeaverseElement {
 export interface WeaverseHydrogen
   extends Omit<
     Weaverse,
-    'itemInstances' | 'elementInstances' | 'registerElement'
+    'itemInstances' | 'elementInstances' | 'registerElement' | 'data'
   > {
   itemInstances: Map<string | number, HydrogenComponentInstance>
   elementInstances: Map<string, HydrogenElement>
   registerElement(element: HydrogenElement): void
   internal: WeaverseInternal
+  data: WeaverseStorefrontData
+}
+
+export type WeaverseStorefrontData = {
+  id?: string
+  rootId: string
+  name: string
+  items: HydrogenComponentData[]
 }
 
 export type HydrogenProjectConfig = {
