@@ -70,6 +70,12 @@ export interface HydrogenComponentProps<L = any> extends WeaverseElement {
   children?: React.JSX.Element[]
 }
 
+export type WeaverseLoaderRequestInfo = {
+  params: any
+  pathname: string
+  search: string
+}
+
 export interface WeaverseHydrogen
   extends Omit<
     Weaverse,
@@ -80,6 +86,7 @@ export interface WeaverseHydrogen
   registerElement(element: HydrogenElement): void
   internal: WeaverseInternal
   data: WeaverseStorefrontData
+  requestInfo: WeaverseLoaderRequestInfo
 }
 
 export type WeaverseStorefrontData = {
@@ -105,6 +112,7 @@ export type WeaverseInternal = {
   themeSchema: HydrogenThemeSchema
   pageAssignment: HydrogenPageAssignment
   project: HydrogenProjectType
+  navigate: NavigateFunction
 }
 
 export type HydrogenComponentPresets = {
@@ -137,6 +145,7 @@ export type HydrogenPageConfigs = {
   weaverseHost: string
   version?: string
   isDesignMode?: boolean
+  requestInfo: WeaverseLoaderRequestInfo
   [key: string]: any
 }
 
@@ -162,10 +171,37 @@ export type HydrogenPageData = {
   [key: string]: any
 }
 
+type RelativeRoutingType = 'route' | 'path'
+type To = string | Partial<Path>
+type Path = {
+  /**
+   * A URL pathname, beginning with a /.
+   */
+  pathname: string
+  /**
+   * A URL search string, beginning with a ?.
+   */
+  search: string
+  /**
+   * A URL fragment identifier, beginning with a #.
+   */
+  hash: string
+}
+
+type NavigateOptions = {
+  replace?: boolean
+  state?: any
+  preventScrollReset?: boolean
+  relative?: RelativeRoutingType
+}
+
+export type NavigateFunction = (to: To, options?: NavigateOptions) => void
+
 export interface WeaverseHydrogenRootProps {
   weaverseData: WeaverseLoaderData
   components: HydrogenComponent[]
   themeSchema: HydrogenThemeSchema
+  navigate: NavigateFunction
 }
 
 export type HydrogenThemeInfo = {

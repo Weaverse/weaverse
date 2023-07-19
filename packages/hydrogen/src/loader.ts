@@ -24,7 +24,7 @@ export async function weaverseLoader(
   loaderConfigs?: WeaverseLoaderConfigs
 ): Promise<WeaverseLoaderData | null> {
   try {
-    let { request, context } = args
+    let { request, context, params } = args
     let queries = getRequestQueries<Record<string, string>>(request)
 
     let { WEAVERSE_PROJECT_ID, WEAVERSE_HOST } = context?.env || {}
@@ -39,6 +39,11 @@ export async function weaverseLoader(
       projectId,
       weaverseHost,
       ...queries,
+      requestInfo: {
+        params,
+        pathname: new URL(request.url).pathname,
+        search: new URL(request.url).search,
+      },
     }
 
     let res = await fetchWithServerCache({
