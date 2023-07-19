@@ -252,8 +252,11 @@ export type InputType =
 
 declare global {
   interface Window {
-    weaverseStudioInitialized: boolean
     Blinkloader: any
+    weaverseStudio: any
+    __initializedWeaverseStudios: {
+      [pageId: string]: boolean | undefined
+    }
     __weaverse: any
     __weaverses: {
       [key: string]: any

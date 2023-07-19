@@ -1,19 +1,23 @@
 import { isIframe, loadScript } from '@weaverse/core'
 import { useEffect } from 'react'
-import type { HydrogenThemeSchema, WeaverseHydrogen } from '~/types'
+import type {
+  HydrogenThemeSchema,
+  NavigateFunction,
+  WeaverseHydrogen,
+} from '~/types'
 
 export function useStudio(
   weaverse: WeaverseHydrogen,
-  themeSchema: HydrogenThemeSchema
+  themeSchema: HydrogenThemeSchema,
+  navigate: NavigateFunction
 ) {
   useEffect(() => {
-    if (
-      isIframe &&
-      weaverse.isDesignMode &&
-      !window.weaverseStudioInitialized
-    ) {
-      window.weaverseStudioInitialized = true
+    let init = checkStudioInitialized(weaverse)
+    if (isIframe && weaverse.isDesignMode && !init) {
+      window.__initializedWeaverseStudios[weaverse.pageId] = true
       weaverse.internal.themeSchema = themeSchema
+      weaverse.internal.navigate = navigate
+
       let host = weaverse.weaverseHost
       let version = weaverse.weaverseVersion || Date.now()
       loadScript(`${host}/assets/studio/studio-bridge.js?v=${version}`).then(
@@ -27,4 +31,15 @@ export function useStudio(
     }
     window.__weaverse = weaverse
   }, [weaverse])
+}
+
+function checkStudioInitialized(weaverseInit: WeaverseHydrogen) {
+  window.__initializedWeaverseStudios =
+    window.__initializedWeaverseStudios || {}
+  let { pageId } = weaverseInit
+  let initialized = window.__initializedWeaverseStudios?.[pageId]
+  if (initialized) {
+    return true
+  }
+  return false
 }

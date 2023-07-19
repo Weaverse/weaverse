@@ -4,12 +4,22 @@ import type {
   HydrogenComponent,
   WeaverseLoaderData,
   WeaverseHydrogen,
+  HydrogenPageData,
+  HydrogenPageConfigs,
 } from './types'
 
-function createCachedWeaverseInstance(init: WeaverseType): WeaverseHydrogen {
+interface WeaverseHydrogenInit extends HydrogenPageConfigs {
+  data: HydrogenPageData
+  pageId: string
+  platformType: 'shopify-hydrogen'
+}
+
+function createCachedWeaverseInstance(
+  init: WeaverseHydrogenInit
+): WeaverseHydrogen {
   if (isBrowser) {
     window.__weaverses = window.__weaverses || {}
-    let pathname = window.location.pathname
+    let { pathname } = init.requestInfo
     if (!window.__weaverses[pathname]) {
       window.__weaverses[pathname] = new Weaverse(init)
     }

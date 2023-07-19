@@ -5,11 +5,7 @@ import { useEffect } from 'react'
 
 export let useStudio = (weaverseCore: Weaverse) => {
   useEffect(() => {
-    if (
-      weaverseCore.isDesignMode &&
-      isIframe &&
-      !window.weaverseStudioInitialized
-    ) {
+    if (weaverseCore.isDesignMode && isIframe && !window.weaverseStudio) {
       let host = weaverseCore.weaverseHost
       let version = Date.now()
       loadScript(`${host}/assets/studio/studio-bridge.js?v=${version}`).then(
