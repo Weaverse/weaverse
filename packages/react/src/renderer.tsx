@@ -1,5 +1,9 @@
 /* eslint-disable react/no-children-prop */
-import type { ElementData, WeaverseProjectDataType } from '@weaverse/core'
+import type {
+  ElementData,
+  Weaverse,
+  WeaverseProjectDataType,
+} from '@weaverse/core'
 import { isBrowser } from '@weaverse/core'
 import React, { memo, useContext, useEffect, useRef, useState } from 'react'
 import { WeaverseContext, WeaverseContextProvider } from './context'
@@ -109,9 +113,9 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
   }
 })
 
-export let useWeaverse = () => {
+export function useWeaverse<T = Weaverse>() {
   let weaverse = useContext(WeaverseContext)
-  return weaverse
+  return weaverse as T
 }
 
 let ItemInstance = memo(({ id }: { id: string | number }) => {

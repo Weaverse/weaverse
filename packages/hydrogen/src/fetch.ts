@@ -2,19 +2,18 @@ import type { AppLoadContext } from '@shopify/remix-oxygen'
 import { CacheShort, generateCacheControlHeader } from '@shopify/hydrogen'
 import { hashKey } from './utils'
 
+type FetchWithServerCacheParams = {
+  url: string
+  options?: RequestInit | Request
+  context: AppLoadContext
+}
+
 let cacheControl = generateCacheControlHeader(CacheShort())
 /**
  * Fetch with server cache requires a storefront.cache instance which is Cloudflare Cache and a waitUntil function, otherwise it will just fetch the url.
  */
-export let fetchWithServerCache = async ({
-  url,
-  options = {},
-  context,
-}: {
-  url: string
-  options?: RequestInit | Request
-  context: AppLoadContext
-}) => {
+export async function fetchWithServerCache(params: FetchWithServerCacheParams) {
+  let { url, options = {}, context } = params
   let { storefront, waitUntil } = context
   if (!storefront?.cache || !waitUntil) {
     return fetch(url, options)

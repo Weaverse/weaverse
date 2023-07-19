@@ -10,9 +10,9 @@ export * from './types'
 export * from '@weaverse/react'
 
 export function WeaverseHydrogenRoot(props: WeaverseHydrogenRootProps) {
-  let { components, weaverseData, themeSchema } = props
+  let { components, weaverseData, themeSchema, navigate } = props
   let weaverse = createWeaverseInstance(weaverseData, components)
-  useStudio(weaverse, themeSchema)
+  useStudio(weaverse, themeSchema, navigate)
   // @ts-ignore
   return <WeaverseRoot context={weaverse} />
 }

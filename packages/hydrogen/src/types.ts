@@ -13,7 +13,7 @@ import type {
 } from '@weaverse/react'
 import type React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
-import type { PageType } from './context'
+import type { STORE_PAGES } from './context'
 
 export type TODO = any
 declare module '@shopify/remix-oxygen' {
@@ -38,8 +38,7 @@ export interface HydrogenComponentData
   updatedAt: string
   deletedAt: string
   children: { id: string }[]
-  loaderData: unknown
-  data: Record<string, unknown>
+  data: Record<string, any>
 }
 
 // export type ComponentFlags = Partial<Record<'customFlag', boolean>>
@@ -71,26 +70,49 @@ export interface HydrogenComponentProps<L = any> extends WeaverseElement {
   children?: React.JSX.Element[]
 }
 
+export type WeaverseLoaderRequestInfo = {
+  params: any
+  pathname: string
+  search: string
+}
+
 export interface WeaverseHydrogen
   extends Omit<
     Weaverse,
-    'itemInstances' | 'elementInstances' | 'registerElement'
+    'itemInstances' | 'elementInstances' | 'registerElement' | 'data'
   > {
   itemInstances: Map<string | number, HydrogenComponentInstance>
   elementInstances: Map<string, HydrogenElement>
   registerElement(element: HydrogenElement): void
   internal: WeaverseInternal
+  data: WeaverseStorefrontData
+  requestInfo: WeaverseLoaderRequestInfo
+}
+
+export type WeaverseStorefrontData = {
+  id?: string
+  rootId: string
+  name: string
+  items: HydrogenComponentData[]
+}
+
+export type HydrogenProjectConfig = {
+  theme: Record<string, any>
+}
+
+export type HydrogenProjectType = {
+  id: string
+  weaverseShopId: string
+  name: string
+  config: HydrogenProjectConfig
+  [key: string]: any
 }
 
 export type WeaverseInternal = {
   themeSchema: HydrogenThemeSchema
-  pageAssignment: any
-  project: {
-    config: {
-      theme: Record<string, any>
-    }
-    [key: string]: any
-  }
+  pageAssignment: HydrogenPageAssignment
+  project: HydrogenProjectType
+  navigate: NavigateFunction
 }
 
 export type HydrogenComponentPresets = {
@@ -123,20 +145,63 @@ export type HydrogenPageConfigs = {
   weaverseHost: string
   version?: string
   isDesignMode?: boolean
+  requestInfo: WeaverseLoaderRequestInfo
   [key: string]: any
 }
 
-export interface HydrogenPageData {
-  configs: HydrogenPageConfigs
-  page: any
-  project: any
-  pageAssignment: any
+export type HydrogenPageAssignment = {
+  projectId: string
+  type: PageType
+  handle: string
+  locale: string
 }
 
+export interface WeaverseLoaderData {
+  configs: HydrogenPageConfigs
+  page: HydrogenPageData
+  project: HydrogenProjectType
+  pageAssignment: HydrogenPageAssignment
+}
+
+export type HydrogenPageData = {
+  id: string
+  name: string
+  rootId: string
+  items: HydrogenComponentData[]
+  [key: string]: any
+}
+
+type RelativeRoutingType = 'route' | 'path'
+type To = string | Partial<Path>
+type Path = {
+  /**
+   * A URL pathname, beginning with a /.
+   */
+  pathname: string
+  /**
+   * A URL search string, beginning with a ?.
+   */
+  search: string
+  /**
+   * A URL fragment identifier, beginning with a #.
+   */
+  hash: string
+}
+
+type NavigateOptions = {
+  replace?: boolean
+  state?: any
+  preventScrollReset?: boolean
+  relative?: RelativeRoutingType
+}
+
+export type NavigateFunction = (to: To, options?: NavigateOptions) => void
+
 export interface WeaverseHydrogenRootProps {
-  weaverseData: HydrogenPageData
+  weaverseData: WeaverseLoaderData
   components: HydrogenComponent[]
   themeSchema: HydrogenThemeSchema
+  navigate: NavigateFunction
 }
 
 export type HydrogenThemeInfo = {
@@ -152,10 +217,10 @@ export interface HydrogenThemeSchema {
   inspector: InspectorGroup[]
 }
 
-export type PageType = (typeof PageType)[keyof typeof PageType]
+export type PageType = keyof typeof STORE_PAGES
 
 export type WeaverseLoaderConfigs = {
-  language?: string
-  type?: PageType
+  type: PageType
+  locale?: string
   handle?: string
 }
