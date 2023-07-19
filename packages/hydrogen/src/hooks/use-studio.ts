@@ -12,8 +12,8 @@ export function useStudio(
   navigate: NavigateFunction
 ) {
   useEffect(() => {
-    let init = checkStudioInitialized(weaverse)
-    if (isIframe && weaverse.isDesignMode && !init) {
+    let initialized = checkStudioInitialized(weaverse)
+    if (isIframe && weaverse.isDesignMode && !initialized) {
       window.__initializedWeaverseStudios[weaverse.pageId] = true
       weaverse.internal.themeSchema = themeSchema
       weaverse.internal.navigate = navigate
