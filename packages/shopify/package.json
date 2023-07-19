@@ -35,7 +35,7 @@
     "@radix-ui/react-dialog": "^1.0.4",
     "@stitches/react": "^1.2.8",
     "@weaverse/react": "1.0.56",
-    "clsx": "^1.2.1",
+    "clsx": "^2.0.0",
     "keen-slider": "^6.8.6",
     "react-error-boundary": "^4.0.10"
   }
