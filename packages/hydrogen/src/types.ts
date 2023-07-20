@@ -118,6 +118,7 @@ export type WeaverseInternal = {
 export type HydrogenComponentPresets = {
   type: string
   children?: HydrogenComponentPresets[]
+  [key: string]: any
 }
 
 export interface HydrogenElement {
