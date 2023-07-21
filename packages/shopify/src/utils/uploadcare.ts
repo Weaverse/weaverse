@@ -13,12 +13,6 @@ export function initUploadCareAdaptiveDelivery(baseUrl: string) {
         })(baseUrl + '/static/blinkloader.min.js', function () {
           window.Blinkloader.optimize({
             pubkey: '1a22133d1a1bdc089d4c',
-            fadeIn: true,
-            lazyload: true,
-            smartCompression: true,
-            responsive: true,
-            retina: true,
-            webp: true,
           })
         })
       }
