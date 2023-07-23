@@ -24,7 +24,7 @@
     "packages/hydrogen"
   ],
   "devDependencies": {
-    "@types/node": "^20.4.2",
+    "@types/node": "^20.4.4",
     "@types/react": "^18.2.15",
     "@typescript-eslint/eslint-plugin": "^6.1.0",
     "@typescript-eslint/parser": "^6.1.0",
@@ -44,7 +44,7 @@
     "typescript": "^5.1.6"
   },
   "optionalDependencies": {
-    "@esbuild/darwin-x64": "^0.18.14"
+    "@esbuild/darwin-x64": "^0.18.16"
   },
   "engines": {
     "node": ">=16.13"
