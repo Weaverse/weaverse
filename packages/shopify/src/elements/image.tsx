@@ -34,11 +34,11 @@ let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
     }
 
     return (
-      <div ref={ref} style={style} {...rest}>
+      <div ref={ref} {...rest} style={style}>
         {content}
       </div>
     )
-  }
+  },
 )
 
 export let css: ElementCSS = {

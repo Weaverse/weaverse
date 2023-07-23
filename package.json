@@ -62,7 +62,7 @@
   "lint-staged": {
     "./**/*.{js,jsx,ts,tsx,yml,json}": [
       "prettier --write --ignore-unknown",
-      "npm run lint:fix"
+      "nr lint:fix"
     ]
   }
 }
