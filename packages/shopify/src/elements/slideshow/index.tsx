@@ -30,23 +30,26 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
   if (animation === 'fade') {
     faderClass = stitchesCss({
       '.keen-slider__slide': opacities.reduce<
-        Record<string, { opacity: number }>
+        Record<string, { opacity: number; display: string }>
       >((acc, opacity, index) => {
         acc[`&:nth-child(${index + 1})`] = {
           opacity,
+          display: opacity === 0 ? 'none' : 'block',
         }
+
         return acc
       }, {}),
     })().className
   }
+
   let _className = clsx(
     faderClass,
-    animation === 'slide' ? 'keen-slider' : 'keen-fader'
+    animation === 'slide' ? 'keen-slider' : 'keen-fader',
   )
   let arrowsClass = clsx(
     'wv-slideshow--arrows',
     showArrowsOnHover && 'show-on-hover',
-    `arrows--${arrowsColor}`
+    `arrows--${arrowsColor}`,
   )
 
   return (
