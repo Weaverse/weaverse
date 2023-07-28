@@ -35,7 +35,7 @@ let Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
         overlayOpacity={overlayOpacity}
         className="slide-overlay"
       />
-      <div ref={ref} style={slidePositionMap[contentPosition]} {...rest}>
+      <div ref={ref} {...rest} style={slidePositionMap[contentPosition]}>
         {children?.length ? (
           children
         ) : (

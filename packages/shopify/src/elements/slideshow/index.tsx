@@ -23,6 +23,7 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
   let { sliderRef, instanceRef, currentSlide, opacities, ready, created } =
     useSlideshowConfigs(props)
 
+  // must put style after rest props, to override default style
   let style = {
     '--slider-opacity': ready ? 1 : 0,
   } as React.CSSProperties
@@ -53,7 +54,7 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
   )
 
   return (
-    <div ref={ref} style={style} {...rest}>
+    <div ref={ref} {...rest} style={style}>
       <div ref={sliderRef} className={_className}>
         {children}
       </div>
