@@ -21,7 +21,7 @@ type FetchProjectPayload = {
 export async function weaverseLoader(
   args: LoaderArgs,
   components: HydrogenComponent[],
-  loaderConfigs?: WeaverseLoaderConfigs
+  loaderConfigs?: WeaverseLoaderConfigs,
 ): Promise<WeaverseLoaderData | null> {
   try {
     let { request, context, params } = args
@@ -88,7 +88,7 @@ export async function weaverseLoader(
             }
           }
           return itemData
-        })
+        }),
       )
     }
     return { page, configs, project, pageAssignment }

@@ -9,7 +9,7 @@ import type {
 export function useStudio(
   weaverse: WeaverseHydrogen,
   themeSchema: HydrogenThemeSchema,
-  navigate: NavigateFunction
+  navigate: NavigateFunction,
 ) {
   useEffect(() => {
     let initialized = checkStudioInitialized(weaverse)
@@ -26,7 +26,7 @@ export function useStudio(
           setTimeout(() => {
             weaverse.triggerUpdate()
           }, 2000)
-        }
+        },
       )
     }
     window.__weaverse = weaverse
