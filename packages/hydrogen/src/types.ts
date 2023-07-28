@@ -41,8 +41,6 @@ export interface HydrogenComponentData
   data: Record<string, any>
 }
 
-// export type ComponentFlags = Partial<Record<'customFlag', boolean>>
-
 export interface HydrogenComponentSchema
   extends Omit<
     ElementSchema,
@@ -53,10 +51,14 @@ export interface HydrogenComponentSchema
     | 'childElements'
     | 'catalog'
   > {
-  // flags?: ComponentFlags
   childTypes?: string[]
   inspector: InspectorGroup[]
   presets?: Omit<HydrogenComponentPresets, 'type'>
+  limit?: number
+  enabledOn?: {
+    pages?: ('*' | PageType)[]
+    groups?: ('*' | 'header' | 'footer' | 'body')[]
+  }
 }
 
 export interface InspectorGroup {
