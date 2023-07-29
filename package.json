@@ -44,7 +44,8 @@
     "typescript": "^5.1.6"
   },
   "optionalDependencies": {
-    "@esbuild/darwin-x64": "^0.18.17"
+    "@esbuild/darwin-x64": "^0.18.17",
+    "turbo-darwin-arm64": "^1.10.12"
   },
   "engines": {
     "node": ">=16.13"
