@@ -22,6 +22,7 @@ declare module '@shopify/remix-oxygen' {
     session: TODO
     storefront: TODO
     env: TODO
+    cart: TODO
   }
 }
 

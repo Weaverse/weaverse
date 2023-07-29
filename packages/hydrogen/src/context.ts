@@ -1,4 +1,3 @@
-import type { WeaverseType } from '@weaverse/react'
 import { Weaverse, isBrowser } from '@weaverse/react'
 import type {
   HydrogenComponent,
@@ -15,7 +14,7 @@ interface WeaverseHydrogenInit extends HydrogenPageConfigs {
 }
 
 function createCachedWeaverseInstance(
-  init: WeaverseHydrogenInit
+  init: WeaverseHydrogenInit,
 ): WeaverseHydrogen {
   if (isBrowser) {
     window.__weaverses = window.__weaverses || {}
@@ -30,7 +29,7 @@ function createCachedWeaverseInstance(
 
 export function createWeaverseInstance(
   weaverseData: WeaverseLoaderData,
-  components: HydrogenComponent[]
+  components: HydrogenComponent[],
 ) {
   if (isBrowser) {
     console.log('💿 Weaverse data', weaverseData)
