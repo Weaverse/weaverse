@@ -1,3 +1,6 @@
+import type { WeaverseItemStore } from "~/core"
+import type { BasicGroup } from "~/types"
+
 export let isReactNative = typeof navigator === "object" && navigator.product === "ReactNative"
 export let isBrowser = typeof window !== "undefined" && !isReactNative
 export let isIframe = isBrowser && window.top !== window.self
@@ -22,3 +25,18 @@ export function merge(target: Record<string, any>, source: Record<string, any>) 
 }
 
 export { loadScript } from "./load-script"
+
+export function getItemDefaultData(item: WeaverseItemStore) {
+  let platformType = item.weaverse.platformType
+  if (platformType === "shopify-section") {
+    return { ...item.Element?.Component?.defaultProps }
+  }
+  let groups = item.Element?.schema?.inspector as BasicGroup[]
+  let inputs = groups?.flatMap((group) => group.inputs)
+  return inputs?.reduce<Record<string, any>>((a, { defaultValue, name }) => {
+    if (name && defaultValue !== null && defaultValue !== undefined) {
+      a[name] = defaultValue
+    }
+    return a
+  }, {})
+}

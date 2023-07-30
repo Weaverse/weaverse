@@ -42,6 +42,11 @@ export interface HydrogenComponentData
   data: Record<string, any>
 }
 
+export type HydrogenToolbarAction =
+  | 'general-settings'
+  | 'settings-level-2'
+  | 'duplicate'
+  | 'delete'
 export interface HydrogenComponentSchema
   extends Omit<
     ElementSchema,
@@ -51,6 +56,7 @@ export interface HydrogenComponentSchema
     | 'gridSize'
     | 'childElements'
     | 'catalog'
+    | 'toolbar'
   > {
   childTypes?: string[]
   inspector: InspectorGroup[]
@@ -60,6 +66,7 @@ export interface HydrogenComponentSchema
     pages?: ('*' | PageType)[]
     groups?: ('*' | 'header' | 'footer' | 'body')[]
   }
+  toolbar?: (HydrogenToolbarAction | HydrogenToolbarAction[])[]
 }
 
 export interface InspectorGroup {

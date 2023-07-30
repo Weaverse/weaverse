@@ -16,7 +16,7 @@ import type {
   WeaverseProjectDataType,
   WeaverseType,
 } from "./types"
-import { merge } from "./utils"
+import { getItemDefaultData, merge } from "./utils"
 import { stitchesUtils } from "./utils/styles"
 
 export class WeaverseItemStore {
@@ -67,7 +67,8 @@ export class WeaverseItemStore {
   }
 
   get data(): ElementData {
-    let defaultProps = { ...this.Element?.Component?.defaultProps }
+    // let defaultProps = { ...this.Element?.Component?.defaultProps }
+    let defaultData = getItemDefaultData(this)
     // if (this.platformType === "shopify-hydrogen") {
     //   return {
     //     ...defaultProps,
@@ -85,7 +86,7 @@ export class WeaverseItemStore {
     let currentCss = this._store.css || {}
     let css = merge(defaultCss, currentCss)
     let extraData = this.Element?.extraData
-    return { ...defaultProps, ...extraData, ...this._store, css }
+    return { ...defaultData, ...extraData, ...this._store, css }
   }
 
   setData = (update: Omit<ElementData, "id" | "type">) => {
