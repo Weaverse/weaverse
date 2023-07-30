@@ -1,5 +1,5 @@
 {
-  "version": "1.0.60",
+  "version": "1.0.61",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -33,7 +33,7 @@
   "author": "Weaverse Team",
   "dependencies": {
     "@shopify/hydrogen": "2023.7.0",
-    "@weaverse/react": "1.0.60"
+    "@weaverse/react": "1.0.61"
   },
   "devDependencies": {
     "@shopify/remix-oxygen": "^1.1.1"
