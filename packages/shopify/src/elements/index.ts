@@ -1,4 +1,4 @@
-import type { WeaverseElement } from '@weaverse/core'
+import type { WeaverseElement } from '@weaverse/react'
 import * as ArticleList from '~/elements/article-list'
 import * as CollectionList from '~/elements/collection-list'
 import * as CustomHTML from './custom-html'

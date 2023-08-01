@@ -1,5 +1,5 @@
 import React, { forwardRef, useContext } from 'react'
-import type { ElementCSS } from '@weaverse/core'
+import type { ElementCSS } from '@weaverse/react'
 import type { WeaverseElementProps } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
 import { Components } from '~/components'
@@ -39,7 +39,7 @@ export let AppBlock = forwardRef<HTMLDivElement, WeaverseElementProps>(
         />
       </div>
     )
-  }
+  },
 )
 
 export let css: ElementCSS = {

@@ -6,7 +6,7 @@ import type {
   GridSize,
   ParentType,
   ToolbarAction,
-} from '@weaverse/core'
+} from '@weaverse/react'
 
 export interface ShopifyProductImage {
   created_at: string

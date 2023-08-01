@@ -1,5 +1,5 @@
 {
-  "version": "1.0.61",
+  "version": "1.0.62",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -15,8 +15,8 @@
   },
   "scripts": {
     "start": "npm run dev",
-    "dev": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --watch --external react,keen-slider --sourcemap",
-    "build": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --external react,keen-slider",
+    "dev": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --watch --external react,keen-slider,clsx --sourcemap",
+    "build": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --external react,keen-slider,clsx",
     "clean": "rimraf dist",
     "prepublish": "npm run build"
   },
@@ -34,8 +34,7 @@
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.4",
     "@stitches/react": "^1.2.8",
-    "@weaverse/react": "1.0.61",
-    "clsx": "^2.0.0",
+    "@weaverse/react": "1.0.62",
     "keen-slider": "^6.8.6",
     "react-error-boundary": "^4.0.10"
   }

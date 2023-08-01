@@ -1,6 +1,6 @@
 // TODO: make @weaverse/react framework agnostic and then move this code to @weaverse/react
-import type { Weaverse } from '@weaverse/core'
-import { isIframe, loadScript } from '@weaverse/core'
+import type { Weaverse } from '@weaverse/react'
+import { isIframe, loadScript } from '@weaverse/react'
 import { useEffect } from 'react'
 
 export let useStudio = (weaverseCore: Weaverse) => {
@@ -15,7 +15,7 @@ export let useStudio = (weaverseCore: Weaverse) => {
           setTimeout(() => {
             weaverseCore.triggerUpdate()
           }, 2000)
-        }
+        },
       )
     }
   }, [])

@@ -1,4 +1,4 @@
-import { isIframe, loadScript } from '@weaverse/core'
+import { isIframe, loadScript } from '@weaverse/react'
 import { useEffect } from 'react'
 import type {
   HydrogenThemeSchema,

@@ -1,4 +1,4 @@
-import type { ElementCSS } from '@weaverse/core'
+import type { ElementCSS } from '@weaverse/react'
 import React, { forwardRef, useContext } from 'react'
 import { WeaverseContext } from '@weaverse/react'
 import type { VideoElementProps } from '~/types/components'

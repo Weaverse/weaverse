@@ -1,5 +1,5 @@
 {
-  "version": "1.0.61",
+  "version": "1.0.62",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -15,8 +15,8 @@
   },
   "scripts": {
     "start": "npm run dev",
-    "dev": "tsup src/index.ts --format esm,cjs --dts --outDir dist --watch --external react --sourcemap",
-    "build": "tsup src/index.ts --format esm,cjs --dts --outDir dist --external react",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --outDir dist --watch --external react,clsx --sourcemap",
+    "build": "tsup src/index.ts --format esm,cjs --dts --outDir dist --external react,clsx",
     "clean": "rimraf dist",
     "prepublish": "npm run build"
   },
@@ -32,6 +32,7 @@
   "name": "@weaverse/react",
   "author": "Weaverse Team",
   "dependencies": {
-    "@weaverse/core": "1.0.61"
+    "@weaverse/core": "1.0.62",
+    "clsx": "^2.0.0"
   }
 }

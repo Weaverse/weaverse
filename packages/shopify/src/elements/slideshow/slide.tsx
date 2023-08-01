@@ -1,4 +1,4 @@
-import type { ElementCSS } from '@weaverse/core'
+import type { ElementCSS } from '@weaverse/react'
 import React, { forwardRef } from 'react'
 import { Background } from '~/components/background'
 import { Overlay } from '~/components/overlay'

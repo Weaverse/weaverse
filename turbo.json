@@ -10,7 +10,7 @@
     },
     "dev": {
       "cache": false,
-      "dependsOn": ["@weaverse/core#build", "@weaverse/react#build"]
+      "dependsOn": ["@weaverse/core#build", "@weaverse/react#build", "@weaverse/hydrogen#build"]
     },
     "pilot#build": {
       "dependsOn": ["@weaverse/core#build", "@weaverse/react#build", "@weaverse/hydrogen#build"],
