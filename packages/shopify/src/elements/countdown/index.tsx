@@ -1,4 +1,4 @@
-import type { ElementCSS } from '@weaverse/core'
+import type { ElementCSS } from '@weaverse/react'
 import React, { forwardRef, useContext, useEffect } from 'react'
 import { COUNTDOWN_KEY, TIMES } from '~/constant'
 import { WeaverseContext } from '@weaverse/react'
@@ -68,7 +68,7 @@ let Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
     useEffect(() => {
       let intervalFlag: ReturnType<typeof setInterval> = setInterval(
         handleRemaining,
-        1000
+        1000,
       )
       return () => {
         clearInterval(intervalFlag)
@@ -95,7 +95,7 @@ let Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
         })}
       </div>
     )
-  }
+  },
 )
 
 export let css: ElementCSS = {

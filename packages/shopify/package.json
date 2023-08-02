@@ -15,8 +15,8 @@
   },
   "scripts": {
     "start": "npm run dev",
-    "dev": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --watch --external react,keen-slider --sourcemap",
-    "build": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --external react,keen-slider",
+    "dev": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --watch --external react,keen-slider,clsx --sourcemap",
+    "build": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --external react,keen-slider,clsx",
     "clean": "rimraf dist",
     "prepublish": "npm run build"
   },

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import type { ButtonElementProps } from '~/types/components'
-import type { ElementCSS } from '@weaverse/core'
+import type { ElementCSS } from '@weaverse/react'
 import { useContext } from 'react'
 import { WeaverseContext } from '@weaverse/react'
 

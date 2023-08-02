@@ -1,4 +1,4 @@
-import type { ElementCSS } from '@weaverse/core'
+import type { ElementCSS } from '@weaverse/react'
 import React from 'react'
 import type { ImageElementProps } from '~/types/components'
 

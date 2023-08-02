@@ -1,4 +1,4 @@
-import type { ElementCSS } from '@weaverse/core'
+import type { ElementCSS } from '@weaverse/react'
 import type { CSSProperties } from 'react'
 import React from 'react'
 import { useState } from 'react'

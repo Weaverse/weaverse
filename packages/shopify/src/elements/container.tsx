@@ -1,4 +1,4 @@
-import type { ElementCSS } from '@weaverse/core'
+import type { ElementCSS } from '@weaverse/react'
 import React, { Children, forwardRef } from 'react'
 import type { ContainerElementProps } from '~/types/components'
 import { Components } from '~/components'
@@ -18,7 +18,7 @@ let Container = forwardRef<HTMLDivElement, ContainerElementProps>(
         )}
       </div>
     )
-  }
+  },
 )
 
 export let css: ElementCSS = {

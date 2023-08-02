@@ -1,4 +1,4 @@
-import { isBrowser } from '@weaverse/core'
+import { isBrowser } from '@weaverse/react'
 let initialized = false
 export function initUploadCareAdaptiveDelivery(baseUrl: string) {
   try {

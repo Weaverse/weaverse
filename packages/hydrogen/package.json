@@ -15,8 +15,8 @@
   },
   "scripts": {
     "start": "npm run dev",
-    "dev": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --watch --external react",
-    "build": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --external react",
+    "dev": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --watch --external @weaverse/react,@shopify/hydrogen",
+    "build": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --external @weaverse/react,@shopify/hydrogen",
     "clean": "rimraf dist",
     "prepublish": "npm run build"
   },

@@ -1,5 +1,5 @@
 import { css as stitchesCss } from '@stitches/react'
-import type { ElementCSS } from '@weaverse/core'
+import type { ElementCSS } from '@weaverse/react'
 import clsx from 'clsx'
 import React, { forwardRef } from 'react'
 import { Arrows } from '~/components/slider/arrows'
