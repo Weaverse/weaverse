@@ -219,6 +219,7 @@ export type HydrogenThemeInfo = {
   name: string
   version: string
   author: string
+  authorProfilePhoto: string
   documentationUrl: string
   supportUrl: string
 }
