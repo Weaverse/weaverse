@@ -49,6 +49,7 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
 }
 
 function ShopifyRoot({ context }: WeaverseRootPropsType) {
+  // @ts-ignore
   useStudio(context)
   useEffect(() => {
     initUploadCareAdaptiveDelivery(context.weaverseHost)
