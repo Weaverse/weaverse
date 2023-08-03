@@ -1,22 +1,23 @@
 import { isIframe, loadScript } from '@weaverse/react'
 import { useEffect } from 'react'
-import type {
-  HydrogenThemeSchema,
-  NavigateFunction,
-  WeaverseHydrogen,
-} from '~/types'
+import { useRevalidator, useNavigate } from '@remix-run/react'
+import type { HydrogenThemeSchema, WeaverseHydrogen } from '~/types'
 
 export function useStudio(
   weaverse: WeaverseHydrogen,
   themeSchema: HydrogenThemeSchema,
-  navigate: NavigateFunction,
 ) {
+  let revalidator = useRevalidator()
+  let navigate = useNavigate()
+  console.log('revalidator', revalidator)
+
   useEffect(() => {
     let initialized = checkStudioInitialized(weaverse)
     if (isIframe && weaverse.isDesignMode && !initialized) {
       window.__initializedWeaverseStudios[weaverse.pageId] = true
       weaverse.internal.themeSchema = themeSchema
       weaverse.internal.navigate = navigate
+      weaverse.internal.revalidator = revalidator
 
       let host = weaverse.weaverseHost
       let version = weaverse.weaverseVersion || Date.now()

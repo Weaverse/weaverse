@@ -122,6 +122,7 @@ export type WeaverseInternal = {
   pageAssignment: HydrogenPageAssignment
   project: HydrogenProjectType
   navigate: NavigateFunction
+  revalidator: TODO
 }
 
 export type HydrogenComponentPresets = {
@@ -208,10 +209,8 @@ type NavigateOptions = {
 export type NavigateFunction = (to: To, options?: NavigateOptions) => void
 
 export interface WeaverseHydrogenRootProps {
-  weaverseData: WeaverseLoaderData
   components: HydrogenComponent[]
   themeSchema: HydrogenThemeSchema
-  navigate: NavigateFunction
 }
 
 export type HydrogenThemeInfo = {
