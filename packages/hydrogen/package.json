@@ -1,5 +1,5 @@
 {
-  "version": "1.0.65",
+  "version": "1.1.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -15,8 +15,8 @@
   },
   "scripts": {
     "start": "npm run dev",
-    "dev": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --watch --external @weaverse/react,@shopify/hydrogen",
-    "build": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --external @weaverse/react,@shopify/hydrogen",
+    "dev": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --watch --external @remix-run/react,@shopify/hydrogen",
+    "build": "tsup src/index.tsx --format esm,cjs --dts --outDir dist --external @remix-run/react,@shopify/hydrogen",
     "clean": "rimraf dist",
     "prepublish": "npm run build"
   },
@@ -32,8 +32,9 @@
   "name": "@weaverse/hydrogen",
   "author": "Weaverse Team",
   "dependencies": {
+    "@remix-run/react": "1.19.1",
     "@shopify/hydrogen": "2023.7.1",
-    "@weaverse/react": "1.0.65"
+    "@weaverse/react": "1.1.0"
   },
   "devDependencies": {
     "@shopify/remix-oxygen": "^1.1.2"
