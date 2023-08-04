@@ -244,3 +244,11 @@ export type WeaverseLoaderConfigs = {
   locale?: string
   handle?: string
 }
+
+declare global {
+  interface Window {
+    __weaverse: WeaverseHydrogen
+    __weaverses: WeaverseHydrogen[]
+    __weaverseHydrogenThemeSchema: HydrogenThemeSchema
+  }
+}

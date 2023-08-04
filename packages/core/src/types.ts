@@ -255,14 +255,6 @@ declare global {
   interface Window {
     Blinkloader: any
     weaverseStudio: any
-    __initializedWeaverseStudios: {
-      [pageId: string]: boolean | undefined
-    }
-    __weaverse: any
-    __weaverses: {
-      [key: string]: any
-    }
-    __weaverseHydrogenThemeSchema: any
     createWeaverseStudioBridge: (weaverse: Weaverse) => void
   }
 }
