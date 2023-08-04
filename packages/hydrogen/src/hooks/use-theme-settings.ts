@@ -8,7 +8,7 @@ export function useThemeSettings() {
     weaverse.internal.project.config.theme = Object.assign(
       {},
       settings,
-      newSettings
+      newSettings,
     )
     weaverse.triggerUpdate()
   }
