@@ -145,6 +145,7 @@ export class Weaverse {
   pageId = ""
 
   internal: any = {}
+  requestInfo: any = {}
   /**
    * Weaverse project data, by default, user can provide project data via React Component:
    * <WeaverseRoot data={data} /> it will be used to server-side rendering
