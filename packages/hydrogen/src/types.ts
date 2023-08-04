@@ -220,7 +220,7 @@ export type NavigateFunction = (to: To, options?: NavigateOptions) => void
 
 export interface WeaverseHydrogenRootProps {
   components: HydrogenComponent[]
-  ErrorComponent: React.FC<{ error: { message: string; stack?: string } }>
+  errorComponent: React.FC<{ error: { message: string; stack?: string } }>
 }
 
 export type HydrogenThemeInfo = {

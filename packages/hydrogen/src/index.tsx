@@ -19,7 +19,7 @@ export * from './types'
 
 export function WeaverseHydrogenRoot({
   components,
-  ErrorComponent,
+  errorComponent: ErrorComponent,
 }: WeaverseHydrogenRootProps) {
   let data = useLoaderData()
   let weaverseDataFromLoader: WeaverseLoaderData | Promise<WeaverseLoaderData> =
