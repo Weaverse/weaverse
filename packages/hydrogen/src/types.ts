@@ -79,11 +79,20 @@ export interface HydrogenComponentProps<L = any> extends WeaverseElement {
   children?: React.JSX.Element[]
 }
 
+type I18nLocale = {
+  country: string
+  currency: string
+  language: string
+  label: string
+  pathPrefix: string
+}
+
 export type WeaverseLoaderRequestInfo = {
   params: any
   pathname: string
   search: string
   queries: Record<string, string | boolean>
+  i18n: I18nLocale
 }
 
 export interface WeaverseHydrogen

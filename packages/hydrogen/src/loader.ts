@@ -27,6 +27,7 @@ export async function weaverseLoader(
   return new Promise(async (resolve, reject) => {
     try {
       let { request, context, params } = args
+      let i18n = context?.storefront?.i18n
       let queries =
         getRequestQueries<Omit<HydrogenPageConfigs, 'requestInfo'>>(request)
 
@@ -47,10 +48,11 @@ export async function weaverseLoader(
         weaverseVersion,
         isDesignMode,
         requestInfo: {
+          i18n,
           params,
+          queries,
           pathname: new URL(request.url).pathname,
           search: new URL(request.url).search,
-          queries,
         },
       }
 
@@ -59,10 +61,10 @@ export async function weaverseLoader(
         options: {
           method: 'POST',
           body: JSON.stringify({
+            i18n,
             projectId,
-            url: request.url,
-            i18n: context?.storefront?.i18n,
             loaderConfigs,
+            url: request.url,
           }),
         },
         context,
