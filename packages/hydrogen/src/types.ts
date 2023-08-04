@@ -83,6 +83,7 @@ export type WeaverseLoaderRequestInfo = {
   params: any
   pathname: string
   search: string
+  queries: Record<string, string | boolean>
 }
 
 export interface WeaverseHydrogen
@@ -154,7 +155,7 @@ export interface HydrogenComponent<T extends HydrogenComponentProps = any> {
 export type HydrogenPageConfigs = {
   projectId: string
   weaverseHost: string
-  version?: string
+  weaverseVersion?: string
   isDesignMode?: boolean
   requestInfo: WeaverseLoaderRequestInfo
   [key: string]: any

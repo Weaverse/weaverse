@@ -27,10 +27,12 @@ export async function weaverseLoader(
   return new Promise(async (resolve, reject) => {
     try {
       let { request, context, params } = args
-      let queries = getRequestQueries<Record<string, string>>(request)
+      let queries =
+        getRequestQueries<Omit<HydrogenPageConfigs, 'requestInfo'>>(request)
 
       let { WEAVERSE_PROJECT_ID, WEAVERSE_HOST } = context?.env || {}
-      let { weaverseProjectId, weaverseHost } = queries
+      let { weaverseProjectId, weaverseHost, weaverseVersion, isDesignMode } =
+        queries
       let projectId = weaverseProjectId || WEAVERSE_PROJECT_ID
       weaverseHost = weaverseHost || WEAVERSE_HOST || 'https://weaverse.io'
 
@@ -42,11 +44,13 @@ export async function weaverseLoader(
       let configs: HydrogenPageConfigs = {
         projectId,
         weaverseHost,
-        ...queries,
+        weaverseVersion,
+        isDesignMode,
         requestInfo: {
           params,
           pathname: new URL(request.url).pathname,
           search: new URL(request.url).search,
+          queries,
         },
       }
 
