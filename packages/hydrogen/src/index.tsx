@@ -12,6 +12,7 @@ import type {
 export * from '@weaverse/react'
 export * from './fetch'
 export * from './hooks/use-theme-settings'
+export * from './hydrogen-wrappers'
 export * from './loader'
 export * from './studio'
 export * from './types'
