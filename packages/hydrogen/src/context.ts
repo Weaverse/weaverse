@@ -17,12 +17,19 @@ function createCachedWeaverseInstance(
   init: WeaverseHydrogenInit,
 ): WeaverseHydrogen {
   if (isBrowser) {
-    window.__weaverses = window.__weaverses || {}
-    let { pathname } = init.requestInfo
-    if (!window.__weaverses[pathname]) {
-      window.__weaverses[pathname] = new Weaverse(init)
+    window.__weaverses = window.__weaverses || []
+    let weaverse = window.__weaverses.find((w) => {
+      let { pathname, search } = w.requestInfo
+      return (
+        pathname === init.requestInfo.pathname &&
+        search === init.requestInfo.search
+      )
+    })
+    if (!weaverse) {
+      weaverse = new Weaverse(init) as unknown as WeaverseHydrogen
+      window.__weaverses.push(weaverse)
     }
-    return window.__weaverses[pathname]
+    return weaverse
   }
   return new Weaverse(init) as unknown as WeaverseHydrogen
 }
