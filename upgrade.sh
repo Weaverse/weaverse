@@ -13,7 +13,7 @@ upgrade() {
     old_ver="\"$pkg\": \"$major.$minor.$patch\""
     new_ver="\"$pkg\": \"$major.$minor.$((patch + 1))\""
     sed -i '' "s#$old_ver#$new_ver#" $pkg_file
-    echo "📦📦📦 $pkg upgraded: $major.$minor.$patch --> $major.$minor.$((patch + 1))"
+    echo "⬆️. $pkg upgraded: $major.$minor.$patch --> $major.$minor.$((patch + 1))"
   fi
 }
 
@@ -37,7 +37,7 @@ main() {
   cd "./packages"
   for package in "${packages[@]}"; do
     cd ./$package
-    echo "Upgrading @weaverse/$package..."
+    echo "📦 Upgrading @weaverse/$package..."
     upgrade
     for package in "${packages[@]}"; do
       upgrade "@weaverse/$package"
@@ -46,14 +46,14 @@ main() {
     echo ''
   done
 
-  echo "💿💿💿 Building packages..."
+  echo "💿 Building packages..."
   npm run build
 
   if [[ $1 == true ]]; then
     for package in "${packages[@]}"; do
       cd ./$package
       echo ''
-      echo "🚀🚀🚀 Publishing @weaverse/$package to npm..."
+      echo "🚀 Publishing @weaverse/$package to npm..."
       npm publish
       cd ..
     done
