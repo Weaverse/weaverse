@@ -79,10 +79,20 @@ export interface HydrogenComponentProps<L = any> extends WeaverseElement {
   children?: React.JSX.Element[]
 }
 
+type I18nLocale = {
+  country: string
+  currency: string
+  language: string
+  label: string
+  pathPrefix: string
+}
+
 export type WeaverseLoaderRequestInfo = {
   params: any
   pathname: string
   search: string
+  queries: Record<string, string | boolean>
+  i18n: I18nLocale
 }
 
 export interface WeaverseHydrogen
@@ -154,7 +164,7 @@ export interface HydrogenComponent<T extends HydrogenComponentProps = any> {
 export type HydrogenPageConfigs = {
   projectId: string
   weaverseHost: string
-  version?: string
+  weaverseVersion?: string
   isDesignMode?: boolean
   requestInfo: WeaverseLoaderRequestInfo
   [key: string]: any
@@ -210,7 +220,7 @@ export type NavigateFunction = (to: To, options?: NavigateOptions) => void
 
 export interface WeaverseHydrogenRootProps {
   components: HydrogenComponent[]
-  themeSchema: HydrogenThemeSchema
+  errorComponent: React.FC<{ error: { message: string; stack?: string } }>
 }
 
 export type HydrogenThemeInfo = {
@@ -233,4 +243,12 @@ export type WeaverseLoaderConfigs = {
   type: PageType
   locale?: string
   handle?: string
+}
+
+declare global {
+  interface Window {
+    __weaverse: WeaverseHydrogen
+    __weaverses: WeaverseHydrogen[]
+    __weaverseHydrogenThemeSchema: HydrogenThemeSchema
+  }
 }

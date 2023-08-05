@@ -1,6 +1,7 @@
 import type * as Stitches from "@stitches/core"
 import type { ForwardRefExoticComponent } from "react"
 import type { stitchesUtils } from "./utils/styles"
+import type { Weaverse } from "./core"
 
 // Project types
 export interface WeaverseProjectDataType {
@@ -254,13 +255,6 @@ declare global {
   interface Window {
     Blinkloader: any
     weaverseStudio: any
-    __initializedWeaverseStudios: {
-      [pageId: string]: boolean | undefined
-    }
-    __weaverse: any
-    __weaverses: {
-      [key: string]: any
-    }
-    createWeaverseStudioBridge: (weaverse: any) => Promise<any>
+    createWeaverseStudioBridge: (weaverse: Weaverse) => void
   }
 }

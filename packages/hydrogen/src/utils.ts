@@ -28,7 +28,7 @@ export function hashKey(queryKey: QueryKey): string {
 }
 
 export function getRequestQueries<T = Record<string, string | boolean>>(
-  request: Request
+  request: Request,
 ) {
   let url = new URL(request.url)
   return Array.from(url.searchParams.entries()).reduce(
@@ -36,6 +36,6 @@ export function getRequestQueries<T = Record<string, string | boolean>>(
       q[k] = v === 'true' ? true : v === 'false' ? false : v
       return q
     },
-    {}
+    {},
   ) as T
 }
