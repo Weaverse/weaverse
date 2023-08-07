@@ -13,6 +13,20 @@ import type {
 import type React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
 import type { STORE_PAGES } from './context'
+import type {
+  CountryCode,
+  CurrencyCode,
+  LanguageCode,
+} from '@shopify/hydrogen/storefront-api-types'
+
+export type Locale = {
+  language: LanguageCode
+  country: CountryCode
+  label: string
+  currency: CurrencyCode
+}
+
+export type Localizations = Record<string, Locale>
 
 export type TODO = any
 declare module '@shopify/remix-oxygen' {
@@ -79,11 +93,7 @@ export interface HydrogenComponentProps<L = any> extends WeaverseElement {
   children?: React.JSX.Element[]
 }
 
-type I18nLocale = {
-  country: string
-  currency: string
-  language: string
-  label: string
+export type I18nLocale = Locale & {
   pathPrefix: string
 }
 
@@ -243,6 +253,14 @@ export type WeaverseLoaderConfigs = {
   type: PageType
   locale?: string
   handle?: string
+}
+
+export type FetchProjectRequestBody = {
+  projectId: string
+  url: string
+  countries: Localizations
+  i18n?: I18nLocale
+  loaderConfigs?: WeaverseLoaderConfigs
 }
 
 declare global {

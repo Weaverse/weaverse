@@ -9,6 +9,9 @@ import type {
   HydrogenPageData,
   HydrogenProjectType,
   HydrogenPageAssignment,
+  Localizations,
+  I18nLocale,
+  FetchProjectRequestBody,
 } from './types'
 import { getRequestQueries } from './utils'
 
@@ -21,19 +24,17 @@ type FetchProjectPayload = {
 export async function weaverseLoader(
   args: LoaderArgs,
   components: HydrogenComponent[],
+  countries: Localizations,
   loaderConfigs?: WeaverseLoaderConfigs,
 ): Promise<WeaverseLoaderData | null> {
   // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve, reject) => {
     try {
       let { request, context, params } = args
-      let i18n = context?.storefront?.i18n
       let queries =
         getRequestQueries<Omit<HydrogenPageConfigs, 'requestInfo'>>(request)
-
       let { WEAVERSE_PROJECT_ID, WEAVERSE_HOST } = context?.env || {}
-      let { weaverseProjectId, weaverseHost, weaverseVersion, isDesignMode } =
-        queries
+      let { weaverseProjectId, weaverseHost } = queries
       let projectId = weaverseProjectId || WEAVERSE_PROJECT_ID
       weaverseHost = weaverseHost || WEAVERSE_HOST || 'https://weaverse.io'
 
@@ -42,31 +43,18 @@ export async function weaverseLoader(
           `Missing Weaverse project's id. Try adding WEAVERSE_PROJECT_ID to your .env file then restart the server.`,
         )
       }
-      let configs: HydrogenPageConfigs = {
-        projectId,
-        weaverseHost,
-        weaverseVersion,
-        isDesignMode,
-        requestInfo: {
-          i18n,
-          params,
-          queries,
-          pathname: new URL(request.url).pathname,
-          search: new URL(request.url).search,
-        },
-      }
 
+      let i18n: I18nLocale = context?.storefront?.i18n
+      let reqBody: FetchProjectRequestBody = {
+        i18n,
+        countries,
+        projectId,
+        loaderConfigs,
+        url: request.url,
+      }
       let res = await fetchWithServerCache({
         url: `${weaverseHost}/api/public/project`,
-        options: {
-          method: 'POST',
-          body: JSON.stringify({
-            i18n,
-            projectId,
-            loaderConfigs,
-            url: request.url,
-          }),
-        },
+        options: { method: 'POST', body: JSON.stringify(reqBody) },
         context,
       })
       let payload: FetchProjectPayload = await res.json()
@@ -77,31 +65,22 @@ export async function weaverseLoader(
           payload?.error || 'Invalid Weaverse project payload!',
         )
       }
+      let configs: HydrogenPageConfigs = {
+        projectId,
+        weaverseHost,
+        weaverseVersion: queries.weaverseVersion,
+        isDesignMode: queries.isDesignMode,
+        requestInfo: {
+          i18n,
+          params,
+          queries,
+          pathname: new URL(request.url).pathname,
+          search: new URL(request.url).search,
+        },
+      }
       if (page?.items) {
         let items = page.items
-        page.items = await Promise.all(
-          items.map(async (itemData: HydrogenComponentData) => {
-            let type = itemData.type
-            let { loader } =
-              components.find(({ schema }) => schema?.type === type) || {}
-            if (loader && typeof loader === 'function') {
-              try {
-                return {
-                  ...itemData,
-                  loaderData: await loader({
-                    itemData,
-                    configs,
-                    ...args,
-                  }),
-                }
-              } catch (err) {
-                console.log(`❌ Loader run failed! Item: ${itemData}: ${err}`)
-                return itemData
-              }
-            }
-            return itemData
-          }),
-        )
+        page.items = await withLoaderData(items, components, configs, args)
       }
       resolve({ page, configs, project, pageAssignment })
     } catch (err) {
@@ -109,4 +88,35 @@ export async function weaverseLoader(
       reject(err)
     }
   })
+}
+
+async function withLoaderData(
+  items: HydrogenComponentData[],
+  components: HydrogenComponent[],
+  configs: HydrogenPageConfigs,
+  args: LoaderArgs,
+) {
+  return await Promise.all(
+    items.map(async (itemData: HydrogenComponentData) => {
+      let type = itemData.type
+      let { loader } =
+        components.find(({ schema }) => schema?.type === type) || {}
+      if (loader && typeof loader === 'function') {
+        try {
+          return {
+            ...itemData,
+            loaderData: await loader({
+              itemData,
+              configs,
+              ...args,
+            }),
+          }
+        } catch (err) {
+          console.log(`❌ Loader run failed! Item: ${itemData}: ${err}`)
+          return itemData
+        }
+      }
+      return itemData
+    }),
+  )
 }
