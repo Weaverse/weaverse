@@ -137,8 +137,13 @@ export type HydrogenProjectType = {
   [key: string]: any
 }
 
+export type WeaverseThemeConfigs = {
+  schema: HydrogenThemeSchema
+  countries: Localizations
+}
+
 export type WeaverseInternal = {
-  themeSchema: HydrogenThemeSchema
+  themeConfigs: WeaverseThemeConfigs
   pageAssignment: HydrogenPageAssignment
   project: HydrogenProjectType
   navigate: NavigateFunction
@@ -267,6 +272,6 @@ declare global {
   interface Window {
     __weaverse: WeaverseHydrogen
     __weaverses: WeaverseHydrogen[]
-    __weaverseHydrogenThemeSchema: HydrogenThemeSchema
+    __weaverseThemeConfigs: WeaverseThemeConfigs
   }
 }
