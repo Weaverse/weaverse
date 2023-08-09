@@ -1,5 +1,5 @@
-import type { AppLoadContext } from '@shopify/remix-oxygen'
 import { createWithCache } from '@shopify/hydrogen'
+import type { AppLoadContext } from '@shopify/remix-oxygen'
 
 type FetchWithServerCacheParams = {
   url: string

@@ -1,35 +1,40 @@
-import { useLocation } from '@remix-run/react'
-import React from 'react'
-import type { HydrogenThemeSchema } from './types'
+import { Await, useLoaderData, useLocation } from '@remix-run/react'
+import React, { Suspense } from 'react'
+import type { WeaverseThemeConfigs } from './types'
 
-type StudioProps = {
-  themeSchema: HydrogenThemeSchema
-}
-
-export function HydrogenStudio({ themeSchema }: StudioProps) {
+export function WeaverseStudio() {
   let { search } = useLocation()
-  let params = new URLSearchParams(search)
-  if (params) {
-    let isDesignMode = params.get('isDesignMode') === 'true'
+  let { weaverseThemeConfigs } = useLoaderData<{
+    weaverseThemeConfigs: Promise<WeaverseThemeConfigs>
+  }>()
+  if (weaverseThemeConfigs instanceof Promise) {
+    let params = new URLSearchParams(search)
     let weaverseHost = params.get('weaverseHost')
     let weaverseVersion = params.get('weaverseVersion')
-    if (isDesignMode && weaverseHost && weaverseVersion) {
-      return (
-        <>
-          <script
-            src={`${weaverseHost}/assets/studio/hydrogen/index.js?v=${weaverseVersion}`}
-            async
-          />
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `window.__weaverseHydrogenThemeSchema = ${JSON.stringify(
-                themeSchema,
-              )}`,
-            }}
-          />
-        </>
-      )
-    }
+    return (
+      <Suspense>
+        <Await resolve={weaverseThemeConfigs}>
+          {(configs: WeaverseThemeConfigs) => {
+            if (!configs) return null
+            return (
+              <>
+                <script
+                  src={`${weaverseHost}/assets/studio/hydrogen/index.js?v=${weaverseVersion}`}
+                  async
+                />
+                <script
+                  dangerouslySetInnerHTML={{
+                    __html: `window.__weaverseThemeConfigs = ${JSON.stringify(
+                      configs,
+                    )}`,
+                  }}
+                />
+              </>
+            )
+          }}
+        </Await>
+      </Suspense>
+    )
   }
   return null
 }

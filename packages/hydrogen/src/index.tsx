@@ -11,10 +11,11 @@ import type {
 } from './types'
 export * from '@weaverse/react'
 export * from './fetch'
-export * from './hooks/use-theme-settings'
-export * from './hydrogen-wrappers'
 export * from './loader'
 export * from './studio'
+export * from './utils'
+export * from './hydrogen-wrappers'
+export * from './hooks/use-theme-settings'
 export * from './types'
 
 export function WeaverseHydrogenRoot({

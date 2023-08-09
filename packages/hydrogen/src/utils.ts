@@ -10,3 +10,17 @@ export function getRequestQueries<T = Record<string, string | boolean>>(
     {},
   ) as T
 }
+
+/**
+ * Check if the request is from Weaverse Studio.
+ * @param request Request
+ * @returns boolean
+ */
+export function studioCheck(request: Request) {
+  let queries = getRequestQueries(request)
+  let { weaverseProjectId, weaverseHost, isDesignMode, weaverseVersion } =
+    queries
+  return Boolean(
+    isDesignMode && weaverseProjectId && weaverseHost && weaverseVersion,
+  )
+}
