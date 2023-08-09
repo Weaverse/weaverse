@@ -56,7 +56,7 @@ export async function weaverseLoader(
         },
       }
 
-      let res = await fetchWithServerCache({
+      let payload = await fetchWithServerCache({
         url: `${weaverseHost}/api/public/project`,
         options: {
           method: 'POST',
@@ -69,7 +69,6 @@ export async function weaverseLoader(
         },
         context,
       })
-      let payload: FetchProjectPayload = await res.json()
       let { page, project, pageAssignment } = payload
       if (!page || !project || !pageAssignment) {
         throw new Error(
