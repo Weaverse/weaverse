@@ -52,12 +52,11 @@ export async function weaverseLoader(
         loaderConfigs,
         url: request.url,
       }
-      let res = await fetchWithServerCache({
+      let payload = await fetchWithServerCache({
         url: `${weaverseHost}/api/public/project`,
         options: { method: 'POST', body: JSON.stringify(reqBody) },
         context,
       })
-      let payload: FetchProjectPayload = await res.json()
       let { page, project, pageAssignment } = payload
       if (!page || !project || !pageAssignment) {
         throw new Error(

@@ -36,6 +36,7 @@ declare module '@shopify/remix-oxygen' {
     storefront: TODO
     env: TODO
     cart: TODO
+    withCache?: TODO
   }
 }
 
