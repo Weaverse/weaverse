@@ -1,10 +1,10 @@
 import { Weaverse, isBrowser } from '@weaverse/react'
 import type {
   HydrogenComponent,
-  WeaverseLoaderData,
-  WeaverseHydrogen,
-  HydrogenPageData,
   HydrogenPageConfigs,
+  HydrogenPageData,
+  WeaverseHydrogen,
+  WeaverseLoaderData,
 } from './types'
 
 interface WeaverseHydrogenInit extends HydrogenPageConfigs {
@@ -47,9 +47,8 @@ export function createWeaverseInstance(
     data: page || {},
     pageId: page?.id,
     platformType: 'shopify-hydrogen',
+    internal: { project, pageAssignment },
   })
-  weaverse.internal.project = project
-  weaverse.internal.pageAssignment = pageAssignment
 
   components.forEach((comp) => {
     weaverse.registerElement({
