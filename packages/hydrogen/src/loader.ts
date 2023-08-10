@@ -1,25 +1,16 @@
 import type { LoaderArgs } from '@shopify/remix-oxygen'
 import { fetchWithServerCache } from './fetch'
 import type {
+  FetchProjectRequestBody,
   HydrogenComponent,
   HydrogenComponentData,
   HydrogenPageConfigs,
-  WeaverseLoaderData,
-  WeaverseLoaderConfigs,
-  HydrogenPageData,
-  HydrogenProjectType,
-  HydrogenPageAssignment,
-  Localizations,
   I18nLocale,
-  FetchProjectRequestBody,
+  Localizations,
+  WeaverseLoaderConfigs,
+  WeaverseLoaderData,
 } from './types'
 import { getRequestQueries } from './utils'
-
-type FetchProjectPayload = {
-  page: HydrogenPageData
-  project: HydrogenProjectType
-  pageAssignment: HydrogenPageAssignment
-}
 
 export async function weaverseLoader(
   args: LoaderArgs,

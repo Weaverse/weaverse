@@ -1,22 +1,37 @@
 import { useNavigate, useRevalidator } from '@remix-run/react'
-import { isIframe } from '@weaverse/react'
+import { isIframe, loadScript } from '@weaverse/react'
 import { useEffect } from 'react'
-import type { WeaverseHydrogen } from '~/types'
+import type {
+  HydrogenThemeSchema,
+  Localizations,
+  WeaverseHydrogen,
+} from '~/types'
 
-export function useStudio(weaverse: WeaverseHydrogen) {
+export function useStudio(
+  weaverse: WeaverseHydrogen,
+  countries: Localizations,
+  schema: HydrogenThemeSchema,
+) {
   let navigate = useNavigate()
   let revalidator = useRevalidator()
+  let { isDesignMode, weaverseHost, weaverseVersion } = weaverse
+  let isStudio = isIframe && isDesignMode && weaverseHost && weaverseVersion
 
   useEffect(() => {
-    if (isIframe && weaverse.isDesignMode) {
+    if (isStudio) {
       weaverse.internal = {
         ...weaverse.internal,
         navigate,
         revalidator,
+        themeConfigs: { schema, countries },
       }
       window.__weaverse = weaverse
       if (window.weaverseStudio) {
         window.weaverseStudio.init(weaverse)
+      } else {
+        loadScript(
+          `${weaverseHost}/assets/studio/hydrogen/index.js?v=${weaverseVersion}`,
+        )
       }
     }
   }, [weaverse])

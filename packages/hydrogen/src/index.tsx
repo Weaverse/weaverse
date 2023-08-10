@@ -6,37 +6,38 @@ import { createWeaverseInstance } from './context'
 import { useStudio } from './hooks/use-studio'
 import type {
   HydrogenComponent,
+  HydrogenThemeSchema,
+  Localizations,
   WeaverseHydrogenRootProps,
   WeaverseLoaderData,
 } from './types'
 export * from '@weaverse/react'
 export * from './fetch'
 export * from './loader'
-export * from './studio'
 export * from './utils'
 export * from './hydrogen-wrappers'
 export * from './hooks/use-theme-settings'
 export * from './types'
 
+type WeaverseData = WeaverseLoaderData | Promise<WeaverseLoaderData>
+
 export function WeaverseHydrogenRoot({
-  components,
   errorComponent: ErrorComponent,
+  ...themeConfigs
 }: WeaverseHydrogenRootProps) {
   let data = useLoaderData()
-  let weaverseDataFromLoader: WeaverseLoaderData | Promise<WeaverseLoaderData> =
-    data?.weaverseData
-
-  if (weaverseDataFromLoader) {
-    if (weaverseDataFromLoader instanceof Promise) {
+  let weaverseData: WeaverseData = data?.weaverseData
+  if (weaverseData) {
+    if (weaverseData instanceof Promise) {
       return (
         <ErrorBoundary fallbackRender={ErrorComponent}>
           <Suspense>
-            <Await resolve={weaverseDataFromLoader}>
+            <Await resolve={weaverseData}>
               {(resolvedData: WeaverseLoaderData) => {
                 return (
                   <RenderWeaverseRoot
                     weaverseData={resolvedData}
-                    components={components}
+                    {...themeConfigs}
                   />
                 )
               }}
@@ -45,12 +46,7 @@ export function WeaverseHydrogenRoot({
         </ErrorBoundary>
       )
     }
-    return (
-      <RenderWeaverseRoot
-        weaverseData={weaverseDataFromLoader}
-        components={components}
-      />
-    )
+    return <RenderWeaverseRoot weaverseData={weaverseData} {...themeConfigs} />
   }
   return (
     <ErrorComponent
@@ -61,11 +57,13 @@ export function WeaverseHydrogenRoot({
 
 function RenderWeaverseRoot(props: {
   components: HydrogenComponent[]
+  countries: Localizations
+  themeSchema: HydrogenThemeSchema
   weaverseData: WeaverseLoaderData
 }) {
-  let { components, weaverseData } = props
+  let { weaverseData, components, countries, themeSchema } = props
   let weaverse = createWeaverseInstance(weaverseData, components)
-  useStudio(weaverse)
+  useStudio(weaverse, countries, themeSchema)
   // @ts-ignore
   return <WeaverseRoot context={weaverse} />
 }

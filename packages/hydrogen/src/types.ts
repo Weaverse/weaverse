@@ -211,17 +211,8 @@ export type HydrogenPageData = {
 type RelativeRoutingType = 'route' | 'path'
 type To = string | Partial<Path>
 type Path = {
-  /**
-   * A URL pathname, beginning with a /.
-   */
   pathname: string
-  /**
-   * A URL search string, beginning with a ?.
-   */
   search: string
-  /**
-   * A URL fragment identifier, beginning with a #.
-   */
   hash: string
 }
 
@@ -236,6 +227,8 @@ export type NavigateFunction = (to: To, options?: NavigateOptions) => void
 
 export interface WeaverseHydrogenRootProps {
   components: HydrogenComponent[]
+  countries: Localizations
+  themeSchema: HydrogenThemeSchema
   errorComponent: React.FC<{ error: { message: string; stack?: string } }>
 }
 
@@ -273,6 +266,5 @@ declare global {
   interface Window {
     __weaverse: WeaverseHydrogen
     __weaverses: WeaverseHydrogen[]
-    __weaverseThemeConfigs: WeaverseThemeConfigs
   }
 }
