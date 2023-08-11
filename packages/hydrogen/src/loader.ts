@@ -25,7 +25,8 @@ export async function weaverseLoader(
       let queries =
         getRequestQueries<Omit<HydrogenPageConfigs, 'requestInfo'>>(request)
       let { WEAVERSE_PROJECT_ID, WEAVERSE_HOST } = context?.env || {}
-      let { weaverseProjectId, weaverseHost } = queries
+      let { weaverseProjectId, weaverseHost, isDesignMode, weaverseVersion } =
+        queries
       let projectId = weaverseProjectId || WEAVERSE_PROJECT_ID
       weaverseHost = weaverseHost || WEAVERSE_HOST || 'https://weaverse.io'
 
@@ -43,11 +44,20 @@ export async function weaverseLoader(
         loaderConfigs,
         url: request.url,
       }
-      let payload = await fetchWithServerCache({
-        url: `${weaverseHost}/api/public/project`,
-        options: { method: 'POST', body: JSON.stringify(reqBody) },
-        context,
-      })
+      let url = `${weaverseHost}/api/public/project`
+      let payload
+      if (isDesignMode) {
+        payload = await fetch(url, {
+          method: 'POST',
+          body: JSON.stringify(reqBody),
+        }).then((res) => res.json())
+      } else {
+        payload = await fetchWithServerCache({
+          url,
+          options: { method: 'POST', body: JSON.stringify(reqBody) },
+          context,
+        })
+      }
       let { page, project, pageAssignment } = payload
       if (!page || !project || !pageAssignment) {
         throw new Error(
@@ -58,8 +68,8 @@ export async function weaverseLoader(
       let configs: HydrogenPageConfigs = {
         projectId,
         weaverseHost,
-        weaverseVersion: queries.weaverseVersion,
-        isDesignMode: queries.isDesignMode,
+        weaverseVersion,
+        isDesignMode,
         requestInfo: {
           i18n,
           params,
