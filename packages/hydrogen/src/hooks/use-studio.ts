@@ -34,5 +34,5 @@ export function useStudio(
         )
       }
     }
-  }, [weaverse])
+  }, [weaverse, revalidator])
 }

@@ -28,6 +28,8 @@ function createCachedWeaverseInstance(
     if (!weaverse) {
       weaverse = new Weaverse(init) as unknown as WeaverseHydrogen
       window.__weaverses.push(weaverse)
+    } else {
+      weaverse.setProjectData(init.data)
     }
     return weaverse
   }

@@ -280,6 +280,11 @@ export class Weaverse {
       data.items.forEach((item) => {
         if (!this.itemInstances.get(item.id as string | number)) {
           return new WeaverseItemStore(item, this)
+        } else {
+          let itemInstance = this.itemInstances.get(item.id as string | number)
+          if (itemInstance) {
+            itemInstance.setData(item)
+          }
         }
       })
     }
