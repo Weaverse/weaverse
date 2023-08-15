@@ -260,6 +260,7 @@ export type FetchProjectRequestBody = {
   countries: Localizations
   i18n?: I18nLocale
   loaderConfigs?: WeaverseLoaderConfigs
+  isDesignMode?: boolean
 }
 
 declare global {

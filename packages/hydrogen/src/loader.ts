@@ -38,6 +38,7 @@ export async function weaverseLoader(
 
       let i18n: I18nLocale = context?.storefront?.i18n
       let reqBody: FetchProjectRequestBody = {
+        isDesignMode,
         i18n,
         countries,
         projectId,
