@@ -13,7 +13,7 @@ export function useStudio(
   schema: HydrogenThemeSchema,
 ) {
   let navigate = useNavigate()
-  let revalidator = useRevalidator()
+  let { revalidate } = useRevalidator()
   let { isDesignMode, weaverseHost, weaverseVersion } = weaverse
   let isStudio = isIframe && isDesignMode && weaverseHost && weaverseVersion
 
@@ -22,7 +22,7 @@ export function useStudio(
       weaverse.internal = {
         ...weaverse.internal,
         navigate,
-        revalidator,
+        revalidate,
         themeConfigs: { schema, countries },
       }
       window.__weaverse = weaverse
@@ -34,5 +34,5 @@ export function useStudio(
         )
       }
     }
-  }, [weaverse, revalidator])
+  }, [weaverse])
 }

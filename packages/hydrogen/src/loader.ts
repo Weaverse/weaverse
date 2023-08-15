@@ -9,6 +9,7 @@ import type {
   Localizations,
   WeaverseLoaderConfigs,
   WeaverseLoaderData,
+  WeaverseStudioQueries,
 } from './types'
 import { getRequestQueries } from './utils'
 
@@ -22,8 +23,7 @@ export async function weaverseLoader(
   return new Promise(async (resolve, reject) => {
     try {
       let { request, context, params } = args
-      let queries =
-        getRequestQueries<Omit<HydrogenPageConfigs, 'requestInfo'>>(request)
+      let queries = getRequestQueries<WeaverseStudioQueries>(request)
       let { WEAVERSE_PROJECT_ID, WEAVERSE_HOST } = context?.env || {}
       let { weaverseProjectId, weaverseHost, isDesignMode, weaverseVersion } =
         queries

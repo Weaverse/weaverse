@@ -18,6 +18,7 @@ import type {
   CurrencyCode,
   LanguageCode,
 } from '@shopify/hydrogen/storefront-api-types'
+import type { NavigateFunction } from '@remix-run/react'
 
 export type Locale = {
   language: LanguageCode
@@ -106,11 +107,12 @@ export type WeaverseLoaderRequestInfo = {
   i18n: I18nLocale
 }
 
-export interface WeaverseHydrogen
-  extends Omit<
-    Weaverse,
-    'itemInstances' | 'elementInstances' | 'registerElement' | 'data'
-  > {
+type WeaverseCore = Omit<
+  Weaverse,
+  'itemInstances' | 'elementInstances' | 'registerElement' | 'data'
+>
+
+export interface WeaverseHydrogen extends WeaverseCore {
   itemInstances: Map<string | number, HydrogenComponentInstance>
   elementInstances: Map<string, HydrogenElement>
   registerElement(element: HydrogenElement): void
@@ -148,7 +150,7 @@ export type WeaverseInternal = {
   pageAssignment: HydrogenPageAssignment
   project: HydrogenProjectType
   navigate: NavigateFunction
-  revalidator: TODO
+  revalidate: () => void
 }
 
 export type HydrogenComponentPresets = {
@@ -177,13 +179,19 @@ export interface HydrogenComponent<T extends HydrogenComponentProps = any> {
   loader?: (args: WeaverseLoaderArgs) => Promise<unknown>
 }
 
+export type WeaverseStudioQueries = {
+  weaverseProjectId: string
+  weaverseHost: string
+  weaverseVersion: string
+  isDesignMode: boolean
+}
+
 export type HydrogenPageConfigs = {
   projectId: string
   weaverseHost: string
   weaverseVersion?: string
   isDesignMode?: boolean
   requestInfo: WeaverseLoaderRequestInfo
-  [key: string]: any
 }
 
 export type HydrogenPageAssignment = {
@@ -207,23 +215,6 @@ export type HydrogenPageData = {
   items: HydrogenComponentData[]
   [key: string]: any
 }
-
-type RelativeRoutingType = 'route' | 'path'
-type To = string | Partial<Path>
-type Path = {
-  pathname: string
-  search: string
-  hash: string
-}
-
-type NavigateOptions = {
-  replace?: boolean
-  state?: any
-  preventScrollReset?: boolean
-  relative?: RelativeRoutingType
-}
-
-export type NavigateFunction = (to: To, options?: NavigateOptions) => void
 
 export interface WeaverseHydrogenRootProps {
   components: HydrogenComponent[]

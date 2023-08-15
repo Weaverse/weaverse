@@ -4,6 +4,7 @@ import type {
   HydrogenPageConfigs,
   HydrogenPageData,
   WeaverseHydrogen,
+  WeaverseInternal,
   WeaverseLoaderData,
 } from './types'
 
@@ -11,6 +12,7 @@ interface WeaverseHydrogenInit extends HydrogenPageConfigs {
   data: HydrogenPageData
   pageId: string
   platformType: 'shopify-hydrogen'
+  internal: Partial<WeaverseInternal>
 }
 
 function createCachedWeaverseInstance(
