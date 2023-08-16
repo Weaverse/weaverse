@@ -59,6 +59,7 @@ export function createWeaverseInstance(
       type: comp?.schema?.type,
       Component: comp?.default,
       schema: comp?.schema,
+      loader: comp?.loader,
     })
   })
   return weaverse

@@ -163,6 +163,7 @@ export interface HydrogenElement {
   Component: ForwardRefExoticComponent<HydrogenComponentProps>
   type: string
   schema?: HydrogenComponentSchema
+  loader?: HydrogenComponentLoaderFunction
 }
 
 export interface HydrogenComponentInstance
@@ -173,10 +174,14 @@ export interface HydrogenComponentInstance
   _store: HydrogenComponentData
 }
 
+export type HydrogenComponentLoaderFunction = (
+  args: WeaverseLoaderArgs,
+) => Promise<unknown>
+
 export interface HydrogenComponent<T extends HydrogenComponentProps = any> {
   default: ForwardRefExoticComponent<T>
   schema: HydrogenComponentSchema
-  loader?: (args: WeaverseLoaderArgs) => Promise<unknown>
+  loader?: HydrogenComponentLoaderFunction
 }
 
 export type WeaverseStudioQueries = {
