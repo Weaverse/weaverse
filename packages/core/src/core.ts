@@ -268,7 +268,6 @@ export class Weaverse {
   setProjectData(data: WeaverseProjectDataType) {
     this.data = data
     this.initProject()
-    this.triggerUpdate()
   }
 
   /**
