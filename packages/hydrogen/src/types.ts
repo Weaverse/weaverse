@@ -18,6 +18,7 @@ import type {
   CurrencyCode,
   LanguageCode,
 } from '@shopify/hydrogen/storefront-api-types'
+import type { NavigateFunction } from '@remix-run/react'
 
 export type Locale = {
   language: LanguageCode
@@ -106,11 +107,12 @@ export type WeaverseLoaderRequestInfo = {
   i18n: I18nLocale
 }
 
-export interface WeaverseHydrogen
-  extends Omit<
-    Weaverse,
-    'itemInstances' | 'elementInstances' | 'registerElement' | 'data'
-  > {
+type WeaverseCore = Omit<
+  Weaverse,
+  'itemInstances' | 'elementInstances' | 'registerElement' | 'data'
+>
+
+export interface WeaverseHydrogen extends WeaverseCore {
   itemInstances: Map<string | number, HydrogenComponentInstance>
   elementInstances: Map<string, HydrogenElement>
   registerElement(element: HydrogenElement): void
@@ -148,7 +150,7 @@ export type WeaverseInternal = {
   pageAssignment: HydrogenPageAssignment
   project: HydrogenProjectType
   navigate: NavigateFunction
-  revalidator: TODO
+  revalidate: () => void
 }
 
 export type HydrogenComponentPresets = {
@@ -161,6 +163,14 @@ export interface HydrogenElement {
   Component: ForwardRefExoticComponent<HydrogenComponentProps>
   type: string
   schema?: HydrogenComponentSchema
+  loader?: HydrogenComponentLoaderFunction
+}
+
+export interface WeaverseHydrogenInit extends HydrogenPageConfigs {
+  data: HydrogenPageData
+  pageId: string
+  platformType: 'shopify-hydrogen'
+  internal: Partial<WeaverseInternal>
 }
 
 export interface HydrogenComponentInstance
@@ -171,10 +181,21 @@ export interface HydrogenComponentInstance
   _store: HydrogenComponentData
 }
 
+export type HydrogenComponentLoaderFunction = (
+  args: WeaverseLoaderArgs,
+) => Promise<unknown>
+
 export interface HydrogenComponent<T extends HydrogenComponentProps = any> {
   default: ForwardRefExoticComponent<T>
   schema: HydrogenComponentSchema
-  loader?: (args: WeaverseLoaderArgs) => Promise<unknown>
+  loader?: HydrogenComponentLoaderFunction
+}
+
+export type WeaverseStudioQueries = {
+  weaverseProjectId: string
+  weaverseHost: string
+  weaverseVersion: string
+  isDesignMode: boolean
 }
 
 export type HydrogenPageConfigs = {
@@ -183,7 +204,6 @@ export type HydrogenPageConfigs = {
   weaverseVersion?: string
   isDesignMode?: boolean
   requestInfo: WeaverseLoaderRequestInfo
-  [key: string]: any
 }
 
 export type HydrogenPageAssignment = {
@@ -207,23 +227,6 @@ export type HydrogenPageData = {
   items: HydrogenComponentData[]
   [key: string]: any
 }
-
-type RelativeRoutingType = 'route' | 'path'
-type To = string | Partial<Path>
-type Path = {
-  pathname: string
-  search: string
-  hash: string
-}
-
-type NavigateOptions = {
-  replace?: boolean
-  state?: any
-  preventScrollReset?: boolean
-  relative?: RelativeRoutingType
-}
-
-export type NavigateFunction = (to: To, options?: NavigateOptions) => void
 
 export interface WeaverseHydrogenRootProps {
   components: HydrogenComponent[]

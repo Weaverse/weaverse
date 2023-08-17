@@ -1,17 +1,10 @@
 import { Weaverse, isBrowser } from '@weaverse/react'
 import type {
   HydrogenComponent,
-  HydrogenPageConfigs,
-  HydrogenPageData,
   WeaverseHydrogen,
+  WeaverseHydrogenInit,
   WeaverseLoaderData,
 } from './types'
-
-interface WeaverseHydrogenInit extends HydrogenPageConfigs {
-  data: HydrogenPageData
-  pageId: string
-  platformType: 'shopify-hydrogen'
-}
 
 function createCachedWeaverseInstance(
   init: WeaverseHydrogenInit,
@@ -57,6 +50,7 @@ export function createWeaverseInstance(
       type: comp?.schema?.type,
       Component: comp?.default,
       schema: comp?.schema,
+      loader: comp?.loader,
     })
   })
   return weaverse
