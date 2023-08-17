@@ -1,19 +1,10 @@
 import { Weaverse, isBrowser } from '@weaverse/react'
 import type {
   HydrogenComponent,
-  HydrogenPageConfigs,
-  HydrogenPageData,
   WeaverseHydrogen,
-  WeaverseInternal,
+  WeaverseHydrogenInit,
   WeaverseLoaderData,
 } from './types'
-
-interface WeaverseHydrogenInit extends HydrogenPageConfigs {
-  data: HydrogenPageData
-  pageId: string
-  platformType: 'shopify-hydrogen'
-  internal: Partial<WeaverseInternal>
-}
 
 function createCachedWeaverseInstance(
   init: WeaverseHydrogenInit,

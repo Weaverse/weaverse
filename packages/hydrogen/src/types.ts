@@ -166,6 +166,13 @@ export interface HydrogenElement {
   loader?: HydrogenComponentLoaderFunction
 }
 
+export interface WeaverseHydrogenInit extends HydrogenPageConfigs {
+  data: HydrogenPageData
+  pageId: string
+  platformType: 'shopify-hydrogen'
+  internal: Partial<WeaverseInternal>
+}
+
 export interface HydrogenComponentInstance
   extends Omit<WeaverseItemStore, '_flags' | 'data' | 'Element'> {
   get _element(): HTMLElement | null
