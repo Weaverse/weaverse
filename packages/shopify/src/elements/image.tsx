@@ -10,7 +10,7 @@ let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
       objectFit,
       objectPosition,
       clickAction,
-      openLinkInNewTab,
+      openInNewTab,
       linkTo,
       ...rest
     } = props
@@ -25,7 +25,7 @@ let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
       content = (
         <a
           href={linkTo}
-          target={openLinkInNewTab ? '_blank' : '_self'}
+          target={openInNewTab ? '_blank' : '_self'}
           rel="noreferrer"
         >
           <img alt={alt} data-blink-src={src} />
