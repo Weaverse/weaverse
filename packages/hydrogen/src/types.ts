@@ -1,6 +1,12 @@
 /// <reference types="@shopify/remix-oxygen" />
 /// <reference types="@shopify/oxygen-workers-types" />
 
+import type { NavigateFunction, Params } from '@remix-run/react'
+import type {
+  CountryCode,
+  CurrencyCode,
+  LanguageCode,
+} from '@shopify/hydrogen/storefront-api-types'
 import type { LoaderArgs } from '@shopify/remix-oxygen'
 import type {
   BasicInput,
@@ -13,12 +19,6 @@ import type {
 import type React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
 import type { STORE_PAGES } from './context'
-import type {
-  CountryCode,
-  CurrencyCode,
-  LanguageCode,
-} from '@shopify/hydrogen/storefront-api-types'
-import type { NavigateFunction } from '@remix-run/react'
 
 export type Locale = {
   language: LanguageCode
@@ -100,9 +100,9 @@ export type I18nLocale = Locale & {
 }
 
 export type WeaverseLoaderRequestInfo = {
-  params: any
-  pathname: string
+  params: Params
   search: string
+  pathname: string
   queries: Record<string, string | boolean>
   i18n: I18nLocale
 }
@@ -123,6 +123,7 @@ export interface WeaverseHydrogen extends WeaverseCore {
 
 export type WeaverseStorefrontData = {
   id?: string
+  __cachedId?: string
   rootId: string
   name: string
   items: HydrogenComponentData[]
@@ -264,6 +265,12 @@ export type FetchProjectRequestBody = {
   i18n?: I18nLocale
   loaderConfigs?: WeaverseLoaderConfigs
   isDesignMode?: boolean
+}
+
+export type FetchProjectPayload = {
+  page: HydrogenPageData
+  project: HydrogenProjectType
+  pageAssignment: HydrogenPageAssignment
 }
 
 declare global {

@@ -1,6 +1,7 @@
 import type { LoaderArgs } from '@shopify/remix-oxygen'
 import { fetchWithServerCache } from './fetch'
 import type {
+  FetchProjectPayload,
   FetchProjectRequestBody,
   HydrogenComponent,
   HydrogenComponentData,
@@ -46,7 +47,7 @@ export async function weaverseLoader(
         url: request.url,
       }
       let url = `${weaverseHost}/api/public/project`
-      let payload
+      let payload: FetchProjectPayload
       if (isDesignMode) {
         payload = await fetch(url, {
           method: 'POST',
