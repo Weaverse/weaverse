@@ -92,7 +92,7 @@ export interface ImageElementProps extends WeaverseElementProps {
   objectPosition: CSSProperties['objectPosition']
   clickAction: 'none' | 'openLightbox' | 'openLink'
   linkTo?: string
-  openLinkInNewTab?: boolean
+  openInNewTab?: boolean
 }
 
 // GridContentElement
