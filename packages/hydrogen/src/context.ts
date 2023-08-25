@@ -13,16 +13,17 @@ function createCachedWeaverseInstance(
     window.__weaverses = window.__weaverses || []
     let weaverse = window.__weaverses.find((w) => {
       let { pathname, search } = w.requestInfo
+      let { __cachedId } = w.data
       return (
         pathname === init.requestInfo.pathname &&
-        search === init.requestInfo.search
+        search === init.requestInfo.search &&
+        __cachedId === init.data.__cachedId
       )
     })
     if (!weaverse) {
       weaverse = new Weaverse(init) as unknown as WeaverseHydrogen
       window.__weaverses.push(weaverse)
-    } else {
-      weaverse.setProjectData(init.data)
+      console.log('💿 Weaverse', weaverse)
     }
     return weaverse
   }
@@ -33,9 +34,6 @@ export function createWeaverseInstance(
   weaverseData: WeaverseLoaderData,
   components: HydrogenComponent[],
 ) {
-  if (isBrowser) {
-    console.log('💿 Weaverse data', weaverseData)
-  }
   let { page, configs, project, pageAssignment } = weaverseData || {}
   let weaverse = createCachedWeaverseInstance({
     ...configs,
