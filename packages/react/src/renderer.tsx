@@ -12,9 +12,6 @@ import { generateItemClassName } from './utils/css'
 import clsx from 'clsx'
 
 export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
-  if (isBrowser) {
-    console.log('💿 Weaverse root', context)
-  }
   let [, setData] = useState<WeaverseProjectDataType | unknown>(context.data)
   let rootRef = useRef<HTMLElement>()
   let renderRoot = () => setData({})
@@ -25,7 +22,7 @@ export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
     return () => {
       context.unsubscribe(renderRoot)
     }
-  }, [])
+  }, [context])
 
   let eventHandlers = context?.studioBridge?.eventHandlers || {}
   let themeClass = context.stitchesInstance.theme.className
@@ -75,7 +72,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
       })
     }
     return () => instance.unsubscribe(render)
-  }, [])
+  }, [instance])
 
   let Element = elementInstances.get(type)
 
@@ -100,7 +97,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
         className={clsx(
           platformType !== 'shopify-hydrogen' &&
             generateItemClassName(instance, stitchesInstance),
-          rest?.data?.className
+          rest?.data?.className,
         )}
         style={style}
         {...rest}
