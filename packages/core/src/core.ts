@@ -1,9 +1,13 @@
-// TODO: Implement Weaverse SDK class
-// Only core code is implemented here, avoid importing other packages,
-// the core code should be framework agnostic, no react, vue, angular, etc.
-// noinspection JSUnusedGlobalSymbols
+/*
+  @weaverse/core is the core package of Weaverse SDK, it contains the core logic of Weaverse.
+  It is a singleton class that can be used to register item, store project data, etc.
+  It also provides some helper functions for Weaverse SDK.
+  ---
+  Licensed under MIT License.
+  Written by https://github.com/weaverse
+  About Weaverse: https://weaverse.io
+*/
 
-// using stitches core only for framework-agnostic code
 import * as stitches from "@stitches/core"
 import type Stitches from "@stitches/core/types/stitches"
 import type { RefObject } from "react"
@@ -54,34 +58,11 @@ export class WeaverseItemStore {
   }
 
   set data(update: Omit<ElementData, "id" | "type">) {
-    // if (this.weaverse.platformType === "shopify-hydrogen") {
-    //   let { children, ...rest } = update
-    //   if (children) {
-    //     this._store.children = children
-    //   }
-    //   this._store.data = merge(this._store.data, rest)
-    // } else {
-    //   this._store = { ...this.data, ...update }
-    // }
     this._store = { ...this.data, ...update }
   }
 
   get data(): ElementData {
-    // let defaultProps = { ...this.Element?.Component?.defaultProps }
     let defaultData = getItemDefaultData(this)
-    // if (this.platformType === "shopify-hydrogen") {
-    //   return {
-    //     ...defaultProps,
-    //     ...this._store,
-    //     data: { ...defaultProps?.data, ...this._store.data },
-    //   }
-    // } else {
-    //   let defaultCss = this.Element?.defaultCss || {}
-    //   let currentCss = this._store.css || {}
-    //   let css = merge(defaultCss, currentCss)
-    //   let extraData = this.Element?.extraData
-    //   return { ...defaultProps, ...extraData, ...this._store, css }
-    // }
     let defaultCss = this.Element?.defaultCss || {}
     let currentCss = this._store.css || {}
     let css = merge(defaultCss, currentCss)
@@ -90,13 +71,7 @@ export class WeaverseItemStore {
   }
 
   setData = (update: Omit<ElementData, "id" | "type">) => {
-    // if (this.weaverse.platformType === "shopify-hydrogen") {
-    //   this.data = update
-    // } else {
-    //   this.data = Object.assign(this.data, update)
-    // }
     this.data = Object.assign(this.data, update)
-
     this.triggerUpdate()
     return this.data
   }
@@ -196,17 +171,6 @@ export class Weaverse {
     mobile: "(max-width: 767.98px)",
   }
 
-  /**
-   * constructor
-   * @param weaverseHost {string} Weaverse base URL that can provide by user/developer. for local development, use localhost:3000
-   * @param projectId {string} Weaverse project key to access project data via API
-   * @param data {WeaverseProjectDataType} Weaverse project data, by default, user can provide project data via React Component.
-   * @param mediaBreakPoints {object} Pass down custom media query breakpoints or just use the default.
-   * @param isDesignMode {boolean} check whether the sdk is isDesignMode or not
-   * @param ssrMode {boolean} Use in element to optionally render special HTML for hydration
-   * @param elementSchemas {Array<ElementSchema>} List of element schemas
-   * @param platformType {PlatformTypeEnum} Check the platform, shopify-section or react-ssr(hydrogen)
-   */
   constructor(params: WeaverseType = {}) {
     Object.entries(params).forEach(([k, v]) => {
       let key = k as keyof typeof this
