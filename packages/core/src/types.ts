@@ -186,9 +186,10 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
    * `imagesPerRow.gt.1`
    */
   condition?: string
-  defaultValue: string | number | boolean
+  defaultValue?: string | number | boolean
   placeholder?: string
   helpText?: string
+  shouldRevalidate?: boolean
 }
 
 export type AdditionalInputConfigs =
