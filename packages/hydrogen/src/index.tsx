@@ -63,7 +63,7 @@ function RenderWeaverseRoot(props: {
 }) {
   let { weaverseData, components, countries, themeSchema } = props
   let weaverse = createWeaverseInstance(weaverseData, components)
-  useStudio(weaverse, countries, themeSchema)
+  useStudio(weaverse, countries, themeSchema, weaverseData)
   // @ts-ignore
   return <WeaverseRoot context={weaverse} />
 }

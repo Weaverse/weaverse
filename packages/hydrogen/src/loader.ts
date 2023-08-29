@@ -25,7 +25,12 @@ export async function weaverseLoader(
     try {
       let { request, context, params } = args
       let queries = getRequestQueries<WeaverseStudioQueries>(request)
-      let { WEAVERSE_PROJECT_ID, WEAVERSE_HOST } = context?.env || {}
+      let {
+        WEAVERSE_PROJECT_ID,
+        WEAVERSE_HOST,
+        PUBLIC_STORE_DOMAIN,
+        PUBLIC_STOREFRONT_API_TOKEN,
+      } = context?.env || {}
       let { weaverseProjectId, weaverseHost, isDesignMode, weaverseVersion } =
         queries
       let projectId = weaverseProjectId || WEAVERSE_PROJECT_ID
@@ -83,6 +88,12 @@ export async function weaverseLoader(
       if (page?.items) {
         let items = page.items
         page.items = await withLoaderData(items, components, configs, args)
+      }
+      if (isDesignMode) {
+        Object.assign(configs, {
+          publicStoreDomain: PUBLIC_STORE_DOMAIN,
+          publicStorefrontApiToken: PUBLIC_STOREFRONT_API_TOKEN,
+        })
       }
       resolve({ page, configs, project, pageAssignment })
     } catch (err) {

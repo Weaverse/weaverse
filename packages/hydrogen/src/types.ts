@@ -152,6 +152,7 @@ export type WeaverseInternal = {
   project: HydrogenProjectType
   navigate: NavigateFunction
   revalidate: () => void
+  [key: string]: any
 }
 
 export type HydrogenComponentPresets = {
