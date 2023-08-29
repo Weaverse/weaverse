@@ -11,6 +11,7 @@ export function useStudio(
   weaverse: WeaverseHydrogen,
   countries: Localizations,
   schema: HydrogenThemeSchema,
+  weaverseData: any,
 ) {
   let navigate = useNavigate()
   let { revalidate } = useRevalidator()
@@ -24,6 +25,9 @@ export function useStudio(
         navigate,
         revalidate,
         themeConfigs: { schema, countries },
+        publicStoreDomain: weaverseData?.configs?.publicStoreDomain,
+        publicStorefrontApiToken:
+          weaverseData?.configs?.publicStorefrontApiToken,
       }
       window.__weaverse = weaverse
       if (window.weaverseStudio) {

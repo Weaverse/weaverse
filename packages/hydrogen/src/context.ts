@@ -20,6 +20,7 @@ function createCachedWeaverseInstance(
         __cachedId === init.data.__cachedId
       )
     })
+
     if (!weaverse) {
       weaverse = new Weaverse(init) as unknown as WeaverseHydrogen
       window.__weaverses.push(weaverse)
