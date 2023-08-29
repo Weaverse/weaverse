@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import type {
   HydrogenThemeSchema,
   Localizations,
+  PublicEnv,
   WeaverseHydrogen,
 } from '~/types'
 
@@ -11,7 +12,7 @@ export function useStudio(
   weaverse: WeaverseHydrogen,
   countries: Localizations,
   schema: HydrogenThemeSchema,
-  weaverseData: any,
+  publicEnv?: PublicEnv,
 ) {
   let navigate = useNavigate()
   let { revalidate } = useRevalidator()
@@ -24,10 +25,8 @@ export function useStudio(
         ...weaverse.internal,
         navigate,
         revalidate,
+        publicEnv,
         themeConfigs: { schema, countries },
-        publicStoreDomain: weaverseData?.configs?.publicStoreDomain,
-        publicStorefrontApiToken:
-          weaverseData?.configs?.publicStorefrontApiToken,
       }
       window.__weaverse = weaverse
       if (window.weaverseStudio) {

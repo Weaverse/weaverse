@@ -152,7 +152,7 @@ export type WeaverseInternal = {
   project: HydrogenProjectType
   navigate: NavigateFunction
   revalidate: () => void
-  [key: string]: any
+  publicEnv?: PublicEnv
 }
 
 export type HydrogenComponentPresets = {
@@ -200,12 +200,18 @@ export type WeaverseStudioQueries = {
   isDesignMode: boolean
 }
 
+export type PublicEnv = {
+  PUBLIC_STORE_DOMAIN: string
+  PUBLIC_STOREFRONT_API_TOKEN: string
+}
+
 export type HydrogenPageConfigs = {
   projectId: string
   weaverseHost: string
   weaverseVersion?: string
   isDesignMode?: boolean
   requestInfo: WeaverseLoaderRequestInfo
+  publicEnv?: PublicEnv
 }
 
 export type HydrogenPageAssignment = {
