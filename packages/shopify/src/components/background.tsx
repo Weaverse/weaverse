@@ -24,7 +24,8 @@ export function Background(props: BackgroundProps) {
           <img
             width="100%"
             height="100%"
-            data-blink-src={backgroundImage}
+            src={backgroundImage}
+            loading="lazy"
             alt="Background"
             style={{
               objectFit: backgroundFit,

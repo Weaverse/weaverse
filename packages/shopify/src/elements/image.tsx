@@ -20,7 +20,7 @@ let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
       '--img-object-position': objectPosition,
     } as React.CSSProperties
 
-    let content = <img alt={alt} data-blink-src={src} />
+    let content = <img alt={alt} src={src} loading="lazy" />
     if (clickAction === 'openLink' && linkTo) {
       content = (
         <a
@@ -28,7 +28,7 @@ let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
           target={openInNewTab ? '_blank' : '_self'}
           rel="noreferrer"
         >
-          <img alt={alt} data-blink-src={src} />
+          <img alt={alt} src={src} loading="lazy" />
         </a>
       )
     }
@@ -62,7 +62,7 @@ Image.defaultProps = {
   objectFit: 'cover',
   objectPosition: 'center center',
   clickAction: 'none',
-  openLinkInNewTab: false,
+  openInNewTab: false,
   linkTo: '',
 }
 

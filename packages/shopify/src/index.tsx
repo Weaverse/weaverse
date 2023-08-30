@@ -7,7 +7,6 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { useStudio } from './hooks/use-studio'
 import { registerThirdPartyElement } from '~/utils/register-integration'
 import type { ThirdPartyIntegration } from '~/types/shopify'
-import { initUploadCareAdaptiveDelivery } from './utils/uploadcare'
 
 export * from '@weaverse/react'
 export * from './types'
@@ -51,9 +50,6 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
 function ShopifyRoot({ context }: WeaverseRootPropsType) {
   // @ts-ignore
   useStudio(context)
-  useEffect(() => {
-    initUploadCareAdaptiveDelivery(context.weaverseHost)
-  }, [])
   return (
     <ErrorBoundary
       FallbackComponent={ErrorFallback}
