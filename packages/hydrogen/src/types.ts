@@ -130,7 +130,9 @@ export type WeaverseStorefrontData = {
 }
 
 export type HydrogenProjectConfig = {
-  theme: Record<string, any>
+  theme: {
+    [key: string]: string | number | boolean
+  }
 }
 
 export type HydrogenProjectType = {

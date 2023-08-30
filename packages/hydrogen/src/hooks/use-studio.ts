@@ -23,9 +23,9 @@ export function useStudio(
     if (isStudio) {
       weaverse.internal = {
         ...weaverse.internal,
+        publicEnv,
         navigate,
         revalidate,
-        publicEnv,
         themeConfigs: { schema, countries },
       }
       window.__weaverse = weaverse
