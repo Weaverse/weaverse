@@ -59,6 +59,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     deletedAt,
     css,
     __hidden,
+    data: _,
     ...rest
   } = data
 
