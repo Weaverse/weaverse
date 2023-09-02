@@ -90,10 +90,10 @@ export async function weaverseLoader(
         page.items = await withLoaderData(items, components, configs, args)
       }
       if (isDesignMode) {
-        Object.assign(configs, {
-          publicStoreDomain: PUBLIC_STORE_DOMAIN,
-          publicStorefrontApiToken: PUBLIC_STOREFRONT_API_TOKEN,
-        })
+        configs.publicEnv = {
+          PUBLIC_STORE_DOMAIN,
+          PUBLIC_STOREFRONT_API_TOKEN,
+        }
       }
       resolve({ page, configs, project, pageAssignment })
     } catch (err) {
