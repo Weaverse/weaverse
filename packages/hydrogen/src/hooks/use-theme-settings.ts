@@ -1,9 +1,7 @@
 import { useWeaverse } from '@weaverse/react'
-import type { HydrogenProjectConfig, WeaverseHydrogen } from '~/types'
+import type { HydrogenThemeSettings, WeaverseHydrogen } from '~/types'
 
-type WeaverseThemeSettings = HydrogenProjectConfig['theme']
-
-export function useThemeSettings<T = WeaverseThemeSettings>() {
+export function useThemeSettings<T = HydrogenThemeSettings>() {
   let weaverse = useWeaverse<WeaverseHydrogen>()
   let settings = weaverse?.internal?.project?.config?.theme
   return settings as T
