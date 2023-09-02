@@ -27,12 +27,13 @@ export let Hotspots = forwardRef<HTMLDivElement, HotspotsProps>(
         <img
           alt="Hotspots"
           className="hotspots__image"
-          data-blink-src={image}
+          src={image}
+          loading="lazy"
         />
         <div className="hotspots">
           {hotspots.map((hotspot) => {
             let product = products.find(
-              (product) => product?.id === hotspot.productId
+              (product) => product?.id === hotspot.productId,
             )
             if (!product) return null
             let { images, url, price, title } = product
@@ -84,7 +85,7 @@ export let Hotspots = forwardRef<HTMLDivElement, HotspotsProps>(
         </div>
       </div>
     )
-  }
+  },
 )
 
 export let css: ElementCSS = {
