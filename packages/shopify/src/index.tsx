@@ -1,9 +1,7 @@
 import elements from './elements'
 import type { WeaverseRootPropsType, WeaverseType } from '@weaverse/react'
 import { Weaverse, WeaverseRoot } from '@weaverse/react'
-import React, { useEffect } from 'react'
-import type { FallbackProps } from 'react-error-boundary'
-import { ErrorBoundary } from 'react-error-boundary'
+import React from 'react'
 import { useStudio } from './hooks/use-studio'
 import { registerThirdPartyElement } from '~/utils/register-integration'
 import type { ThirdPartyIntegration } from '~/types/shopify'
@@ -15,8 +13,10 @@ export * from './types/shopify'
 export * from './utils/fetch-project-data'
 
 let createRootContext = (configs: WeaverseType) => new Weaverse(configs)
+
 class ShopifyWeaverse extends Weaverse {
   thirdPartyIntegration = [] as ThirdPartyIntegration[]
+
   constructor() {
     super()
   }
@@ -37,27 +37,10 @@ function createWeaverseShopifyContext(configs: ShopifyWeaverseType) {
   return context
 }
 
-function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
-  return (
-    <div role="alert" className="wv-error-boundary">
-      <p>Something went wrong :(</p>
-      <pre>{error.message}</pre>
-      <button onClick={resetErrorBoundary}>Reload frame</button>
-    </div>
-  )
-}
-
 function ShopifyRoot({ context }: WeaverseRootPropsType) {
   // @ts-ignore
   useStudio(context)
-  return (
-    <ErrorBoundary
-      FallbackComponent={ErrorFallback}
-      onReset={() => context.triggerUpdate()}
-    >
-      <WeaverseRoot context={context} />
-    </ErrorBoundary>
-  )
+  return <WeaverseRoot context={context} />
 }
 
 export {
