@@ -37,8 +37,10 @@ export async function weaverseLoader(
       weaverseHost = weaverseHost || WEAVERSE_HOST || 'https://weaverse.io'
 
       if (!projectId) {
-        throw new Error(
-          `Missing Weaverse project's id. Try adding WEAVERSE_PROJECT_ID to your .env file then restart the server.`,
+        return reject(
+          new Error(
+            `Missing Weaverse project's id. Try adding WEAVERSE_PROJECT_ID to your .env file then restart the server.`,
+          ),
         )
       }
 
@@ -67,9 +69,11 @@ export async function weaverseLoader(
       }
       let { page, project, pageAssignment } = payload
       if (!page || !project || !pageAssignment) {
-        throw new Error(
-          // @ts-ignore
-          payload?.error || 'Invalid Weaverse project payload!',
+        return reject(
+          new Error(
+            // @ts-ignore
+            payload?.error || 'Invalid Weaverse project payload!',
+          ),
         )
       }
       let configs: HydrogenPageConfigs = {
@@ -95,7 +99,7 @@ export async function weaverseLoader(
           PUBLIC_STOREFRONT_API_TOKEN,
         }
       }
-      resolve({ page, configs, project, pageAssignment })
+      return resolve({ page, configs, project, pageAssignment })
     } catch (err) {
       console.log(`❌ Error fetching project data: ${err?.toString()}`)
       reject(err)
