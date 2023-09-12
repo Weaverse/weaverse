@@ -198,8 +198,8 @@ type InformationThirdParty = {
 type CatalogThirdParty = {
   title: string
   type: string
-  extraData: Record<string, unknown>
-  inspector: ElementInspector
+  extraData?: Record<string, unknown>
+  inspector?: ElementInspector
   flags?: ElementFlags
   parentTypes?: ParentType[]
   toolbar?: (ToolbarAction | ToolbarAction[])[]
@@ -208,10 +208,10 @@ type CatalogThirdParty = {
 }
 
 export interface ThirdPartyIntegration {
-  appType: string
-  id: string
-  name: string
-  information: InformationThirdParty
+  appType?: string
+  id?: string
+  name?: string
+  information?: InformationThirdParty
   elements: CatalogThirdParty[]
-  order: number
+  order?: number
 }

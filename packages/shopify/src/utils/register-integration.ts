@@ -1,6 +1,5 @@
 import type { ThirdPartyIntegration } from '~/types/shopify'
 import type { WeaverseElement } from '@weaverse/react'
-import { ElementSchema } from '@weaverse/react'
 import * as ThirdParty from '~/elements/third-party'
 import type { ShopifyWeaverse, ShopifyWeaverseType } from '~/index'
 
@@ -28,7 +27,18 @@ export const registerThirdPartyElement = (
   context: ShopifyWeaverse,
   configs: ShopifyWeaverseType,
 ) => {
-  if (!configs.thirdPartyIntegration) return
+  if (!configs.thirdPartyIntegration) {
+    configs.thirdPartyIntegration = [
+      {
+        elements: [
+          {
+            type: 'dingdoong_date_picker',
+            title: 'Date Picker',
+          },
+        ],
+      },
+    ]
+  }
 
   const elements = initElement(configs.thirdPartyIntegration)
 
