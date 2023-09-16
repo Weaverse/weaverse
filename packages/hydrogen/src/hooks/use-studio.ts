@@ -1,4 +1,8 @@
-import { useNavigate, useRevalidator } from '@remix-run/react'
+import {
+  useNavigate,
+  useRevalidator,
+  useRouteLoaderData,
+} from '@remix-run/react'
 import { isIframe, loadScript } from '@weaverse/react'
 import { useEffect } from 'react'
 import type {
@@ -8,14 +12,20 @@ import type {
   WeaverseHydrogen,
 } from '~/types'
 
-export function useStudio(
-  weaverse: WeaverseHydrogen,
-  countries: Localizations,
-  schema: HydrogenThemeSchema,
-  publicEnv?: PublicEnv,
-) {
+type RootRouteData = {
+  weaverseTheme: {
+    countries: Localizations
+    schema: HydrogenThemeSchema
+    publicEnv?: PublicEnv
+  }
+}
+
+export function useStudio(weaverse: WeaverseHydrogen) {
+  let { weaverseTheme } = useRouteLoaderData('root') as RootRouteData
   let navigate = useNavigate()
   let { revalidate } = useRevalidator()
+
+  let { countries, schema, publicEnv } = weaverseTheme || {}
   let { isDesignMode, weaverseHost, weaverseVersion } = weaverse
   let isStudio = isIframe && isDesignMode && weaverseHost && weaverseVersion
 
@@ -32,9 +42,8 @@ export function useStudio(
       if (window.weaverseStudio) {
         window.weaverseStudio.init(weaverse)
       } else {
-        loadScript(
-          `${weaverseHost}/assets/studio/hydrogen/index.js?v=${weaverseVersion}`,
-        )
+        let studioSrc = `${weaverseHost}/assets/studio/hydrogen/index.js?v=${weaverseVersion}`
+        loadScript(studioSrc)
       }
     }
   }, [weaverse])

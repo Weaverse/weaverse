@@ -5,6 +5,7 @@
     "importHelpers": true,
     // stricter type-checking for stronger correctness. Recommended by TS
     "strict": true,
+    "resolveJsonModule": true,
     "moduleResolution": "node",
     // transpile JSX to React.createElement
     "jsx": "react",

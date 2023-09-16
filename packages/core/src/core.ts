@@ -1,10 +1,9 @@
 /*
-  @weaverse/core is the core package of Weaverse SDK, it contains the core logic of Weaverse.
+  @weaverse/core is the core package of Weaverse SDKs, it contains the core logic of Weaverse.
   It is a singleton class that can be used to register item, store project data, etc.
-  It also provides some helper functions for Weaverse SDK.
   ---
   Licensed under MIT License.
-  Written by https://github.com/weaverse
+  Source: https://github.com/weaverse/sdks
   About Weaverse: https://weaverse.io
 */
 
