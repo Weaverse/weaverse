@@ -315,9 +315,7 @@ export type WeaverseClientArgs = {
   themeSchema: HydrogenThemeSchema
 }
 
-export type FetchWithCacheParams = {
-  url: string
-  options?: RequestInit
+export type FetchWithCacheOptions = RequestInit & {
   strategy?: AllCacheOptions
 }
 

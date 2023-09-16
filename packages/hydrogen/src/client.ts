@@ -6,7 +6,7 @@ import type {
   AllCacheOptions,
   FetchProjectPayload,
   FetchProjectRequestBody,
-  FetchWithCacheParams,
+  FetchWithCacheOptions,
   HydrogenComponent,
   HydrogenComponentData,
   HydrogenThemeSchema,
@@ -55,14 +55,11 @@ export class WeaverseClient {
     }
   }
 
-  fetchWithCache = <T>({
-    url,
-    options = {},
-    strategy = this.storefront.CacheShort(),
-  }: FetchWithCacheParams) => {
+  fetchWithCache = <T>(url: string, options: FetchWithCacheOptions) => {
     let cacheKey = [url, options.body]
+    let { strategy = this.storefront.CacheShort(), ...reqInit } = options
     let res = this.withCache(cacheKey, strategy, async () => {
-      let response = await fetch(url, options)
+      let response = await fetch(url, reqInit)
       if (!response.ok) {
         throw new Error('Something went wrong. Skipping cache.')
       }
@@ -74,10 +71,10 @@ export class WeaverseClient {
   loadThemeSettings = async (strategy?: AllCacheOptions) => {
     let { API, configs } = this
     let { weaverseHost, projectId } = configs
-    let res = await this.fetchWithCache<{ ok: boolean; payload: any }>({
-      url: `${weaverseHost}/${API}/${projectId}/configs`,
-      strategy,
-    })
+    let res = await this.fetchWithCache<{ ok: boolean; payload: any }>(
+      `${weaverseHost}/${API}/${projectId}/configs`,
+      { strategy },
+    )
     let data = null
     if (res.ok) {
       data = res.payload
@@ -116,9 +113,8 @@ export class WeaverseClient {
         if (this.configs.isDesignMode) {
           payload = await fetch(url, reqInit).then((res) => res.json())
         } else {
-          payload = await this.fetchWithCache({
-            url,
-            options: reqInit,
+          payload = await this.fetchWithCache(url, {
+            ...reqInit,
             strategy,
           })
         }
