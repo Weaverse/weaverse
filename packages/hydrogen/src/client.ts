@@ -81,7 +81,7 @@ export class WeaverseClient {
       if (this.configs.isDesignMode) {
         data = {
           ...data,
-          themeSchema: this.themeSchema,
+          schema: this.themeSchema,
           countries: this.countries,
           publicEnv: this.configs.publicEnv,
         }
