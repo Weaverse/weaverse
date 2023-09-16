@@ -25,7 +25,7 @@ export function useStudio(weaverse: WeaverseHydrogen) {
   let navigate = useNavigate()
   let { revalidate } = useRevalidator()
 
-  let { countries, schema, publicEnv } = weaverseTheme
+  let { countries, schema, publicEnv } = weaverseTheme || {}
   let { isDesignMode, weaverseHost, weaverseVersion } = weaverse
   let isStudio = isIframe && isDesignMode && weaverseHost && weaverseVersion
 
@@ -42,9 +42,8 @@ export function useStudio(weaverse: WeaverseHydrogen) {
       if (window.weaverseStudio) {
         window.weaverseStudio.init(weaverse)
       } else {
-        loadScript(
-          `${weaverseHost}/assets/studio/hydrogen/index.js?v=${weaverseVersion}`,
-        )
+        let studioSrc = `${weaverseHost}/assets/studio/hydrogen/index.js?v=${weaverseVersion}`
+        loadScript(studioSrc)
       }
     }
   }, [weaverse])
