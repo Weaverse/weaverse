@@ -286,7 +286,7 @@ export type PageLoadParams = {
 export type FetchProjectRequestBody = {
   projectId: string
   url: string
-  countries: Localizations
+  countries?: Localizations
   i18n?: I18nLocale
   params?: PageLoadParams
   isDesignMode?: boolean

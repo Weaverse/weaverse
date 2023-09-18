@@ -25,7 +25,7 @@ export class WeaverseClient {
   clientVersion = pkg.version
   storefront: Storefront<I18nLocale>
   components: HydrogenComponent[]
-  countries: Localizations
+  countries?: Localizations
   themeSchema: HydrogenThemeSchema
   configs: WeaverseProjectConfigs
   basePageConfigs: Omit<WeaverseProjectConfigs, 'requestInfo'>
