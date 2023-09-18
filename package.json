@@ -1,6 +1,9 @@
 {
   "name": "weaverse-sdks",
+  "version": "1.1.19",
+  "description": "Weaverse SDKs monorepo.",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "dev": "npm run dev:pkg -- --filter=./templates/pilot",
     "dev:pkg": "cross-env LOCAL_DEV=true turbo dev --no-daemon --parallel --filter=./packages/*",
@@ -50,7 +53,6 @@
   "engines": {
     "node": ">=16.13"
   },
-  "version": "0.0.3",
   "prettier": {
     "semi": false,
     "bracketSpacing": true,
