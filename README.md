@@ -30,7 +30,7 @@ Seamlessly integrate your existing ecommerce store into Shopify with Weaverse.
 
 ### How to upgrade packages?
 
-To upgrade all packages use: `nr up` or `npm run up` with these optional flags:
+To upgrade all packages, use: `nr up` or `npm run up` with these optional flags:
 
 - Add `--patch` to upgrade all packages to the latest patch version
 - Add `--minor` to upgrade all packages to the latest minor version
@@ -54,5 +54,5 @@ E.g:
 
 ```bash
 $ nr up --patch -p
- # v1.0.1 -> v1.0.2 -> publish v1.0.2 to npm
+# v1.0.1 -> v1.0.2 -> publish v1.0.2 to npm
 ```
