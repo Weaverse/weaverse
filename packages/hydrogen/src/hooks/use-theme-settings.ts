@@ -1,60 +1,69 @@
-import { useLoaderData } from '@remix-run/react'
-import { isBrowser } from '@weaverse/react'
-import { useEffect, useSyncExternalStore } from 'react'
-import type { HydrogenThemeSettings, WeaverseThemeSettingsStore } from '~/types'
+import { useContext, useSyncExternalStore } from 'react'
+import { ThemeProvider } from '~/context'
+import type {
+  HydrogenThemeSettings,
+  WeaverseThemeSettingsStore,
+  HydrogenThemeSchema,
+  Localizations,
+  PublicEnv,
+} from '~/types'
+export class ThemeSettingsStore implements WeaverseThemeSettingsStore {
+  settings: HydrogenThemeSettings | null = null
+  listeners: (() => void)[] = []
+  countries: Localizations
+  schema: HydrogenThemeSchema
+  publicEnv?: PublicEnv
 
-let settings: HydrogenThemeSettings | null = null
-let listeners: (() => void)[] = []
+  constructor({
+    theme,
+    countries,
+    schema,
+    publicEnv,
+  }: {
+    theme: HydrogenThemeSettings
+    countries: Localizations
+    schema: HydrogenThemeSchema
+    publicEnv?: PublicEnv
+  }) {
+    this.settings = theme
+    this.countries = countries
+    this.schema = schema
+    this.publicEnv = publicEnv
+  }
+  updateThemeSettings = (newSettings: HydrogenThemeSettings) => {
+    this.settings = { ...this.settings, ...newSettings }
+    this.emitChange()
+  }
 
-let themeSettingsStore: WeaverseThemeSettingsStore = {
-  updateThemeSettings(newSettings: HydrogenThemeSettings) {
-    settings = { ...settings, ...newSettings }
-    emitChange()
-  },
-  subscribe(listener: () => void) {
-    listeners = [...listeners, listener]
+  subscribe = (listener: () => void): (() => void) => {
+    this.listeners = [...this.listeners, listener]
     return () => {
-      listeners = listeners.filter((l) => l !== listener)
+      this.listeners = this.listeners.filter((l) => l !== listener)
     }
-  },
-  getSnapshot() {
-    return settings
-  },
-  getServerSnapshot() {
-    return settings
-  },
-}
+  }
 
-function emitChange() {
-  for (let listener of listeners) {
-    listener()
+  getSnapshot = () => {
+    return this.settings
+  }
+
+  getServerSnapshot = () => {
+    return this.settings
+  }
+
+  emitChange = () => {
+    for (const listener of this.listeners) {
+      listener()
+    }
   }
 }
 
-if (isBrowser) {
-  window.__weaverseThemeSettingsStore = themeSettingsStore
-}
-
 export function useThemeSettings<T = HydrogenThemeSettings>() {
+  let themeSettingsStore = useContext(ThemeProvider)
+
   let settings = useSyncExternalStore(
     themeSettingsStore.subscribe,
     themeSettingsStore.getSnapshot,
     themeSettingsStore.getServerSnapshot,
   )
-  let { weaverseTheme } = useLoaderData()
-
-  useEffect(() => {
-    if (weaverseTheme) {
-      let settings = weaverseTheme.theme
-      if (settings) {
-        themeSettingsStore.updateThemeSettings(settings)
-      }
-    } else {
-      console.warn(
-        `'weaverseTheme' should be returned from root loader in order to get global settings from 'useThemeSettings'.`,
-      )
-    }
-  }, [weaverseTheme])
-
   return settings as T
 }

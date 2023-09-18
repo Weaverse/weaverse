@@ -160,12 +160,11 @@ export type WeaverseThemeConfigs = {
 }
 
 export type WeaverseInternal = {
-  themeConfigs: WeaverseThemeConfigs
   pageAssignment: HydrogenPageAssignment
   project: HydrogenProjectType
   navigate: NavigateFunction
   revalidate: () => void
-  publicEnv?: PublicEnv
+  themeSettingsStore: WeaverseThemeSettingsStore
 }
 
 export type HydrogenComponentPresets = {
@@ -303,6 +302,12 @@ export type WeaverseThemeSettingsStore = {
   subscribe(listener: () => void): () => void
   getSnapshot(): HydrogenThemeSettings | null
   getServerSnapshot(): HydrogenThemeSettings | null
+  settings: HydrogenThemeSettings | null
+  listeners: (() => void)[]
+  emitChange(): void
+  countries: Localizations
+  schema: HydrogenThemeSchema
+  publicEnv?: PublicEnv
 }
 
 export type HydrogenThemeEnv = {
@@ -329,6 +334,5 @@ declare global {
   interface Window {
     __weaverse: WeaverseHydrogen
     __weaverses: WeaverseHydrogen[]
-    __weaverseThemeSettingsStore: WeaverseThemeSettingsStore
   }
 }

@@ -108,7 +108,7 @@ export class WeaverseClient {
           method: 'POST',
           body: JSON.stringify(body),
         }
-        let url = `${this.configs.weaverseHost}/api/public/project`
+        let url = `${this.configs.weaverseHost}/${this.API}`
         let payload: FetchProjectPayload
         if (this.configs.isDesignMode) {
           payload = await fetch(url, reqInit).then((res) => res.json())
