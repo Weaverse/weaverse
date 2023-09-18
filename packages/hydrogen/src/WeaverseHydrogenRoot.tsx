@@ -21,7 +21,9 @@ export function WeaverseHydrogenRoot({
   if (data) {
     if (data instanceof Promise) {
       return (
-        <ErrorBoundary fallbackRender={ErrorComponent}>
+        <ErrorBoundary
+          fallbackRender={ErrorComponent || (() => <>An error occurred!</>)}
+        >
           <Suspense>
             <Await resolve={data}>
               {(resolvedData: WeaverseLoaderData) => {
@@ -36,10 +38,12 @@ export function WeaverseHydrogenRoot({
     }
     return <RenderRoot data={data} components={components} />
   }
-  return (
+  return ErrorComponent ? (
     <ErrorComponent
       error={{ message: 'No Weaverse data return from route loader!' }}
     />
+  ) : (
+    <>No Weaverse data return from route loader!</>
   )
 }
 

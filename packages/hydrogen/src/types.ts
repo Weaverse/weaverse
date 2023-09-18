@@ -68,6 +68,7 @@ export type HydrogenToolbarAction =
   | 'settings-level-2'
   | 'duplicate'
   | 'delete'
+
 export interface HydrogenComponentSchema
   extends Omit<
     ElementSchema,
@@ -121,7 +122,9 @@ type WeaverseCore = Omit<
 export interface WeaverseHydrogen extends WeaverseCore {
   itemInstances: Map<string | number, HydrogenComponentInstance>
   elementInstances: Map<string, HydrogenElement>
+
   registerElement(element: HydrogenElement): void
+
   internal: WeaverseInternal
   data: WeaverseStorefrontData
   requestInfo: WeaverseLoaderRequestInfo
@@ -189,8 +192,11 @@ export interface WeaverseHydrogenInit extends WeaverseProjectConfigs {
 export interface HydrogenComponentInstance
   extends Omit<WeaverseItemStore, '_flags' | 'data' | 'Element'> {
   get _element(): HTMLElement | null
+
   get Element(): HydrogenElement | undefined
+
   get data(): HydrogenComponentData
+
   _store: HydrogenComponentData
 }
 
@@ -252,7 +258,7 @@ export type HydrogenPageData = {
 
 export interface WeaverseHydrogenRootProps {
   components: HydrogenComponent[]
-  errorComponent: React.FC<{ error: { message: string; stack?: string } }>
+  errorComponent?: React.FC<{ error: { message: string; stack?: string } }>
 }
 
 export type HydrogenThemeInfo = {
@@ -311,7 +317,7 @@ export type WeaverseClientArgs = {
   configs: WeaverseProjectConfigs
   storefront: Storefront<I18nLocale>
   components: HydrogenComponent[]
-  countries: Localizations
+  countries?: Localizations
   themeSchema: HydrogenThemeSchema
 }
 
