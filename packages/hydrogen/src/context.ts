@@ -5,6 +5,7 @@ import type {
   WeaverseHydrogenInit,
   WeaverseLoaderData,
 } from './types'
+import { createContext } from 'react'
 
 function createCachedWeaverseInstance(
   init: WeaverseHydrogenInit,
@@ -71,3 +72,6 @@ export let STORE_PAGES = {
   PASSWORD: 'PASSWORD',
   CUSTOM: 'CUSTOM',
 }
+
+export let ThemeProvider = createContext<any>(null)
+ThemeProvider.displayName = 'WeaverseThemeProvider'

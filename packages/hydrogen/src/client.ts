@@ -25,7 +25,7 @@ export class WeaverseClient {
   clientVersion = pkg.version
   storefront: Storefront<I18nLocale>
   components: HydrogenComponent[]
-  countries: Localizations
+  countries?: Localizations
   themeSchema: HydrogenThemeSchema
   configs: WeaverseProjectConfigs
   basePageConfigs: Omit<WeaverseProjectConfigs, 'requestInfo'>
@@ -108,7 +108,7 @@ export class WeaverseClient {
           method: 'POST',
           body: JSON.stringify(body),
         }
-        let url = `${this.configs.weaverseHost}/api/public/project`
+        let url = `${this.configs.weaverseHost}/${this.API}`
         let payload: FetchProjectPayload
         if (this.configs.isDesignMode) {
           payload = await fetch(url, reqInit).then((res) => res.json())
