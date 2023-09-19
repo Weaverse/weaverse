@@ -4,17 +4,17 @@ import React, { Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ThemeProvider, createWeaverseInstance } from './context'
 import { useStudio } from './hooks/use-studio'
+import { ThemeSettingsStore } from './hooks/use-theme-settings'
 import type {
   HydrogenComponent,
   WeaverseHydrogenRootProps,
   WeaverseLoaderData,
 } from './types'
-import { ThemeSettingsStore } from './hooks/use-theme-settings'
 
 type WeaverseData = WeaverseLoaderData | Promise<WeaverseLoaderData>
 
 export function WeaverseHydrogenRoot({
-  errorComponent: ErrorComponent,
+  errorComponent: ErrorComponent = FallbackError,
   components,
 }: WeaverseHydrogenRootProps) {
   let loaderData = useLoaderData()
@@ -23,9 +23,7 @@ export function WeaverseHydrogenRoot({
   if (data) {
     if (data instanceof Promise) {
       return (
-        <ErrorBoundary
-          fallbackRender={ErrorComponent || (() => <>An error occurred!</>)}
-        >
+        <ErrorBoundary fallbackRender={ErrorComponent}>
           <Suspense>
             <Await resolve={data}>
               {(resolvedData: WeaverseLoaderData) => {
@@ -40,12 +38,10 @@ export function WeaverseHydrogenRoot({
     }
     return <RenderRoot data={data} components={components} />
   }
-  return ErrorComponent ? (
+  return (
     <ErrorComponent
       error={{ message: 'No Weaverse data return from route loader!' }}
     />
-  ) : (
-    <>No Weaverse data return from route loader!</>
   )
 }
 
@@ -70,4 +66,8 @@ export let withWeaverse = (Component: React.ComponentType<any>) => {
       </ThemeProvider.Provider>
     )
   }
+}
+
+function FallbackError({ error }: { error?: { message?: string } }) {
+  return <div>{error?.message || 'An unexpected error occurred'}</div>
 }
