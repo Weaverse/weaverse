@@ -7,6 +7,7 @@ import { useStudio } from './hooks/use-studio'
 import { ThemeSettingsStore } from './hooks/use-theme-settings'
 import type {
   HydrogenComponent,
+  RootRouteData,
   WeaverseHydrogenRootProps,
   WeaverseLoaderData,
 } from './types'
@@ -56,9 +57,9 @@ function RenderRoot(props: {
   return <WeaverseRoot context={weaverse} />
 }
 
-export let withWeaverse = (Component: React.ComponentType<any>) => {
-  return (props: any) => {
-    let { weaverseTheme } = useLoaderData<any>()
+export let withWeaverse = (Component: React.ComponentType) => {
+  return (props: React.JSX.IntrinsicAttributes) => {
+    let { weaverseTheme } = useLoaderData<RootRouteData>()
     let themeSettingsStore = new ThemeSettingsStore(weaverseTheme)
     return (
       <ThemeProvider.Provider value={themeSettingsStore}>
