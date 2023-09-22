@@ -27,10 +27,10 @@
     "packages/hydrogen"
   ],
   "devDependencies": {
-    "@types/node": "^20.6.2",
-    "@types/react": "^18.2.21",
-    "@typescript-eslint/eslint-plugin": "^6.7.0",
-    "@typescript-eslint/parser": "^6.7.0",
+    "@types/node": "^20.6.3",
+    "@types/react": "^18.2.22",
+    "@typescript-eslint/eslint-plugin": "^6.7.2",
+    "@typescript-eslint/parser": "^6.7.2",
     "cross-env": "^7.0.3",
     "eslint": "8.49.0",
     "eslint-config-prettier": "^9.0.0",
