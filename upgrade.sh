@@ -96,7 +96,7 @@ main() {
       cd "./$package" || exit 1
       echo ''
       echo "🚀 Publishing @weaverse/$package to npm..."
-      npm publish
+      npm publish --access public
       cd ..
     done
   fi
