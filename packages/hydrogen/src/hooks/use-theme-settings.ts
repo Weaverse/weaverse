@@ -1,35 +1,28 @@
-import { useContext, useSyncExternalStore } from 'react'
-import { ThemeProvider } from '~/context'
+import { useSyncExternalStore } from 'react'
 import type {
-  HydrogenThemeSettings,
-  WeaverseThemeSettingsStore,
   HydrogenThemeSchema,
+  HydrogenThemeSettings,
   Localizations,
   PublicEnv,
+  RootRouteData,
 } from '~/types'
-export class ThemeSettingsStore implements WeaverseThemeSettingsStore {
+import { useThemeContext } from './use-theme-context'
+
+export class ThemeSettingsStore {
   settings: HydrogenThemeSettings | null = null
   listeners: (() => void)[] = []
-  countries: Localizations
-  schema: HydrogenThemeSchema
+  countries?: Localizations
+  schema?: HydrogenThemeSchema
   publicEnv?: PublicEnv
 
-  constructor({
-    theme,
-    countries,
-    schema,
-    publicEnv,
-  }: {
-    theme: HydrogenThemeSettings
-    countries: Localizations
-    schema: HydrogenThemeSchema
-    publicEnv?: PublicEnv
-  }) {
-    this.settings = theme
+  constructor(data: RootRouteData['weaverseTheme']) {
+    let { theme, countries, schema, publicEnv } = data || {}
+    this.settings = theme || null
     this.countries = countries
     this.schema = schema
     this.publicEnv = publicEnv
   }
+
   updateThemeSettings = (newSettings: HydrogenThemeSettings) => {
     this.settings = { ...this.settings, ...newSettings }
     this.emitChange()
@@ -51,15 +44,14 @@ export class ThemeSettingsStore implements WeaverseThemeSettingsStore {
   }
 
   emitChange = () => {
-    for (const listener of this.listeners) {
+    for (let listener of this.listeners) {
       listener()
     }
   }
 }
 
 export function useThemeSettings<T = HydrogenThemeSettings>() {
-  let themeSettingsStore = useContext(ThemeProvider)
-
+  let themeSettingsStore = useThemeContext()
   let settings = useSyncExternalStore(
     themeSettingsStore.subscribe,
     themeSettingsStore.getSnapshot,

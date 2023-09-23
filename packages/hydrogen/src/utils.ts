@@ -45,7 +45,7 @@ export function getWeaverseConfigs(
 
 export function getWeaverseCsp(request: Request) {
   let url = new URL(request.url)
-  // get weaverse host from query params
+  // Get weaverse host from query params
   let weaverseHost = url.searchParams.get('weaverseHost')
   let weaverseHosts = ['https://*.weaverse.io']
   if (weaverseHost) {

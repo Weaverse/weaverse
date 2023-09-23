@@ -181,7 +181,3 @@ export class WeaverseClient {
     return item
   }
 }
-
-export function createWeaverseClient(args: WeaverseClientArgs) {
-  return new WeaverseClient(args)
-}

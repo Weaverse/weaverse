@@ -1,15 +1,17 @@
 import { useNavigate, useRevalidator } from '@remix-run/react'
 import { isIframe, loadScript } from '@weaverse/react'
-import { useContext, useEffect } from 'react'
+import { useEffect } from 'react'
 import type { WeaverseHydrogen } from '~/types'
-import { ThemeProvider } from '~/context'
+import { useThemeContext } from './use-theme-context'
 
 export function useStudio(weaverse: WeaverseHydrogen) {
-  let navigate = useNavigate()
   let { revalidate } = useRevalidator()
-  let themeSettingsStore = useContext(ThemeProvider)
+  let navigate = useNavigate()
+  let themeSettingsStore = useThemeContext()
+
   let { isDesignMode, weaverseHost, weaverseVersion } = weaverse
   let isStudio = isIframe && isDesignMode && weaverseHost && weaverseVersion
+
   useEffect(() => {
     if (isStudio) {
       weaverse.internal = {
