@@ -1,6 +1,6 @@
 {
   "name": "weaverse-sdks",
-  "version": "1.1.19",
+  "version": "1.3.1",
   "description": "Weaverse SDKs monorepo.",
   "private": true,
   "license": "MIT",
