@@ -69,25 +69,33 @@ export class WeaverseClient {
   }
 
   loadThemeSettings = async (strategy?: AllCacheOptions) => {
-    let { API, configs } = this
-    let { weaverseHost, projectId } = configs
-    let res = await this.fetchWithCache<{ ok: boolean; payload: any }>(
-      `${weaverseHost}/${API}/${projectId}/configs`,
-      { strategy },
-    )
-    let data = null
-    if (res.ok) {
-      data = res.payload
-      if (this.configs.isDesignMode) {
-        data = {
-          ...data,
-          schema: this.themeSchema,
-          countries: this.countries,
-          publicEnv: this.configs.publicEnv,
+    try {
+      let { API, configs } = this
+      let { weaverseHost, projectId } = configs
+      if (!projectId) {
+        throw new Error('Missing Weaverse projectId!')
+      }
+      let res = await this.fetchWithCache<{ ok: boolean; payload: any }>(
+        `${weaverseHost}/${API}/${projectId}/configs`,
+        { strategy },
+      )
+      let data = null
+      if (res.ok) {
+        data = res.payload
+        if (this.configs.isDesignMode) {
+          data = {
+            ...data,
+            schema: this.themeSchema,
+            countries: this.countries,
+            publicEnv: this.configs.publicEnv,
+          }
         }
       }
+      return data
+    } catch (err) {
+      console.log(`❌ [Weaverse theme settings]`, err)
+      return null
     }
-    return data
   }
 
   loadPage = async (
@@ -97,6 +105,9 @@ export class WeaverseClient {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       try {
+        if (!this.configs.projectId) {
+          reject(new Error('Missing Weaverse projectId!'))
+        }
         let { request, params } = args
         let { strategy, ...pageLoadParams } = configs
         let body: FetchProjectRequestBody = {
