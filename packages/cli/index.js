@@ -5,6 +5,7 @@ const decompress = require("decompress")
 const fs = require("fs-extra")
 const yargs = require("yargs/yargs")
 const { hideBin } = require("yargs/helpers")
+const spawn = require("cross-spawn")
 
 const downloadAndExtractTemplate = async (url, outputPath) => {
   const response = await axios.get(url, { responseType: "arraybuffer" })
@@ -80,8 +81,6 @@ Options:
     await createEnvFile(outputPath, argv["project-id"])
 
     if (!argv["no-install"]) {
-      const spawn = require("child_process").spawn
-
       // First, run 'npm install'
       const install = spawn("npm", ["install"], { cwd: outputPath, stdio: "inherit" })
 
