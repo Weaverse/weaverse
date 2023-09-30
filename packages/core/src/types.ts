@@ -1,17 +1,17 @@
 import type * as Stitches from "@stitches/core"
 import type { ForwardRefExoticComponent } from "react"
-import type { stitchesUtils } from "./utils/styles"
+import type { stitchesUtils } from "./utils/stitches"
 import type { Weaverse } from "./core"
 
 // Project types
 export interface WeaverseProjectDataType {
   items: ElementData[]
   rootId: string
-  script?: {
-    css: string
-    js: string
-  }
-  pageId?: string // for standalone app, we have pageId for the page that we're editing
+  // script?: {
+  //   css: string
+  //   js: string
+  // }
+  // pageId?: string // for standalone app, we have pageId for the page that we're editing
 }
 
 export interface BreakPoints {
@@ -21,16 +21,16 @@ export interface BreakPoints {
 export type PlatformTypeEnum = "shopify-section" | "shopify-hydrogen" | "nextjs"
 
 // Weaverse types
-export interface WeaverseType {
+export interface WeaverseCoreParams {
   mediaBreakPoints?: BreakPoints
   weaverseHost?: string
   weaverseVersion?: string
   projectId?: string
-  pageId?: string
+  // pageId?: string
   data?: WeaverseProjectDataType
   isDesignMode?: boolean
-  ssrMode?: boolean
-  elementSchemas?: ElementSchema[]
+  // ssrMode?: boolean
+  // elementSchemas?: ElementSchema[]
   platformType?: PlatformTypeEnum
 }
 
