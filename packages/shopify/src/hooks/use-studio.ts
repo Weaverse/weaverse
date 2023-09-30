@@ -1,16 +1,16 @@
-// TODO: make @weaverse/react framework agnostic and then move this code to @weaverse/react
-import type { Weaverse } from '@weaverse/react'
 import { isIframe, loadScript } from '@weaverse/react'
 import { useEffect } from 'react'
+import type { WeaverseShopify } from '..'
 
-export let useStudio = (weaverseCore: Weaverse) => {
+export function useStudio(weaverse: WeaverseShopify) {
   useEffect(() => {
-    if (weaverseCore.isDesignMode && isIframe && !window.weaverseStudio) {
-      let host = weaverseCore.weaverseHost
-      let version = weaverseCore.weaverseVersion || Date.now()
-      loadScript(`${host}/assets/studio/studio-bridge.js?v=${version}`).then(
-        () => window?.createWeaverseStudioBridge(weaverseCore),
-      )
+    let { isDesignMode, weaverseHost, weaverseVersion } = weaverse
+    if (isDesignMode && isIframe && !window.weaverseStudio) {
+      let version = weaverseVersion || Date.now()
+      let studioScriptSrc = `${weaverseHost}/assets/studio/studio-bridge.js?v=${version}`
+      loadScript(studioScriptSrc)
+        .then(() => window?.createWeaverseStudioBridge(weaverse))
+        .catch(console.error)
     }
   }, [])
 }

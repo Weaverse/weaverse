@@ -15,6 +15,10 @@ import type {
 } from './shopify'
 import type { WeaverseIcon } from './components'
 
+export * from './configs'
+export * from './shopify'
+export * from './weaverse-shopify'
+
 export interface ProductContextType {
   product: ShopifyProduct
   productId?: string | number
