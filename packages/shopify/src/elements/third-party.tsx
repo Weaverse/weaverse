@@ -6,11 +6,12 @@ import { WeaverseContext } from '@weaverse/react'
 
 let NoHydrate = Components.NoHydrate
 let Placeholder = Components.Placeholder
-let ThirdParty = forwardRef<HTMLDivElement, ThirdPartyProps>((props, ref) => {
-  const { snippet_code, information, placeholder, ...rest } = props
-  const id = rest['data-wv-id'] as string
 
-  const { isDesignMode } = useContext(WeaverseContext)
+let ThirdParty = forwardRef<HTMLDivElement, ThirdPartyProps>((props, ref) => {
+  let { snippet_code, information, placeholder, ...rest } = props
+  let id = rest['data-wv-id'] as string
+
+  let { isDesignMode } = useContext(WeaverseContext)
 
   if (isDesignMode) {
     return (
