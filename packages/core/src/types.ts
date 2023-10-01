@@ -1,17 +1,11 @@
 import type * as Stitches from "@stitches/core"
 import type { ForwardRefExoticComponent } from "react"
 import type { stitchesUtils } from "./utils/stitches"
-import type { Weaverse } from "./core"
 
 // Project types
 export interface WeaverseProjectDataType {
   items: ElementData[]
   rootId: string
-  // script?: {
-  //   css: string
-  //   js: string
-  // }
-  // pageId?: string // for standalone app, we have pageId for the page that we're editing
 }
 
 export interface BreakPoints {
@@ -26,11 +20,8 @@ export interface WeaverseCoreParams {
   weaverseHost?: string
   weaverseVersion?: string
   projectId?: string
-  // pageId?: string
   data?: WeaverseProjectDataType
   isDesignMode?: boolean
-  // ssrMode?: boolean
-  // elementSchemas?: ElementSchema[]
   platformType?: PlatformTypeEnum
 }
 
@@ -256,6 +247,5 @@ declare global {
   interface Window {
     Blinkloader: any
     weaverseStudio: any
-    createWeaverseStudioBridge: (weaverse: Weaverse) => void
   }
 }

@@ -10,14 +10,7 @@
 import * as stitches from "@stitches/core"
 import type Stitches from "@stitches/core/types/stitches"
 import type { RefObject } from "react"
-import type {
-  BreakPoints,
-  ElementData,
-  PlatformTypeEnum,
-  WeaverseCoreParams,
-  WeaverseElement,
-  WeaverseProjectDataType,
-} from "./types"
+import type { BreakPoints, ElementData, PlatformTypeEnum, WeaverseCoreParams, WeaverseProjectDataType } from "./types"
 import { getItemDefaultData, merge } from "./utils"
 import { EventEmitter } from "./utils/event-emiiter"
 import { stitchesUtils } from "./utils/stitches"
@@ -56,7 +49,7 @@ export class WeaverseItemStore extends EventEmitter {
   }
 
   get Element() {
-    return this.weaverse.elementInstances.get(this._store.type)
+    return this.weaverse.elementRegistry.get(this._store.type)
   }
 
   set data(update: Omit<ElementData, "id" | "type">) {
@@ -84,28 +77,20 @@ export class WeaverseItemStore extends EventEmitter {
 }
 
 export class Weaverse extends EventEmitter {
-  contentRootElement: HTMLElement | undefined
-  elementInstances = new Map<string, WeaverseElement>()
-  itemInstances = new Map<string | number, WeaverseItemStore>()
+  contentRootElement: HTMLElement | null = null
+  itemInstances = new Map()
   weaverseHost = "https://weaverse.io"
   weaverseVersion = ""
   projectId = ""
-  // pageId = "" // Hydrogen
-  // internal: any = {} // Hydrogen
-  // requestInfo: any = {} // Hydrogen
-  data: WeaverseProjectDataType = {
-    rootId: "",
-    items: [],
-    // script: { css: "", js: "" },
-  }
   isDesignMode = false
-  platformType: PlatformTypeEnum = "shopify-section"
   isPreviewMode = false
-  // ssrMode = false // Shpopify
   stitchesInstance: Stitches | any
   studioBridge?: any
-  // elementSchemas: ElementSchema[] = []
+
+  declare data: WeaverseProjectDataType
+  declare platformType: PlatformTypeEnum
   static WeaverseItemStore: typeof WeaverseItemStore = WeaverseItemStore
+  readonly elementRegistry = new Map()
 
   mediaBreakPoints: BreakPoints = {
     desktop: "all",
@@ -118,9 +103,7 @@ export class Weaverse extends EventEmitter {
     super()
     Object.entries(params).forEach(([k, v]) => {
       let key = k as keyof typeof this
-      if (key in this) {
-        this[key] = v || this[key]
-      }
+      this[key] = v || this[key]
     })
     this.initProject()
     this.initStitches()
@@ -133,19 +116,17 @@ export class Weaverse extends EventEmitter {
     let data = this.data
     if (data?.items) {
       data.items.forEach((item) => {
-        if (!this.itemInstances.get(item.id as string | number)) {
+        if (!this.itemInstances.get(item.id)) {
           return new WeaverseItemStore(item, this)
         } else {
-          let itemInstance = this.itemInstances.get(item.id as string | number)
-          if (itemInstance) {
-            itemInstance.setData(item)
-          }
+          let itemInstance = this.itemInstances.get(item.id)
+          itemInstance.setData(item)
         }
       })
     }
   }
 
-  initStitches = (externalConfig = {}) => {
+  initStitches = (externalConfig?: stitches.CreateStitches) => {
     this.stitchesInstance =
       this.stitchesInstance ||
       stitches.createStitches({
@@ -157,13 +138,12 @@ export class Weaverse extends EventEmitter {
   }
 
   /**
-   * Register the custom React Component to Weaverse, store it into Weaverse.elementInstances
-   * @param element {WeaverseElement} custom React Component
+   * Register the custom React Component to Weaverse, store it into Weaverse.elementRegistry
    */
-  registerElement(element: WeaverseElement) {
+  registerElement(element: { type: string }) {
     if (element?.type) {
-      if (!this.elementInstances.has(element.type)) {
-        this.elementInstances.set(element?.type, element)
+      if (!this.elementRegistry.has(element.type)) {
+        this.elementRegistry.set(element?.type, element)
       } else {
         console.warn(`Element with type '${element.type}' already exists.`)
       }
