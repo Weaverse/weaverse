@@ -1,4 +1,3 @@
-// Product
 import type {
   ElementCatalog,
   ElementFlags,
@@ -6,7 +5,7 @@ import type {
   GridSize,
   ParentType,
   ToolbarAction,
-} from '@weaverse/react'
+} from './weaverse-shopify'
 
 export interface ShopifyProductImage {
   created_at: string

@@ -1,26 +1,26 @@
-import type { WeaverseElement } from '@weaverse/react'
 import * as ArticleList from '~/elements/article-list'
 import * as CollectionList from '~/elements/collection-list'
-import * as CustomHTML from './custom-html'
-import * as Hotspots from './hotspots'
-import * as Form from './form'
-import { productElements } from './product'
-import * as ProductList from './product-list'
+import type { WeaverseElement } from '~/types/weaverse-shopify'
 import * as AppBlock from './app-block'
 import * as Button from './button'
 import * as Container from './container'
 import * as Countdown from './countdown'
+import * as CustomHTML from './custom-html'
+import * as Form from './form'
+import * as Hotspots from './hotspots'
 import * as Image from './image'
+import * as Instagram from './instagram'
 import * as Layout from './layout'
 import * as Map from './map'
-import * as Text from './text'
+import { productElements } from './product'
+import * as ProductList from './product-list'
 import * as ScrollingText from './scrolling-text'
-import * as Video from './video'
-import * as Instagram from './instagram'
 import * as Slideshow from './slideshow'
 import * as Slide from './slideshow/slide'
+import * as Text from './text'
+import * as Video from './video'
 
-let elements: Record<string, WeaverseElement> = {
+export let SHOPIFY_ELEMENTS: Record<string, WeaverseElement> = {
   ...productElements,
   ArticleList: {
     Component: ArticleList.default,
@@ -119,5 +119,3 @@ let elements: Record<string, WeaverseElement> = {
     defaultCss: Slide.css,
   },
 }
-
-export default elements

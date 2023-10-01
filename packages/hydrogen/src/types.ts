@@ -19,6 +19,7 @@ import type {
   WeaverseCoreParams,
   WeaverseElement,
   WeaverseItemStore,
+  WeaverseProjectDataType,
 } from '@weaverse/react'
 import type React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
@@ -26,7 +27,8 @@ import type { WeaverseHydrogen } from '.'
 import type { WeaverseClient } from './client'
 import type { STORE_PAGES } from './context'
 import type { ThemeSettingsStore } from './hooks/use-theme-settings'
-import type { WeaverseProjectDataType } from '@weaverse/react'
+
+export type { WeaverseItemStore }
 
 export type Locale = {
   language: LanguageCode

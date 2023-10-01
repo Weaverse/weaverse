@@ -1,20 +1,16 @@
-import type {
-  ElementSchema,
-  PlatformTypeEnum,
-  WeaverseElement,
-  WeaverseItemStore,
-} from '@weaverse/react'
+import type { PlatformTypeEnum, WeaverseItemStore } from '@weaverse/react'
 import { Weaverse } from '@weaverse/react'
 import * as ThirdPartyElement from '~/elements/third-party'
 import type { ThirdPartyIntegration } from '~/types/shopify'
 import { DEFAULT_INTEGRATIONS } from './constant'
-import elements from './elements'
+import { SHOPIFY_ELEMENTS } from './elements'
 import type {
+  ElementSchema,
+  WeaverseElement,
   WeaverseShopifyParams,
   WeaverseShopifySectionData,
 } from './types/weaverse-shopify'
 
-export * from '@weaverse/react'
 export * from './WeaverseShopifyRoot'
 export * from './types'
 export * from './utils/fetch-project-data'
@@ -43,7 +39,7 @@ export class WeaverseShopify extends Weaverse {
   }
 
   registerShopifyElements = () => {
-    Object.values(elements).forEach((elm) => {
+    Object.values(SHOPIFY_ELEMENTS).forEach((elm) => {
       this.registerElement(elm)
     })
     this.registerThirdPartyElements()
