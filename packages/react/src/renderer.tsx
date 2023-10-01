@@ -18,7 +18,7 @@ export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
 
   useEffect(() => {
     context.subscribe(renderRoot)
-    context.contentRootElement = rootRef.current
+    context.contentRootElement = rootRef?.current || null
     return () => {
       context.unsubscribe(renderRoot)
     }
@@ -46,7 +46,7 @@ export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
 
 const ItemComponent = memo(({ instance }: ItemComponentProps) => {
   let context = useContext(WeaverseContext)
-  let { stitchesInstance, elementInstances, platformType } = context
+  let { stitchesInstance, elementRegistry, platformType } = context
   let [data, setData] = useState<ElementData>(instance.data)
   let {
     id,
@@ -75,7 +75,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     return () => instance.unsubscribe(render)
   }, [instance])
 
-  let Element = elementInstances.get(type)
+  let Element = elementRegistry.get(type)
 
   if (Element?.Component) {
     let Component = Element.Component
