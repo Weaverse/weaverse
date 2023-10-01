@@ -1,7 +1,6 @@
 import type Stitches from '@stitches/react/types/stitches'
 import type { ElementCSS, WeaverseItemStore } from '@weaverse/core'
 import clsx from 'clsx'
-import type { LinkHTMLAttributes } from 'react'
 
 // Make the css data formatted to correct order (desktop, tablet, mobile)
 function formatCSS(css: ElementCSS) {
@@ -14,7 +13,7 @@ function formatCSS(css: ElementCSS) {
 let permanentClasses: Record<string, string> = {}
 export function generateItemClassName(
   instance: WeaverseItemStore,
-  stitchesInstance: Stitches
+  stitchesInstance: Stitches,
 ) {
   let { css, type, className: cls = '' } = instance.data
   let className = ''
