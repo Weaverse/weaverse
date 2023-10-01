@@ -16,15 +16,17 @@ import type {
   BasicInput,
   ElementData,
   ElementSchema,
-  Weaverse,
+  WeaverseCoreParams,
   WeaverseElement,
   WeaverseItemStore,
 } from '@weaverse/react'
 import type React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
+import type { WeaverseHydrogen } from '.'
 import type { WeaverseClient } from './client'
 import type { STORE_PAGES } from './context'
 import type { ThemeSettingsStore } from './hooks/use-theme-settings'
+import type { WeaverseProjectDataType } from '@weaverse/react'
 
 export type Locale = {
   language: LanguageCode
@@ -115,20 +117,6 @@ export type WeaverseLoaderRequestInfo = {
   i18n: I18nLocale
 }
 
-type WeaverseCore = Omit<
-  Weaverse,
-  'itemInstances' | 'elementInstances' | 'registerElement' | 'data'
->
-
-export interface WeaverseHydrogen extends WeaverseCore {
-  itemInstances: Map<string | number, HydrogenComponentInstance>
-  elementInstances: Map<string, HydrogenElement>
-  registerElement(element: HydrogenElement): void
-  internal: WeaverseInternal
-  data: WeaverseStorefrontData
-  requestInfo: WeaverseLoaderRequestInfo
-}
-
 export type WeaverseStorefrontData = {
   id?: string
   __cachedId?: string
@@ -179,10 +167,9 @@ export interface HydrogenElement {
   loader?: HydrogenComponentLoaderFunction
 }
 
-export interface WeaverseHydrogenInit extends WeaverseProjectConfigs {
+export interface WeaverseHydrogenParams extends WeaverseCoreParams {
   data: HydrogenPageData
   pageId: string
-  platformType: 'shopify-hydrogen'
   internal: Partial<WeaverseInternal>
   requestInfo: WeaverseLoaderRequestInfo
 }
@@ -243,10 +230,10 @@ export interface WeaverseLoaderData {
   pageAssignment: HydrogenPageAssignment
 }
 
-export type HydrogenPageData = {
+export interface HydrogenPageData extends WeaverseProjectDataType {
   id: string
+  pageId: string
   name: string
-  rootId: string
   items: HydrogenComponentData[]
   [key: string]: any
 }
