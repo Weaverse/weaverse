@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "npm run dev:pkg -- --filter=./templates/pilot",
     "dev:pkg": "cross-env LOCAL_DEV=true turbo dev --no-daemon --parallel --filter=./packages/*",
-    "up": "bash ./upgrade.sh",
+    "clean": "bash ./scripts/clean.sh",
+    "up": "bash ./scripts/upgrade.sh",
     "test": "turbo run test",
     "build": "turbo run build --no-daemon",
     "build:graph": "turbo run build --graph=repo-graph.svg",
@@ -16,7 +17,6 @@
     "lint": "eslint packages",
     "lint:fix": "eslint packages --fix",
     "typecheck": "tsc --noEmit packages",
-    "clean": "bash ./clean.sh",
     "clean-all": "rimraf node_modules/.bin && rimraf node_modules/.cache && rimraf packages/core/dist && rimraf packages/hydrogen/dist && rimraf packages/react/dist && rimraf templates/pilot/.cache"
   },
   "workspaces": [
