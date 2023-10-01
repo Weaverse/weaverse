@@ -106,7 +106,7 @@ export class WeaverseClient {
     return new Promise(async (resolve, reject) => {
       try {
         if (!this.configs.projectId) {
-          reject(new Error('Missing Weaverse projectId!'))
+          throw new Error('Missing Weaverse projectId!')
         }
         let { request, params } = args
         let { strategy, ...pageLoadParams } = configs
@@ -131,11 +131,9 @@ export class WeaverseClient {
         }
         let { page, project, pageAssignment } = payload
         if (!page || !project || !pageAssignment) {
-          return reject(
-            new Error(
-              // @ts-ignore
-              payload?.error || 'Invalid Weaverse project payload!',
-            ),
+          throw new Error(
+            // @ts-ignore
+            payload?.error || 'Invalid Weaverse project payload!',
           )
         }
         if (page?.items) {
