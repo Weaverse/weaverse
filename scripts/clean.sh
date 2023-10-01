@@ -26,6 +26,7 @@ for dir in "${directories[@]}"; do
   for target in "${targets[@]}"; do
     rm -rf "$target"
   done
+  echo "  ✅ $dir"
   cd - >/dev/null || exit
 done
 
