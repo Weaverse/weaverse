@@ -1,12 +1,12 @@
 import type { ElementCSS } from '@weaverse/react'
-import { WeaverseContext } from '@weaverse/react'
-import React, { forwardRef, useContext } from 'react'
+import React, { forwardRef } from 'react'
+import { Components } from '~/components'
+import { useWeaverseShopify } from '~/hooks/use-weaverse-shopify'
 import { weaverseShopifyArticles, weaverseShopifyArticlesByBlog } from '~/proxy'
 import type { ArticleListProps } from '~/types'
 import type { ShopifyArticle } from '~/types/shopify'
 import { ArticleCard, css as articleCardCss } from './article-card'
-import { css as skeletonCss, Skeleton } from './skeleton'
-import { Components } from '~/components'
+import { Skeleton, css as skeletonCss } from './skeleton'
 
 let { Placeholder, Slider } = Components
 
@@ -30,10 +30,10 @@ let ArticleList = forwardRef<HTMLDivElement, ArticleListProps>((props, ref) => {
     children,
     ...rest
   } = props
-  let { ssrMode } = useContext(WeaverseContext)
+  let { ssrMode } = useWeaverseShopify()
   let articleIds: number[] = weaverseShopifyArticlesByBlog[blogId] || []
   let articles: ShopifyArticle[] = articleIds.map(
-    (id) => weaverseShopifyArticles[id]
+    (id) => weaverseShopifyArticles[id],
   )
 
   if (!blogId) {

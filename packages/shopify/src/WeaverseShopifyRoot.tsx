@@ -1,7 +1,7 @@
 import { WeaverseRoot } from '@weaverse/react'
 import React from 'react'
-import { WeaverseShopify } from '.'
 import { useStudio } from './hooks/use-studio'
+import { WeaverseShopify } from './index'
 import type { WeaverseShopifyParams } from './types/weaverse-shopify'
 
 export function createWeaverseShopify(params: WeaverseShopifyParams) {
