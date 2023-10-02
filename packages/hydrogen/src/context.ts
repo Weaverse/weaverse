@@ -1,15 +1,16 @@
-import { Weaverse, isBrowser } from '@weaverse/react'
-import type {
-  HydrogenComponent,
-  WeaverseHydrogen,
-  WeaverseHydrogenInit,
-  WeaverseLoaderData,
-} from './types'
+import { isBrowser } from '@weaverse/react'
 import { createContext } from 'react'
 import type { ThemeSettingsStore } from './hooks/use-theme-settings'
+import { WeaverseHydrogen } from './index'
+import type {
+  HydrogenComponent,
+  WeaverseHydrogenParams,
+  WeaverseLoaderData,
+} from './types'
 
 function createCachedWeaverseInstance(
-  init: WeaverseHydrogenInit,
+  params: WeaverseHydrogenParams,
+  components: HydrogenComponent[],
 ): WeaverseHydrogen {
   if (isBrowser) {
     window.__weaverses = window.__weaverses || []
@@ -17,20 +18,20 @@ function createCachedWeaverseInstance(
       let { pathname, search } = w.requestInfo
       let { __cachedId } = w.data
       return (
-        pathname === init.requestInfo.pathname &&
-        search === init.requestInfo.search &&
-        __cachedId === init.data.__cachedId
+        pathname === params.requestInfo.pathname &&
+        search === params.requestInfo.search &&
+        __cachedId === params.data.__cachedId
       )
     })
 
     if (!weaverse) {
-      weaverse = new Weaverse(init) as unknown as WeaverseHydrogen
+      weaverse = new WeaverseHydrogen(params, components)
       window.__weaverses.push(weaverse)
       console.log('💿 Weaverse', weaverse)
     }
     return weaverse
   }
-  return new Weaverse(init) as unknown as WeaverseHydrogen
+  return new WeaverseHydrogen(params, components)
 }
 
 export function createWeaverseInstance(
@@ -38,22 +39,16 @@ export function createWeaverseInstance(
   components: HydrogenComponent[],
 ) {
   let { page, configs, project, pageAssignment } = weaverseData || {}
-  let weaverse = createCachedWeaverseInstance({
-    ...configs,
-    data: page || {},
-    pageId: page?.id,
-    platformType: 'shopify-hydrogen',
-    internal: { project, pageAssignment },
-  })
+  let weaverse = createCachedWeaverseInstance(
+    {
+      ...configs,
+      data: page || {},
+      pageId: page?.id,
+      internal: { project, pageAssignment },
+    },
+    components,
+  )
 
-  components.forEach((comp) => {
-    weaverse.registerElement({
-      type: comp?.schema?.type,
-      Component: comp?.default,
-      schema: comp?.schema,
-      loader: comp?.loader,
-    })
-  })
   return weaverse
 }
 

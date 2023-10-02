@@ -19,7 +19,6 @@ export function WeaverseHydrogenRoot({
   components,
 }: WeaverseHydrogenRootProps) {
   let loaderData = useLoaderData()
-
   let data: WeaverseData = loaderData?.weaverseData
   if (data) {
     if (data instanceof Promise) {
@@ -53,11 +52,10 @@ function RenderRoot(props: {
   let { data, components } = props
   let weaverse = createWeaverseInstance(data, components)
   useStudio(weaverse)
-  // @ts-ignore
   return <WeaverseRoot context={weaverse} />
 }
 
-export let withWeaverse = (Component: React.ComponentType) => {
+export function withWeaverse(Component: React.ComponentType) {
   return (props: React.JSX.IntrinsicAttributes) => {
     let { weaverseTheme } = useLoaderData<RootRouteData>()
     let themeSettingsStore = new ThemeSettingsStore(weaverseTheme)

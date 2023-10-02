@@ -1,5 +1,4 @@
 export let stitchesUtils = {
-  // Abbreviated margin properties
   m: (value: string) => ({
     margin: value,
   }),
@@ -23,13 +22,10 @@ export let stitchesUtils = {
     marginTop: value,
     marginBottom: value,
   }),
-
-  // A property for applying width/height together
   size: (value: string) => ({
     width: value,
     height: value,
   }),
-  // Abbreviated padding properties
   px: (value: string) => ({
     paddingLeft: value,
     paddingRight: value,

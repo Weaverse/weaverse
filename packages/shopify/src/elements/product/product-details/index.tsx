@@ -1,9 +1,8 @@
 import type { ElementCSS } from '@weaverse/react'
-import { WeaverseContext } from '@weaverse/react'
 import { Components } from '~/components'
-
-import React, { forwardRef, useContext } from 'react'
+import React, { forwardRef } from 'react'
 import { ProductContext } from '~/context'
+import { useWeaverseShopify } from '~/hooks/use-weaverse-shopify'
 import type { ProductDetailsProps } from '~/types'
 import { ProductSkeleton, css as skeletonCss } from './skeleton'
 import { useProduct } from './use-product'
@@ -12,13 +11,13 @@ let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
   (props, ref) => {
     let { children, productId, productHandle, useDefaultProduct, ...rest } =
       props
-    let { ssrMode, isDesignMode } = useContext(WeaverseContext)
+    let { ssrMode, isDesignMode } = useWeaverseShopify()
     let { product, ready, formRef, selectedVariant, setSelectedVariant } =
       useProduct(productId, useDefaultProduct)
 
     let shouldRenderSkeleton = Boolean(
       (isDesignMode && productId && !product) ||
-        (ssrMode && (productId || useDefaultProduct))
+        (ssrMode && (productId || useDefaultProduct)),
     )
     let shouldRenderProduct = Boolean((isDesignMode && productId) || product)
 
@@ -70,7 +69,7 @@ let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
         </Components.Placeholder>
       </div>
     )
-  }
+  },
 )
 
 ProductDetails.defaultProps = {

@@ -1,11 +1,11 @@
 import type { ElementCSS } from '@weaverse/react'
-import { WeaverseContext } from '@weaverse/react'
-import React, { forwardRef, useContext, useId } from 'react'
+import React, { forwardRef, useId } from 'react'
+import { useWeaverseShopify } from '~/hooks/use-weaverse-shopify'
 import type { FormElementProps } from '~/types'
 import { FormField } from './form-field'
 
 let Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
-  let { ssrMode } = useContext(WeaverseContext)
+  let { ssrMode } = useWeaverseShopify()
   let {
     fields,
     formType,

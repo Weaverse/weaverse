@@ -36,7 +36,7 @@ export async function fetchProjectData({
     weaverseHost +
       `/api/public/section?id=${sectionId}${
         paramString ? '&' + paramString : ''
-      }`
+      }`,
   )
     .then((res: Response) => res.json())
     .catch((err: Error) => console.log('Error fetching project data:', err))
@@ -44,7 +44,7 @@ export async function fetchProjectData({
     if (timestamp && !isDesignMode) {
       localStorage.setItem(
         `weaverse-${sectionId}-${timestamp}`,
-        JSON.stringify(data)
+        JSON.stringify(data),
       )
     }
     return data

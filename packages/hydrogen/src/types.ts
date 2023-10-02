@@ -16,13 +16,14 @@ import type {
   BasicInput,
   ElementData,
   ElementSchema,
-  Weaverse,
+  WeaverseCoreParams,
   WeaverseElement,
-  WeaverseItemStore,
+  WeaverseProjectDataType,
 } from '@weaverse/react'
 import type React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
-import type { WeaverseClient } from './client'
+import type { WeaverseHydrogen } from './index'
+import type { WeaverseClient } from './weaverse-client'
 import type { STORE_PAGES } from './context'
 import type { ThemeSettingsStore } from './hooks/use-theme-settings'
 
@@ -53,15 +54,12 @@ export interface RouteLoaderArgs extends RemixOxygenLoaderArgs {
   }
 }
 
-export interface HydrogenComponentData
-  extends Omit<ElementData, 'childIds' | 'css'> {
-  id: string
-  type: string
-  createdAt: string
-  updatedAt: string
-  deletedAt: string
-  children: { id: string }[]
-  data: Record<string, any>
+export interface HydrogenComponentData extends ElementData {
+  data?: Record<string, any>
+  children?: { id: string }[]
+  createdAt?: string
+  updatedAt?: string
+  deletedAt?: string
 }
 
 export type HydrogenToolbarAction =
@@ -70,17 +68,7 @@ export type HydrogenToolbarAction =
   | 'duplicate'
   | 'delete'
 
-export interface HydrogenComponentSchema
-  extends Omit<
-    ElementSchema,
-    | 'parentTypes'
-    | 'flags'
-    | 'inspector'
-    | 'gridSize'
-    | 'childElements'
-    | 'catalog'
-    | 'toolbar'
-  > {
+export interface HydrogenComponentSchema extends ElementSchema {
   childTypes?: string[]
   inspector: InspectorGroup[]
   presets?: Omit<HydrogenComponentPresets, 'type'>
@@ -113,20 +101,6 @@ export type WeaverseLoaderRequestInfo = {
   pathname: string
   queries: Record<string, string | boolean>
   i18n: I18nLocale
-}
-
-type WeaverseCore = Omit<
-  Weaverse,
-  'itemInstances' | 'elementInstances' | 'registerElement' | 'data'
->
-
-export interface WeaverseHydrogen extends WeaverseCore {
-  itemInstances: Map<string | number, HydrogenComponentInstance>
-  elementInstances: Map<string, HydrogenElement>
-  registerElement(element: HydrogenElement): void
-  internal: WeaverseInternal
-  data: WeaverseStorefrontData
-  requestInfo: WeaverseLoaderRequestInfo
 }
 
 export type WeaverseStorefrontData = {
@@ -179,20 +153,12 @@ export interface HydrogenElement {
   loader?: HydrogenComponentLoaderFunction
 }
 
-export interface WeaverseHydrogenInit extends WeaverseProjectConfigs {
+export interface WeaverseHydrogenParams
+  extends Omit<WeaverseCoreParams, 'ItemConstructor'> {
   data: HydrogenPageData
   pageId: string
-  platformType: 'shopify-hydrogen'
   internal: Partial<WeaverseInternal>
   requestInfo: WeaverseLoaderRequestInfo
-}
-
-export interface HydrogenComponentInstance
-  extends Omit<WeaverseItemStore, '_flags' | 'data' | 'Element'> {
-  get _element(): HTMLElement | null
-  get Element(): HydrogenElement | undefined
-  get data(): HydrogenComponentData
-  _store: HydrogenComponentData
 }
 
 export type HydrogenComponentLoaderFunction = (
@@ -243,10 +209,10 @@ export interface WeaverseLoaderData {
   pageAssignment: HydrogenPageAssignment
 }
 
-export type HydrogenPageData = {
+export interface HydrogenPageData extends WeaverseProjectDataType {
   id: string
+  pageId: string
   name: string
-  rootId: string
   items: HydrogenComponentData[]
   [key: string]: any
 }

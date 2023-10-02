@@ -1,5 +1,7 @@
 import type { WeaverseElementProps } from '@weaverse/react'
 import type { KeenSliderInstance, KeenSliderPlugin } from 'keen-slider'
+import type { WeaverseShopify } from '~/index'
+import type { WeaverseIcon } from './components'
 import type {
   OptionDisplayType,
   ShopifyGlobalConfigs,
@@ -13,7 +15,10 @@ import type {
   ShopifyProductOption,
   ShopifyProductVariant,
 } from './shopify'
-import type { WeaverseIcon } from './components'
+
+export * from './configs'
+export * from './shopify'
+export * from './weaverse-shopify'
 
 export interface ProductContextType {
   product: ShopifyProduct
@@ -315,6 +320,7 @@ export interface HotspotsProps extends WeaverseElementProps {
 
 declare global {
   interface Window {
+    createWeaverseStudioBridge: (weaverse: WeaverseShopify) => void
     weaverseShopifyConfigs: ShopifyGlobalConfigs
     weaverseShopifyProducts: Record<number, ShopifyProduct>
     weaverseShopifyProductsByCollection: Record<number, number[]>

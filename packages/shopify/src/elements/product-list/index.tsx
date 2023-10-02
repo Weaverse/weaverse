@@ -1,12 +1,12 @@
 import type { ElementCSS } from '@weaverse/react'
-import { WeaverseContext } from '@weaverse/react'
+import React, { forwardRef } from 'react'
 import { Components } from '~/components'
-
-import React, { forwardRef, useContext } from 'react'
+import { useWeaverseShopify } from '~/hooks/use-weaverse-shopify'
 import type { ProductListProps } from '~/types'
 import { ProductCard, css as productCardCss } from './product-card'
-import { css as skeletonCss, Skeleton } from './skeleton'
+import { Skeleton, css as skeletonCss } from './skeleton'
 import { useProducts } from './use-products'
+
 let { Placeholder, Slider } = Components
 
 let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
@@ -31,7 +31,7 @@ let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
     children,
     ...rest
   } = props
-  let { ssrMode, isDesignMode } = useContext(WeaverseContext)
+  let { ssrMode, isDesignMode } = useWeaverseShopify()
   let products = useProducts({
     source,
     collectionId,

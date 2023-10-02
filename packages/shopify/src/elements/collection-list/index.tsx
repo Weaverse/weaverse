@@ -1,11 +1,11 @@
 import type { ElementCSS } from '@weaverse/react'
-import { WeaverseContext } from '@weaverse/react'
-import React, { forwardRef, useContext } from 'react'
+import React, { forwardRef } from 'react'
+import { Components } from '~/components'
+import { useWeaverseShopify } from '~/hooks/use-weaverse-shopify'
 import type { CollectionListProps } from '~/types'
 import { CollectionCard, css as collectionCardCss } from './collection-card'
-import { css as skeletonCss, Skeleton } from './skeleton'
+import { Skeleton, css as skeletonCss } from './skeleton'
 import { useCollections } from './use-collections'
-import { Components } from '~/components'
 
 let { Placeholder, Slider } = Components
 
@@ -22,7 +22,7 @@ let CollectionList = forwardRef<HTMLDivElement, CollectionListProps>(
       children,
       ...rest
     } = props
-    let { ssrMode } = useContext(WeaverseContext)
+    let { ssrMode } = useWeaverseShopify()
     let collectionsInfo = useCollections(collections)
 
     if (!collections.length) {
@@ -95,7 +95,7 @@ let CollectionList = forwardRef<HTMLDivElement, CollectionListProps>(
         {collectionCards}
       </div>
     )
-  }
+  },
 )
 
 export default CollectionList

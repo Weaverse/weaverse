@@ -1,5 +1,5 @@
-import type { createWithCache } from '@shopify/hydrogen'
-import { type Storefront } from '@shopify/hydrogen'
+// import type { createWithCache } from '@shopify/hydrogen'
+// import { type Storefront } from '@shopify/hydrogen'
 import type { LoaderArgs } from '@shopify/remix-oxygen'
 import pkg from '../package.json'
 import type {
@@ -23,14 +23,17 @@ import { getRequestQueries } from './utils'
 export class WeaverseClient {
   API = 'api/public/project'
   clientVersion = pkg.version
-  storefront: Storefront<I18nLocale>
+  basePageConfigs: Omit<WeaverseProjectConfigs, 'requestInfo'>
+  basePageRequestBody: Omit<FetchProjectRequestBody, 'url'>
+
+  storefront: WeaverseClientArgs['storefront']
+  // storefront: Storefront<I18nLocale>
   components: HydrogenComponent[]
   countries?: Localizations
   themeSchema: HydrogenThemeSchema
   configs: WeaverseProjectConfigs
-  basePageConfigs: Omit<WeaverseProjectConfigs, 'requestInfo'>
-  basePageRequestBody: Omit<FetchProjectRequestBody, 'url'>
-  withCache: ReturnType<typeof createWithCache>
+  withCache: WeaverseClientArgs['withCache']
+  // withCache: ReturnType<typeof createWithCache>
 
   constructor(args: WeaverseClientArgs) {
     let { configs, storefront, components, countries, withCache, themeSchema } =
@@ -106,7 +109,7 @@ export class WeaverseClient {
     return new Promise(async (resolve, reject) => {
       try {
         if (!this.configs.projectId) {
-          reject(new Error('Missing Weaverse projectId!'))
+          throw new Error('Missing Weaverse projectId!')
         }
         let { request, params } = args
         let { strategy, ...pageLoadParams } = configs
@@ -131,11 +134,9 @@ export class WeaverseClient {
         }
         let { page, project, pageAssignment } = payload
         if (!page || !project || !pageAssignment) {
-          return reject(
-            new Error(
-              // @ts-ignore
-              payload?.error || 'Invalid Weaverse project payload!',
-            ),
+          throw new Error(
+            // @ts-ignore
+            payload?.error || 'Invalid Weaverse project payload!',
           )
         }
         if (page?.items) {
