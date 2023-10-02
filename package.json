@@ -8,7 +8,7 @@
     "dev": "npm run dev:pkg -- --filter=./templates/pilot",
     "dev:pkg": "cross-env LOCAL_DEV=true turbo dev --no-daemon --parallel --filter=./packages/*",
     "clean": "bash ./scripts/clean.sh",
-    "up": "bash ./scripts/upgrade.sh",
+    "up": "bash ./scripts/upgrade-packages.sh",
     "update-deps": "bash ./scripts/update-deps.sh",
     "test": "turbo run test",
     "build": "turbo run build --no-daemon",
