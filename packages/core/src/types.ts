@@ -29,75 +29,19 @@ export interface WeaverseCoreParams {
 export interface WeaverseElement {
   Component: ForwardRefExoticComponent<any>
   type: string
-  // schema?: ElementSchema
-  // defaultCss?: ElementCSS
-  // permanentCss?: ElementCSS
-  // extraData?: ElementExtraData
 }
-
-// export type FlagType =
-//   | "draggable"
-//   | "resizable"
-//   | "sortable"
-//   | "ignoreShortcutKeys"
-//   | "hasContextMenu"
-//   | "isSortableContext"
-//   | "mustHaveChildren"
-// export type ElementFlags = Partial<Record<FlagType, boolean>>
-
-// export type ChildElementSelector = string | string[]
-
-// export interface ChildElement {
-//   label: string
-//   selector: ChildElementSelector
-// }
-// export type ParentType = "container" | "layout" | "root" | "product-details" | "product-info" | "slideshow" | "slide"
-
-// export type GridSize = {
-//   rowSpan: number
-//   colSpan: number
-// }
-export type ToolbarAction =
-  | "general-settings"
-  | "settings-level-2"
-  // | "text-presets"
-  // | "ai-assistant"
-  // | "scale-text"
-  | "duplicate"
-  | "delete"
-// | "copy-styles"
-// | "paste-styles"
-// | "move-up"
-// | "move-down"
-// | "next-slide"
-// | "prev-slide"
-// | "change-background"
-// | "toggle-visibility"
-// | "more-actions"
+export type ToolbarAction = "general-settings" | "settings-level-2" | "duplicate" | "delete"
 
 export interface ElementSchema {
   title: string
   type: string
-  // parentTypes: ParentType[]
-  // gridSize?: GridSize
-  // inspector?: ElementInspector
-  // toolbar?: (ToolbarAction | ToolbarAction[])[]
-  // childElements?: ChildElement[]
-  // catalog?: ElementCatalog
-  // flags?: ElementFlags
 }
 
 export interface ElementData {
   id: string
   type: string
-  // childIds?: (string | number)[]
-  // css?: ElementCSS
   [key: string]: any
 }
-
-// export interface ElementExtraData {
-//   [key: string]: unknown
-// }
 
 export type WeaverseCSSProperties = Stitches.CSS & Partial<Record<keyof typeof stitchesUtils, string | number>>
 export type ChildElementCSS = Partial<{
@@ -109,23 +53,7 @@ export interface ElementCSS {
   "@mobile"?: WeaverseCSSProperties | ChildElementCSS
 }
 
-// export interface ElementInspector {
-//   settings?: (AdvancedGroup | BasicGroup)[]
-//   styles?: (AdvancedGroup | BasicGroup)[]
-// }
-
-// export interface AdvancedGroup {
-//   groupType: AdvancedGroupType
-// }
-
-// export interface BasicGroup {
-//   groupType: "basic"
-//   groupHeader: string
-//   inputs: BasicInput[]
-// }
-
 export type AdvancedGroupType =
-  // Styles
   | "border"
   | "alignment"
   | "background"
@@ -139,7 +67,6 @@ export type AdvancedGroupType =
 export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
   type: InputType
   label?: string
-  // binding?: "style" | "data"
   /**
    * The key of the value of the element data or styles
    * @example
@@ -169,7 +96,6 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
   defaultValue?: any
   placeholder?: string
   helpText?: string
-  // shouldRevalidate?: boolean
 }
 
 export type AdditionalInputConfigs =
@@ -177,7 +103,6 @@ export type AdditionalInputConfigs =
   | ToggleGroupConfigs
   | RangeInputConfigs
   | ChildrenSortInputConfigs
-// | DataSortInputConfigs
 
 export interface SelectInputConfigs {
   options?: { value: string; label: string; icon?: string; weight?: string }[]
@@ -200,14 +125,7 @@ export interface ChildrenSortInputConfigs {
   actions: SortableItemAction[]
 }
 
-// export interface DataSortInputConfigs {
-//   prop: string
-//   defaultData: object
-//   inspector: string
-// }
-
 export type InputType =
-  // Basic inputs
   | "color"
   | "datepicker"
   | "image"
@@ -219,19 +137,6 @@ export type InputType =
   | "textarea"
   | "toggle-group"
   | "position"
-// Element inputs
-// | "data-sort"
-// | "information"
-// | "product"
-// | "product-list"
-// | "product-swatches"
-// | "text-editor"
-// | "custom.html"
-// | "instagram"
-// | "collection-list"
-// | "collection"
-// | "article-list"
-// | "map-autocomplete"
 
 declare global {
   interface Window {
