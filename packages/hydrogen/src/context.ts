@@ -25,21 +25,13 @@ function createCachedWeaverseInstance(
     })
 
     if (!weaverse) {
-      weaverse = new WeaverseHydrogen(params)
-      components.forEach((comp) => {
-        weaverse!.registerElement({
-          type: comp?.schema?.type,
-          Component: comp?.default,
-          schema: comp?.schema,
-          loader: comp?.loader,
-        })
-      })
+      weaverse = new WeaverseHydrogen(params, components)
       window.__weaverses.push(weaverse)
       console.log('💿 Weaverse', weaverse)
     }
     return weaverse
   }
-  return new WeaverseHydrogen(params)
+  return new WeaverseHydrogen(params, components)
 }
 
 export function createWeaverseInstance(

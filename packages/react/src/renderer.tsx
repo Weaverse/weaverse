@@ -83,9 +83,11 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
       rest.ref = instance.ref
     }
     let renderChildren = children?.length
-      ? children.map((item: any) => <ItemInstance key={item.id} id={item.id} />)
+      ? children.map((item: { id: string }) => (
+          <ItemInstance key={item.id} id={item.id} />
+        ))
       : childIds.length
-      ? childIds.map((cid) => <ItemInstance key={cid} id={cid} />)
+      ? childIds.map((cid: string) => <ItemInstance key={cid} id={cid} />)
       : null
     let style = rest.style || {}
     if (__hidden) style.display = 'none'

@@ -15,7 +15,6 @@ import type {
   ToggleGroupConfigs,
   WeaverseCSSProperties,
   WeaverseCoreParams,
-  WeaverseItemStore,
   WeaverseProjectDataType,
 } from '@weaverse/react'
 import type { ThirdPartyIntegration } from './shopify'
@@ -29,7 +28,6 @@ export type {
   SortableItemAction,
   ToggleGroupConfigs,
   WeaverseCSSProperties,
-  WeaverseItemStore,
   WeaverseProjectDataType,
 }
 
@@ -167,7 +165,8 @@ export interface WeaverseShopifySectionData extends WeaverseProjectDataType {
   }
 }
 
-export interface WeaverseShopifyParams extends WeaverseCoreParams {
+export interface WeaverseShopifyParams
+  extends Omit<WeaverseCoreParams, 'ItemConstructor'> {
   thirdPartyIntegration?: ThirdPartyIntegration[]
   elementSchemas?: ElementSchema[]
   ssrMode?: boolean

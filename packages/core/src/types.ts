@@ -1,8 +1,8 @@
 import type * as Stitches from "@stitches/core"
 import type { ForwardRefExoticComponent } from "react"
+import type { WeaverseItemStore } from "./core"
 import type { stitchesUtils } from "./utils/stitches"
 
-// Project types
 export interface WeaverseProjectDataType {
   items: ElementData[]
   rootId: string
@@ -14,15 +14,15 @@ export interface BreakPoints {
 }
 export type PlatformTypeEnum = "shopify-section" | "shopify-hydrogen" | "nextjs"
 
-// Weaverse types
 export interface WeaverseCoreParams {
   mediaBreakPoints?: BreakPoints
   weaverseHost?: string
   weaverseVersion?: string
-  projectId?: string
-  data?: WeaverseProjectDataType
+  projectId: string
+  data: WeaverseProjectDataType
   isDesignMode?: boolean
   platformType?: PlatformTypeEnum
+  ItemConstructor: typeof WeaverseItemStore
 }
 
 export interface WeaverseElement {

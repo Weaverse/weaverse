@@ -18,17 +18,14 @@ import type {
   ElementSchema,
   WeaverseCoreParams,
   WeaverseElement,
-  WeaverseItemStore,
   WeaverseProjectDataType,
 } from '@weaverse/react'
 import type React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
 import type { WeaverseHydrogen } from '.'
-import type { WeaverseClient } from './client'
+import type { WeaverseClient } from './weaverse-client'
 import type { STORE_PAGES } from './context'
 import type { ThemeSettingsStore } from './hooks/use-theme-settings'
-
-export type { WeaverseItemStore }
 
 export type Locale = {
   language: LanguageCode
@@ -57,15 +54,12 @@ export interface RouteLoaderArgs extends RemixOxygenLoaderArgs {
   }
 }
 
-export interface HydrogenComponentData
-  extends Omit<ElementData, 'childIds' | 'css'> {
-  id: string
-  type: string
-  createdAt: string
-  updatedAt: string
-  deletedAt: string
-  children: { id: string }[]
-  data: Record<string, any>
+export interface HydrogenComponentData extends ElementData {
+  data?: Record<string, any>
+  children?: { id: string }[]
+  createdAt?: string
+  updatedAt?: string
+  deletedAt?: string
 }
 
 export type HydrogenToolbarAction =
@@ -74,17 +68,7 @@ export type HydrogenToolbarAction =
   | 'duplicate'
   | 'delete'
 
-export interface HydrogenComponentSchema
-  extends Omit<
-    ElementSchema,
-    | 'parentTypes'
-    | 'flags'
-    | 'inspector'
-    | 'gridSize'
-    | 'childElements'
-    | 'catalog'
-    | 'toolbar'
-  > {
+export interface HydrogenComponentSchema extends ElementSchema {
   childTypes?: string[]
   inspector: InspectorGroup[]
   presets?: Omit<HydrogenComponentPresets, 'type'>
@@ -169,19 +153,12 @@ export interface HydrogenElement {
   loader?: HydrogenComponentLoaderFunction
 }
 
-export interface WeaverseHydrogenParams extends WeaverseCoreParams {
+export interface WeaverseHydrogenParams
+  extends Omit<WeaverseCoreParams, 'ItemConstructor'> {
   data: HydrogenPageData
   pageId: string
   internal: Partial<WeaverseInternal>
   requestInfo: WeaverseLoaderRequestInfo
-}
-
-export interface HydrogenComponentInstance
-  extends Omit<WeaverseItemStore, '_flags' | 'data' | 'Element'> {
-  get _element(): HTMLElement | null
-  get Element(): HydrogenElement | undefined
-  get data(): HydrogenComponentData
-  _store: HydrogenComponentData
 }
 
 export type HydrogenComponentLoaderFunction = (

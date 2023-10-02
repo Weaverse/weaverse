@@ -10,29 +10,32 @@
 import * as stitches from "@stitches/core"
 import type Stitches from "@stitches/core/types/stitches"
 import type { RefObject } from "react"
-import type { BreakPoints, ElementData, PlatformTypeEnum, WeaverseCoreParams, WeaverseProjectDataType } from "./types"
-import { getItemDefaultData, merge } from "./utils"
+import type {
+  BreakPoints,
+  ElementCSS,
+  ElementData,
+  PlatformTypeEnum,
+  WeaverseCoreParams,
+  WeaverseProjectDataType,
+} from "./types"
+import { merge } from "./utils"
 import { EventEmitter } from "./utils/event-emiiter"
 import { stitchesUtils } from "./utils/stitches"
 
 export class WeaverseItemStore extends EventEmitter {
   weaverse: Weaverse
   ref: RefObject<HTMLElement> = { current: null }
-  private _store: ElementData = { id: "", type: "" }
+  _store: ElementData = { id: "", type: "" }
   stitchesClass = ""
 
-  constructor(itemData: ElementData, weaverse: Weaverse) {
+  constructor(intialData: ElementData, weaverse: Weaverse) {
     super()
-    let { type, id } = itemData
+    let { type, id } = intialData || {}
     this.weaverse = weaverse
     if (id && type) {
       weaverse.itemInstances.set(id, this)
-      if (weaverse.platformType === "shopify-hydrogen") {
-        let { data, ...rest } = itemData
-        this._store = { ...data, ...rest }
-      } else {
-        this._store = { ...itemData }
-      }
+    } else {
+      throw new Error(`'id' and 'type' are required to create a new Weaverse item.`)
     }
   }
 
@@ -44,25 +47,24 @@ export class WeaverseItemStore extends EventEmitter {
     return this.ref.current
   }
 
-  get _flags() {
-    return this.Element?.schema?.flags || {}
-  }
-
   get Element() {
     return this.weaverse.elementRegistry.get(this._store.type)
   }
 
-  set data(update: Omit<ElementData, "id" | "type">) {
-    this._store = { ...this.data, ...update }
-  }
-
-  get data(): ElementData {
-    let defaultData = getItemDefaultData(this)
+  get css(): ElementCSS {
     let defaultCss = this.Element?.defaultCss || {}
     let currentCss = this._store.css || {}
     let css = merge(defaultCss, currentCss)
-    let extraData = this.Element?.extraData
-    return { ...defaultData, ...extraData, ...this._store, css }
+    return css
+  }
+
+  get data(): ElementData {
+    let css = this.css
+    return { ...this._store, css }
+  }
+
+  set data(update: Omit<ElementData, "id" | "type">) {
+    this._store = { ...this.data, ...update }
   }
 
   setData = (update: Omit<ElementData, "id" | "type">) => {
@@ -87,9 +89,9 @@ export class Weaverse extends EventEmitter {
   stitchesInstance: Stitches | any
   studioBridge?: any
 
+  declare ItemConstructor: typeof WeaverseItemStore
   declare data: WeaverseProjectDataType
   declare platformType: PlatformTypeEnum
-  static WeaverseItemStore: typeof WeaverseItemStore = WeaverseItemStore
   readonly elementRegistry = new Map()
 
   mediaBreakPoints: BreakPoints = {
@@ -99,7 +101,7 @@ export class Weaverse extends EventEmitter {
     mobile: "(max-width: 767.98px)",
   }
 
-  constructor(params: WeaverseCoreParams = {}) {
+  constructor(params: WeaverseCoreParams) {
     super()
     Object.entries(params).forEach(([k, v]) => {
       let key = k as keyof typeof this
@@ -113,13 +115,13 @@ export class Weaverse extends EventEmitter {
    * Create new `WeaverseItemStore` instance for each item in the project.
    */
   initProject() {
-    let data = this.data
+    let { data, itemInstances, ItemConstructor } = this
     if (data?.items) {
       data.items.forEach((item) => {
-        if (!this.itemInstances.get(item.id)) {
-          return new WeaverseItemStore(item, this)
+        if (!itemInstances.get(item.id)) {
+          new ItemConstructor(item, this)
         } else {
-          let itemInstance = this.itemInstances.get(item.id)
+          let itemInstance = itemInstances.get(item.id)
           itemInstance.setData(item)
         }
       })
