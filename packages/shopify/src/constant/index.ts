@@ -1,6 +1,6 @@
 import type { CountdownTimeKey } from '~/types/components'
 import type { OptionDisplayType } from '~/types/configs'
-import type { ThirdPartyIntegration } from '..'
+import type { ThirdPartyIntegration } from '~/types/shopify'
 
 export let TIMES: CountdownTimeKey[] = ['days', 'hours', 'minutes', 'seconds']
 export let COUNTDOWN_KEY = 'wv-cd-evergreen-start'

@@ -1,6 +1,6 @@
 import type { WeaverseElementProps } from '@weaverse/react'
 import type { KeenSliderInstance, KeenSliderPlugin } from 'keen-slider'
-import type { WeaverseShopify } from '..'
+import type { WeaverseShopify } from '~/index'
 import type { WeaverseIcon } from './components'
 import type {
   OptionDisplayType,
