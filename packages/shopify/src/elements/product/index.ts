@@ -1,4 +1,4 @@
-import type { WeaverseElement } from '@weaverse/react'
+import type { WeaverseElement } from '~/types'
 import * as ProductBuyButton from './product-buy-button'
 import * as ProductDescription from './product-description'
 import * as ProductDetails from './product-details'
