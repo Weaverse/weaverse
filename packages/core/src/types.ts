@@ -12,6 +12,7 @@ export interface BreakPoints {
   mobile: string
   desktop: string
 }
+
 export type PlatformTypeEnum = "shopify-section" | "shopify-hydrogen" | "nextjs"
 
 export interface WeaverseCoreParams {
@@ -102,6 +103,7 @@ export type WeaverseCSSProperties = Stitches.CSS & Partial<Record<keyof typeof s
 export type ChildElementCSS = Partial<{
   [selector: string]: WeaverseCSSProperties & ChildElementCSS
 }>
+
 export interface ElementCSS {
   "@desktop"?: WeaverseCSSProperties | ChildElementCSS
   "@mobile"?: WeaverseCSSProperties | ChildElementCSS
@@ -164,7 +166,7 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
    * `imagesPerRow.gt.1`
    */
   condition?: string
-  defaultValue?: string | number | boolean
+  defaultValue?: any
   placeholder?: string
   helpText?: string
   // shouldRevalidate?: boolean
@@ -193,6 +195,7 @@ export interface RangeInputConfigs {
 }
 
 export type SortableItemAction = "add" | "edit" | "duplicate" | "delete" | "toggle-visibility"
+
 export interface ChildrenSortInputConfigs {
   actions: SortableItemAction[]
 }
