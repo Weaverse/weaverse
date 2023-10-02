@@ -83,4 +83,8 @@ export class WeaverseShopifyItem extends WeaverseItemStore {
     let extraData = this.Element?.extraData
     return { ...defaultData, ...extraData, ...super.data }
   }
+
+  set data(update) {
+    super.data = update
+  }
 }

@@ -79,4 +79,8 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
       }, {})
     return { ...defaultData, ...super.data } as HydrogenComponentData
   }
+
+  set data(update) {
+    super.data = update
+  }
 }
