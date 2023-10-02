@@ -1,7 +1,7 @@
 import { isBrowser } from '@weaverse/react'
 import { createContext } from 'react'
-import { WeaverseHydrogen } from '.'
 import type { ThemeSettingsStore } from './hooks/use-theme-settings'
+import { WeaverseHydrogen } from './index'
 import type {
   HydrogenComponent,
   WeaverseHydrogenParams,

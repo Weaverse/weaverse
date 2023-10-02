@@ -22,7 +22,7 @@ import type {
 } from '@weaverse/react'
 import type React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
-import type { WeaverseHydrogen } from '.'
+import type { WeaverseHydrogen } from './index'
 import type { WeaverseClient } from './weaverse-client'
 import type { STORE_PAGES } from './context'
 import type { ThemeSettingsStore } from './hooks/use-theme-settings'
