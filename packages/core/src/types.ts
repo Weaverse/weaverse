@@ -18,6 +18,7 @@ export interface BreakPoints {
   mobile: string
   desktop: string
 }
+
 export type PlatformTypeEnum = "shopify-section" | "shopify-hydrogen" | "nextjs"
 
 // Weaverse types
@@ -45,12 +46,14 @@ export interface WeaverseElement {
 
 // Element types
 export type CatalogGroup = "essential" | "composition" | "shopify"
+
 export interface ElementCatalog {
   name: string
   icon?: string
   group?: CatalogGroup
   data?: ElementDataInCatalog[]
 }
+
 export interface ElementDataInCatalog extends Omit<ElementData, "id"> {
   id: string | number
 }
@@ -71,6 +74,7 @@ export interface ChildElement {
   label: string
   selector: ChildElementSelector
 }
+
 export type ParentType = "container" | "layout" | "root" | "product-details" | "product-info" | "slideshow" | "slide"
 
 export type GridSize = {
@@ -112,6 +116,7 @@ export interface ElementData {
   type: string
   childIds?: (string | number)[]
   css?: ElementCSS
+
   [key: string]: any
 }
 
@@ -123,6 +128,7 @@ export type WeaverseCSSProperties = Stitches.CSS & Partial<Record<keyof typeof s
 export type ChildElementCSS = Partial<{
   [selector: string]: WeaverseCSSProperties & ChildElementCSS
 }>
+
 export interface ElementCSS {
   "@desktop"?: WeaverseCSSProperties | ChildElementCSS
   "@mobile"?: WeaverseCSSProperties | ChildElementCSS
@@ -143,6 +149,33 @@ export interface BasicGroup {
   groupHeader: string
   inputs: BasicInput[]
 }
+
+export type InputType =
+  // Basic inputs
+  | "color"
+  | "datepicker"
+  | "image"
+  | "range"
+  | "select"
+  | "children-sort"
+  | "data-sort"
+  | "switch"
+  | "text"
+  | "textarea"
+  | "toggle-group"
+  | "position"
+  | "information"
+  // Element inputs
+  | "product"
+  | "product-list"
+  | "product-swatches"
+  | "text-editor"
+  | "custom.html"
+  | "instagram"
+  | "collection-list"
+  | "collection"
+  | "article-list"
+  | "map-autocomplete"
 
 export type AdvancedGroupType =
   // Styles
@@ -186,7 +219,7 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
    * `imagesPerRow.gt.1`
    */
   condition?: string
-  defaultValue?: string | number | boolean
+  defaultValue?: any
   placeholder?: string
   helpText?: string
   shouldRevalidate?: boolean
@@ -215,6 +248,7 @@ export interface RangeInputConfigs {
 }
 
 export type SortableItemAction = "add" | "edit" | "duplicate" | "delete" | "toggle-visibility"
+
 export interface ChildrenSortInputConfigs {
   actions: SortableItemAction[]
 }
@@ -224,33 +258,6 @@ export interface DataSortInputConfigs {
   defaultData: object
   inspector: string
 }
-
-export type InputType =
-  // Basic inputs
-  | "color"
-  | "datepicker"
-  | "image"
-  | "range"
-  | "select"
-  | "children-sort"
-  | "data-sort"
-  | "switch"
-  | "text"
-  | "textarea"
-  | "toggle-group"
-  | "position"
-  | "information"
-  // Element inputs
-  | "product"
-  | "product-list"
-  | "product-swatches"
-  | "text-editor"
-  | "custom.html"
-  | "instagram"
-  | "collection-list"
-  | "collection"
-  | "article-list"
-  | "map-autocomplete"
 
 declare global {
   interface Window {
