@@ -1,5 +1,3 @@
-// import type { createWithCache } from '@shopify/hydrogen'
-// import { type Storefront } from '@shopify/hydrogen'
 import type { LoaderArgs } from '@shopify/remix-oxygen'
 import pkg from '../package.json'
 import type {
@@ -7,11 +5,7 @@ import type {
   FetchProjectPayload,
   FetchProjectRequestBody,
   FetchWithCacheOptions,
-  HydrogenComponent,
   HydrogenComponentData,
-  HydrogenThemeSchema,
-  I18nLocale,
-  Localizations,
   PageLoadParams,
   WeaverseClientArgs,
   WeaverseLoaderData,
@@ -27,13 +21,11 @@ export class WeaverseClient {
   basePageRequestBody: Omit<FetchProjectRequestBody, 'url'>
 
   storefront: WeaverseClientArgs['storefront']
-  // storefront: Storefront<I18nLocale>
-  components: HydrogenComponent[]
-  countries?: Localizations
-  themeSchema: HydrogenThemeSchema
-  configs: WeaverseProjectConfigs
+  components: WeaverseClientArgs['components']
+  themeSchema: WeaverseClientArgs['themeSchema']
+  configs: WeaverseClientArgs['configs']
   withCache: WeaverseClientArgs['withCache']
-  // withCache: ReturnType<typeof createWithCache>
+  countries?: WeaverseClientArgs['countries']
 
   constructor(args: WeaverseClientArgs) {
     let { configs, storefront, components, countries, withCache, themeSchema } =
