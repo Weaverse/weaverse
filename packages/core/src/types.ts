@@ -83,7 +83,7 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
   /**
    * Only display if condition matches.
    *
-   * Format: `dataBindingKey.conditionalOperator.value`
+   * Format: `bindingName.conditionalOperator.value`
    *
    * Supported operators: `eq`, `ne`, `gt`, `gte`, `lt`, `lte`
    *
@@ -98,11 +98,7 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
   helpText?: string
 }
 
-export type AdditionalInputConfigs =
-  | SelectInputConfigs
-  | ToggleGroupConfigs
-  | RangeInputConfigs
-  | ChildrenSortInputConfigs
+export type AdditionalInputConfigs = SelectInputConfigs | ToggleGroupConfigs | RangeInputConfigs
 
 export interface SelectInputConfigs {
   options?: { value: string; label: string; icon?: string; weight?: string }[]
@@ -119,24 +115,24 @@ export interface RangeInputConfigs {
   unit?: string
 }
 
-export type SortableItemAction = "add" | "edit" | "duplicate" | "delete" | "toggle-visibility"
-
-export interface ChildrenSortInputConfigs {
-  actions: SortableItemAction[]
-}
-
 export type InputType =
   | "color"
   | "datepicker"
   | "image"
   | "range"
   | "select"
-  | "children-sort"
   | "switch"
   | "text"
   | "textarea"
   | "toggle-group"
   | "position"
+  | "map-autocomplete"
+  | "text-editor"
+  | "product"
+  | "product-list"
+  | "collection-list"
+  | "collection"
+  | "article-list"
 
 declare global {
   interface Window {
