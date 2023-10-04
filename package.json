@@ -28,11 +28,11 @@
     "packages/hydrogen"
   ],
   "devDependencies": {
-    "@types/node": "^20.8.0",
+    "@types/node": "^20.8.2",
     "@types/react": "^18.2.24",
     "@types/react-dom": "18.2.8",
-    "@typescript-eslint/eslint-plugin": "^6.7.3",
-    "@typescript-eslint/parser": "^6.7.3",
+    "@typescript-eslint/eslint-plugin": "^6.7.4",
+    "@typescript-eslint/parser": "^6.7.4",
     "cross-env": "^7.0.3",
     "eslint": "8.50.0",
     "eslint-config-prettier": "^9.0.0",
