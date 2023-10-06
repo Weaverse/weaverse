@@ -93,7 +93,7 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
    * `imagesPerRow.gt.1`
    */
   condition?: string
-  defaultValue?: any
+  defaultValue?: string | number | boolean | WeaverseImage
   placeholder?: string
   helpText?: string
 }
@@ -115,24 +115,32 @@ export interface RangeInputConfigs {
   unit?: string
 }
 
+export type WeaverseImage = {
+  id: string
+  url: string
+  alt: string
+  width: number
+  height: number
+}
+
 export type InputType =
+  | "article-list"
+  | "collection"
+  | "collection-list"
   | "color"
   | "datepicker"
   | "image"
+  | "map-autocomplete"
+  | "position"
+  | "product"
+  | "product-list"
   | "range"
+  | "richtext"
   | "select"
   | "switch"
   | "text"
   | "textarea"
   | "toggle-group"
-  | "position"
-  | "map-autocomplete"
-  | "text-editor"
-  | "product"
-  | "product-list"
-  | "collection-list"
-  | "collection"
-  | "article-list"
 
 declare global {
   interface Window {
