@@ -44,6 +44,7 @@ export class WeaverseClient {
     this.themeSchema = themeSchema
     this.env = env
     this.withCache = withCache
+    this.countries = countries
 
     this.configs = getWeaverseConfigs(request, env)
     this.basePageConfigs = {
@@ -91,7 +92,7 @@ export class WeaverseClient {
         data = {
           ...data,
           schema: this.themeSchema,
-          countries: this.countries,
+          countries: this.countries || [],
           publicEnv: this.configs.publicEnv,
         }
       }
