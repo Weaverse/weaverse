@@ -1,7 +1,7 @@
 /// <reference types="@shopify/remix-oxygen" />
 /// <reference types="@shopify/oxygen-workers-types" />
 
-import type { NavigateFunction, Params } from '@remix-run/react'
+import type { NavigateFunction } from '@remix-run/react'
 import type { Storefront, createWithCache } from '@shopify/hydrogen'
 import type {
   CountryCode,
@@ -17,16 +17,16 @@ import type {
   ElementData,
   ElementSchema,
   WeaverseCoreParams,
-  WeaverseImage,
   WeaverseElement,
+  WeaverseImage,
   WeaverseProjectDataType,
 } from '@weaverse/react'
 import type React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
-import type { WeaverseHydrogen } from './index'
-import type { WeaverseClient } from './weaverse-client'
 import type { STORE_PAGES } from './context'
 import type { ThemeSettingsStore } from './hooks/use-theme-settings'
+import type { WeaverseHydrogen } from './index'
+import type { WeaverseClient } from './weaverse-client'
 
 export type { WeaverseImage }
 
@@ -37,7 +37,7 @@ export type Locale = {
   currency: CurrencyCode
 }
 
-export type Localizations = Record<string, Locale>
+export type Localizations = { [key: string]: Locale }
 
 export interface AllCacheOptions {
   mode?: string
@@ -47,8 +47,9 @@ export interface AllCacheOptions {
   staleIfError?: number
 }
 
-export type ComponentLoaderArgs = RemixOxygenLoaderArgs & {
-  itemData: HydrogenComponentData
+export type ComponentLoaderArgs<T = { [key: string]: any }> = {
+  data: T
+  weaverse: WeaverseClient
 }
 
 export interface RouteLoaderArgs extends RemixOxygenLoaderArgs {
@@ -58,7 +59,7 @@ export interface RouteLoaderArgs extends RemixOxygenLoaderArgs {
 }
 
 export interface HydrogenComponentData extends ElementData {
-  data?: Record<string, any>
+  data?: { [key: string]: any }
   children?: { id: string }[]
   createdAt?: string
   updatedAt?: string
@@ -99,10 +100,9 @@ export type I18nLocale = Locale & {
 }
 
 export type WeaverseLoaderRequestInfo = {
-  params: Params
   search: string
   pathname: string
-  queries: Record<string, string | boolean>
+  queries: { [key: string]: string | boolean }
   i18n: I18nLocale
 }
 
@@ -126,7 +126,6 @@ export type HydrogenProjectType = {
   id: string
   weaverseShopId: string
   name: string
-  config: HydrogenProjectConfig
   [key: string]: any
 }
 
@@ -241,10 +240,14 @@ export interface HydrogenThemeSchema {
 
 export type PageType = keyof typeof STORE_PAGES
 
-export type PageLoadParams = {
+export type PageAssignmentParams = {
   type?: PageType
   locale?: string
   handle?: string
+}
+
+export type LoadPageParams = PageAssignmentParams & {
+  strategy?: AllCacheOptions
 }
 
 export type FetchProjectRequestBody = {
@@ -252,7 +255,7 @@ export type FetchProjectRequestBody = {
   url: string
   countries?: Localizations
   i18n?: I18nLocale
-  params?: PageLoadParams
+  params?: PageAssignmentParams
   isDesignMode?: boolean
 }
 
@@ -270,8 +273,9 @@ export type HydrogenThemeEnv = {
 }
 
 export type WeaverseClientArgs = {
+  request: Request
   withCache: ReturnType<typeof createWithCache>
-  configs: WeaverseProjectConfigs
+  env: HydrogenThemeEnv
   storefront: Storefront<I18nLocale>
   components: HydrogenComponent[]
   countries?: Localizations
