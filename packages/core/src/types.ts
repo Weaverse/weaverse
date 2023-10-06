@@ -83,7 +83,7 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
   /**
    * Only display if condition matches.
    *
-   * Format: `dataBindingKey.conditionalOperator.value`
+   * Format: `bindingName.conditionalOperator.value`
    *
    * Supported operators: `eq`, `ne`, `gt`, `gte`, `lt`, `lte`
    *
@@ -93,16 +93,12 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
    * `imagesPerRow.gt.1`
    */
   condition?: string
-  defaultValue?: any
+  defaultValue?: string | number | boolean | WeaverseImage
   placeholder?: string
   helpText?: string
 }
 
-export type AdditionalInputConfigs =
-  | SelectInputConfigs
-  | ToggleGroupConfigs
-  | RangeInputConfigs
-  | ChildrenSortInputConfigs
+export type AdditionalInputConfigs = SelectInputConfigs | ToggleGroupConfigs | RangeInputConfigs
 
 export interface SelectInputConfigs {
   options?: { value: string; label: string; icon?: string; weight?: string }[]
@@ -119,24 +115,32 @@ export interface RangeInputConfigs {
   unit?: string
 }
 
-export type SortableItemAction = "add" | "edit" | "duplicate" | "delete" | "toggle-visibility"
-
-export interface ChildrenSortInputConfigs {
-  actions: SortableItemAction[]
+export type WeaverseImage = {
+  id: string
+  url: string
+  alt: string
+  width: number
+  height: number
 }
 
 export type InputType =
+  | "article-list"
+  | "collection"
+  | "collection-list"
   | "color"
   | "datepicker"
   | "image"
+  | "map-autocomplete"
+  | "position"
+  | "product"
+  | "product-list"
   | "range"
+  | "richtext"
   | "select"
-  | "children-sort"
   | "switch"
   | "text"
   | "textarea"
   | "toggle-group"
-  | "position"
 
 declare global {
   interface Window {

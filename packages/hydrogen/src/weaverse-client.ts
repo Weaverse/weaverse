@@ -1,54 +1,57 @@
-// import type { createWithCache } from '@shopify/hydrogen'
-// import { type Storefront } from '@shopify/hydrogen'
-import type { LoaderArgs } from '@shopify/remix-oxygen'
 import pkg from '../package.json'
 import type {
   AllCacheOptions,
   FetchProjectPayload,
   FetchProjectRequestBody,
   FetchWithCacheOptions,
-  HydrogenComponent,
   HydrogenComponentData,
-  HydrogenThemeSchema,
-  I18nLocale,
-  Localizations,
-  PageLoadParams,
+  LoadPageParams,
   WeaverseClientArgs,
   WeaverseLoaderData,
   WeaverseProjectConfigs,
   WeaverseStudioQueries,
 } from './types'
-import { getRequestQueries } from './utils'
+import { getRequestQueries, getWeaverseConfigs } from './utils'
 
 export class WeaverseClient {
   API = 'api/public/project'
   clientVersion = pkg.version
   basePageConfigs: Omit<WeaverseProjectConfigs, 'requestInfo'>
   basePageRequestBody: Omit<FetchProjectRequestBody, 'url'>
-
-  storefront: WeaverseClientArgs['storefront']
-  // storefront: Storefront<I18nLocale>
-  components: HydrogenComponent[]
-  countries?: Localizations
-  themeSchema: HydrogenThemeSchema
   configs: WeaverseProjectConfigs
+
+  request: WeaverseClientArgs['request']
+  storefront: WeaverseClientArgs['storefront']
+  components: WeaverseClientArgs['components']
+  themeSchema: WeaverseClientArgs['themeSchema']
+  env: WeaverseClientArgs['env']
   withCache: WeaverseClientArgs['withCache']
-  // withCache: ReturnType<typeof createWithCache>
+  countries?: WeaverseClientArgs['countries']
 
   constructor(args: WeaverseClientArgs) {
-    let { configs, storefront, components, countries, withCache, themeSchema } =
-      args
+    let {
+      env,
+      storefront,
+      components,
+      countries,
+      withCache,
+      themeSchema,
+      request,
+    } = args
+    this.request = request
     this.storefront = storefront
     this.components = components
-    this.countries = countries
     this.themeSchema = themeSchema
-    this.configs = configs
+    this.env = env
     this.withCache = withCache
+    this.countries = countries
+
+    this.configs = getWeaverseConfigs(request, env)
     this.basePageConfigs = {
-      projectId: configs.projectId,
-      weaverseHost: configs.weaverseHost,
-      weaverseVersion: configs.weaverseVersion,
-      isDesignMode: configs.isDesignMode,
+      projectId: this.configs.projectId,
+      weaverseHost: this.configs.weaverseHost,
+      weaverseVersion: this.configs.weaverseVersion,
+      isDesignMode: this.configs.isDesignMode,
     }
     this.basePageRequestBody = {
       countries,
@@ -64,7 +67,9 @@ export class WeaverseClient {
     let res = this.withCache(cacheKey, strategy, async () => {
       let response = await fetch(url, reqInit)
       if (!response.ok) {
-        throw new Error('Something went wrong. Skipping cache.')
+        let error = await response.text()
+        let { status, statusText } = response
+        throw new Error(`${status} ${statusText} ${error}`)
       }
       return await response.json<T>()
     })
@@ -78,43 +83,41 @@ export class WeaverseClient {
       if (!projectId) {
         throw new Error('Missing Weaverse projectId!')
       }
-      let res = await this.fetchWithCache<{ ok: boolean; payload: any }>(
+      let res = await this.fetchWithCache(
         `${weaverseHost}/${API}/${projectId}/configs`,
-        { strategy },
+        { method: 'POST', strategy },
       )
-      let data = null
-      if (res.ok) {
-        data = res.payload
-        if (this.configs.isDesignMode) {
-          data = {
-            ...data,
-            schema: this.themeSchema,
-            countries: this.countries,
-            publicEnv: this.configs.publicEnv,
-          }
+      let data = res || {}
+      if (this.configs.isDesignMode) {
+        data = {
+          ...data,
+          schema: this.themeSchema,
+          countries: this.countries || [],
+          publicEnv: this.configs.publicEnv,
         }
       }
       return data
-    } catch (err) {
-      console.log(`❌ [Weaverse theme settings]`, err)
+    } catch (e) {
+      console.error(`❌ Theme settings load failed.`, e)
       return null
     }
   }
 
   loadPage = async (
-    args: LoaderArgs,
-    configs: PageLoadParams & { strategy?: AllCacheOptions } = {},
+    params: LoadPageParams = {},
   ): Promise<WeaverseLoaderData | null> => {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       try {
-        if (!this.configs.projectId) {
+        let { request, storefront, basePageRequestBody, basePageConfigs } = this
+        let { projectId, isDesignMode, weaverseHost } = this.configs
+
+        if (!projectId) {
           throw new Error('Missing Weaverse projectId!')
         }
-        let { request, params } = args
-        let { strategy, ...pageLoadParams } = configs
+        let { strategy, ...pageLoadParams } = params
         let body: FetchProjectRequestBody = {
-          ...this.basePageRequestBody,
+          ...basePageRequestBody,
           params: pageLoadParams,
           url: request.url,
         }
@@ -122,9 +125,9 @@ export class WeaverseClient {
           method: 'POST',
           body: JSON.stringify(body),
         }
-        let url = `${this.configs.weaverseHost}/${this.API}`
+        let url = `${weaverseHost}/${this.API}`
         let payload: FetchProjectPayload
-        if (this.configs.isDesignMode) {
+        if (isDesignMode) {
           payload = await fetch(url, reqInit).then((res) => res.json())
         } else {
           payload = await this.fetchWithCache(url, {
@@ -142,7 +145,7 @@ export class WeaverseClient {
         if (page?.items) {
           let items = page.items
           page.items = await Promise.all(
-            items.map((item) => this.execComponentLoader(item, args)),
+            items.map((item) => this.execComponentLoader(item)),
           )
         }
         let data: WeaverseLoaderData = {
@@ -150,10 +153,9 @@ export class WeaverseClient {
           project,
           pageAssignment,
           configs: {
-            ...this.basePageConfigs,
+            ...basePageConfigs,
             requestInfo: {
-              params,
-              i18n: this.storefront.i18n,
+              i18n: storefront.i18n,
               queries: getRequestQueries<WeaverseStudioQueries>(request),
               pathname: new URL(request.url).pathname,
               search: new URL(request.url).search,
@@ -161,32 +163,28 @@ export class WeaverseClient {
           },
         }
         return resolve(data)
-      } catch (err) {
-        console.log(`❌ [Weaverse page]`, err)
-        reject(err)
+      } catch (e) {
+        console.error(`❌ Page load failed.`, e)
+        reject(e)
       }
     })
   }
 
-  execComponentLoader = async (
-    item: HydrogenComponentData,
-    args: LoaderArgs,
-  ) => {
-    let schema = this.components.find(
-      ({ schema }) => schema?.type === item.type,
-    )
+  execComponentLoader = async (item: HydrogenComponentData) => {
+    let { data = {}, type, id } = item
+    let schema = this.components.find(({ schema }) => schema?.type === type)
     let { loader } = schema || {}
     if (loader && typeof loader === 'function') {
       try {
         return {
           ...item,
           loaderData: await loader({
-            itemData: item,
-            ...args,
+            data,
+            weaverse: this,
           }),
         }
-      } catch (err) {
-        console.log(`❌ [Weaverse item loader]`, item.id, err)
+      } catch (e) {
+        console.warn(`❌ Item loader run failed.`, type, id, e)
         return item
       }
     }

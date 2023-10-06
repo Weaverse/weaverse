@@ -1,6 +1,5 @@
 import type {
   AdvancedGroupType,
-  ChildrenSortInputConfigs,
   AdditionalInputConfigs as CoreAdditionalInputConfigs,
   BasicInput as CoreBasicInput,
   ElementData as CoreElementData,
@@ -11,23 +10,22 @@ import type {
   ElementCSS,
   RangeInputConfigs,
   SelectInputConfigs,
-  SortableItemAction,
   ToggleGroupConfigs,
   WeaverseCSSProperties,
   WeaverseCoreParams,
+  WeaverseImage,
   WeaverseProjectDataType,
 } from '@weaverse/react'
 import type { ThirdPartyIntegration } from './shopify'
 
 export type {
   AdvancedGroupType,
-  ChildrenSortInputConfigs,
   ElementCSS,
   RangeInputConfigs,
   SelectInputConfigs,
-  SortableItemAction,
   ToggleGroupConfigs,
   WeaverseCSSProperties,
+  WeaverseImage,
   WeaverseProjectDataType,
 }
 
@@ -117,22 +115,28 @@ export interface BasicGroup {
 
 export type InputType =
   | CoreInputType
+  | 'children-sort'
   | 'data-sort'
   | 'information'
-  | 'product'
-  | 'product-list'
-  | 'product-swatches'
-  | 'text-editor'
   | 'custom.html'
+  | 'product-swatches'
   | 'instagram'
-  | 'collection-list'
-  | 'collection'
-  | 'article-list'
-  | 'map-autocomplete'
 
 export type AdditionalInputConfigs =
   | CoreAdditionalInputConfigs
+  | ChildrenSortInputConfigs
   | DataSortInputConfigs
+
+export interface ChildrenSortInputConfigs {
+  actions: SortableItemAction[]
+}
+
+export type SortableItemAction =
+  | 'add'
+  | 'edit'
+  | 'duplicate'
+  | 'delete'
+  | 'toggle-visibility'
 
 export interface DataSortInputConfigs {
   prop: string
