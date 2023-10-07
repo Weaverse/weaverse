@@ -2,7 +2,7 @@
 /// <reference types="@shopify/oxygen-workers-types" />
 
 import type { NavigateFunction } from '@remix-run/react'
-import type { Storefront, createWithCache } from '@shopify/hydrogen'
+import type { Storefront } from '@shopify/hydrogen'
 import type {
   CountryCode,
   CurrencyCode,
@@ -274,7 +274,8 @@ export type HydrogenThemeEnv = {
 
 export type WeaverseClientArgs = {
   request: Request
-  withCache: ReturnType<typeof createWithCache>
+  cache: Cache
+  waitUntil: ExecutionContext['waitUntil']
   env: HydrogenThemeEnv
   storefront: Storefront<I18nLocale>
   components: HydrogenComponent[]

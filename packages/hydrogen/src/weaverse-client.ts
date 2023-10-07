@@ -1,3 +1,4 @@
+import { createWithCache } from '@shopify/hydrogen'
 import pkg from '../package.json'
 import type {
   AllCacheOptions,
@@ -19,13 +20,15 @@ export class WeaverseClient {
   basePageConfigs: Omit<WeaverseProjectConfigs, 'requestInfo'>
   basePageRequestBody: Omit<FetchProjectRequestBody, 'url'>
   configs: WeaverseProjectConfigs
+  withCache: ReturnType<typeof createWithCache>
 
   request: WeaverseClientArgs['request']
   storefront: WeaverseClientArgs['storefront']
   components: WeaverseClientArgs['components']
   themeSchema: WeaverseClientArgs['themeSchema']
   env: WeaverseClientArgs['env']
-  withCache: WeaverseClientArgs['withCache']
+  cache: WeaverseClientArgs['cache']
+  waitUntil: WeaverseClientArgs['waitUntil']
   countries?: WeaverseClientArgs['countries']
 
   constructor(args: WeaverseClientArgs) {
@@ -34,7 +37,8 @@ export class WeaverseClient {
       storefront,
       components,
       countries,
-      withCache,
+      cache,
+      waitUntil,
       themeSchema,
       request,
     } = args
@@ -43,8 +47,10 @@ export class WeaverseClient {
     this.components = components
     this.themeSchema = themeSchema
     this.env = env
-    this.withCache = withCache
+    this.cache = cache
+    this.waitUntil = waitUntil
     this.countries = countries
+    this.withCache = createWithCache({ cache, waitUntil })
 
     this.configs = getWeaverseConfigs(request, env)
     this.basePageConfigs = {
