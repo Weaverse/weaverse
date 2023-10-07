@@ -1,6 +1,6 @@
 {
   "name": "weaverse-sdks",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Weaverse SDKs monorepo.",
   "private": true,
   "license": "MIT",
@@ -17,8 +17,7 @@
     "preprepare": "husky install",
     "lint": "eslint packages",
     "lint:fix": "eslint packages --fix",
-    "typecheck": "tsc --noEmit packages",
-    "clean-all": "rimraf node_modules/.bin && rimraf node_modules/.cache && rimraf packages/core/dist && rimraf packages/hydrogen/dist && rimraf packages/react/dist && rimraf templates/pilot/.cache"
+    "typecheck": "tsc --noEmit packages"
   },
   "workspaces": [
     "templates/pilot",
@@ -28,9 +27,9 @@
     "packages/hydrogen"
   ],
   "devDependencies": {
-    "@types/node": "^20.8.2",
+    "@types/node": "^20.8.3",
     "@types/react": "^18.2.25",
-    "@types/react-dom": "18.2.10",
+    "@types/react-dom": "18.2.11",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
     "@typescript-eslint/parser": "^6.7.4",
     "cross-env": "^7.0.3",
