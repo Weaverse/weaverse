@@ -35,14 +35,14 @@ let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
 
       if (optionsStyle === 'combined') {
         return (
-          <div ref={ref} style={style} {...rest}>
+          <div ref={ref} {...rest} style={style}>
             <CombinedVariantSelector context={context} />
           </div>
         )
       }
 
       return (
-        <div ref={ref} style={style} {...rest}>
+        <div ref={ref} {...rest} style={style}>
           <input type="hidden" name="id" value={selectedVariant?.id} />
           {product.options.map((option) => {
             let { name, position } = option
@@ -85,7 +85,7 @@ let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
         <input type="hidden" name="id" value={selectedVariant?.id} />
       </div>
     )
-  }
+  },
 )
 
 ProductVariant.defaultProps = {
