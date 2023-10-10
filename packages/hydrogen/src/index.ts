@@ -58,9 +58,9 @@ export class WeaverseHydrogen extends Weaverse {
 export class WeaverseHydrogenItem extends WeaverseItemStore {
   declare weaverse: WeaverseHydrogen
 
-  constructor(intialData: HydrogenComponentData, weaverse: WeaverseHydrogen) {
-    super(intialData, weaverse)
-    let { data, ...rest } = intialData
+  constructor(initialData: HydrogenComponentData, weaverse: WeaverseHydrogen) {
+    super(initialData, weaverse)
+    let { data, ...rest } = initialData
     this._store = { ...data, ...rest }
   }
 

@@ -114,15 +114,15 @@ export class Weaverse extends EventEmitter {
   /**
    * Create new `WeaverseItemStore` instance for each item in the project.
    */
-  initProject() {
+  initProject = () => {
     let { data, itemInstances, ItemConstructor } = this
     if (data?.items) {
       data.items.forEach((item) => {
-        if (!itemInstances.get(item.id)) {
-          new ItemConstructor(item, this)
-        } else {
-          let itemInstance = itemInstances.get(item.id)
+        let itemInstance = itemInstances.get(item.id)
+        if (itemInstance) {
           itemInstance.setData(item)
+        } else {
+          new ItemConstructor(item, this)
         }
       })
     }
@@ -169,8 +169,9 @@ export class Weaverse extends EventEmitter {
    * Used when we need to re-render the project with new data (like applying new template)
    * @param data {WeaverseProjectDataType}
    */
-  setProjectData(data: WeaverseProjectDataType) {
+  setProjectData = (data: WeaverseProjectDataType) => {
     this.data = data
+    console.log("setProjectData", 2222, data)
     this.initProject()
   }
 }

@@ -18,16 +18,18 @@ function createCachedWeaverseInstance(
       let { pathname, search } = w.requestInfo
       let { __cachedId } = w.data
       return (
-        pathname === params.requestInfo.pathname &&
-        search === params.requestInfo.search &&
-        __cachedId === params.data.__cachedId
+        pathname === params.requestInfo.pathname
+        // &&
+        // search === params.requestInfo.search &&
+        // __cachedId === params.data.__cachedId
       )
     })
 
     if (!weaverse) {
       weaverse = new WeaverseHydrogen(params, components)
       window.__weaverses.push(weaverse)
-      console.log('💿 Weaverse', weaverse)
+    } else {
+      weaverse.setProjectData(params.data)
     }
     return weaverse
   }
@@ -39,7 +41,7 @@ export function createWeaverseInstance(
   components: HydrogenComponent[],
 ) {
   let { page, configs, project, pageAssignment } = weaverseData || {}
-  let weaverse = createCachedWeaverseInstance(
+  return createCachedWeaverseInstance(
     {
       ...configs,
       data: page || {},
@@ -48,8 +50,6 @@ export function createWeaverseInstance(
     },
     components,
   )
-
-  return weaverse
 }
 
 export let STORE_PAGES = {
