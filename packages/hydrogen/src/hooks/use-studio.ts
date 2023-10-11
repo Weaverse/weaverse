@@ -8,7 +8,6 @@ export function useStudio(weaverse: WeaverseHydrogen) {
   let { revalidate } = useRevalidator()
   let navigate = useNavigate()
   let themeSettingsStore = useThemeContext()
-
   let { isDesignMode, weaverseHost, weaverseVersion } = weaverse
   let isStudio = isIframe && isDesignMode && weaverseHost && weaverseVersion
 
@@ -28,5 +27,5 @@ export function useStudio(weaverse: WeaverseHydrogen) {
         loadScript(studioSrc)
       }
     }
-  }, [weaverse])
+  }, [weaverse.requestInfo])
 }

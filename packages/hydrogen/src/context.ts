@@ -16,19 +16,16 @@ function createCachedWeaverseInstance(
     window.__weaverses = window.__weaverses || []
     let weaverse = window.__weaverses.find((w) => {
       let { pathname, search } = w.requestInfo
-      let { __cachedId } = w.data
-      return (
-        pathname === params.requestInfo.pathname
-        // &&
-        // search === params.requestInfo.search &&
-        // __cachedId === params.data.__cachedId
-      )
+      return pathname === params.requestInfo.pathname
     })
 
     if (!weaverse) {
       weaverse = new WeaverseHydrogen(params, components)
       window.__weaverses.push(weaverse)
-    } else {
+    } else if (weaverse.isDesignMode) {
+      // we might find a proper way to make weaverse as fresh as possible
+      // pass new requestInfo so that it will make useStudio effect run again and reinitialize studio
+      weaverse.requestInfo = params.requestInfo
       weaverse.setProjectData(params.data)
     }
     return weaverse

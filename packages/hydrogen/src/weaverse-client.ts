@@ -18,7 +18,7 @@ export class WeaverseClient {
   API = 'api/public/project'
   clientVersion = pkg.version
   basePageConfigs: Omit<WeaverseProjectConfigs, 'requestInfo'>
-  basePageRequestBody: Omit<FetchProjectRequestBody, 'url'>
+  basePageRequestBody: Omit<FetchProjectRequestBody, 'url' | 'countries'>
   configs: WeaverseProjectConfigs
   withCache: ReturnType<typeof createWithCache>
 
@@ -60,7 +60,6 @@ export class WeaverseClient {
       isDesignMode: this.configs.isDesignMode,
     }
     this.basePageRequestBody = {
-      countries,
       isDesignMode: this.configs.isDesignMode,
       i18n: storefront.i18n,
       projectId: this.configs.projectId,
