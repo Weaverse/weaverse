@@ -84,14 +84,21 @@ export class WeaverseClient {
   loadThemeSettings = async (strategy?: AllCacheOptions) => {
     try {
       let { API, configs } = this
-      let { weaverseHost, projectId } = configs
+      let { weaverseHost, projectId, isDesignMode } = configs
       if (!projectId) {
         throw new Error('Missing Weaverse projectId!')
       }
-      let res = await this.fetchWithCache(
-        `${weaverseHost}/${API}/${projectId}/configs`,
-        { method: 'POST', strategy },
-      )
+      let res
+      if (isDesignMode) {
+        res = await fetch(`${weaverseHost}/${API}/${projectId}/configs`, {
+          method: 'POST',
+        })
+      } else {
+        res = await this.fetchWithCache(
+          `${weaverseHost}/${API}/${projectId}/configs`,
+          { method: 'POST', strategy },
+        )
+      }
       let data = res || {}
       if (this.configs.isDesignMode) {
         data = {
