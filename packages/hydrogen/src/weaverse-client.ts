@@ -13,8 +13,6 @@ import type {
   WeaverseStudioQueries,
 } from './types'
 import { getRequestQueries, getWeaverseConfigs } from './utils'
-import { builders } from 'prettier/doc'
-import group = builders.group
 
 export class WeaverseClient {
   API = 'api/public/project'
