@@ -58,7 +58,7 @@ function RenderRoot(props: {
   return <WeaverseRoot context={weaverse} />
 }
 
-export function withWeaverse(Component: React.ComponentType) {
+export function withWeaverse(Component: React.ComponentType<any>) {
   return (props: React.JSX.IntrinsicAttributes) => {
     let { weaverseTheme } = useLoaderData<RootRouteData>()
     let themeSettingsStore = new ThemeSettingsStore(weaverseTheme)

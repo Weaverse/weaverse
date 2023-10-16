@@ -18,7 +18,7 @@ export class ThemeSettingsStore {
   constructor(data: RootRouteData['weaverseTheme']) {
     let { theme, countries, schema, publicEnv } = data || {}
     if (!ThemeSettingsStore.settings) {
-      ThemeSettingsStore.settings = theme || null
+      ThemeSettingsStore.settings = theme || {}
     } else {
       ThemeSettingsStore.settings = {
         ...theme,
