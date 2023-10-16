@@ -13,6 +13,8 @@ import type {
   WeaverseStudioQueries,
 } from './types'
 import { getRequestQueries, getWeaverseConfigs } from './utils'
+import { builders } from 'prettier/doc'
+import group = builders.group
 
 export class WeaverseClient {
   API = 'api/public/project'
@@ -92,14 +94,28 @@ export class WeaverseClient {
       if (isDesignMode) {
         res = await fetch(`${weaverseHost}/${API}/${projectId}/configs`, {
           method: 'POST',
-        })
+        }).then((res) => res.json())
       } else {
         res = await this.fetchWithCache(
           `${weaverseHost}/${API}/${projectId}/configs`,
           { method: 'POST', strategy },
         )
       }
-      let data = res || {}
+      let data: any = res || {}
+      if (data?.theme && this.themeSchema?.inspector) {
+        let defaultThemeSchema: any = {}
+        this.themeSchema.inspector.forEach((group) => {
+          group.inputs.forEach((input) => {
+            if (typeof input.name === 'string' && input.defaultValue) {
+              defaultThemeSchema[input.name] = input.defaultValue
+            }
+          })
+        })
+        data.theme = {
+          ...defaultThemeSchema,
+          ...data.theme,
+        }
+      }
       if (this.configs.isDesignMode) {
         data = {
           ...data,

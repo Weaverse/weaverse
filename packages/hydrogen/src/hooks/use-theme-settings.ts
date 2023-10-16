@@ -7,6 +7,7 @@ import type {
   RootRouteData,
 } from '~/types'
 import { useThemeContext } from './use-theme-context'
+import { isBrowser } from '@weaverse/react'
 
 export class ThemeSettingsStore {
   static settings: HydrogenThemeSettings | null = null
@@ -17,13 +18,13 @@ export class ThemeSettingsStore {
 
   constructor(data: RootRouteData['weaverseTheme']) {
     let { theme, countries, schema, publicEnv } = data || {}
-    if (!ThemeSettingsStore.settings) {
-      ThemeSettingsStore.settings = theme || {}
-    } else {
+    if (isBrowser && ThemeSettingsStore.settings) {
       ThemeSettingsStore.settings = {
         ...theme,
         ...ThemeSettingsStore.settings,
       }
+    } else {
+      ThemeSettingsStore.settings = theme || {}
     }
     this.countries = countries
     this.schema = schema
