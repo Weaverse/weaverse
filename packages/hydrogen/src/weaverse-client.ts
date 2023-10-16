@@ -18,7 +18,7 @@ export class WeaverseClient {
   API = 'api/public/project'
   clientVersion = pkg.version
   basePageConfigs: Omit<WeaverseProjectConfigs, 'requestInfo'>
-  basePageRequestBody: Omit<FetchProjectRequestBody, 'url'>
+  basePageRequestBody: Omit<FetchProjectRequestBody, 'url' | 'countries'>
   configs: WeaverseProjectConfigs
   withCache: ReturnType<typeof createWithCache>
 
@@ -60,7 +60,6 @@ export class WeaverseClient {
       isDesignMode: this.configs.isDesignMode,
     }
     this.basePageRequestBody = {
-      countries,
       isDesignMode: this.configs.isDesignMode,
       i18n: storefront.i18n,
       projectId: this.configs.projectId,
@@ -85,14 +84,21 @@ export class WeaverseClient {
   loadThemeSettings = async (strategy?: AllCacheOptions) => {
     try {
       let { API, configs } = this
-      let { weaverseHost, projectId } = configs
+      let { weaverseHost, projectId, isDesignMode } = configs
       if (!projectId) {
         throw new Error('Missing Weaverse projectId!')
       }
-      let res = await this.fetchWithCache(
-        `${weaverseHost}/${API}/${projectId}/configs`,
-        { method: 'POST', strategy },
-      )
+      let res
+      if (isDesignMode) {
+        res = await fetch(`${weaverseHost}/${API}/${projectId}/configs`, {
+          method: 'POST',
+        })
+      } else {
+        res = await this.fetchWithCache(
+          `${weaverseHost}/${API}/${projectId}/configs`,
+          { method: 'POST', strategy },
+        )
+      }
       let data = res || {}
       if (this.configs.isDesignMode) {
         data = {
