@@ -115,7 +115,7 @@ export type WeaverseStorefrontData = {
 }
 
 export type HydrogenThemeSettings = {
-  [key: string]: string | number | boolean
+  [key: string]: any // should be any or generic
 }
 
 export type HydrogenProjectConfig = {
@@ -216,6 +216,7 @@ export interface HydrogenPageData extends WeaverseProjectDataType {
   pageId: string
   name: string
   items: HydrogenComponentData[]
+
   [key: string]: any
 }
 

@@ -78,7 +78,7 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
         height: 1000,
       }
       return (
-        <div ref={ref} style={style} {...rest}>
+        <div ref={ref} {...rest} style={style}>
           <div className="wv-product-image__single">
             <Image image={image} width={1000} onLoad={() => setReady(true)} />
           </div>
@@ -87,7 +87,7 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
     }
 
     return (
-      <div ref={ref} style={style} {...rest}>
+      <div ref={ref} {...rest} style={style}>
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/keen-slider@latest/keen-slider.min.css"
@@ -142,7 +142,7 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
         )}
       </div>
     )
-  }
+  },
 )
 
 ProductMedia.defaultProps = {
