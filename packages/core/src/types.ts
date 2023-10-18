@@ -93,7 +93,7 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
    * `imagesPerRow.gt.1`
    */
   condition?: string
-  defaultValue?: string | number | boolean | WeaverseImage
+  defaultValue?: string | number | boolean | Partial<WeaverseImage>
   placeholder?: string
   helpText?: string
 }
@@ -101,7 +101,7 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
 export type AdditionalInputConfigs = SelectInputConfigs | ToggleGroupConfigs | RangeInputConfigs
 
 export interface SelectInputConfigs {
-  options?: { value: string; label: string; icon?: string; weight?: string }[]
+  options?: { value: string; label: string }[]
 }
 
 export interface ToggleGroupConfigs {
