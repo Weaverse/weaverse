@@ -1,4 +1,7 @@
-import type { WeaverseElementProps } from '@weaverse/react'
+import type {
+  WeaverseElementProps,
+  WeaverseResourcePickerData,
+} from '@weaverse/react'
 import type { KeenSliderInstance, KeenSliderPlugin } from 'keen-slider'
 import type { WeaverseShopify } from '~/index'
 import type { WeaverseIcon } from './components'
@@ -152,6 +155,7 @@ export interface ProductDetailsProps extends WeaverseElementProps {
   productId: number | 'default'
   productHandle: string // For generating product liquid data in SSR
   useDefaultProduct: boolean
+  product?: WeaverseResourcePickerData
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

@@ -66,7 +66,6 @@ export type AdvancedGroupType =
 
 export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
   type: InputType
-  label?: string
   /**
    * The key of the value of the element data or styles
    * @example
@@ -75,7 +74,8 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
    * // Bind to `element.css["@desktop"].backgroundColor`
    * name: "backgroundColor"
    */
-  name?: string
+  name: string
+  label?: string
   /**
    * Additional options for inputs that require more configuration
    */
@@ -93,15 +93,28 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
    * `imagesPerRow.gt.1`
    */
   condition?: string
-  defaultValue?: string | number | boolean | WeaverseImage
+  defaultValue?: string | number | boolean | Partial<WeaverseImage>
   placeholder?: string
   helpText?: string
+}
+
+export type WeaverseResourcePickerData = {
+  id: number
+  handle: string
+}
+
+export type WeaverseImage = {
+  id: string
+  url: string
+  alt: string
+  width: number
+  height: number
 }
 
 export type AdditionalInputConfigs = SelectInputConfigs | ToggleGroupConfigs | RangeInputConfigs
 
 export interface SelectInputConfigs {
-  options?: { value: string; label: string; icon?: string; weight?: string }[]
+  options?: { value: string; label: string }[]
 }
 
 export interface ToggleGroupConfigs {
@@ -115,16 +128,19 @@ export interface RangeInputConfigs {
   unit?: string
 }
 
-export type WeaverseImage = {
-  id: string
-  url: string
-  alt: string
-  width: number
-  height: number
-}
+export type PositionInputValue =
+  | "top left"
+  | "top center"
+  | "top right"
+  | "center left"
+  | "center center"
+  | "center right"
+  | "bottom left"
+  | "bottom center"
+  | "bottom right"
 
 export type InputType =
-  | "article-list"
+  | "blog"
   | "collection"
   | "collection-list"
   | "color"

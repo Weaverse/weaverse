@@ -13,7 +13,6 @@ import type {
   ToggleGroupConfigs,
   WeaverseCSSProperties,
   WeaverseCoreParams,
-  WeaverseImage,
   WeaverseProjectDataType,
 } from '@weaverse/react'
 import type { ThirdPartyIntegration } from './shopify'
@@ -25,7 +24,6 @@ export type {
   SelectInputConfigs,
   ToggleGroupConfigs,
   WeaverseCSSProperties,
-  WeaverseImage,
   WeaverseProjectDataType,
 }
 
@@ -139,7 +137,6 @@ export type SortableItemAction =
   | 'toggle-visibility'
 
 export interface DataSortInputConfigs {
-  prop: string
   defaultData: object
   inspector: string
 }
