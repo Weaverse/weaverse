@@ -14,6 +14,8 @@ import type {
 } from './types'
 import { getRequestQueries, getWeaverseConfigs } from './utils'
 
+const CACHE_HITS_KEY = '__CACHE_HITS_COUNT__'
+
 export class WeaverseClient {
   API = 'api/public/project'
   clientVersion = pkg.version
@@ -75,6 +77,13 @@ export class WeaverseClient {
         let error = await response.text()
         let { status, statusText } = response
         throw new Error(`${status} ${statusText} ${error}`)
+      } else {
+        if (!url.includes('/configs')) {
+          console.log(`🔥 load page ${url} fetched.`)
+          // Reset the cacheHits count in the cache
+          const resetHitsResponse = new Response('0')
+          await this.cache.put(CACHE_HITS_KEY, resetHitsResponse)
+        }
       }
       return await response.json<T>()
     })
