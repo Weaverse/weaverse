@@ -9,8 +9,17 @@ import { useProduct } from './use-product'
 
 let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
   (props, ref) => {
-    let { children, productId, productHandle, useDefaultProduct, ...rest } =
-      props
+    let {
+      children,
+      product: productPickerData,
+      productId,
+      productHandle,
+      useDefaultProduct,
+      ...rest
+    } = props
+    productId ??= productPickerData?.id || 'default'
+    productHandle ??= productPickerData?.handle || ''
+
     let { ssrMode, isDesignMode } = useWeaverseShopify()
     let { product, ready, formRef, selectedVariant, setSelectedVariant } =
       useProduct(productId, useDefaultProduct)

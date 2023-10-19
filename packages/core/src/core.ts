@@ -171,7 +171,6 @@ export class Weaverse extends EventEmitter {
    */
   setProjectData = (data: WeaverseProjectDataType) => {
     this.data = data
-    console.log("setProjectData", 2222, data)
     this.initProject()
   }
 }

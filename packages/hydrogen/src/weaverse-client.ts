@@ -101,16 +101,16 @@ export class WeaverseClient {
       }
       let data: any = res || {}
       if (data?.theme && this.themeSchema?.inspector) {
-        let defaultThemeSchema: any = {}
-        this.themeSchema.inspector.forEach((group) => {
-          group.inputs.forEach((input) => {
-            if (typeof input.name === 'string' && input.defaultValue) {
-              defaultThemeSchema[input.name] = input.defaultValue
+        let defaultThemeSettings: { [key: string]: any } = {}
+        this.themeSchema.inspector.forEach(({ inputs }) => {
+          inputs.forEach(({ name, defaultValue }) => {
+            if (typeof name === 'string' && defaultValue) {
+              defaultThemeSettings[name] = defaultValue
             }
           })
         })
         data.theme = {
-          ...defaultThemeSchema,
+          ...defaultThemeSettings,
           ...data.theme,
         }
       }
