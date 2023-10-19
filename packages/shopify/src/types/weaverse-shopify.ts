@@ -13,7 +13,6 @@ import type {
   ToggleGroupConfigs,
   WeaverseCSSProperties,
   WeaverseCoreParams,
-  WeaverseImage,
   WeaverseProjectDataType,
 } from '@weaverse/react'
 import type { ThirdPartyIntegration } from './shopify'
@@ -25,7 +24,6 @@ export type {
   SelectInputConfigs,
   ToggleGroupConfigs,
   WeaverseCSSProperties,
-  WeaverseImage,
   WeaverseProjectDataType,
 }
 

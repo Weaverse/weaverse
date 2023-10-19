@@ -20,6 +20,7 @@ import type {
   WeaverseElement,
   WeaverseImage,
   WeaverseProjectDataType,
+  WeaverseResourcePickerData,
 } from '@weaverse/react'
 import type React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
@@ -254,7 +255,7 @@ export type LoadPageParams = PageAssignmentParams & {
 export type FetchProjectRequestBody = {
   projectId: string
   url: string
-  countries?: Localizations
+  // countries?: Localizations
   i18n?: I18nLocale
   params?: PageAssignmentParams
   isDesignMode?: boolean
@@ -297,6 +298,11 @@ export type RootRouteData = {
   }
   [key: string]: any
 }
+
+export type WeaverseProduct = WeaverseResourcePickerData
+export type WeaverseCollection = WeaverseResourcePickerData
+export type WeaverseBlog = WeaverseResourcePickerData
+export type WeaverseArticle = WeaverseResourcePickerData
 
 declare global {
   interface Window {
