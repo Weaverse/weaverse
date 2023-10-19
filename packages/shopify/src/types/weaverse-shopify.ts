@@ -137,7 +137,6 @@ export type SortableItemAction =
   | 'toggle-visibility'
 
 export interface DataSortInputConfigs {
-  prop: string
   defaultData: object
   inspector: string
 }
