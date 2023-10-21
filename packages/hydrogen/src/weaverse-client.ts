@@ -125,9 +125,12 @@ export class WeaverseClient {
       }
       let res
       if (isDesignMode) {
-        res = await fetch(`${weaverseHost}/${API}/${projectId}/configs`, {
-          method: 'POST',
-        }).then((res) => res.json())
+        res = await fetch(
+          `${weaverseHost}/${API}/${projectId}/configs?isDesignMode=true`,
+          {
+            method: 'POST',
+          },
+        ).then((res) => res.json())
       } else {
         res = await this.fetchWithCache(
           `${weaverseHost}/${API}/${projectId}/configs`,
@@ -139,7 +142,7 @@ export class WeaverseClient {
         let defaultThemeSettings: { [key: string]: any } = {}
         this.themeSchema.inspector.forEach(({ inputs }) => {
           inputs.forEach(({ name, defaultValue }) => {
-            if (typeof name === 'string' && defaultValue) {
+            if (name && defaultValue) {
               defaultThemeSettings[name] = defaultValue
             }
           })
