@@ -11,7 +11,7 @@ import type {
   WeaverseElement,
   WeaverseShopifyParams,
   WeaverseShopifySectionData,
-} from './types/weaverse-shopify'
+} from '~/types'
 
 export * from './WeaverseShopifyRoot'
 export * from './types'
@@ -24,8 +24,8 @@ export class WeaverseShopify extends Weaverse {
   ssrMode: boolean
   declare ItemConstructor: typeof WeaverseShopifyItem
   declare data: WeaverseShopifySectionData
-  declare itemInstances: Map<string | number, WeaverseShopifyItem>
-  declare elementRegistry: Map<string, WeaverseElement>
+  declare static itemInstances: Map<string | number, WeaverseShopifyItem>
+  declare static elementRegistry: Map<string, WeaverseElement>
 
   constructor(params: WeaverseShopifyParams) {
     let { thirdPartyIntegration, elementSchemas, ssrMode, ...coreParams } =
@@ -37,13 +37,9 @@ export class WeaverseShopify extends Weaverse {
     this.registerShopifyElements()
   }
 
-  registerElement(element: WeaverseElement) {
-    super.registerElement(element)
-  }
-
   registerShopifyElements = () => {
     Object.values(SHOPIFY_ELEMENTS).forEach((elm) => {
-      this.registerElement(elm)
+      Weaverse.registerElement(elm)
     })
     this.registerThirdPartyElements()
   }
@@ -52,7 +48,7 @@ export class WeaverseShopify extends Weaverse {
     this.integrations
       .flatMap(({ elements }) => elements)
       .forEach(({ type, extraData }) => {
-        this.registerElement({
+        Weaverse.registerElement({
           type,
           extraData,
           Component: ThirdPartyElement.default,
@@ -65,9 +61,9 @@ export class WeaverseShopify extends Weaverse {
 export class WeaverseShopifyItem extends WeaverseItemStore {
   declare weaverse: WeaverseShopify
 
-  constructor(intialData: ElementData, weaverse: WeaverseShopify) {
-    super(intialData, weaverse)
-    this._store = { ...intialData }
+  constructor(initialData: ElementData, weaverse: WeaverseShopify) {
+    super(initialData, weaverse)
+    this._store = { ...initialData }
   }
 
   get Element(): WeaverseElement {

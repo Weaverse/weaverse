@@ -27,8 +27,8 @@ export class WeaverseHydrogen extends Weaverse {
   requestInfo: WeaverseLoaderRequestInfo
   declare ItemConstructor: typeof WeaverseHydrogenItem
   declare data: HydrogenPageData
-  declare itemInstances: Map<string | number, WeaverseHydrogenItem>
-  declare elementRegistry: Map<string, HydrogenElement>
+  declare static itemInstances: Map<string | number, WeaverseHydrogenItem>
+  declare static elementRegistry: Map<string, HydrogenElement>
 
   constructor(params: WeaverseHydrogenParams, components: HydrogenComponent[]) {
     let { internal, pageId, requestInfo, ...coreParams } = params
@@ -39,13 +39,9 @@ export class WeaverseHydrogen extends Weaverse {
     this.registerComponents(components)
   }
 
-  registerElement(element: HydrogenElement) {
-    super.registerElement(element)
-  }
-
-  registerComponents(components: HydrogenComponent[]) {
+  registerComponents = (components: HydrogenComponent[]) => {
     components.forEach((comp) => {
-      this.registerElement({
+      Weaverse.registerElement({
         type: comp?.schema?.type,
         Component: comp?.default,
         schema: comp?.schema,

@@ -33,14 +33,14 @@ let { Modal, ModalContent, ModalTrigger } = ModalComponents
 export function ProductQuickView({ product }: { product: ShopifyProduct }) {
   let { stitchesInstance } = useContext(WeaverseContext)
   let { className } = stitchesInstance.css(css)()
-  let quickviewModalClass = clsx('wv-pcard__quickview', className)
+  let quickViewModalClass = clsx('wv-pcard__quickview', className)
 
   return (
     <Modal>
       <ModalTrigger className="wv-pcard__button quick-view">
         <Icon name="Eye" />
       </ModalTrigger>
-      <ModalContent size="auto" className={quickviewModalClass} portal>
+      <ModalContent size="auto" className={quickViewModalClass} portal>
         <ProductDetails
           productId={product.id}
           productHandle={product.handle}

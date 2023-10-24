@@ -28,9 +28,9 @@ export class WeaverseItemStore extends EventEmitter {
   _store: ElementData = { id: "", type: "" }
   stitchesClass = ""
 
-  constructor(intialData: ElementData, weaverse: Weaverse) {
+  constructor(initialData: ElementData, weaverse: Weaverse) {
     super()
-    let { type, id } = intialData || {}
+    let { type, id } = initialData || {}
     this.weaverse = weaverse
     if (id && type) {
       weaverse.itemInstances.set(id, this)
@@ -48,14 +48,13 @@ export class WeaverseItemStore extends EventEmitter {
   }
 
   get Element() {
-    return this.weaverse.elementRegistry.get(this._store.type)
+    return Weaverse.elementRegistry.get(this._store.type)
   }
 
   get css(): ElementCSS {
     let defaultCss = this.Element?.defaultCss || {}
     let currentCss = this._store.css || {}
-    let css = merge(defaultCss, currentCss)
-    return css
+    return merge(defaultCss, currentCss)
   }
 
   get data(): ElementData {
@@ -80,19 +79,19 @@ export class WeaverseItemStore extends EventEmitter {
 
 export class Weaverse extends EventEmitter {
   contentRootElement: HTMLElement | null = null
-  itemInstances = new Map()
+  static itemInstances = new Map()
   weaverseHost = "https://weaverse.io"
   weaverseVersion = ""
   projectId = ""
   isDesignMode = false
   isPreviewMode = false
-  stitchesInstance: Stitches | any
+  static stitchesInstance: Stitches | any
   studioBridge?: any
 
   declare ItemConstructor: typeof WeaverseItemStore
   declare data: WeaverseProjectDataType
   declare platformType: PlatformTypeEnum
-  readonly elementRegistry = new Map()
+  static elementRegistry = new Map()
 
   mediaBreakPoints: BreakPoints = {
     desktop: "all",
@@ -115,7 +114,8 @@ export class Weaverse extends EventEmitter {
    * Create new `WeaverseItemStore` instance for each item in the project.
    */
   initProject = () => {
-    let { data, itemInstances, ItemConstructor } = this
+    let { data, ItemConstructor } = this
+    let itemInstances = Weaverse.itemInstances
     if (data?.items) {
       data.items.forEach((item) => {
         let itemInstance = itemInstances.get(item.id)
@@ -128,9 +128,13 @@ export class Weaverse extends EventEmitter {
     }
   }
 
+  get itemInstances() {
+    return Weaverse.itemInstances
+  }
+
   initStitches = (externalConfig?: stitches.CreateStitches) => {
-    this.stitchesInstance =
-      this.stitchesInstance ||
+    Weaverse.stitchesInstance =
+      Weaverse.stitchesInstance ||
       stitches.createStitches({
         prefix: "weaverse",
         media: this.mediaBreakPoints,
@@ -139,19 +143,25 @@ export class Weaverse extends EventEmitter {
       })
   }
 
+  get stitchesInstance() {
+    return Weaverse.stitchesInstance
+  }
+
   /**
    * Register the custom React Component to Weaverse, store it into Weaverse.elementRegistry
    */
-  registerElement(element: { type: string }) {
+  static registerElement(element: { type: string; [x: string]: any }) {
     if (element?.type) {
-      if (!this.elementRegistry.has(element.type)) {
-        this.elementRegistry.set(element?.type, element)
-      } else {
-        console.warn(`Element with type '${element.type}' already exists.`)
+      if (!Weaverse.elementRegistry.has(element.type)) {
+        Weaverse.elementRegistry.set(element?.type, element)
       }
     } else {
       console.error("Cannot register element without 'type'.")
     }
+  }
+
+  get elementRegistry() {
+    return Weaverse.elementRegistry
   }
 
   triggerUpdate() {
