@@ -30,6 +30,7 @@ export interface WeaverseElement {
   Component: ForwardRefExoticComponent<any>
   type: string
 }
+
 export type ToolbarAction = "general-settings" | "settings-level-2" | "duplicate" | "delete"
 
 export interface ElementSchema {
@@ -40,6 +41,7 @@ export interface ElementSchema {
 export interface ElementData {
   id: string
   type: string
+
   [key: string]: any
 }
 
@@ -106,7 +108,7 @@ export type WeaverseResourcePickerData = {
 export type WeaverseImage = {
   id: string
   url: string
-  alt: string
+  altText: string
   width: number
   height: number
 }
