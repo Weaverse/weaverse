@@ -24,7 +24,7 @@ export class WeaverseShopify extends Weaverse {
   ssrMode: boolean
   declare ItemConstructor: typeof WeaverseShopifyItem
   declare data: WeaverseShopifySectionData
-  declare static itemInstances: Map<string | number, WeaverseShopifyItem>
+  declare static itemInstances: Map<string, WeaverseShopifyItem>
   declare static elementRegistry: Map<string, WeaverseElement>
 
   constructor(params: WeaverseShopifyParams) {
