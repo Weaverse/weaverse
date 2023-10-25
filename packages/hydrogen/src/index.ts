@@ -1,6 +1,8 @@
 import {
   Weaverse,
   WeaverseItemStore,
+  useItemInstance,
+  useWeaverse,
   type PlatformTypeEnum,
 } from '@weaverse/react'
 import type {
@@ -12,6 +14,7 @@ import type {
   WeaverseInternal,
   WeaverseLoaderRequestInfo,
 } from './types'
+import { defaultComponents } from '~/components'
 
 export * from './WeaverseHydrogenRoot'
 export * from './weaverse-client'
@@ -27,8 +30,8 @@ export class WeaverseHydrogen extends Weaverse {
   requestInfo: WeaverseLoaderRequestInfo
   declare ItemConstructor: typeof WeaverseHydrogenItem
   declare data: HydrogenPageData
-  declare itemInstances: Map<string | number, WeaverseHydrogenItem>
-  declare elementRegistry: Map<string, HydrogenElement>
+  declare static itemInstances: Map<string, WeaverseHydrogenItem>
+  declare static elementRegistry: Map<string, HydrogenElement>
 
   constructor(params: WeaverseHydrogenParams, components: HydrogenComponent[]) {
     let { internal, pageId, requestInfo, ...coreParams } = params
@@ -37,15 +40,12 @@ export class WeaverseHydrogen extends Weaverse {
     this.pageId = pageId
     this.requestInfo = requestInfo
     this.registerComponents(components)
+    this.registerComponents(defaultComponents)
   }
 
-  registerElement(element: HydrogenElement) {
-    super.registerElement(element)
-  }
-
-  registerComponents(components: HydrogenComponent[]) {
+  registerComponents = (components: HydrogenComponent[]) => {
     components.forEach((comp) => {
-      this.registerElement({
+      Weaverse.registerElement({
         type: comp?.schema?.type,
         Component: comp?.default,
         schema: comp?.schema,
@@ -71,7 +71,7 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
   get data() {
     let defaultData = this.Element?.schema?.inspector
       ?.flatMap((group) => group.inputs)
-      ?.reduce<Record<string, any>>((a, { defaultValue, name }) => {
+      .reduce<Record<string, any>>((a, { defaultValue, name }) => {
         if (name && defaultValue !== null && defaultValue !== undefined) {
           a[name] = defaultValue
         }
@@ -84,3 +84,5 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
     super.data = update
   }
 }
+
+export { useWeaverse, useItemInstance }

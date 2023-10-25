@@ -17,11 +17,8 @@ export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
   let renderRoot = () => setData({})
 
   useEffect(() => {
-    context.subscribe(renderRoot)
     context.contentRootElement = rootRef?.current || null
-    return () => {
-      context.unsubscribe(renderRoot)
-    }
+    return context.subscribe(renderRoot)
   }, [context])
 
   let eventHandlers = context?.studioBridge?.eventHandlers || {}
@@ -45,7 +42,7 @@ export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
 })
 
 const ItemComponent = memo(({ instance }: ItemComponentProps) => {
-  let context = useContext(WeaverseContext)
+  let context = useWeaverse()
   let { stitchesInstance, elementRegistry, platformType } = context
   let [data, setData] = useState<ElementData>(instance.data)
   let {
@@ -65,14 +62,14 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
 
   useEffect(() => {
     let render = (data: ElementData) => setData({ ...data })
-    instance.subscribe(render)
+
     if (isBrowser && !instance.ref.current) {
       // Fallback `ref` if the element isn't created by `React.forwardRef`
       Object.assign(instance.ref, {
         current: document.querySelector(`[data-wv-id="${id}"]`),
       })
     }
-    return () => instance.unsubscribe(render)
+    return instance.subscribe(render)
   }, [instance])
 
   let Element = elementRegistry.get(type)
@@ -82,13 +79,14 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     if (Component.$$typeof === Symbol.for('react.forward_ref')) {
       rest.ref = instance.ref
     }
-    let renderChildren = children?.length
-      ? children.map((item: { id: string }) => (
-          <ItemInstance key={item.id} id={item.id} />
-        ))
-      : childIds.length
-      ? childIds.map((cid: string) => <ItemInstance key={cid} id={cid} />)
-      : null
+    let renderChildren = (
+      children.length
+        ? children
+        : childIds.length
+        ? childIds.map((cid: string) => ({ id: cid }))
+        : []
+    ).map((item: { id: string }) => <ItemInstance key={item.id} id={item.id} />)
+
     let style = rest.style || {}
     if (__hidden) style.display = 'none'
 
@@ -118,12 +116,20 @@ export function useWeaverse<T = Weaverse>() {
   return weaverse as T
 }
 
-let ItemInstance = memo(({ id }: { id: string | number }) => {
+export let useItemInstance = (id: string) => {
   let weaverse = useWeaverse()
   let { itemInstances } = weaverse
   let instance = itemInstances.get(id)
   if (!instance) {
     console.warn(`Item instance ${id} not found`)
+    return null
+  }
+  return instance
+}
+
+let ItemInstance = memo(({ id }: { id: string }) => {
+  let instance = useItemInstance(id)
+  if (!instance) {
     return <div style={{ display: 'none' }}>Item instance {id} not found</div>
   }
   return <ItemComponent key={id} instance={instance} />

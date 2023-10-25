@@ -48,7 +48,7 @@ export interface AllCacheOptions {
   staleIfError?: number
 }
 
-export type ComponentLoaderArgs<T = { [key: string]: any }> = {
+export type ComponentLoaderArgs<T = any> = {
   data: T
   weaverse: WeaverseClient
 }

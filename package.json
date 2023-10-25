@@ -17,7 +17,7 @@
     "preprepare": "husky install",
     "lint": "eslint packages",
     "lint:fix": "eslint packages --fix",
-    "typecheck": "tsc --noEmit packages"
+    "typecheck": "turbo typecheck --parallel"
   },
   "workspaces": [
     "templates/pilot",

@@ -15,6 +15,10 @@
     "pilot#build": {
       "dependsOn": ["@weaverse/core#build", "@weaverse/react#build", "@weaverse/hydrogen#build"],
       "outputs": ["dist/**"]
+    },
+    "typecheck": {
+      "outputs": [],
+      "dependsOn": ["build"]
     }
   }
 }
