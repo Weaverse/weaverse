@@ -27,18 +27,18 @@
     "packages/hydrogen"
   ],
   "devDependencies": {
-    "@types/node": "^20.8.7",
-    "@types/react": "^18.2.29",
+    "@types/node": "^20.8.9",
+    "@types/react": "^18.2.32",
     "@types/react-dom": "18.2.14",
-    "@typescript-eslint/eslint-plugin": "^6.8.0",
-    "@typescript-eslint/parser": "^6.8.0",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
     "cross-env": "^7.0.3",
     "eslint": "8.51.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-react": "^7.33.2",
     "husky": "^8.0.3",
-    "lint-staged": "^15.0.1",
+    "lint-staged": "^15.0.2",
     "prettier": "3.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -49,7 +49,7 @@
   },
   "optionalDependencies": {
     "@esbuild/darwin-x64": "^0.19.5",
-    "turbo-darwin-arm64": "^1.10.15"
+    "turbo-darwin-arm64": "^1.10.16"
   },
   "engines": {
     "node": ">=16.13"
