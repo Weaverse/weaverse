@@ -24,7 +24,11 @@ export function Background(props: BackgroundProps) {
           <img
             width="100%"
             height="100%"
-            src={backgroundImage}
+            src={
+              typeof backgroundImage === 'object'
+                ? backgroundImage.url
+                : backgroundImage
+            }
             loading="lazy"
             alt="Background"
             style={{
