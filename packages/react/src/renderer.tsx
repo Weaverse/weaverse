@@ -102,7 +102,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
         )}
         style={style}
         {...rest}
-        children={renderChildren}
+        children={renderChildren.length ? renderChildren : undefined}
       />
     )
   } else {
