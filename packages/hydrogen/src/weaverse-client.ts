@@ -68,7 +68,7 @@ export class WeaverseClient {
     }
   }
 
-  fetchWithCache = <T>(url: string, options: FetchWithCacheOptions) => {
+  fetchWithCache = <T>(url: string, options: FetchWithCacheOptions = {}) => {
     let cacheKey = [url, options.body]
     let {
       strategy = this.storefront.CacheCustom({
