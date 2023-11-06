@@ -57,7 +57,7 @@ export let css: ElementCSS = {
 }
 
 Image.defaultProps = {
-  src: 'https://ucarecdn.com/dac0f414-2b1f-46df-99ce-41554f0f653a/',
+  src: 'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/Integration.png?v=1698317519',
   alt: 'Alternative information',
   objectFit: 'cover',
   objectPosition: 'center center',

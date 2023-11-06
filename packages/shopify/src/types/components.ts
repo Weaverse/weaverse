@@ -1,5 +1,5 @@
 import type { DialogContentProps } from '@radix-ui/react-dialog'
-import type { WeaverseElementProps } from '@weaverse/react'
+import type { WeaverseElementProps, WeaverseImage } from '@weaverse/react'
 import type { KeenSliderInstance } from 'keen-slider'
 import type {
   CSSProperties,
@@ -8,12 +8,14 @@ import type {
   ReactNode,
 } from 'react'
 import type * as PhosphorIcons from '~/components/icons/phosphor'
+
 export interface ModalContentProps extends DialogContentProps {
   size?: 'auto' | 'fullscreen'
   portal?: boolean
 }
 
 export type WeaverseIcon = keyof typeof PhosphorIcons
+
 export interface WeaverseIconProps extends HTMLAttributes<SVGElement> {
   name: WeaverseIcon
 }
@@ -55,7 +57,7 @@ export interface OverlayProps {
 
 export interface BackgroundProps {
   backgroundColor?: string
-  backgroundImage?: string
+  backgroundImage?: string | WeaverseImage
   backgroundFit?: CSSProperties['objectFit']
   backgroundPosition?: CSSProperties['objectPosition']
   className?: string
@@ -113,6 +115,7 @@ interface BackgroundDataProps {
   /** @deprecated no more use but still reserved for old element */
   backgroundFit?: CSSProperties['objectFit']
 }
+
 // Layout
 export interface LayoutElementProps
   extends BackgroundDataProps,
@@ -144,6 +147,7 @@ export interface MapElementProps extends WeaverseElementProps {
 export interface TextElementProps extends WeaverseElementProps {
   value: string
 }
+
 export interface ScrollingTextElementProps extends WeaverseElementProps {
   value: string
   gap: number
@@ -160,6 +164,7 @@ export interface VideoCommonProps {
   autoPlay: boolean
   muted: boolean
 }
+
 // Video
 export type VideoElementProps = VideoCommonProps & WeaverseElementProps
 

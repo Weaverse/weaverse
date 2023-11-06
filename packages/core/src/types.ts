@@ -162,7 +162,6 @@ export type InputType =
 
 declare global {
   interface Window {
-    Blinkloader: any
     weaverseStudio: any
   }
 }

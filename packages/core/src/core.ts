@@ -48,7 +48,7 @@ export class WeaverseItemStore extends EventEmitter {
   }
 
   get Element() {
-    return Weaverse.elementRegistry.get(this._store.type)
+    return this.weaverse.elementRegistry.get(this._store.type)
   }
 
   get css(): ElementCSS {
@@ -93,7 +93,7 @@ export class Weaverse extends EventEmitter {
   declare platformType: PlatformTypeEnum
   static elementRegistry = new Map()
 
-  mediaBreakPoints: BreakPoints = {
+  static mediaBreakPoints: BreakPoints = {
     desktop: "all",
     // max-width need to subtract 0.02px to prevent bug
     // ref: https://getbootstrap.com/docs/5.1/layout/breakpoints/#max-width
@@ -107,7 +107,7 @@ export class Weaverse extends EventEmitter {
       this[key] = v || this[key]
     })
     this.initProject()
-    this.initStitches()
+    Weaverse.initStitches()
   }
 
   /**
@@ -115,7 +115,7 @@ export class Weaverse extends EventEmitter {
    */
   initProject = () => {
     let { data, ItemConstructor } = this
-    let itemInstances = Weaverse.itemInstances
+    let itemInstances = this.itemInstances
     if (data?.items) {
       data.items.forEach((item) => {
         let itemInstance = itemInstances.get(item.id)
@@ -132,12 +132,12 @@ export class Weaverse extends EventEmitter {
     return Weaverse.itemInstances
   }
 
-  initStitches = (externalConfig?: stitches.CreateStitches) => {
+  static initStitches = (externalConfig?: stitches.CreateStitches) => {
     Weaverse.stitchesInstance =
       Weaverse.stitchesInstance ||
       stitches.createStitches({
         prefix: "weaverse",
-        media: this.mediaBreakPoints,
+        media: Weaverse.mediaBreakPoints,
         utils: stitchesUtils,
         ...externalConfig,
       })

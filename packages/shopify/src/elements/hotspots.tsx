@@ -7,6 +7,7 @@ import type { HotspotsProps } from '~/types'
 import type { ShopifyProduct } from '~/types/shopify'
 import { Image } from '~/elements/product/product-media/image'
 import { formatMoney } from '~/utils/money'
+
 let { Icon } = Components
 
 export let Hotspots = forwardRef<HTMLDivElement, HotspotsProps>(
@@ -194,7 +195,8 @@ export let css: ElementCSS = {
 }
 
 Hotspots.defaultProps = {
-  image: 'https://ucarecdn.com/dac0f414-2b1f-46df-99ce-41554f0f653a/',
+  image:
+    'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/Integration.png?v=1698317519',
   aspectRatio: 'auto',
   icon: 'HandBag',
   color: 'light',

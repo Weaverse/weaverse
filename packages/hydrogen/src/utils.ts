@@ -30,7 +30,6 @@ export function getWeaverseConfigs(
   } = env || {}
   let { weaverseProjectId, weaverseHost, isDesignMode, weaverseVersion } =
     queries
-
   return {
     projectId: weaverseProjectId || WEAVERSE_PROJECT_ID || '',
     weaverseHost: weaverseHost || WEAVERSE_HOST || 'https://weaverse.io',
