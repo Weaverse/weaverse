@@ -19,9 +19,10 @@ export let WeaverseHydrogenRoot = memo(
     errorComponent: ErrorComponent = FallbackError,
     components,
   }: WeaverseHydrogenRootProps) => {
-    let loaderData = useLoaderData()
-
-    let data: WeaverseData = loaderData?.weaverseData
+    let loaderData = useLoaderData() as unknown as {
+      weaverseData: WeaverseData
+    }
+    let data = loaderData?.weaverseData
     if (data) {
       if (data instanceof Promise) {
         return (
