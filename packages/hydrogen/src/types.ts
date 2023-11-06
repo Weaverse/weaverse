@@ -10,7 +10,7 @@ import type {
 } from '@shopify/hydrogen/storefront-api-types'
 import type {
   AppLoadContext,
-  LoaderArgs as RemixOxygenLoaderArgs,
+  LoaderFunctionArgs as RemixOxygenLoaderArgs,
 } from '@shopify/remix-oxygen'
 import type {
   BasicInput,
