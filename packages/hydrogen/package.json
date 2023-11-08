@@ -22,7 +22,9 @@
   },
   "peerDependencies": {
     "react": ">=18",
-    "react-dom": ">=18"
+    "react-dom": ">=18",
+    "@remix-run/react": "^2.1.0",
+    "@shopify/hydrogen": "^2023.10.2"
   },
   "prettier": {
     "printWidth": 80,
@@ -32,8 +34,6 @@
   "name": "@weaverse/hydrogen",
   "author": "Weaverse Team",
   "dependencies": {
-    "@remix-run/react": "2.1.0",
-    "@shopify/hydrogen": "^2023.10.2",
     "@weaverse/react": "2.4.3",
     "react-error-boundary": "^4.0.11"
   },
