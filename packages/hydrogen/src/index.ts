@@ -2,6 +2,8 @@ import {
   Weaverse,
   WeaverseItemStore,
   useItemInstance,
+  useChildInstances,
+  useParentInstance,
   useWeaverse,
   type PlatformTypeEnum,
 } from '@weaverse/react'
@@ -85,4 +87,4 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
   }
 }
 
-export { useWeaverse, useItemInstance }
+export { useWeaverse, useItemInstance, useChildInstances, useParentInstance }

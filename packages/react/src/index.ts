@@ -1,4 +1,5 @@
 export * from '@weaverse/core'
 export * from './context'
+export * from './hooks'
 export * from './renderer'
 export * from './types'
