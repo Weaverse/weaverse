@@ -25,9 +25,9 @@ export let useParentInstance = () => {
   return useItemInstance(parentId || '')
 }
 
-export let useChildInstances = () => {
+export let useChildInstances = (id?: string) => {
   let weaverse = useWeaverse()
-  let currentInstance = useItemInstance()
+  let currentInstance = useItemInstance(id)
   if (!currentInstance) return []
   let { itemInstances } = weaverse
 
@@ -36,5 +36,5 @@ export let useChildInstances = () => {
   } = currentInstance
   return children.map(({ id }: { id: string }) => {
     return itemInstances.get(id)
-  })
+  }) as WeaverseItemStore[]
 }
