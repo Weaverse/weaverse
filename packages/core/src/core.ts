@@ -79,7 +79,7 @@ export class WeaverseItemStore extends EventEmitter {
 
 export class Weaverse extends EventEmitter {
   contentRootElement: HTMLElement | null = null
-  static itemInstances = new Map()
+  static itemInstances = new Map<string, WeaverseItemStore | any>()
   weaverseHost = "https://weaverse.io"
   weaverseVersion = ""
   projectId = ""

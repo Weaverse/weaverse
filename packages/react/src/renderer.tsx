@@ -1,15 +1,12 @@
 /* eslint-disable react/no-children-prop */
-import type {
-  ElementData,
-  Weaverse,
-  WeaverseProjectDataType,
-} from '@weaverse/core'
+import type { ElementData, WeaverseProjectDataType } from '@weaverse/core'
 import { isBrowser } from '@weaverse/core'
-import React, { memo, useContext, useEffect, useRef, useState } from 'react'
-import { WeaverseContext, WeaverseContextProvider } from './context'
+import React, { memo, useEffect, useRef, useState } from 'react'
+import { WeaverseContextProvider, WeaverseItemContext } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
 import { generateItemClassName } from './utils/css'
 import clsx from 'clsx'
+import { useItemInstance, useWeaverse } from '~/hooks'
 
 export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
   let [, setData] = useState<WeaverseProjectDataType | unknown>(context.data)
@@ -33,7 +30,10 @@ export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
         data-weaverse-project-id={context.projectId}
       >
         <WeaverseContextProvider value={context}>
-          <ItemInstance id={context.data.rootId || context.projectId} />
+          <ItemInstance
+            id={context.data.rootId || context.projectId}
+            parentId={''}
+          />
         </WeaverseContextProvider>
       </div>
     )
@@ -85,7 +85,9 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
         : childIds.length
         ? childIds.map((cid: string) => ({ id: cid }))
         : []
-    ).map((item: { id: string }) => <ItemInstance key={item.id} id={item.id} />)
+    ).map((item: { id: string }) => (
+      <ItemInstance key={item.id} id={item.id} parentId={id} />
+    ))
 
     let style = rest.style || {}
     if (__hidden) style.display = 'none'
@@ -111,26 +113,16 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
   }
 })
 
-export function useWeaverse<T = Weaverse>() {
-  let weaverse = useContext(WeaverseContext)
-  return weaverse as T
-}
-
-export let useItemInstance = (id: string) => {
-  let weaverse = useWeaverse()
-  let { itemInstances } = weaverse
-  let instance = itemInstances.get(id)
-  if (!instance) {
-    console.warn(`Item instance ${id} not found`)
-    return null
-  }
-  return instance
-}
-
-let ItemInstance = memo(({ id }: { id: string }) => {
-  let instance = useItemInstance(id)
-  if (!instance) {
-    return <div style={{ display: 'none' }}>Item instance {id} not found</div>
-  }
-  return <ItemComponent key={id} instance={instance} />
-})
+let ItemInstance = memo(
+  ({ id, parentId }: { id: string; parentId: string }) => {
+    let instance = useItemInstance(id)
+    if (!instance) {
+      return <div style={{ display: 'none' }}>Item instance {id} not found</div>
+    }
+    return (
+      <WeaverseItemContext.Provider value={{ parentId, id }}>
+        <ItemComponent key={id} instance={instance} />
+      </WeaverseItemContext.Provider>
+    )
+  },
+)

@@ -1,0 +1,56 @@
+name: 🚀 Lint & Typecheck
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  lint:
+    name: ⬣ ESLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v3
+        with:
+          cache: npm
+          cache-dependency-path: ./package.json
+          node-version: 18
+
+      - name: 📥 Install deps
+        run: npm install
+
+      - name: 🔬 Lint
+        run: npm run lint
+
+  typecheck:
+    name: ʦ TypeScript
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v3
+        with:
+          cache: npm
+          cache-dependency-path: ./package.json
+          node-version: 18
+
+      - name: 📥 Install deps
+        run: npm install
+
+      - name: 🔎 Type check
+        run: npm run typecheck --if-present
