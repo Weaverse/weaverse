@@ -63,3 +63,16 @@ Passionate about empowering developers, The Weaverse Team is committed to creati
 simplify and enhance web development. Our focus is on fostering a vibrant community and driving forward the evolution of
 web technologies.
 
+## Quick Links
+
+- **Home Page**: [Weaverse](https://weaverse.io)
+- **Playground & Demo**: [Playground](https://playground.weaverse.io)
+
+## Community Engagement
+
+Engage with the Weaverse community through these channels:
+
+- **Slack
+  **: [Join Weaverse Slack](https://join.slack.com/t/weaversecommunity/shared_invite/zt-235bv7d80-velzJU8CpZIHWdrzFwAdXg)
+- **Twitter**: [Follow @WeaverseIO](https://twitter.com/WeaverseIO)
+- **LinkedIn**: [Follow Weaverse on LinkedIn](https://www.linkedin.com/company/weaverseio)
