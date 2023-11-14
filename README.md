@@ -6,6 +6,20 @@ The "Weaverse SDKs" is a public collection of SDKs for integrating the Weaverse 
 frameworks such as Shopify Hydrogen, Remix, and Next.js. Developed by The Weaverse Team, these SDKs are designed to
 simplify and enhance the integration of dynamic, content-rich web applications with the Weaverse CMS.
 
+## Quick Links
+
+- **Home Page**: [Weaverse](https://weaverse.io)
+- **Playground & Demo**: [Playground](https://playground.weaverse.io)
+
+## Community Engagement
+
+Engage with the Weaverse community through these channels:
+
+- **Slack
+  **: [Join Weaverse Slack](https://join.slack.com/t/weaversecommunity/shared_invite/zt-235bv7d80-velzJU8CpZIHWdrzFwAdXg)
+- **Twitter**: [Follow @WeaverseIO](https://twitter.com/WeaverseIO)
+- **LinkedIn**: [Follow Weaverse on LinkedIn](https://www.linkedin.com/company/weaverseio)
+
 ## Key Features
 
 - **Framework-Specific SDKs**: Tailored SDKs for various React/JamStack frameworks, ensuring flexible and efficient
@@ -62,17 +76,3 @@ This project is open-source and licensed under the MIT License.
 Passionate about empowering developers, The Weaverse Team is committed to creating innovative tools and solutions that
 simplify and enhance web development. Our focus is on fostering a vibrant community and driving forward the evolution of
 web technologies.
-
-## Quick Links
-
-- **Home Page**: [Weaverse](https://weaverse.io)
-- **Playground & Demo**: [Playground](https://playground.weaverse.io)
-
-## Community Engagement
-
-Engage with the Weaverse community through these channels:
-
-- **Slack
-  **: [Join Weaverse Slack](https://join.slack.com/t/weaversecommunity/shared_invite/zt-235bv7d80-velzJU8CpZIHWdrzFwAdXg)
-- **Twitter**: [Follow @WeaverseIO](https://twitter.com/WeaverseIO)
-- **LinkedIn**: [Follow Weaverse on LinkedIn](https://www.linkedin.com/company/weaverseio)
