@@ -1,9 +1,16 @@
 {
-  "version": "2.5.1",
+  "name": "@weaverse/core",
+  "author": "Weaverse Team",
+  "description": "Weaverse Core",
+  "version": "2.6.0",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "module": "dist/index.mjs",
+  "repository": {
+    "url": "git+https://github.com/Weaverse/weaverse.git",
+    "directory": "packages/core"
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -20,8 +27,6 @@
     "clean": "rimraf dist",
     "prepublish": "npm run build"
   },
-  "name": "@weaverse/core",
-  "author": "Weaverse Team",
   "dependencies": {
     "@stitches/core": "^1.2.8"
   },

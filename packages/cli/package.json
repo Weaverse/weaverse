@@ -1,6 +1,6 @@
 {
   "name": "@weaverse/cli",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "CLI for Weaverse projects",
   "main": "index.js",
   "bin": {
@@ -11,15 +11,15 @@
     "start": "node index.js"
   },
   "repository": {
-    "type": "https",
-    "url": "https://github.com/Weaverse/sdks"
+    "url": "git+https://github.com/Weaverse/weaverse.git",
+    "directory": "packages/cli"
   },
-  "author": "Paul",
-  "license": "ISC",
+  "author": "The Weaverse Team",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Weaverse/sdks/issues"
+    "url": "https://github.com/Weaverse/weaverse/issues"
   },
-  "homepage": "https://github.com/Weaverse/sdks#readme",
+  "homepage": "https://github.com/Weaverse/weaverse#readme",
   "dependencies": {
     "axios": "^1.5.1",
     "cross-spawn": "^7.0.3",
