@@ -2,7 +2,7 @@
   "name": "@weaverse/core",
   "author": "Weaverse Team",
   "description": "Weaverse Core",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,7 +12,8 @@
     "directory": "packages/core"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "@weaverse:registry": "https://registry.npmjs.org"
   },
   "files": [
     "dist/*"

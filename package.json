@@ -1,8 +1,7 @@
 {
   "name": "weaverse-sdks",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "description": "Weaverse SDKs monorepo.",
-  "private": true,
   "license": "MIT",
   "scripts": {
     "dev": "npm run dev:pkg -- --filter=./templates/pilot",
