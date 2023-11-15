@@ -2,7 +2,7 @@
   "name": "@weaverse/react",
   "author": "Weaverse Team",
   "description": "React bindings for Weaverse",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -12,7 +12,8 @@
     "directory": "packages/react"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "@weaverse:registry": "https://registry.npmjs.org"
   },
   "files": [
     "dist/*"
@@ -37,6 +38,6 @@
     "singleQuote": true
   },
   "dependencies": {
-    "@weaverse/core": "2.6.0"
+    "@weaverse/core": "2.6.1"
   }
 }
