@@ -1,58 +1,78 @@
-# Weaverse monorepo
+# Weaverse SDKs
 
-Seamlessly integrate your existing ecommerce store into Shopify with Weaverse.
+## Overview
 
-### Setup
+The "Weaverse SDKs" is a public collection of SDKs for integrating the Weaverse Headless CMS with modern React/JamStack
+frameworks such as Shopify Hydrogen, Remix, and Next.js. Developed by The Weaverse Team, these SDKs are designed to
+simplify and enhance the integration of dynamic, content-rich web applications with the Weaverse CMS.
 
-- The project is using git submodules for templates so for the first time cloning this project, if the submodule is not yet downloaded, use the following command:
-  ```bash
-    git submodule update --init --recursive
-  ```
-- Start developing Weaverse SDKs and Hydrogen demo with `npm run dev` or `nr dev`.
-- In order to make the `pilot` template to watch SDKs changes, you can manually set the `rexmi.config.js` `watchPaths` like this:
-  ```js
-  watchPaths: [
-    './public',
-    './.env',
-    '../../packages/core/dist/index.js',
-    '../../packages/react/dist/index.js',
-    '../../packages/hydrogen/dist/index.js',
-  ],
-  ```
-  - However, do not commit it because this is template project and normal users don't need that. To make git stop track that file change, you can use following command in `weaverse-project`:
-    `git update-index --assume-unchanged ./remix.config.js`
-  - If you need git to track that file again, use the command:
-    `git update-index --no-assume-unchanged ./remix.config.js`
+## Quick Links
 
-### Note for commiting git project with submodule:
+- **Home Page**: [Weaverse](https://weaverse.io)
+- **Playground & Demo**: [Playground](https://playground.weaverse.io)
 
-- We should commit & push the submodule update first then after the submodule got latest commit code => commit the sdks packages with the latest submodule signature
+## Community Engagement
 
-### How to upgrade packages?
+Engage with the Weaverse community through these channels:
 
-To upgrade all packages, use: `nr up` or `npm run up` with these optional flags:
+- **Slack
+  **: [Join Weaverse Slack](https://join.slack.com/t/weaversecommunity/shared_invite/zt-235bv7d80-velzJU8CpZIHWdrzFwAdXg)
+- **Twitter**: [Follow @WeaverseIO](https://twitter.com/WeaverseIO)
+- **LinkedIn**: [Follow Weaverse on LinkedIn](https://www.linkedin.com/company/weaverseio)
 
-- Add `--patch` to upgrade all packages to the latest patch version
-- Add `--minor` to upgrade all packages to the latest minor version
-- Add `--major` to upgrade all packages to the latest major version
-- Add `--version <version>` to upgrade/downgrade all packages to the specified version
-- If no flag is provided, the default is `--patch`
+## Key Features
 
-E.g:
+- **Framework-Specific SDKs**: Tailored SDKs for various React/JamStack frameworks, ensuring flexible and efficient
+  integration.
+- **Seamless CMS Integration**: Facilitates the integration of applications with the Weaverse Headless CMS.
+- **Community-Driven**: Open-source and community-focused, welcoming contributions and collaborative development.
 
-```bash
-$ nr up # v1.0.0 -> v1.0.1
-$ nr up --patch # v1.0.1 -> v1.0.2
-$ nr up --minor # v1.0.2 -> v1.1.0
-$ nr up --major # v1.1.0 -> v2.0.0
-$ nr up --version 1.3.2 # v2.0.0 -> v1.3.2
-```
+## Packages
 
-- Add `-p` to publish all packages to npm after upgrading
+- [`@weaverse/core`](https://github.com/Weaverse/weaverse/tree/main/packages/core): Foundation package with core logic
+  and framework-agnostic code.
+- [`@weaverse/react`](https://github.com/Weaverse/weaverse/tree/main/packages/react): React components and utilities for
+  CMS integration.
+- [`@weaverse/hydrogen`](https://github.com/Weaverse/weaverse/tree/main/packages/hydrogen): SDK for Shopify Hydrogen
+  integration with Weaverse CMS.
+- [`@weaverse/remix`](https://github.com/Weaverse/weaverse/tree/main/packages/remix): Integration tools for Remix
+  applications with Weaverse CMS.
+- [`@weaverse/next`](https://github.com/Weaverse/weaverse/tree/main/packages/next): Utilities for integrating Next.js
+  applications with Weaverse CMS.
 
-E.g:
+## Installation & Development
 
-```bash
-$ nr up --patch -p
-# v1.0.1 -> v1.0.2 -> publish v1.0.2 to npm
-```
+### Getting Started
+
+1. **Fork & Clone**: Fork this repository and clone it to your local machine.
+
+2. **Submodule Setup**: Initialize and update the submodule to pull the sample project:
+   ```bash
+   git submodule init
+   git submodule update --recursive
+   ```
+
+3. **Install Dependencies**: Navigate to the desired package or sample project and install dependencies:
+   ```bash
+   npm install
+   ```
+
+4. **Run Development Server**: Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+### Contributing
+
+Your contributions are welcome to further enhance the Weaverse SDKs. Feel free to fork the repository, make changes, and
+submit pull requests with your improvements.
+
+## License
+
+This project is open-source and licensed under the MIT License.
+
+## About The Weaverse Team
+
+Passionate about empowering developers, The Weaverse Team is committed to creating innovative tools and solutions that
+simplify and enhance web development. Our focus is on fostering a vibrant community and driving forward the evolution of
+web technologies.
