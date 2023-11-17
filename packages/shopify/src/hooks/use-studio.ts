@@ -7,7 +7,7 @@ export function useStudio(weaverse: WeaverseShopify) {
     let { isDesignMode, weaverseHost, weaverseVersion } = weaverse
     if (isDesignMode && isIframe && !window.weaverseStudio) {
       let version = weaverseVersion || Date.now()
-      let studioScriptSrc = `${weaverseHost}/build/studio/studio-bridge.js?v=${version}`
+      let studioScriptSrc = `${weaverseHost}/static/studio/studio-bridge.js?v=${version}`
       loadScript(studioScriptSrc)
         .then(() => window?.createWeaverseStudioBridge(weaverse))
         .catch(console.error)
