@@ -13,9 +13,10 @@ import type {
   LoaderFunctionArgs as RemixOxygenLoaderArgs,
 } from '@shopify/remix-oxygen'
 import type {
-  BasicInput,
+  BasicInput as CoreBasicInput,
   ElementData,
   ElementSchema,
+  InputType,
   WeaverseCoreParams,
   WeaverseElement,
   WeaverseImage,
@@ -29,7 +30,7 @@ import type { ThemeSettingsStore } from './hooks/use-theme-settings'
 import type { WeaverseHydrogen } from './index'
 import type { WeaverseClient } from './weaverse-client'
 
-export type { WeaverseImage }
+export type { InputType, WeaverseImage }
 
 export type Locale = {
   language: LanguageCode
@@ -83,6 +84,10 @@ export interface HydrogenComponentSchema extends ElementSchema {
     groups?: ('*' | 'header' | 'footer' | 'body')[]
   }
   toolbar?: (HydrogenToolbarAction | HydrogenToolbarAction[])[]
+}
+
+export type BasicInput = CoreBasicInput & {
+  shouldRevalidate?: boolean
 }
 
 export interface InspectorGroup {
