@@ -23,7 +23,7 @@ export function useStudio(weaverse: WeaverseHydrogen) {
       if (window.weaverseStudio) {
         window.weaverseStudio.init(weaverse)
       } else {
-        let studioSrc = `${weaverseHost}/build/studio/hydrogen/index.js?v=${weaverseVersion}`
+        let studioSrc = `${weaverseHost}/static/studio/hydrogen/index.js?v=${weaverseVersion}`
         loadScript(studioSrc)
       }
     }
