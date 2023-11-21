@@ -23,18 +23,31 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
 
-      - name: 📥 Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          run_install: true
-          version: 8
-
-
       - name: ⎔ Setup node
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: pnpm
+
+      - name: 📥 Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          run_install: false
+          version: 8
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install
 
       - name: 🔬 Lint
         run: npm run lint
@@ -46,18 +59,31 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
 
-      - name: 📥 Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          run_install: true
-          version: 8
-
-
       - name: ⎔ Setup node
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: pnpm
+
+      - name: 📥 Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          run_install: false
+          version: 8
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install
 
       - name: 🔎 Type check
         run: npm run typecheck --if-present
