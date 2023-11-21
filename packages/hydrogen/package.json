@@ -19,7 +19,7 @@
     "dist/*"
   ],
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "scripts": {
     "start": "npm run dev",
@@ -29,10 +29,10 @@
     "prepublish": "npm run build"
   },
   "peerDependencies": {
-    "react": ">=18",
-    "react-dom": ">=18",
     "@remix-run/react": "^2.1.0",
-    "@shopify/hydrogen": "^2023.10.2"
+    "@shopify/hydrogen": "^2023.10.2",
+    "react": ">=18",
+    "react-dom": ">=18"
   },
   "prettier": {
     "printWidth": 80,

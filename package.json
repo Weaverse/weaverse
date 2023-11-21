@@ -16,15 +16,9 @@
     "preprepare": "husky install",
     "lint": "eslint packages",
     "lint:fix": "eslint packages --fix",
-    "typecheck": "turbo typecheck --parallel"
+    "typecheck": "turbo typecheck --parallel",
+    "preinstall": "npx only-allow pnpm"
   },
-  "workspaces": [
-    "templates/pilot",
-    "packages/core",
-    "packages/react",
-    "packages/shopify",
-    "packages/hydrogen"
-  ],
   "devDependencies": {
     "@types/node": "^20.9.1",
     "@types/react": "^18.2.37",
@@ -51,7 +45,7 @@
     "turbo-darwin-arm64": "^1.10.16"
   },
   "engines": {
-    "node": ">=16.13"
+    "node": ">=18"
   },
   "prettier": {
     "semi": false,
