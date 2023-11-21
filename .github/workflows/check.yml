@@ -14,6 +14,7 @@ permissions:
   actions: write
   contents: read
 
+
 jobs:
   lint:
     name: ⬣ ESLint
@@ -22,15 +23,21 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
 
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v3
+      - name: 📥 Install pnpm
+        uses: pnpm/action-setup@v2
         with:
-          cache: npm
-          cache-dependency-path: ./package.json
-          node-version: 18
+          run_install: true
+          version: 8
 
-      - name: 📥 Install deps
-        run: npm install
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: pnpm
+
+      - name: 🖼 Build icons
+        run: npm run build:icons
 
       - name: 🔬 Lint
         run: npm run lint
@@ -42,15 +49,21 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
 
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v3
+      - name: 📥 Install pnpm
+        uses: pnpm/action-setup@v2
         with:
-          cache: npm
-          cache-dependency-path: ./package.json
-          node-version: 18
+          run_install: true
+          version: 8
 
-      - name: 📥 Install deps
-        run: npm install
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: pnpm
+
+      - name: 🖼 Build icons
+        run: npm run build:icons
 
       - name: 🔎 Type check
         run: npm run typecheck --if-present
