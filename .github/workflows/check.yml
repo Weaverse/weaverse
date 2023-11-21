@@ -36,9 +36,6 @@ jobs:
           node-version: 18
           cache: pnpm
 
-      - name: 🖼 Build icons
-        run: npm run build:icons
-
       - name: 🔬 Lint
         run: npm run lint
 
@@ -61,9 +58,6 @@ jobs:
         with:
           node-version: 18
           cache: pnpm
-
-      - name: 🖼 Build icons
-        run: npm run build:icons
 
       - name: 🔎 Type check
         run: npm run typecheck --if-present
