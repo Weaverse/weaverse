@@ -19,7 +19,7 @@
     "dist/*"
   ],
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "scripts": {
     "start": "npm run dev",
@@ -29,8 +29,8 @@
     "prepublish": "npm run build"
   },
   "peerDependencies": {
-    "react": ">=16.8.0",
-    "react-dom": ">=16.8.0"
+    "react": ">=18",
+    "react-dom": ">=18"
   },
   "prettier": {
     "printWidth": 80,

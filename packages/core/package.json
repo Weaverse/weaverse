@@ -19,7 +19,7 @@
     "dist/*"
   ],
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "scripts": {
     "start": "npm run dev",
