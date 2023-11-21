@@ -4,7 +4,7 @@
   "description": "Weaverse SDKs monorepo.",
   "license": "MIT",
   "scripts": {
-    "dev": "pnpm run dev:pkg -- --filter=./templates/pilot",
+    "dev": "npm run dev:pkg -- --filter=./templates/pilot",
     "dev:pkg": "cross-env LOCAL_DEV=true turbo dev --no-daemon --parallel --filter=./packages/*",
     "clean": "bash ./scripts/clean.sh",
     "up": "bash ./scripts/upgrade-packages.sh",
@@ -12,7 +12,7 @@
     "test": "turbo run test",
     "build": "turbo run build --no-daemon",
     "build:graph": "turbo run build --graph=repo-graph.svg",
-    "prepare": "pnpm run build",
+    "prepare": "npm run build",
     "preprepare": "husky install",
     "lint": "eslint packages",
     "lint:fix": "eslint packages --fix",
