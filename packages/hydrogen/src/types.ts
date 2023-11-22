@@ -90,9 +90,16 @@ export type BasicInput = CoreBasicInput & {
   shouldRevalidate?: boolean
 }
 
+export type HeadingInput = {
+  type: 'heading'
+  label: string
+  name?: string
+  defaultValue?: string
+}
+
 export interface InspectorGroup {
   group: string
-  inputs: BasicInput[]
+  inputs: (BasicInput | HeadingInput)[]
 }
 
 export interface HydrogenComponentProps<L = any> extends WeaverseElement {
