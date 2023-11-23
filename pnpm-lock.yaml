@@ -111,7 +111,7 @@ importers:
         version: 2023.10.2(@remix-run/react@2.3.1)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
       '@weaverse/react':
         specifier: 2.6.3
-        version: link:../react
+        version: registry.npmjs.org/@weaverse/react@2.6.3(react-dom@18.2.0)(react@18.2.0)
       react:
         specifier: '>=18'
         version: 18.2.0
@@ -130,7 +130,7 @@ importers:
     dependencies:
       '@weaverse/core':
         specifier: 2.6.3
-        version: link:../core
+        version: registry.npmjs.org/@weaverse/core@2.6.3
       react:
         specifier: '>=18'
         version: 18.2.0
@@ -148,7 +148,7 @@ importers:
         version: 1.2.8(react@18.2.0)
       '@weaverse/react':
         specifier: 2.6.3
-        version: link:../react
+        version: registry.npmjs.org/@weaverse/react@2.6.3(react-dom@18.2.0)(react@18.2.0)
       clsx:
         specifier: ^2.0.0
         version: 2.0.0
@@ -183,7 +183,7 @@ importers:
         specifier: ^2.0.1
         version: 2.0.1(@shopify/oxygen-workers-types@3.17.3)
       '@weaverse/hydrogen':
-        specifier: ^2.6.2
+        specifier: 2.7.0
         version: link:../../packages/hydrogen
       clsx:
         specifier: 2.0.0
@@ -14308,3 +14308,29 @@ packages:
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
+
+  registry.npmjs.org/@weaverse/core@2.6.3:
+    resolution: {integrity: sha512-n4eNV0U69X9FpN3SkspDpnio4U/lwPYq5LS9TUCi+Uh0VdnZRw6Gx3/sFBrUeizCgwmjgC0oaZXVaZTftOUvXA==, tarball: https://registry.npmjs.org/@weaverse/core/-/core-2.6.3.tgz}
+    name: '@weaverse/core'
+    version: 2.6.3
+    engines: {node: '>=18'}
+    dependencies:
+      '@stitches/core': 1.2.8
+    optionalDependencies:
+      '@esbuild/darwin-x64': 0.19.7
+    dev: false
+
+  registry.npmjs.org/@weaverse/react@2.6.3(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-loQqx7Mhn2L81NYKt7ZKaG9KrcmPu0QGaepxoNNIun6iVEZT05kQRUci/v3VBx0eGFSch3wy0gHmutsipdlB8A==, tarball: https://registry.npmjs.org/@weaverse/react/-/react-2.6.3.tgz}
+    id: registry.npmjs.org/@weaverse/react/2.6.3
+    name: '@weaverse/react'
+    version: 2.6.3
+    engines: {node: '>=18'}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
+    dependencies:
+      '@weaverse/core': registry.npmjs.org/@weaverse/core@2.6.3
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false

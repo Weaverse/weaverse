@@ -58,6 +58,7 @@ export class WeaverseClient {
     this.basePageConfigs = {
       projectId: this.configs.projectId,
       weaverseHost: this.configs.weaverseHost,
+      weaverseApiKey: this.configs.weaverseApiKey,
       weaverseVersion: this.configs.weaverseVersion,
       isDesignMode: this.configs.isDesignMode,
     }

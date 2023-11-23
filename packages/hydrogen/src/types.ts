@@ -181,6 +181,7 @@ export interface HydrogenComponent<T extends HydrogenComponentProps = any> {
 
 export type WeaverseStudioQueries = {
   weaverseProjectId: string
+  weaverseApiKey: string
   weaverseHost: string
   weaverseVersion: string
   isDesignMode: boolean
@@ -194,6 +195,7 @@ export type PublicEnv = {
 export type WeaverseProjectConfigs = {
   projectId: string
   weaverseHost: string
+  weaverseApiKey: string
   weaverseVersion?: string
   isDesignMode?: boolean
   publicEnv?: PublicEnv
@@ -274,6 +276,7 @@ export type FetchProjectPayload = {
 
 export type HydrogenThemeEnv = {
   WEAVERSE_PROJECT_ID: string
+  WEAVERSE_API_KEY: string
   WEAVERSE_HOST: string
   PUBLIC_STORE_DOMAIN: string
   PUBLIC_STOREFRONT_API_TOKEN: string
