@@ -2,7 +2,7 @@
   "name": "@weaverse/shopify",
   "author": "Weaverse Team",
   "description": "Weaverse Components for Shopify Online Store 2.0 Section builder",
-  "version": "2.6.3",
+  "version": "2.7.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
