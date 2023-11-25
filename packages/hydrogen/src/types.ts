@@ -17,6 +17,7 @@ import type {
   ElementData,
   ElementSchema,
   InputType,
+  PositionInputValue,
   WeaverseCoreParams,
   WeaverseElement,
   WeaverseImage,
@@ -30,7 +31,7 @@ import type { ThemeSettingsStore } from './hooks/use-theme-settings'
 import type { WeaverseHydrogen } from './index'
 import type { WeaverseClient } from './weaverse-client'
 
-export type { InputType, WeaverseImage }
+export type { InputType, PositionInputValue, WeaverseImage }
 
 export type Locale = {
   language: LanguageCode
@@ -90,11 +91,12 @@ export type BasicInput = CoreBasicInput & {
   shouldRevalidate?: boolean
 }
 
+export type HeadingInputType = 'heading'
+
 export type HeadingInput = {
-  type: 'heading'
+  type: HeadingInputType
   label: string
-  name?: string
-  defaultValue?: string
+  [key: string]: any
 }
 
 export interface InspectorGroup {
