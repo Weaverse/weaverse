@@ -13,6 +13,8 @@ import type {
   WeaverseLoaderData,
 } from './types'
 
+import { WeaversePixel } from '~/pixel'
+
 type WeaverseData = WeaverseLoaderData | Promise<WeaverseLoaderData>
 
 export let WeaverseHydrogenRoot = memo(
@@ -57,7 +59,10 @@ function RenderRoot(props: {
   let { data, components } = props
   let weaverse = createWeaverseInstance(data, components)
   useStudio(weaverse)
-  return <WeaverseRoot context={weaverse} />
+  return <>
+    <WeaverseRoot context={weaverse} />
+    <WeaversePixel context={weaverse} />
+  </>
 }
 
 export function withWeaverse(Component: React.ComponentType<any>) {
