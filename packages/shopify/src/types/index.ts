@@ -3,7 +3,7 @@ import type {
   WeaverseResourcePickerData,
 } from '@weaverse/react'
 import type { KeenSliderInstance, KeenSliderPlugin } from 'keen-slider'
-import type { WeaverseShopify } from '~/index'
+
 import type { WeaverseIcon } from './components'
 import type {
   OptionDisplayType,
@@ -18,6 +18,8 @@ import type {
   ShopifyProductOption,
   ShopifyProductVariant,
 } from './shopify'
+
+import type { WeaverseShopify } from '~/index'
 
 export * from './configs'
 export * from './shopify'

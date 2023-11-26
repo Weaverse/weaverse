@@ -1,7 +1,8 @@
 import type { ElementCSS } from '@weaverse/react'
-import { Components } from '~/components'
 import clsx from 'clsx'
 import React from 'react'
+
+import { Components } from '~/components'
 import type { OptionValuesProps } from '~/types'
 import {
   getSoldOutAndUnavailableState,

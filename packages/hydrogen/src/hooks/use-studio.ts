@@ -1,8 +1,10 @@
 import { useNavigate, useRevalidator } from '@remix-run/react'
 import { isIframe, loadScript } from '@weaverse/react'
 import { useEffect } from 'react'
-import type { WeaverseHydrogen } from '~/index'
+
 import { useThemeContext } from './use-theme-context'
+
+import type { WeaverseHydrogen } from '~/index'
 
 export function useStudio(weaverse: WeaverseHydrogen) {
   let { revalidate } = useRevalidator()

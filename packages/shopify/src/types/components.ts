@@ -7,6 +7,7 @@ import type {
   ReactElement,
   ReactNode,
 } from 'react'
+
 import type * as PhosphorIcons from '~/components/icons/phosphor'
 
 export interface ModalContentProps extends DialogContentProps {

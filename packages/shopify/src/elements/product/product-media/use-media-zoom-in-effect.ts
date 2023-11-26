@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+
 import type { ProductContextType } from '~/types'
 
 export function useMediaZoomInEffect(

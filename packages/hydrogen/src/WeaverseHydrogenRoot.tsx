@@ -2,6 +2,7 @@ import { Await, useLoaderData, useRouteLoaderData } from '@remix-run/react'
 import { WeaverseRoot } from '@weaverse/react'
 import React, { memo, Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
+
 import { ThemeProvider, createWeaverseInstance } from './context'
 import { useStudio } from './hooks/use-studio'
 import { ThemeSettingsStore } from './hooks/use-theme-settings'

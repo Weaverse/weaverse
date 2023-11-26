@@ -1,7 +1,7 @@
 import type { ElementCSS } from '@weaverse/react'
 import type { CSSProperties } from 'react'
-import React from 'react'
-import { useState } from 'react'
+import React, { useState } from 'react'
+
 import type { ScrollingTextElementProps } from '~/types/components'
 
 type AnimationPlayState = 'running' | 'paused'

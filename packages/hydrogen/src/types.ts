@@ -25,10 +25,12 @@ import type {
 } from '@weaverse/react'
 import type React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
+
 import type { STORE_PAGES } from './context'
 import type { ThemeSettingsStore } from './hooks/use-theme-settings'
-import type { WeaverseHydrogen } from './index'
 import type { WeaverseClient } from './weaverse-client'
+
+import type { WeaverseHydrogen } from './index'
 
 export type { InputType, WeaverseImage }
 

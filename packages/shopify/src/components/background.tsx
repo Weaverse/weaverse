@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react'
 import React from 'react'
+
 import type { BackgroundProps } from '~/types/components'
 
 export function Background(props: BackgroundProps) {

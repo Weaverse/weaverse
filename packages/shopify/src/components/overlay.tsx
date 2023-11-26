@@ -1,4 +1,5 @@
 import React from 'react'
+
 import type { OverlayProps } from '~/types/components'
 
 export function Overlay(props: OverlayProps) {

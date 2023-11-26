@@ -1,4 +1,5 @@
 import type { LinkHTMLAttributes } from 'react'
+
 import type { CountdownTimeKey } from '~/types/components'
 
 export function getTime(_seconds: number): {

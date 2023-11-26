@@ -1,5 +1,6 @@
 import type { ElementCSS } from '@weaverse/react'
 import React, { forwardRef } from 'react'
+
 import type { ProductInfoProps } from '~/types'
 
 let ProductInfo = forwardRef<HTMLDivElement, ProductInfoProps>((props, ref) => {

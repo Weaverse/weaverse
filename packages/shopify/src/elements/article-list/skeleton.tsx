@@ -1,6 +1,7 @@
 import type { ElementCSS } from '@weaverse/react'
-import { Components } from '~/components'
 import React from 'react'
+
+import { Components } from '~/components'
 import type { ArticleSkeletonProps } from '~/types'
 let { Icon } = Components
 

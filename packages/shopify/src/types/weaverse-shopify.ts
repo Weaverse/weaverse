@@ -15,6 +15,7 @@ import type {
   WeaverseCoreParams,
   WeaverseProjectDataType,
 } from '@weaverse/react'
+
 import type { ThirdPartyIntegration } from './shopify'
 
 export type {
