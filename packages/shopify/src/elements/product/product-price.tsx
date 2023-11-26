@@ -1,5 +1,6 @@
 import type { ElementCSS } from '@weaverse/react'
 import React, { forwardRef, useEffect, useState } from 'react'
+
 import { useProductContext } from '~/hooks/use-product-context'
 import { weaverseShopifyConfigs } from '~/proxy'
 import type { ProductPriceProps } from '~/types'

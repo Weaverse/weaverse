@@ -1,5 +1,6 @@
 import { isIframe, loadScript } from '@weaverse/react'
 import { useEffect } from 'react'
+
 import type { WeaverseShopify } from '~/index'
 
 export function useStudio(weaverse: WeaverseShopify) {

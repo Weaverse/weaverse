@@ -1,4 +1,8 @@
 import { useSyncExternalStore } from 'react'
+import { isBrowser } from '@weaverse/react'
+
+import { useThemeContext } from './use-theme-context'
+
 import type {
   HydrogenThemeSchema,
   HydrogenThemeSettings,
@@ -6,8 +10,6 @@ import type {
   PublicEnv,
   RootRouteData,
 } from '~/types'
-import { useThemeContext } from './use-theme-context'
-import { isBrowser } from '@weaverse/react'
 
 export class ThemeSettingsStore {
   static settings: HydrogenThemeSettings | null = null

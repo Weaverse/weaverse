@@ -1,5 +1,6 @@
 import type { ElementCSS } from '@weaverse/react'
 import * as React from 'react'
+
 import type { TextElementProps } from '~/types/components'
 
 const Text = React.forwardRef<HTMLDivElement, TextElementProps>(

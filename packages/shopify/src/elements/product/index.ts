@@ -1,4 +1,3 @@
-import type { WeaverseElement } from '~/types'
 import * as ProductBuyButton from './product-buy-button'
 import * as ProductDescription from './product-description'
 import * as ProductDetails from './product-details'
@@ -9,6 +8,8 @@ import * as ProductPrice from './product-price'
 import * as ProductTitle from './product-title'
 import * as ProductVariant from './product-variant'
 import * as ProductVendor from './product-vendor'
+
+import type { WeaverseElement } from '~/types'
 
 export let productElements: Record<string, WeaverseElement> = {
   ProductDetails: {

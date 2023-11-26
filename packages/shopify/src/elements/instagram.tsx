@@ -1,4 +1,5 @@
 import React, { forwardRef, useEffect, useState } from 'react'
+
 import { INSTAGRAM_API } from '~/constant'
 import type { InstagramElementProps, InstagramMedia } from '~/types/components'
 import { Components } from '~/components'

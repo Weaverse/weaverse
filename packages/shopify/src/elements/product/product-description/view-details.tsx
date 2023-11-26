@@ -1,5 +1,6 @@
-import { Components } from '~/components'
 import React from 'react'
+
+import { Components } from '~/components'
 import type { ProductDescriptionViewDetailsProps } from '~/types'
 
 let { Modal, ModalTrigger, ModalHeader, ModalContent } =

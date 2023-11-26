@@ -1,9 +1,11 @@
 import type { PlatformTypeEnum } from '@weaverse/react'
 import { Weaverse, WeaverseItemStore } from '@weaverse/react'
-import * as ThirdPartyElement from '~/elements/third-party'
-import type { ThirdPartyIntegration } from '~/types/shopify'
+
 import { DEFAULT_INTEGRATIONS } from './constant'
 import { SHOPIFY_ELEMENTS } from './elements'
+
+import * as ThirdPartyElement from '~/elements/third-party'
+import type { ThirdPartyIntegration } from '~/types/shopify'
 import type {
   ElementData,
   ElementFlags,

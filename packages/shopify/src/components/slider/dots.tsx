@@ -1,6 +1,7 @@
 import { styled } from '@stitches/react'
 import clsx from 'clsx'
 import React from 'react'
+
 import type { SliderDotsProps } from '~/types/components'
 
 export function Dots(props: SliderDotsProps) {

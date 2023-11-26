@@ -1,8 +1,9 @@
 import { useKeenSlider } from 'keen-slider/react'
 import React, { useContext, useEffect, useState } from 'react'
+import { WeaverseContext } from '@weaverse/react'
+
 import { AutoplayPlugin } from '~/components/slider/autoplay-plugin'
 import { ResizePlugin } from '~/components/slider/resize-plugin'
-import { WeaverseContext } from '@weaverse/react'
 import type { SlideshowProps } from '~/types/components'
 import { loadCSS } from '~/utils'
 

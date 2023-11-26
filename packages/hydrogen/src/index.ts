@@ -7,6 +7,7 @@ import {
   useWeaverse,
   type PlatformTypeEnum,
 } from '@weaverse/react'
+
 import type {
   HydrogenComponent,
   HydrogenComponentData,
@@ -16,6 +17,7 @@ import type {
   WeaverseInternal,
   WeaverseLoaderRequestInfo,
 } from './types'
+
 import { defaultComponents } from '~/components'
 
 export * from './WeaverseHydrogenRoot'

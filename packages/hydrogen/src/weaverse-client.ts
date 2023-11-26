@@ -1,5 +1,7 @@
 import { createWithCache, generateCacheControlHeader } from '@shopify/hydrogen'
+
 import pkg from '../package.json'
+
 import type {
   AllCacheOptions,
   FetchProjectPayload,
