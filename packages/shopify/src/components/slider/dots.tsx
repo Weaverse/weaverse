@@ -1,6 +1,7 @@
 import { styled } from '@stitches/react'
 import clsx from 'clsx'
 import React from 'react'
+
 import type { SliderDotsProps } from '~/types/components'
 
 export function Dots(props: SliderDotsProps) {
@@ -10,7 +11,7 @@ export function Dots(props: SliderDotsProps) {
     className,
     absolute && 'dots--absolute',
     position && `dots--${position}`,
-    color && `dots--${color}`
+    color && `dots--${color}`,
   )
   return (
     <StyledDots className={_className}>
@@ -25,7 +26,7 @@ export function Dots(props: SliderDotsProps) {
               className={className}
             />
           )
-        }
+        },
       )}
     </StyledDots>
   )

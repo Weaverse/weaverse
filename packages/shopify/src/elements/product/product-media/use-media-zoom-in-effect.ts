@@ -1,13 +1,14 @@
 import { useEffect } from 'react'
+
 import type { ProductContextType } from '~/types'
 
 export function useMediaZoomInEffect(
   zoomed: boolean,
-  context: ProductContextType
+  context: ProductContextType,
 ) {
   useEffect(() => {
     let productDetails = context?.formRef?.current?.closest(
-      '[data-wv-type="product-details"]'
+      '[data-wv-type="product-details"]',
     )
     if (productDetails) {
       if (zoomed) {

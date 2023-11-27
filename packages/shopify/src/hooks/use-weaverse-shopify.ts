@@ -1,4 +1,5 @@
 import { useWeaverse } from '@weaverse/react'
+
 import type { WeaverseShopify } from '~/index'
 
 export function useWeaverseShopify() {

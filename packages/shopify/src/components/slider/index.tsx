@@ -1,9 +1,11 @@
 import clsx from 'clsx'
 import { useKeenSlider } from 'keen-slider/react'
 import React, { useState } from 'react'
-import type { SliderProps } from '~/types/components'
+
 import { Arrows } from './arrows'
 import { ResizePlugin } from './resize-plugin'
+
+import type { SliderProps } from '~/types/components'
 
 export function Slider(props: SliderProps) {
   let { children, className, gap, slidesPerView, arrowOffset } = props
@@ -30,7 +32,7 @@ export function Slider(props: SliderProps) {
         setCurrentSlide(slider.track.details.rel)
       },
     },
-    [ResizePlugin]
+    [ResizePlugin],
   )
   let _className = clsx('keen-slider', className)
   let arrowsClass = clsx(className && `${className}-arrows`)

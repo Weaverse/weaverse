@@ -1,10 +1,12 @@
 import type { CSSProperties } from 'react'
-import { DEFAULT_OPTION_DESIGN } from '~/constant'
-import type { OptionDisplayType, OptionStyle } from '~/types/configs'
-import type { ShopifyProductOption, ShopifyProduct } from '~/types/shopify'
+
 import { resizeImage } from './image'
 import { getSwatchValue, optionRadiusSizeMap, optionSizeMap } from './swatch'
 import { getVariantFromOptionArray } from './variant'
+
+import { DEFAULT_OPTION_DESIGN } from '~/constant'
+import type { OptionDisplayType, OptionStyle } from '~/types/configs'
+import type { ShopifyProductOption, ShopifyProduct } from '~/types/shopify'
 
 export function getOptionsGroupConfigs(option: ShopifyProductOption) {
   let { swatches } = window.weaverseShopifyConfigs || {}
@@ -35,7 +37,7 @@ export function getOptionItemStyle(
   value: string,
   type: OptionDisplayType,
   position: number,
-  product: ShopifyProduct
+  product: ShopifyProduct,
 ) {
   if (/button|dropdown/.test(type)) return {}
 
@@ -49,7 +51,7 @@ export function getOptionItemStyle(
   if (type === 'variant-image') {
     let variantImage = ''
     let variant = product.variants.find(
-      (v) => v.options[position - 1] === value
+      (v) => v.options[position - 1] === value,
     )
     if (variant?.featured_image) {
       variantImage = resizeImage(variant?.featured_image.src, '200x')
@@ -70,7 +72,7 @@ export function getSoldOutAndUnavailableState(
   value: string,
   position: number,
   product: ShopifyProduct,
-  selectedOptions: string[]
+  selectedOptions: string[],
 ) {
   let state = { soldOut: false, unavailable: false }
   if (selectedOptions.length) {

@@ -1,12 +1,14 @@
 import { isBrowser } from '@weaverse/react'
 import { createContext } from 'react'
+
 import type { ThemeSettingsStore } from './hooks/use-theme-settings'
-import { WeaverseHydrogen } from './index'
 import type {
   HydrogenComponent,
   WeaverseHydrogenParams,
   WeaverseLoaderData,
 } from './types'
+
+import { WeaverseHydrogen } from './index'
 
 function createCachedWeaverseInstance(
   params: WeaverseHydrogenParams,
@@ -15,7 +17,7 @@ function createCachedWeaverseInstance(
   if (isBrowser) {
     window.__weaverses = window.__weaverses || []
     let weaverse = window.__weaverses.find((w) => {
-      let { pathname, search } = w.requestInfo
+      let { pathname } = w.requestInfo
       return pathname === params.requestInfo.pathname
     })
 

@@ -1,10 +1,12 @@
 import type { ElementCSS } from '@weaverse/react'
-import { Components } from '~/components'
 import React, { forwardRef, useState } from 'react'
+
+import { QuantitySelector } from './quantity-selector'
+
+import { Components } from '~/components'
 import { useProductContext } from '~/hooks/use-product-context'
 import type { ProductBuyButtonProps } from '~/types'
 import { addProductToCart } from '~/utils/cart'
-import { QuantitySelector } from './quantity-selector'
 
 let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
   (props, ref) => {
@@ -25,7 +27,7 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
       e.preventDefault()
       setAdding(true)
       addProductToCart(formRef?.current as HTMLFormElement, () =>
-        setAdding(false)
+        setAdding(false),
       )
     }
 
@@ -54,7 +56,7 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
         </div>
       </div>
     )
-  }
+  },
 )
 
 export let css: ElementCSS = {

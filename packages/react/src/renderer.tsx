@@ -2,10 +2,12 @@
 import type { ElementData, WeaverseProjectDataType } from '@weaverse/core'
 import { isBrowser } from '@weaverse/core'
 import React, { memo, useEffect, useRef, useState } from 'react'
+import clsx from 'clsx'
+
 import { WeaverseContextProvider, WeaverseItemContext } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
 import { generateItemClassName } from './utils/css'
-import clsx from 'clsx'
+
 import { useItemInstance, useWeaverse } from '~/hooks'
 
 export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
@@ -70,6 +72,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
       })
     }
     return instance.subscribe(render)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [instance])
 
   let Element = elementRegistry.get(type)

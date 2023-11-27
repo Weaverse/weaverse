@@ -1,8 +1,9 @@
 import type { ElementCSS } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
-import { Components } from '~/components'
 import clsx from 'clsx'
 import React, { useContext } from 'react'
+
+import { Components } from '~/components'
 import { PRODUCT_IMAGE_PLACEHOLDER } from '~/constant'
 import ProductBuyButton, {
   css as buyButtonCss,

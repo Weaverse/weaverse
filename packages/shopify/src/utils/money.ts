@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-template-curly-in-string
 let defaultMoneyFormat = '${{amount}}'
 
 /**
@@ -19,7 +20,7 @@ export function formatMoney(cents: string | number, format: string): string {
     number: any,
     precision = 2,
     thousands = ',',
-    decimal = '.'
+    decimal = '.',
   ): string | 0 {
     if (isNaN(number) || number == null) {
       return 0
@@ -30,7 +31,7 @@ export function formatMoney(cents: string | number, format: string): string {
     let parts = number.split('.')
     let dollarsAmount = parts[0].replace(
       /(\d)(?=(\d\d\d)+(?!\d))/g,
-      `$1${thousands}`
+      `$1${thousands}`,
     )
     let centsAmount = parts[1] ? decimal + parts[1] : ''
 

@@ -1,4 +1,5 @@
 import React, { forwardRef } from 'react'
+
 import type { HydrogenComponentProps, HydrogenComponentSchema } from '~/types'
 
 interface MainProps extends HydrogenComponentProps {}

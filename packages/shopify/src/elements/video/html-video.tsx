@@ -1,4 +1,5 @@
 import React from 'react'
+
 import type { VideoCommonProps } from '~/types/components'
 
 export function HTMLVideo(props: VideoCommonProps) {

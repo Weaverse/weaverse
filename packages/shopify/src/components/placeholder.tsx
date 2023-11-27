@@ -1,4 +1,5 @@
 import React, { forwardRef } from 'react'
+
 import type { PlaceholderProps } from '~/types/components'
 
 const Placeholder = forwardRef<HTMLDivElement, PlaceholderProps>(
@@ -22,7 +23,7 @@ const Placeholder = forwardRef<HTMLDivElement, PlaceholderProps>(
         </div>
       </div>
     )
-  }
+  },
 )
 
 export default Placeholder

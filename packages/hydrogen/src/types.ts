@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference types="@shopify/remix-oxygen" />
 /// <reference types="@shopify/oxygen-workers-types" />
 
@@ -26,11 +27,12 @@ import type {
 } from '@weaverse/react'
 import type React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
+
 import type { STORE_PAGES } from './context'
 import type { ThemeSettingsStore } from './hooks/use-theme-settings'
-import type { WeaverseHydrogen } from './index'
 import type { WeaverseClient } from './weaverse-client'
 
+import type { WeaverseHydrogen } from './index'
 export type { InputType, PositionInputValue, WeaverseImage }
 
 export type Locale = {
@@ -190,6 +192,7 @@ export interface HydrogenComponent<T extends HydrogenComponentProps = any> {
 
 export type WeaverseStudioQueries = {
   weaverseProjectId: string
+  weaverseApiKey: string
   weaverseHost: string
   weaverseVersion: string
   isDesignMode: boolean
@@ -203,6 +206,7 @@ export type PublicEnv = {
 export type WeaverseProjectConfigs = {
   projectId: string
   weaverseHost: string
+  weaverseApiKey: string
   weaverseVersion?: string
   isDesignMode?: boolean
   publicEnv?: PublicEnv
@@ -283,6 +287,7 @@ export type FetchProjectPayload = {
 
 export type HydrogenThemeEnv = {
   WEAVERSE_PROJECT_ID: string
+  WEAVERSE_API_KEY: string
   WEAVERSE_HOST: string
   PUBLIC_STORE_DOMAIN: string
   PUBLIC_STOREFRONT_API_TOKEN: string

@@ -1,6 +1,7 @@
 import type { ElementCSS } from '@weaverse/react'
 import clsx from 'clsx'
 import React from 'react'
+
 import type { ArticleCardProps } from '~/types'
 
 export function ArticleCard(props: ArticleCardProps) {
@@ -25,7 +26,7 @@ export function ArticleCard(props: ArticleCardProps) {
   let cardClass = clsx(
     'wv-article-card',
     zoomInOnHover && 'zoom-in-on-hover',
-    className
+    className,
   )
   let excerptStyle = {
     WebkitBoxOrient: 'vertical',

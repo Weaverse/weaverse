@@ -1,10 +1,12 @@
 import type { ElementCSS } from '@weaverse/react'
 import React, { forwardRef, useContext, useEffect } from 'react'
-import { COUNTDOWN_KEY, TIMES } from '~/constant'
 import { WeaverseContext } from '@weaverse/react'
+
+import { TimerBlock } from './timer-block'
+
+import { COUNTDOWN_KEY, TIMES } from '~/constant'
 import type { CountdownElementProps } from '~/types/components'
 import { getTime } from '~/utils'
-import { TimerBlock } from './timer-block'
 
 let Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
   (props, ref) => {
@@ -73,6 +75,7 @@ let Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
       return () => {
         clearInterval(intervalFlag)
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [startTimeProp, endTimeProp, periods, timerType])
 
     const timer = getTime(remaining)

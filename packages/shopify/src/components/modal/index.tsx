@@ -5,8 +5,9 @@ import type {
 } from '@radix-ui/react-dialog'
 import { Close, Portal, Root, Trigger } from '@radix-ui/react-dialog'
 import React, { forwardRef } from 'react'
-import type { ModalContentProps } from '~/types/components'
+
 import { Icon } from '../icons'
+
 import {
   StyledCloseIcon,
   StyledContent,
@@ -14,6 +15,8 @@ import {
   StyledTitle,
 } from './styled'
 import { useOpenChangeEffect } from './use-open-change-effect'
+
+import type { ModalContentProps } from '~/types/components'
 
 export let Modal = (props: DialogProps) => {
   let { children, open, defaultOpen, onOpenChange, ...rest } = props
@@ -40,7 +43,7 @@ export let ModalHeader = forwardRef<HTMLHeadingElement, DialogTitleProps>(
         {children}
       </StyledTitle>
     )
-  }
+  },
 )
 
 export let ModalContent = forwardRef<HTMLDivElement, ModalContentProps>(
@@ -66,7 +69,7 @@ export let ModalContent = forwardRef<HTMLDivElement, ModalContentProps>(
       return <Portal>{modalContent}</Portal>
     }
     return modalContent
-  }
+  },
 )
 
 ModalContent.defaultProps = {
@@ -87,5 +90,5 @@ export let ModalClose = forwardRef<HTMLButtonElement, DialogCloseProps>(
         {asChild ? children : closeIcon}
       </Close>
     )
-  }
+  },
 )

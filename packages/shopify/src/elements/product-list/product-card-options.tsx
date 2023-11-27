@@ -1,7 +1,8 @@
 import type { ElementCSS } from '@weaverse/react'
-import { Components } from '~/components'
 import clsx from 'clsx'
 import React from 'react'
+
+import { Components } from '~/components'
 import type { ProductCardOptionsProps } from '~/types'
 import { getOptionsGroupConfigs, getOptionItemStyle } from '~/utils/option'
 let { Tooltip } = Components
@@ -28,10 +29,10 @@ export function ProductCardOptions(props: ProductCardOptionsProps) {
           let className = clsx(
             'wv-option__value',
             `wv-option__${optionDesign}`,
-            shouldShowTooltip && 'wv-tooltip-container'
+            shouldShowTooltip && 'wv-tooltip-container',
           )
           let foundVariant = variants.find(
-            (v) => v.options[position - 1] === value
+            (v) => v.options[position - 1] === value,
           )
           let productURL = url
           if (foundVariant) {

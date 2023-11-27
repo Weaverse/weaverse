@@ -1,6 +1,7 @@
 import type { ElementCSS } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext } from 'react'
+
 import { useProductContext } from '~/hooks/use-product-context'
 import type { ProductTitleProps } from '~/types'
 
@@ -32,7 +33,7 @@ let ProductTitle = forwardRef<HTMLElement, ProductTitleProps>((props, ref) => {
         clickAction === 'goToProductPage' && isNotProductPage,
       ...rest,
     },
-    product.title
+    product.title,
   )
 })
 

@@ -1,5 +1,6 @@
 import { isIframe, loadScript } from '@weaverse/react'
 import { useEffect } from 'react'
+
 import type { WeaverseShopify } from '~/index'
 
 export function useStudio(weaverse: WeaverseShopify) {
@@ -12,5 +13,6 @@ export function useStudio(weaverse: WeaverseShopify) {
         .then(() => window?.createWeaverseStudioBridge(weaverse))
         .catch(console.error)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 }

@@ -1,5 +1,6 @@
 import clsx from 'clsx'
 import React from 'react'
+
 import type { ProductImageProps } from '~/types'
 
 export function Image(props: ProductImageProps) {

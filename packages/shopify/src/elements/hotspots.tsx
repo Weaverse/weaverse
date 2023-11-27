@@ -1,7 +1,8 @@
 import type { ElementCSS } from '@weaverse/react'
-import { Components } from '~/components'
 import type { CSSProperties } from 'react'
 import React, { forwardRef } from 'react'
+
+import { Components } from '~/components'
 import { weaverseShopifyConfigs, weaverseShopifyProducts } from '~/proxy'
 import type { HotspotsProps } from '~/types'
 import type { ShopifyProduct } from '~/types/shopify'

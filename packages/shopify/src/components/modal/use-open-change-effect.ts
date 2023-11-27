@@ -20,6 +20,7 @@ export function useOpenChangeEffect(props: DialogProps) {
   useEffect(() => {
     let isOpen = open || defaultOpen
     toggleRootzIndex(isOpen)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, defaultOpen])
 
   let handleOpenChange = (open: boolean) => {

@@ -1,5 +1,7 @@
-import { createWithCache } from '@shopify/hydrogen'
+import { createWithCache, generateCacheControlHeader } from '@shopify/hydrogen'
+
 import pkg from '../package.json'
+
 import type {
   AllCacheOptions,
   FetchProjectPayload,
@@ -13,8 +15,6 @@ import type {
   WeaverseStudioQueries,
 } from './types'
 import { getRequestQueries, getWeaverseConfigs } from './utils'
-
-const CACHE_HITS_KEY = 'https://weaverse.io/__CACHE_HITS_COUNT__'
 
 export class WeaverseClient {
   API = 'api/public/project'
@@ -58,6 +58,7 @@ export class WeaverseClient {
     this.basePageConfigs = {
       projectId: this.configs.projectId,
       weaverseHost: this.configs.weaverseHost,
+      weaverseApiKey: this.configs.weaverseApiKey,
       weaverseVersion: this.configs.weaverseVersion,
       isDesignMode: this.configs.isDesignMode,
     }
@@ -73,47 +74,30 @@ export class WeaverseClient {
     let {
       strategy = this.storefront.CacheCustom({
         maxAge: 5,
+        sMaxAge: 5,
         staleWhileRevalidate: 82800,
       }),
       ...reqInit
     } = options
     let res = this.withCache(cacheKey, strategy, async () => {
-      let response = await fetch(url, reqInit)
+      let cacheControlHeader = generateCacheControlHeader(strategy)
+      let response = await fetch(url, {
+        ...reqInit,
+        headers: {
+          'Cache-Control': cacheControlHeader,
+          ...reqInit.headers,
+        },
+      })
+
       if (!response.ok) {
         let error = await response.text()
         let { status, statusText } = response
         throw new Error(`${status} ${statusText} ${error}`)
-      } else {
-        if (!url.includes('/configs')) {
-          // Reset the cacheHits count in the cache
-          await this.resetCacheHits().catch(console.error)
-        }
       }
+
       return await response.json<T>()
     })
     return res as Promise<T>
-  }
-  incrementCacheHits = async () => {
-    // Increment the cacheHits count in the cache
-    const currentHitsResponse = await this.cache.match(CACHE_HITS_KEY)
-    const currentHits = currentHitsResponse
-      ? parseInt(await currentHitsResponse.text())
-      : 0
-    const newHitsCount = currentHits + 1
-    const newHitsResponse = new Response(newHitsCount.toString(), {
-      headers: {
-        'Cache-Control': 'max-age=3600',
-      },
-    })
-
-    await this.cache.put(CACHE_HITS_KEY, newHitsResponse)
-
-    return newHitsCount.toString()
-  }
-  resetCacheHits = async () => {
-    // Reset the cacheHits count in the cache
-    const resetHitsResponse = new Response('0')
-    await this.cache.put(CACHE_HITS_KEY, resetHitsResponse)
   }
 
   loadThemeSettings = async (strategy?: AllCacheOptions) => {
@@ -195,16 +179,8 @@ export class WeaverseClient {
         if (isDesignMode) {
           payload = await fetch(url, reqInit).then((res) => res.json())
         } else {
-          let cacheHitsToSend = await this.incrementCacheHits().catch(
-            console.error,
-          )
-
-          let headers = {
-            'X-Cache-Hits': cacheHitsToSend || '0', // Send cache hits as a custom header
-          }
           payload = await this.fetchWithCache(url, {
             ...reqInit,
-            headers,
             strategy,
           })
         }

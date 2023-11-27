@@ -1,7 +1,9 @@
 import { useKeenSlider } from 'keen-slider/react'
 import { useEffect } from 'react'
-import type { ProductImageHooksInput } from '~/types'
+
 import { ThumbnailPlugin } from './thumbnail-plugin'
+
+import type { ProductImageHooksInput } from '~/types'
 
 export function useMediaSlider(input: ProductImageHooksInput) {
   let {
@@ -23,7 +25,7 @@ export function useMediaSlider(input: ProductImageHooksInput) {
       slideChanged: onSlideChanged,
       created: onSliderCreated,
     },
-    [ResizePlugin]
+    [ResizePlugin],
   )
   let [thumbnailRef, thumbnailInstanceRef] = useKeenSlider<HTMLDivElement>(
     {
@@ -35,7 +37,7 @@ export function useMediaSlider(input: ProductImageHooksInput) {
         },
       },
     },
-    [ThumbnailPlugin(instanceRef), ResizePlugin]
+    [ThumbnailPlugin(instanceRef), ResizePlugin],
   )
 
   useEffect(() => {
@@ -49,6 +51,7 @@ export function useMediaSlider(input: ProductImageHooksInput) {
         instanceRef.current.moveToIdx(targetMediaIndex)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context])
 
   return [sliderRef, thumbnailRef, instanceRef, thumbnailInstanceRef] as const

@@ -1,4 +1,5 @@
 import { createContext } from 'react'
+
 import type {
   CollectionContextProps,
   ProductContextType,
@@ -11,5 +12,5 @@ export let ArticleContext = createContext<any>({})
 export let BlogContext = createContext<any>({})
 export let CollectionListContext = createContext<any>({})
 export let CollectionContext = createContext<Partial<CollectionContextProps>>(
-  {}
+  {},
 )

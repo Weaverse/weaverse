@@ -1,7 +1,7 @@
 import React, { forwardRef, useContext } from 'react'
-import type { ElementCSS } from '@weaverse/react'
-import type { WeaverseElementProps } from '@weaverse/react'
+import type { ElementCSS, WeaverseElementProps } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
+
 import { Components } from '~/components'
 
 let { Placeholder, NoHydrate } = Components

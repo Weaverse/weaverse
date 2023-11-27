@@ -1,6 +1,7 @@
 import type { ElementCSS } from '@weaverse/react'
 import clsx from 'clsx'
 import React from 'react'
+
 import type { CollectionCardProps } from '~/types'
 
 export function CollectionCard(props: CollectionCardProps) {
@@ -19,7 +20,7 @@ export function CollectionCard(props: CollectionCardProps) {
   let cardClass = clsx(
     'wv-collection-card',
     zoomInOnHover && 'zoom-in-on-hover',
-    className
+    className,
   )
   let imageSrc =
     typeof featured_image === 'string' ? featured_image : featured_image?.src
