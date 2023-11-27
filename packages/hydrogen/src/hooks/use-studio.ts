@@ -12,7 +12,6 @@ export function useStudio(weaverse: WeaverseHydrogen) {
   let themeSettingsStore = useThemeContext()
   let { isDesignMode, weaverseHost, weaverseVersion } = weaverse
   let isStudio = isIframe && isDesignMode && weaverseHost && weaverseVersion
-
   useEffect(() => {
     if (isStudio) {
       weaverse.internal = {
