@@ -5,7 +5,6 @@ import { WeaverseContext } from '@weaverse/react'
 import type { ThirdPartyProps } from '~/types'
 import { Components } from '~/components'
 
-
 let NoHydrate = Components.NoHydrate
 let Placeholder = Components.Placeholder
 

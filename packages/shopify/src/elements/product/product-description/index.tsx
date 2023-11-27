@@ -71,7 +71,7 @@ let ProductDescription = forwardRef<HTMLDivElement, ProductDescriptionProps>(
         {viewDetailsButton}
       </div>
     )
-  }
+  },
 )
 
 export let css: ElementCSS = {

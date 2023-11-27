@@ -23,7 +23,7 @@ const Placeholder = forwardRef<HTMLDivElement, PlaceholderProps>(
         </div>
       </div>
     )
-  }
+  },
 )
 
 export default Placeholder

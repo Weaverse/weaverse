@@ -11,17 +11,18 @@ export function getTime(_seconds: number): {
   let days = Math.floor(_seconds / ONE_DAY)
   let hours = Math.floor((_seconds - days * ONE_DAY) / ONE_HOUR)
   let minutes = Math.floor(
-    (_seconds - days * ONE_DAY - hours * ONE_HOUR) / ONE_MINUTE
+    (_seconds - days * ONE_DAY - hours * ONE_HOUR) / ONE_MINUTE,
   )
   let seconds = Math.floor(
-    (_seconds - days * ONE_DAY - hours * ONE_HOUR - minutes * ONE_MINUTE) / 1000
+    (_seconds - days * ONE_DAY - hours * ONE_HOUR - minutes * ONE_MINUTE) /
+      1000,
   )
   return { days, hours, minutes, seconds }
 }
 
 export function getYoutubeEmbedId(url: string) {
   const match = url.match(
-    /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?(.+)/
+    /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?(.+)/,
   )
   return match ? match[1] : null
 }

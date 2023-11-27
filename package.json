@@ -1,13 +1,13 @@
 {
   "name": "weaverse-sdks",
-  "version": "2.7.2",
+  "version": "2.7.4",
   "description": "Weaverse SDKs monorepo.",
   "license": "MIT",
   "scripts": {
     "dev": "npm run dev:pkg -- --filter=./templates/pilot",
     "dev:pkg": "cross-env LOCAL_DEV=true turbo dev --no-daemon --parallel --filter=./packages/*",
     "clean": "bash ./scripts/clean.sh",
-    "up": "bash ./scripts/upgrade-packages.sh",
+    "upgrade-packages": "bash ./scripts/upgrade-packages.sh",
     "update-deps": "bash ./scripts/update-deps.sh",
     "test": "turbo run test",
     "build": "turbo run build --no-daemon",
@@ -41,8 +41,8 @@
     "typescript": "5.3.2"
   },
   "optionalDependencies": {
-    "@esbuild/darwin-x64": "*",
-    "turbo-darwin-arm64": "*"
+    "@esbuild/darwin-x64": "^0.19.8",
+    "turbo-darwin-arm64": "^1.10.16"
   },
   "engines": {
     "node": ">=18"

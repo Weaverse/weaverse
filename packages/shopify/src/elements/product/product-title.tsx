@@ -33,7 +33,7 @@ let ProductTitle = forwardRef<HTMLElement, ProductTitleProps>((props, ref) => {
         clickAction === 'goToProductPage' && isNotProductPage,
       ...rest,
     },
-    product.title
+    product.title,
   )
 })
 

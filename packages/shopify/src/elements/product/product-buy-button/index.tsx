@@ -8,7 +8,6 @@ import { useProductContext } from '~/hooks/use-product-context'
 import type { ProductBuyButtonProps } from '~/types'
 import { addProductToCart } from '~/utils/cart'
 
-
 let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
   (props, ref) => {
     let {
@@ -28,7 +27,7 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
       e.preventDefault()
       setAdding(true)
       addProductToCart(formRef?.current as HTMLFormElement, () =>
-        setAdding(false)
+        setAdding(false),
       )
     }
 
@@ -57,7 +56,7 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
         </div>
       </div>
     )
-  }
+  },
 )
 
 export let css: ElementCSS = {

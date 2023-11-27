@@ -27,7 +27,7 @@ let ProductVendor = forwardRef<HTMLDivElement, ProductVendorProps>(
         )}
       </div>
     )
-  }
+  },
 )
 
 ProductVendor.defaultProps = {

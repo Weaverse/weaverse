@@ -72,6 +72,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
       })
     }
     return instance.subscribe(render)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [instance])
 
   let Element = elementRegistry.get(type)

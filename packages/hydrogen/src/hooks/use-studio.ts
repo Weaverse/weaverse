@@ -21,6 +21,7 @@ export function useStudio(weaverse: WeaverseHydrogen) {
         revalidate,
         themeSettingsStore,
       }
+      // @ts-ignore
       window.__weaverse = weaverse
       if (window.weaverseStudio) {
         window.weaverseStudio.init(weaverse)
@@ -29,5 +30,6 @@ export function useStudio(weaverse: WeaverseHydrogen) {
         loadScript(studioSrc)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [weaverse.requestInfo])
 }

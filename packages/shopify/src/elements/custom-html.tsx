@@ -31,7 +31,7 @@ export let CustomHTML = forwardRef<HTMLDivElement, CustomHTMLProps>(
         {isDesignMode ? content : <NoHydrate id={id} getHTML={() => content} />}
       </div>
     )
-  }
+  },
 )
 
 export let css: ElementCSS = {

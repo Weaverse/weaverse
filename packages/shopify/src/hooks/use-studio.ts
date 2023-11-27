@@ -13,5 +13,6 @@ export function useStudio(weaverse: WeaverseShopify) {
         .then(() => window?.createWeaverseStudioBridge(weaverse))
         .catch(console.error)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 }

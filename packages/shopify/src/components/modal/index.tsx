@@ -43,7 +43,7 @@ export let ModalHeader = forwardRef<HTMLHeadingElement, DialogTitleProps>(
         {children}
       </StyledTitle>
     )
-  }
+  },
 )
 
 export let ModalContent = forwardRef<HTMLDivElement, ModalContentProps>(
@@ -69,7 +69,7 @@ export let ModalContent = forwardRef<HTMLDivElement, ModalContentProps>(
       return <Portal>{modalContent}</Portal>
     }
     return modalContent
-  }
+  },
 )
 
 ModalContent.defaultProps = {
@@ -90,5 +90,5 @@ export let ModalClose = forwardRef<HTMLButtonElement, DialogCloseProps>(
         {asChild ? children : closeIcon}
       </Close>
     )
-  }
+  },
 )

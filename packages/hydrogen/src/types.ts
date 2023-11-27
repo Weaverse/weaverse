@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference types="@shopify/remix-oxygen" />
 /// <reference types="@shopify/oxygen-workers-types" />
 
@@ -17,6 +18,7 @@ import type {
   ElementData,
   ElementSchema,
   InputType,
+  PositionInputValue,
   WeaverseCoreParams,
   WeaverseElement,
   WeaverseImage,
@@ -31,8 +33,7 @@ import type { ThemeSettingsStore } from './hooks/use-theme-settings'
 import type { WeaverseClient } from './weaverse-client'
 
 import type { WeaverseHydrogen } from './index'
-
-export type { InputType, WeaverseImage }
+export type { InputType, PositionInputValue, WeaverseImage }
 
 export type Locale = {
   language: LanguageCode
@@ -92,9 +93,17 @@ export type BasicInput = CoreBasicInput & {
   shouldRevalidate?: boolean
 }
 
+export type HeadingInputType = 'heading'
+
+export type HeadingInput = {
+  type: HeadingInputType
+  label: string
+  [key: string]: any
+}
+
 export interface InspectorGroup {
   group: string
-  inputs: BasicInput[]
+  inputs: (BasicInput | HeadingInput)[]
 }
 
 export interface HydrogenComponentProps<L = any> extends WeaverseElement {

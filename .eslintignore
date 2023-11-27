@@ -9,3 +9,4 @@ node_modules/
 /coverage
 dist
 app/styles
+package.json

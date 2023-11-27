@@ -9,7 +9,6 @@ import { ProductContext } from '~/context'
 import { useWeaverseShopify } from '~/hooks/use-weaverse-shopify'
 import type { ProductDetailsProps } from '~/types'
 
-
 let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
   (props, ref) => {
     let {

@@ -75,7 +75,7 @@ let Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
         </div>
       </div>
     )
-  }
+  },
 )
 export let css = {
   // '@desktop': {

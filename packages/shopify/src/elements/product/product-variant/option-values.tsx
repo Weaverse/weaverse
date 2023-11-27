@@ -36,7 +36,7 @@ export function OptionValues(props: OptionValuesProps) {
             value,
             position,
             product,
-            selectedOptions
+            selectedOptions,
           )
           if (hideUnavailableOptions && state.unavailable) {
             return null
@@ -44,7 +44,7 @@ export function OptionValues(props: OptionValuesProps) {
 
           let className = clsx(
             state.soldOut && 'sold-out',
-            state.unavailable && 'unavailable'
+            state.unavailable && 'unavailable',
           )
           return (
             <option key={value + idx} value={value} className={className}>
@@ -64,7 +64,7 @@ export function OptionValues(props: OptionValuesProps) {
           value,
           position,
           product,
-          selectedOptions
+          selectedOptions,
         )
         let shouldShowTooltip =
           showTooltip &&
@@ -78,11 +78,11 @@ export function OptionValues(props: OptionValuesProps) {
           state.unavailable && [
             'unavailable',
             hideUnavailableOptions && 'hidden',
-          ]
+          ],
         )
         let wrapperClassName = clsx(
           'wv-option__value-container',
-          shouldShowTooltip && 'wv-tooltip-container'
+          shouldShowTooltip && 'wv-tooltip-container',
         )
 
         return (

@@ -6,7 +6,7 @@ import type { ShopifyProduct, ShopifyProductVariant } from '~/types/shopify'
 
 export function useProduct(
   productId: number | 'default',
-  useDefaultProduct: boolean
+  useDefaultProduct: boolean,
 ) {
   let { isDesignMode } = useContext(WeaverseContext)
   let [ready, setReady] = useState(false)
@@ -26,7 +26,7 @@ export function useProduct(
   useEffect(() => {
     if (product) {
       setSelectedVariant(
-        product.selected_or_first_available_variant || product.variants[0]
+        product.selected_or_first_available_variant || product.variants[0],
       )
       window.weaverseCartHelpers?.notify('on_product_rendered', {
         product,

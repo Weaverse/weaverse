@@ -32,7 +32,7 @@ export function Slider(props: SliderProps) {
         setCurrentSlide(slider.track.details.rel)
       },
     },
-    [ResizePlugin]
+    [ResizePlugin],
   )
   let _className = clsx('keen-slider', className)
   let arrowsClass = clsx(className && `${className}-arrows`)

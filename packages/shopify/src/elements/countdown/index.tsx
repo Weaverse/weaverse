@@ -8,7 +8,6 @@ import { COUNTDOWN_KEY, TIMES } from '~/constant'
 import type { CountdownElementProps } from '~/types/components'
 import { getTime } from '~/utils'
 
-
 let Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
   (props, ref) => {
     const { isDesignMode } = useContext(WeaverseContext)
@@ -76,6 +75,7 @@ let Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
       return () => {
         clearInterval(intervalFlag)
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [startTimeProp, endTimeProp, periods, timerType])
 
     const timer = getTime(remaining)

@@ -30,12 +30,29 @@ export function getWeaverseConfigs(
     PUBLIC_STOREFRONT_API_TOKEN,
   } = env || {}
   let envFromProcess = (typeof process !== 'undefined' && process.env) || {}
-  let { weaverseProjectId, weaverseHost, isDesignMode, weaverseVersion,weaverseApiKey } =
-    queries
+  let {
+    weaverseProjectId,
+    weaverseHost,
+    isDesignMode,
+    weaverseVersion,
+    weaverseApiKey,
+  } = queries
   return {
-    projectId: weaverseProjectId || WEAVERSE_PROJECT_ID || envFromProcess.WEAVERSE_PROJECT_ID || '',
-    weaverseHost: weaverseHost || WEAVERSE_HOST || envFromProcess.WEAVERSE_HOST || 'https://weaverse.io',
-    weaverseApiKey: weaverseApiKey || WEAVERSE_API_KEY || envFromProcess.WEAVERSE_API_KEY || '',
+    projectId:
+      weaverseProjectId ||
+      WEAVERSE_PROJECT_ID ||
+      envFromProcess.WEAVERSE_PROJECT_ID ||
+      '',
+    weaverseHost:
+      weaverseHost ||
+      WEAVERSE_HOST ||
+      envFromProcess.WEAVERSE_HOST ||
+      'https://weaverse.io',
+    weaverseApiKey:
+      weaverseApiKey ||
+      WEAVERSE_API_KEY ||
+      envFromProcess.WEAVERSE_API_KEY ||
+      '',
     weaverseVersion: weaverseVersion || '',
     isDesignMode: isDesignMode || false,
     publicEnv: {

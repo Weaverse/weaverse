@@ -11,7 +11,7 @@ export function Dots(props: SliderDotsProps) {
     className,
     absolute && 'dots--absolute',
     position && `dots--${position}`,
-    color && `dots--${color}`
+    color && `dots--${color}`,
   )
   return (
     <StyledDots className={_className}>
@@ -26,7 +26,7 @@ export function Dots(props: SliderDotsProps) {
               className={className}
             />
           )
-        }
+        },
       )}
     </StyledDots>
   )

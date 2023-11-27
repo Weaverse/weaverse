@@ -41,7 +41,7 @@ export function ProductCard(props: ProductCardProps) {
   let secondImage = imageSource[1]
   let imagesClass = clsx(
     'wv-pcard__images',
-    showSecondImageOnHover && secondImage && 'show-second-image-on-hover'
+    showSecondImageOnHover && secondImage && 'show-second-image-on-hover',
   )
   let cardClass = clsx('wv-product-card', className)
 

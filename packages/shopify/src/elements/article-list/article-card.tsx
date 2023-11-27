@@ -26,7 +26,7 @@ export function ArticleCard(props: ArticleCardProps) {
   let cardClass = clsx(
     'wv-article-card',
     zoomInOnHover && 'zoom-in-on-hover',
-    className
+    className,
   )
   let excerptStyle = {
     WebkitBoxOrient: 'vertical',

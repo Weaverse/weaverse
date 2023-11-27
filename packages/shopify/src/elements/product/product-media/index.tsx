@@ -14,7 +14,6 @@ import { useProductContext } from '~/hooks/use-product-context'
 import type { ProductMediaProps, ProductMediaSize } from '~/types'
 import { SliderComponents } from '~/components'
 
-
 let mediaSizesMap: Record<ProductMediaSize, string> = {
   small: '40%',
   medium: '50%',
@@ -63,6 +62,7 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
           setReady(true)
         })
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mediaSize, aspectRatio, created, cssLoaded])
 
     let { images, aspect_ratio } = context.product

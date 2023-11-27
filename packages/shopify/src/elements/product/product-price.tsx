@@ -31,7 +31,7 @@ let ProductPrice = forwardRef<HTMLDivElement, ProductPriceProps>(
     if (compare_at_price && Number(compare_at_price) > Number(price)) {
       let savedAmount = Number(compare_at_price) - Number(price)
       savedPercentage = Math.round(
-        (savedAmount / Number(compare_at_price)) * 100
+        (savedAmount / Number(compare_at_price)) * 100,
       )
     }
 
@@ -58,7 +58,7 @@ let ProductPrice = forwardRef<HTMLDivElement, ProductPriceProps>(
         ) : null}
       </div>
     )
-  }
+  },
 )
 
 ProductPrice.defaultProps = {

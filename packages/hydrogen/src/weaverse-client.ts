@@ -16,7 +16,6 @@ import type {
 } from './types'
 import { getRequestQueries, getWeaverseConfigs } from './utils'
 
-
 export class WeaverseClient {
   API = 'api/public/project'
   clientVersion = pkg.version
@@ -82,10 +81,13 @@ export class WeaverseClient {
     } = options
     let res = this.withCache(cacheKey, strategy, async () => {
       let cacheControlHeader = generateCacheControlHeader(strategy)
-      let response = await fetch(url, { ...reqInit, headers: {
+      let response = await fetch(url, {
+        ...reqInit,
+        headers: {
           'Cache-Control': cacheControlHeader,
-        ...reqInit.headers,
-        }})
+          ...reqInit.headers,
+        },
+      })
 
       if (!response.ok) {
         let error = await response.text()
@@ -97,7 +99,6 @@ export class WeaverseClient {
     })
     return res as Promise<T>
   }
-
 
   loadThemeSettings = async (strategy?: AllCacheOptions) => {
     try {
