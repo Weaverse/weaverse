@@ -183,8 +183,8 @@ importers:
         specifier: ^2.0.1
         version: 2.0.1(@shopify/oxygen-workers-types@3.17.3)
       '@weaverse/hydrogen':
-        specifier: 2.7.2
-        version: registry.npmjs.org/@weaverse/hydrogen@2.7.2(@remix-run/react@2.1.0)(@shopify/hydrogen@2023.10.2)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 2.7.4
+        version: link:../../packages/hydrogen
       clsx:
         specifier: 2.0.0
         version: 2.0.0
@@ -14313,49 +14313,3 @@ packages:
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
-
-  registry.npmjs.org/@weaverse/core@2.7.2:
-    resolution: {integrity: sha512-LyDKDgV01GNkifH6ePPcuMOjAuNDeyevYA4vGUyOWFe4TQK46D63vZknddGMUSnegcHopWratPutE2WAhlrvhw==, tarball: https://registry.npmjs.org/@weaverse/core/-/core-2.7.2.tgz}
-    name: '@weaverse/core'
-    version: 2.7.2
-    engines: {node: '>=18'}
-    dependencies:
-      '@stitches/core': 1.2.8
-    optionalDependencies:
-      '@esbuild/darwin-x64': 0.19.8
-    dev: false
-
-  registry.npmjs.org/@weaverse/hydrogen@2.7.2(@remix-run/react@2.1.0)(@shopify/hydrogen@2023.10.2)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-/8TIAEk2pGmn3F0S5WFG5kAEqpbvgYizNY1dJSJCu6lWumrpZNJgKvRY5MX6UUlSSGmwqvHY/V4x+bU8cKLIMA==, tarball: https://registry.npmjs.org/@weaverse/hydrogen/-/hydrogen-2.7.2.tgz}
-    id: registry.npmjs.org/@weaverse/hydrogen/2.7.2
-    name: '@weaverse/hydrogen'
-    version: 2.7.2
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@remix-run/react': ^2.1.0
-      '@shopify/hydrogen': ^2023.10.2
-      react: '>=18'
-      react-dom: '>=18'
-    dependencies:
-      '@remix-run/react': 2.1.0(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
-      '@shopify/hydrogen': 2023.10.2(@remix-run/react@2.1.0)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
-      '@weaverse/react': registry.npmjs.org/@weaverse/react@2.7.2(react-dom@18.2.0)(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-error-boundary: 4.0.11(react@18.2.0)
-    dev: false
-
-  registry.npmjs.org/@weaverse/react@2.7.2(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-0+26IB0dmTW6uYLidZLA9XLPAdYpqbYp1g6TVjKjLGSfwTyI7XUt532IzddXhg1fiWKwOvTs23yrYyq940M7RQ==, tarball: https://registry.npmjs.org/@weaverse/react/-/react-2.7.2.tgz}
-    id: registry.npmjs.org/@weaverse/react/2.7.2
-    name: '@weaverse/react'
-    version: 2.7.2
-    engines: {node: '>=18'}
-    peerDependencies:
-      react: '>=18'
-      react-dom: '>=18'
-    dependencies:
-      '@weaverse/core': registry.npmjs.org/@weaverse/core@2.7.2
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    dev: false
