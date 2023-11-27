@@ -110,7 +110,7 @@ importers:
         specifier: ^2023.10.2
         version: 2023.10.2(@remix-run/react@2.3.1)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
       '@weaverse/react':
-        specifier: 2.7.2
+        specifier: 2.7.4
         version: link:../react
       react:
         specifier: '>=18'
@@ -129,7 +129,7 @@ importers:
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: 2.7.2
+        specifier: 2.7.4
         version: link:../core
       react:
         specifier: '>=18'
@@ -147,7 +147,7 @@ importers:
         specifier: ^1.2.8
         version: 1.2.8(react@18.2.0)
       '@weaverse/react':
-        specifier: 2.7.2
+        specifier: 2.7.4
         version: link:../react
       clsx:
         specifier: ^2.0.0
@@ -172,10 +172,10 @@ importers:
         version: 2.1.0(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
       '@shopify/cli':
         specifier: 3.50.0
-        version: 3.50.0(@types/node@20.10.0)(@types/react@18.2.28)(typescript@5.2.2)(zod@3.22.4)
+        version: 3.50.0(@types/node@20.9.4)(@types/react@18.2.28)(typescript@5.2.2)(zod@3.22.4)
       '@shopify/cli-hydrogen':
         specifier: ^6.0.2
-        version: 6.0.2(@remix-run/dev@2.1.0)(@remix-run/react@2.1.0)(@shopify/hydrogen@2023.10.2)(@shopify/remix-oxygen@2.0.1)(@types/node@20.10.0)(@types/react@18.2.28)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
+        version: 6.0.2(@remix-run/dev@2.1.0)(@remix-run/react@2.1.0)(@shopify/hydrogen@2023.10.2)(@shopify/remix-oxygen@2.0.1)(@types/node@20.9.4)(@types/react@18.2.28)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
       '@shopify/hydrogen':
         specifier: ^2023.10.2
         version: 2023.10.2(@remix-run/react@2.1.0)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
@@ -184,7 +184,7 @@ importers:
         version: 2.0.1(@shopify/oxygen-workers-types@3.17.3)
       '@weaverse/hydrogen':
         specifier: 2.7.2
-        version: link:../../packages/hydrogen
+        version: registry.npmjs.org/@weaverse/hydrogen@2.7.2(@remix-run/react@2.1.0)(@shopify/hydrogen@2023.10.2)(react-dom@18.2.0)(react@18.2.0)
       clsx:
         specifier: 2.0.0
         version: 2.0.0
@@ -230,7 +230,7 @@ importers:
     devDependencies:
       '@remix-run/dev':
         specifier: 2.1.0
-        version: 2.1.0(@types/node@20.10.0)(typescript@5.2.2)
+        version: 2.1.0(@types/node@20.9.4)(typescript@5.2.2)
       '@remix-run/eslint-config':
         specifier: 2.1.0
         version: 2.1.0(eslint@8.51.0)(react@18.2.0)(typescript@5.2.2)
@@ -2141,7 +2141,7 @@ packages:
       tslib: 2.5.3
     dev: false
 
-  /@graphql-codegen/cli@5.0.0(@parcel/watcher@2.3.0)(@types/node@20.10.0)(graphql@16.8.1)(typescript@5.2.2):
+  /@graphql-codegen/cli@5.0.0(@parcel/watcher@2.3.0)(@types/node@20.9.4)(graphql@16.8.1)(typescript@5.2.2):
     resolution: {integrity: sha512-A7J7+be/a6e+/ul2KI5sfJlpoqeqwX8EzktaKCeduyVKgOLA6W5t+NUGf6QumBDXU8PEOqXk3o3F+RAwCWOiqA==}
     hasBin: true
     peerDependencies:
@@ -2159,12 +2159,12 @@ packages:
       '@graphql-tools/apollo-engine-loader': 8.0.0(graphql@16.8.1)
       '@graphql-tools/code-file-loader': 8.0.3(graphql@16.8.1)
       '@graphql-tools/git-loader': 8.0.3(graphql@16.8.1)
-      '@graphql-tools/github-loader': 8.0.0(@types/node@20.10.0)(graphql@16.8.1)
+      '@graphql-tools/github-loader': 8.0.0(@types/node@20.9.4)(graphql@16.8.1)
       '@graphql-tools/graphql-file-loader': 8.0.0(graphql@16.8.1)
       '@graphql-tools/json-file-loader': 8.0.0(graphql@16.8.1)
       '@graphql-tools/load': 8.0.1(graphql@16.8.1)
-      '@graphql-tools/prisma-loader': 8.0.2(@types/node@20.10.0)(graphql@16.8.1)
-      '@graphql-tools/url-loader': 8.0.0(@types/node@20.10.0)(graphql@16.8.1)
+      '@graphql-tools/prisma-loader': 8.0.2(@types/node@20.9.4)(graphql@16.8.1)
+      '@graphql-tools/url-loader': 8.0.0(@types/node@20.9.4)(graphql@16.8.1)
       '@graphql-tools/utils': 10.0.11(graphql@16.8.1)
       '@parcel/watcher': 2.3.0
       '@whatwg-node/fetch': 0.8.8
@@ -2173,7 +2173,7 @@ packages:
       debounce: 1.2.1
       detect-indent: 6.1.0
       graphql: 16.8.1
-      graphql-config: 5.0.3(@types/node@20.10.0)(graphql@16.8.1)(typescript@5.2.2)
+      graphql-config: 5.0.3(@types/node@20.9.4)(graphql@16.8.1)(typescript@5.2.2)
       inquirer: 8.2.6
       is-glob: 4.0.3
       jiti: 1.21.0
@@ -2365,7 +2365,7 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@graphql-tools/executor-http@1.0.3(@types/node@20.10.0)(graphql@16.8.1):
+  /@graphql-tools/executor-http@1.0.3(@types/node@20.9.4)(graphql@16.8.1):
     resolution: {integrity: sha512-5WZIMBevRaxMabZ8U2Ty0dTUPy/PpeYSlMNEmC/YJjKKykgSfc/AwSejx2sE4FFKZ0I2kxRKRenyoWMHRAV49Q==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
@@ -2376,7 +2376,7 @@ packages:
       '@whatwg-node/fetch': 0.9.14
       extract-files: 11.0.0
       graphql: 16.8.1
-      meros: 1.3.0(@types/node@20.10.0)
+      meros: 1.3.0(@types/node@20.9.4)
       tslib: 2.6.2
       value-or-promise: 1.0.12
     transitivePeerDependencies:
@@ -2431,14 +2431,14 @@ packages:
       - supports-color
     dev: false
 
-  /@graphql-tools/github-loader@8.0.0(@types/node@20.10.0)(graphql@16.8.1):
+  /@graphql-tools/github-loader@8.0.0(@types/node@20.9.4)(graphql@16.8.1):
     resolution: {integrity: sha512-VuroArWKcG4yaOWzV0r19ElVIV6iH6UKDQn1MXemND0xu5TzrFme0kf3U9o0YwNo0kUYEk9CyFM0BYg4he17FA==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       '@ardatan/sync-fetch': 0.0.1
-      '@graphql-tools/executor-http': 1.0.3(@types/node@20.10.0)(graphql@16.8.1)
+      '@graphql-tools/executor-http': 1.0.3(@types/node@20.9.4)(graphql@16.8.1)
       '@graphql-tools/graphql-tag-pluck': 8.1.0(graphql@16.8.1)
       '@graphql-tools/utils': 10.0.11(graphql@16.8.1)
       '@whatwg-node/fetch': 0.9.14
@@ -2542,13 +2542,13 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@graphql-tools/prisma-loader@8.0.2(@types/node@20.10.0)(graphql@16.8.1):
+  /@graphql-tools/prisma-loader@8.0.2(@types/node@20.9.4)(graphql@16.8.1):
     resolution: {integrity: sha512-8d28bIB0bZ9Bj0UOz9sHagVPW+6AHeqvGljjERtwCnWl8OCQw2c2pNboYXISLYUG5ub76r4lDciLLTU+Ks7Q0w==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
-      '@graphql-tools/url-loader': 8.0.0(@types/node@20.10.0)(graphql@16.8.1)
+      '@graphql-tools/url-loader': 8.0.0(@types/node@20.9.4)(graphql@16.8.1)
       '@graphql-tools/utils': 10.0.11(graphql@16.8.1)
       '@types/js-yaml': 4.0.9
       '@types/json-stable-stringify': 1.0.36
@@ -2603,7 +2603,7 @@ packages:
       value-or-promise: 1.0.12
     dev: false
 
-  /@graphql-tools/url-loader@8.0.0(@types/node@20.10.0)(graphql@16.8.1):
+  /@graphql-tools/url-loader@8.0.0(@types/node@20.9.4)(graphql@16.8.1):
     resolution: {integrity: sha512-rPc9oDzMnycvz+X+wrN3PLrhMBQkG4+sd8EzaFN6dypcssiefgWKToXtRKI8HHK68n2xEq1PyrOpkjHFJB+GwA==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
@@ -2612,7 +2612,7 @@ packages:
       '@ardatan/sync-fetch': 0.0.1
       '@graphql-tools/delegate': 10.0.3(graphql@16.8.1)
       '@graphql-tools/executor-graphql-ws': 1.1.0(graphql@16.8.1)
-      '@graphql-tools/executor-http': 1.0.3(@types/node@20.10.0)(graphql@16.8.1)
+      '@graphql-tools/executor-http': 1.0.3(@types/node@20.9.4)(graphql@16.8.1)
       '@graphql-tools/executor-legacy-ws': 1.0.4(graphql@16.8.1)
       '@graphql-tools/utils': 10.0.11(graphql@16.8.1)
       '@graphql-tools/wrap': 10.0.1(graphql@16.8.1)
@@ -2956,7 +2956,7 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@oclif/core@2.11.7(@types/node@20.10.0)(typescript@5.2.2):
+  /@oclif/core@2.11.7(@types/node@20.9.4)(typescript@5.2.2):
     resolution: {integrity: sha512-0jbHePVekndUTd+Wee0+pnCpRhuHJrKiG9OtMqf4JSBCxp5Q8V+ACf8QKN4gNH9ppbGORfnTIYtXWh60+DcIiw==}
     engines: {node: '>=14.0.0'}
     dependencies:
@@ -2985,7 +2985,7 @@ packages:
       strip-ansi: 6.0.1
       supports-color: 8.1.1
       supports-hyperlinks: 2.3.0
-      ts-node: 10.9.1(@types/node@20.10.0)(typescript@5.2.2)
+      ts-node: 10.9.1(@types/node@20.9.4)(typescript@5.2.2)
       tslib: 2.6.2
       widest-line: 3.1.0
       wordwrap: 1.0.0
@@ -2997,7 +2997,7 @@ packages:
       - typescript
     dev: false
 
-  /@oclif/core@2.15.0(@types/node@20.10.0)(typescript@5.2.2):
+  /@oclif/core@2.15.0(@types/node@20.9.4)(typescript@5.2.2):
     resolution: {integrity: sha512-fNEMG5DzJHhYmI3MgpByTvltBOMyFcnRIUMxbiz2ai8rhaYgaTHMG3Q38HcosfIvtw9nCjxpcQtC8MN8QtVCcA==}
     engines: {node: '>=14.0.0'}
     dependencies:
@@ -3024,7 +3024,7 @@ packages:
       strip-ansi: 6.0.1
       supports-color: 8.1.1
       supports-hyperlinks: 2.3.0
-      ts-node: 10.9.1(@types/node@20.10.0)(typescript@5.2.2)
+      ts-node: 10.9.1(@types/node@20.9.4)(typescript@5.2.2)
       tslib: 2.6.2
       widest-line: 3.1.0
       wordwrap: 1.0.0
@@ -3036,11 +3036,11 @@ packages:
       - typescript
     dev: false
 
-  /@oclif/plugin-commands@2.2.24(@types/node@20.10.0)(typescript@5.2.2):
+  /@oclif/plugin-commands@2.2.24(@types/node@20.9.4)(typescript@5.2.2):
     resolution: {integrity: sha512-bUZOBefMPR59oHngWNHDn+zGRQctVR5iMkO3qRWFUSVYt1VQtqOwAPBtpTIuIxL17/iGTG+U2b8jafn09lQNxA==}
     engines: {node: '>=12.0.0'}
     dependencies:
-      '@oclif/core': 2.15.0(@types/node@20.10.0)(typescript@5.2.2)
+      '@oclif/core': 2.15.0(@types/node@20.9.4)(typescript@5.2.2)
       lodash: 4.17.21
     transitivePeerDependencies:
       - '@swc/core'
@@ -3049,11 +3049,11 @@ packages:
       - typescript
     dev: false
 
-  /@oclif/plugin-help@5.2.18(@types/node@20.10.0)(typescript@5.2.2):
+  /@oclif/plugin-help@5.2.18(@types/node@20.9.4)(typescript@5.2.2):
     resolution: {integrity: sha512-0JjupXUuDzlI0Ojj7/YL42btfUNuvSgZxdi8ZfeYt/uhC1/zvsSkO29KjffPxKEnbhr6jrkjOgy/Vly5JquYLg==}
     engines: {node: '>=12.0.0'}
     dependencies:
-      '@oclif/core': 2.15.0(@types/node@20.10.0)(typescript@5.2.2)
+      '@oclif/core': 2.15.0(@types/node@20.9.4)(typescript@5.2.2)
     transitivePeerDependencies:
       - '@swc/core'
       - '@swc/wasm'
@@ -3061,12 +3061,12 @@ packages:
       - typescript
     dev: false
 
-  /@oclif/plugin-plugins@3.1.8(@types/node@20.10.0)(typescript@5.2.2):
+  /@oclif/plugin-plugins@3.1.8(@types/node@20.9.4)(typescript@5.2.2):
     resolution: {integrity: sha512-514sFBzLcR9QCSMWCHt/1XntfjJEZvb637b9YuV4kwq749pKEPF7fjCxSV1gYQCCP4TjMB5gB4AwPL4cCbe+/A==}
     engines: {node: '>=16'}
     dependencies:
       '@oclif/color': 1.0.13
-      '@oclif/core': 2.11.7(@types/node@20.10.0)(typescript@5.2.2)
+      '@oclif/core': 2.11.7(@types/node@20.9.4)(typescript@5.2.2)
       chalk: 4.1.2
       debug: 4.3.4(supports-color@8.1.1)
       fs-extra: 9.1.0
@@ -3718,7 +3718,7 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@remix-run/dev@2.1.0(@types/node@20.10.0)(typescript@5.2.2):
+  /@remix-run/dev@2.1.0(@types/node@20.9.4)(typescript@5.2.2):
     resolution: {integrity: sha512-Hn5lw46F+a48dp5uHKe68ckaHgdStW4+PmLod+LMFEqrMbkF0j4XD1ousebxlv989o0Uy/OLgfRMgMy4cBOvHg==}
     engines: {node: '>=18.0.0'}
     hasBin: true
@@ -3742,7 +3742,7 @@ packages:
       '@npmcli/package-json': 4.0.1
       '@remix-run/server-runtime': 2.1.0(typescript@5.2.2)
       '@types/mdx': 2.0.10
-      '@vanilla-extract/integration': 6.2.4(@types/node@20.10.0)
+      '@vanilla-extract/integration': 6.2.4(@types/node@20.9.4)
       arg: 5.0.2
       cacache: 17.1.4
       chalk: 4.1.2
@@ -4017,7 +4017,7 @@ packages:
     resolution: {integrity: sha512-2/U3GXA6YiPYQDLGwtGlnNgKYBSwCFIHf8Y9LUY5VATHdtbLlU0Y1R3QoBnT0aB4qv/BEiVVsj7LJXoQCgJ2vA==}
     dev: true
 
-  /@shopify/cli-hydrogen@6.0.2(@remix-run/dev@2.1.0)(@remix-run/react@2.1.0)(@shopify/hydrogen@2023.10.2)(@shopify/remix-oxygen@2.0.1)(@types/node@20.10.0)(@types/react@18.2.28)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2):
+  /@shopify/cli-hydrogen@6.0.2(@remix-run/dev@2.1.0)(@remix-run/react@2.1.0)(@shopify/hydrogen@2023.10.2)(@shopify/remix-oxygen@2.0.1)(@types/node@20.9.4)(@types/react@18.2.28)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2):
     resolution: {integrity: sha512-a2Jw+KS2quLpAL0jldA15OzXmKIqOUbGnZ1csTtlhcOcBA+OFxzLe4/F44Kk+k6+bCVXxFPPdafEgGlZ+UZO8w==}
     engines: {node: '>=16.13'}
     hasBin: true
@@ -4038,15 +4038,15 @@ packages:
         optional: true
     dependencies:
       '@ast-grep/napi': 0.11.0
-      '@graphql-codegen/cli': 5.0.0(@parcel/watcher@2.3.0)(@types/node@20.10.0)(graphql@16.8.1)(typescript@5.2.2)
-      '@oclif/core': 2.11.7(@types/node@20.10.0)(typescript@5.2.2)
-      '@remix-run/dev': 2.1.0(@types/node@20.10.0)(typescript@5.2.2)
+      '@graphql-codegen/cli': 5.0.0(@parcel/watcher@2.3.0)(@types/node@20.9.4)(graphql@16.8.1)(typescript@5.2.2)
+      '@oclif/core': 2.11.7(@types/node@20.9.4)(typescript@5.2.2)
+      '@remix-run/dev': 2.1.0(@types/node@20.9.4)(typescript@5.2.2)
       '@remix-run/react': 2.1.0(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
-      '@shopify/cli-kit': 3.50.0(@types/node@20.10.0)(@types/react@18.2.28)(typescript@5.2.2)
+      '@shopify/cli-kit': 3.50.0(@types/node@20.9.4)(@types/react@18.2.28)(typescript@5.2.2)
       '@shopify/hydrogen': 2023.10.2(@remix-run/react@2.1.0)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
       '@shopify/hydrogen-codegen': 0.1.0(graphql@16.8.1)
       '@shopify/mini-oxygen': 2.2.3
-      '@shopify/oxygen-cli': 2.6.2(@types/node@20.10.0)(@types/react@18.2.28)(typescript@5.2.2)
+      '@shopify/oxygen-cli': 2.6.2(@types/node@20.9.4)(@types/react@18.2.28)(typescript@5.2.2)
       '@shopify/remix-oxygen': 2.0.1(@shopify/oxygen-workers-types@3.17.3)
       ansi-escapes: 6.2.0
       diff: 5.1.0
@@ -4082,14 +4082,14 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@shopify/cli-kit@3.50.0(@types/node@20.10.0)(@types/react@18.2.28)(typescript@5.2.2):
+  /@shopify/cli-kit@3.50.0(@types/node@20.9.4)(@types/react@18.2.28)(typescript@5.2.2):
     resolution: {integrity: sha512-MTtEZjP0UqiapO9QLX4+wS8H0oePdSC6GYRPCWICQfbIT1HRbfhkIqk2L1WixNP+Dc2TS4IAYU9ChfZhJpqUVg==}
     engines: {node: '>=14.17.0'}
     os: [darwin, linux, win32]
     dependencies:
       '@bugsnag/js': 7.21.0
       '@iarna/toml': 2.2.5
-      '@oclif/core': 2.11.7(@types/node@20.10.0)(typescript@5.2.2)
+      '@oclif/core': 2.11.7(@types/node@20.9.4)(typescript@5.2.2)
       '@opentelemetry/api': 1.6.0
       '@opentelemetry/core': 1.17.1(@opentelemetry/api@1.6.0)
       '@opentelemetry/exporter-metrics-otlp-http': 0.43.0(@opentelemetry/api@1.6.0)
@@ -4164,14 +4164,14 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@shopify/cli-kit@3.51.1(@types/node@20.10.0)(@types/react@18.2.28)(typescript@5.2.2):
+  /@shopify/cli-kit@3.51.1(@types/node@20.9.4)(@types/react@18.2.28)(typescript@5.2.2):
     resolution: {integrity: sha512-X7RtOmHBpCS0z0PQ3yWFpRC8/xUKibZmTdNT+GZhALm2M7+rd6Rkv5CdiIu5+9XtIS6KUMsnPxUCqWFxVChfSQ==}
     engines: {node: '>=14.17.0'}
     os: [darwin, linux, win32]
     dependencies:
       '@bugsnag/js': 7.21.0
       '@iarna/toml': 2.2.5
-      '@oclif/core': 2.11.7(@types/node@20.10.0)(typescript@5.2.2)
+      '@oclif/core': 2.11.7(@types/node@20.9.4)(typescript@5.2.2)
       '@opentelemetry/api': 1.6.0
       '@opentelemetry/core': 1.17.1(@opentelemetry/api@1.6.0)
       '@opentelemetry/exporter-metrics-otlp-http': 0.43.0(@opentelemetry/api@1.6.0)
@@ -4246,18 +4246,18 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@shopify/cli@3.50.0(@types/node@20.10.0)(@types/react@18.2.28)(typescript@5.2.2)(zod@3.22.4):
+  /@shopify/cli@3.50.0(@types/node@20.9.4)(@types/react@18.2.28)(typescript@5.2.2)(zod@3.22.4):
     resolution: {integrity: sha512-zzUYwlE8FJA78KW6YqHbxdYrf43RT3BCt3vC+IJfJltJvTceeip1DBWEOLA2m8rsUBkh9LpcTZR6Ik5sfgLacA==}
     engines: {node: '>=14.17.0'}
     os: [darwin, linux, win32]
     hasBin: true
     dependencies:
-      '@oclif/core': 2.11.7(@types/node@20.10.0)(typescript@5.2.2)
-      '@oclif/plugin-commands': 2.2.24(@types/node@20.10.0)(typescript@5.2.2)
-      '@oclif/plugin-help': 5.2.18(@types/node@20.10.0)(typescript@5.2.2)
-      '@oclif/plugin-plugins': 3.1.8(@types/node@20.10.0)(typescript@5.2.2)
-      '@shopify/cli-kit': 3.50.0(@types/node@20.10.0)(@types/react@18.2.28)(typescript@5.2.2)
-      '@shopify/plugin-did-you-mean': 3.50.0(@types/node@20.10.0)(@types/react@18.2.28)(typescript@5.2.2)
+      '@oclif/core': 2.11.7(@types/node@20.9.4)(typescript@5.2.2)
+      '@oclif/plugin-commands': 2.2.24(@types/node@20.9.4)(typescript@5.2.2)
+      '@oclif/plugin-help': 5.2.18(@types/node@20.9.4)(typescript@5.2.2)
+      '@oclif/plugin-plugins': 3.1.8(@types/node@20.9.4)(typescript@5.2.2)
+      '@shopify/cli-kit': 3.50.0(@types/node@20.9.4)(@types/react@18.2.28)(typescript@5.2.2)
+      '@shopify/plugin-did-you-mean': 3.50.0(@types/node@20.9.4)(@types/react@18.2.28)(typescript@5.2.2)
       zod-to-json-schema: 3.21.4(zod@3.22.4)
     transitivePeerDependencies:
       - '@swc/core'
@@ -4437,7 +4437,7 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@shopify/oxygen-cli@2.6.2(@types/node@20.10.0)(@types/react@18.2.28)(typescript@5.2.2):
+  /@shopify/oxygen-cli@2.6.2(@types/node@20.9.4)(@types/react@18.2.28)(typescript@5.2.2):
     resolution: {integrity: sha512-vN5G3HmMNgy0VKZw0VWPVndQpCELzVBLHrflp6Edn4te/iVwXJXQLyIqWGGoTz/pfmyo9eF1qV4e18rTvI1afw==}
     engines: {node: '>=16.14.0'}
     os: [darwin, linux, win32]
@@ -4446,8 +4446,8 @@ packages:
       '@bugsnag/core': 7.19.0
       '@bugsnag/js': 7.22.2
       '@bugsnag/node': 7.19.0
-      '@oclif/core': 2.11.7(@types/node@20.10.0)(typescript@5.2.2)
-      '@shopify/cli-kit': 3.51.1(@types/node@20.10.0)(@types/react@18.2.28)(typescript@5.2.2)
+      '@oclif/core': 2.11.7(@types/node@20.9.4)(typescript@5.2.2)
+      '@shopify/cli-kit': 3.51.1(@types/node@20.9.4)(@types/react@18.2.28)(typescript@5.2.2)
       async: 3.2.5
     transitivePeerDependencies:
       - '@swc/core'
@@ -4465,13 +4465,13 @@ packages:
   /@shopify/oxygen-workers-types@3.17.3:
     resolution: {integrity: sha512-lGeQN6V6i5rZ9kBH2hrldAOCRdWleQXLJs9wbb+iM9YngL7qbC97w253O3MDoYfFaNF4GwS9isDfLuXFl1SQbA==}
 
-  /@shopify/plugin-did-you-mean@3.50.0(@types/node@20.10.0)(@types/react@18.2.28)(typescript@5.2.2):
+  /@shopify/plugin-did-you-mean@3.50.0(@types/node@20.9.4)(@types/react@18.2.28)(typescript@5.2.2):
     resolution: {integrity: sha512-viIAmL76RL1vtTvQ5+hrTVko/lYIdCF6/JUExjDEv8NFMEv3gYrhIOB0mJNOGMEsXUHKyapXmc4d25dpI1otPg==}
     engines: {node: '>=14.17.0'}
     os: [darwin, linux, win32]
     dependencies:
-      '@oclif/core': 2.11.7(@types/node@20.10.0)(typescript@5.2.2)
-      '@shopify/cli-kit': 3.50.0(@types/node@20.10.0)(@types/react@18.2.28)(typescript@5.2.2)
+      '@oclif/core': 2.11.7(@types/node@20.9.4)(typescript@5.2.2)
+      '@shopify/cli-kit': 3.50.0(@types/node@20.9.4)(@types/react@18.2.28)(typescript@5.2.2)
       n-gram: 2.0.2
     transitivePeerDependencies:
       - '@swc/core'
@@ -4692,7 +4692,6 @@ packages:
     resolution: {integrity: sha512-wmyg8HUhcn6ACjsn8oKYjkN/zUzQeNtMy44weTJSM6p4MMzEOuKbA3OjJ267uPCOW7Xex9dyrNTful8XTQYoDA==}
     dependencies:
       undici-types: 5.26.5
-    dev: true
 
   /@types/prop-types@15.7.11:
     resolution: {integrity: sha512-ga8y9v9uyeiLdpKddhxYQkxNDrfvuPrlFb0N1qnZZByvcElJaXthF1UhvCh9TLWJBEHeNtdnbysW7Y6Uq8CVng==}
@@ -5052,7 +5051,7 @@ packages:
       modern-ahocorasick: 1.0.1
       outdent: 0.8.0
 
-  /@vanilla-extract/integration@6.2.4(@types/node@20.10.0):
+  /@vanilla-extract/integration@6.2.4(@types/node@20.9.4):
     resolution: {integrity: sha512-+AfymNMVq9sEUe0OJpdCokmPZg4Zi6CqKaW/PnUOfDwEn53ighHOMOBl5hAgxYR8Kiz9NG43Bn00mkjWlFi+ng==}
     dependencies:
       '@babel/core': 7.23.3
@@ -5066,8 +5065,8 @@ packages:
       lodash: 4.17.21
       mlly: 1.4.2
       outdent: 0.8.0
-      vite: 4.5.0(@types/node@20.10.0)
-      vite-node: 0.28.5(@types/node@20.10.0)
+      vite: 4.5.0(@types/node@20.9.4)
+      vite-node: 0.28.5(@types/node@20.9.4)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -8519,7 +8518,7 @@ packages:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
     dev: true
 
-  /graphql-config@5.0.3(@types/node@20.10.0)(graphql@16.8.1)(typescript@5.2.2):
+  /graphql-config@5.0.3(@types/node@20.9.4)(graphql@16.8.1)(typescript@5.2.2):
     resolution: {integrity: sha512-BNGZaoxIBkv9yy6Y7omvsaBUHOzfFcII3UN++tpH8MGOKFPFkCPZuwx09ggANMt8FgyWP1Od8SWPmrUEZca4NQ==}
     engines: {node: '>= 16.0.0'}
     peerDependencies:
@@ -8533,7 +8532,7 @@ packages:
       '@graphql-tools/json-file-loader': 8.0.0(graphql@16.8.1)
       '@graphql-tools/load': 8.0.1(graphql@16.8.1)
       '@graphql-tools/merge': 9.0.1(graphql@16.8.1)
-      '@graphql-tools/url-loader': 8.0.0(@types/node@20.10.0)(graphql@16.8.1)
+      '@graphql-tools/url-loader': 8.0.0(@types/node@20.9.4)(graphql@16.8.1)
       '@graphql-tools/utils': 10.0.11(graphql@16.8.1)
       cosmiconfig: 8.3.6(typescript@5.2.2)
       graphql: 16.8.1
@@ -9967,7 +9966,7 @@ packages:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
 
-  /meros@1.3.0(@types/node@20.10.0):
+  /meros@1.3.0(@types/node@20.9.4):
     resolution: {integrity: sha512-2BNGOimxEz5hmjUG2FwoxCt5HN7BXdaWyFqEwxPTrJzVdABtrL4TiHTcsWSFAxPQ/tOnEaQEJh3qWq71QRMY+w==}
     engines: {node: '>=13'}
     peerDependencies:
@@ -9976,7 +9975,7 @@ packages:
       '@types/node':
         optional: true
     dependencies:
-      '@types/node': 20.10.0
+      '@types/node': 20.9.4
     dev: false
 
   /methods@1.1.2:
@@ -13232,7 +13231,7 @@ packages:
       code-block-writer: 12.0.0
     dev: false
 
-  /ts-node@10.9.1(@types/node@20.10.0)(typescript@5.2.2):
+  /ts-node@10.9.1(@types/node@20.9.4)(typescript@5.2.2):
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
     hasBin: true
     peerDependencies:
@@ -13251,7 +13250,7 @@ packages:
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 20.10.0
+      '@types/node': 20.9.4
       acorn: 8.11.2
       acorn-walk: 8.3.0
       arg: 4.1.3
@@ -13902,7 +13901,7 @@ packages:
       unist-util-stringify-position: 3.0.3
       vfile-message: 3.1.4
 
-  /vite-node@0.28.5(@types/node@20.10.0):
+  /vite-node@0.28.5(@types/node@20.9.4):
     resolution: {integrity: sha512-LmXb9saMGlrMZbXTvOveJKwMTBTNUH66c8rJnQ0ZPNX+myPEol64+szRzXtV5ORb0Hb/91yq+/D3oERoyAt6LA==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
@@ -13914,7 +13913,7 @@ packages:
       picocolors: 1.0.0
       source-map: 0.6.1
       source-map-support: 0.5.21
-      vite: 4.5.0(@types/node@20.10.0)
+      vite: 4.5.0(@types/node@20.9.4)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -13925,7 +13924,7 @@ packages:
       - supports-color
       - terser
 
-  /vite@4.5.0(@types/node@20.10.0):
+  /vite@4.5.0(@types/node@20.9.4):
     resolution: {integrity: sha512-ulr8rNLA6rkyFAlVWw2q5YJ91v098AFQ2R0PRFwPzREXOUJQPtFUG0t+/ZikhaOCDqFoDhN6/v8Sq0o4araFAw==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -13953,7 +13952,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 20.10.0
+      '@types/node': 20.9.4
       esbuild: 0.18.20
       postcss: 8.4.31
       rollup: 3.29.4
@@ -14314,3 +14313,49 @@ packages:
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
+
+  registry.npmjs.org/@weaverse/core@2.7.2:
+    resolution: {integrity: sha512-LyDKDgV01GNkifH6ePPcuMOjAuNDeyevYA4vGUyOWFe4TQK46D63vZknddGMUSnegcHopWratPutE2WAhlrvhw==, tarball: https://registry.npmjs.org/@weaverse/core/-/core-2.7.2.tgz}
+    name: '@weaverse/core'
+    version: 2.7.2
+    engines: {node: '>=18'}
+    dependencies:
+      '@stitches/core': 1.2.8
+    optionalDependencies:
+      '@esbuild/darwin-x64': 0.19.8
+    dev: false
+
+  registry.npmjs.org/@weaverse/hydrogen@2.7.2(@remix-run/react@2.1.0)(@shopify/hydrogen@2023.10.2)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-/8TIAEk2pGmn3F0S5WFG5kAEqpbvgYizNY1dJSJCu6lWumrpZNJgKvRY5MX6UUlSSGmwqvHY/V4x+bU8cKLIMA==, tarball: https://registry.npmjs.org/@weaverse/hydrogen/-/hydrogen-2.7.2.tgz}
+    id: registry.npmjs.org/@weaverse/hydrogen/2.7.2
+    name: '@weaverse/hydrogen'
+    version: 2.7.2
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@remix-run/react': ^2.1.0
+      '@shopify/hydrogen': ^2023.10.2
+      react: '>=18'
+      react-dom: '>=18'
+    dependencies:
+      '@remix-run/react': 2.1.0(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
+      '@shopify/hydrogen': 2023.10.2(@remix-run/react@2.1.0)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
+      '@weaverse/react': registry.npmjs.org/@weaverse/react@2.7.2(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      react-error-boundary: 4.0.11(react@18.2.0)
+    dev: false
+
+  registry.npmjs.org/@weaverse/react@2.7.2(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-0+26IB0dmTW6uYLidZLA9XLPAdYpqbYp1g6TVjKjLGSfwTyI7XUt532IzddXhg1fiWKwOvTs23yrYyq940M7RQ==, tarball: https://registry.npmjs.org/@weaverse/react/-/react-2.7.2.tgz}
+    id: registry.npmjs.org/@weaverse/react/2.7.2
+    name: '@weaverse/react'
+    version: 2.7.2
+    engines: {node: '>=18'}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
+    dependencies:
+      '@weaverse/core': registry.npmjs.org/@weaverse/core@2.7.2
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
