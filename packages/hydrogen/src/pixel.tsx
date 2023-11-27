@@ -14,12 +14,12 @@ export interface PixelProps {
 }
 
 export const Pixel: FC<PixelProps> = ({ baseUrl, projectId, pageId }) => {
-  const url = `${baseUrl}/api/public/weaverse-pixel?projectId=${projectId}&pageId=${pageId}`
+  const url = `${baseUrl}/api/public/px?projectId=${projectId}&pageId=${pageId}`
   return <img src={url} alt="weaverse pixel" style={{ display: 'none' }} />
 }
 
 export const WeaversePixel = ({ context }: { context: WeaverseHydrogen }) => {
-  let { projectId, pageId, weaverseHost } = context
-  if (!projectId || !pageId || !weaverseHost) return null
+  let { projectId, pageId, weaverseHost, isDesignMode } = context
+  if (isDesignMode || !projectId || !pageId || !weaverseHost) return null
   return <Pixel baseUrl={weaverseHost} projectId={projectId} pageId={pageId} />
 }
