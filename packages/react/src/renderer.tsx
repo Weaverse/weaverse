@@ -82,9 +82,9 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
       rest.ref = instance.ref
     }
     let renderChildren = (
-      children.length
+      children?.length
         ? children
-        : childIds.length
+        : childIds?.length
         ? childIds.map((cid: string) => ({ id: cid }))
         : []
     ).map((item: { id: string }) => (
