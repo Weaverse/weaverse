@@ -110,7 +110,7 @@ importers:
         specifier: ^2023.10.2
         version: 2023.10.2(@remix-run/react@2.3.1)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
       '@weaverse/react':
-        specifier: workspace:*
+        specifier: 2.7.2
         version: link:../react
       react:
         specifier: '>=18'
@@ -129,7 +129,7 @@ importers:
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: workspace:*
+        specifier: 2.7.2
         version: link:../core
       react:
         specifier: '>=18'
@@ -147,7 +147,7 @@ importers:
         specifier: ^1.2.8
         version: 1.2.8(react@18.2.0)
       '@weaverse/react':
-        specifier: workspace:*
+        specifier: 2.7.2
         version: link:../react
       clsx:
         specifier: ^2.0.0
@@ -183,7 +183,7 @@ importers:
         specifier: ^2.0.1
         version: 2.0.1(@shopify/oxygen-workers-types@3.17.3)
       '@weaverse/hydrogen':
-        specifier: 2.7.1
+        specifier: 2.7.2
         version: link:../../packages/hydrogen
       clsx:
         specifier: 2.0.0
