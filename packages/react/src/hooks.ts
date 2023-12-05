@@ -20,7 +20,6 @@ export let useItemInstance = (id?: string) => {
   return instance as WeaverseItemStore
 }
 
-// get the closest parent item instance
 export let useParentInstance = () => {
   let { parentId } = useContext(WeaverseItemContext)
   return useItemInstance(parentId || '')

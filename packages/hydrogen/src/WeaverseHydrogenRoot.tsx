@@ -59,10 +59,12 @@ function RenderRoot(props: {
   let { data, components } = props
   let weaverse = createWeaverseInstance(data, components)
   useStudio(weaverse)
-  return <>
-    <WeaverseRoot context={weaverse} />
-    <WeaversePixel context={weaverse} />
-  </>
+  return (
+    <>
+      <WeaverseRoot context={weaverse} />
+      <WeaversePixel context={weaverse} />
+    </>
+  )
 }
 
 export function withWeaverse(Component: React.ComponentType<any>) {
