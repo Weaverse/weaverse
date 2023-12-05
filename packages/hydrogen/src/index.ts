@@ -38,6 +38,7 @@ export class WeaverseHydrogen extends Weaverse {
   declare static elementRegistry: Map<string, HydrogenElement>
 
   constructor(params: WeaverseHydrogenParams, components: HydrogenComponent[]) {
+    console.log('💿 New WeaverseHydrogen', params)
     let { internal, pageId, requestInfo, ...coreParams } = params
     super({ ...coreParams, ItemConstructor: WeaverseHydrogenItem })
     this.internal = internal
