@@ -184,12 +184,15 @@ export class WeaverseClient {
             strategy,
           })
         }
+        if (payload?.error) {
+          throw new Error(payload?.error)
+        }
         let { page, project, pageAssignment } = payload
-        if (!page || !project || !pageAssignment) {
-          throw new Error(
-            // @ts-ignore
-            payload?.error || 'Invalid Weaverse project payload!',
-          )
+        if (!project) {
+          throw new Error(`Weaverse project not found. Id: ${projectId}`)
+        }
+        if (!page) {
+          throw new Error(`No Weaverse page assigned to this url.`)
         }
         if (page?.items) {
           let items = page.items
