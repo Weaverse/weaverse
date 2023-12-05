@@ -3,7 +3,7 @@
   It is a singleton class that can be used to register item, store project data, trigger update on item or project data, etc.
   ---
   Licensed under MIT License.
-  Source: https://github.com/weaverse/sdks
+  Source: https://github.com/weaverse/weaverse
   About Weaverse: https://weaverse.io
 */
 
