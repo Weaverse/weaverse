@@ -11,7 +11,7 @@ import type {
   WeaverseHydrogenRootProps,
   WeaverseLoaderData,
 } from './types'
-import { WeaverseEffect } from '~/effect'
+import { WeaverseEffect } from '~/Effect'
 
 type WeaverseData = WeaverseLoaderData | Promise<WeaverseLoaderData>
 
