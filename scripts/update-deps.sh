@@ -12,6 +12,6 @@ for package in "${packages[@]}"; do
   cd "$package" || exit
   echo "📦 Updating dependencies for $package..."
   # npx taze major -w
-  pnpm up
+  pnpm up --latest
   cd - >/dev/null || exit
 done
