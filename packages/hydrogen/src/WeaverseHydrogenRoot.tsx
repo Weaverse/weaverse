@@ -3,8 +3,7 @@ import { WeaverseRoot } from '@weaverse/react'
 import React, { memo, Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 
-import { ThemeProvider, createWeaverseInstance } from './context'
-import { useStudio } from './hooks/use-studio'
+import { createWeaverseInstance, ThemeProvider } from './context'
 import { ThemeSettingsStore } from './hooks/use-theme-settings'
 import type {
   HydrogenComponent,
@@ -12,8 +11,7 @@ import type {
   WeaverseHydrogenRootProps,
   WeaverseLoaderData,
 } from './types'
-
-import { WeaversePixel } from '~/pixel'
+import { WeaverseEffect } from '~/effect'
 
 type WeaverseData = WeaverseLoaderData | Promise<WeaverseLoaderData>
 
@@ -58,11 +56,10 @@ function RenderRoot(props: {
 }) {
   let { data, components } = props
   let weaverse = createWeaverseInstance(data, components)
-  useStudio(weaverse)
   return (
     <>
       <WeaverseRoot context={weaverse} />
-      <WeaversePixel context={weaverse} />
+      <WeaverseEffect context={weaverse} />
     </>
   )
 }

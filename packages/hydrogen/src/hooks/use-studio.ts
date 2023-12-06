@@ -10,7 +10,6 @@ export function useStudio(weaverse: WeaverseHydrogen) {
   let navigate = useNavigate()
   let themeSettingsStore = useThemeContext()
   let { isDesignMode, weaverseHost, weaverseVersion } = weaverse
-
   useEffect(() => {
     if (isDesignMode) {
       weaverse.internal = {
