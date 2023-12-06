@@ -13,7 +13,7 @@ importers:
         version: 0.19.8
       turbo-darwin-arm64:
         specifier: ^1.10.16
-        version: 1.10.16
+        version: 1.11.0
     devDependencies:
       '@types/node':
         specifier: 20.9.4
@@ -110,7 +110,7 @@ importers:
         specifier: ^2023.10.2
         version: 2023.10.2(@remix-run/react@2.1.0)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
       '@weaverse/react':
-        specifier: 2.7.4
+        specifier: 2.8.0
         version: link:../react
       react:
         specifier: '>=18'
@@ -129,7 +129,7 @@ importers:
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: 2.7.4
+        specifier: 2.8.0
         version: link:../core
       react:
         specifier: '>=18'
@@ -147,7 +147,7 @@ importers:
         specifier: ^1.2.8
         version: 1.2.8(react@18.2.0)
       '@weaverse/react':
-        specifier: 2.7.4
+        specifier: 2.8.0
         version: link:../react
       clsx:
         specifier: ^2.0.0
@@ -186,7 +186,7 @@ importers:
         specifier: ^2.0.1
         version: 2.0.1(@remix-run/server-runtime@2.1.0)(@shopify/oxygen-workers-types@4.0.0)
       '@weaverse/hydrogen':
-        specifier: 2.7.4
+        specifier: 2.8.0
         version: link:../../packages/hydrogen
       clsx:
         specifier: 2.0.0
@@ -4544,7 +4544,7 @@ packages:
     dev: false
 
   /@shopify/oxygen-workers-types@3.17.3:
-    resolution: {integrity: sha512-lGeQN6V6i5rZ9kBH2hrldAOCRdWleQXLJs9wbb+iM9YngL7qbC97w253O3MDoYfFaNF4GwS9isDfLuXFl1SQbA==}
+    resolution: {integrity: sha512-lGeQN6V6i5rZ9kBH2hrldAOCRdWleQXLJs9wbb+iM9YngL7qbC97w253O3MDoYfFaNF4GwS9isDfLuXFl1SQbA==, tarball: https://registry.npmjs.org/@shopify/oxygen-workers-types/-/oxygen-workers-types-3.17.3.tgz}
     dev: true
 
   /@shopify/oxygen-workers-types@4.0.0:
@@ -5828,7 +5828,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001566
-      electron-to-chromium: 1.4.603
+      electron-to-chromium: 1.4.604
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.22.2)
 
@@ -6878,8 +6878,8 @@ packages:
       jake: 10.8.7
     dev: false
 
-  /electron-to-chromium@1.4.603:
-    resolution: {integrity: sha512-Dvo5OGjnl7AZTU632dFJtWj0uJK835eeOVQIuRcmBmsFsTNn3cL05FqOyHAfGQDIoHfLhyJ1Tya3PJ0ceMz54g==}
+  /electron-to-chromium@1.4.604:
+    resolution: {integrity: sha512-JAJ4lyLJYudlgJPYJicimU9R+qZ/3iyeyQS99bfT7PWi7psYWeN84lPswTjpHxQueU34PKxM/IJzQS6poYlovQ==}
 
   /emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -13426,6 +13426,15 @@ packages:
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
+    dev: true
+    optional: true
+
+  /turbo-darwin-arm64@1.11.0:
+    resolution: {integrity: sha512-lZGlfTG6+u3R7+6eVY9j/07WpVF/tx8UNkmRWfMNt4ZGSEBMg6A+Vimvp+rni92WdPhD/rhxv+qYI/kco9hNXg==}
+    cpu: [arm64]
+    os: [darwin]
+    requiresBuild: true
+    dev: false
     optional: true
 
   /turbo-linux-64@1.10.16:
