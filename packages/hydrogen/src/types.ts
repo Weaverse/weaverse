@@ -125,14 +125,13 @@ export type WeaverseLoaderRequestInfo = {
 
 export type WeaverseStorefrontData = {
   id?: string
-  __cachedId?: string
   rootId: string
   name: string
   items: HydrogenComponentData[]
 }
 
 export type HydrogenThemeSettings = {
-  [key: string]: any // should be any or generic
+  [key: string]: any
 }
 
 export type HydrogenProjectConfig = {
@@ -232,10 +231,9 @@ export interface WeaverseLoaderData {
 
 export interface HydrogenPageData extends WeaverseProjectDataType {
   id: string
-  pageId: string
   name: string
   items: HydrogenComponentData[]
-
+  __cacheId?: string
   [key: string]: any
 }
 
@@ -273,7 +271,6 @@ export type LoadPageParams = PageAssignmentParams & {
 export type FetchProjectRequestBody = {
   projectId: string
   url: string
-  // countries?: Localizations
   i18n?: I18nLocale
   params?: PageAssignmentParams
   isDesignMode?: boolean
@@ -283,6 +280,7 @@ export type FetchProjectPayload = {
   page: HydrogenPageData
   project: HydrogenProjectType
   pageAssignment: HydrogenPageAssignment
+  error?: string
 }
 
 export type HydrogenThemeEnv = {
@@ -326,6 +324,6 @@ export type WeaverseArticle = WeaverseResourcePickerData
 declare global {
   interface Window {
     __weaverse: WeaverseHydrogen
-    __weaverses: WeaverseHydrogen[]
+    __weaverses: Record<string, WeaverseHydrogen>
   }
 }
