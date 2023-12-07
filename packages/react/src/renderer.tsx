@@ -58,6 +58,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     deletedAt,
     css,
     __hidden,
+    // Need to get rid of this `data` property
     data: _,
     ...rest
   } = data
@@ -86,8 +87,8 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
       children?.length
         ? children
         : childIds?.length
-        ? childIds.map((cid: string) => ({ id: cid }))
-        : []
+          ? childIds.map((cid: string) => ({ id: cid }))
+          : []
     ).map((item: { id: string }) => (
       <ItemInstance key={item.id} id={item.id} parentId={id} />
     ))
