@@ -5,7 +5,6 @@ import { useLocation } from '@remix-run/react'
 let fetchingKey = ''
 
 export function usePixel(context: WeaverseHydrogen) {
-  // TODO: create a post xhr request to the pixel endpoint
   let { projectId, pageId, weaverseHost, isDesignMode } = context
   let location = useLocation()
 

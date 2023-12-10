@@ -160,6 +160,7 @@ export type InputType =
   | "text"
   | "textarea"
   | "toggle-group"
+  | "swatches"
 
 declare global {
   interface Window {

@@ -196,9 +196,7 @@ export class WeaverseClient {
         }
         if (page?.items) {
           let items = page.items
-          page.items = await Promise.all(
-            items.map((item) => this.execComponentLoader(item)),
-          )
+          page.items = await Promise.all(items.map(this.execComponentLoader))
         }
         let data: WeaverseLoaderData = {
           page,
@@ -226,7 +224,7 @@ export class WeaverseClient {
   execComponentLoader = async (item: HydrogenComponentData) => {
     let { data = {}, type, id } = item
     let schema = this.components.find(({ schema }) => schema?.type === type)
-    let { loader } = schema || {}
+    let loader = schema?.loader
     if (loader && typeof loader === 'function') {
       try {
         return {
