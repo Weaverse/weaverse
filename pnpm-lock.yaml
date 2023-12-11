@@ -110,7 +110,7 @@ importers:
         specifier: ^2023.10.2
         version: 2023.10.3(@remix-run/react@2.1.0)(@remix-run/server-runtime@2.1.0)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0)
       '@weaverse/react':
-        specifier: 2.8.0
+        specifier: 2.8.1
         version: link:../react
       react:
         specifier: '>=18'
@@ -129,7 +129,7 @@ importers:
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: 2.8.0
+        specifier: 2.8.1
         version: link:../core
       react:
         specifier: '>=18'
@@ -147,7 +147,7 @@ importers:
         specifier: ^1.2.8
         version: 1.2.8(react@18.2.0)
       '@weaverse/react':
-        specifier: 2.8.0
+        specifier: 2.8.1
         version: link:../react
       clsx:
         specifier: ^2.0.0
@@ -186,7 +186,7 @@ importers:
         specifier: ^2.0.2
         version: 2.0.2(@remix-run/server-runtime@2.1.0)(@shopify/oxygen-workers-types@4.0.0)
       '@weaverse/hydrogen':
-        specifier: 2.8.0
+        specifier: 2.8.1
         version: link:../../packages/hydrogen
       clsx:
         specifier: 2.0.0
@@ -2542,7 +2542,7 @@ packages:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       graphql: 16.8.1
-      tslib: 2.5.3
+      tslib: 2.6.2
     dev: false
 
   /@graphql-tools/prisma-loader@8.0.2(@types/node@20.10.3)(graphql@16.8.1):
@@ -2587,7 +2587,7 @@ packages:
       '@ardatan/relay-compiler': 12.0.0(graphql@16.8.1)
       '@graphql-tools/utils': 10.0.11(graphql@16.8.1)
       graphql: 16.8.1
-      tslib: 2.5.3
+      tslib: 2.6.2
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -4275,10 +4275,11 @@ packages:
       '@shopify/hydrogen-react': 2023.10.1(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
       content-security-policy-builder: 2.1.1
       react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
       type-fest: 4.8.3
+      worktop: 0.7.3
     transitivePeerDependencies:
       - '@types/react'
-      - react-dom
       - xstate
     dev: false
 
@@ -4385,6 +4386,16 @@ packages:
     dependencies:
       '@remix-run/server-runtime': 2.1.0(typescript@5.3.2)
       '@shopify/oxygen-workers-types': 4.0.0
+
+  /@shopify/remix-oxygen@2.0.2(@remix-run/server-runtime@2.1.0)(@shopify/oxygen-workers-types@4.0.0):
+    resolution: {integrity: sha512-igwmg0VLfLf4OdJ3XE6fWEgR5P97tF6/zFs45C2r3nKv/T1Ph6Q98rmfcuWgDQfn1piRJdC1ztd56DhC8mVLCA==}
+    peerDependencies:
+      '@remix-run/server-runtime': ^2.1.0
+      '@shopify/oxygen-workers-types': ^3.17.3 || ^4.0.0
+    dependencies:
+      '@remix-run/server-runtime': 2.1.0(typescript@5.2.2)
+      '@shopify/oxygen-workers-types': 4.0.0
+    dev: false
 
   /@sindresorhus/is@5.6.0:
     resolution: {integrity: sha512-TV7t8GKYaJWsn00tFDqBw8+Uqmr8A0fRU1tvTQhyZzGv0sJCGRQL3JGMI3ucuKo3XIZdUP+Lx7/gh2t3lewy7g==}
