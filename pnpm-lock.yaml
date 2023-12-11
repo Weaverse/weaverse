@@ -108,7 +108,7 @@ importers:
         version: 2.1.0(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.2)
       '@shopify/hydrogen':
         specifier: ^2023.10.2
-        version: 2023.10.2(@remix-run/react@2.1.0)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0)
+        version: 2023.10.3(@remix-run/react@2.1.0)(@remix-run/server-runtime@2.1.0)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0)
       '@weaverse/react':
         specifier: 2.8.0
         version: link:../react
@@ -124,7 +124,7 @@ importers:
     devDependencies:
       '@shopify/remix-oxygen':
         specifier: ^2.0.1
-        version: 2.0.1(@shopify/oxygen-workers-types@3.17.3)
+        version: 2.0.2(@remix-run/server-runtime@2.1.0)(@shopify/oxygen-workers-types@4.0.0)
 
   packages/react:
     dependencies:
@@ -177,14 +177,14 @@ importers:
         specifier: 3.51.0
         version: 3.51.0(@types/node@20.10.3)(@types/react@18.2.28)(typescript@5.2.2)(zod@3.22.4)
       '@shopify/cli-hydrogen':
-        specifier: ^6.0.2
-        version: 6.0.2(@remix-run/dev@2.1.0)(@remix-run/react@2.1.0)(@shopify/hydrogen@2023.10.2)(@shopify/remix-oxygen@2.0.1)(@types/node@20.10.3)(@types/react@18.2.28)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
+        specifier: ^6.1.0
+        version: 6.1.0(@remix-run/dev@2.1.0)(@types/node@20.10.3)(@types/react@18.2.28)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
       '@shopify/hydrogen':
-        specifier: ~2023.10.2
-        version: 2023.10.2(@remix-run/react@2.1.0)(@remix-run/server-runtime@2.1.0)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ~2023.10.3
+        version: 2023.10.3(@remix-run/react@2.1.0)(@remix-run/server-runtime@2.1.0)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
       '@shopify/remix-oxygen':
-        specifier: ^2.0.1
-        version: 2.0.1(@remix-run/server-runtime@2.1.0)(@shopify/oxygen-workers-types@4.0.0)
+        specifier: ^2.0.2
+        version: 2.0.2(@remix-run/server-runtime@2.1.0)(@shopify/oxygen-workers-types@4.0.0)
       '@weaverse/hydrogen':
         specifier: 2.8.0
         version: link:../../packages/hydrogen
@@ -1100,8 +1100,8 @@ packages:
     resolution: {integrity: sha512-htzFO1Zc57S8kgdRK9mLcPVTW1BY2ijfH7Dk2CeZmspTWKdKqSo1iwmqrq2WtRjFlo8aRZYgLX0wFrDXF/9DLA==}
     dev: false
 
-  /@cloudflare/workerd-darwin-64@1.20230904.0:
-    resolution: {integrity: sha512-/GDlmxAFbDtrQwP4zOXFbqOfaPvkDxdsCoEa+KEBcAl5uR98+7WW5/b8naBHX+t26uS7p4bLlImM8J5F1ienRQ==}
+  /@cloudflare/workerd-darwin-64@1.20231016.0:
+    resolution: {integrity: sha512-rPAnF8Q25+eHEsAopihWeftPW/P0QapY9d7qaUmtOXztWdd6YPQ7JuiWVj4Nvjphge1BleehxAbo4I3Z4L2H1g==}
     engines: {node: '>=16'}
     cpu: [x64]
     os: [darwin]
@@ -1109,8 +1109,8 @@ packages:
     dev: false
     optional: true
 
-  /@cloudflare/workerd-darwin-arm64@1.20230904.0:
-    resolution: {integrity: sha512-x8WXNc2xnDqr5y1iirnNdyx8GZY3rL5xiF7ebK3mKQeB+jFjkhO71yuPTkDCzUWtOvw1Wfd4jbwy4wxacMX4mQ==}
+  /@cloudflare/workerd-darwin-arm64@1.20231016.0:
+    resolution: {integrity: sha512-MvydDdiLXt+jy57vrVZ2lU6EQwCdpieyZoN8uBXSWzfG3zR/6dxU1+okvPQPlHN0jtlufqPeHrpJyAqqgLHUKA==}
     engines: {node: '>=16'}
     cpu: [arm64]
     os: [darwin]
@@ -1118,8 +1118,8 @@ packages:
     dev: false
     optional: true
 
-  /@cloudflare/workerd-linux-64@1.20230904.0:
-    resolution: {integrity: sha512-V58xyMS3oDpKO8Dpdh0r0BXm99OzoGgvWe9ufttVraj/1NTMGELwb6i9ySb8k3F1J9m/sO26+TV7pQc/bGC1VQ==}
+  /@cloudflare/workerd-linux-64@1.20231016.0:
+    resolution: {integrity: sha512-y6Sj37yTzM8QbAghG9LRqoSBrsREnQz8NkcmpjSxeK6KMc2g0L5A/OemCdugNlIiv+zRv9BYX1aosaoxY5JbeQ==}
     engines: {node: '>=16'}
     cpu: [x64]
     os: [linux]
@@ -1127,8 +1127,8 @@ packages:
     dev: false
     optional: true
 
-  /@cloudflare/workerd-linux-arm64@1.20230904.0:
-    resolution: {integrity: sha512-VrDaW+pjb5IAKEnNWtEaFiG377kXKmk5Fu0Era4W+jKzPON2BW/qRb/4LNHXQ4yxg/2HLm7RiUTn7JZtt1qO6A==}
+  /@cloudflare/workerd-linux-arm64@1.20231016.0:
+    resolution: {integrity: sha512-LqMIRUHD1YeRg2TPIfIQEhapSKMFSq561RypvJoXZvTwSbaROxGdW6Ku+PvButqTkEvuAtfzN/kGje7fvfQMHg==}
     engines: {node: '>=16'}
     cpu: [arm64]
     os: [linux]
@@ -1136,8 +1136,8 @@ packages:
     dev: false
     optional: true
 
-  /@cloudflare/workerd-windows-64@1.20230904.0:
-    resolution: {integrity: sha512-/R/dE8uy+8J2YeXfDhI8/Bg7YUirdbbjH5/l/Vv00ZRE0lC3nPLcYeyBXSwXIQ6/Xht3gN+lksLQgKd0ZWRd+Q==}
+  /@cloudflare/workerd-windows-64@1.20231016.0:
+    resolution: {integrity: sha512-96ojBwIHyiUAbsWlzBqo9P/cvH8xUh8SuBboFXtwAeXcJ6/urwKN2AqPa/QzOGUTCdsurWYiieARHT5WWWPhKw==}
     engines: {node: '>=16'}
     cpu: [x64]
     os: [win32]
@@ -2776,13 +2776,6 @@ packages:
       '@lit-labs/ssr-dom-shim': 1.1.2
     dev: false
 
-  /@ljharb/through@2.3.11:
-    resolution: {integrity: sha512-ccfcIDlogiXNq5KcbAwbaO7lMh3Tm1i3khMPYpxlK8hH/W53zN81KM9coerRLOnTGu3nfXIniAmQbRI9OxbC0w==}
-    engines: {node: '>= 0.4'}
-    dependencies:
-      call-bind: 1.0.5
-    dev: false
-
   /@mdx-js/mdx@2.3.0:
     resolution: {integrity: sha512-jLuwRlz8DQfQNiUCJR50Y09CGPq3fLtmtUQfVrj79E0JWu3dvsVcxVIcfhR5h0iXu+/z++zDrYeiJqifRynJkA==}
     dependencies:
@@ -3909,7 +3902,6 @@ packages:
       set-cookie-parser: 2.6.0
       source-map: 0.7.4
       typescript: 5.3.2
-    dev: false
 
   /@repeaterjs/repeater@3.0.5:
     resolution: {integrity: sha512-l3YHBLAol6d/IKnB9LhpD0cEZWAoe3eFKUyTYWmFmCO2Q/WOckxLQAUyMZWwZV2M/m3+4vgRoaolFqaII82/TA==}
@@ -4015,43 +4007,31 @@ packages:
     resolution: {integrity: sha512-2/U3GXA6YiPYQDLGwtGlnNgKYBSwCFIHf8Y9LUY5VATHdtbLlU0Y1R3QoBnT0aB4qv/BEiVVsj7LJXoQCgJ2vA==}
     dev: true
 
-  /@shopify/cli-hydrogen@6.0.2(@remix-run/dev@2.1.0)(@remix-run/react@2.1.0)(@shopify/hydrogen@2023.10.2)(@shopify/remix-oxygen@2.0.1)(@types/node@20.10.3)(@types/react@18.2.28)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2):
-    resolution: {integrity: sha512-a2Jw+KS2quLpAL0jldA15OzXmKIqOUbGnZ1csTtlhcOcBA+OFxzLe4/F44Kk+k6+bCVXxFPPdafEgGlZ+UZO8w==}
-    engines: {node: '>=16.13'}
+  /@shopify/cli-hydrogen@6.1.0(@remix-run/dev@2.1.0)(@types/node@20.10.3)(@types/react@18.2.28)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-3agYmQpPQQzOFlJkJHd0YfCm8+UpSwlC8bc5soHPC2oPmRX1y3Gda4JT5KcOaNExXPRpq1rC3MSqXtIcON+ZBg==}
+    engines: {node: '>=18.0.0'}
     hasBin: true
     peerDependencies:
       '@remix-run/dev': ^2.1.0
-      '@remix-run/react': ^2.1.0
-      '@shopify/hydrogen': 2023.10.2
-      '@shopify/hydrogen-react': '*'
-      '@shopify/remix-oxygen': ^2.0.0
     peerDependenciesMeta:
       '@remix-run/dev':
-        optional: true
-      '@remix-run/react':
-        optional: true
-      '@shopify/hydrogen-react':
-        optional: true
-      '@shopify/remix-oxygen':
         optional: true
     dependencies:
       '@ast-grep/napi': 0.11.0
       '@graphql-codegen/cli': 5.0.0(@parcel/watcher@2.3.0)(@types/node@20.10.3)(graphql@16.8.1)(typescript@5.2.2)
       '@oclif/core': 2.11.7(@types/node@20.10.3)(typescript@5.2.2)
       '@remix-run/dev': 2.1.0(@types/node@20.10.3)(typescript@5.2.2)
-      '@remix-run/react': 2.1.0(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
-      '@shopify/cli-kit': 3.50.0(@types/node@20.10.3)(@types/react@18.2.28)(typescript@5.2.2)
-      '@shopify/hydrogen': 2023.10.2(@remix-run/react@2.1.0)(@remix-run/server-runtime@2.1.0)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
+      '@shopify/cli-kit': 3.51.0(@types/node@20.10.3)(@types/react@18.2.28)(typescript@5.2.2)
       '@shopify/hydrogen-codegen': 0.1.0(graphql@16.8.1)
-      '@shopify/mini-oxygen': 2.2.3
+      '@shopify/mini-oxygen': 2.2.4
       '@shopify/oxygen-cli': 2.6.2(@types/node@20.10.3)(@types/react@18.2.28)(typescript@5.2.2)
-      '@shopify/remix-oxygen': 2.0.1(@remix-run/server-runtime@2.1.0)(@shopify/oxygen-workers-types@4.0.0)
       ansi-escapes: 6.2.0
+      cli-truncate: 4.0.0
       diff: 5.1.0
       fs-extra: 11.2.0
       get-port: 7.0.0
       gunzip-maybe: 1.4.2
-      miniflare: 3.20230918.0
+      miniflare: 3.20231016.0
       prettier: 2.8.8
       semver: 7.5.4
       source-map: 0.7.4
@@ -4080,172 +4060,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@shopify/cli-kit@3.50.0(@types/node@20.10.3)(@types/react@18.2.28)(typescript@5.2.2):
-    resolution: {integrity: sha512-MTtEZjP0UqiapO9QLX4+wS8H0oePdSC6GYRPCWICQfbIT1HRbfhkIqk2L1WixNP+Dc2TS4IAYU9ChfZhJpqUVg==}
-    engines: {node: '>=14.17.0'}
-    os: [darwin, linux, win32]
-    dependencies:
-      '@bugsnag/js': 7.21.0
-      '@iarna/toml': 2.2.5
-      '@oclif/core': 2.11.7(@types/node@20.10.3)(typescript@5.2.2)
-      '@opentelemetry/api': 1.6.0
-      '@opentelemetry/core': 1.17.1(@opentelemetry/api@1.6.0)
-      '@opentelemetry/exporter-metrics-otlp-http': 0.43.0(@opentelemetry/api@1.6.0)
-      '@opentelemetry/resources': 1.17.1(@opentelemetry/api@1.6.0)
-      '@opentelemetry/sdk-metrics': 1.17.1(@opentelemetry/api@1.6.0)
-      '@opentelemetry/semantic-conventions': 1.17.1
-      '@types/archiver': 5.3.2
-      abort-controller: 3.0.0
-      ansi-escapes: 6.2.0
-      archiver: 5.3.2
-      bottleneck: 2.19.5
-      chalk: 5.3.0
-      change-case: 4.1.2
-      color-json: 3.0.5
-      commondir: 1.0.1
-      conf: 11.0.2
-      cross-zip: 4.0.0
-      deepmerge: 4.3.1
-      del: 6.1.1
-      env-paths: 3.0.0
-      envfile: 6.18.0
-      execa: 7.2.0
-      fast-glob: 3.3.1
-      figures: 5.0.0
-      find-process: 1.4.7
-      find-up: 6.3.0
-      find-versions: 5.1.0
-      form-data: 4.0.0
-      fs-extra: 11.1.0
-      fuzzy: 0.1.3
-      get-port-please: 3.0.1
-      git-diff: 2.0.6
-      gradient-string: 2.0.2
-      graphql: 16.8.1
-      graphql-request: 5.2.0(graphql@16.8.1)
-      ink: 4.4.1(@types/react@18.2.28)(react@18.2.0)
-      is-interactive: 2.0.0
-      js-yaml: 4.1.0
-      kill-port-process: 3.1.0
-      latest-version: 7.0.0
-      liquidjs: 10.9.2
-      lodash: 4.17.21
-      macaddress: 0.5.3
-      mrmime: 1.0.1
-      node-abort-controller: 3.1.1
-      node-fetch: 3.3.2
-      open: 8.4.2
-      pathe: 1.1.1
-      react: 18.2.0
-      semver: 7.5.4
-      simple-git: 3.19.1
-      source-map-support: 0.5.21
-      stacktracey: 2.1.8
-      strip-ansi: 7.1.0
-      supports-hyperlinks: 3.0.0
-      tempy: 3.0.0
-      term-size: 3.0.2
-      terminal-link: 3.0.0
-      ts-error: 1.0.6
-      unique-string: 3.0.0
-      zod: 3.22.2
-    transitivePeerDependencies:
-      - '@swc/core'
-      - '@swc/wasm'
-      - '@types/node'
-      - '@types/react'
-      - bufferutil
-      - encoding
-      - react-devtools-core
-      - supports-color
-      - typescript
-      - utf-8-validate
-    dev: false
-
   /@shopify/cli-kit@3.51.0(@types/node@20.10.3)(@types/react@18.2.28)(typescript@5.2.2):
     resolution: {integrity: sha512-9lnkgjKrgeV7mfEiM0uA+FotyvmNh9Op93dtkTgYSkyc4ungdrW6W8sMSGOqVWXUIkJvIZi1bNLOZ0Csk+B6WQ==}
-    engines: {node: '>=14.17.0'}
-    os: [darwin, linux, win32]
-    dependencies:
-      '@bugsnag/js': 7.21.0
-      '@iarna/toml': 2.2.5
-      '@oclif/core': 2.11.7(@types/node@20.10.3)(typescript@5.2.2)
-      '@opentelemetry/api': 1.6.0
-      '@opentelemetry/core': 1.17.1(@opentelemetry/api@1.6.0)
-      '@opentelemetry/exporter-metrics-otlp-http': 0.43.0(@opentelemetry/api@1.6.0)
-      '@opentelemetry/resources': 1.17.1(@opentelemetry/api@1.6.0)
-      '@opentelemetry/sdk-metrics': 1.17.1(@opentelemetry/api@1.6.0)
-      '@opentelemetry/semantic-conventions': 1.17.1
-      '@types/archiver': 5.3.2
-      abort-controller: 3.0.0
-      ansi-escapes: 6.2.0
-      archiver: 5.3.2
-      bottleneck: 2.19.5
-      chalk: 5.3.0
-      change-case: 4.1.2
-      color-json: 3.0.5
-      commondir: 1.0.1
-      conf: 11.0.2
-      cross-zip: 4.0.0
-      deepmerge: 4.3.1
-      del: 6.1.1
-      env-paths: 3.0.0
-      envfile: 6.18.0
-      execa: 7.2.0
-      fast-glob: 3.3.1
-      figures: 5.0.0
-      find-process: 1.4.7
-      find-up: 6.3.0
-      find-versions: 5.1.0
-      form-data: 4.0.0
-      fs-extra: 11.1.0
-      fuzzy: 0.1.3
-      get-port-please: 3.0.1
-      git-diff: 2.0.6
-      gradient-string: 2.0.2
-      graphql: 16.8.1
-      graphql-request: 5.2.0(graphql@16.8.1)
-      ink: 4.4.1(@types/react@18.2.28)(react@18.2.0)
-      is-interactive: 2.0.0
-      js-yaml: 4.1.0
-      kill-port-process: 3.1.0
-      latest-version: 7.0.0
-      liquidjs: 10.9.2
-      lodash: 4.17.21
-      macaddress: 0.5.3
-      mrmime: 1.0.1
-      node-abort-controller: 3.1.1
-      node-fetch: 3.3.2
-      open: 8.4.2
-      pathe: 1.1.1
-      react: 18.2.0
-      semver: 7.5.4
-      simple-git: 3.19.1
-      source-map-support: 0.5.21
-      stacktracey: 2.1.8
-      strip-ansi: 7.1.0
-      supports-hyperlinks: 3.0.0
-      tempy: 3.0.0
-      term-size: 3.0.2
-      terminal-link: 3.0.0
-      ts-error: 1.0.6
-      unique-string: 3.0.0
-      zod: 3.22.3
-    transitivePeerDependencies:
-      - '@swc/core'
-      - '@swc/wasm'
-      - '@types/node'
-      - '@types/react'
-      - bufferutil
-      - encoding
-      - react-devtools-core
-      - supports-color
-      - typescript
-      - utf-8-validate
-    dev: false
-
-  /@shopify/cli-kit@3.51.2(@types/node@20.10.3)(@types/react@18.2.28)(typescript@5.2.2):
-    resolution: {integrity: sha512-Y1goCgdQCd8ifu/U/AXwjbFcFHXei/rdC7nJWfRBhpRar+HASLf6aCCVP/UlW0q8v0kUccFveA9Jl8UE8lhmeA==}
     engines: {node: '>=14.17.0'}
     os: [darwin, linux, win32]
     dependencies:
@@ -4407,9 +4223,9 @@ packages:
       - supports-color
     dev: false
 
-  /@shopify/hydrogen-react@2023.10.0(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-fb9UHLF2nzzfHZMCPedT4kRHnCAcdrlCjsa8JUs3HFD0ESBq3VKCOxS5QLzVc5uT9X7ElRp1JnORa7q/qXUaxQ==}
-    engines: {node: '>=14'}
+  /@shopify/hydrogen-react@2023.10.1(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-RHyo+Fc1tBUmFTHmKGPFWF2BqDfHHqefv9JHr/j3ovGgJGSefk30zIS1OtQkm6UFj2VPLu3bZJM8chgUQnXJ9w==}
+    engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
@@ -4427,9 +4243,9 @@ packages:
       - xstate
     dev: false
 
-  /@shopify/hydrogen-react@2023.10.0(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-fb9UHLF2nzzfHZMCPedT4kRHnCAcdrlCjsa8JUs3HFD0ESBq3VKCOxS5QLzVc5uT9X7ElRp1JnORa7q/qXUaxQ==}
-    engines: {node: '>=14'}
+  /@shopify/hydrogen-react@2023.10.1(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-RHyo+Fc1tBUmFTHmKGPFWF2BqDfHHqefv9JHr/j3ovGgJGSefk30zIS1OtQkm6UFj2VPLu3bZJM8chgUQnXJ9w==}
+    engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
@@ -4447,21 +4263,16 @@ packages:
       - xstate
     dev: false
 
-  /@shopify/hydrogen@2023.10.2(@remix-run/react@2.1.0)(@remix-run/server-runtime@2.1.0)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-p5nhX/k2RebxvA800mX8C/C7yG+yWnNAynOF1/601JePeLjhOlnHd4F8x+duj9fNu1yVbjPM+erUUvuJHij2sg==}
+  /@shopify/hydrogen@2023.10.3(@remix-run/react@2.1.0)(@remix-run/server-runtime@2.1.0)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-oTNjdsBHzb5W4S4S2b83qZ1SiHeY1MJgTRjaq9OqKYHMmchggd9ap44lheZjG67CgQYyuE9ocr/bgBq1yU8hoA==}
     peerDependencies:
       '@remix-run/react': ^2.1.0
       '@remix-run/server-runtime': ^2.1.0
       react: ^18.2.0
-    peerDependenciesMeta:
-      '@remix-run/react':
-        optional: true
-      '@remix-run/server-runtime':
-        optional: true
     dependencies:
       '@remix-run/react': 2.1.0(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
       '@remix-run/server-runtime': 2.1.0(typescript@5.2.2)
-      '@shopify/hydrogen-react': 2023.10.0(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
+      '@shopify/hydrogen-react': 2023.10.1(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
       content-security-policy-builder: 2.1.1
       react: 18.2.0
       type-fest: 4.8.3
@@ -4471,20 +4282,16 @@ packages:
       - xstate
     dev: false
 
-  /@shopify/hydrogen@2023.10.2(@remix-run/react@2.1.0)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-p5nhX/k2RebxvA800mX8C/C7yG+yWnNAynOF1/601JePeLjhOlnHd4F8x+duj9fNu1yVbjPM+erUUvuJHij2sg==}
+  /@shopify/hydrogen@2023.10.3(@remix-run/react@2.1.0)(@remix-run/server-runtime@2.1.0)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-oTNjdsBHzb5W4S4S2b83qZ1SiHeY1MJgTRjaq9OqKYHMmchggd9ap44lheZjG67CgQYyuE9ocr/bgBq1yU8hoA==}
     peerDependencies:
       '@remix-run/react': ^2.1.0
       '@remix-run/server-runtime': ^2.1.0
       react: ^18.2.0
-    peerDependenciesMeta:
-      '@remix-run/react':
-        optional: true
-      '@remix-run/server-runtime':
-        optional: true
     dependencies:
       '@remix-run/react': 2.1.0(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.2)
-      '@shopify/hydrogen-react': 2023.10.0(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0)
+      '@remix-run/server-runtime': 2.1.0(typescript@5.3.2)
+      '@shopify/hydrogen-react': 2023.10.1(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0)
       content-security-policy-builder: 2.1.1
       react: 18.2.0
       type-fest: 4.8.3
@@ -4494,9 +4301,9 @@ packages:
       - xstate
     dev: false
 
-  /@shopify/mini-oxygen@2.2.3:
-    resolution: {integrity: sha512-cf36D4YUV72mT2lFHO1ikQtjGuDsOsknvwsEuhTM8k6slX6qlqq6bUlDg6Q8F3uEG8x4wBFxVjhxu8v3cWnmzg==}
-    engines: {node: '>=16.13.0'}
+  /@shopify/mini-oxygen@2.2.4:
+    resolution: {integrity: sha512-9Co9oc2g9nNoK6rguRZ4pirMOHYjC107QmZIvNMfoc1Bqkm+8UcUBJ+JEK6fSsT2xWaTlYERUQcjhvBNOr2hbw==}
+    engines: {node: '>=18.0.0'}
     dependencies:
       '@miniflare/cache': 2.14.1
       '@miniflare/core': 2.14.1
@@ -4507,9 +4314,7 @@ packages:
       '@miniflare/web-sockets': 2.14.1
       body-parser: 1.20.2
       connect: 3.7.0
-      fs-extra: 11.2.0
       get-port: 7.0.0
-      inquirer: 9.2.12
       mime: 3.0.0
       source-map-support: 0.5.21
     transitivePeerDependencies:
@@ -4528,7 +4333,7 @@ packages:
       '@bugsnag/js': 7.22.2
       '@bugsnag/node': 7.19.0
       '@oclif/core': 2.11.7(@types/node@20.10.3)(typescript@5.2.2)
-      '@shopify/cli-kit': 3.51.2(@types/node@20.10.3)(@types/react@18.2.28)(typescript@5.2.2)
+      '@shopify/cli-kit': 3.51.0(@types/node@20.10.3)(@types/react@18.2.28)(typescript@5.2.2)
       async: 3.2.5
     transitivePeerDependencies:
       - '@swc/core'
@@ -4542,10 +4347,6 @@ packages:
       - typescript
       - utf-8-validate
     dev: false
-
-  /@shopify/oxygen-workers-types@3.17.3:
-    resolution: {integrity: sha512-lGeQN6V6i5rZ9kBH2hrldAOCRdWleQXLJs9wbb+iM9YngL7qbC97w253O3MDoYfFaNF4GwS9isDfLuXFl1SQbA==}
-    dev: true
 
   /@shopify/oxygen-workers-types@4.0.0:
     resolution: {integrity: sha512-9MiXUSu0kXA9mNPMDK6+S8eRuGZ6o0HB4/P1ebZzFlsxFYxfvTu29KDJv/RYKoJufniv/WNSvwHKFyDgEmkJnw==}
@@ -4576,30 +4377,14 @@ packages:
     resolution: {integrity: sha512-5ugCL9sPGzmOaZjeRGaWUWhHgAbemrS6z+R7v6gwiD+BiqSeoFhIY+imLpfdFCVpuOGalpHeCv6o3gv++EHs0A==}
     dev: true
 
-  /@shopify/remix-oxygen@2.0.1(@remix-run/server-runtime@2.1.0)(@shopify/oxygen-workers-types@4.0.0):
-    resolution: {integrity: sha512-D1dqaAr0P9kARqqh2OKiNW/SglCq3FWX0NdJ/RTrwwQMuwcrKWKJAOL/bxmIbYXVYfY0YsBdhvq3bIbb0KpRog==}
+  /@shopify/remix-oxygen@2.0.2(@remix-run/server-runtime@2.1.0)(@shopify/oxygen-workers-types@4.0.0):
+    resolution: {integrity: sha512-igwmg0VLfLf4OdJ3XE6fWEgR5P97tF6/zFs45C2r3nKv/T1Ph6Q98rmfcuWgDQfn1piRJdC1ztd56DhC8mVLCA==}
     peerDependencies:
       '@remix-run/server-runtime': ^2.1.0
-      '@shopify/oxygen-workers-types': ^3.17.3
-    peerDependenciesMeta:
-      '@remix-run/server-runtime':
-        optional: true
+      '@shopify/oxygen-workers-types': ^3.17.3 || ^4.0.0
     dependencies:
-      '@remix-run/server-runtime': 2.1.0(typescript@5.2.2)
+      '@remix-run/server-runtime': 2.1.0(typescript@5.3.2)
       '@shopify/oxygen-workers-types': 4.0.0
-    dev: false
-
-  /@shopify/remix-oxygen@2.0.1(@shopify/oxygen-workers-types@3.17.3):
-    resolution: {integrity: sha512-D1dqaAr0P9kARqqh2OKiNW/SglCq3FWX0NdJ/RTrwwQMuwcrKWKJAOL/bxmIbYXVYfY0YsBdhvq3bIbb0KpRog==}
-    peerDependencies:
-      '@remix-run/server-runtime': ^2.1.0
-      '@shopify/oxygen-workers-types': ^3.17.3
-    peerDependenciesMeta:
-      '@remix-run/server-runtime':
-        optional: true
-    dependencies:
-      '@shopify/oxygen-workers-types': 3.17.3
-    dev: true
 
   /@sindresorhus/is@5.6.0:
     resolution: {integrity: sha512-TV7t8GKYaJWsn00tFDqBw8+Uqmr8A0fRU1tvTQhyZzGv0sJCGRQL3JGMI3ucuKo3XIZdUP+Lx7/gh2t3lewy7g==}
@@ -4790,7 +4575,7 @@ packages:
   /@types/react-dom@18.2.13:
     resolution: {integrity: sha512-eJIUv7rPP+EC45uNYp/ThhSpE16k22VJUknt5OLoH9tbXoi8bMhwLf5xRuWMywamNbWzhrSmU7IBJfPup1+3fw==}
     dependencies:
-      '@types/react': 18.2.28
+      '@types/react': 18.2.42
     dev: true
 
   /@types/react-dom@18.2.17:
@@ -5291,8 +5076,8 @@ packages:
     dependencies:
       acorn: 8.11.2
 
-  /acorn-walk@8.3.0:
-    resolution: {integrity: sha512-FS7hV565M5l1R08MXqo8odwMTB02C2UqzB17RVgu9EyuYFBqJZ3/ZY97sQD5FewVu1UyDFc1yztUDrAwT0EypA==}
+  /acorn-walk@8.3.1:
+    resolution: {integrity: sha512-TgUZgYvqZprrl7YldZNoa9OciCAyZR+Ejm9eXzKCmjsF5IKp/wgQ7Z/ZpjpGTIUPwrHQIcYeI8qDh4PsEwxMbw==}
     engines: {node: '>=0.4.0'}
     dev: false
 
@@ -5828,7 +5613,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001566
-      electron-to-chromium: 1.4.604
+      electron-to-chromium: 1.4.607
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.22.2)
 
@@ -6153,16 +5938,10 @@ packages:
     dependencies:
       slice-ansi: 5.0.0
       string-width: 7.0.0
-    dev: true
 
   /cli-width@3.0.0:
     resolution: {integrity: sha512-FxqpkPPwu1HjuN93Omfm4h8uIanXofW0RxVEW3k5RKx+mJJYSthzNhp32Kzxxy3YAEZ/Dc/EWN1vZRY0+kOhbw==}
     engines: {node: '>= 10'}
-    dev: false
-
-  /cli-width@4.1.0:
-    resolution: {integrity: sha512-ouuZd4/dm2Sw5Gmqy6bGyNNNe1qt9RpmxveLSO7KcgsTnU7RXfsw+/bukWGo1abgBiMAic068rclZsO4IWmmxQ==}
-    engines: {node: '>= 12'}
     dev: false
 
   /client-only@0.0.1:
@@ -6887,12 +6666,11 @@ packages:
       jake: 10.8.7
     dev: false
 
-  /electron-to-chromium@1.4.604:
-    resolution: {integrity: sha512-JAJ4lyLJYudlgJPYJicimU9R+qZ/3iyeyQS99bfT7PWi7psYWeN84lPswTjpHxQueU34PKxM/IJzQS6poYlovQ==}
+  /electron-to-chromium@1.4.607:
+    resolution: {integrity: sha512-YUlnPwE6eYxzwBnFmawA8LiLRfm70R2aJRIUv0n03uHt/cUzzYACOogmvk8M2+hVzt/kB80KJXx7d5f5JofPvQ==}
 
   /emoji-regex@10.3.0:
     resolution: {integrity: sha512-QpLs9D9v9kArv4lfDEgg1X/gN5XLnf/A6l9cs8SPZLRZR3ZkY9+kwIQTxm+fsSej5UMYGE8fdoaZVIBlqG0XTw==}
-    dev: true
 
   /emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -8409,7 +8187,6 @@ packages:
   /get-east-asian-width@1.2.0:
     resolution: {integrity: sha512-2nk+7SIVb14QrgXFHcm84tD4bKQz0RxPuMT8Ag5KPOq7J5fEmAg0UbXdTOSHqNuHSU28k55qnceesxXRZGzKWA==}
     engines: {node: '>=18'}
-    dev: true
 
   /get-intrinsic@1.2.2:
     resolution: {integrity: sha512-0gSo4ml/0j98Y3lngkFEot/zhiCeWsbYIlZ+uZOVgzLyLaUw7wxUL+nCTP0XJvJg1AXulJRI3UJi8GsbDuxdGA==}
@@ -9018,27 +8795,6 @@ packages:
       string-width: 4.2.3
       strip-ansi: 6.0.1
       through: 2.3.8
-      wrap-ansi: 6.2.0
-    dev: false
-
-  /inquirer@9.2.12:
-    resolution: {integrity: sha512-mg3Fh9g2zfuVWJn6lhST0O7x4n03k7G8Tx5nvikJkbq8/CK47WDVm+UznF0G6s5Zi0KcyUisr6DU8T67N5U+1Q==}
-    engines: {node: '>=14.18.0'}
-    dependencies:
-      '@ljharb/through': 2.3.11
-      ansi-escapes: 4.3.2
-      chalk: 5.3.0
-      cli-cursor: 3.1.0
-      cli-width: 4.1.0
-      external-editor: 3.1.0
-      figures: 5.0.0
-      lodash: 4.17.21
-      mute-stream: 1.0.0
-      ora: 5.4.1
-      run-async: 3.0.0
-      rxjs: 7.8.1
-      string-width: 4.2.3
-      strip-ansi: 6.0.1
       wrap-ansi: 6.2.0
     dev: false
 
@@ -10391,19 +10147,19 @@ packages:
     hasBin: true
     dev: true
 
-  /miniflare@3.20230918.0:
-    resolution: {integrity: sha512-Dd29HB7ZlT1CXB2tPH8nW6fBOOXi/m7qFZHjKm2jGS+1OaGfrv0PkT5UspWW5jQi8rWI87xtordAUiIJkwWqRw==}
+  /miniflare@3.20231016.0:
+    resolution: {integrity: sha512-AmlqI89zsnBJfC+nKKZdCB/fuu0q/br24Kqt9NZwcT6yJEpO5NytNKfjl6nJROHROwuJSRQR1T3yopCtG1/0DA==}
     engines: {node: '>=16.13'}
     dependencies:
       acorn: 8.11.2
-      acorn-walk: 8.3.0
+      acorn-walk: 8.3.1
       capnp-ts: 0.7.0
       exit-hook: 2.2.1
       glob-to-regexp: 0.4.1
       source-map-support: 0.5.21
       stoppable: 1.1.0
       undici: 5.28.2
-      workerd: 1.20230904.0
+      workerd: 1.20231016.0
       ws: 8.14.2
       youch: 3.3.3
       zod: 3.22.4
@@ -10537,11 +10293,6 @@ packages:
 
   /mute-stream@0.0.8:
     resolution: {integrity: sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==}
-    dev: false
-
-  /mute-stream@1.0.0:
-    resolution: {integrity: sha512-avsJQhyd+680gKXyG/sQc0nXaC6rBkPOfyHYcFb9+hdkqQkR9bdnkJ0AMZhke0oesPqIO+mFFJ+IdBc7mst4IA==}
-    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     dev: false
 
   /mz@2.7.0:
@@ -12440,11 +12191,6 @@ packages:
     engines: {node: '>=0.12.0'}
     dev: false
 
-  /run-async@3.0.0:
-    resolution: {integrity: sha512-540WwVDOMxA6dN6We19EcT9sc3hkXPw5mzRNGM3FkdN/vtE9NFvj5lFAPNwUDmJjXidm3v7TC1cTE7t17Ulm1Q==}
-    engines: {node: '>=0.12.0'}
-    dev: false
-
   /run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
     dependencies:
@@ -12904,7 +12650,6 @@ packages:
       emoji-regex: 10.3.0
       get-east-asian-width: 1.2.0
       strip-ansi: 7.1.0
-    dev: true
 
   /string.prototype.matchall@4.0.10:
     resolution: {integrity: sha512-rGXbGmOEosIQi6Qva94HUjgPs9vKW+dkG7Y8Q5O2OYkWL6wFaTRZO8zM4mhP94uX55wgyrXzfS2aGtGzUL7EJQ==}
@@ -13362,7 +13107,7 @@ packages:
       '@tsconfig/node16': 1.0.4
       '@types/node': 20.10.3
       acorn: 8.11.2
-      acorn-walk: 8.3.0
+      acorn-walk: 8.3.1
       arg: 4.1.3
       create-require: 1.1.1
       diff: 4.0.2
@@ -14205,17 +13950,17 @@ packages:
     resolution: {integrity: sha512-gvVzJFlPycKc5dZN4yPkP8w7Dc37BtP1yczEneOb4uq34pXZcvrtRTmWV8W+Ume+XCxKgbjM+nevkyFPMybd4Q==}
     dev: false
 
-  /workerd@1.20230904.0:
-    resolution: {integrity: sha512-t9znszH0rQGK4mJGvF9L3nN0qKEaObAGx0JkywFtAwH8OkSn+YfQbHNZE+YsJ4qa1hOz1DCNEk08UDFRBaYq4g==}
+  /workerd@1.20231016.0:
+    resolution: {integrity: sha512-v2GDb5XitSqgub/xm7EWHVAlAK4snxQu3itdMQxXstGtUG9hl79fQbXS/8fNFbmms2R2bAxUwSv47q8k5T5Erw==}
     engines: {node: '>=16'}
     hasBin: true
     requiresBuild: true
     optionalDependencies:
-      '@cloudflare/workerd-darwin-64': 1.20230904.0
-      '@cloudflare/workerd-darwin-arm64': 1.20230904.0
-      '@cloudflare/workerd-linux-64': 1.20230904.0
-      '@cloudflare/workerd-linux-arm64': 1.20230904.0
-      '@cloudflare/workerd-windows-64': 1.20230904.0
+      '@cloudflare/workerd-darwin-64': 1.20231016.0
+      '@cloudflare/workerd-darwin-arm64': 1.20231016.0
+      '@cloudflare/workerd-linux-64': 1.20231016.0
+      '@cloudflare/workerd-linux-arm64': 1.20231016.0
+      '@cloudflare/workerd-windows-64': 1.20231016.0
     dev: false
 
   /worktop@0.7.3:
@@ -14416,10 +14161,6 @@ packages:
       zod: ^3.21.4
     dependencies:
       zod: 3.22.4
-    dev: false
-
-  /zod@3.22.2:
-    resolution: {integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==}
     dev: false
 
   /zod@3.22.3:
