@@ -110,7 +110,7 @@ importers:
         specifier: ^2023.10.2
         version: 2023.10.2(@remix-run/react@2.1.0)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0)
       '@weaverse/react':
-        specifier: 2.8.1
+        specifier: 2.8.3
         version: link:../react
       react:
         specifier: '>=18'
@@ -129,10 +129,10 @@ importers:
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: 2.8.1
+        specifier: 2.8.3
         version: link:../core
       clsx:
-        specifier: '*'
+        specifier: ^2.0.0
         version: 2.0.0
       react:
         specifier: '>=18'
@@ -150,7 +150,7 @@ importers:
         specifier: ^1.2.8
         version: 1.2.8(react@18.2.0)
       '@weaverse/react':
-        specifier: 2.8.1
+        specifier: 2.8.3
         version: link:../react
       clsx:
         specifier: ^2.0.0
@@ -189,7 +189,7 @@ importers:
         specifier: ^2.0.2
         version: 2.0.2(@remix-run/server-runtime@2.1.0)(@shopify/oxygen-workers-types@4.0.0)
       '@weaverse/hydrogen':
-        specifier: 2.8.1
+        specifier: 2.8.3
         version: link:../../packages/hydrogen
       clsx:
         specifier: 2.0.0

@@ -96,7 +96,7 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
    * `imagesPerRow.gt.1`
    */
   condition?: string
-  defaultValue?: string | number | boolean | Partial<WeaverseImage>
+  defaultValue?: string | number | boolean | Partial<WeaverseImage> | {[x: string]: any}
   placeholder?: string
   helpText?: string
 }

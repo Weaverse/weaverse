@@ -295,13 +295,14 @@ export type HydrogenThemeEnv = {
   PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID: string;
   PUBLIC_CUSTOMER_ACCOUNT_API_URL: string;
 }
-
-export type WeaverseClientArgs = {
+export type CreateWeaverseClientArgs ={
   request: Request
   cache: Cache
   waitUntil: ExecutionContext['waitUntil']
   env: HydrogenThemeEnv
-  storefront: Storefront<I18nBase>
+  storefront: Storefront<I18nBase> | any
+}
+export type WeaverseClientArgs = CreateWeaverseClientArgs & {
   components: HydrogenComponent[]
   countries?: Localizations
   themeSchema: HydrogenThemeSchema
