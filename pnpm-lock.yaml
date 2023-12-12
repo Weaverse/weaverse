@@ -131,6 +131,9 @@ importers:
       '@weaverse/core':
         specifier: 2.8.1
         version: link:../core
+      clsx:
+        specifier: '*'
+        version: 2.0.0
       react:
         specifier: '>=18'
         version: 18.2.0
