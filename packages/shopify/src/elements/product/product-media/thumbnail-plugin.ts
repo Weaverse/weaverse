@@ -2,7 +2,7 @@ import type { KeenSliderInstance, KeenSliderPlugin } from 'keen-slider/react'
 import type { MutableRefObject } from 'react'
 
 export function ThumbnailPlugin(
-  mainRef: MutableRefObject<KeenSliderInstance | null>
+  mainRef: MutableRefObject<KeenSliderInstance | null>,
 ): KeenSliderPlugin {
   return (slider) => {
     function removeActive() {

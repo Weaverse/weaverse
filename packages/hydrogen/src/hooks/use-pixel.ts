@@ -5,11 +5,11 @@ import { useLocation } from '@remix-run/react'
 let fetchingKey = ''
 
 export function usePixel(context: WeaverseHydrogen) {
-  let { projectId, pageId, weaverseHost, isDesignMode } = context
+  let { projectId, pageId, weaverseHost } = context
   let location = useLocation()
 
   useEffect(() => {
-    if (isDesignMode || !projectId || !pageId || !weaverseHost) return
+    if (!projectId || !pageId || !weaverseHost) return
     let currentKey = `${projectId}-${pageId}-${location.pathname}`
     if (fetchingKey === currentKey) return
     fetchingKey = currentKey

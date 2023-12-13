@@ -3,7 +3,7 @@ import type { CollectionListProps } from '~/types'
 import type { ShopifyCollection } from '~/types/shopify'
 
 export function useCollections(
-  collections: CollectionListProps['collections']
+  collections: CollectionListProps['collections'],
 ) {
   let collectionsInfo: ShopifyCollection[] = collections
     .map(({ collectionId }) => weaverseShopifyCollections[collectionId])

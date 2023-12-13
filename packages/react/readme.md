@@ -24,12 +24,12 @@ npm install @weaverse/react
 First, initialize a Weaverse Core instance with the necessary parameters:
 
 ```jsx
-import { Weaverse } from '@weaverse/core';
+import { Weaverse } from '@weaverse/core'
 
 let weaverse = new Weaverse({
   projectId: 'your_project_id',
-  data: 'WeaverseProjectDataType' // fetched from Weaverse CMS
-});
+  data: 'WeaverseProjectDataType', // fetched from Weaverse CMS
+})
 ```
 
 Next, register your React components with the Weaverse instance:
@@ -43,9 +43,9 @@ weaverse.registerElement({
     type: 'Button',
     inspector: {
       // define settings inputs for customizing the Component here
-    }
-  }
-});
+    },
+  },
+})
 ```
 
 ## Usage
@@ -54,16 +54,16 @@ After initializing and registering elements, use the `WeaverseRoot` component to
 Weaverse context:
 
 ```jsx
-import React from 'react';
-import { WeaverseRoot } from '@weaverse/react';
+import React from 'react'
+import { WeaverseRoot } from '@weaverse/react'
 
 function App() {
   // ... your other React component logic
 
-  return <WeaverseRoot context={weaverse} />;
+  return <WeaverseRoot context={weaverse} />
 }
 
-export default App;
+export default App
 ```
 
 ## Best Practices
