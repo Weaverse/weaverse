@@ -34,7 +34,7 @@ Initialize the Weaverse Client to establish a connection between your Hydrogen p
 ```typescript
 // <root>/server.ts
 
-import {createWeaverseClient} from '~/weaverse/create-weaverse.server';
+import { createWeaverseClient } from '~/weaverse/create-weaverse.server'
 
 const handleRequest = createRequestHandler({
   // ...
@@ -49,8 +49,7 @@ const handleRequest = createRequestHandler({
     }),
     // ... more app context properties
   }),
-});
-
+})
 ```
 
 ### Data Fetching and Rendering
@@ -60,19 +59,18 @@ Use the Weaverse Client to fetch data such as page content and global theme sett
 ```typescript
 // <root>/app/routes/($locale)._index.tsx
 
-import { json } from '@shopify/remix-oxygen';
-import { type RouteLoaderArgs } from '@weaverse/hydrogen';
+import { json } from '@shopify/remix-oxygen'
+import { type RouteLoaderArgs } from '@weaverse/hydrogen'
 
-export async function loader({context}: RouteLoaderArgs) {
-  let {weaverse} = context;
+export async function loader({ context }: RouteLoaderArgs) {
+  let { weaverse } = context
 
   return json({
     // The key prop for a Weaverse page must always be `weaverseData`
     weaverseData: await weaverse.loadPage(),
     // Additional page data...
-  });
+  })
 }
-
 ```
 
 Implement the `WeaverseHydrogenRoot` component to render the fetched content:
@@ -80,9 +78,9 @@ Implement the `WeaverseHydrogenRoot` component to render the fetched content:
 ```jsx
 // <root>/app/weaverse/index.tsx
 
-import {WeaverseHydrogenRoot} from '@weaverse/hydrogen';
-import {GenericError} from '~/components/GenericError';
-import {components} from './components';
+import { WeaverseHydrogenRoot } from '@weaverse/hydrogen'
+import { GenericError } from '~/components/GenericError'
+import { components } from './components'
 
 export function WeaverseContent() {
   return (
@@ -90,18 +88,16 @@ export function WeaverseContent() {
       components={components}
       errorComponent={GenericError}
     />
-  );
+  )
 }
-
 
 // <root>/app/routes/($locale)._index.tsx
 
-import { WeaverseContent } from '~/weaverse';
+import { WeaverseContent } from '~/weaverse'
 
 export default function Homepage() {
-  return <WeaverseContent />;
+  return <WeaverseContent />
 }
-
 ```
 
 ### Defining Component Schema
@@ -109,7 +105,7 @@ export default function Homepage() {
 Define your component's schema to control its behavior and interactivity within Weaverse Studio:
 
 ```typescript
-import type { HydrogenComponentSchema } from '@weaverse/hydrogen';
+import type { HydrogenComponentSchema } from '@weaverse/hydrogen'
 
 export let schema: HydrogenComponentSchema = {
   title: 'Product Card',
@@ -117,17 +113,13 @@ export let schema: HydrogenComponentSchema = {
   inspector: [
     {
       group: 'Settings',
-      inputs: [] // Defining input settings
-    }
+      inputs: [], // Defining input settings
+    },
   ],
   childTypes: ['image', 'product-title', 'price'],
   presets: {
     type: 'product-card',
-    children: [
-      { type: 'image' },
-      { type: 'product-title' },
-      { type: 'price' },
-    ],
+    children: [{ type: 'image' }, { type: 'product-title' }, { type: 'price' }],
   },
   limit: 3,
   enabledOn: {
@@ -135,8 +127,7 @@ export let schema: HydrogenComponentSchema = {
     groups: ['body'],
   },
   toolbar: ['general-settings', ['duplicate', 'delete']],
-};
-
+}
 ```
 
 ### Customizing Input Settings
@@ -170,4 +161,3 @@ for more details on how to contribute effectively.
 
 This package is created by The Weaverse Team ([https://weaverse.io](https://weaverse.io)) and is licensed under the MIT
 License.
-

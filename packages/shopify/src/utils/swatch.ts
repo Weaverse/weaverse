@@ -24,12 +24,12 @@ export function getSwatchValue(type: 'color' | 'image', value: string) {
   let { colorSwatches = [], imageSwatches = [] } = presets
   if (type === 'color') {
     let colorSwatch = colorSwatches.find(
-      ({ name }) => name.toLowerCase() === value.toLowerCase()
+      ({ name }) => name.toLowerCase() === value.toLowerCase(),
     )
     return colorSwatch?.value
   }
   let imageSwatch = imageSwatches.find(
-    ({ name }) => name.toLowerCase() === value.toLowerCase()
+    ({ name }) => name.toLowerCase() === value.toLowerCase(),
   )
   return imageSwatch?.value
 }

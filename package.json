@@ -4,6 +4,7 @@
   "description": "Weaverse SDKs monorepo.",
   "license": "MIT",
   "scripts": {
+    "preinstall": "command -v git >/dev/null 2>&1 && git config core.hooksPath git-hooks || true",
     "dev": "npm run dev:pkg -- --filter=./templates/pilot",
     "dev:pkg": "cross-env LOCAL_DEV=true turbo dev --no-daemon --parallel --filter=./packages/*",
     "clean": "bash ./scripts/clean.sh",
@@ -14,12 +15,13 @@
     "build:graph": "turbo run build --graph=repo-graph.svg",
     "prepare": "npm run build",
     "preprepare": "husky install",
-    "lint": "eslint packages",
-    "lint:fix": "eslint packages --fix",
+    "lint": "eslint packages --cache .",
+    "lint:fix": "eslint packages --fix --no-error-on-unmatched-pattern",
     "typecheck": "turbo typecheck --parallel",
-    "preinstall": "npx only-allow pnpm"
+    "format": "prettier --write --cache ."
   },
   "devDependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "^4.1.1",
     "@remix-run/eslint-config": "2.1.0",
     "@types/node": "20.10.3",
     "@types/react": "18.2.42",
@@ -31,9 +33,8 @@
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.0.1",
     "eslint-plugin-react": "7.33.2",
-    "husky": "8.0.3",
-    "lint-staged": "15.2.0",
     "prettier": "3.1.0",
+    "prettier-plugin-tailwindcss": "^0.5.9",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "rimraf": "5.0.5",
@@ -42,24 +43,18 @@
     "typescript": "5.3.2"
   },
   "optionalDependencies": {
-    "@esbuild/darwin-x64": "^0.19.8",
-    "turbo-darwin-arm64": "^1.11.0"
+    "@esbuild/darwin-x64": "^0.19.9",
+    "turbo-darwin-arm64": "^1.11.2"
   },
   "engines": {
     "node": ">=18"
   },
   "prettier": {
     "semi": false,
-    "bracketSpacing": true,
-    "importOrder": [
-      "^@(.*)/(.*)$",
-      "^~/(.*)$",
-      "^[./]"
-    ]
-  },
-  "lint-staged": {
-    "./**/*.{js,jsx,ts,tsx}": [
-      "nr lint:fix"
+    "singleQuote": true,
+    "plugins": [
+      "prettier-plugin-tailwindcss",
+      "@ianvs/prettier-plugin-sort-imports"
     ]
   }
 }

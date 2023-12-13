@@ -1,12 +1,8 @@
 node_modules
-
-packages/*/.turbo
-packages/*/dist
-
+**/*/dist
+**/*/.turbo
 .env
-
 .idea
-.turbo
 build/**
  dist/**
  .next/**

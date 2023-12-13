@@ -1,8 +1,7 @@
-import type * as Stitches from "@stitches/core"
-import type { ForwardRefExoticComponent } from "react"
-
-import type { WeaverseItemStore } from "./core"
-import type { stitchesUtils } from "./utils/stitches"
+import type * as Stitches from '@stitches/core'
+import type { ForwardRefExoticComponent } from 'react'
+import type { WeaverseItemStore } from './core'
+import type { stitchesUtils } from './utils/stitches'
 
 export interface WeaverseProjectDataType {
   items: ElementData[]
@@ -14,7 +13,7 @@ export interface BreakPoints {
   desktop: string
 }
 
-export type PlatformTypeEnum = "shopify-section" | "shopify-hydrogen" | "nextjs"
+export type PlatformTypeEnum = 'shopify-section' | 'shopify-hydrogen' | 'nextjs'
 
 export interface WeaverseCoreParams {
   mediaBreakPoints?: BreakPoints
@@ -32,7 +31,7 @@ export interface WeaverseElement {
   type: string
 }
 
-export type ToolbarAction = "general-settings" | "settings-level-2" | "duplicate" | "delete"
+export type ToolbarAction = 'general-settings' | 'settings-level-2' | 'duplicate' | 'delete'
 
 export interface ElementSchema {
   title: string
@@ -52,20 +51,20 @@ export type ChildElementCSS = Partial<{
 }>
 
 export interface ElementCSS {
-  "@desktop"?: WeaverseCSSProperties | ChildElementCSS
-  "@mobile"?: WeaverseCSSProperties | ChildElementCSS
+  '@desktop'?: WeaverseCSSProperties | ChildElementCSS
+  '@mobile'?: WeaverseCSSProperties | ChildElementCSS
 }
 
 export type AdvancedGroupType =
-  | "border"
-  | "alignment"
-  | "background"
-  | "dimensions"
-  | "spacing"
-  | "typography"
-  | "visibility"
-  | "shadows-and-effects"
-  | "layout-background"
+  | 'border'
+  | 'alignment'
+  | 'background'
+  | 'dimensions'
+  | 'spacing'
+  | 'typography'
+  | 'visibility'
+  | 'shadows-and-effects'
+  | 'layout-background'
 
 export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
   type: InputType
@@ -96,7 +95,7 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
    * `imagesPerRow.gt.1`
    */
   condition?: string
-  defaultValue?: string | number | boolean | Partial<WeaverseImage> | {[x: string]: any}
+  defaultValue?: string | number | boolean | Partial<WeaverseImage> | { [x: string]: any }
   placeholder?: string
   helpText?: string
 }
@@ -132,35 +131,35 @@ export interface RangeInputConfigs {
 }
 
 export type PositionInputValue =
-  | "top left"
-  | "top center"
-  | "top right"
-  | "center left"
-  | "center center"
-  | "center right"
-  | "bottom left"
-  | "bottom center"
-  | "bottom right"
+  | 'top left'
+  | 'top center'
+  | 'top right'
+  | 'center left'
+  | 'center center'
+  | 'center right'
+  | 'bottom left'
+  | 'bottom center'
+  | 'bottom right'
 
 export type InputType =
-  | "blog"
-  | "collection"
-  | "collection-list"
-  | "color"
-  | "datepicker"
-  | "image"
-  | "map-autocomplete"
-  | "position"
-  | "product"
-  | "product-list"
-  | "range"
-  | "richtext"
-  | "select"
-  | "switch"
-  | "text"
-  | "textarea"
-  | "toggle-group"
-  | "swatches"
+  | 'blog'
+  | 'collection'
+  | 'collection-list'
+  | 'color'
+  | 'datepicker'
+  | 'image'
+  | 'map-autocomplete'
+  | 'position'
+  | 'product'
+  | 'product-list'
+  | 'range'
+  | 'richtext'
+  | 'select'
+  | 'switch'
+  | 'text'
+  | 'textarea'
+  | 'toggle-group'
+  | 'swatches'
 
 declare global {
   interface Window {

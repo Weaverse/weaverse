@@ -7,10 +7,9 @@
   About Weaverse: https://weaverse.io
 */
 
-import * as stitches from "@stitches/core"
-import type Stitches from "@stitches/core/types/stitches"
-import type { RefObject } from "react"
-
+import * as stitches from '@stitches/core'
+import type Stitches from '@stitches/core/types/stitches'
+import type { RefObject } from 'react'
 import type {
   BreakPoints,
   ElementCSS,
@@ -18,16 +17,16 @@ import type {
   PlatformTypeEnum,
   WeaverseCoreParams,
   WeaverseProjectDataType,
-} from "./types"
-import { merge } from "./utils"
-import { EventEmitter } from "./utils/event-emiiter"
-import { stitchesUtils } from "./utils/stitches"
+} from './types'
+import { merge } from './utils'
+import { EventEmitter } from './utils/event-emiiter'
+import { stitchesUtils } from './utils/stitches'
 
 export class WeaverseItemStore extends EventEmitter {
   weaverse: Weaverse
   ref: RefObject<HTMLElement> = { current: null }
-  _store: ElementData = { id: "", type: "" }
-  stitchesClass = ""
+  _store: ElementData = { id: '', type: '' }
+  stitchesClass = ''
 
   constructor(initialData: ElementData, weaverse: Weaverse) {
     super()
@@ -63,11 +62,11 @@ export class WeaverseItemStore extends EventEmitter {
     return { ...this._store, css }
   }
 
-  set data(update: Omit<ElementData, "id" | "type">) {
+  set data(update: Omit<ElementData, 'id' | 'type'>) {
     this._store = { ...this.data, ...update }
   }
 
-  setData = (update: Omit<ElementData, "id" | "type">) => {
+  setData = (update: Omit<ElementData, 'id' | 'type'>) => {
     this.data = Object.assign(this.data, update)
     this.triggerUpdate()
     return this.data
@@ -81,9 +80,9 @@ export class WeaverseItemStore extends EventEmitter {
 export class Weaverse extends EventEmitter {
   contentRootElement: HTMLElement | null = null
   static itemInstances = new Map<string, WeaverseItemStore | any>()
-  weaverseHost = "https://weaverse.io"
-  weaverseVersion = ""
-  projectId = ""
+  weaverseHost = 'https://weaverse.io'
+  weaverseVersion = ''
+  projectId = ''
   isDesignMode = false
   isPreviewMode = false
   static stitchesInstance: Stitches | any
@@ -95,10 +94,10 @@ export class Weaverse extends EventEmitter {
   static elementRegistry = new Map()
 
   static mediaBreakPoints: BreakPoints = {
-    desktop: "all",
+    desktop: 'all',
     // max-width need to subtract 0.02px to prevent bug
     // ref: https://getbootstrap.com/docs/5.1/layout/breakpoints/#max-width
-    mobile: "(max-width: 767.98px)",
+    mobile: '(max-width: 767.98px)',
   }
 
   constructor(params: WeaverseCoreParams) {
@@ -137,7 +136,7 @@ export class Weaverse extends EventEmitter {
     Weaverse.stitchesInstance =
       Weaverse.stitchesInstance ||
       stitches.createStitches({
-        prefix: "weaverse",
+        prefix: 'weaverse',
         media: Weaverse.mediaBreakPoints,
         utils: stitchesUtils,
         ...externalConfig,
