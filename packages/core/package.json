@@ -32,6 +32,6 @@
     "@stitches/core": "^1.2.8"
   },
   "optionalDependencies": {
-    "@esbuild/darwin-x64": "^0.19.8"
+    "@esbuild/darwin-x64": "^0.19.9"
   }
 }
