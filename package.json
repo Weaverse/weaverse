@@ -4,7 +4,7 @@
   "description": "Weaverse SDKs monorepo.",
   "license": "MIT",
   "scripts": {
-    "preinstall": "command -v git >/dev/null 2>&1 && git config core.hooksPath .git-hooks || true",
+    "preinstall": "command -v git >/dev/null 2>&1 && git config core.hooksPath .git-hooks",
     "dev": "npm run dev:pkg -- --filter=./templates/pilot",
     "dev:pkg": "cross-env LOCAL_DEV=true turbo dev --no-daemon --parallel --filter=./packages/*",
     "clean": "bash ./scripts/clean.sh",
@@ -49,6 +49,7 @@
   "engines": {
     "node": ">=18"
   },
+  "packageManager": "pnpm@8.11.0",
   "prettier": {
     "semi": false,
     "singleQuote": true,

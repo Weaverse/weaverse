@@ -8,6 +8,7 @@ import type {
   FetchProjectRequestBody,
   FetchWithCacheOptions,
   HydrogenComponentData,
+  HydrogenPageData,
   LoadPageParams,
   WeaverseClientArgs,
   WeaverseLoaderData,
@@ -151,6 +152,21 @@ export class WeaverseClient {
     }
   }
 
+  generateFallbackPage = (message: string): HydrogenPageData => {
+    return {
+      id: 'fallback' + Date.now(),
+      rootId: 'root',
+      name: 'Error',
+      items: [
+        {
+          type: 'main',
+          id: 'main',
+          data: { dangerouslySetInnerHTML: { __html: message } },
+        },
+      ],
+    }
+  }
+
   loadPage = async (
     params: LoadPageParams = {},
   ): Promise<WeaverseLoaderData | null> => {
@@ -192,7 +208,10 @@ export class WeaverseClient {
           throw new Error(`Weaverse project not found. Id: ${projectId}`)
         }
         if (!page) {
-          throw new Error(`No Weaverse page assigned to this url.`)
+          page = this.generateFallbackPage(
+            `No Weaverse page assigned to this url.1`,
+          )
+          // throw new Error(`No Weaverse page assigned to this url.`)
         }
         if (page?.items) {
           let items = page.items
