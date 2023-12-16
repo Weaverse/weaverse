@@ -1,0 +1,1 @@
+command -v git >/dev/null 2>&1 && git config core.hooksPath ../.git-hooks

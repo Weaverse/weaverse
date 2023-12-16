@@ -12,7 +12,7 @@ simplify and enhance the integration of dynamic, content-rich web applications w
 ## Quick Links
 
 - **Home Page**: [Weaverse](https://weaverse.io)
-- **Playground**: [Playground](https://playground.weaverse.io)
+- **Playground**: [Playground](https://studio.weaverse.io/demo)
 - **Demo**: [Pilot](https://github.com/weaverse/pilot)
 
 [![Deploy with Vercel](https://vercel.com/button)](https://wvse.cc/deploy-pilot-to-vercel)
