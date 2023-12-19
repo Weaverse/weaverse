@@ -153,14 +153,15 @@ export class WeaverseClient {
   }
 
   generateFallbackPage = (message: string): HydrogenPageData => {
+    let rootId = crypto.randomUUID()
     return {
-      id: 'fallback' + Date.now(),
-      rootId: 'root',
-      name: 'Error',
+      id: 'fallback_page_' + Date.now(),
+      rootId,
+      name: 'Main',
       items: [
         {
           type: 'main',
-          id: 'main',
+          id: rootId,
           data: { dangerouslySetInnerHTML: { __html: message } },
         },
       ],
@@ -208,10 +209,7 @@ export class WeaverseClient {
           throw new Error(`Weaverse project not found. Id: ${projectId}`)
         }
         if (!page) {
-          page = this.generateFallbackPage(
-            `No Weaverse page assigned to this url.1`,
-          )
-          // throw new Error(`No Weaverse page assigned to this url.`)
+          page = this.generateFallbackPage(`Please add new section to start.`)
         }
         if (page?.items) {
           let items = page.items
