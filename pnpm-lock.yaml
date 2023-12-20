@@ -113,7 +113,7 @@ importers:
         specifier: ^2023.10.2
         version: 2023.10.3(@remix-run/react@2.4.0)(@remix-run/server-runtime@2.4.0)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
       '@weaverse/react':
-        specifier: 2.8.4
+        specifier: 2.8.5
         version: link:../react
       react:
         specifier: '>=18'
@@ -132,7 +132,7 @@ importers:
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: 2.8.4
+        specifier: 2.8.5
         version: link:../core
       clsx:
         specifier: ^2.0.0
@@ -153,7 +153,7 @@ importers:
         specifier: ^1.2.8
         version: 1.2.8(react@18.2.0)
       '@weaverse/react':
-        specifier: 2.8.4
+        specifier: 2.8.5
         version: link:../react
       clsx:
         specifier: ^2.0.0
@@ -193,7 +193,7 @@ importers:
         version: 2.0.2(@remix-run/server-runtime@2.4.0)(@shopify/oxygen-workers-types@4.0.0)
       '@weaverse/hydrogen':
         specifier: 2.8.4
-        version: link:../../packages/hydrogen
+        version: 2.8.4(@remix-run/react@2.4.0)(@shopify/hydrogen@2023.10.3)(react-dom@18.2.0)(react@18.2.0)
       clsx:
         specifier: 2.0.0
         version: 2.0.0
@@ -5058,6 +5058,45 @@ packages:
 
   /@vanilla-extract/private@1.0.3:
     resolution: {integrity: sha512-17kVyLq3ePTKOkveHxXuIJZtGYs+cSoev7BlP+Lf4916qfDhk/HBjvlYDe8egrea7LNPHKwSZJK/bzZC+Q6AwQ==}
+
+  /@weaverse/core@2.8.4:
+    resolution: {integrity: sha512-ql/hdQe5FoQVdIFbQOx5V5UnPEq2GL4lxx5yC5a+rp0QoaeKrux8E0hatu+jMvfeQbuA+Aa2O1jhhwOnmk5niQ==, tarball: https://registry.npmjs.org/@weaverse/core/-/core-2.8.4.tgz}
+    engines: {node: '>=18'}
+    dependencies:
+      '@stitches/core': 1.2.8
+    optionalDependencies:
+      '@esbuild/darwin-x64': 0.19.9
+    dev: false
+
+  /@weaverse/hydrogen@2.8.4(@remix-run/react@2.4.0)(@shopify/hydrogen@2023.10.3)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-A2CgC0oVySKVURaDj6UatfAULLlaThQH0476IOxKWVKYbsZbFkp81kCkMrfgnmWUPOlqLUpp6EQFOtz6wSXtKA==, tarball: https://registry.npmjs.org/@weaverse/hydrogen/-/hydrogen-2.8.4.tgz}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@remix-run/react': ^2.1.0
+      '@shopify/hydrogen': ^2023.10.2
+      react: '>=18'
+      react-dom: '>=18'
+    dependencies:
+      '@remix-run/react': 2.4.0(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)
+      '@shopify/hydrogen': 2023.10.3(@remix-run/react@2.4.0)(@remix-run/server-runtime@2.4.0)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
+      '@weaverse/react': 2.8.4(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      react-error-boundary: 4.0.12(react@18.2.0)
+    dev: false
+
+  /@weaverse/react@2.8.4(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-Fjy4vj3n3bo4o4PeX+fqRVWfmKzOGUai9Up2rmstcgUJC4zSbynORTrMv4RNmug1Whoevkq76S4UDzvciNzADA==, tarball: https://registry.npmjs.org/@weaverse/react/-/react-2.8.4.tgz}
+    engines: {node: '>=18'}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
+    dependencies:
+      '@weaverse/core': 2.8.4
+      clsx: 2.0.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
 
   /@web3-storage/multipart-parser@1.0.0:
     resolution: {integrity: sha512-BEO6al7BYqcnfX15W2cnGR+Q566ACXAT9UQykORCWW80lmkpWsnEob6zJS1ZVBKsSJC8+7vJkHwlp+lXG1UCdw==}
