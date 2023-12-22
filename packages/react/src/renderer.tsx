@@ -8,7 +8,7 @@ import { WeaverseContextProvider, WeaverseItemContext } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
 import { generateItemClassName } from './utils/css'
 
-import { useItemInstance, useWeaverse } from '~/hooks'
+import { useItemInstance, usePixel, useWeaverse } from '~/hooks'
 
 export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
   let [, setData] = useState<WeaverseProjectDataType | unknown>(context.data)
@@ -19,6 +19,7 @@ export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
     context.contentRootElement = rootRef?.current || null
     return context.subscribe(renderRoot)
   }, [context])
+  usePixel(context)
 
   let eventHandlers = context?.studioBridge?.eventHandlers || {}
   let themeClass = context.stitchesInstance.theme.className

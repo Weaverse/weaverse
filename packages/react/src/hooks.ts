@@ -1,5 +1,5 @@
 import type { Weaverse, WeaverseItemStore } from '@weaverse/core'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 
 import { WeaverseContext, WeaverseItemContext } from '~/context'
 
@@ -37,4 +37,23 @@ export let useChildInstances = (id?: string) => {
   return children.map(({ id }: { id: string }) => {
     return itemInstances.get(id)
   }) as WeaverseItemStore[]
+}
+
+let fetchingKey = ''
+
+export function usePixel(context: Weaverse) {
+  // @ts-expect-error
+  let { projectId, pageId, weaverseHost } = context
+
+  useEffect(() => {
+    if (!projectId || !pageId || !weaverseHost) return
+    let currentKey = `${projectId}-${pageId}-${globalThis.location.pathname}`
+    if (fetchingKey === currentKey) return
+    fetchingKey = currentKey
+    let url = `${weaverseHost}/api/public/px`
+    let xhr = new XMLHttpRequest()
+    xhr.open('POST', url, true)
+    xhr.send(JSON.stringify({ projectId, pageId }))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 }

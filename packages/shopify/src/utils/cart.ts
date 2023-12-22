@@ -1,6 +1,6 @@
 export function addProductToCart(
   productForm: HTMLFormElement,
-  onFinish: () => void
+  onFinish: () => void,
 ) {
   let { cart_add_url = '/cart/add.js' } =
     window.weaverseShopifyConfigs?.shopData?.routes || {}
@@ -17,7 +17,7 @@ export function addProductToCart(
       }
     })
     .catch((err) =>
-      console.error(`Error adding product to cart: ${err.message}`)
+      console.error(`Error adding product to cart: ${err.message}`),
     )
     .finally(onFinish)
 }

@@ -16,12 +16,12 @@ export let weaverseShopifyConfigs = createProxy('weaverseShopifyConfigs')
 
 export let weaverseShopifyProducts = createProxy('weaverseShopifyProducts')
 export let weaverseShopifyProductsByCollection = createProxy(
-  'weaverseShopifyProductsByCollection'
+  'weaverseShopifyProductsByCollection',
 )
 export let weaverseShopifyCollections = createProxy(
-  'weaverseShopifyCollections'
+  'weaverseShopifyCollections',
 )
 export let weaverseShopifyArticlesByBlog = createProxy(
-  'weaverseShopifyArticlesByBlog'
+  'weaverseShopifyArticlesByBlog',
 )
 export let weaverseShopifyArticles = createProxy('weaverseShopifyArticles')

@@ -1,5 +1,5 @@
-export let isReactNative = typeof navigator === "object" && navigator.product === "ReactNative"
-export let isBrowser = typeof window !== "undefined" && !isReactNative
+export let isReactNative = typeof navigator === 'object' && navigator.product === 'ReactNative'
+export let isBrowser = typeof window !== 'undefined' && !isReactNative
 export let isIframe = isBrowser && window.top !== window.self
 
 /**
@@ -27,7 +27,7 @@ export function loadScript(src: string) {
     if (currScript) {
       return resolve(true)
     }
-    let script = document.createElement("script")
+    let script = document.createElement('script')
     script.src = src
     script.onload = resolve
     script.onerror = reject

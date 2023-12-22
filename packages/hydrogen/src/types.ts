@@ -3,7 +3,7 @@
 /// <reference types="@shopify/oxygen-workers-types" />
 
 import type { NavigateFunction } from '@remix-run/react'
-import type { Storefront } from '@shopify/hydrogen'
+import type { Storefront, I18nBase } from '@shopify/hydrogen'
 import type {
   CountryCode,
   CurrencyCode,
@@ -120,7 +120,7 @@ export type WeaverseLoaderRequestInfo = {
   search: string
   pathname: string
   queries: { [key: string]: string | boolean }
-  i18n: I18nLocale
+  i18n: I18nBase
 }
 
 export type WeaverseStorefrontData = {
@@ -271,7 +271,7 @@ export type LoadPageParams = PageAssignmentParams & {
 export type FetchProjectRequestBody = {
   projectId: string
   url: string
-  i18n?: I18nLocale
+  i18n?: I18nBase
   params?: PageAssignmentParams
   isDesignMode?: boolean
 }
@@ -286,17 +286,23 @@ export type FetchProjectPayload = {
 export type HydrogenThemeEnv = {
   WEAVERSE_PROJECT_ID: string
   WEAVERSE_API_KEY: string
-  WEAVERSE_HOST: string
-  PUBLIC_STORE_DOMAIN: string
-  PUBLIC_STOREFRONT_API_TOKEN: string
+  WEAVERSE_HOST?: string
+  PUBLIC_STORE_DOMAIN?: string
+  PUBLIC_STOREFRONT_API_TOKEN?: string
+  SESSION_SECRET?: string
+  PRIVATE_STOREFRONT_API_TOKEN: string
+  PUBLIC_STOREFRONT_ID: string
+  PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID: string
+  PUBLIC_CUSTOMER_ACCOUNT_API_URL: string
 }
-
-export type WeaverseClientArgs = {
+export type CreateWeaverseClientArgs = {
   request: Request
   cache: Cache
   waitUntil: ExecutionContext['waitUntil']
   env: HydrogenThemeEnv
-  storefront: Storefront<I18nLocale>
+  storefront: Storefront<I18nBase> | any
+}
+export type WeaverseClientArgs = CreateWeaverseClientArgs & {
   components: HydrogenComponent[]
   countries?: Localizations
   themeSchema: HydrogenThemeSchema

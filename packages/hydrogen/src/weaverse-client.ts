@@ -8,6 +8,7 @@ import type {
   FetchProjectRequestBody,
   FetchWithCacheOptions,
   HydrogenComponentData,
+  HydrogenPageData,
   LoadPageParams,
   WeaverseClientArgs,
   WeaverseLoaderData,
@@ -17,7 +18,7 @@ import type {
 import { getRequestQueries, getWeaverseConfigs } from './utils'
 
 export class WeaverseClient {
-  API = 'api/public/project'
+  API = 'api/public'
   clientVersion = pkg.version
   basePageConfigs: Omit<WeaverseProjectConfigs, 'requestInfo'>
   basePageRequestBody: Omit<FetchProjectRequestBody, 'url' | 'countries'>
@@ -73,8 +74,8 @@ export class WeaverseClient {
     let cacheKey = [url, options.body]
     let {
       strategy = this.storefront.CacheCustom({
-        maxAge: 5,
-        sMaxAge: 5,
+        maxAge: 10,
+        sMaxAge: 10,
         staleWhileRevalidate: 82800,
       }),
       ...reqInit
@@ -107,19 +108,19 @@ export class WeaverseClient {
       if (!projectId) {
         throw new Error('Missing Weaverse projectId!')
       }
+      let url = `${weaverseHost}/${API}/project_configs`
       let res
+      let body = JSON.stringify({
+        isDesignMode,
+        projectId,
+      })
       if (isDesignMode) {
-        res = await fetch(
-          `${weaverseHost}/${API}/${projectId}/configs?isDesignMode=true`,
-          {
-            method: 'POST',
-          },
-        ).then((res) => res.json())
+        res = await fetch(url, {
+          method: 'POST',
+          body,
+        }).then((res) => res.json())
       } else {
-        res = await this.fetchWithCache(
-          `${weaverseHost}/${API}/${projectId}/configs`,
-          { method: 'POST', strategy },
-        )
+        res = await this.fetchWithCache(url, { method: 'POST', strategy, body })
       }
       let data: any = res || {}
       if (data?.theme && this.themeSchema?.inspector) {
@@ -151,6 +152,22 @@ export class WeaverseClient {
     }
   }
 
+  generateFallbackPage = (message: string): HydrogenPageData => {
+    let rootId = crypto.randomUUID()
+    return {
+      id: 'fallback_page_' + Date.now(),
+      rootId,
+      name: 'Main',
+      items: [
+        {
+          type: 'main',
+          id: rootId,
+          data: { dangerouslySetInnerHTML: { __html: message } },
+        },
+      ],
+    }
+  }
+
   loadPage = async (
     params: LoadPageParams = {},
   ): Promise<WeaverseLoaderData | null> => {
@@ -174,7 +191,7 @@ export class WeaverseClient {
           method: 'POST',
           body: JSON.stringify(body),
         }
-        let url = `${weaverseHost}/${this.API}`
+        let url = `${weaverseHost}/${this.API}/project`
         let payload: FetchProjectPayload
         if (isDesignMode) {
           payload = await fetch(url, reqInit).then((res) => res.json())
@@ -192,7 +209,7 @@ export class WeaverseClient {
           throw new Error(`Weaverse project not found. Id: ${projectId}`)
         }
         if (!page) {
-          throw new Error(`No Weaverse page assigned to this url.`)
+          page = this.generateFallbackPage(`Please add new section to start.`)
         }
         if (page?.items) {
           let items = page.items

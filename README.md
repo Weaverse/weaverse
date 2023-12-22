@@ -1,6 +1,8 @@
 # Weaverse SDKs
+
 [![Better Stack Badge](https://uptime.betterstack.com/status-badges/v1/monitor/vif3.svg)](https://wvse.cc/weaverse-status)
 [![🚀 Lint & Typecheck](https://github.com/Weaverse/weaverse/actions/workflows/check.yml/badge.svg)](https://github.com/Weaverse/weaverse/actions/workflows/check.yml)
+
 ## Overview
 
 The "Weaverse SDKs" is a public collection of SDKs for integrating the Weaverse Headless CMS with modern React/JamStack
@@ -10,9 +12,8 @@ simplify and enhance the integration of dynamic, content-rich web applications w
 ## Quick Links
 
 - **Home Page**: [Weaverse](https://weaverse.io)
-- **Playground**: [Playground](https://playground.weaverse.io)
+- **Playground**: [Playground](https://studio.weaverse.io/demo)
 - **Demo**: [Pilot](https://github.com/weaverse/pilot)
-
 
 [![Deploy with Vercel](https://vercel.com/button)](https://wvse.cc/deploy-pilot-to-vercel)
 
@@ -51,12 +52,14 @@ Engage with the Weaverse community through these channels:
 1. **Fork & Clone**: Fork this repository and clone it to your local machine.
 
 2. **Submodule Setup**: Initialize and update the submodule to pull the sample project:
+
    ```bash
    git submodule init
    git submodule update --recursive
    ```
 
 3. **Install Dependencies**: Navigate to the desired package or sample project and install dependencies:
+
    ```bash
    npm install
    ```

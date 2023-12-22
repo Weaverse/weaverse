@@ -56,8 +56,8 @@ export function getWeaverseConfigs(
     weaverseVersion: weaverseVersion || '',
     isDesignMode: isDesignMode || false,
     publicEnv: {
-      PUBLIC_STORE_DOMAIN,
-      PUBLIC_STOREFRONT_API_TOKEN,
+      PUBLIC_STORE_DOMAIN: PUBLIC_STORE_DOMAIN || '',
+      PUBLIC_STOREFRONT_API_TOKEN: PUBLIC_STOREFRONT_API_TOKEN || '',
     },
   }
 }
