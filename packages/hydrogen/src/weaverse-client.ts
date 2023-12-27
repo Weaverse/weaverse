@@ -157,7 +157,7 @@ export class WeaverseClient {
     return {
       id: 'fallback_page_' + Date.now(),
       rootId,
-      name: 'Main',
+      name: 'Default Page',
       items: [
         {
           type: 'main',
