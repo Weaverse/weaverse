@@ -20,7 +20,10 @@ let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
       '--img-object-fit': objectFit,
       '--img-object-position': objectPosition,
     } as React.CSSProperties
-
+    if (src?.includes('ucarecdn.com') && src?.endsWith('/')) {
+      // add -/preview/-/quality/smart/-/format/auto/ if it ends with {uuid}/
+      src = `${src}-/preview/-/quality/smart/-/format/auto/`
+    }
     let content = <img alt={alt} src={src} loading="lazy" />
     if (clickAction === 'openLink' && linkTo) {
       content = (
