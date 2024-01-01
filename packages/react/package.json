@@ -2,7 +2,7 @@
   "name": "@weaverse/react",
   "author": "Weaverse Team",
   "description": "React bindings for Weaverse",
-  "version": "2.8.6",
+  "version": "2.8.8",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -38,7 +38,7 @@
     "singleQuote": true
   },
   "dependencies": {
-    "@weaverse/core": "2.8.6",
+    "@weaverse/core": "2.8.8",
     "clsx": "^2.0.0"
   }
 }
