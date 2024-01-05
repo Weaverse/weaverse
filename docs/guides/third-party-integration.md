@@ -34,7 +34,7 @@ If the third-party app provides an API:
 
 * Store the third-party app's API token in your **`.env`** file.
 
-  👉 [Learn more about Environment Variables](https://weaverse.io/docs/guides/8460014-environment-variables).
+  👉 [Learn more about Environment Variables](https://weaverse.io/docs/guides/environment-variables).
 
 2. Query App Data:
 
