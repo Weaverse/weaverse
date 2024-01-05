@@ -204,7 +204,7 @@ export let loader = async (args: ComponentLoaderArgs<MyComponentData>) => {
 ```
 
 Unlock the potential of loaders with
-the [Data Fetching & Caching article](/docs/guides/data-fetching-and-caching).
+the [Data Fetching & Caching article](/docs/guides/fetching-and-caching).
 
 Conclusion
 ----------

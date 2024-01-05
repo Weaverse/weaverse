@@ -40,7 +40,7 @@ If the third-party app provides an API:
 
 * Use the app's API within your route's loader function or a component's loader function to fetch data.
 
-  👉 [Review data fetching and caching practices](https://weaverse.io/docs/guides/8463309-data-fetching-and-caching).
+  👉 [Review data fetching and caching practices](https://weaverse.io/docs/guides/fetching-and-caching).
 
 * Display the fetched data on your Weaverse page effectively.
 
