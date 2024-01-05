@@ -49,4 +49,4 @@ export function GlobalStyle() {
 
 For a deeper understanding of how global theme settings are established and how they interact with the
 **`useThemeSettings`** hook, you can reference
-the [Global Theme Settings article](https://weaverse.io/docs/guides/8463295-global-theme-settings).
+the [Global Theme Settings article](https://weaverse.io/docs/guides/global-theme-settings).
