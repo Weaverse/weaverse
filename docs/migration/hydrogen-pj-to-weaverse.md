@@ -77,7 +77,7 @@ Wrapping the app with `withWeaverse` HoC
 ----------------------------------------
 
 Ensure your main application component is wrapped with the **`withWeaverse`** Higher-Order Component (HoC). Learn more
-in the [withWeaverse article](https://weaverse.io/docs/api/8529973-withweaverse).
+in the [withWeaverse article](/docs/api/with-weaverse).
 
 ```tsx
 import { withWeaverse } from '@weaverse/hydrogen';

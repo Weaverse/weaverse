@@ -25,7 +25,7 @@ Before diving into Weaverse Hydrogen theme development, make sure you've:
 * Downloaded the Weaverse Hydrogen starter theme with `@weaverse/cli`
 
 If you haven't completed these steps, refer back to the
-**[Getting Started](https://weaverse.io/docs/hydrogen/6839953-getting-started)** article.
+**[Getting Started](/docs/hydrogen/getting-started)** article.
 
 Shopify Requirements
 --------------------

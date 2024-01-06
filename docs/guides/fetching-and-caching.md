@@ -12,7 +12,7 @@ Data Fetching
 
 With Weaverse, fetching data **server-side** is straightforward. This ease-of-use is attributed to the **`weaverse`**
 client which is already injected into
-the [application's load context](https://weaverse.io/docs/guides/8321058-project-structure#base-files-explained). Let's
+the [application's load context](/docs/guides/project-structure#base-files-explained). Let's
 explore the mechanisms and available methods for data fetching.
 
 #### Fetching Page Data

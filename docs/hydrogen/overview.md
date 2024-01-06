@@ -64,4 +64,4 @@ Conclusion
 
 Weaverse is the nexus of **Shopify Hydrogen**'s robust capabilities and user-centric simplicity, ensuring every merchant can fully harness the benefits of headless commerce.
 
-Eager to learn more? Head over to the 👉 [Getting Started](https://weaverse.io/docs/hydrogen/6839953-getting-started) guide for a step-by-step walkthrough.
+Eager to learn more? Head over to the 👉 [Getting Started](/docs/hydrogen/getting-started) guide for a step-by-step walkthrough.
