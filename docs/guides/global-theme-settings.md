@@ -4,6 +4,7 @@ description: Walking through how to define theme schema, leverage global theme s
 publishedAt: 11-20-2023
 updatedAt: 11-20-2023
 order: 8
+published: true
 ---
 
 **Theme Settings** define the global configuration of your entire Weaverse theme. They impact the look and behavior of

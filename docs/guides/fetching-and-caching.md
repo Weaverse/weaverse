@@ -4,6 +4,7 @@ description: Unveiling the intricacies of fetching data efficiently and caching 
 publishedAt: 10-11-2023
 updatedAt: 10-11-2023
 order: 7
+published: true
 ---
 
 Data Fetching

@@ -4,6 +4,7 @@ description: The editor is equipped with various components, each designed to pr
 publishedAt: 11-20-2023
 updatedAt: 11-20-2023
 order: 0
+published: true
 ---
 
 Customizing your Hydrogen project within Weaverse Studio is a user-friendly experience. The editor is equipped with

@@ -4,6 +4,7 @@ description: The useWeaverse hook allows components to access the Weaverse insta
 publishedAt: 10-10-2023
 updatedAt: 10-10-2023
 order: 2
+published: true
 ---
 
 The **`useWeaverse`** hook allows components to access the Weaverse instance specific to each page, enabling the retrieval of page data, component instances, and configuration settings within a Weaverse Hydrogen theme.

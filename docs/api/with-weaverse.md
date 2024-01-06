@@ -4,6 +4,7 @@ description: The withWeaverse HOC enhances your root component, allowing it to a
 publishedAt: 10-10-2023
 updatedAt: 10-10-2023
 order: 5
+published: true
 ---
 
 **`withWeaverse`** HOC is a crucial part of the architecture. It wraps the root component and any error boundaries to

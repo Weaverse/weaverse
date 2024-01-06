@@ -4,6 +4,7 @@ description: The getSelectedProductOption returns the selected product options f
 publishedAt: 10-10-2023
 updatedAt: 10-10-2023
 order: 4
+published: true
 ---
 
 In a Weaverse Hydrogen Theme, **`getSelectedProductOptions`** serves as an essential utility for capturing customer

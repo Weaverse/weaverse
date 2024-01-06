@@ -4,6 +4,7 @@ description: Weaverse Components are the foundational elements of your theme.
 publishedAt: 11-20-2023
 updatedAt: 11-20-2023
 order: 3
+published: true
 ---
 
 

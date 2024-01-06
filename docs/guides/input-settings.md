@@ -4,6 +4,7 @@ description: Input settings to allow section components customizable via Weavers
 publishedAt: 9-27-2023
 updatedAt: 11-20-2023
 order: 5
+published: true
 ---
 
 Anatomy

@@ -4,6 +4,7 @@ description: The WeaverseClient class provides developers with a suite of method
 publishedAt: 10-10-2023
 updatedAt: 10-10-2023
 order: 0
+published: true
 ---
 
 The **`WeaverseClient`** class provides developers with a suite of methods to interact with Weaverse, manage caching

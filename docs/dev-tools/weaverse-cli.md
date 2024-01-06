@@ -4,6 +4,7 @@ description: The Weaverse CLI facilitates tasks such as project setup, theme sca
 publishedAt: 11-20-2023
 updatedAt: 11-20-2023
 order: 0
+published: true
 ---
 
 For developers crafting Weaverse Hydrogen themes, the Weaverse CLI is a simple yet powerful aid, streamlining project

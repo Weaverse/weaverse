@@ -4,6 +4,7 @@ description: Weaverse Marketplace is a one-stop destination where merchants can 
 publishedAt: 11-20-2023
 updatedAt: 11-20-2023
 order: 0
+published: true
 ---
 
 The Weaverse Marketplace is a vibrant and dynamic platform, filled with a selection of pre-built Hydrogen themes. Each

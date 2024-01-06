@@ -4,6 +4,7 @@ description: Here's how you can hide/show elements on mobile (responsive editing
 publishedAt: 11-20-2023
 updatedAt: 11-20-2023
 order: 4
+published: true
 ---
 
 Use Case

@@ -4,6 +4,7 @@ description: "Explore the core structure of a Weaverse Hydrogen theme."
 publishedAt: 11-20-2023
 updatedAt: 11-20-2023
 order: 1
+published: true
 ---
 
 Basic Structure Overview

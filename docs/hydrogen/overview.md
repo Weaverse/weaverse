@@ -4,6 +4,7 @@ description: An introduction to Shopify, the significance of headless commerce, 
 publishedAt: 10-10-2023
 updatedAt: 10-10-2023
 order: 0
+published: true
 ---
 
 

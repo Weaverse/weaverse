@@ -4,6 +4,7 @@ description: Enhance your Hydrogen project by integrating Weaverse SDKs and Them
 publishedAt: 11-20-2023
 updatedAt: 11-20-2023
 order: 0
+published: true
 ---
 
 This guide focuses on integrating the Weaverse SDKs and Theme Customizer into your existing Hydrogen project, providing

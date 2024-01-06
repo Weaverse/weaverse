@@ -4,6 +4,7 @@ description: The blueprint of a Weaverse component.
 publishedAt: 11-20-2023
 updatedAt: 11-20-2023
 order: 4
+published: true
 ---
 
 Anatomy

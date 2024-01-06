@@ -4,6 +4,7 @@ description: "Your initial steps into Weaverse's world: from installing the app 
 publishedAt: 11-20-2023
 updatedAt: 11-20-2023
 order: 1
+published: true
 ---
 
 Taking the First Step

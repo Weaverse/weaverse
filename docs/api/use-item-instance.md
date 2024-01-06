@@ -4,6 +4,7 @@ description: The useItemInstance hook provides components the ability to access 
 publishedAt: 10-10-2023
 updatedAt: 10-10-2023
 order: 3
+published: true
 ---
 
 The **`useItemInstance`** hook is utilized to interact with a distinct item. Developers can access and manage that

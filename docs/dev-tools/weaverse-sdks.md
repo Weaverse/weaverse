@@ -4,6 +4,7 @@ description: Weaverse SDKs bundle essential packages, streamlining the developme
 publishedAt: 11-20-2023
 updatedAt: 11-20-2023
 order: 1
+published: true
 ---
 
 The Weaverse SDK is organized into multiple packages, each serving a specific role in the development of Weaverse

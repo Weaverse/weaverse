@@ -4,6 +4,7 @@ description: Whether your video is on Youtube or you want to upload your own vid
 publishedAt: 11-20-2023
 updatedAt: 11-20-2023
 order: 5
+published: true
 ---
 
 Adding videos in Weaverse is easy, here’s how you do it.

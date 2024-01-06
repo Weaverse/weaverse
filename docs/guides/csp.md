@@ -4,6 +4,7 @@ description: Content Security Policy in Weaverse, how it is automatically config
 publishedAt: 11-20-2023
 updatedAt: 11-20-2023
 order: 9
+published: true
 ---
 
 Understanding Content Security Policy

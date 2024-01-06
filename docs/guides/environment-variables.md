@@ -4,6 +4,7 @@ description: Setting up and managing environment variables in Weaverse Hydrogen 
 publishedAt: 11-20-2023
 updatedAt: 11-20-2023
 order: 2
+published: true
 ---
 
 Introduction

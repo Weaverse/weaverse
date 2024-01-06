@@ -4,6 +4,7 @@ description: Extend the functionality of your Weaverse Hydrogen theme by integra
 publishedAt: 11-20-2023
 updatedAt: 11-20-2023
 order: 11
+published: true
 ---
 
 Merchants often need to extend their store's capabilities with third-party apps for customer reviews, sales promotions,

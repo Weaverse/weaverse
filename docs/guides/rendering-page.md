@@ -4,6 +4,7 @@ description: Learn how to load and render Weaverse pages using optional paramete
 publishedAt: 10-11-2023
 updatedAt: 10-11-2023
 order: 6
+published: true
 ---
 
 Fetching Page Data

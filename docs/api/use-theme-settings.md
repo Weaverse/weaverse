@@ -4,6 +4,7 @@ description: The useThemeSettings hook provides a simple way for Weaverse Hydrog
 publishedAt: 10-10-2023
 updatedAt: 10-10-2023
 order: 1
+published: true
 ---
 
 The **`useThemeSettings`** hook is an interface for accessing the global theme settings within a Weaverse Hydrogen
