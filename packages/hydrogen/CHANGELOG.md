@@ -1,5 +1,12 @@
 # @weaverse/hydrogen
 
+## 2.8.12
+
+### Patch Changes
+
+- update default weaverseHost
+  - @weaverse/react@2.8.12
+
 ## 2.8.11
 
 ### Patch Changes
