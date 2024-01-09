@@ -45,6 +45,7 @@ export type InputType =
   | 'textarea'
   | 'toggle-group'
   | 'swatches'
+  | 'metaobject'
 
 // Complex types
 export type WeaverseCSSProperties = Stitches.CSS & Partial<Record<keyof typeof stitchesUtils, string | number>>
