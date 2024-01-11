@@ -29,8 +29,8 @@
     "prepublish": "npm run build"
   },
   "peerDependencies": {
-    "@remix-run/react": "^2.1.0",
-    "@shopify/hydrogen": "^2023.10.2",
+    "@remix-run/react": "^2",
+    "@shopify/hydrogen": "^2023.10",
     "react": ">=18",
     "react-dom": ">=18"
   },
@@ -41,9 +41,9 @@
   },
   "dependencies": {
     "@weaverse/react": "2.8.12",
-    "react-error-boundary": "^4.0.11"
+    "react-error-boundary": "^4.0.12"
   },
   "devDependencies": {
-    "@shopify/remix-oxygen": "^2.0.1"
+    "@shopify/remix-oxygen": "^2"
   }
 }

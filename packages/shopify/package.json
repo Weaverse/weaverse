@@ -41,7 +41,7 @@
     "@radix-ui/react-dialog": "^1.0.5",
     "@stitches/react": "^1.2.8",
     "@weaverse/react": "2.8.12",
-    "clsx": "^2.0.0",
+    "clsx": "^2.1.0",
     "keen-slider": "^6.8.6"
   }
 }

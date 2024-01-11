@@ -39,6 +39,6 @@
   },
   "dependencies": {
     "@weaverse/core": "2.8.12",
-    "clsx": "^2.0.0"
+    "clsx": "^2.1.0"
   }
 }
