@@ -1,7 +1,5 @@
 import { createWithCache, generateCacheControlHeader } from '@shopify/hydrogen'
 
-import pkg from '../package.json'
-
 import type {
   AllCacheOptions,
   FetchProjectPayload,
@@ -19,7 +17,6 @@ import { getRequestQueries, getWeaverseConfigs } from './utils'
 
 export class WeaverseClient {
   API = 'api/public'
-  clientVersion = pkg.version
   basePageConfigs: Omit<WeaverseProjectConfigs, 'requestInfo'>
   basePageRequestBody: Omit<FetchProjectRequestBody, 'url' | 'countries'>
   configs: WeaverseProjectConfigs

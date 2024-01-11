@@ -300,7 +300,7 @@ export type CreateWeaverseClientArgs = {
   cache: Cache
   waitUntil: ExecutionContext['waitUntil']
   env: HydrogenThemeEnv
-  storefront: Storefront<I18nBase> | any
+  storefront: Storefront
 }
 export type WeaverseClientArgs = CreateWeaverseClientArgs & {
   components: HydrogenComponent[]
