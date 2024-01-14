@@ -99,16 +99,16 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
 
     return (
       <Component
+        {...rest}
         key={id}
         data-wv-type={type}
         data-wv-id={id}
         className={clsx(
           platformType !== 'shopify-hydrogen' &&
             generateItemClassName(instance, stitchesInstance),
-          rest?.data?.className,
+          rest.data?.className,
         )}
         style={style}
-        {...rest}
         children={renderChildren.length ? renderChildren : undefined}
       />
     )
