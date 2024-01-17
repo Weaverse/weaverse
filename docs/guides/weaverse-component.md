@@ -1,8 +1,8 @@
 ---
 title: Weaverse Hydrogen Component
 description: Weaverse Components are the foundational elements of your theme.
-publishedAt: 11-20-2023
-updatedAt: 11-20-2023
+publishedAt: November 20, 2023
+updatedAt: January 17, 2024
 order: 3
 published: true
 ---

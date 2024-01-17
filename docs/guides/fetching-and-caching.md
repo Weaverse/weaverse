@@ -1,8 +1,8 @@
 ---
 title: Data Fetching and Caching
 description: Unveiling the intricacies of fetching data efficiently and caching strategies with Weaverse.
-publishedAt: 10-11-2023
-updatedAt: 10-11-2023
+publishedAt: November 10, 2023
+updatedAt: January 17, 2024
 order: 7
 published: true
 ---

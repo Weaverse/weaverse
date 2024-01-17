@@ -1,8 +1,8 @@
 ---
 title: Weaverse Pricing
 description: How is Weaverse priced?
-publishedAt: 11-20-2023
-updatedAt: 11-20-2023
+publishedAt: November 20, 2023
+updatedAt: January 17, 2024
 order: 1
 published: true
 ---

@@ -1,8 +1,8 @@
 ---
 title: withWeaverse
 description: The withWeaverse HOC enhances your root component, allowing it to access Weaverse-specific properties and methods.
-publishedAt: 10-10-2023
-updatedAt: 10-10-2023
+publishedAt: October 10, 2023
+updatedAt: January 17, 2024
 order: 5
 published: true
 ---

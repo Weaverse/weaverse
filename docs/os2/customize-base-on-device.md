@@ -1,8 +1,8 @@
 ---
 title: How To Customize Page Content Based On Devices
 description: Here's how you can hide/show elements on mobile (responsive editing for mobile) or edit mobile view and all devices view separately.
-publishedAt: 11-20-2023
-updatedAt: 11-20-2023
+publishedAt: November 20, 2023
+updatedAt: November 20, 2023
 order: 4
 published: true
 ---

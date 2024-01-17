@@ -1,8 +1,8 @@
 ---
 title: Introduction To Weaverse Section Builder for Shopify Online Store 2.0
 description: Introduction Section Builder for Shopify Online Store 2.0
-publishedAt: 11-20-2023
-updatedAt: 11-20-2023
+publishedAt: November 20, 2023
+updatedAt: November 20, 2023
 order: 0
 published: true
 ---

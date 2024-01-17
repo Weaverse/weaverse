@@ -1,8 +1,8 @@
 ---
 title: Deploy to Shopify Oxygen
 description: Deploying Weaverse Hydrogen Project to Shopify Oxygen.
-publishedAt: 10-10-2023
-updatedAt: 10-10-2023
+publishedAt: October 10, 2023
+updatedAt: January 17, 2024
 order: 0
 published: true
 ---

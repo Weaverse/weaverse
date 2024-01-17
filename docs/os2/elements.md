@@ -1,8 +1,8 @@
 ---
 title: Weaverse Section Elements
 description: All about Weaverse Section Elements for Shopify Online Store 2.0
-publishedAt: 11-20-2023
-updatedAt: 11-20-2023
+publishedAt: November 20, 2023
+updatedAt: November 20, 2023
 order: 1
 published: true
 ---

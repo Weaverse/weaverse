@@ -1,8 +1,8 @@
 ---
 title: useItemInstance
 description: The useItemInstance hook provides components the ability to access and manipulate a specific item instance.
-publishedAt: 10-10-2023
-updatedAt: 10-10-2023
+publishedAt: October 10, 2023
+updatedAt: January 17, 2024
 order: 3
 published: true
 ---

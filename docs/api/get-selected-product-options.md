@@ -1,8 +1,8 @@
 ---
 title: getSelectedProductOptions
 description: The getSelectedProductOption returns the selected product options from the request's search parameters.
-publishedAt: 10-10-2023
-updatedAt: 10-10-2023
+publishedAt: October 10, 2023
+updatedAt: January 17, 2024
 order: 4
 published: true
 ---

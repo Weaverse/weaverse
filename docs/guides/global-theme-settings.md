@@ -1,8 +1,8 @@
 ---
 title: Global Theme Settings
 description: Walking through how to define theme schema, leverage global theme settings, and render global styles.
-publishedAt: 11-20-2023
-updatedAt: 11-20-2023
+publishedAt: November 20, 2023
+updatedAt: January 17, 2024
 order: 8
 published: true
 ---

@@ -1,8 +1,8 @@
 ---
 title: General Styling Options
 description: Every general styling parameters you have in Weaverse
-publishedAt: 11-20-2023
-updatedAt: 11-20-2023
+publishedAt: November 20, 2023
+updatedAt: November 20, 2023
 order: 2
 published: true
 ---

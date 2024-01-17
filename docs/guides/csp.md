@@ -1,8 +1,8 @@
 ---
 title: Content Security Policy
 description: Content Security Policy in Weaverse, how it is automatically configured, and the ability to customize policies for your unique needs
-publishedAt: 11-20-2023
-updatedAt: 11-20-2023
+publishedAt: November 20, 2023
+updatedAt: January 17, 2024
 order: 9
 published: true
 ---

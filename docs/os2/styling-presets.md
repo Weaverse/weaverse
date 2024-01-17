@@ -1,8 +1,8 @@
 ---
 title: How To Use Styling Presets In Weaverse
 description: Styling Preset help you maintains consistency, streamlines design and allows for easy bulk updates.
-publishedAt: 11-20-2023
-updatedAt: 11-20-2023
+publishedAt: November 20, 2023
+updatedAt: November 20, 2023
 order: 3
 published: true
 ---
