@@ -1,8 +1,8 @@
 ---
 title: Getting Started
 description: "Your initial steps into Weaverse's world: from installing the app on Shopify to setting up your first project."
-publishedAt: 11-20-2023
-updatedAt: 11-20-2023
+publishedAt: November 20, 2023
+updatedAt: January 15, 2024
 order: 1
 published: true
 ---
@@ -23,16 +23,10 @@ Install the Weaverse App from the Shopify App Store
 
 Before you can begin using the Weaverse Hydrogen Theme Customizer, you'll need to install the Weaverse app. Visit the [Shopify app store](https://apps.shopify.com/weaverse) and search for "Weaverse." Click on the app and follow the instructions to install it.
 
-![](https://downloads.intercomcdn.com/i/o/849802817/63bf36493578b8a3c2863d54/image.png)
+![Weaverse on Shopify Apps Store](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/weaverse_on_shopify_apps_store.png)
 
 Creating a New Weaverse Hydrogen Project
 ----------------------------------------
-
-#### Quickstart
-
-Check out the step-by-step quickstart guide to initialize a Weaverse Hydrogen project:
-
-![](https://downloads.intercomcdn.com/i/o/860583199/a83d4d10bb6f3aea38cbbed4/init+project.gif)
 
 #### Create New Project
 

@@ -1,8 +1,8 @@
 ---
 title: WeaverseClient
 description: The WeaverseClient class provides developers with a suite of methods to interact with the Weaverse inside a Weaverse Hydrogen Theme.
-publishedAt: 10-10-2023
-updatedAt: 10-10-2023
+publishedAt: October 10, 2023
+updatedAt: January 17, 2024
 order: 0
 published: true
 ---

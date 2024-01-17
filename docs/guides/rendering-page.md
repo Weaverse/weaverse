@@ -1,8 +1,8 @@
 ---
 title: Rendering a Weaverse Page
 description: Learn how to load and render Weaverse pages using optional parameters and the WeaverseContent component.
-publishedAt: 10-11-2023
-updatedAt: 10-11-2023
+publishedAt: November 10, 2023
+updatedAt: January 17, 2024
 order: 6
 published: true
 ---

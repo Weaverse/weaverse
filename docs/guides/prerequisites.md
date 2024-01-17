@@ -1,8 +1,8 @@
 ---
 title: Prerequisites
 description: "Checklist of system requirements to ensure you have the right environment for smooth and seamless development with."
-publishedAt: 11-20-2023
-updatedAt: 11-20-2023
+publishedAt: November 20, 2023
+updatedAt: January 17, 2024
 order: 0
 published: true
 ---

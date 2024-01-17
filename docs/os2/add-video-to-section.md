@@ -1,8 +1,8 @@
 ---
 title: How To Add Videos To Your Section
 description: Whether your video is on Youtube or you want to upload your own video, adding video in Weaverse is easy. Here's how.
-publishedAt: 11-20-2023
-updatedAt: 11-20-2023
+publishedAt: November 20, 2023
+updatedAt: November 20, 2023
 order: 5
 published: true
 ---

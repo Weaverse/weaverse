@@ -2,7 +2,7 @@
 title: Pilot - Shopify Hydrogen Starter Theme
 description: Elevate your Shopify Headless storefront with Pilot, the robust and versatile starter theme by Weaverse.
 publishedAt: January 11, 2024
-updatedAt: January 11, 2024
+updatedAt: January 15, 2024
 order: 2
 published: true
 ---
@@ -75,4 +75,6 @@ Weaverse introduces a metaobject picker input, enabling users to select and disp
 1. In Weaverse Studio, go to *Theme* > *Sections* > *Add section*.
 2. Choose the *Metaobject demo* section.
 3. From the Inspector, select your created metaobject.
-4. Preview your changes. Check out this video demo: [![Weaverse Hydrogen Metaobject](https://img.youtube.com/vi/BEf6jfjloiE/0.jpg)](https://www.youtube.com/watch?v=BEf6jfjloiE)
+4. Preview your changes. Check out this video demo: 
+
+<iframe src="https://www.youtube.com/embed/BEf6jfjloiE?rel=0" frameBorder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowFullScreen></iframe>

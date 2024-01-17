@@ -1,8 +1,8 @@
 ---
 title: Input Settings
 description: Input settings to allow section components customizable via Weaverse Theme Customizer.
-publishedAt: 9-27-2023
-updatedAt: 11-20-2023
+publishedAt: September 27, 2023
+updatedAt: January 17, 2024
 order: 5
 published: true
 ---

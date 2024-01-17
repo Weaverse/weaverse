@@ -1,8 +1,8 @@
 ---
 title: Migrating Hydrogen Project to Weaverse
 description: Enhance your Hydrogen project by integrating Weaverse SDKs and Theme Customizer.
-publishedAt: 11-20-2023
-updatedAt: 11-20-2023
+publishedAt: November 20, 2023
+updatedAt: January 17, 2024
 order: 0
 published: true
 ---
