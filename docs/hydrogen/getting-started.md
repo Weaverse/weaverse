@@ -30,21 +30,23 @@ Creating a New Weaverse Hydrogen Project
 
 #### Create New Project
 
-![](https://downloads.intercomcdn.com/i/o/862245110/904b7f3300c17a35cd7e4e48/image.png)
+![Create Weaverse Hydrogen Project](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/create_weaverse_hydrogen_project.webp)
 
 In the **Weaverse** dashboard, you'll find a button to create a new project (also referred to as a _storefront_). Click that button to begin the creation process.
 
 #### Select a Starter Theme
 
-![](https://downloads.intercomcdn.com/i/o/848671535/db732096e45d1255d1241438/image.png)
+![Select Weaverse Starter theme](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/select_weaverse_starter_theme.webp)
 
-You'll be presented with various Hydrogen starter templates to choose from. By default, "**Pilot**" (free) will be available as the first starter theme. Select this theme or any other that fits your needs.
+You'll be presented with various Hydrogen starter templates to choose from. By default, "**Pilot**" (free) will be available as the first starter theme. Select this theme or any other that fits your needs. After you selected the theme, a default name and generated data will be provided for your project.
 
-#### Initialize the Project
 
-![](https://downloads.intercomcdn.com/i/o/848671954/f560c61a70f6c75f88567e78/image.png)
+#### Try the demo
+You will use the default Preview URL for demo purpose, just look around, inspect the features, change the content, and see how it works.
 
-Follow the instructions that are used `@weaverse/cli` to clone the project repository to your local machine. This will include all the necessary files to begin development.
+![Start setup Weaverse Project](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/start_setup_weaverse_project.webp)
+
+Now when you are ready to start building or deploy the project, click on the "Start Setup" button.
 
 #### Enter the Development Server Preview URL
 
