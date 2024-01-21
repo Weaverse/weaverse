@@ -112,6 +112,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
       />
     )
   } else {
+    instance._store.deleted = true
     console.log(`❌ Unknown element: ${type}`)
     return null
   }
