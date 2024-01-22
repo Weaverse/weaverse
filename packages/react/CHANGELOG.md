@@ -1,5 +1,16 @@
 # @weaverse/react
 
+## 2.9.0
+
+### Minor Changes
+
+- Refactor
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/core@2.9.0
+
 ## 2.8.12
 
 ### Patch Changes
