@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 2.9.0
+
+### Minor Changes
+
+- Refactor
+
 ## 2.8.12
 
 ## 2.8.11

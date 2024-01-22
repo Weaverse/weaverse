@@ -4,7 +4,7 @@ description: How is Weaverse priced?
 publishedAt: November 20, 2023
 updatedAt: January 17, 2024
 order: 1
-published: true
+published: false
 ---
 
 Description
