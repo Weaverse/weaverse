@@ -94,7 +94,6 @@ export interface WeaverseCoreParams {
   data: WeaverseProjectDataType
   isDesignMode?: boolean
   platformType?: PlatformTypeEnum
-  ItemConstructor: typeof WeaverseItemStore
 }
 
 /**

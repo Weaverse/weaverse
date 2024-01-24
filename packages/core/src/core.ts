@@ -34,6 +34,7 @@ export class WeaverseItemStore extends EventEmitter {
     this.weaverse = weaverse
     if (id && type) {
       weaverse.itemInstances.set(id, this)
+      Object.assign(this._store, initialData)
     } else {
       throw new Error(`'id' and 'type' are required to create a new Weaverse item.`)
     }
@@ -89,7 +90,7 @@ export class Weaverse extends EventEmitter {
   static stitchesInstance: Stitches | any
   studioBridge?: any
 
-  declare ItemConstructor: typeof WeaverseItemStore
+  declare static ItemConstructor: typeof WeaverseItemStore
   declare data: WeaverseProjectDataType
   declare platformType: PlatformTypeEnum
   static elementRegistry = new Map()
@@ -118,7 +119,7 @@ export class Weaverse extends EventEmitter {
    * Create new `WeaverseItemStore` instance for each item in the project.
    */
   initProject = () => {
-    let { data, ItemConstructor } = this
+    let { data } = this
     let itemInstances = this.itemInstances
     if (data?.items) {
       data.items.forEach((item) => {
@@ -126,7 +127,7 @@ export class Weaverse extends EventEmitter {
         if (itemInstance) {
           itemInstance.setData(item)
         } else {
-          new ItemConstructor(item, this)
+          new Weaverse.ItemConstructor(item, this)
         }
       })
     }
@@ -168,7 +169,9 @@ export class Weaverse extends EventEmitter {
     return Weaverse.elementRegistry
   }
 
-  triggerUpdate() {
+  triggerUpdate = () => {
+    // make new copy of data to trigger update
+    this.data = { ...this.data }
     this.emit()
   }
 

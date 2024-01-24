@@ -51,7 +51,7 @@ export class WeaverseShopify extends Weaverse {
   constructor(params: WeaverseShopifyParams) {
     let { thirdPartyIntegration, elementSchemas, ssrMode, ...coreParams } =
       params
-    super({ ...coreParams, ItemConstructor: WeaverseShopifyItem })
+    super({ ...coreParams, platformType: 'shopify-section' })
     this.elementSchemas = elementSchemas || []
     this.ssrMode = ssrMode || false
     WeaverseShopify.integrations = thirdPartyIntegration || DEFAULT_INTEGRATIONS
@@ -65,7 +65,7 @@ export class WeaverseShopifyItem extends WeaverseItemStore {
     super(initialData, weaverse)
     let defaultData = this.Element?.Component?.defaultProps || {}
     let extraData = this.Element?.extraData
-    this._store = { ...defaultData, ...extraData, ...initialData }
+    Object.assign(this._store, defaultData, extraData, initialData)
   }
 
   get Element(): WeaverseElement {
@@ -87,3 +87,4 @@ export class WeaverseShopifyItem extends WeaverseItemStore {
     super.data = update
   }
 }
+Weaverse.ItemConstructor = WeaverseShopifyItem

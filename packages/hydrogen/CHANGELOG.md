@@ -1,5 +1,21 @@
 # @weaverse/hydrogen
 
+## 2.10.1
+
+### Patch Changes
+
+- optimize rendering mechanism
+- Updated dependencies
+  - @weaverse/react@2.10.1
+
+## 2.10.1-next.0
+
+### Patch Changes
+
+- optimize rendering mechanism
+- Updated dependencies
+  - @weaverse/react@2.10.1-next.0
+
 ## 2.10.0
 
 ### Minor Changes

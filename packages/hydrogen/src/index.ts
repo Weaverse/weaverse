@@ -48,7 +48,7 @@ export class WeaverseHydrogen extends Weaverse {
 
   constructor(params: WeaverseHydrogenParams) {
     let { internal, pageId, requestInfo, ...coreParams } = params
-    super({ ...coreParams, ItemConstructor: WeaverseHydrogenItem })
+    super({ ...coreParams })
     this.internal = internal
     this.pageId = pageId
     this.requestInfo = requestInfo
@@ -61,7 +61,7 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
   constructor(initialData: HydrogenComponentData, weaverse: WeaverseHydrogen) {
     super(initialData, weaverse)
     let { data, ...rest } = initialData
-    this._store = { ...this.getDefaultData, ...data, ...rest }
+    Object.assign(this._store, this.getDefaultData(), data, rest)
   }
 
   get Element(): HydrogenElement {
@@ -79,5 +79,5 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
       }, {})
   }
 }
-
+Weaverse.ItemConstructor = WeaverseHydrogenItem
 export { useWeaverse, useItemInstance, useChildInstances, useParentInstance }
