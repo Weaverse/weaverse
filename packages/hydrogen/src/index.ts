@@ -1,11 +1,11 @@
 import {
-  Weaverse,
-  WeaverseItemStore,
-  useItemInstance,
+  type PlatformTypeEnum,
   useChildInstances,
+  useItemInstance,
   useParentInstance,
   useWeaverse,
-  type PlatformTypeEnum,
+  Weaverse,
+  WeaverseItemStore
 } from '@weaverse/react'
 
 import type {
@@ -15,10 +15,8 @@ import type {
   HydrogenPageData,
   WeaverseHydrogenParams,
   WeaverseInternal,
-  WeaverseLoaderRequestInfo,
+  WeaverseLoaderRequestInfo
 } from './types'
-
-import { defaultComponents } from '~/components'
 
 export * from './WeaverseHydrogenRoot'
 export * from './weaverse-client'
@@ -26,6 +24,18 @@ export * from './hooks/use-theme-settings'
 export * from './types'
 export * from './utils'
 export * from './wrappers'
+
+
+export let registerComponents = (components: HydrogenComponent[]) => {
+  components.forEach((comp) => {
+    WeaverseHydrogen.registerElement({
+      type: comp?.schema?.type,
+      Component: comp?.default,
+      schema: comp?.schema,
+      loader: comp?.loader
+    })
+  })
+}
 
 export class WeaverseHydrogen extends Weaverse {
   platformType: PlatformTypeEnum = 'shopify-hydrogen'
@@ -37,26 +47,12 @@ export class WeaverseHydrogen extends Weaverse {
   declare static itemInstances: Map<string, WeaverseHydrogenItem>
   declare static elementRegistry: Map<string, HydrogenElement>
 
-  constructor(params: WeaverseHydrogenParams, components: HydrogenComponent[]) {
-    console.log('💿 New WeaverseHydrogen', params)
-    let { internal, pageId, requestInfo, ...coreParams } = params
-    super({ ...coreParams, ItemConstructor: WeaverseHydrogenItem })
+  constructor(params: WeaverseHydrogenParams) {
+    let {internal, pageId, requestInfo, ...coreParams} = params
+    super({...coreParams, ItemConstructor: WeaverseHydrogenItem})
     this.internal = internal
     this.pageId = pageId
     this.requestInfo = requestInfo
-    this.registerComponents(components)
-    this.registerComponents(defaultComponents)
-  }
-
-  registerComponents = (components: HydrogenComponent[]) => {
-    components.forEach((comp) => {
-      Weaverse.registerElement({
-        type: comp?.schema?.type,
-        Component: comp?.default,
-        schema: comp?.schema,
-        loader: comp?.loader,
-      })
-    })
   }
 }
 
@@ -65,29 +61,24 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
 
   constructor(initialData: HydrogenComponentData, weaverse: WeaverseHydrogen) {
     super(initialData, weaverse)
-    let { data, ...rest } = initialData
-    this._store = { ...data, ...rest }
+    let {data, ...rest} = initialData
+    this._store = {...this.getDefaultData, ...data, ...rest}
   }
 
   get Element(): HydrogenElement {
     return super.Element
   }
 
-  get data() {
-    let defaultData = this.Element?.schema?.inspector
+  getDefaultData = () => {
+    return this.Element?.schema?.inspector
       ?.flatMap((group) => group.inputs)
-      .reduce<Record<string, any>>((a, { defaultValue, name }) => {
+      .reduce<Record<string, any>>((a, {defaultValue, name}) => {
         if (name && defaultValue !== null && defaultValue !== undefined) {
           a[name] = defaultValue
         }
         return a
       }, {})
-    return { ...defaultData, ...super.data } as HydrogenComponentData
-  }
-
-  set data(update) {
-    super.data = update
   }
 }
 
-export { useWeaverse, useItemInstance, useChildInstances, useParentInstance }
+export {useWeaverse, useItemInstance, useChildInstances, useParentInstance}

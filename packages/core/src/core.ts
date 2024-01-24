@@ -37,6 +37,7 @@ export class WeaverseItemStore extends EventEmitter {
     } else {
       throw new Error(`'id' and 'type' are required to create a new Weaverse item.`)
     }
+    this._store.css = this.getDefaultCss()
   }
 
   get _id() {
@@ -51,15 +52,14 @@ export class WeaverseItemStore extends EventEmitter {
     return this.weaverse.elementRegistry.get(this._store.type)
   }
 
-  get css(): ElementCSS {
+  getDefaultCss = (): ElementCSS => {
     let defaultCss = this.Element?.defaultCss || {}
     let currentCss = this._store.css || {}
     return merge(defaultCss, currentCss)
   }
 
   get data(): ElementData {
-    let css = this.css
-    return { ...this._store, css }
+    return this._store
   }
 
   set data(update: Omit<ElementData, 'id' | 'type'>) {
@@ -67,10 +67,11 @@ export class WeaverseItemStore extends EventEmitter {
   }
 
   setData = (update: Omit<ElementData, 'id' | 'type'>) => {
-    this.data = Object.assign(this.data, update)
+    this.data = Object.assign(this._store, update)
     this.triggerUpdate()
     return this.data
   }
+  getSnapShot = () => this.data
 
   triggerUpdate = () => {
     this.emit(this.data)
@@ -110,6 +111,9 @@ export class Weaverse extends EventEmitter {
     Weaverse.initStitches()
   }
 
+  getSnapShot = () => {
+    return this.data
+  }
   /**
    * Create new `WeaverseItemStore` instance for each item in the project.
    */

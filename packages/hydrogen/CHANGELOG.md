@@ -1,5 +1,16 @@
 # @weaverse/hydrogen
 
+## 2.10.0
+
+### Minor Changes
+
+- Optimize page rendering with useSyncExternalStore
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/react@2.10.0
+
 ## 2.9.0
 
 ### Minor Changes

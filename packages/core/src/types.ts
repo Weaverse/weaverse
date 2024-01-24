@@ -81,6 +81,7 @@ export interface BreakPoints {
 }
 
 export interface WeaverseProjectDataType {
+  id?: string
   items: ElementData[]
   rootId: string
 }
