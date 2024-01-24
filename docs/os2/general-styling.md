@@ -14,8 +14,7 @@ To illustrate how they work, we will look at a few examples with Image, Button, 
 It’s important to note that each element come with 02 components: the element itself, and the container containing the
 element.
 
-Selector
---------
+## Selector
 
 With each element, you have the option to design **Normal** and **Hover** states separately.
 
@@ -24,16 +23,15 @@ state to edit how an element looks and behaves when shoppers hover over it.
 
 _Let’s take an example: I want my image to have red-colored borders when someone hovers over it._
 
-* At the **Normal** state, I leave the styling option as it is.
+- At the **Normal** state, I leave the styling option as it is.
 
-* Now I switch to the **Hover** state and add a red border to the image.
+- Now I switch to the **Hover** state and add a red border to the image.
 
 ![](https://downloads.intercomcdn.com/i/o/621077320/9450199b95e8e50a7bf526fa/selector.gif)
 
-* * *
+---
 
-Background
-----------
+## Background
 
 With Background element, you can add background colors to an element, or even add a Background Image to it.
 
@@ -43,19 +41,18 @@ Note that when adding a background image, you also have the option to adjust bac
 
 ![](https://downloads.intercomcdn.com/i/o/621078058/eea3157fe851a33cc82812ab/image.png)
 
-* Fit: Keep the original size and dimensions of the background image.
+- Fit: Keep the original size and dimensions of the background image.
 
-* Fill: Make the background image fill the whole element container.
+- Fill: Make the background image fill the whole element container.
 
-* Auto: Automatically enlarged the background image to fit the element’s container.
+- Auto: Automatically enlarged the background image to fit the element’s container.
 
 **Background Repeat:** Used for Fit option in background size. If you enable “Not Repeat”, then there will be a gap
 between the background image and Container Border.
 
 ![](https://downloads.intercomcdn.com/i/o/621078354/780b33786f66bedadcc37c96/image.png)
 
-Spacing (Padding Margins)
--------------------------
+## Spacing (Padding Margins)
 
 #### Margin
 
@@ -85,21 +82,19 @@ clicking the chain icon in the upper-right corner of the margins panel (or paddi
 Weaverse offers you four options for the measurements of your margins and padding. We offer _px (pixels)_, _em_, and
 _% (of the container)_.
 
-Typography
-----------
+## Typography
 
 Under typography, you can change:
 
-* **_Font family: Font family is inherited from the font of your Shopify Theme._**
+- **_Font family: Font family is inherited from the font of your Shopify Theme._**
 
-* Font color and Font size.
+- Font color and Font size.
 
-* Text Style: Bold, Underline, Strikethrough
+- Text Style: Bold, Underline, Strikethrough
 
-* Text Alignment.
+- Text Alignment.
 
-Border
-------
+## Border
 
 You can use Border options to add a border to the element itself, or to the container surrounding the element.
 
@@ -122,15 +117,13 @@ color, simply select Border Side → Select Border Style → Select Color, then 
 **Border Radius:** If you want the element to have a perfect rectangle shape, leave the radius at 100. If you want the
 border to be rounded, decrease the radius.
 
-Device Visibility
------------------
+## Device Visibility
 
 _Visibility options are only available when you select the entire container that is having the element._
 
 Under Visibility, you can either make a section visible to all devices, or only visible to mobile users.
 
-Shadow and Effects
-------------------
+## Shadow and Effects
 
 Only available to a Text element. Both Box Shadow and Text Shadow have similar styling options.
 
@@ -138,20 +131,20 @@ Only available to a Text element. Both Box Shadow and Text Shadow have similar s
 
 Here you can adjust:
 
-* **Color options:** Define the color of your shadow. The opacity of the shadow can be changed by using the slider bar
+- **Color options:** Define the color of your shadow. The opacity of the shadow can be changed by using the slider bar
   below the color selector.
 
-* **Horizontal offset (X icon)** determines how much of the shadow appears on the side of the element. A negative
+- **Horizontal offset (X icon)** determines how much of the shadow appears on the side of the element. A negative
   horizontal offset will create a shadow on the left side of the element. A positive horizontal offset will appear on
   the right side.
 
-* **Vertical offset (Y icon)** determines how much of the shadow appears on the top or bottom of the element. A negative
+- **Vertical offset (Y icon)** determines how much of the shadow appears on the top or bottom of the element. A negative
   horizontal offset will create a shadow on the top side of the element. A positive horizontal offset will appear on the
   bottom side.
 
-* **Blur (B icon)** softens the edge of the shadow, which can help give it a more natural appearance.
+- **Blur (B icon)** softens the edge of the shadow, which can help give it a more natural appearance.
 
-* **Spread (S icon)** determines the size of the box shadow. Increasing the spread will cause the shadow to expand
+- **Spread (S icon)** determines the size of the box shadow. Increasing the spread will cause the shadow to expand
   outward. Decreasing the spread will pull it back in.
 
 Experimenting with these settings is a great way to see their effects in action and to add depth to your designs.

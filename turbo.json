@@ -18,8 +18,7 @@
     },
     "typecheck": {
       "outputs": [],
-      "dependsOn": ["build"],
-      "inputs": ["packages/**/*.tsx", "packages/**/*.tsx"]
+      "inputs": ["packages/**/*.ts", "packages/**/*.tsx"]
     }
   }
 }

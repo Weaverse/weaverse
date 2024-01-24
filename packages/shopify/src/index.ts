@@ -19,9 +19,28 @@ export * from './WeaverseShopifyRoot'
 export * from './types'
 export * from './utils/fetch-project-data'
 
+export let registerThirdPartyElements = () => {
+  WeaverseShopify.integrations
+    ?.flatMap(({ elements }) => elements)
+    .forEach(({ type, extraData }) => {
+      WeaverseShopify.registerElement({
+        type,
+        extraData,
+        Component: ThirdPartyElement.default,
+        defaultCss: ThirdPartyElement.css,
+      })
+    })
+}
+
+export let registerShopifyElements = () => {
+  Object.values(SHOPIFY_ELEMENTS).forEach((elm) => {
+    WeaverseShopify.registerElement(elm)
+  })
+  registerThirdPartyElements()
+}
 export class WeaverseShopify extends Weaverse {
   platformType: PlatformTypeEnum = 'shopify-section'
-  integrations: ThirdPartyIntegration[]
+  static integrations: ThirdPartyIntegration[]
   elementSchemas: ElementSchema[]
   ssrMode: boolean
   declare ItemConstructor: typeof WeaverseShopifyItem
@@ -32,31 +51,10 @@ export class WeaverseShopify extends Weaverse {
   constructor(params: WeaverseShopifyParams) {
     let { thirdPartyIntegration, elementSchemas, ssrMode, ...coreParams } =
       params
-    super({ ...coreParams, ItemConstructor: WeaverseShopifyItem })
-    this.integrations = thirdPartyIntegration || DEFAULT_INTEGRATIONS
+    super({ ...coreParams, platformType: 'shopify-section' })
     this.elementSchemas = elementSchemas || []
     this.ssrMode = ssrMode || false
-    this.registerShopifyElements()
-  }
-
-  registerShopifyElements = () => {
-    Object.values(SHOPIFY_ELEMENTS).forEach((elm) => {
-      Weaverse.registerElement(elm)
-    })
-    this.registerThirdPartyElements()
-  }
-
-  registerThirdPartyElements = () => {
-    this.integrations
-      .flatMap(({ elements }) => elements)
-      .forEach(({ type, extraData }) => {
-        Weaverse.registerElement({
-          type,
-          extraData,
-          Component: ThirdPartyElement.default,
-          defaultCss: ThirdPartyElement.css,
-        })
-      })
+    WeaverseShopify.integrations = thirdPartyIntegration || DEFAULT_INTEGRATIONS
   }
 }
 
@@ -65,7 +63,9 @@ export class WeaverseShopifyItem extends WeaverseItemStore {
 
   constructor(initialData: ElementData, weaverse: WeaverseShopify) {
     super(initialData, weaverse)
-    this._store = { ...initialData }
+    let defaultData = this.Element?.Component?.defaultProps || {}
+    let extraData = this.Element?.extraData
+    Object.assign(this._store, defaultData, extraData, initialData)
   }
 
   get Element(): WeaverseElement {
@@ -77,12 +77,14 @@ export class WeaverseShopifyItem extends WeaverseItemStore {
   }
 
   get data(): ElementData {
-    let defaultData = this.Element?.Component?.defaultProps || {}
-    let extraData = this.Element?.extraData
-    return { ...defaultData, ...extraData, ...super.data }
+    return super.data
+    // let defaultData = this.Element?.Component?.defaultProps || {}
+    // let extraData = this.Element?.extraData
+    // return { ...defaultData, ...extraData, ...super.data }
   }
 
   set data(update) {
     super.data = update
   }
 }
+Weaverse.ItemConstructor = WeaverseShopifyItem

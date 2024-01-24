@@ -34,9 +34,11 @@ export class WeaverseItemStore extends EventEmitter {
     this.weaverse = weaverse
     if (id && type) {
       weaverse.itemInstances.set(id, this)
+      Object.assign(this._store, initialData)
     } else {
       throw new Error(`'id' and 'type' are required to create a new Weaverse item.`)
     }
+    this._store.css = this.getDefaultCss()
   }
 
   get _id() {
@@ -51,15 +53,14 @@ export class WeaverseItemStore extends EventEmitter {
     return this.weaverse.elementRegistry.get(this._store.type)
   }
 
-  get css(): ElementCSS {
+  getDefaultCss = (): ElementCSS => {
     let defaultCss = this.Element?.defaultCss || {}
     let currentCss = this._store.css || {}
     return merge(defaultCss, currentCss)
   }
 
   get data(): ElementData {
-    let css = this.css
-    return { ...this._store, css }
+    return this._store
   }
 
   set data(update: Omit<ElementData, 'id' | 'type'>) {
@@ -67,10 +68,11 @@ export class WeaverseItemStore extends EventEmitter {
   }
 
   setData = (update: Omit<ElementData, 'id' | 'type'>) => {
-    this.data = Object.assign(this.data, update)
+    this.data = Object.assign(this._store, update)
     this.triggerUpdate()
     return this.data
   }
+  getSnapShot = () => this.data
 
   triggerUpdate = () => {
     this.emit(this.data)
@@ -88,7 +90,7 @@ export class Weaverse extends EventEmitter {
   static stitchesInstance: Stitches | any
   studioBridge?: any
 
-  declare ItemConstructor: typeof WeaverseItemStore
+  declare static ItemConstructor: typeof WeaverseItemStore
   declare data: WeaverseProjectDataType
   declare platformType: PlatformTypeEnum
   static elementRegistry = new Map()
@@ -110,11 +112,14 @@ export class Weaverse extends EventEmitter {
     Weaverse.initStitches()
   }
 
+  getSnapShot = () => {
+    return this.data
+  }
   /**
    * Create new `WeaverseItemStore` instance for each item in the project.
    */
   initProject = () => {
-    let { data, ItemConstructor } = this
+    let { data } = this
     let itemInstances = this.itemInstances
     if (data?.items) {
       data.items.forEach((item) => {
@@ -122,7 +127,7 @@ export class Weaverse extends EventEmitter {
         if (itemInstance) {
           itemInstance.setData(item)
         } else {
-          new ItemConstructor(item, this)
+          new Weaverse.ItemConstructor(item, this)
         }
       })
     }
@@ -164,7 +169,9 @@ export class Weaverse extends EventEmitter {
     return Weaverse.elementRegistry
   }
 
-  triggerUpdate() {
+  triggerUpdate = () => {
+    // make new copy of data to trigger update
+    this.data = { ...this.data }
     this.emit()
   }
 

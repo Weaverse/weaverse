@@ -81,6 +81,7 @@ export interface BreakPoints {
 }
 
 export interface WeaverseProjectDataType {
+  id?: string
   items: ElementData[]
   rootId: string
 }
@@ -93,7 +94,6 @@ export interface WeaverseCoreParams {
   data: WeaverseProjectDataType
   isDesignMode?: boolean
   platformType?: PlatformTypeEnum
-  ItemConstructor: typeof WeaverseItemStore
 }
 
 /**

@@ -1,7 +1,5 @@
 /* eslint-disable react/no-children-prop */
-import type { ElementData, WeaverseProjectDataType } from '@weaverse/core'
-import { isBrowser } from '@weaverse/core'
-import React, { memo, useEffect, useRef, useState } from 'react'
+import React, { memo, useEffect, useRef, useSyncExternalStore } from 'react'
 import clsx from 'clsx'
 
 import { WeaverseContextProvider, WeaverseItemContext } from './context'
@@ -11,13 +9,15 @@ import { generateItemClassName } from './utils/css'
 import { useItemInstance, usePixel, useWeaverse } from '~/hooks'
 
 export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
-  let [, setData] = useState<WeaverseProjectDataType | unknown>(context.data)
+  let data = useSyncExternalStore(
+    context.subscribe,
+    context.getSnapShot,
+    context.getSnapShot,
+  )
   let rootRef = useRef<HTMLElement>()
-  let renderRoot = () => setData({})
 
   useEffect(() => {
     context.contentRootElement = rootRef?.current || null
-    return context.subscribe(renderRoot)
   }, [context])
   usePixel(context)
 
@@ -31,6 +31,7 @@ export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
         {...eventHandlers}
         ref={rootRef}
         data-weaverse-project-id={context.projectId}
+        data-weaverse-template-id={data.id}
       >
         <WeaverseContextProvider value={context}>
           <ItemInstance
@@ -47,7 +48,11 @@ export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
 const ItemComponent = memo(({ instance }: ItemComponentProps) => {
   let context = useWeaverse()
   let { stitchesInstance, elementRegistry, platformType } = context
-  let [data, setData] = useState<ElementData>(instance.data)
+  let data = useSyncExternalStore(
+    instance.subscribe,
+    instance.getSnapShot,
+    instance.getSnapShot,
+  )
   let {
     id,
     type,
@@ -64,15 +69,12 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
   } = data
 
   useEffect(() => {
-    let render = (data: ElementData) => setData({ ...data })
-
-    if (isBrowser && !instance.ref.current) {
+    if (!instance.ref.current) {
       // Fallback `ref` if the element isn't created by `React.forwardRef`
       Object.assign(instance.ref, {
         current: document.querySelector(`[data-wv-id="${id}"]`),
       })
     }
-    return instance.subscribe(render)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [instance])
 

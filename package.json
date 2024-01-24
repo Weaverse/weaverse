@@ -13,7 +13,6 @@
     "build": "turbo run build --no-daemon",
     "build:graph": "turbo run build --graph=repo-graph.svg",
     "prepare": "npm run build",
-    "preprepare": "husky install",
     "lint": "eslint packages --cache .",
     "lint:fix": "eslint packages --fix --no-error-on-unmatched-pattern",
     "typecheck": "turbo typecheck --parallel",

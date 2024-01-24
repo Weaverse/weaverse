@@ -7,8 +7,6 @@ order: 0
 published: true
 ---
 
-
-
 ## Introduction to Shopify
 
 ### Overview

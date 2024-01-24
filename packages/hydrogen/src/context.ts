@@ -6,24 +6,24 @@ import type {
   WeaverseHydrogenParams,
   WeaverseLoaderData,
 } from './types'
-import { WeaverseHydrogen } from './index'
+import { registerComponents, WeaverseHydrogen } from './index'
+import { defaultComponents } from '~/components'
 
 function createCachedWeaverseInstance(
   params: WeaverseHydrogenParams,
-  components: HydrogenComponent[],
 ): WeaverseHydrogen {
   if (isBrowser) {
     window.__weaverses = window.__weaverses || {}
     let weaverse = window.__weaverses[params.pageId]
     if (!weaverse) {
-      weaverse = new WeaverseHydrogen(params, components)
+      weaverse = new WeaverseHydrogen(params)
       window.__weaverses[params.pageId] = weaverse
     } else if (weaverse.isDesignMode) {
       window.weaverseStudio?.refresh(params)
     }
     return weaverse
   }
-  return new WeaverseHydrogen(params, components)
+  return new WeaverseHydrogen(params)
 }
 
 export function createWeaverseInstance(
@@ -31,15 +31,14 @@ export function createWeaverseInstance(
   components: HydrogenComponent[],
 ) {
   let { page, configs, project, pageAssignment } = weaverseData || {}
-  return createCachedWeaverseInstance(
-    {
-      ...configs,
-      data: page || {},
-      pageId: page?.id,
-      internal: { project, pageAssignment },
-    },
-    components,
-  )
+  registerComponents(components)
+  registerComponents(defaultComponents)
+  return createCachedWeaverseInstance({
+    ...configs,
+    data: page || {},
+    pageId: page?.id,
+    internal: { project, pageAssignment },
+  })
 }
 
 export let STORE_PAGES = {

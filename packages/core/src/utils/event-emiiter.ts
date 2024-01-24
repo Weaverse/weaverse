@@ -7,16 +7,16 @@ export class EventEmitter {
     this.listeners = new Set()
   }
 
-  subscribe(fn: AnyFunction) {
+  subscribe = (fn: AnyFunction) => {
     this.listeners.add(fn)
     return () => this.unsubscribe(fn)
   }
 
-  unsubscribe(fn: AnyFunction) {
+  unsubscribe = (fn: AnyFunction) => {
     this.listeners.delete(fn)
   }
 
-  emit(data?: any) {
+  emit = (data?: any) => {
     this.listeners.forEach((fn) => {
       return fn(data)
     })

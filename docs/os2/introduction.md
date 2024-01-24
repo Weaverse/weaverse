@@ -16,8 +16,7 @@ This article delineates vital information to help you get started with Weaverse.
 If you don't find what you're looking for, please feel free to drop us a message in the chatbox at the bottom right of
 your screen - we'll take care of you as soon as possible!
 
-Install Weaverse
-----------------
+## Install Weaverse
 
 ### Install Weaverse like how you install every other Shopify app:
 
@@ -29,8 +28,7 @@ Install Weaverse
 
 4. After successfully installing Weaverse, you can open Weaverse from your **Shopify admin → Apps → Weaverse**
 
-Sync Weaverse With Your Theme
------------------------------
+## Sync Weaverse With Your Theme
 
 To seamlessly flow customized sections between Weaverse and your theme editor, you'd need to sync them.
 
@@ -45,8 +43,7 @@ how you do it:
 
 ![](https://downloads.intercomcdn.com/i/o/638621051/22a772e596333c70b4147af6/SCR-20221220-ud1.png)
 
-Add Your Storefront Password To Weaverse
-----------------------------------------
+## Add Your Storefront Password To Weaverse
 
 If your store is still password-protected, you'd need to add your storefront password to Weaverse. This will allow you
 to preview how the Weaverse section will look when added to your theme.
@@ -64,8 +61,7 @@ to **Online Store → Preferences** → scroll down to the **Password protection
 
 ![](https://downloads.intercomcdn.com/i/o/638622298/f3b60076c3d4a5eec2b9d9d7/SCR-20221220-uhm.png)
 
-How to Create A New Section
----------------------------
+## How to Create A New Section
 
 The Section is the fundamental building block in Weaverse. You build, design, and customize a section, then use it on
 any page you want. As Weaverse is deeply integrated with OS 2.0, you can use sections built in Weaverse when using OS
@@ -78,8 +74,7 @@ To create a new section, open Weaverse and select **"Create New Sectio**n" to op
 You can create a new section tailored to your preferences using one of our pre-built templates in just a few clicks.
 **No design skills are required!** You can also import existing sections or build new sections from scratch.
 
-Working With Page Editor
-------------------------
+## Working With Page Editor
 
 There are 02 key components in Weaverse's page editor: The Toolbar and The Editor.
 
@@ -94,30 +89,29 @@ editor's end and changing the layout handle.
 
 Right above your editor. On the toolbar, from left to right, you have:
 
-* Add Element (Plus icon): Where you get access to all elements you need to design and build new sections.
+- Add Element (Plus icon): Where you get access to all elements you need to design and build new sections.
 
-* Templates (Template icon): Where you get access to all of Weaverse's pre-designed templates - you can use them as they
+- Templates (Template icon): Where you get access to all of Weaverse's pre-designed templates - you can use them as they
   are or tweak them your way to fast-track your section-building process.
 
-* Presets (Open Book icon): Where you define Global Styling and Product Color Swatches. Define once, and use them
+- Presets (Open Book icon): Where you define Global Styling and Product Color Swatches. Define once, and use them
   everywhere.
 
-* Custom Code Editor (Code icon): You can add your custom code to bring more creative, unique designs to life.
+- Custom Code Editor (Code icon): You can add your custom code to bring more creative, unique designs to life.
 
-* All Device View/Mobile View (Computer and Phone icons): Switch to All Device mode to edit for all screens, then switch
+- All Device View/Mobile View (Computer and Phone icons): Switch to All Device mode to edit for all screens, then switch
   to Mobile View to review and refine your design for mobile.
 
-* Undo and Redo: Recover lost works at ease.
+- Undo and Redo: Recover lost works at ease.
 
-* Inspector (**Control Board** icon): You can access every element's configuration options. To customize any element's
+- Inspector (**Control Board** icon): You can access every element's configuration options. To customize any element's
   appearance or behavior, select the element and open Inspector to tweak it.
 
-* Settings (Gear icon): Where you name your Section and select which Shopify Theme you want to add your Section.
+- Settings (Gear icon): Where you name your Section and select which Shopify Theme you want to add your Section.
 
 ![](https://downloads.intercomcdn.com/i/o/617562381/0f0fa5f0c57864e1d18b5dc9/SCR-20221113-qtb.jpeg)
 
-Working With Smart Grid Layout
-------------------------------
+## Working With Smart Grid Layout
 
 Goodbye to crooked layout, misaligned rows, and uneven columns - Weaverse brings back the true drag-and-drop experience.
 We remove the boundary of interlocking columns and rows - now you can drag anywhere, drop anywhere.
@@ -133,8 +127,7 @@ With Smart Grid Layout, you can also overlay elements with ease.
 With other page builder apps, you **_spend hours learning a_** specific layout system and trying to play by its rules.
 With Weaverse, you play by your rules - we make drag-n-drop the way it should be.
 
-Use Weaverse Sections In The Shopify Theme Editor
--------------------------------------------------
+## Use Weaverse Sections In The Shopify Theme Editor
 
 1. Go to Online Store → Themes → Customize.
 
@@ -146,7 +139,7 @@ Use Weaverse Sections In The Shopify Theme Editor
 
 ![](https://downloads.intercomcdn.com/i/o/621312206/c0a46911b037e0a7ce488d14/add-weaverse.gif)
 
-* * *
+---
 
 **Example: I want to create a uniquely customized template for my product page.**
 
