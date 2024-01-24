@@ -6,8 +6,8 @@ import type {
   WeaverseHydrogenParams,
   WeaverseLoaderData,
 } from './types'
-import {registerComponents, WeaverseHydrogen} from './index'
-import {defaultComponents} from '~/components'
+import { registerComponents, WeaverseHydrogen } from './index'
+import { defaultComponents } from '~/components'
 
 function createCachedWeaverseInstance(
   params: WeaverseHydrogenParams,
@@ -33,14 +33,12 @@ export function createWeaverseInstance(
   let { page, configs, project, pageAssignment } = weaverseData || {}
   registerComponents(components)
   registerComponents(defaultComponents)
-  return createCachedWeaverseInstance(
-    {
-      ...configs,
-      data: page || {},
-      pageId: page?.id,
-      internal: { project, pageAssignment },
-    },
-  )
+  return createCachedWeaverseInstance({
+    ...configs,
+    data: page || {},
+    pageId: page?.id,
+    internal: { project, pageAssignment },
+  })
 }
 
 export let STORE_PAGES = {

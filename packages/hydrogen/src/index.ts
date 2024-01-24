@@ -5,7 +5,7 @@ import {
   useParentInstance,
   useWeaverse,
   Weaverse,
-  WeaverseItemStore
+  WeaverseItemStore,
 } from '@weaverse/react'
 
 import type {
@@ -15,7 +15,7 @@ import type {
   HydrogenPageData,
   WeaverseHydrogenParams,
   WeaverseInternal,
-  WeaverseLoaderRequestInfo
+  WeaverseLoaderRequestInfo,
 } from './types'
 
 export * from './WeaverseHydrogenRoot'
@@ -25,14 +25,13 @@ export * from './types'
 export * from './utils'
 export * from './wrappers'
 
-
 export let registerComponents = (components: HydrogenComponent[]) => {
   components.forEach((comp) => {
     WeaverseHydrogen.registerElement({
       type: comp?.schema?.type,
       Component: comp?.default,
       schema: comp?.schema,
-      loader: comp?.loader
+      loader: comp?.loader,
     })
   })
 }
@@ -48,8 +47,8 @@ export class WeaverseHydrogen extends Weaverse {
   declare static elementRegistry: Map<string, HydrogenElement>
 
   constructor(params: WeaverseHydrogenParams) {
-    let {internal, pageId, requestInfo, ...coreParams} = params
-    super({...coreParams, ItemConstructor: WeaverseHydrogenItem})
+    let { internal, pageId, requestInfo, ...coreParams } = params
+    super({ ...coreParams, ItemConstructor: WeaverseHydrogenItem })
     this.internal = internal
     this.pageId = pageId
     this.requestInfo = requestInfo
@@ -61,8 +60,8 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
 
   constructor(initialData: HydrogenComponentData, weaverse: WeaverseHydrogen) {
     super(initialData, weaverse)
-    let {data, ...rest} = initialData
-    this._store = {...this.getDefaultData, ...data, ...rest}
+    let { data, ...rest } = initialData
+    this._store = { ...this.getDefaultData, ...data, ...rest }
   }
 
   get Element(): HydrogenElement {
@@ -72,7 +71,7 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
   getDefaultData = () => {
     return this.Element?.schema?.inspector
       ?.flatMap((group) => group.inputs)
-      .reduce<Record<string, any>>((a, {defaultValue, name}) => {
+      .reduce<Record<string, any>>((a, { defaultValue, name }) => {
         if (name && defaultValue !== null && defaultValue !== undefined) {
           a[name] = defaultValue
         }
@@ -81,4 +80,4 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
   }
 }
 
-export {useWeaverse, useItemInstance, useChildInstances, useParentInstance}
+export { useWeaverse, useItemInstance, useChildInstances, useParentInstance }

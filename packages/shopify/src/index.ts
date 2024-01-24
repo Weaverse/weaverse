@@ -19,7 +19,6 @@ export * from './WeaverseShopifyRoot'
 export * from './types'
 export * from './utils/fetch-project-data'
 
-
 export let registerThirdPartyElements = () => {
   WeaverseShopify.integrations
     ?.flatMap(({ elements }) => elements)

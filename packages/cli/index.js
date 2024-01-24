@@ -84,9 +84,9 @@ Options:
       // First, run 'npm install'
       const install = spawn('npm', ['install', '--ignore-scripts'], { cwd: outputPath, stdio: 'inherit' })
 
-      install.on('data', function(data) {
-        console.log(data.toString());
-      });
+      install.on('data', function (data) {
+        console.log(data.toString())
+      })
       install.on('close', (code) => {
         if (code !== 0) {
           console.error(`npm install exited with code ${code}`)
@@ -102,7 +102,6 @@ Options:
           }
         })
       })
-
     }
   }
 })()

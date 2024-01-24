@@ -10,8 +10,7 @@ published: true
 For developers crafting Weaverse Hydrogen themes, the Weaverse CLI is a simple yet powerful aid, streamlining project
 setup and management tasks directly from the command line.
 
-Usage
------
+## Usage
 
 You can run it directly using **`npx`** to ensure you're always using the latest version:
 
@@ -19,8 +18,7 @@ You can run it directly using **`npx`** to ensure you're always using the latest
 npx @weaverse/cli@latest [command]
 ```
 
-Commands
---------
+## Commands
 
 #### `create`
 
@@ -31,13 +29,13 @@ immediately.
 
 **Options**
 
-* **`--template`**: Specifies the template to be used when creating the project. Currently, the only supported template
+- **`--template`**: Specifies the template to be used when creating the project. Currently, the only supported template
   is **`'pilot'`**.
 
-* **`--project-id`**: This is the unique identifier for your project, which should correspond with the project ID in the
+- **`--project-id`**: This is the unique identifier for your project, which should correspond with the project ID in the
   Weaverse app.
 
-* **`--project-name`**: Defines the name of your project, used as the directory name and within configuration files.
+- **`--project-name`**: Defines the name of your project, used as the directory name and within configuration files.
 
 **Usage**
 

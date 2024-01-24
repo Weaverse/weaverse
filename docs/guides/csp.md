@@ -7,58 +7,53 @@ order: 9
 published: true
 ---
 
-Understanding Content Security Policy
--------------------------------------
+## Understanding Content Security Policy
 
 Content Security Policy (CSP) is a vital security feature implemented by modern web browsers. It defines and enforces a
 set of content restrictions for web pages. Essentially, CSP acts as a protective barrier, allowing you to specify which
 external resources and scripts your web page can load and execute.
 
-Weaverse's Automatic CSP Setup
-------------------------------
+## Weaverse's Automatic CSP Setup
 
 In Weaverse, the implementation of CSP is handled automatically using the **`createContentSecurityPolicy`** utility from
 the `@shopify/hydrogen` package within
 the [`entry.server.jsx`](https://github.com/Weaverse/pilot/blob/main/app/entry.server.tsx) file:
 
 ```tsx
-import { RemixServer } from '@remix-run/react';
-import { createContentSecurityPolicy } from '@shopify/hydrogen';
-import type { EntryContext } from '@shopify/remix-oxygen';
-import { renderToReadableStream } from 'react-dom/server';
-import { getWeaverseCsp } from '~/weaverse/create-weaverse.server';
+import { RemixServer } from '@remix-run/react'
+import { createContentSecurityPolicy } from '@shopify/hydrogen'
+import type { EntryContext } from '@shopify/remix-oxygen'
+import { getWeaverseCsp } from '~/weaverse/create-weaverse.server'
+import { renderToReadableStream } from 'react-dom/server'
 
 export default async function handleRequest(
-        request: Request,
-        responseStatusCode: number,
-        responseHeaders: Headers,
-        remixContext: EntryContext,
+  request: Request,
+  responseStatusCode: number,
+  responseHeaders: Headers,
+  remixContext: EntryContext,
 ) {
-  const { nonce, header, NonceProvider } = createContentSecurityPolicy(
-          getWeaverseCsp(request),
-  );
+  const { nonce, header, NonceProvider } = createContentSecurityPolicy(getWeaverseCsp(request))
   const body = await renderToReadableStream(
-          <NonceProvider>
-            <RemixServer context={remixContext} url={request.url} />
-          </NonceProvider>,
-          {
-            nonce,
-            // ...
-          },
-  );
+    <NonceProvider>
+      <RemixServer context={remixContext} url={request.url} />
+    </NonceProvider>,
+    {
+      nonce,
+      // ...
+    },
+  )
 
-  responseHeaders.set('Content-Security-Policy', header);
+  responseHeaders.set('Content-Security-Policy', header)
   // ...
 }
 ```
 
-Customizing CSP Policies
-------------------------
+## Customizing CSP Policies
 
 The default CSP policies used by Weaverse are returned from
 the [`getWeaverseCsp`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/create-weaverse.server.ts#L24) function.
-These policies include directives that allow the loading of Weaverse resources and enable seamless operation within *
-*Weaverse Studio**.
+These policies include directives that allow the loading of Weaverse resources and enable seamless operation within \*
+\*Weaverse Studio\*\*.
 
 ```tsx
 // <root>/app/weaverse/create-weaverse.server.ts
@@ -71,11 +66,11 @@ These policies include directives that allow the loading of Weaverse resources a
  * @returns CSP policies
  */
 export function getWeaverseCsp(request: Request) {
-  let url = new URL(request.url);
-  let weaverseHost = url.searchParams.get('weaverseHost');
-  let weaverseHosts = ['https://*.weaverse.io'];
+  let url = new URL(request.url)
+  let weaverseHost = url.searchParams.get('weaverseHost')
+  let weaverseHosts = ['https://*.weaverse.io']
   if (weaverseHost) {
-    weaverseHosts.push(weaverseHost);
+    weaverseHosts.push(weaverseHost)
   }
   return {
     frameAncestors: weaverseHosts,
@@ -87,19 +82,9 @@ export function getWeaverseCsp(request: Request) {
       'https://fonts.gstatic.com',
       ...weaverseHosts,
     ],
-    imgSrc: [
-      "'self'",
-      "data:",
-      'https://cdn.shopify.com',
-      ...weaverseHosts,
-    ],
-    styleSrc: [
-      "'self'",
-      "'unsafe-inline'",
-      'https://cdn.shopify.com',
-      ...weaverseHosts,
-    ],
-  };
+    imgSrc: ["'self'", 'data:', 'https://cdn.shopify.com', ...weaverseHosts],
+    styleSrc: ["'self'", "'unsafe-inline'", 'https://cdn.shopify.com', ...weaverseHosts],
+  }
 }
 ```
 

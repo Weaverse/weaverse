@@ -9,8 +9,7 @@ published: true
 
 The **`useWeaverse`** hook allows components to access the Weaverse instance specific to each page, enabling the retrieval of page data, component instances, and configuration settings within a Weaverse Hydrogen theme.
 
-Usage
------
+## Usage
 
 Import the hook from `@weaverse/hydrogen` package then call it within a React Component
 

@@ -10,8 +10,7 @@ published: true
 This guide focuses on integrating the Weaverse SDKs and Theme Customizer into your existing Hydrogen project, providing
 detailed steps to enhance your theme with Weaverse’s powerful features.
 
-Installing the Weaverse SDK
----------------------------
+## Installing the Weaverse SDK
 
 Begin by installing the Weaverse SDKs:
 
@@ -19,8 +18,7 @@ Begin by installing the Weaverse SDKs:
 npm install @weaverse/hydrogen@latest
 ```
 
-Adding the Weaverse Directory
------------------------------
+## Adding the Weaverse Directory
 
 Create a **`weaverse`** directory within your Hydrogen app folder. This will house essential files to establish a
 Weaverse Client Provider, register Section Components, and define theme schema settings.
@@ -36,18 +34,17 @@ Weaverse Client Provider, register Section Components, and define theme schema s
 
 Simply copy the following files into your **`app/weaverse`** directory:
 
-* [`components.ts`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/components.ts)
+- [`components.ts`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/components.ts)
 
-* [`create-weaverse.server.ts`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/create-weaverse.server.ts)
+- [`create-weaverse.server.ts`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/create-weaverse.server.ts)
 
-* [`index.tsx`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/index.tsx)
+- [`index.tsx`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/index.tsx)
 
-* [`schema.server.ts`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/schema.server.ts)
+- [`schema.server.ts`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/schema.server.ts)
 
-* [`style.tsx`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/style.tsx)
+- [`style.tsx`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/style.tsx)
 
-Injecting Weaverse Client into App's Load Context
--------------------------------------------------
+## Injecting Weaverse Client into App's Load Context
 
 Modify your **`server.ts`** file to inject the weaverse client into the **`getLoadContext`** function as illustrated
 below:
@@ -55,7 +52,7 @@ below:
 ```tsx
 // <root>/server.ts
 
-import { createWeaverseClient } from '~/weaverse/create-weaverse.server';
+import { createWeaverseClient } from '~/weaverse/create-weaverse.server'
 
 const handleRequest = createRequestHandler({
   // ...
@@ -70,34 +67,31 @@ const handleRequest = createRequestHandler({
     }),
     // ... more app context properties
   }),
-});
+})
 ```
 
-Wrapping the app with `withWeaverse` HoC
-----------------------------------------
+## Wrapping the app with `withWeaverse` HoC
 
 Ensure your main application component is wrapped with the **`withWeaverse`** Higher-Order Component (HoC). Learn more
 in the [withWeaverse article](/docs/api/with-weaverse).
 
 ```tsx
-import { withWeaverse } from '@weaverse/hydrogen';
+import { withWeaverse } from '@weaverse/hydrogen'
 
 function App() {
   // Your component logic
 }
 
-export default withWeaverse(App);
+export default withWeaverse(App)
 ```
 
-Global Theme Settings
----------------------
+## Global Theme Settings
 
 Manage theme settings effortlessly by loading them server-side and accessing client-side via the **`useThemeSettings`**
 hook. Discover more about this process in
 the [Global Theme Settings article](/docs/guides/global-theme-settings).
 
-Rendering Weaverse Pages
-------------------------
+## Rendering Weaverse Pages
 
 Configure your routes to load Weaverse page data server-side and utilize the **`<WeaverseContent />`** component to
 render pages, prioritizing Weaverse configurations and customizations.
@@ -105,17 +99,17 @@ render pages, prioritizing Weaverse configurations and customizations.
 ```tsx
 // <root>/app/routes/($locale)._index.tsx
 
-import { json } from '@shopify/remix-oxygen';
-import { type RouteLoaderArgs } from '@weaverse/hydrogen';
+import { json } from '@shopify/remix-oxygen'
+import { type RouteLoaderArgs } from '@weaverse/hydrogen'
 
 export async function loader({ context }: RouteLoaderArgs) {
-  let { weaverse } = context;
+  let { weaverse } = context
 
   return json({
     // The key prop for a Weaverse page must always be `weaverseData`
     weaverseData: await weaverse.loadPage(),
     // Additional page data...
-  });
+  })
 }
 ```
 
@@ -124,10 +118,10 @@ Rendering Weaverse page:
 ```tsx
 // <root>/app/routes/($locale)._index.tsx
 
-import { WeaverseContent } from '~/weaverse';
+import { WeaverseContent } from '~/weaverse'
 
 export default function Homepage() {
-  return <WeaverseContent />;
+  return <WeaverseContent />
 }
 ```
 
@@ -135,17 +129,16 @@ export default function Homepage() {
 it's recommended to position the **`WeaverseContent`** at the topmost level of the route hierarchy. This ensures that
 Weaverse's configurations and customizations are prioritized and rendered accurately throughout your project.
 
-Creating the Section/Component
-------------------------------
+## Creating the Section/Component
 
 Structure your components and sections within the **`sections`** directory and register them in the
 **`weaverse/components.ts`** file, maintaining organization and clarity in your project structure.
 
 ```tsx
 let MyComponent = forwardRef<HTMLElement, MyComponentProps>((props, ref) => {
-  let { loaderData, ...rest } = props;
-  return <section ref={ref} {...rest} />;
-});
+  let { loaderData, ...rest } = props
+  return <section ref={ref} {...rest} />
+})
 
 export default MyComponent
 ```

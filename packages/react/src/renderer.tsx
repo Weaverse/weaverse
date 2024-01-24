@@ -9,10 +9,13 @@ import { generateItemClassName } from './utils/css'
 import { useItemInstance, usePixel, useWeaverse } from '~/hooks'
 
 export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
-  let data = useSyncExternalStore(context.subscribe, context.getSnapShot, context.getSnapShot)
+  let data = useSyncExternalStore(
+    context.subscribe,
+    context.getSnapShot,
+    context.getSnapShot,
+  )
   let rootRef = useRef<HTMLElement>()
 
-  console.log('data', data)
   useEffect(() => {
     context.contentRootElement = rootRef?.current || null
   }, [context])
@@ -23,20 +26,20 @@ export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
 
   if (context.projectId) {
     return (
-            <div
-                    className={`weaverse-content-root ${themeClass}`}
-                    {...eventHandlers}
-                    ref={rootRef}
-                    data-weaverse-project-id={context.projectId}
-                    data-weaverse-template-id={data.id}
-            >
-              <WeaverseContextProvider value={context}>
-                <ItemInstance
-                        id={context.data.rootId || context.projectId}
-                        parentId={''}
-                />
-              </WeaverseContextProvider>
-            </div>
+      <div
+        className={`weaverse-content-root ${themeClass}`}
+        {...eventHandlers}
+        ref={rootRef}
+        data-weaverse-project-id={context.projectId}
+        data-weaverse-template-id={data.id}
+      >
+        <WeaverseContextProvider value={context}>
+          <ItemInstance
+            id={context.data.rootId || context.projectId}
+            parentId={''}
+          />
+        </WeaverseContextProvider>
+      </div>
     )
   }
   return null
@@ -45,7 +48,11 @@ export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
 const ItemComponent = memo(({ instance }: ItemComponentProps) => {
   let context = useWeaverse()
   let { stitchesInstance, elementRegistry, platformType } = context
-  let data = useSyncExternalStore(instance.subscribe, instance.getSnapShot, instance.getSnapShot)
+  let data = useSyncExternalStore(
+    instance.subscribe,
+    instance.getSnapShot,
+    instance.getSnapShot,
+  )
   let {
     id,
     type,
@@ -65,7 +72,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     if (!instance.ref.current) {
       // Fallback `ref` if the element isn't created by `React.forwardRef`
       Object.assign(instance.ref, {
-        current: document.querySelector(`[data-wv-id="${id}"]`)
+        current: document.querySelector(`[data-wv-id="${id}"]`),
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -79,32 +86,32 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
       rest.ref = instance.ref
     }
     let renderChildren = (
-            children?.length
-                    ? children
-                    : childIds?.length
-                            ? childIds.map((cid: string) => ({ id: cid }))
-                            : []
+      children?.length
+        ? children
+        : childIds?.length
+          ? childIds.map((cid: string) => ({ id: cid }))
+          : []
     ).map((item: { id: string }) => (
-            <ItemInstance key={item.id} id={item.id} parentId={id} />
+      <ItemInstance key={item.id} id={item.id} parentId={id} />
     ))
 
     let style = rest.style || {}
     if (__hidden) style.display = 'none'
 
     return (
-            <Component
-                    {...rest}
-                    key={id}
-                    data-wv-type={type}
-                    data-wv-id={id}
-                    className={clsx(
-                            platformType !== 'shopify-hydrogen' &&
-                            generateItemClassName(instance, stitchesInstance),
-                            rest.data?.className
-                    )}
-                    style={style}
-                    children={renderChildren.length ? renderChildren : undefined}
-            />
+      <Component
+        {...rest}
+        key={id}
+        data-wv-type={type}
+        data-wv-id={id}
+        className={clsx(
+          platformType !== 'shopify-hydrogen' &&
+            generateItemClassName(instance, stitchesInstance),
+          rest.data?.className,
+        )}
+        style={style}
+        children={renderChildren.length ? renderChildren : undefined}
+      />
     )
   } else {
     instance._store.deleted = true
@@ -114,15 +121,15 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
 })
 
 let ItemInstance = memo(
-        ({ id, parentId }: { id: string; parentId: string }) => {
-          let instance = useItemInstance(id)
-          if (!instance) {
-            return <div style={{ display: 'none' }}>Item instance {id} not found</div>
-          }
-          return (
-                  <WeaverseItemContext.Provider value={{ parentId, id }}>
-                    <ItemComponent key={id} instance={instance} />
-                  </WeaverseItemContext.Provider>
-          )
-        }
+  ({ id, parentId }: { id: string; parentId: string }) => {
+    let instance = useItemInstance(id)
+    if (!instance) {
+      return <div style={{ display: 'none' }}>Item instance {id} not found</div>
+    }
+    return (
+      <WeaverseItemContext.Provider value={{ parentId, id }}>
+        <ItemComponent key={id} instance={instance} />
+      </WeaverseItemContext.Provider>
+    )
+  },
 )

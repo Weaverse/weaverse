@@ -7,6 +7,4 @@ order: 2
 published: true
 ---
 
-**Deploying Your Weaverse Hydrogen Project to Vercel**
-------------------------------------------------------
-
+## **Deploying Your Weaverse Hydrogen Project to Vercel**
