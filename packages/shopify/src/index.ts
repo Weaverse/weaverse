@@ -76,15 +76,5 @@ export class WeaverseShopifyItem extends WeaverseItemStore {
     return this.Element?.schema?.flags || {}
   }
 
-  get data(): ElementData {
-    return super.data
-    // let defaultData = this.Element?.Component?.defaultProps || {}
-    // let extraData = this.Element?.extraData
-    // return { ...defaultData, ...extraData, ...super.data }
-  }
-
-  set data(update) {
-    super.data = update
-  }
 }
 Weaverse.ItemConstructor = WeaverseShopifyItem

@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 2.10.2
+
+### Patch Changes
+
+- update core mechanism
+
 ## 2.10.1
 
 ### Patch Changes
