@@ -1,6 +1,5 @@
 import type * as Stitches from '@stitches/core'
 import type { ForwardRefExoticComponent } from 'react'
-import type { WeaverseItemStore } from './core'
 import type { stitchesUtils } from './utils/stitches'
 
 // Simple types

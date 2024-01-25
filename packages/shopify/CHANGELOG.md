@@ -1,5 +1,13 @@
 # @weaverse/shopify
 
+## 2.10.2
+
+### Patch Changes
+
+- update core mechanism
+- Updated dependencies
+  - @weaverse/react@2.10.2
+
 ## 2.10.1
 
 ### Patch Changes
