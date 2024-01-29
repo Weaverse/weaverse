@@ -1,8 +1,8 @@
 ---
 title: Global Theme Settings
 description: Walking through how to define theme schema, leverage global theme settings, and render global styles.
-publishedAt: 11-20-2023
-updatedAt: 11-20-2023
+publishedAt: November 20, 2023
+updatedAt: January 17, 2024
 order: 8
 published: true
 ---
@@ -15,8 +15,7 @@ experience akin to editing settings in the native **Shopify Theme Customizer**.
 
 <img alt="theme_settings" src="https://downloads.intercomcdn.com/i/o/861762015/d981e4a16f51e9989e35a2d9/image.png" width="300"/>
 
-Define Theme Schema
--------------------
+## Define Theme Schema
 
 The theme schema is stored in a file named
 **[`schema.server.ts`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/schema.server.ts)**, which resides under
@@ -25,8 +24,8 @@ the **`weaverse`** directory. In this file, you define the various elements of y
 Here's a sample code block illustrating the structure of a theme schema:
 
 ```tsx
-import type { HydrogenThemeSchema } from '@weaverse/hydrogen';
-import pkg from '../../package.json';
+import type { HydrogenThemeSchema } from '@weaverse/hydrogen'
+import pkg from '../../package.json'
 
 export let themeSchema: HydrogenThemeSchema = {
   info: {
@@ -45,7 +44,7 @@ export let themeSchema: HydrogenThemeSchema = {
       ],
     },
   ],
-};
+}
 ```
 
 The type of the theme schema is **`HydrogenThemeSchema`**, which comprises two primary components:
@@ -55,17 +54,17 @@ The type of the theme schema is **`HydrogenThemeSchema`**, which comprises two p
 The **`info`** section of the schema includes vital metadata to be displayed within **Weaverse Studio**. It contains
 details such as:
 
-* **`name`**: The name of your theme.
+- **`name`**: The name of your theme.
 
-* **`version`**: The theme's version (should be imported from `package.json` file for consistency versioning).
+- **`version`**: The theme's version (should be imported from `package.json` file for consistency versioning).
 
-* **`author`**: The theme's author or developer.
+- **`author`**: The theme's author or developer.
 
-* **`authorProfilePhoto`**: An image representing the author.
+- **`authorProfilePhoto`**: An image representing the author.
 
-* **`documentationUrl`**: A link to the theme's documentation.
+- **`documentationUrl`**: A link to the theme's documentation.
 
-* **`supportUrl`**: A link for users to seek support or assistance.
+- **`supportUrl`**: A link for users to seek support or assistance.
 
 <img alt="support_url_img" src="https://downloads.intercomcdn.com/i/o/861810489/562ba304e8777bee837032ef/image.png" width="300"/>
 
@@ -78,8 +77,7 @@ array of **`InspectorGroup`** objects, each of which specifies a group name and 
 These inputs are all supported **Input Settings**, which can be explored further in
 the [Input Settings](/docs/guides/input-settings) article.
 
-Load Theme Settings
--------------------
+## Load Theme Settings
 
 To make sure your theme’s global settings are applied consistently, you'll need to load them in the `loader` function at
 the root route. For this, the **`loadThemeSettings`** function from **`WeaverseClient`** is used.
@@ -87,21 +85,20 @@ the root route. For this, the **`loadThemeSettings`** function from **`WeaverseC
 ```tsx
 // <root>/app/root.tsx
 
-import { defer, type LoaderArgs } from '@shopify/remix-oxygen';
+import { defer, type LoaderArgs } from '@shopify/remix-oxygen'
 
 export async function loader({ context }: LoaderArgs) {
   return defer({
     // Root data...
     weaverseTheme: await context.weaverse.loadThemeSettings(),
-  });
+  })
 }
 ```
 
 📌 **Note**: It's important to name the resulting data key as **`weaverseTheme`**. It's a requirement for the settings to
 integrate properly with your theme.
 
-Accessing Global Theme Settings
--------------------------------
+## Accessing Global Theme Settings
 
 To work with global theme settings, you'll utilize the **`useThemeSettings`** hook. This hook returns the settings that
 have been saved or updated by merchants within the Weaverse Studio's "**Theme Settings**" panel.
@@ -121,7 +118,7 @@ export function GlobalStyle() {
     let {
       bodyBaseSize,
       bodyBaseLineHeight,
-      headingBaseSize
+      headingBaseSize,
       // more settings...
     } = settings
 
@@ -135,8 +132,9 @@ export function GlobalStyle() {
                --heading-base-size: ${headingBaseSize}px;
                --height-nav: ${settings.navHeightMobile}rem;
             }
-          `
-        }} />
+          `,
+        }}
+      />
     )
   }
   return null

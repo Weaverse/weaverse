@@ -1,5 +1,51 @@
 # @weaverse/shopify
 
+## 2.10.2
+
+### Patch Changes
+
+- update core mechanism
+- Updated dependencies
+  - @weaverse/react@2.10.2
+
+## 2.10.1
+
+### Patch Changes
+
+- optimize rendering mechanism
+- Updated dependencies
+  - @weaverse/react@2.10.1
+
+## 2.10.1-next.0
+
+### Patch Changes
+
+- optimize rendering mechanism
+- Updated dependencies
+  - @weaverse/react@2.10.1-next.0
+
+## 2.10.0
+
+### Minor Changes
+
+- Optimize page rendering with useSyncExternalStore
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/react@2.10.0
+
+## 2.9.0
+
+### Minor Changes
+
+- Refactor
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/react@2.9.0
+
 ## 2.8.12
 
 ### Patch Changes

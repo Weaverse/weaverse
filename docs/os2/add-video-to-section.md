@@ -1,16 +1,15 @@
 ---
 title: How To Add Videos To Your Section
 description: Whether your video is on Youtube or you want to upload your own video, adding video in Weaverse is easy. Here's how.
-publishedAt: 11-20-2023
-updatedAt: 11-20-2023
+publishedAt: November 20, 2023
+updatedAt: November 20, 2023
 order: 5
 published: true
 ---
 
 Adding videos in Weaverse is easy, here’s how you do it.
 
-Add the video element
----------------------
+## Add the video element
 
 Open Weaverse’s element library. Click and drag the "Video" element to the desired location on your page.
 
@@ -19,10 +18,9 @@ just like how you do it in PowerPoint.
 
 ![](https://downloads.intercomcdn.com/i/o/707949654/ad28d250b4b16e854b2bbc36/video-editing.gif)
 
-* * *
+---
 
-Set Up Your Video Source
-------------------------
+## Set Up Your Video Source
 
 1. Click on the Video element to open the settings panel.
 

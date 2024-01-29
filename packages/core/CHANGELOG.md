@@ -1,5 +1,35 @@
 # @weaverse/core
 
+## 2.10.2
+
+### Patch Changes
+
+- update core mechanism
+
+## 2.10.1
+
+### Patch Changes
+
+- optimize rendering mechanism
+
+## 2.10.1-next.0
+
+### Patch Changes
+
+- optimize rendering mechanism
+
+## 2.10.0
+
+### Minor Changes
+
+- Optimize page rendering with useSyncExternalStore
+
+## 2.9.0
+
+### Minor Changes
+
+- Refactor
+
 ## 2.8.12
 
 ## 2.8.11

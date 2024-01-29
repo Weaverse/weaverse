@@ -1,22 +1,21 @@
 ---
 title: How To Use Styling Presets In Weaverse
 description: Styling Preset help you maintains consistency, streamlines design and allows for easy bulk updates.
-publishedAt: 11-20-2023
-updatedAt: 11-20-2023
+publishedAt: November 20, 2023
+updatedAt: November 20, 2023
 order: 3
 published: true
 ---
 
-Use Case
---------
+## Use Case
 
 Imagine you have 100 sections on 100 pages. Each has two H2 headings - totaling up to 200 H2 headings.
 
 Now you want to change the font size of all H2 headings. What would you do?
 
-* A: Change 200 headings manually in each section.
+- A: Change 200 headings manually in each section.
 
-* B: Change one thing, and every H2 headings will automatically update to match the changes.
+- B: Change one thing, and every H2 headings will automatically update to match the changes.
 
 This is one of the many use cases of Styling Presets.
 
@@ -26,19 +25,18 @@ design process.
 
 Here are some of the most common use cases and applications of Global Styling.
 
-* **Brand Identity:** By using consistent typography, colors, and other design elements, you create a cohesive visual
+- **Brand Identity:** By using consistent typography, colors, and other design elements, you create a cohesive visual
   language that resonates with your target audience and reinforces brand recognition.
 
-* **Design Efficiency:** You can streamline the design process by allowing you to apply preset styles to various
+- **Design Efficiency:** You can streamline the design process by allowing you to apply preset styles to various
   elements and pages with just a few clicks. This saves you time and effort when creating new pages or updating existing
   ones, as you won't need to manually adjust the styling for each individual element.
 
-* **Ease of Maintenance**: If you decide to change a specific style aspect, like the primary color or font, you can
+- **Ease of Maintenance**: If you decide to change a specific style aspect, like the primary color or font, you can
   easily update the global style settings, and the changes will be applied across your entire site or app. This
   eliminates the need to edit each element or page individually.
 
-How To Use Styling Presets
---------------------------
+## How To Use Styling Presets
 
 ### Open Styling Presets Settings
 
@@ -65,8 +63,7 @@ Swatches.
 3. Once you're satisfied with your styling presets, click on the "Save" button in the bottom-right corner of the panel
    to apply the changes across your Weaverse pages.
 
-How Styling Presets Work
-------------------------
+## How Styling Presets Work
 
 Let’s make another example.
 

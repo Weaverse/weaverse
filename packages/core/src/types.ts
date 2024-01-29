@@ -1,6 +1,5 @@
 import type * as Stitches from '@stitches/core'
 import type { ForwardRefExoticComponent } from 'react'
-import type { WeaverseItemStore } from './core'
 import type { stitchesUtils } from './utils/stitches'
 
 // Simple types
@@ -81,6 +80,7 @@ export interface BreakPoints {
 }
 
 export interface WeaverseProjectDataType {
+  id?: string
   items: ElementData[]
   rootId: string
 }
@@ -93,7 +93,6 @@ export interface WeaverseCoreParams {
   data: WeaverseProjectDataType
   isDesignMode?: boolean
   platformType?: PlatformTypeEnum
-  ItemConstructor: typeof WeaverseItemStore
 }
 
 /**

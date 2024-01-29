@@ -1,8 +1,8 @@
 ---
 title: Localization
 description: Explore how Weaverse empowers you to create a multilingual storefront with ease.
-publishedAt: 11-20-2023
-updatedAt: 11-20-2023
+publishedAt: November 20, 2023
+updatedAt: January 17, 2024
 order: 10
 published: true
 ---
@@ -12,8 +12,7 @@ leveraging [Shopify Markets](https://help.shopify.com/en/manual/markets)
 and [Hydrogen's Internationalization](https://shopify.dev/docs/custom-storefronts/hydrogen/markets) features. This
 enables you to cater to a global audience by offering your storefront in multiple languages.
 
-Default Locale
---------------
+## Default Locale
 
 The default locale for your Weaverse store is configured in
 the [`server.ts`](https://github.com/Weaverse/pilot/blob/main/server.ts) file. This setting is crucial, especially when
@@ -25,11 +24,10 @@ const { storefront } = createStorefrontClient({
   // Other configurations...
   i18n: { language: 'EN', country: 'CA' },
   // More configurations...
-});
+})
 ```
 
-Multilingual with URL Paths
----------------------------
+## Multilingual with URL Paths
 
 Weaverse currently supports multilingual storefronts using URL paths. For example, you can have URLs
 like `example.com/en-ca` for **English** in **Canada**. The URL paths method offers a straightforward advantage: you can
@@ -44,22 +42,21 @@ that the storefront is displayed in the most relevant language based on the user
 ```tsx
 // <root>/app/lib/utils.ts
 
-import { countries } from '~/data/countries';
+import { countries } from '~/data/countries'
 
 export function getLocaleFromRequest(request: Request): I18nLocale {
-  const url = new URL(request.url);
-  const firstPathPart =
-          '/' + url.pathname.substring(1).split('/')[0].toLowerCase();
+  const url = new URL(request.url)
+  const firstPathPart = '/' + url.pathname.substring(1).split('/')[0].toLowerCase()
 
   return countries[firstPathPart]
-          ? {
-            ...countries[firstPathPart],
-            pathPrefix: firstPathPart,
-          }
-          : {
-            ...countries['default'],
-            pathPrefix: '',
-          };
+    ? {
+        ...countries[firstPathPart],
+        pathPrefix: firstPathPart,
+      }
+    : {
+        ...countries['default'],
+        pathPrefix: '',
+      }
 }
 ```
 
@@ -79,17 +76,17 @@ file:
 ```tsx
 // <root>/app/weaverse/create-weaverse.server.ts
 
-import { Storefront } from '@shopify/hydrogen';
-import { I18nLocale, WeaverseClient } from '@weaverse/hydrogen';
-import { countries } from '~/data/countries';
+import { Storefront } from '@shopify/hydrogen'
+import { I18nLocale, WeaverseClient } from '@weaverse/hydrogen'
+import { countries } from '~/data/countries'
 
 type CreateWeaverseArgs = {
-  storefront: Storefront<I18nLocale>;
-  request: Request;
-  env: Env;
-  cache: Cache;
-  waitUntil: ExecutionContext['waitUntil'];
-};
+  storefront: Storefront<I18nLocale>
+  request: Request
+  env: Env
+  cache: Cache
+  waitUntil: ExecutionContext['waitUntil']
+}
 
 export function createWeaverseClient(args: CreateWeaverseArgs) {
   return new WeaverseClient({
@@ -97,17 +94,16 @@ export function createWeaverseClient(args: CreateWeaverseArgs) {
     countries,
     themeSchema,
     components,
-  });
+  })
 }
 ```
 
-This step allows merchants to select the country they want to preview, update, or create page data and content within *
-*Weaverse Studio**:
+This step allows merchants to select the country they want to preview, update, or create page data and content within \*
+\*Weaverse Studio\*\*:
 
 <img alt="localization" src="https://downloads.intercomcdn.com/i/o/864542510/3c5654419d7600127cdb7957/image.png" width="300"/>
 
-Multi-Page Support (Under Construction 🚧)
-------------------------------------------
+## Multi-Page Support (Under Construction 🚧)
 
 Weaverse is continually evolving to provide even more multilingual capabilities. Shortly, merchants will be able to
 create multiple pages tailored to each selected locale. This feature will further enhance the localization and

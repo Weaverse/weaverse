@@ -1,15 +1,13 @@
 ---
 title: Weaverse Hydrogen Component
 description: Weaverse Components are the foundational elements of your theme.
-publishedAt: 11-20-2023
-updatedAt: 11-20-2023
+publishedAt: November 20, 2023
+updatedAt: January 17, 2024
 order: 3
 published: true
 ---
 
-
-Anatomy
--------
+## Anatomy
 
 A Weaverse Component file typically comprises these parts:
 
@@ -24,49 +22,41 @@ A Weaverse Component file typically comprises these parts:
 An abbreviated glance at each part:
 
 ```tsx
-import type {
-  ComponentLoaderArgs,
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-} from '@weaverse/hydrogen';
-import { forwardRef } from 'react';
+import type { ComponentLoaderArgs, HydrogenComponentProps, HydrogenComponentSchema } from '@weaverse/hydrogen'
+import { forwardRef } from 'react'
 
 type MyComponentData = {
   heading: string
   // More type definitions...
-};
+}
 
-type MyComponentProps = HydrogenComponentProps<
-        Awaited<ReturnType<typeof loader>>
-> &
-        MyComponentData;
+type MyComponentProps = HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> & MyComponentData
 
 let MyComponent = forwardRef<HTMLElement, MyComponentProps>((props, ref) => {
-  let { heading, loaderData, ...rest } = props;
+  let { heading, loaderData, ...rest } = props
   // More component logic...
 
   return (
-          <section ref={ref} {...rest}>
-            {/*    Component markup...    */}
-          </section>
-  );
-});
+    <section ref={ref} {...rest}>
+      {/*    Component markup...    */}
+    </section>
+  )
+})
 
 export let loader = async (args: ComponentLoaderArgs<MyComponentData>) => {
   // Data fetching logic, the code will be run on the server-side ...
-};
+}
 
 export let schema: HydrogenComponentSchema = {
   type: 'unique-type-string',
   title: 'My Component',
   // More schema definitions...
-};
+}
 
 export default MyComponent
 ```
 
-Guides
-------
+## Guides
 
 #### Defining The Component
 
@@ -81,28 +71,28 @@ Example:
 
 ```tsx
 let MyComponent = forwardRef<HTMLElement, MyComponentProps>((props, ref) => {
-  let { loaderData, ...rest } = props;
-  return <section ref={ref} {...rest} />;
-});
+  let { loaderData, ...rest } = props
+  return <section ref={ref} {...rest} />
+})
 
 export default MyComponent
 ```
 
 #### Registering the Component
 
-Remember to include your component in the main components export. This allows it to be recognized and usable within *
-*Weaverse Studio**:
+Remember to include your component in the main components export. This allows it to be recognized and usable within \*
+\*Weaverse Studio\*\*:
 
 ```tsx
 // <root>/app/weaverse/components.ts
 
-import type { HydrogenComponent } from '@weaverse/hydrogen';
-import * as MySectionComponent from '~/sections/my-comp';
+import type { HydrogenComponent } from '@weaverse/hydrogen'
+import * as MySectionComponent from '~/sections/my-comp'
 
 export let components: HydrogenComponent[] = [
   // ... more components
   MySectionComponent,
-];
+]
 ```
 
 #### Defining Types
@@ -113,31 +103,31 @@ ensuring expected data shapes and enhancing stability.
 Example:
 
 ```tsx
-import type { HydrogenComponentProps } from '@weaverse/hydrogen';
+import type { HydrogenComponentProps } from '@weaverse/hydrogen'
 
 type MyComponentData = {
-  heading: string;
-  height: number;
+  heading: string
+  height: number
   // More type definitions...
-};
+}
 
-type MyComponentProps = HydrogenComponentProps & MyComponentData;
+type MyComponentProps = HydrogenComponentProps & MyComponentData
 
 let MyComponent = forwardRef<HTMLElement, MyComponentProps>((props, ref) => {
   // Get the data from props
-  let { heading, height, ...rest } = props;
+  let { heading, height, ...rest } = props
 
-  return <section ref={ref} {...rest} />;
-});
+  return <section ref={ref} {...rest} />
+})
 ```
 
 #### Defining Schema
 
-The schema is an object that assists in determining how your component is presented and interacted with within *
-*Weaverse Studio**:
+The schema is an object that assists in determining how your component is presented and interacted with within \*
+\*Weaverse Studio\*\*:
 
 ```tsx
-import type { HydrogenComponentSchema } from '@weaverse/hydrogen';
+import type { HydrogenComponentSchema } from '@weaverse/hydrogen'
 
 export let schema: HydrogenComponentSchema = {
   type: 'unique-type-string',
@@ -146,7 +136,7 @@ export let schema: HydrogenComponentSchema = {
     // Inspector Configurations...
   ],
   toolbar: ['general-settings', ['duplicate', 'delete']],
-};
+}
 ```
 
 For further details, delve into
@@ -154,8 +144,8 @@ the [Component Schema article](/docs/guides/component-schema).
 
 #### Input Settings in Schema
 
-The `inspector` key within your schema provides configurations to allow non-developers to modify your component within *
-*Weaverse Studio**:
+The `inspector` key within your schema provides configurations to allow non-developers to modify your component within \*
+\*Weaverse Studio\*\*:
 
 ```txt
 {
@@ -191,24 +181,23 @@ Component's `loader` function have the unique ability to run on the **server-sid
 **, allowing your components to dynamically respond to data:
 
 ```tsx
-import type { ComponentLoaderArgs } from '@weaverse/hydrogen';
+import type { ComponentLoaderArgs } from '@weaverse/hydrogen'
 
 export let loader = async (args: ComponentLoaderArgs<MyComponentData>) => {
-  let { weaverse, data } = args;
+  let { weaverse, data } = args
 
   // Data fetching logic...
 
   return {
     // ... loader data
   }
-};
+}
 ```
 
 Unlock the potential of loaders with
 the [Data Fetching & Caching article](/docs/guides/fetching-and-caching).
 
-Conclusion
-----------
+## Conclusion
 
 Components, with their multifaceted capabilities, are vital in crafting a powerful, efficient, and user-friendly theme
 on Weaverse.

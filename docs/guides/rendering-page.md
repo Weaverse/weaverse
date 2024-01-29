@@ -1,14 +1,13 @@
 ---
 title: Rendering a Weaverse Page
 description: Learn how to load and render Weaverse pages using optional parameters and the WeaverseContent component.
-publishedAt: 10-11-2023
-updatedAt: 10-11-2023
+publishedAt: November 10, 2023
+updatedAt: January 17, 2024
 order: 6
 published: true
 ---
 
-Fetching Page Data
-------------------
+## Fetching Page Data
 
 For dynamic and consistent rendering, Weaverse fetches page data server-side, primarily through a Remix route's
 **[`loader`](https://remix.run/docs/en/main/route/loader)** function using the **`weaverse.loadPage()`** method.
@@ -16,57 +15,52 @@ For dynamic and consistent rendering, Weaverse fetches page data server-side, pr
 ```tsx
 // <root>/app/routes/($locale)._index.tsx
 
-import { json } from '@shopify/remix-oxygen';
-import { type RouteLoaderArgs } from '@weaverse/hydrogen';
+import { json } from '@shopify/remix-oxygen'
+import { type RouteLoaderArgs } from '@weaverse/hydrogen'
 
 export async function loader({ context }: RouteLoaderArgs) {
-  let { weaverse } = context;
+  let { weaverse } = context
 
   return json({
     // The key prop for a Weaverse page must always be `weaverseData`
     weaverseData: await weaverse.loadPage(),
     // Additional page data...
-  });
+  })
 }
 ```
 
 The **`loadPage()`** function takes an optional object as its parameters:
 
 ```tsx
-async function loadPage(params?: {
-  strategy?: AllCacheOptions,
-  type?: PageType,
-  locale?: string,
-  handle?: string,
-}) {}
+async function loadPage(params?: { strategy?: AllCacheOptions; type?: PageType; locale?: string; handle?: string }) {}
 ```
 
-* **`strategy`**: Sets the caching strategy for the page data. Defaults to **`CacheShort()`**. Dive deeper into caching
+- **`strategy`**: Sets the caching strategy for the page data. Defaults to **`CacheShort()`**. Dive deeper into caching
   in the [Data Fetching and Caching](/docs/guides/fetching-and-caching) page.
 
-* **`locale`**: Specifies the page's locale. Default: **`en-us`**.
+- **`locale`**: Specifies the page's locale. Default: **`en-us`**.
 
-* **`handle`**: Indicates the handle of the requested page. Default: **`/`**.
+- **`handle`**: Indicates the handle of the requested page. Default: **`/`**.
 
-* **`type`**: Defines the type of the page to load. The supported types include:
+- **`type`**: Defines the type of the page to load. The supported types include:
 
-* `INDEX` (Home page)
+- `INDEX` (Home page)
 
-* `PRODUCT` (Product details page)
+- `PRODUCT` (Product details page)
 
-* `ALL_PRODUCTS` (All products page)
+- `ALL_PRODUCTS` (All products page)
 
-* `COLLECTION` (Collection details page)
+- `COLLECTION` (Collection details page)
 
-* `COLLECTION_LIST` (All collections page)
+- `COLLECTION_LIST` (All collections page)
 
-* `PAGE` (Regular page)
+- `PAGE` (Regular page)
 
-* `BLOG` (Blog page)
+- `BLOG` (Blog page)
 
-* `ARTICLE` (Article details page)
+- `ARTICLE` (Article details page)
 
-* `CUSTOM` (Coming soon 🚧)
+- `CUSTOM` (Coming soon 🚧)
 
 When no custom parameters are passed to **`context.weaverse.loadPage()`**, Weaverse smartly auto-detects the page type
 based on the current route's request URL.
@@ -74,7 +68,7 @@ based on the current route's request URL.
 The mapping is similar to a native liquid theme:
 
 | Page Type         | Example URL                                                                                                                                   | Remix's Route Pattern                                  |
-|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------|
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
 | `INDEX`           | [https://example.com/](https://example.com/)                                                                                                  | **`_index.tsx`**                                       |
 | `ALL_PRODUCTS`    | [https://example.com/products](https://example.com/products) <br/> [https://example.com/collections/all](https://example.com/collections/all) | **`products._index.tsx`** or **`collections.all.tsx`** |
 | `PRODUCT`         | [https://example.com/products/shirt](https://example.com/products/shirt)                                                                      | **`products.$productHandle.tsx`**                      |
@@ -99,15 +93,15 @@ this:
 ```tsx
 // <root>/app/routes/($locale).featured-products.tsx
 
-import { json } from '@shopify/remix-oxygen';
-import { type RouteLoaderArgs } from '@weaverse/hydrogen';
+import { json } from '@shopify/remix-oxygen'
+import { type RouteLoaderArgs } from '@weaverse/hydrogen'
 
 export async function loader(args: RouteLoaderArgs) {
-  let { context } = args;
+  let { context } = args
   return json({
-    weaverseData: await context.weaverse.loadPage({ type: "COLLECTION" }),
+    weaverseData: await context.weaverse.loadPage({ type: 'COLLECTION' }),
     // Additional page data...
-  });
+  })
 }
 ```
 
@@ -116,8 +110,7 @@ Then the page will be available at this URL: https://example.com/featured-produc
 This freedom in routing & page loading not only enhances the user experience but also empowers developers to structure
 content in a way that best serves their e-commerce objectives.
 
-Using the `WeaverseContent` Component
--------------------------------------
+## Using the `WeaverseContent` Component
 
 Once you've loaded the desired content, the next step is rendering it on the front end. The **`WeaverseContent`**
 component is designed for this purpose, ensuring your content is displayed correctly within the Weaverse ecosystem.
@@ -125,10 +118,10 @@ component is designed for this purpose, ensuring your content is displayed corre
 ```tsx
 // <root>/app/routes/($locale)._index.tsx
 
-import { WeaverseContent } from '~/weaverse';
+import { WeaverseContent } from '~/weaverse'
 
 export default function Homepage() {
-  return <WeaverseContent />;
+  return <WeaverseContent />
 }
 ```
 
@@ -144,11 +137,6 @@ import { GenericError } from '~/components/GenericError'
 import { components } from './components'
 
 export function WeaverseContent() {
-  return (
-    <WeaverseHydrogenRoot
-      components={components}
-      errorComponent={GenericError}
-    />
-  )
+  return <WeaverseHydrogenRoot components={components} errorComponent={GenericError} />
 }
 ```

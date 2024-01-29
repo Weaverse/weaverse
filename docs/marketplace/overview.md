@@ -1,8 +1,8 @@
 ---
 title: Overview
 description: Weaverse Marketplace is a one-stop destination where merchants can explore and purchase a multitude of pre-built Hydrogen themes.
-publishedAt: 11-20-2023
-updatedAt: 11-20-2023
+publishedAt: November 20, 2023
+updatedAt: January 17, 2024
 order: 0
 published: true
 ---
@@ -11,15 +11,13 @@ The Weaverse Marketplace is a vibrant and dynamic platform, filled with a select
 theme is designed with uniqueness, innovation, and functionality in mind, allowing merchants to choose a theme that best
 aligns with their brand identity and business goals.
 
-Browse and Buy with Ease
-------------------------
+## Browse and Buy with Ease
 
 Navigating the Weaverse Marketplace is a breeze. Merchants can effortlessly browse through the available themes, making
 their selection process simple and enjoyable. Purchasing a chosen theme is just as easy, allowing merchants to quickly
 acquire and implement their new theme, transforming their online store’s appearance and user experience.
 
-A Visual Tour of the Marketplace
---------------------------------
+## A Visual Tour of the Marketplace
 
 The Marketplace is designed to be visually appealing and user-friendly, ensuring that merchants have a pleasant and
 efficient browsing experience

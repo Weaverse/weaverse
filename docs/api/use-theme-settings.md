@@ -1,8 +1,8 @@
 ---
 title: useThemeSettings
 description: The useThemeSettings hook provides a simple way for Weaverse Hydrogen components to retrieve and utilize the global theme settings.
-publishedAt: 10-10-2023
-updatedAt: 10-10-2023
+publishedAt: October 10, 2023
+updatedAt: January 17, 2024
 order: 1
 published: true
 ---
@@ -10,14 +10,13 @@ published: true
 The **`useThemeSettings`** hook is an interface for accessing the global theme settings within a Weaverse Hydrogen
 theme, enabling components to adapt to merchant-configured preferences.
 
-Usage
------
+## Usage
 
 Import the hook from `@weaverse/hydrogen` package then call it within a React component to get an object containing the
 current global theme settings.
 
 ```tsx
-import { useThemeSettings } from "@weaverse/hydrogen"
+import { useThemeSettings } from '@weaverse/hydrogen'
 
 export function GlobalStyle() {
   let settings = useThemeSettings()
@@ -25,7 +24,7 @@ export function GlobalStyle() {
     let {
       bodyBaseSize,
       bodyBaseLineHeight,
-      headingBaseSize
+      headingBaseSize,
       // more settings...
     } = settings
 
@@ -39,7 +38,7 @@ export function GlobalStyle() {
               --heading-base-size: ${headingBaseSize}px;
               --height-nav: ${settings.navHeightMobile}rem;
             }
-          `
+          `,
         }}
       />
     )

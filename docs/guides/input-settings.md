@@ -1,23 +1,22 @@
 ---
 title: Input Settings
 description: Input settings to allow section components customizable via Weaverse Theme Customizer.
-publishedAt: 9-27-2023
-updatedAt: 11-20-2023
+publishedAt: September 27, 2023
+updatedAt: January 17, 2024
 order: 5
 published: true
 ---
 
-Anatomy
--------
+## Anatomy
 
 **Input** allows developers to specify a set of configurations that merchants can adjust to customize a component. Each
 setting provides a specific control, from simple text inputs to complex selectors.
 
 Input settings are generally composed of standard attributes. We can classify them into two main categories:
 
-* [Basic Inputs](/docs/guides/input-settings#basic-inputs)
+- [Basic Inputs](/docs/guides/input-settings#basic-inputs)
 
-* [Resource Picker Inputs](/docs/guides/input-settings#resource-picker-inputs)
+- [Resource Picker Inputs](/docs/guides/input-settings#resource-picker-inputs)
 
 #### Overview
 
@@ -40,43 +39,43 @@ type Input = {
 
 Here's a breakdown of the available attributes in an input setting:
 
-| Attribute          | Type                                                                 | Description                                                                                                                       | Required |
-|--------------------|----------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|----------|
-| ```type```         | ```InputType```                                                      | Specifies the kind of UI control the merchant will interact with.                                                                 | ✅        |
-| ```name```         | ```string```                                                         | The key of the value in the component's data. E.g., "title" binds to ```component.data.title```.                                  | ✅        |
-| ```defaultValue``` | ```string``` \| ```number``` \| ```boolean``` \| ```WeaverseImage``` | Sets initial values for inputs and initial data for the component.                                                                | ➖        |
-| ```label```        | ```string```                                                         | A label for the input to show in the Weaverse Studio's Inspector                                                                  | ➖        |
-| ```placeholder```  | ```string```                                                         | A placeholder text to show when the input is empty.                                                                               | ➖        |
-| ```configs```      | ```AdditionalInputConfigs```                                         | Additional options for inputs require more configuration. (Available for ```select```, ```toggle-group```, and ```range``` input) | ➖        |
-| ```condition```    | ```string```                                                         | Only displays the input if the specified condition matches.                                                                       | ➖        |
-| ```helpText```     | ```string```                                                         | Provides additional information or instructions for the input setting (**HTML** format supported).                                | ➖        |
+| Attribute      | Type                                                 | Description                                                                                                           | Required |
+| -------------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | -------- |
+| `type`         | `InputType`                                          | Specifies the kind of UI control the merchant will interact with.                                                     | ✅       |
+| `name`         | `string`                                             | The key of the value in the component's data. E.g., "title" binds to `component.data.title`.                          | ✅       |
+| `defaultValue` | `string` \| `number` \| `boolean` \| `WeaverseImage` | Sets initial values for inputs and initial data for the component.                                                    | ➖       |
+| `label`        | `string`                                             | A label for the input to show in the Weaverse Studio's Inspector                                                      | ➖       |
+| `placeholder`  | `string`                                             | A placeholder text to show when the input is empty.                                                                   | ➖       |
+| `configs`      | `AdditionalInputConfigs`                             | Additional options for inputs require more configuration. (Available for `select`, `toggle-group`, and `range` input) | ➖       |
+| `condition`    | `string`                                             | Only displays the input if the specified condition matches.                                                           | ➖       |
+| `helpText`     | `string`                                             | Provides additional information or instructions for the input setting (**HTML** format supported).                    | ➖       |
 
-* `condition`
+- `condition`
 
   The **`condition`** attribute enables developers to define conditions under which an input will be displayed. It
   supports the following operators:
 
-* **`eq`**: equals
+- **`eq`**: equals
 
-* **`ne`**: not equals
+- **`ne`**: not equals
 
-* **`gt`**: greater than
+- **`gt`**: greater than
 
-* **`gte`**: greater than or equal to
+- **`gte`**: greater than or equal to
 
-* **`lt`**: less than
+- **`lt`**: less than
 
-* **`lte`**: less than or equal to
+- **`lte`**: less than or equal to
 
   The format is as follows: **`bindingName.conditionalOperator.value`**.
 
   **Examples**:
 
-  * `clickAction.eq.openLink` - Displays the input if the **`clickAction`** is set to **`openLink`**.
+  - `clickAction.eq.openLink` - Displays the input if the **`clickAction`** is set to **`openLink`**.
 
-  * `imagesPerRow.gt.1` - Displays the input if the number of **`imagesPerRow`** is greater than 1.
+  - `imagesPerRow.gt.1` - Displays the input if the number of **`imagesPerRow`** is greater than 1.
 
-* `helpText`
+- `helpText`
 
   The **`helpText`** attribute can utilize **HTML**, offering more expressive help instructions. This allows for the
   inclusion of links, emphasis using bold or italics, lists, and more.
@@ -84,15 +83,20 @@ Here's a breakdown of the available attributes in an input setting:
   **Example**:
 
   ```html data-line-numbers=false
-  Learn more about <a href='https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/loading' target='_blank' rel='noopener noreferrer'>image loading strategies</a>.
+  Learn more about
+  <a
+    href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/loading"
+    target="_blank"
+    rel="noopener noreferrer"
+    >image loading strategies</a
+  >.
   ```
 
   Will appear as:
 
   <img alt="example" src="https://downloads.intercomcdn.com/i/o/853117817/24e20664c5cc4668c0a7a4ca/image.png" width="300"/>
 
-Basic Inputs
-------------
+## Basic Inputs
 
 #### `text`
 
@@ -189,17 +193,14 @@ percentages, or customizing display sizes.
 
 <img alt="range_attr_example" src="https://downloads.intercomcdn.com/i/o/853529726/f21af857ecba39099bd8fca6/image.png" width="300"/>
 
-
-
-
 **`configs` details:**
 
 | Property | Type     | Description                                                                                   | Required |
-|----------|----------|-----------------------------------------------------------------------------------------------|----------|
-| `min`    | `number` | The minimum value the range input can have.                                                   | ✅        |
-| `max`    | `number` | The maximum value the range input can have.                                                   | ✅        |
-| `step`   | `number` | The intervals between values in the range.                                                    | ✅        |
-| `unit`   | `string` | A unit of measure displayed next to the value (e.g., `px`, `%`). Purely for display purposes. | ➖        |
+| -------- | -------- | --------------------------------------------------------------------------------------------- | -------- |
+| `min`    | `number` | The minimum value the range input can have.                                                   | ✅       |
+| `max`    | `number` | The maximum value the range input can have.                                                   | ✅       |
+| `step`   | `number` | The intervals between values in the range.                                                    | ✅       |
+| `unit`   | `string` | A unit of measure displayed next to the value (e.g., `px`, `%`). Purely for display purposes. | ➖       |
 
 #### `select`
 
@@ -230,16 +231,15 @@ The select input provides a dropdown list, allowing merchants to select one opti
 
 <img alt="aspect_ratio_select_0" src="https://downloads.intercomcdn.com/i/o/853536003/389c8a3340b9dba42c539e73/image.png" width="300"/>
 
-
 <img alt="aspect_ratio_select_1" src="https://downloads.intercomcdn.com/i/o/853536156/7ff5f0a96a77d7ef2b48f7c3/image.png" width="300"/>
 
 `configs` **details:**
 
 | Property  | Type                | Description                                                     | Required |
-|-----------|---------------------|-----------------------------------------------------------------|----------|
-| `options` | `Array<OptionType>` | An array containing all options. Each option must be an object. | ✅        |
-| ↳ `value` | `string`            | A unique value for the option.                                  | ✅        |
-| ↳ `label` | `string`            | Displayed text for the option.                                  | ✅        |
+| --------- | ------------------- | --------------------------------------------------------------- | -------- |
+| `options` | `Array<OptionType>` | An array containing all options. Each option must be an object. | ✅       |
+| ↳ `value` | `string`            | A unique value for the option.                                  | ✅       |
+| ↳ `label` | `string`            | Displayed text for the option.                                  | ✅       |
 
 #### `toggle-group`
 
@@ -300,20 +300,20 @@ process.
 **`configs` details**
 
 | Property   | Type                | Description                                                                                                                               | Required |
-|------------|---------------------|-------------------------------------------------------------------------------------------------------------------------------------------|----------|
-| `options`  | `Array<OptionType>` | An array of **`OptionType`** objects. See below for the details of each property on an option.                                            | ✅        |
-| ↳ `value`  | `string`            | A unique value for the option.                                                                                                            | ✅        |
-| ↳ `label`  | `string`            | Displayed text for the option.                                                                                                            | ✅        |
-| ↳ `icon`   | `string`            | Displayed icon for the option. When an **`icon`** is set, the **`label`** will act as its `tooltip`.                                      | ➖        |
-| ↳ `weight` | `string`            | An optional weight for the icon, which can be one of the followingvalues: `thin` \| `light` \| `regular` \| `bold` \| `fill` \| `duotone` | ➖        |
+| ---------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| `options`  | `Array<OptionType>` | An array of **`OptionType`** objects. See below for the details of each property on an option.                                            | ✅       |
+| ↳ `value`  | `string`            | A unique value for the option.                                                                                                            | ✅       |
+| ↳ `label`  | `string`            | Displayed text for the option.                                                                                                            | ✅       |
+| ↳ `icon`   | `string`            | Displayed icon for the option. When an **`icon`** is set, the **`label`** will act as its `tooltip`.                                      | ➖       |
+| ↳ `weight` | `string`            | An optional weight for the icon, which can be one of the followingvalues: `thin` \| `light` \| `regular` \| `bold` \| `fill` \| `duotone` | ➖       |
 
 💡 **Note**:
 
-* We use [Phosphor Icons](https://phosphoricons.com/) library for the icons.
+- We use [Phosphor Icons](https://phosphoricons.com/) library for the icons.
 
-* The value of an `icon` is the name of the `React` component (e.g: **AddressBook**, **AlignTopSimple**...)
+- The value of an `icon` is the name of the `React` component (e.g: **AddressBook**, **AlignTopSimple**...)
 
-* Not all icons are supported yet. Please let us know if you need an icon that is missing from your configs.
+- Not all icons are supported yet. Please let us know if you need an icon that is missing from your configs.
 
 #### `richtext`
 
@@ -348,13 +348,13 @@ The **`image`** input offers merchants the ability to select or upload images.
 
 Here's how it works:
 
-* **Media Manager**: on open, it displays the Media Manager modal with all images from
+- **Media Manager**: on open, it displays the Media Manager modal with all images from
   the [Files page](https://help.shopify.com/en/manual/shopify-admin/productivity-tools/file-uploads#upload-a-file) of
   the merchant's Shopify Admin.
 
-* **Uploading Images**: any image a merchant uploads through this input is saved to the Files page as well.
+- **Uploading Images**: any image a merchant uploads through this input is saved to the Files page as well.
 
-* **Enhancing SEO**: merchants can edit the alt text of the images they've uploaded.
+- **Enhancing SEO**: merchants can edit the alt text of the images they've uploaded.
 
 **Return**: `object` - A **`WeaverseImage`** (type can be imported from **`@weaverse/hydrogen`** package).
 
@@ -394,9 +394,9 @@ type WeaverseImage = {
 
 **📌 Note:** The `defaultValue` in the input configuration can either be:
 
-* an object of the `WeaverseImage` type (where all properties are **optional** except for the `url`)
+- an object of the `WeaverseImage` type (where all properties are **optional** except for the `url`)
 
-* or a `string` representing the image URL
+- or a `string` representing the image URL
 
 **Output:**
 
@@ -411,34 +411,25 @@ the **`image`** input, ensuring efficient image delivery.
 Here's a simple example:
 
 ```tsx
-import { Image } from '@shopify/hydrogen';
-import type { HydrogenComponentProps, WeaverseImage } from '@weaverse/hydrogen';
-import { forwardRef } from 'react';
+import { Image } from '@shopify/hydrogen'
+import type { HydrogenComponentProps, WeaverseImage } from '@weaverse/hydrogen'
+import { forwardRef } from 'react'
 
 interface ImageGalleryItemProps extends HydrogenComponentProps {
-  source: WeaverseImage;
+  source: WeaverseImage
 }
 
-let ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>(
-  (props, ref) => {
-    let { source, ...rest } = props;
-    /*
+let ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>((props, ref) => {
+  let { source, ...rest } = props
+  /*
       Pass the object returned from the `image` input (name it as you like, e.g., `source`)
       directly to the `data` prop of the `Image` component.
       This will automatically generate all the necessary attributes for the image element.
     */
-    return (
-      <Image
-        ref={ref}
-        {...rest}
-        data={source}
-        sizes={`(min-width: 45em) 50vw, 100vw`}
-      />
-    );
-  },
-);
+  return <Image ref={ref} {...rest} data={source} sizes={`(min-width: 45em) 50vw, 100vw`} />
+})
 
-export default ImageGalleryItem;
+export default ImageGalleryItem
 ```
 
 #### `color`
@@ -488,12 +479,12 @@ scheduling content, setting event dates, or determining promotional periods.
 
 ```tsx
 // Get the `timestamp` from Weaverse Component props
-let timestamp = 1704067200000;
-let date = new Date(timestamp);
+let timestamp = 1704067200000
+let date = new Date(timestamp)
 
 // Parsing examples:
-console.log(date.toISOString().split('T')[0]);  // => "2024-01-01"
-console.log(date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }));  // => "January 1, 2024"
+console.log(date.toISOString().split('T')[0]) // => "2024-01-01"
+console.log(date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })) // => "January 1, 2024"
 ```
 
 #### `map-autocomplete`
@@ -543,8 +534,7 @@ values: `top left` | `top center` | `top right` | `center left` | `center center
 
 <img alt="position_attr" src="https://downloads.intercomcdn.com/i/o/855185102/10d0807cd47ee9e9e60bc1d6/image.png" width="300"/>
 
-Resource Picker Inputs
-----------------------
+## Resource Picker Inputs
 
 #### `product`
 
@@ -661,8 +651,7 @@ store.
 
 <img alt="blog_attr" src="https://downloads.intercomcdn.com/i/o/856089471/83cf34f9ba89fa9043db3293/image.png" width="300"/>
 
-Querying Storefront Data
-------------------------
+## Querying Storefront Data
 
 After using the Resource Picker inputs, you might notice that the returned data is limited, typically just the `id`
 and `handle` of the selected resource. In most cases, you'll need more detailed data for your components or routes.
@@ -673,8 +662,7 @@ set of data related to your selection from [Shopify's Storefront API](https://sh
 To learn more about how to effectively fetch and utilize data within Weaverse, refer to our dedicated section
 on [Data Fetching & Caching](/docs/guides/data-fetching-and-caching#querying-storefront-data-inside-weaverses-component).
 
-Next Steps
-----------
+## Next Steps
 
 Now that you have a solid understanding of Input Settings, let's learn how to render a Weaverse page in the next
 article: [Rendering a Weaverse Page](/docs/guides/rendering-page).

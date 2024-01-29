@@ -1,8 +1,8 @@
 ---
 title: Is Weaverse a new Headless CMS?
 description: What exactly is Weaverse? Is it a new Headless CMS?
-publishedAt: 11-20-2023
-updatedAt: 11-20-2023
+publishedAt: November 20, 2023
+updatedAt: January 17, 2024
 order: 0
 published: true
 ---
