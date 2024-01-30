@@ -1,68 +1,62 @@
 ---
 title: Prerequisites
-description: 'Checklist of system requirements to ensure you have the right environment for smooth and seamless development with.'
+description: 'Essential System Requirements for Optimal Development in Weaverse Hydrogen.'
 publishedAt: November 20, 2023
-updatedAt: January 17, 2024
+updatedAt: January 30, 2024
 order: 0
 published: true
 ---
 
-## Overview
+## **Overview**
 
-To ensure a seamless development experience with Weaverse Hydrogen, it's crucial to meet certain system prerequisites.
-This article provides a checklist to get you started on the right foot.
+For a fluid and effective development journey with Weaverse Hydrogen, meeting specific system prerequisites is essential. This checklist is designed to help you prepare adequately and start your project on a strong foundation.
 
-## Before Proceeding
+## **Initial Setup**
 
-Before diving into Weaverse Hydrogen theme development, make sure you've:
+Before embarking on your adventure with Weaverse Hydrogen theme development, ensure that you have:
 
-- Installed the **Weaverse** app from the **Shopify** app store.
+- Successfully installed the **[Weaverse](https://apps.shopify.com/weaverse)** app from the **Shopify** app store.
 
-- Created a new project within Weaverse.
+- Initiated a new project in Weaverse.
 
-- Downloaded the Weaverse Hydrogen starter theme with `@weaverse/cli`
+- Acquired the Weaverse Hydrogen starter theme. Choose between the two free starter themes we currently offer: [Pilot](https://github.com/weaverse/pilot) and [Naturelle](https://github.com/weaverse/naturelle). Stay tuned for more themes and the launch of our exclusive theme marketplace.
 
-If you haven't completed these steps, refer back to the
-**[Getting Started](/docs/hydrogen/getting-started)** article.
+Missed a step? Circle back to our **[Getting Started](/docs/hydrogen/getting-started)** guide for guidance.
 
-## Shopify Requirements
+## **Shopify Essentials**
 
-You should have:
+Your toolbox should include:
 
-- **Shopify Account**: A Shopify Basic account or higher is necessary to utilize the Shopify Hydrogen app.
+- **Shopify Account**: A Basic Shopify account (or better) is a prerequisite for using the Shopify Hydrogen app.
 
-- **Basic Knowledge**: Familiarize yourself with Shopify app and theme development.
+- **Foundational Knowledge**: A comfortable grasp of Shopify app and theme development is beneficial.
 
-## Node.js and npm
+## **Node.js and npm**
 
-Ensure your system is equipped with:
+Your development environment should be equipped with:
 
-- **Node.js**: Version `16.x` or newer. Install from the [Node.js official website](https://nodejs.org).
+- **Node.js**: Version `18.x` or above is required. You can download it from the [Node.js official website](https://nodejs.org).
 
-- **npm** (Node Package Manager): Usually bundled with Node.js. Ensure you have version `7.x` or newer.
+- **npm** (Node Package Manager): Typically comes with Node.js. Make sure it's version `10.x` or later.
 
-## Web Browsers
+## **Web Browsers**
 
-For the best experience while developing and testing the themes, we highly recommend using the latest version of
-any [Chrome-based browser](https://www.google.com/search?q=chrome+based+web+browsers):
+To optimize your development and testing experience, we recommend using the latest versions of the following [Chrome-based browsers](https://www.google.com/search?q=chrome+based+web+browsers):
 
 - **Google Chrome**
 
 - **Microsoft Edge**
 
-- **Brave**
+- **Arc**
 
-- **Opera**
+## **Integrated Development Environment (IDE)**
 
-## Integrated Development Environment (IDE)
+Our suggestion for a seamless coding experience:
 
-We recommend using:
+- **Visual Studio Code** ([VSCode](https://code.visualstudio.com/)): A popular choice among developers, VSCode boasts a plethora of extensions and a supportive community. Enhance your Weaverse development with the [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) extension.
 
-- **Visual Studio Code** ([VSCode](https://code.visualstudio.com/)): It offers a range of extensions and a large
-  community. For an optimal experience with Weaverse, install
-  the [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) extension.
+## **Conclusion**
 
-## Wrapping Up
+Now that your environment is primed, you're ready to dive into Weaverse Hydrogen theme development. Up next, delve into the [Weaverse Hydrogen Project Structure](https://weaverse.io/docs/guides/8321058-project-structure) to further your journey.
 
-With your environment now ready, you're all set to embark on your Weaverse Hydrogen theme development. Next, we'll
-explore the [Weaverse Hydrogen Project Structure](https://weaverse.io/docs/guides/8321058-project-structure).
+---
