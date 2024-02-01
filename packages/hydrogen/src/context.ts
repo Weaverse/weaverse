@@ -19,7 +19,7 @@ function createCachedWeaverseInstance(
       weaverse = new WeaverseHydrogen(params)
       window.__weaverses[params.pageId] = weaverse
     } else if (weaverse.isDesignMode) {
-      window.weaverseStudio?.refresh(params)
+      window.weaverseStudio?.refreshStudio(params)
     }
     return weaverse
   }
@@ -50,11 +50,11 @@ export let STORE_PAGES = {
   PAGE: 'PAGE',
   BLOG: 'BLOG',
   ARTICLE: 'ARTICLE',
-  CART: 'CART',
-  CUSTOMER: 'CUSTOMER',
-  SEARCH: 'SEARCH',
-  NOT_FOUND: 'NOT_FOUND',
-  PASSWORD: 'PASSWORD',
+  // CART: 'CART',
+  // CUSTOMER: 'CUSTOMER',
+  // SEARCH: 'SEARCH',
+  // NOT_FOUND: 'NOT_FOUND',
+  // PASSWORD: 'PASSWORD',
   CUSTOM: 'CUSTOM',
 }
 
