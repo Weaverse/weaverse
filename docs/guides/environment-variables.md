@@ -73,6 +73,7 @@ To get your **`PUBLIC_STOREFRONT_API_TOKEN`** to preview your real store data, p
 the [Headless](https://apps.shopify.com/headless) or [Hydrogen](https://apps.shopify.com/hydrogen) app and
 follow [this instruction](https://shopify.dev/docs/custom-storefronts/building-with-the-storefront-api/manage-headless-channels)
 to obtain the _Storefront API Token_
+<doc-warning>If you are on Shopify Starter plan, please create a custom app to obtain the Storefront API token. [Learn more](https://help.shopify.com/en/manual/apps/app-types/custom-apps) </doc-warning>
 
 ![](https://downloads.intercomcdn.com/i/o/848678475/033f78182979523f9a7a23e1/image.png)
 

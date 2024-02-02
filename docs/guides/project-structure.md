@@ -69,8 +69,7 @@ const handleRequest = createRequestHandler({
   managing environment variables, refer to
   the [Environment Variables article](/docs/guides/environment-variables).
 
-- [`tailwind.config.js`](https://github.com/Weaverse/pilot/blob/main/tailwind.config.js): This file configures \*
-  \*TailwindCSS\*\*, a utility-first CSS framework that developers love 💚. Using TailwindCSS, you can quickly design and
+- [`tailwind.config.js`](https://github.com/Weaverse/pilot/blob/main/tailwind.config.js): This file configures **TailwindCSS**, a utility-first CSS framework that developers love 💚. Using TailwindCSS, you can quickly design and
   customize your theme components.
 
 - [`remix.env.d.ts`](https://github.com/Weaverse/pilot/blob/main/remix.env.d.ts): This **TypeScript** definition file is
@@ -157,7 +156,7 @@ export interface AppLoadContext {
   in [Weaverse Hydrogen Component article](/docs/guides/weaverse-component).
 
 - [`create-weaverse.server.ts`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/create-weaverse.server.ts):
-  This file is pivotal for integrating Weaverse's capabilities into your project. It exports the \* \*`createWeaverseClient`\*\* function that sets up the Weaverse client.
+  This file is pivotal for integrating Weaverse's capabilities into your project. It exports the **`createWeaverseClient`** function that sets up the Weaverse client.
 
 ```tsx
 // <root>/app/weaverse/create-weaverse.server.ts
