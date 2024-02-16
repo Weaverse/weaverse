@@ -42,13 +42,13 @@
     "typescript": "5.3.3"
   },
   "optionalDependencies": {
-    "@esbuild/darwin-x64": "^0.19.11",
-    "turbo-darwin-arm64": "^1.11.3"
+    "@esbuild/darwin-x64": "^0.20.0",
+    "turbo-darwin-arm64": "^1.12.4"
   },
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "pnpm@8.11.0",
+  "packageManager": "pnpm@8.15.3",
   "prettier": {
     "semi": false,
     "singleQuote": true,

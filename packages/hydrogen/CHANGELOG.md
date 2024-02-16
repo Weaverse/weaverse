@@ -1,5 +1,12 @@
 # @weaverse/hydrogen
 
+## 2.10.3
+
+### Patch Changes
+
+- Add support for Hydrogen newest version
+  - @weaverse/react@2.10.3
+
 ## 2.10.2
 
 ### Patch Changes
