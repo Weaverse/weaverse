@@ -44,6 +44,7 @@
     "react-error-boundary": "^4.0.12"
   },
   "devDependencies": {
+    "@shopify/oxygen-workers-types": "^4.0.0",
     "@shopify/remix-oxygen": "^2"
   }
 }

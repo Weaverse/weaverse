@@ -19,6 +19,7 @@ function createCachedWeaverseInstance(
       weaverse = new WeaverseHydrogen(params)
       window.__weaverses[params.pageId] = weaverse
     } else if (weaverse.isDesignMode) {
+      weaverse.requestInfo = params.requestInfo
       window.weaverseStudio?.refresh(params)
     }
     return weaverse

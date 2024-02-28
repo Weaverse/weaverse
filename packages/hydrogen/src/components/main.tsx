@@ -1,16 +1,14 @@
-import React, { forwardRef } from 'react'
-
+import React, { forwardRef, type HTMLAttributes } from 'react'
 import type { HydrogenComponentProps, HydrogenComponentSchema } from '~/types'
-
-interface MainProps extends HydrogenComponentProps {
-  dangerouslySetInnerHTML: any
-}
 
 /*
   Main is the default Weaverse component that is used to render the main content.
   This component wraps all the sections/components inside a Weaverse page.
 */
-let Main = forwardRef<HTMLDivElement, MainProps>((props, ref) => {
+let Main = forwardRef<
+  HTMLDivElement,
+  HydrogenComponentProps & HTMLAttributes<HTMLDivElement>
+>((props, ref) => {
   let { children, dangerouslySetInnerHTML, ...rest } = props
 
   return (

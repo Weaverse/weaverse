@@ -64,6 +64,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     deletedAt,
     css,
     __hidden,
+    // Need to get rid of this `data` property
     data: _,
     ...rest
   } = data
