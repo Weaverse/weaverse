@@ -1,5 +1,16 @@
 # @weaverse/shopify
 
+## 3.0.0
+
+### Major Changes
+
+- Update dependencies & fix minor bugs
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/react@3.0.0
+
 ## 2.10.2
 
 ### Patch Changes

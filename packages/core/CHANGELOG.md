@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 3.0.0
+
+### Major Changes
+
+- Update dependencies & fix minor bugs
+
 ## 2.10.2
 
 ### Patch Changes
