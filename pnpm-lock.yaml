@@ -110,10 +110,10 @@ importers:
         specifier: ^2
         version: 2.7.2(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)
       '@shopify/hydrogen':
-        specifier: ^2023.10
-        version: 2023.10.4(@remix-run/react@2.7.2)(@remix-run/server-runtime@2.7.2)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ~2024.1.2
+        version: 2024.1.2(@remix-run/react@2.7.2)(@remix-run/server-runtime@2.7.2)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
       '@weaverse/react':
-        specifier: 2.10.2
+        specifier: 3.0.0
         version: link:../react
       react:
         specifier: '>=18'
@@ -135,7 +135,7 @@ importers:
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: 2.10.2
+        specifier: 3.0.0
         version: link:../core
       clsx:
         specifier: ^2.1.0
@@ -156,7 +156,7 @@ importers:
         specifier: ^1.2.8
         version: 1.2.8(react@18.2.0)
       '@weaverse/react':
-        specifier: 2.10.2
+        specifier: 3.0.0
         version: link:../react
       clsx:
         specifier: ^2.1.0
@@ -198,8 +198,8 @@ importers:
         specifier: ^2.0.3
         version: 2.0.3(@remix-run/server-runtime@2.7.2)(@shopify/oxygen-workers-types@4.0.0)
       '@weaverse/hydrogen':
-        specifier: ^2.10.3
-        version: 2.10.3(@remix-run/react@2.7.2)(@shopify/hydrogen@2024.1.2)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 3.0.0
+        version: link:../../packages/hydrogen
       clsx:
         specifier: 2.1.0
         version: 2.1.0
@@ -4517,26 +4517,6 @@ packages:
       - supports-color
     dev: false
 
-  /@shopify/hydrogen-react@2023.10.1(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-RHyo+Fc1tBUmFTHmKGPFWF2BqDfHHqefv9JHr/j3ovGgJGSefk30zIS1OtQkm6UFj2VPLu3bZJM8chgUQnXJ9w==}
-    engines: {node: '>=18.0.0'}
-    peerDependencies:
-      react: ^18.0.0
-      react-dom: ^18.0.0
-    dependencies:
-      '@google/model-viewer': 1.12.1
-      '@xstate/fsm': 2.1.0
-      '@xstate/react': 3.2.2(@types/react@18.2.60)(@xstate/fsm@2.1.0)(react@18.2.0)
-      graphql: 16.8.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      type-fest: 4.10.3
-      worktop: 0.7.3
-    transitivePeerDependencies:
-      - '@types/react'
-      - xstate
-    dev: false
-
   /@shopify/hydrogen-react@2024.1.1(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-3ZDTUZPauXyV6TTxSjsEd0KEybT0jDpaEaB2tPtpjq783rJ1xD+wS9sWqqaKhAY2EUngg03muZiiuBeZIbR4Fw==}
     engines: {node: '>=18.0.0'}
@@ -4554,25 +4534,6 @@ packages:
       worktop: 0.7.3
     transitivePeerDependencies:
       - '@types/react'
-      - xstate
-    dev: false
-
-  /@shopify/hydrogen@2023.10.4(@remix-run/react@2.7.2)(@remix-run/server-runtime@2.7.2)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-yR33VlhjkO1QzpJZFvUXNW4coW3vOJ40ze3kZ5ppeQugwi65NuHOM35W5NTcq3cLiIGNM0ra85/JFWMjdl5qgQ==}
-    peerDependencies:
-      '@remix-run/react': ^2.1.0
-      '@remix-run/server-runtime': ^2.1.0
-      react: ^18.2.0
-    dependencies:
-      '@remix-run/react': 2.7.2(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)
-      '@remix-run/server-runtime': 2.7.2(typescript@5.3.3)
-      '@shopify/hydrogen-react': 2023.10.1(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
-      content-security-policy-builder: 2.1.1
-      react: 18.2.0
-      type-fest: 4.10.3
-    transitivePeerDependencies:
-      - '@types/react'
-      - react-dom
       - xstate
     dev: false
 
@@ -5388,43 +5349,6 @@ packages:
 
   /@vanilla-extract/private@1.0.3:
     resolution: {integrity: sha512-17kVyLq3ePTKOkveHxXuIJZtGYs+cSoev7BlP+Lf4916qfDhk/HBjvlYDe8egrea7LNPHKwSZJK/bzZC+Q6AwQ==}
-
-  /@weaverse/core@2.10.3:
-    resolution: {integrity: sha512-uOse06iaim+GgsYax9xXn5R74Ci/cI6DBJ+LjXVTfqe+PqwDmIjBtDLMao2gGMnFy096XrnXvMMNQjicxZfOUQ==, tarball: https://registry.npmjs.org/@weaverse/core/-/core-2.10.3.tgz}
-    engines: {node: '>=18'}
-    dependencies:
-      '@stitches/core': 1.2.8
-    dev: false
-
-  /@weaverse/hydrogen@2.10.3(@remix-run/react@2.7.2)(@shopify/hydrogen@2024.1.2)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-UGZ3HpxRMhO+nc9bLCM+oDaodINtq2xPdhpyjllE8zYxgXlPbrZlilNgQnyL1++i/dYQbeXEXQj0pU0az7YBDQ==, tarball: https://registry.npmjs.org/@weaverse/hydrogen/-/hydrogen-2.10.3.tgz}
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@remix-run/react': ^2
-      '@shopify/hydrogen': '>=2023'
-      react: '>=18'
-      react-dom: '>=18'
-    dependencies:
-      '@remix-run/react': 2.7.2(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)
-      '@shopify/hydrogen': 2024.1.2(@remix-run/react@2.7.2)(@remix-run/server-runtime@2.7.2)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
-      '@weaverse/react': 2.10.3(react-dom@18.2.0)(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-error-boundary: 4.0.12(react@18.2.0)
-    dev: false
-
-  /@weaverse/react@2.10.3(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-0qNtFrkMbdqyRhy/2IchVy+LC4CGcFqJttQ051e+pxXgR+3uMa3YdNFoebcPW5vhY6Oa7U7s8WWRPOccSpFdJQ==, tarball: https://registry.npmjs.org/@weaverse/react/-/react-2.10.3.tgz}
-    engines: {node: '>=18'}
-    peerDependencies:
-      react: '>=18'
-      react-dom: '>=18'
-    dependencies:
-      '@weaverse/core': 2.10.3
-      clsx: 2.1.0
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    dev: false
 
   /@web3-storage/multipart-parser@1.0.0:
     resolution: {integrity: sha512-BEO6al7BYqcnfX15W2cnGR+Q566ACXAT9UQykORCWW80lmkpWsnEob6zJS1ZVBKsSJC8+7vJkHwlp+lXG1UCdw==}

@@ -30,7 +30,7 @@
   },
   "peerDependencies": {
     "@remix-run/react": "^2",
-    "@shopify/hydrogen": "^2023.10",
+    "@shopify/hydrogen": "~2024.1.2",
     "react": ">=18",
     "react-dom": ">=18"
   },
