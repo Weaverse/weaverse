@@ -1,5 +1,12 @@
 # @weaverse/hydrogen
 
+## 3.0.1
+
+### Patch Changes
+
+- Bump @shopify/hydrogen version
+  - @weaverse/react@3.0.1
+
 ## 3.0.0
 
 ### Major Changes
