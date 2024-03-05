@@ -1,10 +1,21 @@
 # @weaverse/react
 
-## 2.10.3
+## 3.0.1
 
 ### Patch Changes
 
-- @weaverse/core@2.10.3
+- @weaverse/core@3.0.1
+
+## 3.0.0
+
+### Major Changes
+
+- Update dependencies & fix minor bugs
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/core@3.0.0
 
 ## 2.10.2
 

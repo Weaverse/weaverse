@@ -1,11 +1,22 @@
 # @weaverse/hydrogen
 
-## 2.10.3
+## 3.0.1
 
 ### Patch Changes
 
-- Add support for Hydrogen newest version
-  - @weaverse/react@2.10.3
+- Bump @shopify/hydrogen version
+  - @weaverse/react@3.0.1
+
+## 3.0.0
+
+### Major Changes
+
+- Update dependencies & fix minor bugs
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/react@3.0.0
 
 ## 2.10.2
 

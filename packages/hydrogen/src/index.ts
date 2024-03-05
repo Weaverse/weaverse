@@ -43,8 +43,8 @@ export class WeaverseHydrogen extends Weaverse {
   requestInfo: WeaverseLoaderRequestInfo
   declare ItemConstructor: typeof WeaverseHydrogenItem
   declare data: HydrogenPageData
-  declare static itemInstances: Map<string, WeaverseHydrogenItem>
-  declare static elementRegistry: Map<string, HydrogenElement>
+  static itemInstances: Map<string, WeaverseHydrogenItem>
+  static elementRegistry: Map<string, HydrogenElement>
 
   constructor(params: WeaverseHydrogenParams) {
     let { internal, pageId, requestInfo, ...coreParams } = params
