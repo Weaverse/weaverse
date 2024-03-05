@@ -83,7 +83,7 @@ importers:
   packages/cli:
     dependencies:
       axios:
-        specifier: ^1.6.5
+        specifier: ^1.6.7
         version: 1.6.7
       cross-spawn:
         specifier: ^7.0.3
