@@ -2,9 +2,10 @@
 
 directories=(
   "."
+  "packages/cli"
   "packages/core"
-  "packages/react"
   "packages/hydrogen"
+  "packages/react"
   "packages/shopify"
   "templates/pilot"
 )
