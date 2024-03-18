@@ -2,23 +2,41 @@
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**", "build/**"]
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/**",
+        "build/**"
+      ]
     },
     "test": {
       "outputs": []
     },
     "dev": {
       "cache": false,
-      "dependsOn": ["@weaverse/core#build", "@weaverse/react#build", "@weaverse/hydrogen#build"]
+      "dependsOn": [
+        "@weaverse/core#build",
+        "@weaverse/react#build",
+        "@weaverse/hydrogen#build"
+      ]
     },
     "pilot#build": {
-      "dependsOn": ["@weaverse/core#build", "@weaverse/react#build", "@weaverse/hydrogen#build"],
-      "outputs": ["dist/**"]
+      "dependsOn": [
+        "@weaverse/core#build",
+        "@weaverse/react#build",
+        "@weaverse/hydrogen#build"
+      ],
+      "outputs": [
+        "dist/**"
+      ]
     },
     "typecheck": {
       "outputs": [],
-      "inputs": ["packages/**/*.ts", "packages/**/*.tsx"]
+      "inputs": [
+        "packages/**/*.ts",
+        "packages/**/*.tsx"
+      ]
     }
   }
 }
