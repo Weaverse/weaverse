@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/Weaverse/weaverse#readme",
   "dependencies": {
-    "axios": "^1.6.5",
+    "axios": "^1.6.8",
     "cross-spawn": "^7.0.3",
     "decompress": "^4.2.1",
     "fs-extra": "^11.2.0",
