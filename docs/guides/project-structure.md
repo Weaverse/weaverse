@@ -15,15 +15,23 @@ Before getting into the finer details, let's get a top-level overview of the pro
 🌳 <root>
 ├── 📁 app
 │   ├── 📁 ...
+│   ├── 📁 components
+│   ├── 📁 data
+│   ├── 📁 graphql
+│   ├── 📁 hooks
+│   ├── 📁 libs
 │   ├── 📁 routes
 │   ├── 📁 sections
+│   ├── 📁 styles
 │   ├── 📁 weaverse
+│   │   └── 📄 components.ts
+│   │   └── 📄 create-weaverse.server.ts
+│   │   └── 📄 index.tsx
+│   │   └── 📄 schema.server.ts
+│   │   └── 📄 style.tsx
 │   ├── 📄 entry.client.tsx
 │   ├── 📄 entry.server.tsx
 │   └── 📄 root.tsx
-├── 📁 dist
-│   ├── 📁 client
-│   └── 📁 worker
 ├── 📁 public
 │   └── 📄 favicon.svg
 ├── 📄 .editorconfig
