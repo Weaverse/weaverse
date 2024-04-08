@@ -23,10 +23,12 @@ of predefined variables specially tailored for the framework.
 
 3. **`PUBLIC_STORE_DOMAIN`**: The domain of the store used to communicate with the Storefront API. By default, if you're
    using the demo setup, the **`.env`** file will point to **`mock.shop`**.
+4. **`PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID`**: The public access token for the Customer Account API. This is not required if you are using the old login method with password.
+5. **`PUBLIC_CUSTOMER_ACCOUNT_API_URL`**: The API URL for the Customer Account API, it should look like this: `https://shopify.com/12345678`.
 
-4. **`PRIVATE_STOREFRONT_API_TOKEN`** (optional): The private access token for the Storefront API.
+6. **`PRIVATE_STOREFRONT_API_TOKEN`** (optional): The private access token for the Storefront API.
 
-5. **`PUBLIC_STOREFRONT_API_VERSION`** (optional): The Storefront API version. If not specified, it defaults to the
+7. **`PUBLIC_STOREFRONT_API_VERSION`** (optional): The Storefront API version. If not specified, it defaults to the
    version of the Storefront API used by Hydrogen.
 
 ## Weaverse Specific Environment Variables
@@ -34,10 +36,9 @@ of predefined variables specially tailored for the framework.
 1. **`WEAVERSE_PROJECT_ID`**: A unique ID representing your specific **Weaverse** project. You can find this ID inside
    the Weaverse Studio under the **Project Settings**.
 
-2. **`WEAVERSE_API_KEY`: Weaverse** API Key that is retrieved from your Weaverse Account setting. This is used to make
-   sure your content is protected.
+2. **`WEAVERSE_API_KEY`** (optional): Weaverse API Key that is retrieved from your Weaverse Account setting. This is used for some secured backend operations.
 
-3. **`WEAVERSE_HOST`** (optional): The host URL for Weaverse services. If not specified, the default value is \* \*`https://weaverse.io`\*\*.
+3. **`WEAVERSE_HOST`** (optional): The host URL for Weaverse services. If not specified, the default value is **`https://studio.weaverse.io`**.
 
 ## Setting Up Environment Variables
 
@@ -49,7 +50,6 @@ Define these environment variables in your **`.env`** file located at the root o
 SESSION_SECRET="my-secret-key"
 PUBLIC_STORE_DOMAIN="mock.shop"
 WEAVERSE_PROJECT_ID="weaverse-project-id"
-WEAVERSE_HOST="https://weaverse.io"
 ```
 
 #### When having a token
@@ -60,8 +60,9 @@ WEAVERSE_HOST="https://weaverse.io"
 SESSION_SECRET="my-secret-key"
 PUBLIC_STOREFRONT_API_TOKEN="storefront-api-token"
 PUBLIC_STORE_DOMAIN="my-store.myshopify.com"
+PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID="customer-account-api-client-id"
+PUBLIC_CUSTOMER_ACCOUNT_API_URL="https://shopify.com/12345678"
 WEAVERSE_PROJECT_ID="weaverse-project-id"
-WEAVERSE_HOST="https://weaverse.io"
 ```
 
 📌 **Note**: Always avoid committing the **`.env`** file to version control. This could inadvertently expose sensitive
