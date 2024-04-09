@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 3.1.1
+
+### Patch Changes
+
+- 3a975da: Adding url input type
+
 ## 3.1.0
 
 ## 3.0.1

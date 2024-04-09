@@ -1,5 +1,13 @@
 # @weaverse/shopify
 
+## 3.1.1
+
+### Patch Changes
+
+- 3a975da: Adding url input type
+- Updated dependencies [3a975da]
+  - @weaverse/react@3.1.1
+
 ## 3.1.0
 
 ### Patch Changes
