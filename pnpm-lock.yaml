@@ -174,7 +174,7 @@ importers:
   templates/pilot:
     dependencies:
       '@fontsource/roboto':
-        specifier: ^5.0.8
+        specifier: ^5.0.12
         version: 5.0.12
       '@headlessui/react':
         specifier: 1.7.18
@@ -198,8 +198,8 @@ importers:
         specifier: ^2.0.3
         version: 2.0.3(@remix-run/server-runtime@2.8.1)(@shopify/oxygen-workers-types@4.0.0)
       '@weaverse/hydrogen':
-        specifier: 3.0.1
-        version: 3.0.1(@remix-run/react@2.8.1)(@shopify/hydrogen@2024.1.6)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 3.1.0
+        version: link:../../packages/hydrogen
       clsx:
         specifier: 2.1.0
         version: 2.1.0
@@ -228,7 +228,7 @@ importers:
         specifier: 9.8.1
         version: 9.8.1(react-dom@18.2.0)(react@18.2.0)
       react-player:
-        specifier: ^2.14.1
+        specifier: ^2.15.1
         version: 2.15.1(react@18.2.0)
       react-use:
         specifier: 17.5.0
@@ -244,11 +244,11 @@ importers:
         version: 1.0.4
     optionalDependencies:
       '@esbuild/linux-x64':
-        specifier: ^0.20.1
+        specifier: ^0.20.2
         version: 0.20.2
     devDependencies:
       '@playwright/test':
-        specifier: ^1.40.1
+        specifier: ^1.42.1
         version: 1.43.0
       '@remix-run/dev':
         specifier: 2.8.1
@@ -1789,7 +1789,6 @@ packages:
     cpu: [ppc64]
     os: [aix]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/aix-ppc64@0.20.2:
@@ -1814,7 +1813,6 @@ packages:
     cpu: [arm64]
     os: [android]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/android-arm64@0.20.2:
@@ -1839,7 +1837,6 @@ packages:
     cpu: [arm]
     os: [android]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/android-arm@0.20.2:
@@ -1864,7 +1861,6 @@ packages:
     cpu: [x64]
     os: [android]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/android-x64@0.20.2:
@@ -1889,7 +1885,6 @@ packages:
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/darwin-arm64@0.20.2:
@@ -1914,7 +1909,6 @@ packages:
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/darwin-x64@0.20.2:
@@ -1939,7 +1933,6 @@ packages:
     cpu: [arm64]
     os: [freebsd]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/freebsd-arm64@0.20.2:
@@ -1964,7 +1957,6 @@ packages:
     cpu: [x64]
     os: [freebsd]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/freebsd-x64@0.20.2:
@@ -1989,7 +1981,6 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/linux-arm64@0.20.2:
@@ -2014,7 +2005,6 @@ packages:
     cpu: [arm]
     os: [linux]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/linux-arm@0.20.2:
@@ -2039,7 +2029,6 @@ packages:
     cpu: [ia32]
     os: [linux]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/linux-ia32@0.20.2:
@@ -2064,7 +2053,6 @@ packages:
     cpu: [loong64]
     os: [linux]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/linux-loong64@0.20.2:
@@ -2089,7 +2077,6 @@ packages:
     cpu: [mips64el]
     os: [linux]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/linux-mips64el@0.20.2:
@@ -2114,7 +2101,6 @@ packages:
     cpu: [ppc64]
     os: [linux]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/linux-ppc64@0.20.2:
@@ -2139,7 +2125,6 @@ packages:
     cpu: [riscv64]
     os: [linux]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/linux-riscv64@0.20.2:
@@ -2164,7 +2149,6 @@ packages:
     cpu: [s390x]
     os: [linux]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/linux-s390x@0.20.2:
@@ -2189,7 +2173,6 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/linux-x64@0.20.2:
@@ -2214,7 +2197,6 @@ packages:
     cpu: [x64]
     os: [netbsd]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/netbsd-x64@0.20.2:
@@ -2239,7 +2221,6 @@ packages:
     cpu: [x64]
     os: [openbsd]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/openbsd-x64@0.20.2:
@@ -2264,7 +2245,6 @@ packages:
     cpu: [x64]
     os: [sunos]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/sunos-x64@0.20.2:
@@ -2289,7 +2269,6 @@ packages:
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/win32-arm64@0.20.2:
@@ -2314,7 +2293,6 @@ packages:
     cpu: [ia32]
     os: [win32]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/win32-ia32@0.20.2:
@@ -2339,7 +2317,6 @@ packages:
     cpu: [x64]
     os: [win32]
     requiresBuild: true
-    dev: true
     optional: true
 
   /@esbuild/win32-x64@0.20.2:
@@ -3324,8 +3301,8 @@ packages:
     dependencies:
       which: 3.0.1
 
-  /@oclif/core@2.15.0(@types/node@20.11.30)(typescript@5.4.2):
-    resolution: {integrity: sha512-fNEMG5DzJHhYmI3MgpByTvltBOMyFcnRIUMxbiz2ai8rhaYgaTHMG3Q38HcosfIvtw9nCjxpcQtC8MN8QtVCcA==}
+  /@oclif/core@2.16.0(@types/node@20.11.30)(typescript@5.4.2):
+    resolution: {integrity: sha512-dL6atBH0zCZl1A1IXCKJgLPrM/wR7K+Wi401E/IvqsK8m2iCHW+0TEOGrans/cuN3oTW+uxIyJFHJ8Im0k4qBw==}
     engines: {node: '>=14.0.0'}
     dependencies:
       '@types/cli-progress': 3.11.5
@@ -3435,7 +3412,7 @@ packages:
     resolution: {integrity: sha512-w1vQ6WGltMnyjJnnt6Vo/VVtyhz1V0O9McCy0qKIY+os7SunjnUMRNS/y8MZ7b6AjMSdbLGV9/VAYSlWyQg9SQ==}
     engines: {node: '>=12.0.0'}
     dependencies:
-      '@oclif/core': 2.15.0(@types/node@20.11.30)(typescript@5.4.2)
+      '@oclif/core': 2.16.0(@types/node@20.11.30)(typescript@5.4.2)
       lodash: 4.17.21
     transitivePeerDependencies:
       - '@swc/core'
@@ -3448,7 +3425,7 @@ packages:
     resolution: {integrity: sha512-u+GXX/KAGL9S10LxAwNUaWdzbEBARJ92ogmM7g3gDVud2HioCmvWQCDohNRVZ9GYV9oKwZ/M8xwd6a1d95rEKQ==}
     engines: {node: '>=12.0.0'}
     dependencies:
-      '@oclif/core': 2.15.0(@types/node@20.11.30)(typescript@5.4.2)
+      '@oclif/core': 2.16.0(@types/node@20.11.30)(typescript@5.4.2)
     transitivePeerDependencies:
       - '@swc/core'
       - '@swc/wasm'
@@ -3460,7 +3437,7 @@ packages:
     resolution: {integrity: sha512-JtumjspRdzJgHk1S10wu68tdlqSnyYRmSgCsmsc6AEvU+Orb0DQfrAgJEO77rPKPNo5MfnVAj0WyCDTi0JT/vw==}
     engines: {node: '>=16'}
     dependencies:
-      '@oclif/core': 2.15.0(@types/node@20.11.30)(typescript@5.4.2)
+      '@oclif/core': 2.16.0(@types/node@20.11.30)(typescript@5.4.2)
       chalk: 4.1.2
       debug: 4.3.4(supports-color@8.1.1)
       http-call: 5.3.0
@@ -5786,7 +5763,7 @@ packages:
       '@babel/plugin-syntax-typescript': 7.24.1(@babel/core@7.24.4)
       '@vanilla-extract/babel-plugin-debug-ids': 1.0.5
       '@vanilla-extract/css': 1.14.2
-      esbuild: 0.17.6
+      esbuild: 0.19.12
       eval: 0.1.8
       find-up: 5.0.0
       javascript-stringify: 2.1.0
@@ -5807,43 +5784,6 @@ packages:
 
   /@vanilla-extract/private@1.0.4:
     resolution: {integrity: sha512-8FGD6AejeC/nXcblgNCM5rnZb9KXa4WNkR03HCWtdJBpANjTgjHEglNLFnhuvdQ78tC6afaxBPI+g7F2NX3tgg==}
-
-  /@weaverse/core@3.0.1:
-    resolution: {integrity: sha512-QKkuZtBwrii2QaZdp+V/LjUpqjhFgyiGqL2do1gorBciHvjN3tUZpk+KAE6tE7JwjkqyA93DbhKHOWQ3tp9irA==, tarball: https://registry.npmjs.org/@weaverse/core/-/core-3.0.1.tgz}
-    engines: {node: '>=18'}
-    dependencies:
-      '@stitches/core': 1.2.8
-    dev: false
-
-  /@weaverse/hydrogen@3.0.1(@remix-run/react@2.8.1)(@shopify/hydrogen@2024.1.6)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-3EA/UXETCAbGdHpNPA1tCSh3OqTxR7aAu+z+YxStM+6/Cz7RPy+PZv6FaGfFgbOrH+GVEOhztGZ0lA4/lMf/3A==, tarball: https://registry.npmjs.org/@weaverse/hydrogen/-/hydrogen-3.0.1.tgz}
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@remix-run/react': ^2
-      '@shopify/hydrogen': ~2024.1.2
-      react: '>=18'
-      react-dom: '>=18'
-    dependencies:
-      '@remix-run/react': 2.8.1(react-dom@18.2.0)(react@18.2.0)(typescript@5.4.2)
-      '@shopify/hydrogen': 2024.1.6(@remix-run/react@2.8.1)(@remix-run/server-runtime@2.8.1)(@types/react@18.2.66)(react-dom@18.2.0)(react@18.2.0)
-      '@weaverse/react': 3.0.1(react-dom@18.2.0)(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-error-boundary: 4.0.13(react@18.2.0)
-    dev: false
-
-  /@weaverse/react@3.0.1(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-Zwvg2s52FJ2ByommlfBfkHyD6uzuOSRY1pQKCubuK3wQNUhzY3M8d2c/0rsEyUDnJhMi5fukG5Vn66USk7fJHA==, tarball: https://registry.npmjs.org/@weaverse/react/-/react-3.0.1.tgz}
-    engines: {node: '>=18'}
-    peerDependencies:
-      react: '>=18'
-      react-dom: '>=18'
-    dependencies:
-      '@weaverse/core': 3.0.1
-      clsx: 2.1.0
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    dev: false
 
   /@web3-storage/multipart-parser@1.0.0:
     resolution: {integrity: sha512-BEO6al7BYqcnfX15W2cnGR+Q566ACXAT9UQykORCWW80lmkpWsnEob6zJS1ZVBKsSJC8+7vJkHwlp+lXG1UCdw==}
@@ -6515,7 +6455,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001607
-      electron-to-chromium: 1.4.729
+      electron-to-chromium: 1.4.730
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.23.0)
 
@@ -7626,8 +7566,8 @@ packages:
       jake: 10.8.7
     dev: false
 
-  /electron-to-chromium@1.4.729:
-    resolution: {integrity: sha512-bx7+5Saea/qu14kmPTDHQxkp2UnziG3iajUQu3BxFvCOnpAJdDbMV4rSl+EqFDkkpNNVUFlR1kDfpL59xfy1HA==}
+  /electron-to-chromium@1.4.730:
+    resolution: {integrity: sha512-oJRPo82XEqtQAobHpJIR3zW5YO3sSRRkPz2an4yxi1UvqhsGm54vR/wzTFV74a3soDOJ8CKW7ajOOX5ESzddwg==}
 
   /emoji-regex@10.3.0:
     resolution: {integrity: sha512-QpLs9D9v9kArv4lfDEgg1X/gN5XLnf/A6l9cs8SPZLRZR3ZkY9+kwIQTxm+fsSej5UMYGE8fdoaZVIBlqG0XTw==}
@@ -7884,7 +7824,6 @@ packages:
       '@esbuild/win32-arm64': 0.19.12
       '@esbuild/win32-ia32': 0.19.12
       '@esbuild/win32-x64': 0.19.12
-    dev: true
 
   /esbuild@0.20.2:
     resolution: {integrity: sha512-WdOOppmUNU+IbZ0PaDiTst80zjnrOkyJNHoKupIcVyU8Lvla3Ugx94VzkQ32Ijqd7UhHJy75gNWDMUekcrSJ6g==}
