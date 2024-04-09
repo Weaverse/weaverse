@@ -4,7 +4,7 @@ description: A comprehensive guide to Weaverse, the first-ever Theme Customizer 
 publishedAt: March 28, 2024
 updatedAt: March 28, 2024
 order: 2
-published: false
+published: true
 ---
 
 
