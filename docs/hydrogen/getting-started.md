@@ -7,23 +7,23 @@ order: 1
 published: true
 ---
 
-## **Taking the First Step**
+## Taking the First Step
 
 Welcome to **Weaverse**! This guide will walk you through integrating the Weaverse app with your Shopify store and initiating your first **Weaverse Hydrogen** project.
 
-## **Exploring Before Committing: The Weaverse Playground**
+## Exploring Before Committing: The Weaverse Playground
 
 Not ready to install the app just yet? Try out our [Weaverse Playground](https://studio.weaverse.io/demo) to get a feel for the features. For guidance, watch our brief tutorial video below.
 
 <iframe src="https://www.youtube.com/embed/aQZdQ17kF1U?rel=0" frameBorder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowFullScreen></iframe>
 
-## **Installing the Weaverse App from the Shopify App Store**
+## Installing the Weaverse App from the Shopify App Store
 
 Begin by installing the Weaverse app. Go to the [Shopify app store](https://apps.shopify.com/weaverse), search for "Weaverse," and follow the installation instructions.
 
 ![Weaverse on Shopify Apps Store](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/weaverse_on_shopify_apps_store.png)
 
-## **Creating a New Weaverse Hydrogen Project**
+## Creating a New Weaverse Hydrogen Project
 
 ### Start a New Project
 
@@ -70,7 +70,7 @@ The Theme Customizer is designed to mirror Shopify's OS2 Theme Customizer for ea
 
 Start adding and customizing sections in the user-friendly Theme Customizer.
 
-## **Next Steps**
+## Next Steps
 
 You're now ready to dive in! Build your first Weaverse Hydrogen Theme with our guide.
 
