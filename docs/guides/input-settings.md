@@ -305,13 +305,13 @@ process.
 | ↳ `value`  | `string`            | A unique value for the option.                                                                                                            | ✅       |
 | ↳ `label`  | `string`            | Displayed text for the option.                                                                                                            | ✅       |
 | ↳ `icon`   | `string`            | Displayed icon for the option. When an **`icon`** is set, the **`label`** will act as its `tooltip`.                                      | ➖       |
-| ↳ `weight` | `string`            | An optional weight for the icon, which can be one of the followingvalues: `thin` \| `light` \| `regular` \| `bold` \| `fill` \| `duotone` | ➖       |
+| ↳ `weight` | `string`            | An optional weight for the icon, which can be one of the following values: `thin` \| `light` \| `regular` \| `bold` \| `fill` \| `duotone` | ➖       |
 
 💡 **Note**:
 
-- We use [Phosphor Icons](https://phosphoricons.com/) library for the icons.
+- We use [Lucide Icons](https://lucide.dev/) library for the icons.
 
-- The value of an `icon` is the name of the `React` component (e.g: **AddressBook**, **AlignTopSimple**...)
+- The value is the Icon name (e.g: [mail-search](https://lucide.dev/icons/mail-search), [bar-chart-horizontal](https://lucide.dev/icons/bar-chart-horizontal)...)
 
 - Not all icons are supported yet. Please let us know if you need an icon that is missing from your configs.
 
@@ -535,6 +535,27 @@ values: `top left` | `top center` | `top right` | `center left` | `center center
 <img alt="position_attr" src="https://downloads.intercomcdn.com/i/o/855185102/10d0807cd47ee9e9e60bc1d6/image.png" width="300"/>
 
 ## Resource Picker Inputs
+
+#### `url`
+
+The **`url`** input allows merchants to enter a URL or select a page from their store using the internal link picker.
+
+**Return:** `string` - The entered URL or the selected page's URL.
+
+**Example:**
+
+```txt
+{
+  type: "url",
+  label: "Button link",
+  name: "buttonLink",
+  defaultValue: "/products"
+}
+```
+
+**Output:**
+
+<img alt="product_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/url_input.png?v=1712823900" width="300"/>
 
 #### `product`
 
