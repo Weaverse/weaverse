@@ -10,3 +10,5 @@ node_modules/
 dist
 app/styles
 package.json
+/templates/pilot/customer-accountapi.generated.d.ts
+/templates/pilot/storefrontapi.generated.d.ts

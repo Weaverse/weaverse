@@ -1,6 +1,3 @@
-/**
- * @type {import("@types/eslint").Linter.BaseConfig}
- */
 module.exports = {
   env: {
     browser: true,
@@ -15,7 +12,6 @@ module.exports = {
     'no-useless-escape': 'off',
     '@typescript-eslint/no-non-null-asserted-optional-chain': 'off',
     'no-case-declarations': 'off',
-    'jest/no-deprecated-functions': 'off',
     'eslint-comments/disable-enable-pair': 'off',
     'prefer-const': 'off',
     'no-console': 'off',

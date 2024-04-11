@@ -10,3 +10,4 @@ dist/**
 .vscode/
 .DS_Store
 templates/**/package-lock.json
+/.eslintcache
