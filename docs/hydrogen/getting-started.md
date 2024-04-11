@@ -25,19 +25,19 @@ Begin by installing the Weaverse app. Go to the [Shopify app store](https://apps
 
 ## Creating a New Weaverse Hydrogen Project
 
-### Start a New Project
+#### Start a New Project
 
 ![Create Weaverse Hydrogen Project](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/create_weaverse_hydrogen_project.webp)
 
 In the Weaverse dashboard, click "Create New Project" to begin.
 
-### Choose a Starter Theme
+#### Choose a Starter Theme
 
 ![Select Weaverse Starter Theme](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/select_weaverse_starter_theme.webp)
 
 Select from various Hydrogen starter themes. The default "Pilot" theme is free and a great starting point.
 
-### Experiment with the Demo
+#### Experiment with the Demo
 
 Use the default Preview URL to explore the theme's features and interface.
 
@@ -45,14 +45,14 @@ Use the default Preview URL to explore the theme's features and interface.
 
 When ready, click "Start Setup" to proceed with building or deploying your project.
 
-### Setting Up Your Project
+#### Setting Up Your Project
 
 Choose from two setup options:
 
 - **For Developers**: Clone the project locally or use our command to start the development server.
 - **For Non-Developers**: Follow our guide to deploy the project live. This option is less technical. For more information, refer to our [deployment guide](/docs/deployment/oxygen).
 
-### Accessing the Development Server
+#### Accessing the Development Server
 
 After setup, enter the development server preview URL (default `http://localhost:3456`) in the Preview URL field and click "Next."
 
@@ -62,11 +62,11 @@ Note: You can later modify the Preview URL in the **Project Settings**:
 
 💡 **Tip**: Use a **Chrome-based Browser** for optimal experience. Browsers like **Safari** may not support `localhost`.
 
-### Exploring the Theme Customizer
+#### Exploring the Theme Customizer
 
 The Theme Customizer is designed to mirror Shopify's OS2 Theme Customizer for ease of use.
 
-### Adding Sections and Customizing
+#### Adding Sections and Customizing
 
 Start adding and customizing sections in the user-friendly Theme Customizer.
 

@@ -1,5 +1,5 @@
 ---
-title: Tutorial (20m)
+title: Quick Start Guide (20m)
 description: A comprehensive guide to Weaverse, the first-ever Theme Customizer & CMS for Shopify Hydrogen.
 publishedAt: March 28, 2024
 updatedAt: March 28, 2024
@@ -8,7 +8,7 @@ published: true
 ---
 
 
-# Weaverse Hydrogen Tutorial
+# Weaverse Hydrogen Quick Start Guide (20m)
 
 Welcome to this step-by-step guide on setting up a Weaverse Hydrogen project using the pre-made "Pilot" theme. Aimed at providing a hands-on experience, this tutorial is structured to guide you from installation through to deployment, ensuring you're ready to launch your Shopify store with a custom theme. Whether you're coding along or just browsing, expect to spend about 20 minutes on this guide.
 
@@ -45,7 +45,7 @@ After project creation, dive into the theme editor to customize your theme, from
 
 
 
-### **Setup Local Development**
+### Setup Local Development
 
 To kickstart your local development with the Weaverse Hydrogen project, there are several methods to clone or set up the project on your local machine. Here's how you can proceed with the Pilot theme, available at: [Pilot Theme GitHub Repository](https://github.com/weaverse/pilot).
 
@@ -99,7 +99,7 @@ After selecting one of the setup methods for your project, follow these steps to
     ```bash
     cd <your-project-name>
     ```
-    
+
 
 
 2. **Setting Up Environment Variables**:
@@ -121,7 +121,7 @@ After selecting one of the setup methods for your project, follow these steps to
     WEAVERSE_PROJECT_ID="your-weaverse-project-id"
     PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID="your-customer-account-api-client-id"
     PUBLIC_CUSTOMER_ACCOUNT_API_URL="https://your-shopify-store.myshopify.com/api/2022-01/graphql"
-    
+
     ### Optional:
     #PRIVATE_STOREFRONT_API_TOKEN="your-private-storefront-api-token" # Optional
     #PUBLIC_STOREFRONT_API_VERSION="unstable" # Optional, defaults to Hydrogen's version
@@ -263,7 +263,7 @@ export const schema: HydrogenComponentSchema = {
   title: 'User Profiles',
   type: 'user-profiles',
   inspector: [
-    
+
   ]
 };
 ```
