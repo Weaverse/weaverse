@@ -1,5 +1,5 @@
 ---
-title: Quick Start Guide (30m)
+title: Tutorial (20m)
 description: A comprehensive guide to Weaverse, the first-ever Theme Customizer & CMS for Shopify Hydrogen.
 publishedAt: March 28, 2024
 updatedAt: April 11, 2024
@@ -8,7 +8,7 @@ published: true
 ---
 
 
-# Weaverse Hydrogen Quick Start Guide (20m)
+# Weaverse Hydrogen Tutorial
 
 Welcome to this step-by-step guide on setting up a Weaverse Hydrogen project using the pre-made "Pilot" theme. Aimed at providing a hands-on experience, this tutorial is structured to guide you from installation through to deployment, ensuring you're ready to launch your Shopify store with a custom theme. Whether you're coding along or just browsing, expect to spend about 20 minutes on this guide.
 
