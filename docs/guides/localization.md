@@ -4,7 +4,7 @@ description: Explore how Weaverse empowers you to create a multilingual storefro
 publishedAt: November 20, 2023
 updatedAt: January 17, 2024
 order: 10
-published: true
+published: false
 ---
 
 **Weaverse** is designed to provide a seamless multilingual storefront experience,

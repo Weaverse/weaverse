@@ -1,8 +1,8 @@
 ---
-title: Quick Start Guide (20m)
+title: Quick Start Guide (30m)
 description: A comprehensive guide to Weaverse, the first-ever Theme Customizer & CMS for Shopify Hydrogen.
 publishedAt: March 28, 2024
-updatedAt: March 28, 2024
+updatedAt: April 11, 2024
 order: 2
 published: true
 ---
@@ -104,7 +104,12 @@ After selecting one of the setup methods for your project, follow these steps to
 
 2. **Setting Up Environment Variables**:
   - Create a `.env` file in the root of your project directory.
+  - Install [Headless](https://apps.shopify.com) or [Hydrogen](https://apps.shopify.com) (paid store only) app on your Shopify store to obtain necessary API keys and tokens. [Learn more](/docs/guides/environment-variables)
   - Populate the `.env` file with necessary environment variables. Here are examples for both the demo setup and a setup with real store data.
+  - If you already got a store with Hydrogen app installed, you can pull the ENV with this command:
+    ```bash
+    npx shopify hydrogen env pull
+    ```
 
     **For a demo setup using `mock.shop`:**
     ```plaintext
@@ -325,3 +330,243 @@ To incorporate custom data for user profiles in your Weaverse Hydrogen project, 
 5. **Repeat**: Add more entries to test various data presentations.
 
 ![Shopify MetaObject Entries](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/metaobject_entry.png?v=1712227679)
+
+
+## Querying the UserProfile MetaObject
+
+To leverage the custom data stored in UserProfile MetaObjects within your Shopify store, you'll need to craft a GraphQL query that fetches this data from the Shopify Storefront API. The query and its implementation are outlined below:
+
+### Fetching MetaObject Data
+
+Add the following query to your `app/data/queries.ts` file to retrieve MetaObject data. This query is designed to fetch a specific type of MetaObject, including details such as key, type, value, and any associated media images.
+
+```tsx
+// app/data/queries.ts
+
+export const METAOBJECTS_QUERY = `#graphql
+  query MetaObjects($type: String!, $first: Int) {
+    metaobjects(type: $type, first: $first) {
+      nodes {
+        fields {
+          key
+          type
+          value
+          reference {
+            ... on MediaImage {
+              alt
+              image {
+                altText
+                url
+                width
+                height
+              }
+            }
+          }
+        }
+        handle
+        id
+        type
+      }
+    }
+  }
+`;
+```
+This query has been added to [`app/data/queries.ts`](https://github.com/Weaverse/pilot/blob/main/app/data/queries.ts#L480) in the Weaverse Pilot theme repository for your reference.
+
+### Implementing the Loader Function
+
+Next, define a metaobject picker input and a loader function within your component to utilize this query. This example demonstrates how to set up the loader function in `app/sections/user-profiles/index.tsx`:
+
+```tsx
+// app/sections/user-profiles/index.tsx
+
+export let schema: HydrogenComponentSchema = {
+  type: 'meta-demo',
+  title: 'Metaobject Demo',
+  toolbar: ['general-settings', ['duplicate', 'delete']],
+  inspector: [
+    {
+      group: 'Metaobject Demo',
+      inputs: [
+        {
+          label: 'Select metaobject definition',
+          type: 'metaobject',
+          name: 'metaObjectData',
+          shouldRevalidate: true,
+        },
+        {
+          label: 'Items per row',
+          name: 'itemsPerRow',
+          type: 'range',
+          configs: {
+            min: 1,
+            max: 10,
+            defaultValue: 3,
+          },
+        },
+      ],
+    },
+  ],
+};
+
+export let loader = async (args: ComponentLoaderArgs<UserProfilesProps>) => {
+  let {weaverse, data} = args;
+  let {storefront} = weaverse;
+  if (!data?.metaObjectData) {
+    return null;
+  }
+  let {metaobjects} = await storefront.query(METAOBJECTS_QUERY, {
+    variables: {
+      type: data.metaObjectData.type,
+      first: 10,
+    },
+  });
+  return {
+    userProfiles: metaobjects.nodes,
+  };
+};
+```
+
+The `shouldRevalidate` property in the metaobject input ensures the page revalidates, allowing the loader function to fetch new data whenever a different metaobject definition is selected.
+
+The loader function returns a `userProfiles` object containing the fetched MetaObject data, making it accessible through `props.loaderData` in your component for rendering user profiles.
+
+
+## Finishing the UserProfiles Section
+
+It's time to finalize the `UserProfiles` section. Update your code with the following snippet in the `app/sections/user-profiles/index.tsx` file:
+
+```tsx
+// app/sections/user-profiles/index.tsx
+
+import type {
+  ComponentLoaderArgs,
+  HydrogenComponentProps,
+  HydrogenComponentSchema,
+} from '@weaverse/hydrogen';
+import {forwardRef} from 'react';
+import {METAOBJECTS_QUERY} from '~/data/queries';
+import clsx from 'clsx';
+import {Image} from '@shopify/hydrogen';
+import {Button} from '~/components';
+
+const UserCard = ({user}: {user: any}) => {
+  let {fields} = user;
+  let image = fields.find((field: any) => field.key === 'avatar');
+  let imageData = image?.reference?.image;
+  let name = fields.find((field: any) => field.key === 'name')?.value;
+  let role = fields.find((field: any) => field.key === 'role')?.value;
+  let description = fields.find(
+          (field: any) => field.key === 'description',
+  )?.value;
+  return (
+          <div
+                  className="flex flex-col gap-2 items-center border bg-card text-card-foreground rounded-lg overflow-hidden shadow-lg max-w-sm mx-auto hover:shadow-xl transition-all duration-200"
+                  data-v0-t="card"
+          >
+            <Image
+                    className="object-cover w-full"
+                    data={imageData}
+                    style={{aspectRatio: '320/320', objectFit: 'contain'}}
+            />
+            <div className="p-4">
+              <h2 className="text-2xl font-bold hover:text-gray-700 transition-all duration-200">
+                {name}
+              </h2>
+              <h3 className="text-gray-500 hover:text-gray-600 transition-all duration-200">
+                {role}
+              </h3>
+              <p className="mt-2 text-gray-600 hover:text-gray-700 transition-all duration-200">
+                {description}
+              </p>
+              <div className="flex mt-4 space-x-2">
+                <Button>Follow</Button>
+                <Button variant={'secondary'}>Message</Button>
+              </div>
+            </div>
+          </div>
+  );
+};
+
+interface UserProfilesProps extends HydrogenComponentProps {
+  metaObjectData: {
+    id: string;
+    type: string;
+  };
+  itemsPerRow: number;
+}
+
+const UserProfiles = forwardRef<HTMLDivElement, UserProfilesProps>(
+        (props, ref) => {
+          let {loaderData, metaObjectData, itemsPerRow, className, ...rest} = props;
+          if (!metaObjectData) {
+            return (
+                    <section
+                            className={clsx(
+                                    'w-full px-6 py-12 md:py-24 lg:py-32 bg-amber-50 mx-auto',
+                                    className,
+                            )}
+                            ref={ref}
+                            {...rest}
+                    >
+                      <p className="text-center">Please select a metaobject definition</p>
+                    </section>
+            );
+          }
+          return (
+                  <div
+                          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4"
+                          ref={ref}
+                          {...rest}
+                  >
+                    <div
+                            className="grid w-fit mx-auto"
+                            style={{
+                              gridTemplateColumns: `repeat(${itemsPerRow}, minmax(0, 1fr))`,
+                              gap: '16rem',
+                            }}
+                    >
+                      {loaderData?.userProfiles.map((user: any) => {
+                        return <UserCard key={user.id} user={user} />;
+                      })}
+                    </div>
+                  </div>
+          );
+        },
+);
+
+```
+
+The updated `UserProfiles` component utilizes data fetched by the loader function. This data is passed from the `loaderData` prop and used to render individual `UserCard` components for each user profile, displaying the user's name, role, description, and avatar.
+
+To preview the user profiles within Weaverse Studio:
+- Navigate back to Weaverse Studio.
+- Add the `UserProfiles` section to your page.
+- Select the `UserProfile` MetaObject definition to display the profiles.
+
+![Weaverse User Profiles Preview](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_metaobject_demo_tutorial.jpg?v=1712900443)
+
+## Conclusion
+
+You now have the essential skills to set up a Weaverse Hydrogen project using the Pilot theme, customize sections, and utilize MetaObjects for sophisticated data management. Here are some resources to further expand your expertise:
+- [Weaverse Hydrogen Components](/docs/guides/weaverse-component)
+- [Component Schema](/docs/guides/component-schema)
+- [Input Settings](/docs/guides/input-settings)
+- [Data Fetching and Caching](/docs/guides/fetching-and-caching)
+- [Deploy to Shopify Oxygen](/docs/deployment/oxygen)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
