@@ -4,7 +4,7 @@ description: Introduction Section Builder for Shopify Online Store 2.0
 publishedAt: November 20, 2023
 updatedAt: November 20, 2023
 order: 0
-published: true
+published: false
 ---
 
 **Welcome aboard! Here is how Weaverse will help you build stores that _load fast and convert well._**
