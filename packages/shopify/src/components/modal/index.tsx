@@ -2,6 +2,7 @@ import type {
   DialogCloseProps,
   DialogProps,
   DialogTitleProps,
+  DialogTriggerProps,
 } from '@radix-ui/react-dialog'
 import { Close, Portal, Root, Trigger } from '@radix-ui/react-dialog'
 import React, { forwardRef } from 'react'
@@ -34,7 +35,7 @@ export let Modal = (props: DialogProps) => {
   )
 }
 
-export let ModalTrigger = Trigger
+export let ModalTrigger: React.FC<DialogTriggerProps & React.RefAttributes<HTMLButtonElement>> = Trigger
 export let ModalHeader = forwardRef<HTMLHeadingElement, DialogTitleProps>(
   (props, ref) => {
     let { children, ...rest } = props
@@ -54,7 +55,7 @@ export let ModalContent = forwardRef<HTMLDivElement, ModalContentProps>(
         <StyledOverlay />
         <StyledContent
           {...rest}
-          onCloseAutoFocus={(e) => e.preventDefault()}
+          onCloseAutoFocus={(e: Event) => e.preventDefault()}
           data-wv-modal
           data-size={size}
           ref={ref}

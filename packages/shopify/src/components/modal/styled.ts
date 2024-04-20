@@ -1,5 +1,8 @@
+import type { DialogTitleProps } from '@radix-ui/react-dialog'
 import { Content, Overlay, Title } from '@radix-ui/react-dialog'
 import { keyframes, styled } from '@stitches/react'
+import type React from 'react'
+import type { ModalContentProps } from '~/types/components'
 
 let overlayShow = keyframes({
   '0%': { opacity: 0 },
@@ -11,7 +14,7 @@ let contentShow = keyframes({
   '100%': { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' },
 })
 
-export let StyledOverlay = styled(Overlay, {
+export let StyledOverlay: React.FC = styled(Overlay, {
   display: 'block !important',
   backgroundColor: 'rgba(0, 0, 0, .3)',
   position: 'fixed',
@@ -20,7 +23,9 @@ export let StyledOverlay = styled(Overlay, {
   animation: `${overlayShow} 300ms cubic-bezier(0.16, 1, 0.3, 1)`,
 })
 
-export let StyledTitle = styled(Title, {
+export let StyledTitle: React.FC<
+  DialogTitleProps & React.RefAttributes<HTMLElement>
+> = styled(Title, {
   margin: '0 0 24px',
   fontWeight: 500,
   fontSize: 24,
@@ -30,7 +35,9 @@ export let StyledTitle = styled(Title, {
   },
 })
 
-export let StyledContent = styled(Content, {
+export let StyledContent: React.FC<
+  ModalContentProps & React.RefAttributes<HTMLElement>
+> = styled(Content, {
   backgroundColor: 'white',
   borderRadius: 6,
   boxShadow:

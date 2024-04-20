@@ -16,7 +16,7 @@ export function ViewDetails(props: ProductDescriptionViewDetailsProps) {
         </button>
       </ModalTrigger>
       <ModalContent>
-        <ModalHeader>Product decription</ModalHeader>
+        <ModalHeader>Product description</ModalHeader>
         {children}
       </ModalContent>
     </Modal>
