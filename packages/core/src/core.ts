@@ -19,7 +19,7 @@ import type {
   WeaverseProjectDataType,
 } from './types'
 import { merge } from './utils'
-import { EventEmitter } from './utils/event-emiiter'
+import { EventEmitter } from './utils/event-emitter'
 import { stitchesUtils } from './utils/stitches'
 
 export class WeaverseItemStore extends EventEmitter {
