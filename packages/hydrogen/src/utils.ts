@@ -1,4 +1,5 @@
 import type {
+  HydrogenComponentSchema,
   HydrogenThemeEnv,
   WeaverseProjectConfigs,
   WeaverseStudioQueries,
@@ -60,4 +61,19 @@ export function getWeaverseConfigs(
       PUBLIC_STOREFRONT_API_TOKEN: PUBLIC_STOREFRONT_API_TOKEN || '',
     },
   }
+}
+
+export function generateDataFromSchema(schema: HydrogenComponentSchema) {
+  let data: Record<string, any> = {}
+  if (schema?.inspector) {
+    for (let group of schema.inspector) {
+      for (let input of group.inputs) {
+        let { name, defaultValue } = input
+        if (name && defaultValue !== null && defaultValue !== undefined) {
+          data[name] = defaultValue
+        }
+      }
+    }
+  }
+  return data
 }

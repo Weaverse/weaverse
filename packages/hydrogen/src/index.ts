@@ -1,15 +1,13 @@
 import {
-  type PlatformTypeEnum,
+  Weaverse,
+  WeaverseItemStore,
   useChildInstances,
   useItemInstance,
   useParentInstance,
   useWeaverse,
-  Weaverse,
-  WeaverseItemStore,
+  type PlatformTypeEnum,
 } from '@weaverse/react'
-
 import type {
-  HydrogenComponent,
   HydrogenComponentData,
   HydrogenElement,
   HydrogenPageData,
@@ -17,24 +15,15 @@ import type {
   WeaverseInternal,
   WeaverseLoaderRequestInfo,
 } from './types'
+import { generateDataFromSchema } from './utils'
 
 export * from './WeaverseHydrogenRoot'
-export * from './weaverse-client'
-export * from './hooks/use-theme-settings'
+export { useThemeSettings } from './hooks/use-theme-settings'
 export * from './types'
 export * from './utils'
+export * from './weaverse-client'
 export * from './wrappers'
-
-export let registerComponents = (components: HydrogenComponent[]) => {
-  components.forEach((comp) => {
-    WeaverseHydrogen.registerElement({
-      type: comp?.schema?.type,
-      Component: comp?.default,
-      schema: comp?.schema,
-      loader: comp?.loader,
-    })
-  })
-}
+export { useChildInstances, useItemInstance, useParentInstance, useWeaverse }
 
 export class WeaverseHydrogen extends Weaverse {
   platformType: PlatformTypeEnum = 'shopify-hydrogen'
@@ -61,23 +50,19 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
   constructor(initialData: HydrogenComponentData, weaverse: WeaverseHydrogen) {
     super(initialData, weaverse)
     let { data, ...rest } = initialData
-    Object.assign(this._store, this.getDefaultData(), data, rest)
+    Object.assign(this._store, this._schemaData, data, rest)
   }
 
   get Element(): HydrogenElement {
     return super.Element
   }
 
-  getDefaultData = () => {
-    return this.Element?.schema?.inspector
-      ?.flatMap((group) => group.inputs)
-      .reduce<Record<string, any>>((a, { defaultValue, name }) => {
-        if (name && defaultValue !== null && defaultValue !== undefined) {
-          a[name] = defaultValue
-        }
-        return a
-      }, {})
+  get _schemaData() {
+    if (this.Element.schema) {
+      return generateDataFromSchema(this.Element.schema)
+    }
+    return {}
   }
 }
+
 Weaverse.ItemConstructor = WeaverseHydrogenItem
-export { useWeaverse, useItemInstance, useChildInstances, useParentInstance }
