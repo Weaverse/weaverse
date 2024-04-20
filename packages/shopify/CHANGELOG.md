@@ -1,5 +1,13 @@
 # @weaverse/shopify
 
+## 3.1.3
+
+### Patch Changes
+
+- Fix typo, update types
+- Updated dependencies
+  - @weaverse/react@3.1.3
+
 ## 3.1.2
 
 ### Patch Changes

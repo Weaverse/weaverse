@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 3.1.3
+
+### Patch Changes
+
+- Fix typo, update types
+
 ## 3.1.2
 
 ## 3.1.1
