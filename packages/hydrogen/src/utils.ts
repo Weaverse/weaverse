@@ -1,6 +1,7 @@
 import type {
   HydrogenComponentSchema,
   HydrogenThemeEnv,
+  HydrogenThemeSchema,
   WeaverseProjectConfigs,
   WeaverseStudioQueries,
 } from './types'
@@ -63,10 +64,12 @@ export function getWeaverseConfigs(
   }
 }
 
-export function generateDataFromSchema(schema: HydrogenComponentSchema) {
+export function generateDataFromSchema({
+  inspector,
+}: HydrogenComponentSchema | HydrogenThemeSchema) {
   let data: Record<string, any> = {}
-  if (schema?.inspector) {
-    for (let group of schema.inspector) {
+  if (inspector) {
+    for (let group of inspector) {
       for (let input of group.inputs) {
         let { name, defaultValue } = input
         if (name && defaultValue !== null && defaultValue !== undefined) {

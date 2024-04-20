@@ -13,7 +13,11 @@ import type {
   WeaverseProjectConfigs,
   WeaverseStudioQueries,
 } from './types'
-import { getRequestQueries, getWeaverseConfigs } from './utils'
+import {
+  generateDataFromSchema,
+  getRequestQueries,
+  getWeaverseConfigs,
+} from './utils'
 
 export class WeaverseClient {
   API = 'api/public'
@@ -107,28 +111,20 @@ export class WeaverseClient {
       }
       let url = `${weaverseHost}/${API}/project_configs`
       let res
-      let body = JSON.stringify({
-        isDesignMode,
-        projectId,
-      })
+      let body = JSON.stringify({ isDesignMode, projectId })
       if (isDesignMode) {
-        res = await fetch(url, {
-          method: 'POST',
-          body,
-        }).then((res) => res.json())
+        res = await fetch(url, { method: 'POST', body }).then((res) =>
+          res.json(),
+        )
       } else {
         res = await this.fetchWithCache(url, { method: 'POST', strategy, body })
       }
       let data: any = res || {}
       if (data?.theme && this.themeSchema?.inspector) {
-        let defaultThemeSettings: { [key: string]: any } = {}
-        this.themeSchema.inspector.forEach(({ inputs }) => {
-          inputs.forEach(({ name, defaultValue }) => {
-            if (name && defaultValue) {
-              defaultThemeSettings[name] = defaultValue
-            }
-          })
-        })
+        let defaultThemeSettings = {}
+        if (this.themeSchema) {
+          defaultThemeSettings = generateDataFromSchema(this.themeSchema)
+        }
         data.theme = {
           ...defaultThemeSettings,
           ...data.theme,
@@ -177,6 +173,7 @@ export class WeaverseClient {
         if (!projectId) {
           throw new Error('Missing Weaverse projectId!')
         }
+
         let { strategy, ...pageLoadParams } = params
         let body: FetchProjectRequestBody = {
           ...basePageRequestBody,
@@ -190,6 +187,7 @@ export class WeaverseClient {
         }
         let url = `${weaverseHost}/${this.API}/project`
         let payload: FetchProjectPayload
+
         if (isDesignMode) {
           payload = await fetch(url, reqInit).then((res) => res.json())
         } else {
@@ -198,6 +196,7 @@ export class WeaverseClient {
             strategy,
           })
         }
+
         if (payload?.error) {
           throw new Error(payload?.error)
         }
