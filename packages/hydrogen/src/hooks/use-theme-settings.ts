@@ -1,8 +1,6 @@
-import { useSyncExternalStore } from 'react'
+import { useRouteLoaderData } from '@remix-run/react'
 import { isBrowser } from '@weaverse/react'
-
-import { useThemeContext } from './use-theme-context'
-
+import { useSyncExternalStore } from 'react'
 import type {
   HydrogenThemeSchema,
   HydrogenThemeSettings,
@@ -12,7 +10,7 @@ import type {
 } from '~/types'
 
 export class ThemeSettingsStore {
-  static settings: HydrogenThemeSettings | null = null
+  settings: HydrogenThemeSettings = {}
   listeners: (() => void)[] = []
   countries?: Localizations
   schema?: HydrogenThemeSchema
@@ -20,22 +18,18 @@ export class ThemeSettingsStore {
 
   constructor(data: RootRouteData['weaverseTheme']) {
     let { theme, countries, schema, publicEnv } = data || {}
-    if (isBrowser && ThemeSettingsStore.settings) {
-      ThemeSettingsStore.settings = {
-        ...theme,
-        ...ThemeSettingsStore.settings,
-      }
-    } else {
-      ThemeSettingsStore.settings = theme || {}
-    }
+    this.settings = { ...theme } || {}
     this.countries = countries
     this.schema = schema
     this.publicEnv = publicEnv
+    if (isBrowser) {
+      window.__weaverseThemeSettingsStore = this
+    }
   }
 
   updateThemeSettings = (newSettings: HydrogenThemeSettings) => {
-    ThemeSettingsStore.settings = {
-      ...ThemeSettingsStore.settings,
+    this.settings = {
+      ...this.settings,
       ...newSettings,
     }
     this.emitChange()
@@ -49,11 +43,11 @@ export class ThemeSettingsStore {
   }
 
   getSnapshot = () => {
-    return ThemeSettingsStore.settings
+    return this.settings
   }
 
   getServerSnapshot = () => {
-    return ThemeSettingsStore.settings
+    return this.settings
   }
 
   emitChange = () => {
@@ -63,8 +57,16 @@ export class ThemeSettingsStore {
   }
 }
 
+export function useThemeSettingsStore() {
+  let data = useRouteLoaderData<RootRouteData>('root')
+  if (isBrowser && window.__weaverseThemeSettingsStore) {
+    return window.__weaverseThemeSettingsStore
+  }
+  return new ThemeSettingsStore(data?.weaverseTheme)
+}
+
 export function useThemeSettings<T = HydrogenThemeSettings>() {
-  let themeSettingsStore = useThemeContext()
+  let themeSettingsStore = useThemeSettingsStore()
   let settings = useSyncExternalStore(
     themeSettingsStore.subscribe,
     themeSettingsStore.getSnapshot,

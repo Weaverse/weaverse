@@ -1,17 +1,16 @@
-import { Await, useLoaderData, useRouteLoaderData } from '@remix-run/react'
+import { Await, useLoaderData } from '@remix-run/react'
 import { WeaverseRoot } from '@weaverse/react'
 import React, { memo, Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 
-import { createWeaverseInstance, ThemeProvider } from './context'
-import { ThemeSettingsStore } from './hooks/use-theme-settings'
+import { WeaverseEffect } from '~/Effect'
+import { createWeaverseInstance, ThemeSettingsProvider } from './context'
+import { useThemeSettingsStore } from './hooks/use-theme-settings'
 import type {
   HydrogenComponent,
-  RootRouteData,
   WeaverseHydrogenRootProps,
   WeaverseLoaderData,
 } from './types'
-import { WeaverseEffect } from '~/Effect'
 
 type WeaverseData = WeaverseLoaderData | Promise<WeaverseLoaderData>
 
@@ -66,12 +65,11 @@ function RenderRoot(props: {
 
 export function withWeaverse(Component: React.ComponentType<any>) {
   return (props: React.JSX.IntrinsicAttributes) => {
-    let loaderData = useRouteLoaderData<RootRouteData>('root')
-    let themeSettingsStore = new ThemeSettingsStore(loaderData?.weaverseTheme)
+    let { settings } = useThemeSettingsStore()
     return (
-      <ThemeProvider.Provider value={themeSettingsStore}>
+      <ThemeSettingsProvider.Provider value={settings}>
         <Component {...props} />
-      </ThemeProvider.Provider>
+      </ThemeSettingsProvider.Provider>
     )
   }
 }
