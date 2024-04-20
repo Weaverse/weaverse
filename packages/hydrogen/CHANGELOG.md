@@ -1,5 +1,12 @@
 # @weaverse/hydrogen
 
+## 3.1.2
+
+### Patch Changes
+
+- Fix theme settings store, optimize package mechanism
+  - @weaverse/react@3.1.2
+
 ## 3.1.1
 
 ### Patch Changes
