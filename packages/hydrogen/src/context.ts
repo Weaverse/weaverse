@@ -1,13 +1,24 @@
 import { isBrowser } from '@weaverse/react'
 import { createContext } from 'react'
-import type { ThemeSettingsStore } from './hooks/use-theme-settings'
 import type {
   HydrogenComponent,
+  HydrogenThemeSettings,
   WeaverseHydrogenParams,
   WeaverseLoaderData,
 } from './types'
-import { registerComponents, WeaverseHydrogen } from './index'
+import { WeaverseHydrogen } from './index'
 import { defaultComponents } from '~/components'
+
+function registerComponents(components: HydrogenComponent[]) {
+  components.forEach((comp) => {
+    WeaverseHydrogen.registerElement({
+      type: comp?.schema?.type,
+      Component: comp?.default,
+      schema: comp?.schema,
+      loader: comp?.loader,
+    })
+  })
+}
 
 function createCachedWeaverseInstance(
   params: WeaverseHydrogenParams,
@@ -55,5 +66,7 @@ export let STORE_PAGES = {
   CUSTOM: 'CUSTOM',
 }
 
-export let ThemeProvider = createContext<ThemeSettingsStore | null>(null)
-ThemeProvider.displayName = 'WeaverseThemeProvider'
+export let ThemeSettingsProvider = createContext<HydrogenThemeSettings | null>(
+  null,
+)
+ThemeSettingsProvider.displayName = 'WeaverseThemeSettingsProvider'

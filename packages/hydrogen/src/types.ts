@@ -3,7 +3,7 @@
 /// <reference types="@shopify/oxygen-workers-types" />
 
 import type { NavigateFunction } from '@remix-run/react'
-import type { Storefront, I18nBase } from '@shopify/hydrogen'
+import type { I18nBase, Storefront } from '@shopify/hydrogen'
 import type {
   CountryCode,
   CurrencyCode,
@@ -331,5 +331,6 @@ declare global {
   interface Window {
     __weaverse: WeaverseHydrogen
     __weaverses: Record<string, WeaverseHydrogen>
+    __weaverseThemeSettingsStore: ThemeSettingsStore
   }
 }
