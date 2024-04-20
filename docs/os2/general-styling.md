@@ -4,7 +4,7 @@ description: Every general styling parameters you have in Weaverse
 publishedAt: November 20, 2023
 updatedAt: November 20, 2023
 order: 2
-published: true
+published: false
 ---
 
 Every element in Weaverse comes with a wide range of styling options.

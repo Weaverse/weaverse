@@ -1,8 +1,8 @@
 ---
-title: Deploy to Vercel
+title: Deploy to Vercel (Deprecated)
 description: Step-by-step guide to deploying your Weaverse Hydrogen Project on Vercel.
 publishedAt: January 24, 2024
-updatedAt: January 30, 2024
+updatedAt: April 16, 2024
 order: 2
 published: true
 ---
@@ -11,6 +11,17 @@ published: true
 ## **Deploying Your Weaverse Hydrogen Project to Vercel**
 
 As a dynamic cloud platform, Vercel provides developers with robust tools for deploying, managing, and scaling their web and application projects. While it excels in deploying Next.js applications, its capabilities extend to a wide range of other application frameworks.
+
+
+
+### Deprecated Notice
+
+With the migration to Vite in the [Hydrogen April 2024 release](https://hydrogen.shopify.dev/update/april-2024), the existing Vercel adapter has become incompatible. We are actively updating the adapter to ensure compatibility with Vite. This guide will be revised once the adapter is updated.
+
+In the interim, if you wish to continue using Vercel, you must utilize the classic remix compiler. The necessary code remains accessible on our `classic-compiler` branch. You can find it [here](https://github.com/Weaverse/pilot/tree/classic-compiler). Please clone the branch and adhere to the included instructions for deployment on Vercel.
+
+
+This revision aims to clarify the message and enhance the formal tone of the document. Let me know if there are specific aspects you'd like further refined or adjusted!
 
 ### Important Considerations
 Before opting to host your website on Vercel, be aware of these critical points:
@@ -23,6 +34,8 @@ Before opting to host your website on Vercel, be aware of these critical points:
   - You prefer Vercel's features and are willing to bear the associated costs.
 
 In this guide, we focus on deploying a Weaverse Hydrogen Project, a Remix-based application, to Vercel.
+
+
 
 ### Video Tutorial
 For a visual walkthrough, watch our video tutorial below:
