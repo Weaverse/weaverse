@@ -18,7 +18,7 @@ For reference, I already own the domain "weaverse.dev" and will connect it to my
 If your domain is purchased and managed by Shopify, you can skip the step of updating DNS records as Shopify will automatically handle this for you.
 
 For domains not managed by Shopify, you will need to update the DNS records in your domain provider's dashboard. Here are the DNS records you need to add:
-- **CNAME**: Host: @ (or the subdomain you want to connect), Points to: shops.myshopify.com.
+- **CNAME**: Host: `@` (or the subdomain you want to connect), Points to: `shops.myshopify.com`.
   ![Shopify Domain DNS Records](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/dns_settings.png?v=1713694183)
 
 After updating the DNS records, click "Verify connection". Once verified, your domain will be linked to your Shopify store. It's then time to update the domain target to your Hydrogen store:
@@ -44,9 +44,9 @@ While your Hydrogen store manages the storefront, the checkout process is still 
 - Go to your Shopify store's admin > Settings > Domain.
 - Add a domain and set it as the primary target for the Online Store.
 - Update the DNS records in your domain provider's dashboard with the following:
-  - **CNAME**: Host: www, Points to: checkout.shopify.com.
+  - **CNAME**: Host: `www`, Points to: `shops.myshopify.com`.
 
-I recommend using the `www` subdomain for checkout to maintain a consistent URL format like `www.yourdomain.com`. Alternatively, you can use subdomains such as `checkout` or `buy` if you prefer.
+I recommend using the `www` subdomain for checkout to maintain a consistent URL format like `yourdomain.com`. Alternatively, you can use subdomains such as `checkout` or `buy` if you prefer.
 
 
 ## **Setting Up Cookie Banner and Analytics**
