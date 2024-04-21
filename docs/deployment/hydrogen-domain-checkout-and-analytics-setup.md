@@ -50,10 +50,10 @@ I recommend using the `www` subdomain for checkout to maintain a consistent URL 
 
 
 ## **Setting Up Cookie Banner and Analytics**
-Following the [Hydrogen April 2024 updates](https://hydrogen.shopify.dev/update/april-2024), Shopify's Hydrogen now supports the Native Cookie Banner and Analytics. If your Hydrogen project has not been updated, please follow [these instructions](https://github.com/Shopify/hydrogen/tree/main/examples/analytics#hydrogen-example-shopify-analytics--consent-unstable) to upgrade.
+Following the [Hydrogen April 2024 updates](https://hydrogen.shopify.dev/update/april-2024), Shopify's Hydrogen now supports the Native Cookie Banner and Analytics. If your Hydrogen project has not been updated, please follow [these instructions](https://github.com/Shopify/hydrogen/tree/main/examples/analytics#1-enable-customer-privacy--cookie-consent-banner) to upgrade.
 
 The [Weaverse Hydrogen theme](https://github.com/Weaverse/pilot/tree/main) has been updated to the latest version to include these features. To enable the cookie banner and analytics, follow these steps:
-- Enable the cookie banner by following [this guide](https://github.com/Shopify/hydrogen/tree/main/examples/analytics#hydrogen-example-shopify-analytics--consent-unstable).
+- Enable the cookie banner by following [this guide](https://github.com/Shopify/hydrogen/tree/main/examples/analytics#1-enable-customer-privacy--cookie-consent-banner).
 - Add the `PUBLIC_CHECKOUT_DOMAIN` to your storefront's environment variables. Set this variable to your checkout domain, such as `www.yourdomain.com`.
 - Redeploy your Hydrogen project to apply these changes using the command `npx shopify hydrogen deploy`.
 
