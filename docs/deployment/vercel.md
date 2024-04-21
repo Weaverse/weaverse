@@ -3,7 +3,7 @@ title: Deploy to Vercel (Deprecated)
 description: Step-by-step guide to deploying your Weaverse Hydrogen Project on Vercel.
 publishedAt: January 24, 2024
 updatedAt: April 16, 2024
-order: 2
+order: 3
 published: true
 ---
 
