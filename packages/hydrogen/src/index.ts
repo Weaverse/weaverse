@@ -23,6 +23,7 @@ export * from './types'
 export * from './utils'
 export * from './weaverse-client'
 export * from './wrappers'
+export * from './placeholders'
 export { useChildInstances, useItemInstance, useParentInstance, useWeaverse }
 
 export class WeaverseHydrogen extends Weaverse {
