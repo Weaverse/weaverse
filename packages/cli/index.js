@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-const axios = require('axios')
 const decompress = require('decompress')
 const fs = require('fs-extra')
 const yargs = require('yargs/yargs')
@@ -8,8 +7,10 @@ const { hideBin } = require('yargs/helpers')
 const spawn = require('cross-spawn')
 
 const downloadAndExtractTemplate = async (url, outputPath) => {
-  const response = await axios.get(url, { responseType: 'arraybuffer' })
-  await decompress(response.data, `${outputPath}/temp`)
+  const fetch = (await import('node-fetch')).default
+  const response = await fetch(url)
+  const buffer = await response.buffer()
+  await decompress(buffer, `${outputPath}/temp`)
 
   // Move contents from temp to the root of outputPath and then remove temp
   const files = await fs.readdir(`${outputPath}/temp/pilot-main`)
