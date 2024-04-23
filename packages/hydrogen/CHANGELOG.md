@@ -1,5 +1,12 @@
 # @weaverse/hydrogen
 
+## 3.1.4
+
+### Patch Changes
+
+- Add shopify utils and placeholder images
+  - @weaverse/react@3.1.4
+
 ## 3.1.3
 
 ### Patch Changes
