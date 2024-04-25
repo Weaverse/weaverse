@@ -13,6 +13,7 @@ directories=(
 targets=(
   "node_modules"
   "pnpm-lock.yaml"
+  "package-lock.json"
   ".turbo"
   "dist"
   ".cache"

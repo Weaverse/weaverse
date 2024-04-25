@@ -1,5 +1,12 @@
 # @weaverse/hydrogen
 
+## 3.1.5
+
+### Patch Changes
+
+- v3.1.5
+  - @weaverse/react@3.1.5
+
 ## 3.1.4
 
 ### Patch Changes
