@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 3.1.6
+
+### Patch Changes
+
+- Fix item visibility func
+
 ## 3.1.5
 
 ## 3.1.4

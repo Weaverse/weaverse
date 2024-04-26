@@ -1,5 +1,13 @@
 # @weaverse/hydrogen
 
+## 3.1.6
+
+### Patch Changes
+
+- Fix item visibility func
+- Updated dependencies
+  - @weaverse/react@3.1.6
+
 ## 3.1.5
 
 ### Patch Changes
