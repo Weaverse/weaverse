@@ -72,6 +72,7 @@ export class WeaverseItemStore extends EventEmitter {
     this.triggerUpdate()
     return this.data
   }
+
   getSnapShot = () => this.data
 
   triggerUpdate = () => {

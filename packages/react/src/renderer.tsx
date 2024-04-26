@@ -96,8 +96,9 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
       <ItemInstance key={item.id} id={item.id} parentId={id} />
     ))
 
-    let style = rest.style || {}
-    if (__hidden) style.display = 'none'
+    if (__hidden) {
+      return null
+    }
 
     return (
       <Component
@@ -110,7 +111,6 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
             generateItemClassName(instance, stitchesInstance),
           rest.data?.className,
         )}
-        style={style}
         children={renderChildren.length ? renderChildren : undefined}
       />
     )
