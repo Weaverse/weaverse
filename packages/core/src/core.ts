@@ -64,7 +64,7 @@ export class WeaverseItemStore extends EventEmitter {
   }
 
   set data(update: Omit<ElementData, 'id' | 'type'>) {
-    this._store = { ...this.data, ...update }
+    this._store = { ...this._store, ...update }
   }
 
   setData = (update: Omit<ElementData, 'id' | 'type'>) => {
@@ -76,7 +76,7 @@ export class WeaverseItemStore extends EventEmitter {
   getSnapShot = () => this.data
 
   triggerUpdate = () => {
-    this.emit(this.data)
+    this.emit(this._store)
   }
 }
 

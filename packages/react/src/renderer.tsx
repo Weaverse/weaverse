@@ -8,6 +8,8 @@ import { generateItemClassName } from './utils/css'
 
 import { useItemInstance, usePixel, useWeaverse } from '~/hooks'
 
+let reactVersion = Number(React.version.split('.')[0])
+
 export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
   let data = useSyncExternalStore(
     context.subscribe,
@@ -79,11 +81,18 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [instance])
 
+  if (__hidden) {
+    return null
+  }
+
   let Element = elementRegistry.get(type)
 
   if (Element?.Component) {
     let Component = Element.Component
-    if (Component.$$typeof === Symbol.for('react.forward_ref')) {
+    if (
+      Component.$$typeof === Symbol.for('react.forward_ref') ||
+      reactVersion > 18
+    ) {
       rest.ref = instance.ref
     }
     let renderChildren = (
@@ -92,13 +101,9 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
         : childIds?.length
           ? childIds.map((cid: string) => ({ id: cid }))
           : []
-    ).map((item: { id: string }) => (
-      <ItemInstance key={item.id} id={item.id} parentId={id} />
+    ).map((item: { id: string }, index: number) => (
+      <ItemInstance key={item.id + '-' + index} id={item.id} parentId={id} />
     ))
-
-    if (__hidden) {
-      return null
-    }
 
     return (
       <Component

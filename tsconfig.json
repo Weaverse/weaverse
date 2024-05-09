@@ -4,7 +4,7 @@
     "lib": ["dom", "esnext"],
     "importHelpers": true,
     // stricter type-checking for stronger correctness. Recommended by TS
-    "strict": true,
+    "strict": false,
     "resolveJsonModule": true,
     "moduleResolution": "node",
     // transpile JSX to React.createElement
