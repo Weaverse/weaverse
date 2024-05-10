@@ -1,4 +1,4 @@
-import type { Weaverse, WeaverseItemStore } from '@weaverse/core'
+import { Weaverse, type WeaverseItemStore } from '@weaverse/core'
 import { useContext, useEffect } from 'react'
 
 import { WeaverseContext, WeaverseItemContext } from '~/context'
@@ -9,9 +9,8 @@ export function useWeaverse<T = Weaverse>() {
 }
 
 export let useItemInstance = (id?: string) => {
-  let weaverse = useWeaverse()
   let { id: currentId } = useContext(WeaverseItemContext)
-  let { itemInstances } = weaverse
+  let { itemInstances } = Weaverse
   let instance = itemInstances.get(id || currentId)
   if (!instance) {
     console.warn(`Item instance ${id} not found`)
@@ -26,10 +25,9 @@ export let useParentInstance = () => {
 }
 
 export let useChildInstances = (id?: string) => {
-  let weaverse = useWeaverse()
   let currentInstance = useItemInstance(id)
   if (!currentInstance) return []
-  let { itemInstances } = weaverse
+  let { itemInstances } = Weaverse
 
   let {
     data: { children },

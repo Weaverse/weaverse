@@ -58,7 +58,7 @@ export class ThemeSettingsStore {
 }
 
 export function useThemeSettingsStore() {
-  let data = useRouteLoaderData<RootRouteData>('root')
+  let data = useRouteLoaderData('root') as RootRouteData
   if (isBrowser && window.__weaverseThemeSettingsStore) {
     return window.__weaverseThemeSettingsStore
   }

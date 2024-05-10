@@ -48,7 +48,7 @@ export function createWeaverseInstance(
   registerComponents(defaultComponents)
   return createCachedWeaverseInstance({
     ...configs,
-    data: page || {},
+    data: page,
     pageId: page?.id,
     internal: { project, pageAssignment },
   })

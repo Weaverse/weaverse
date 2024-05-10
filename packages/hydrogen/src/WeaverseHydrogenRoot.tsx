@@ -19,7 +19,7 @@ export let WeaverseHydrogenRoot = memo(
     errorComponent: ErrorComponent = FallbackError,
     components,
   }: WeaverseHydrogenRootProps) => {
-    let loaderData = useLoaderData() as unknown as {
+    let loaderData = useLoaderData() as {
       weaverseData: WeaverseData
     }
     let data = loaderData?.weaverseData
@@ -29,11 +29,9 @@ export let WeaverseHydrogenRoot = memo(
           <ErrorBoundary fallbackRender={ErrorComponent}>
             <Suspense>
               <Await resolve={data}>
-                {(resolvedData: WeaverseLoaderData) => {
-                  return (
-                    <RenderRoot data={resolvedData} components={components} />
-                  )
-                }}
+                {(resolvedData) => (
+                  <RenderRoot data={resolvedData} components={components} />
+                )}
               </Await>
             </Suspense>
           </ErrorBoundary>

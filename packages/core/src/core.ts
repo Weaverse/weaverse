@@ -33,7 +33,7 @@ export class WeaverseItemStore extends EventEmitter {
     let { type, id } = initialData || {}
     this.weaverse = weaverse
     if (id && type) {
-      weaverse.itemInstances.set(id, this)
+      Weaverse.itemInstances.set(id, this)
       Object.assign(this._store, initialData)
     } else {
       throw new Error(`'id' and 'type' are required to create a new Weaverse item.`)
@@ -121,7 +121,7 @@ export class Weaverse extends EventEmitter {
    */
   initProject = () => {
     let { data } = this
-    let itemInstances = this.itemInstances
+    let itemInstances = Weaverse.itemInstances
     if (data?.items) {
       data.items.forEach((item) => {
         let itemInstance = itemInstances.get(item.id)
@@ -177,7 +177,7 @@ export class Weaverse extends EventEmitter {
   }
 
   refreshAllItems() {
-    this.itemInstances.forEach((item) => {
+    Weaverse.itemInstances.forEach((item) => {
       item.triggerUpdate()
     })
   }
