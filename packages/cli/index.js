@@ -6,16 +6,30 @@ const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 const spawn = require('cross-spawn')
 
-const downloadAndExtractTemplate = async (url, outputPath) => {
+const TEMPLATES = [
+  {
+    name: 'pilot',
+    downloadURL: 'https://github.com/Weaverse/pilot/archive/refs/heads/main.zip',
+    defaultDownloadFolder: 'pilot-main'
+  },
+  {
+    name: 'naturelle',
+    downloadURL: 'https://github.com/Weaverse/naturelle/archive/refs/heads/main.zip',
+    defaultDownloadFolder: 'naturelle-main'
+  }
+]
+
+const downloadAndExtractTemplate = async (template, outputPath) => {
   const fetch = (await import('node-fetch')).default
-  const response = await fetch(url)
+  let { downloadURL, defaultDownloadFolder } = template
+  const response = await fetch(downloadURL)
   const buffer = await response.buffer()
   await decompress(buffer, `${outputPath}/temp`)
 
   // Move contents from temp to the root of outputPath and then remove temp
-  const files = await fs.readdir(`${outputPath}/temp/pilot-main`)
-  for (const file of files) {
-    await fs.move(`${outputPath}/temp/pilot-main/${file}`, `${outputPath}/${file}`)
+  const files = await fs.readdir(`${outputPath}/temp/${defaultDownloadFolder}`)
+  for (let file of files) {
+    await fs.move(`${outputPath}/temp/${defaultDownloadFolder}/${file}`, `${outputPath}/${file}`)
   }
   await fs.remove(`${outputPath}/temp`)
 }
@@ -49,7 +63,7 @@ const argv = yargs(hideBin(process.argv))
     'project-name': {
       describe: 'Project folder name',
       demandOption: false,
-      default: 'pilot-project',
+      default: 'my-weaverse-hydrogen-project',
       type: 'string',
     },
     'no-install': {
@@ -74,38 +88,41 @@ Options:
   process.exit(0)
 }
 
-;(async () => {
-  if (argv.template === 'pilot') {
-    const outputPath = `./${toKebabCase(argv['project-name'])}`
+; (async () => {
+  if (argv.template) {
+    let template = TEMPLATES.find((t) => t.name === argv.template)
+    if (template) {
+      const outputPath = `./${toKebabCase(argv['project-name'])}`
 
-    await downloadAndExtractTemplate('https://github.com/Weaverse/pilot/archive/refs/heads/main.zip', outputPath)
-    await createEnvFile(outputPath, argv['project-id'])
+      await downloadAndExtractTemplate(template, outputPath)
+      await createEnvFile(outputPath, argv['project-id'])
 
-    if (!argv['no-install']) {
-      // remove the package-lock.json, it not necessary
-      await fs.remove(`${outputPath}/package-lock.json`).catch(console.error)
+      if (!argv['no-install']) {
+        // remove the package-lock.json, it not necessary
+        await fs.remove(`${outputPath}/package-lock.json`).catch(console.error)
 
-      // run 'npm install'
-      const install = spawn('npm', ['install', '--ignore-scripts'], { cwd: outputPath, stdio: 'inherit' })
+        // run 'npm install'
+        const install = spawn('npm', ['install', '--ignore-scripts'], { cwd: outputPath, stdio: 'inherit' })
 
-      install.on('data', function (data) {
-        console.log(data.toString())
-      })
-      install.on('close', (code) => {
-        if (code !== 0) {
-          console.error(`npm install exited with code ${code}`)
-          return
-        }
-
-        // Then, run 'npm run dev' after 'npm install' completes
-        const runDev = spawn('npm', ['run', 'dev'], { cwd: outputPath, stdio: 'inherit' })
-
-        runDev.on('close', (code) => {
-          if (code !== 0) {
-            console.error(`npm run dev exited with code ${code}`)
-          }
+        install.on('data', function (data) {
+          console.log(data.toString())
         })
-      })
+        install.on('close', (code) => {
+          if (code !== 0) {
+            console.error(`npm install exited with code ${code}`)
+            return
+          }
+
+          // Then, run 'npm run dev' after 'npm install' completes
+          const runDev = spawn('npm', ['run', 'dev'], { cwd: outputPath, stdio: 'inherit' })
+
+          runDev.on('close', (code) => {
+            if (code !== 0) {
+              console.error(`npm run dev exited with code ${code}`)
+            }
+          })
+        })
+      }
     }
   }
 })()
