@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 3.1.7
+
+### Patch Changes
+
+- Minor update to support Global Section feature
+
 ## 3.1.6
 
 ### Patch Changes

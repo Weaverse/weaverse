@@ -1,5 +1,13 @@
 # @weaverse/react
 
+## 3.1.7
+
+### Patch Changes
+
+- Minor update to support Global Section feature
+- Updated dependencies
+  - @weaverse/core@3.1.7
+
 ## 3.1.6
 
 ### Patch Changes
