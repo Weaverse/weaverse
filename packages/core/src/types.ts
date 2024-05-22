@@ -4,7 +4,7 @@ import type { stitchesUtils } from './utils/stitches'
 
 // Simple types
 export type PlatformTypeEnum = 'shopify-section' | 'shopify-hydrogen' | 'nextjs'
-export type ToolbarAction = 'general-settings' | 'settings-level-2' | 'duplicate' | 'delete'
+export type ToolbarAction = 'general-settings' | 'settings-level-2' | 'duplicate' | 'delete' | 'global-sections'
 export type AdvancedGroupType =
   | 'border'
   | 'alignment'
