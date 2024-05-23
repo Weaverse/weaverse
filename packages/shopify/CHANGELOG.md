@@ -1,5 +1,11 @@
 # @weaverse/shopify
 
+## 3.1.10
+
+### Patch Changes
+
+- @weaverse/react@3.1.10
+
 ## 3.1.9
 
 ### Patch Changes

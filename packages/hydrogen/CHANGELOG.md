@@ -1,5 +1,12 @@
 # @weaverse/hydrogen
 
+## 3.1.10
+
+### Patch Changes
+
+- update core
+  - @weaverse/react@3.1.10
+
 ## 3.1.9
 
 ### Patch Changes

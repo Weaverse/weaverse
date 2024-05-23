@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 3.1.10
+
+### Patch Changes
+
+- update core
+
 ## 3.1.9
 
 ### Patch Changes

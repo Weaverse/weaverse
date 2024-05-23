@@ -59,7 +59,7 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
   }
 
   get _schemaData() {
-    if (this.Element.schema) {
+    if (this.Element?.schema) {
       return generateDataFromSchema(this.Element.schema)
     }
     return {}

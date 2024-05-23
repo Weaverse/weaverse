@@ -68,7 +68,7 @@ export class WeaverseItemStore extends EventEmitter {
   }
 
   setData = (update: Omit<ElementData, 'id' | 'type'>) => {
-    this.data = Object.assign(this._store, update)
+    this.data = update
     this.triggerUpdate()
     return this.data
   }
@@ -128,7 +128,7 @@ export class Weaverse extends EventEmitter {
         if (itemInstance) {
           itemInstance.setData(item)
         } else {
-          new Weaverse.ItemConstructor(item, this)
+          this.createItemInstance(item)
         }
       })
     }
