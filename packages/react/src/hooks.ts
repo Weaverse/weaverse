@@ -10,8 +10,7 @@ export function useWeaverse<T = Weaverse>() {
 
 export let useItemInstance = (id?: string) => {
   let { id: currentId } = useContext(WeaverseItemContext)
-  let { itemInstances } = Weaverse
-  let instance = itemInstances.get(id || currentId)
+  let instance = Weaverse.itemInstances.get(id || currentId)
   if (!instance) {
     console.warn(`Item instance ${id} not found`)
     return null

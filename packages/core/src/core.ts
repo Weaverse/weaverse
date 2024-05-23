@@ -137,6 +137,9 @@ export class Weaverse extends EventEmitter {
   get itemInstances() {
     return Weaverse.itemInstances
   }
+  createItemInstance = (data: ElementData) => {
+    return new Weaverse.ItemConstructor(data, this)
+  }
 
   static initStitches = (externalConfig?: stitches.CreateStitches) => {
     Weaverse.stitchesInstance =

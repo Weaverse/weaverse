@@ -1,5 +1,20 @@
 # @weaverse/hydrogen
 
+## 3.1.9
+
+### Patch Changes
+
+- Fix typos
+- Updated dependencies
+  - @weaverse/react@3.1.9
+
+## 3.1.8
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/react@3.1.8
+
 ## 3.1.7
 
 ### Patch Changes

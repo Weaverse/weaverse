@@ -1,5 +1,17 @@
 # @weaverse/core
 
+## 3.1.9
+
+### Patch Changes
+
+- Fix typos
+
+## 3.1.8
+
+### Patch Changes
+
+- Support create item instance from Weaverse core
+
 ## 3.1.7
 
 ### Patch Changes

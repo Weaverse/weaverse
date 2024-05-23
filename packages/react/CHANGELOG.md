@@ -1,5 +1,21 @@
 # @weaverse/react
 
+## 3.1.9
+
+### Patch Changes
+
+- Fix typos
+- Updated dependencies
+  - @weaverse/core@3.1.9
+
+## 3.1.8
+
+### Patch Changes
+
+- Support create item instance from Weaverse core
+- Updated dependencies
+  - @weaverse/core@3.1.8
+
 ## 3.1.7
 
 ### Patch Changes

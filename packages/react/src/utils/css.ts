@@ -35,7 +35,7 @@ export function generateItemClassName(
     // then return the classname, so we can use it in the render
     let formattedCss = formatCSS(css)
     let newStitchesClass = stitchesInstance.css(formattedCss)().className || ''
-    let { stitchesClass } = instance
+    let { stitchesClass = '' } = instance
     let otherClass = (instance.ref.current?.className || '')
       .replace(stitchesClass, '')
       .replace(cls, '')
