@@ -1,7 +1,7 @@
 {
   "name": "weaverse-sdks",
   "description": "Weaverse SDKs monorepo.",
-  "version" : "3.0.0",
+  "version": "3.0.0",
   "license": "MIT",
   "scripts": {
     "dev": "npm run dev:pkg -- --filter=./templates/pilot",
@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
-    "@remix-run/eslint-config": "2.8.1",
+    "@remix-run/eslint-config": "2.9.2",
     "@shopify/eslint-plugin": "44.0.0",
     "@types/node": "20.11.30",
     "@types/react": "18.2.69",
@@ -40,16 +40,16 @@
     "rimraf": "5.0.5",
     "tsup": "8.0.2",
     "turbo": "1.13.0",
-    "typescript": "5.4.3"
+    "typescript": "5.4.5"
   },
   "optionalDependencies": {
     "@esbuild/darwin-x64": "^0.20.2",
-    "turbo-darwin-arm64": "^1.13.2"
+    "turbo-darwin-arm64": "^1.13.3"
   },
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "pnpm@8.15.7",
+  "packageManager": "pnpm@8.15.8",
   "prettier": {
     "semi": false,
     "singleQuote": true,
@@ -59,6 +59,6 @@
     ]
   },
   "dependencies": {
-    "@changesets/cli": "^2.27.1"
+    "@changesets/cli": "^2.27.5"
   }
 }
