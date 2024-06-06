@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2022",
+    "target": "esnext",
     "lib": ["dom", "esnext"],
     "importHelpers": true,
     // stricter type-checking for stronger correctness. Recommended by TS

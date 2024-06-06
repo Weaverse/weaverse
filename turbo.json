@@ -1,34 +1,53 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "pipeline": {
+  "tasks": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "dist/**",
-        "build/**"
-      ]
-    },
-    "test": {
-      "outputs": []
     },
     "dev": {
-      "cache": false,
-      "dependsOn": [
-        "@weaverse/core#build",
-        "@weaverse/react#build",
-        "@weaverse/hydrogen#build"
-      ]
     },
-    "pilot#build": {
+    "@weaverse/core#build": {
       "dependsOn": [
-        "@weaverse/core#build",
-        "@weaverse/react#build",
-        "@weaverse/hydrogen#build"
       ],
       "outputs": [
-        "dist/**"
+        "dist/index.js",
+        "dist/index.mjs",
+        "dist/index.d.ts",
+        "dist/index.d.mts"
+      ]
+    },
+    "@weaverse/react#build": {
+      "dependsOn": [
+        "@weaverse/core#build"
+      ],
+      "outputs": [
+        "dist/index.js",
+        "dist/index.mjs",
+        "dist/index.d.ts",
+        "dist/index.d.mts"
+      ]
+    },
+    "@weaverse/hydrogen#build": {
+      "dependsOn": [
+        "@weaverse/core#build",
+        "@weaverse/react#build"
+      ],
+      "outputs": [
+        "dist/index.js",
+        "dist/index.mjs",
+        "dist/index.d.ts",
+        "dist/index.d.mts"
+      ]
+    },
+    "@weaverse/shopify#build": {
+      "dependsOn": [
+        "@weaverse/core#build",
+        "@weaverse/react#build"
+      ],
+      "outputs": [
+        "dist/index.js",
+        "dist/index.mjs",
+        "dist/index.d.ts",
+        "dist/index.d.mts"
       ]
     },
     "typecheck": {
