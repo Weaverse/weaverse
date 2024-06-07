@@ -3,7 +3,7 @@ title: Localization
 description: Explore how Weaverse empowers you to create a multilingual storefront with ease.
 publishedAt: November 20, 2023
 updatedAt: January 17, 2024
-order: 10
+order: 12
 published: false
 ---
 

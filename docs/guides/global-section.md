@@ -4,7 +4,7 @@ description: Learn how to create and reuse global sections in your Weaverse them
 publishedAt: May 31, 2024
 updatedAt: Jun 7, 2024
 order: 9
-published: false
+published: true
 ---
 
 **Global Sections** in Weaverse empower you to create and reuse sections across multiple pages and components. This feature enhances the organization and structure of your theme’s content, making maintenance and updates more efficient.
