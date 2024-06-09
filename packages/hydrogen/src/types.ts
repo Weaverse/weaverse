@@ -52,9 +52,9 @@ export interface AllCacheOptions {
   staleIfError?: number
 }
 
-export type ComponentLoaderArgs<T = any> = {
+export type ComponentLoaderArgs<T = any, E = HydrogenThemeEnv> = {
   data: T
-  weaverse: WeaverseClient
+  weaverse: Omit<WeaverseClient, 'env'> & { env: E }
 }
 
 export interface RouteLoaderArgs extends RemixOxygenLoaderArgs {
