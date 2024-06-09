@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 3.1.11
+
+### Patch Changes
+
+- Update types, add more placeholders
+
 ## 3.1.10
 
 ### Patch Changes

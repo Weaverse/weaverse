@@ -1,5 +1,13 @@
 # @weaverse/react
 
+## 3.1.11
+
+### Patch Changes
+
+- Update types, add more placeholders
+- Updated dependencies
+  - @weaverse/core@3.1.11
+
 ## 3.1.10
 
 ### Patch Changes
