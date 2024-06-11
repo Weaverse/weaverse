@@ -179,8 +179,8 @@ export interface WeaverseHydrogenParams
   requestInfo: WeaverseLoaderRequestInfo
 }
 
-export type HydrogenComponentLoaderFunction = (
-  args: ComponentLoaderArgs,
+export type HydrogenComponentLoaderFunction<T = any, E = HydrogenThemeEnv> = (
+  args: ComponentLoaderArgs<T, E>,
 ) => Promise<unknown>
 
 export interface HydrogenComponent<T extends HydrogenComponentProps = any> {
