@@ -1,5 +1,13 @@
 # @weaverse/hydrogen
 
+## 3.1.12
+
+### Patch Changes
+
+- Update placeholders image & fix types
+- Updated dependencies
+  - @weaverse/react@3.1.12
+
 ## 3.1.11
 
 ### Patch Changes
