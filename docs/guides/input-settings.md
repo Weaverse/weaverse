@@ -307,13 +307,13 @@ process.
 | ↳ `icon`   | `string`            | Displayed icon for the option. When an **`icon`** is set, the **`label`** will act as its `tooltip`.                                      | ➖       |
 | ↳ `weight` | `string`            | An optional weight for the icon, which can be one of the following values: `thin` \| `light` \| `regular` \| `bold` \| `fill` \| `duotone` | ➖       |
 
-💡 **Note**:
+💡 **Note for icons:**
 
 - We use [Lucide Icons](https://lucide.dev/) library for the icons.
 
 - The value is the Icon name (e.g: [mail-search](https://lucide.dev/icons/mail-search), [bar-chart-horizontal](https://lucide.dev/icons/bar-chart-horizontal)...)
 
-- Not all icons are supported yet. Please let us know if you need an icon that is missing from your configs.
+- Not all icons are supported yet. Please contact us if you need an icon that is missing from your configs.
 
 #### `richtext`
 
