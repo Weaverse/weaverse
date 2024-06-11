@@ -1,7 +1,6 @@
 import type * as Stitches from '@stitches/core'
 import type { ForwardRefExoticComponent } from 'react'
 import type { stitchesUtils } from './utils/stitches'
-import {IconName} from '~/icon-name'
 
 // Simple types
 export type PlatformTypeEnum = 'shopify-section' | 'shopify-hydrogen' | 'nextjs'
@@ -127,7 +126,7 @@ export interface SelectInputConfigs {
 }
 
 export interface ToggleGroupConfigs {
-  options?: { value: string; label: string; icon?: IconName | string; weight?: string }[]
+  options?: { value: string; label: string; icon?: string; weight?: string }[]
 }
 
 export interface RangeInputConfigs {
