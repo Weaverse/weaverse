@@ -1,5 +1,13 @@
 # @weaverse/hydrogen
 
+## 3.1.13
+
+### Patch Changes
+
+- Update schema config & docs
+- Updated dependencies
+  - @weaverse/react@3.1.13
+
 ## 3.1.12
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 3.1.13
+
+### Patch Changes
+
+- Update schema config & docs
+
 ## 3.1.12
 
 ### Patch Changes
