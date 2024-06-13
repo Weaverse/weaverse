@@ -5,17 +5,15 @@
 
 ## Overview
 
-The "Weaverse SDKs" is a public collection of SDKs for integrating the Weaverse Headless CMS with modern React/JamStack
-frameworks such as Shopify Hydrogen, Remix, and Next.js. Developed by The Weaverse Team, these SDKs are designed to
+The **Weaverse SDKs** is a public collection of SDKs for integrating **Weaverse Headless CMS** with modern `React/JamStack`
+frameworks such as *Shopify Hydrogen*, *Remix*, or *Next.js*. Developed by The Weaverse Team, these SDKs are designed to
 simplify and enhance the integration of dynamic, content-rich web applications with the Weaverse CMS.
 
 ## Quick Links
 
-- **Home Page**: [Weaverse](https://weaverse.io)
-- **Playground**: [Playground](https://studio.weaverse.io/demo)
-- **Demo**: [Pilot](https://github.com/weaverse/pilot)
-
-[![Deploy with Vercel](https://vercel.com/button)](https://wvse.cc/deploy-pilot-to-vercel)
+- **Home page**: https://weaverse.io
+- **Weaverse Studio playground**: https://studio.weaverse.io/demo
+- **Pilot theme demo**: https://pilot.weaverse.dev
 
 ## Community Engagement
 
@@ -40,43 +38,17 @@ Engage with the Weaverse community through these channels:
   CMS integration.
 - [`@weaverse/hydrogen`](https://github.com/Weaverse/weaverse/tree/main/packages/hydrogen): SDK for Shopify Hydrogen
   integration with Weaverse CMS.
-- [`@weaverse/remix`](https://github.com/Weaverse/weaverse/tree/main/packages/remix): Integration tools for Remix
+- 🚧 [`@weaverse/remix`](https://github.com/Weaverse/weaverse/tree/main/packages/remix): Integration tools for Remix
   applications with Weaverse CMS.
-- [`@weaverse/next`](https://github.com/Weaverse/weaverse/tree/main/packages/next): Utilities for integrating Next.js
+- 🚧 [`@weaverse/next`](https://github.com/Weaverse/weaverse/tree/main/packages/next): Utilities for integrating Next.js
   applications with Weaverse CMS.
 
-## Installation & Development
+## Contribution Guidelines
 
-### Getting Started
-
-1. **Fork & Clone**: Fork this repository and clone it to your local machine.
-
-2. **Submodule Setup**: Initialize and update the submodule to pull the sample project:
-
-   ```bash
-   git submodule init
-   git submodule update --recursive
-   ```
-
-3. **Install Dependencies**: Navigate to the desired package or sample project and install dependencies:
-
-   ```bash
-   npm install
-   ```
-
-4. **Run Development Server**: Start the development server:
-   ```bash
-   npm run dev
-   ```
-
-### Contributing
+Please refer to the [Contribution Guidelines](./CONTRIBUTING.md) for information on how to contribute to the Weaverse SDKs.
 
 Your contributions are welcome to further enhance the Weaverse SDKs. Feel free to fork the repository, make changes, and
 submit pull requests with your improvements.
-
-## License
-
-This project is open-source and licensed under the MIT License.
 
 ## About The Weaverse Team
 
