@@ -52,7 +52,7 @@ export interface AllCacheOptions {
   staleIfError?: number
 }
 
-export type ComponentLoaderArgs<T = any, E = HydrogenThemeEnv> = {
+export type ComponentLoaderArgs<T = any, E = any> = {
   data: T
   weaverse: Omit<WeaverseClient, 'env'> & { env: E }
 }
@@ -168,7 +168,7 @@ export interface HydrogenElement {
   Component: ForwardRefExoticComponent<HydrogenComponentProps>
   type: string
   schema?: HydrogenComponentSchema
-  loader?: HydrogenComponentLoaderFunction
+  loader?: (args: ComponentLoaderArgs) => Promise<unknown>
 }
 
 export interface WeaverseHydrogenParams
@@ -179,14 +179,10 @@ export interface WeaverseHydrogenParams
   requestInfo: WeaverseLoaderRequestInfo
 }
 
-export type HydrogenComponentLoaderFunction<T = any, E = HydrogenThemeEnv> = (
-  args: ComponentLoaderArgs<T, E>,
-) => Promise<unknown>
-
 export interface HydrogenComponent<T extends HydrogenComponentProps = any> {
   default: ForwardRefExoticComponent<T>
   schema: HydrogenComponentSchema
-  loader?: HydrogenComponentLoaderFunction
+  loader?: (args: ComponentLoaderArgs) => Promise<unknown>
 }
 
 export type WeaverseStudioQueries = {
