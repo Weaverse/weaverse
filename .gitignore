@@ -9,5 +9,4 @@ dist/**
 /packages/core/pnpm-global/
 .vscode/
 .DS_Store
-templates/**/package-lock.json
 /.eslintcache

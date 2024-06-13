@@ -4,9 +4,8 @@ node_modules
 .env
 .idea
 build/**
- dist/**
- .next/**
+dist/**
+.next/**
 /.pnpm-store/
 /pnpm-global/
 /packages/core/pnpm-global/
-templates/**

@@ -7,7 +7,6 @@ directories=(
   "packages/hydrogen"
   "packages/react"
   "packages/shopify"
-  "templates/pilot"
 )
 
 targets=(
