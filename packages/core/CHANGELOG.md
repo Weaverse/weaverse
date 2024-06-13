@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 3.1.14
+
+### Patch Changes
+
+- Remomve pilot from submodule & workspace packages
+
 ## 3.1.13
 
 ### Patch Changes
