@@ -89,7 +89,7 @@ Inside a **Weaverse** component's `loader`:
 ```tsx
 import type { ComponentLoaderArgs } from '@weaverse/hydrogen'
 
-export let loader = async ({ weaverse }: ComponentLoaderArgs) => {
+export let loader = async ({ weaverse }: ComponentLoaderArgs<{}, Env>) => {
   // Get `env` variables from `weaverse` client
   let { env } = weaverse
 
@@ -98,6 +98,8 @@ export let loader = async ({ weaverse }: ComponentLoaderArgs) => {
   }
 }
 ```
+
+You can pass the `env` type to the `ComponentLoaderArgs` generics as the second argument to ensure that the type of the environment variables is correct.
 
 ## Conclusion
 

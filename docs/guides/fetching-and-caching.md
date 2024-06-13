@@ -31,8 +31,8 @@ Let's delve a bit deeper:
 - **Dynamic Content Queries**: One of the standout features is the ability to dynamically query content using the \* \*`data`\*\* prop. This prop comes from the component's loader's arguments, allowing for content that responds to changes
   based on the component's data.
 
-- **Typing with `ComponentLoaderArgs`**: You can pass types to **`ComponentLoaderArgs<T>`**, ensuring that you have
-  access to correct data types within the component's loader function.
+- **Typing with `ComponentLoaderArgs`**: You can pass types to **`ComponentLoaderArgs<T, E>`**, ensuring that you have
+  access to correct data & environment types within the component's loader function.
 
 - **Accessing to `env` and `request`**: Sometimes, while crafting your queries or managing data, you might need more
   context about the environment or incoming requests. The **`weaverse`** client has got you covered; it also packs
@@ -52,7 +52,7 @@ type MyComponentData = {
 
 // Component definition...
 
-export let loader = async (args: ComponentLoaderArgs<MyComponentData>) => {
+export let loader = async (args: ComponentLoaderArgs<MyComponentData, Env>) => {
   // Getting `weaverse` client instance and component's `data` from component's loader function's arguments
   let { weaverse, data } = args
   let { storefront, request, env } = weaverse
@@ -87,7 +87,7 @@ type ExternalData = {
   // Type definition...
 }
 
-export let loader = async ({ weaverse }: ComponentLoaderArgs) => {
+export let loader = async ({ weaverse }: ComponentLoaderArgs<{}, Env>) => {
   let { fetchWithCache, env } = weaverse
   let API = `https://external-api.endpoint`
 
