@@ -6,7 +6,7 @@
 ## Overview
 
 The **Weaverse SDKs** is a public collection of SDKs for integrating **Weaverse Headless CMS** with modern `React/JamStack`
-frameworks such as *Shopify Hydrogen*, *Remix*, or *Next.js*. Developed by The Weaverse Team, these SDKs are designed to
+frameworks such as _Shopify Hydrogen_, _Remix_, or _Next.js_. Developed by The Weaverse Team, these SDKs are designed to
 simplify and enhance the integration of dynamic, content-rich web applications with the Weaverse CMS.
 
 ## Quick Links

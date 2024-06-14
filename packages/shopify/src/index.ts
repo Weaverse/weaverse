@@ -75,6 +75,5 @@ export class WeaverseShopifyItem extends WeaverseItemStore {
   get _flags(): ElementFlags {
     return this.Element?.schema?.flags || {}
   }
-
 }
 Weaverse.ItemConstructor = WeaverseShopifyItem

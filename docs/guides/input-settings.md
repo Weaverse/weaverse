@@ -299,12 +299,12 @@ process.
 
 **`configs` details**
 
-| Property   | Type                | Description                                                                                                                               | Required |
-| ---------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| `options`  | `Array<OptionType>` | An array of **`OptionType`** objects. See below for the details of each property on an option.                                            | ✅       |
-| ↳ `value`  | `string`            | A unique value for the option.                                                                                                            | ✅       |
-| ↳ `label`  | `string`            | Displayed text for the option.                                                                                                            | ✅       |
-| ↳ `icon`   | `string`            | Displayed icon for the option. When an **`icon`** is set, the **`label`** will act as its `tooltip`.                                      | ➖       |
+| Property   | Type                | Description                                                                                                                                | Required |
+| ---------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------- |
+| `options`  | `Array<OptionType>` | An array of **`OptionType`** objects. See below for the details of each property on an option.                                             | ✅       |
+| ↳ `value`  | `string`            | A unique value for the option.                                                                                                             | ✅       |
+| ↳ `label`  | `string`            | Displayed text for the option.                                                                                                             | ✅       |
+| ↳ `icon`   | `string`            | Displayed icon for the option. When an **`icon`** is set, the **`label`** will act as its `tooltip`.                                       | ➖       |
 | ↳ `weight` | `string`            | An optional weight for the icon, which can be one of the following values: `thin` \| `light` \| `regular` \| `bold` \| `fill` \| `duotone` | ➖       |
 
 💡 **Note for icons:**

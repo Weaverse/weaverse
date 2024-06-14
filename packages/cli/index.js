@@ -10,13 +10,13 @@ const TEMPLATES = [
   {
     name: 'pilot',
     downloadURL: 'https://github.com/Weaverse/pilot/archive/refs/heads/main.zip',
-    defaultDownloadFolder: 'pilot-main'
+    defaultDownloadFolder: 'pilot-main',
   },
   {
     name: 'naturelle',
     downloadURL: 'https://github.com/Weaverse/naturelle/archive/refs/heads/main.zip',
-    defaultDownloadFolder: 'naturelle-main'
-  }
+    defaultDownloadFolder: 'naturelle-main',
+  },
 ]
 
 const downloadAndExtractTemplate = async (template, outputPath) => {
@@ -88,7 +88,7 @@ Options:
   process.exit(0)
 }
 
-; (async () => {
+;(async () => {
   if (argv.template) {
     let template = TEMPLATES.find((t) => t.name === argv.template)
     if (template) {
