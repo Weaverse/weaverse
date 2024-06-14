@@ -9,12 +9,14 @@ const spawn = require('cross-spawn')
 const TEMPLATES = [
   {
     name: 'pilot',
-    downloadURL: 'https://github.com/Weaverse/pilot/archive/refs/heads/main.zip',
+    downloadURL:
+      'https://github.com/Weaverse/pilot/archive/refs/heads/main.zip',
     defaultDownloadFolder: 'pilot-main',
   },
   {
     name: 'naturelle',
-    downloadURL: 'https://github.com/Weaverse/naturelle/archive/refs/heads/main.zip',
+    downloadURL:
+      'https://github.com/Weaverse/naturelle/archive/refs/heads/main.zip',
     defaultDownloadFolder: 'naturelle-main',
   },
 ]
@@ -29,7 +31,10 @@ const downloadAndExtractTemplate = async (template, outputPath) => {
   // Move contents from temp to the root of outputPath and then remove temp
   const files = await fs.readdir(`${outputPath}/temp/${defaultDownloadFolder}`)
   for (let file of files) {
-    await fs.move(`${outputPath}/temp/${defaultDownloadFolder}/${file}`, `${outputPath}/${file}`)
+    await fs.move(
+      `${outputPath}/temp/${defaultDownloadFolder}/${file}`,
+      `${outputPath}/${file}`,
+    )
   }
   await fs.remove(`${outputPath}/temp`)
 }
@@ -102,7 +107,10 @@ Options:
         await fs.remove(`${outputPath}/package-lock.json`).catch(console.error)
 
         // run 'npm install'
-        const install = spawn('npm', ['install', '--ignore-scripts'], { cwd: outputPath, stdio: 'inherit' })
+        const install = spawn('npm', ['install', '--ignore-scripts'], {
+          cwd: outputPath,
+          stdio: 'inherit',
+        })
 
         install.on('data', function (data) {
           console.log(data.toString())
@@ -114,7 +122,10 @@ Options:
           }
 
           // Then, run 'npm run dev' after 'npm install' completes
-          const runDev = spawn('npm', ['run', 'dev'], { cwd: outputPath, stdio: 'inherit' })
+          const runDev = spawn('npm', ['run', 'dev'], {
+            cwd: outputPath,
+            stdio: 'inherit',
+          })
 
           runDev.on('close', (code) => {
             if (code !== 0) {

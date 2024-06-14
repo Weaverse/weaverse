@@ -50,7 +50,19 @@
     "plugins": [
       "prettier-plugin-tailwindcss",
       "@ianvs/prettier-plugin-sort-imports"
-    ]
+    ],
+    "arrowParens": "always",
+    "bracketSpacing": true,
+    "embeddedLanguageFormatting": "auto",
+    "htmlWhitespaceSensitivity": "css",
+    "insertPragma": false,
+    "printWidth": 80,
+    "proseWrap": "preserve",
+    "quoteProps": "as-needed",
+    "requirePragma": false,
+    "tabWidth": 2,
+    "trailingComma": "all",
+    "useTabs": false
   },
   "dependencies": {
     "@changesets/cli": "^2.27.5"

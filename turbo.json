@@ -5,19 +5,39 @@
     "dev": {},
     "@weaverse/core#build": {
       "dependsOn": [],
-      "outputs": ["dist/index.js", "dist/index.mjs", "dist/index.d.ts", "dist/index.d.mts"]
+      "outputs": [
+        "dist/index.js",
+        "dist/index.mjs",
+        "dist/index.d.ts",
+        "dist/index.d.mts"
+      ]
     },
     "@weaverse/react#build": {
       "dependsOn": ["@weaverse/core#build"],
-      "outputs": ["dist/index.js", "dist/index.mjs", "dist/index.d.ts", "dist/index.d.mts"]
+      "outputs": [
+        "dist/index.js",
+        "dist/index.mjs",
+        "dist/index.d.ts",
+        "dist/index.d.mts"
+      ]
     },
     "@weaverse/hydrogen#build": {
       "dependsOn": ["@weaverse/core#build", "@weaverse/react#build"],
-      "outputs": ["dist/index.js", "dist/index.mjs", "dist/index.d.ts", "dist/index.d.mts"]
+      "outputs": [
+        "dist/index.js",
+        "dist/index.mjs",
+        "dist/index.d.ts",
+        "dist/index.d.mts"
+      ]
     },
     "@weaverse/shopify#build": {
       "dependsOn": ["@weaverse/core#build", "@weaverse/react#build"],
-      "outputs": ["dist/index.js", "dist/index.mjs", "dist/index.d.ts", "dist/index.d.mts"]
+      "outputs": [
+        "dist/index.js",
+        "dist/index.mjs",
+        "dist/index.d.ts",
+        "dist/index.d.mts"
+      ]
     },
     "typecheck": {
       "outputs": [],

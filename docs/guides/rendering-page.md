@@ -32,7 +32,12 @@ export async function loader({ context }: RouteLoaderArgs) {
 The **`loadPage()`** function takes an optional object as its parameters:
 
 ```tsx
-async function loadPage(params?: { strategy?: AllCacheOptions; type?: PageType; locale?: string; handle?: string }) {}
+async function loadPage(params?: {
+  strategy?: AllCacheOptions
+  type?: PageType
+  locale?: string
+  handle?: string
+}) {}
 ```
 
 - **`strategy`**: Sets the caching strategy for the page data. Defaults to **`CacheShort()`**. Dive deeper into caching
@@ -137,6 +142,11 @@ import { GenericError } from '~/components/GenericError'
 import { components } from './components'
 
 export function WeaverseContent() {
-  return <WeaverseHydrogenRoot components={components} errorComponent={GenericError} />
+  return (
+    <WeaverseHydrogenRoot
+      components={components}
+      errorComponent={GenericError}
+    />
+  )
 }
 ```

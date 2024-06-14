@@ -218,8 +218,12 @@ const UserCard = () => {
         width="320"
       />
       <div className="p-4">
-        <h2 className="text-2xl font-bold hover:text-gray-700 transition-all duration-200">Emily Johnson</h2>
-        <h3 className="text-gray-500 hover:text-gray-600 transition-all duration-200">Front-end Developer</h3>
+        <h2 className="text-2xl font-bold hover:text-gray-700 transition-all duration-200">
+          Emily Johnson
+        </h2>
+        <h3 className="text-gray-500 hover:text-gray-600 transition-all duration-200">
+          Front-end Developer
+        </h3>
         <p className="mt-2 text-gray-600 hover:text-gray-700 transition-all duration-200">
           Passionate about creating interactive user interfaces.
         </p>
@@ -241,13 +245,15 @@ const UserCard = () => {
 
 ```tsx
 interface UserProfilesProps extends HydrogenComponentProps {}
-const UserProfiles = forwardRef<HTMLDivElement, UserProfilesProps>((props, ref) => {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-      <UserCard />
-    </div>
-  )
-})
+const UserProfiles = forwardRef<HTMLDivElement, UserProfilesProps>(
+  (props, ref) => {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+        <UserCard />
+      </div>
+    )
+  },
+)
 
 export default UserProfiles
 ```
@@ -427,7 +433,11 @@ It's time to finalize the `UserProfiles` section. Update your code with the foll
 // app/sections/user-profiles/index.tsx
 
 import { Image } from '@shopify/hydrogen'
-import type { ComponentLoaderArgs, HydrogenComponentProps, HydrogenComponentSchema } from '@weaverse/hydrogen'
+import type {
+  ComponentLoaderArgs,
+  HydrogenComponentProps,
+  HydrogenComponentSchema,
+} from '@weaverse/hydrogen'
 import { Button } from '~/components'
 import { METAOBJECTS_QUERY } from '~/data/queries'
 import clsx from 'clsx'
@@ -439,7 +449,9 @@ const UserCard = ({ user }: { user: any }) => {
   let imageData = image?.reference?.image
   let name = fields.find((field: any) => field.key === 'name')?.value
   let role = fields.find((field: any) => field.key === 'role')?.value
-  let description = fields.find((field: any) => field.key === 'description')?.value
+  let description = fields.find(
+    (field: any) => field.key === 'description',
+  )?.value
   return (
     <div
       className="flex flex-col gap-2 items-center border bg-card text-card-foreground rounded-lg overflow-hidden shadow-lg max-w-sm mx-auto hover:shadow-xl transition-all duration-200"
@@ -451,9 +463,15 @@ const UserCard = ({ user }: { user: any }) => {
         style={{ aspectRatio: '320/320', objectFit: 'contain' }}
       />
       <div className="p-4">
-        <h2 className="text-2xl font-bold hover:text-gray-700 transition-all duration-200">{name}</h2>
-        <h3 className="text-gray-500 hover:text-gray-600 transition-all duration-200">{role}</h3>
-        <p className="mt-2 text-gray-600 hover:text-gray-700 transition-all duration-200">{description}</p>
+        <h2 className="text-2xl font-bold hover:text-gray-700 transition-all duration-200">
+          {name}
+        </h2>
+        <h3 className="text-gray-500 hover:text-gray-600 transition-all duration-200">
+          {role}
+        </h3>
+        <p className="mt-2 text-gray-600 hover:text-gray-700 transition-all duration-200">
+          {description}
+        </p>
         <div className="flex mt-4 space-x-2">
           <Button>Follow</Button>
           <Button variant={'secondary'}>Message</Button>
@@ -471,35 +489,44 @@ interface UserProfilesProps extends HydrogenComponentProps {
   itemsPerRow: number
 }
 
-const UserProfiles = forwardRef<HTMLDivElement, UserProfilesProps>((props, ref) => {
-  let { loaderData, metaObjectData, itemsPerRow, className, ...rest } = props
-  if (!metaObjectData) {
+const UserProfiles = forwardRef<HTMLDivElement, UserProfilesProps>(
+  (props, ref) => {
+    let { loaderData, metaObjectData, itemsPerRow, className, ...rest } = props
+    if (!metaObjectData) {
+      return (
+        <section
+          className={clsx(
+            'w-full px-6 py-12 md:py-24 lg:py-32 bg-amber-50 mx-auto',
+            className,
+          )}
+          ref={ref}
+          {...rest}
+        >
+          <p className="text-center">Please select a metaobject definition</p>
+        </section>
+      )
+    }
     return (
-      <section
-        className={clsx('w-full px-6 py-12 md:py-24 lg:py-32 bg-amber-50 mx-auto', className)}
+      <div
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4"
         ref={ref}
         {...rest}
       >
-        <p className="text-center">Please select a metaobject definition</p>
-      </section>
-    )
-  }
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4" ref={ref} {...rest}>
-      <div
-        className="grid w-fit mx-auto"
-        style={{
-          gridTemplateColumns: `repeat(${itemsPerRow}, minmax(0, 1fr))`,
-          gap: '16rem',
-        }}
-      >
-        {loaderData?.userProfiles.map((user: any) => {
-          return <UserCard key={user.id} user={user} />
-        })}
+        <div
+          className="grid w-fit mx-auto"
+          style={{
+            gridTemplateColumns: `repeat(${itemsPerRow}, minmax(0, 1fr))`,
+            gap: '16rem',
+          }}
+        >
+          {loaderData?.userProfiles.map((user: any) => {
+            return <UserCard key={user.id} user={user} />
+          })}
+        </div>
       </div>
-    </div>
-  )
-})
+    )
+  },
+)
 ```
 
 The updated `UserProfiles` component utilizes data fetched by the loader function. This data is passed from the `loaderData` prop and used to render individual `UserCard` components for each user profile, displaying the user's name, role, description, and avatar.

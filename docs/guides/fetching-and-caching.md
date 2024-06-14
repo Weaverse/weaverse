@@ -41,7 +41,11 @@ Let's delve a bit deeper:
 Here's a sample to give you an idea:
 
 ```tsx
-import { ComponentLoaderArgs, getSelectedProductOptions, WeaverseProduct } from '@weaverse/hydrogen'
+import {
+  ComponentLoaderArgs,
+  getSelectedProductOptions,
+  WeaverseProduct,
+} from '@weaverse/hydrogen'
 import { PRODUCT_QUERY } from '~/data/queries'
 import { ProductInfoQuery } from 'storefrontapi.generated'
 

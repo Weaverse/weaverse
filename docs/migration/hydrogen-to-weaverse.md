@@ -250,7 +250,9 @@ import { getWeaverseCsp } from '~/weaverse/weaverse.server'
 
 // ...
 
-const { nonce, header, NonceProvider } = createContentSecurityPolicy(getWeaverseCsp(request))
+const { nonce, header, NonceProvider } = createContentSecurityPolicy(
+  getWeaverseCsp(request),
+)
 ```
 
 ### Updating app/root.tsx for Weaverse Theme Settings

@@ -9,3 +9,4 @@ dist/**
 /.pnpm-store/
 /pnpm-global/
 /packages/core/pnpm-global/
+/templates/**
