@@ -4,7 +4,12 @@ import type { stitchesUtils } from './utils/stitches'
 
 // Simple types
 export type PlatformTypeEnum = 'shopify-section' | 'shopify-hydrogen' | 'nextjs'
-export type ToolbarAction = 'general-settings' | 'settings-level-2' | 'duplicate' | 'delete' | 'global-sections'
+export type ToolbarAction =
+  | 'general-settings'
+  | 'settings-level-2'
+  | 'duplicate'
+  | 'delete'
+  | 'global-sections'
 export type AdvancedGroupType =
   | 'border'
   | 'alignment'
@@ -48,11 +53,23 @@ export type InputType =
   | 'url'
 
 // Complex types
-export type WeaverseCSSProperties = Stitches.CSS & Partial<Record<keyof typeof stitchesUtils, string | number>>
-export type ChildElementCSS = Partial<{ [selector: string]: WeaverseCSSProperties & ChildElementCSS }>
+export type WeaverseCSSProperties = Stitches.CSS &
+  Partial<Record<keyof typeof stitchesUtils, string | number>>
+export type ChildElementCSS = Partial<{
+  [selector: string]: WeaverseCSSProperties & ChildElementCSS
+}>
 export type WeaverseResourcePickerData = { id: number; handle: string }
-export type WeaverseImage = { id: string; url: string; altText: string; width: number; height: number }
-export type AdditionalInputConfigs = SelectInputConfigs | ToggleGroupConfigs | RangeInputConfigs
+export type WeaverseImage = {
+  id: string
+  url: string
+  altText: string
+  width: number
+  height: number
+}
+export type AdditionalInputConfigs =
+  | SelectInputConfigs
+  | ToggleGroupConfigs
+  | RangeInputConfigs
 
 export interface ElementCSS {
   '@desktop'?: WeaverseCSSProperties | ChildElementCSS
@@ -116,7 +133,12 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
   label?: string
   configs?: ConfigsType
   condition?: string
-  defaultValue?: string | number | boolean | Partial<WeaverseImage> | { [x: string]: any }
+  defaultValue?:
+    | string
+    | number
+    | boolean
+    | Partial<WeaverseImage>
+    | { [x: string]: any }
   placeholder?: string
   helpText?: string
 }

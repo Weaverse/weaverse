@@ -35,7 +35,9 @@ export let Modal = (props: DialogProps) => {
   )
 }
 
-export let ModalTrigger: React.FC<DialogTriggerProps & React.RefAttributes<HTMLButtonElement>> = Trigger
+export let ModalTrigger: React.FC<
+  DialogTriggerProps & React.RefAttributes<HTMLButtonElement>
+> = Trigger
 export let ModalHeader = forwardRef<HTMLHeadingElement, DialogTitleProps>(
   (props, ref) => {
     let { children, ...rest } = props

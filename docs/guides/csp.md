@@ -33,7 +33,8 @@ export default async function handleRequest(
   const { nonce, header, NonceProvider } = createContentSecurityPolicy({
     ...getWeaverseCsp(request, context),
     shop: {
-      checkoutDomain: context.env?.PUBLIC_CHECKOUT_DOMAIN || context.env?.PUBLIC_STORE_DOMAIN,
+      checkoutDomain:
+        context.env?.PUBLIC_CHECKOUT_DOMAIN || context.env?.PUBLIC_STORE_DOMAIN,
       storeDomain: context.env?.PUBLIC_STORE_DOMAIN,
     },
   })
@@ -81,7 +82,8 @@ Weaverse uses default CSP policies that are suitable for most needs, defined in 
  */
 export function getWeaverseCsp(request: Request, context: AppLoadContext) {
   let url = new URL(request.url)
-  let weaverseHost = url.searchParams.get('weaverseHost') || context.env.WEAVERSE_HOST
+  let weaverseHost =
+    url.searchParams.get('weaverseHost') || context.env.WEAVERSE_HOST
   let isDesignMode = url.searchParams.get('weaverseHost')
   let weaverseHosts = ['*.weaverse.io', '*.shopify.com', '*.myshopify.com']
   if (weaverseHost) {
@@ -112,7 +114,12 @@ export function getWeaverseCsp(request: Request, context: AppLoadContext) {
 If you need to customize CSP for specific requirements, such as loading external scripts or enabling additional integrations, update the `getWeaverseCsp` function with the appropriate sources. For example, to allow scripts from additional external domains, you might modify the `scriptSrc` directive:
 
 ```tsx
-scriptSrc: ['cdn.example.com', 'www.googletagmanager.com', '*.clarity.ms', ...weaverseHosts]
+scriptSrc: [
+  'cdn.example.com',
+  'www.googletagmanager.com',
+  '*.clarity.ms',
+  ...weaverseHosts,
+]
 ```
 
 For detailed guidance on CSP directive values, visit [content-security-policy.com](https://content-security-policy.com/).

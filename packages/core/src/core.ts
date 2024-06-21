@@ -36,7 +36,9 @@ export class WeaverseItemStore extends EventEmitter {
       Weaverse.itemInstances.set(id, this)
       Object.assign(this._store, initialData)
     } else {
-      throw new Error(`'id' and 'type' are required to create a new Weaverse item.`)
+      throw new Error(
+        `'id' and 'type' are required to create a new Weaverse item.`,
+      )
     }
     this._store.css = this.getDefaultCss()
   }

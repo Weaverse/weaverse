@@ -1,13 +1,10 @@
 {
   "$schema": "https://turborepo.org/schema.json",
   "tasks": {
-    "build": {
-    },
-    "dev": {
-    },
+    "build": {},
+    "dev": {},
     "@weaverse/core#build": {
-      "dependsOn": [
-      ],
+      "dependsOn": [],
       "outputs": [
         "dist/index.js",
         "dist/index.mjs",
@@ -16,9 +13,7 @@
       ]
     },
     "@weaverse/react#build": {
-      "dependsOn": [
-        "@weaverse/core#build"
-      ],
+      "dependsOn": ["@weaverse/core#build"],
       "outputs": [
         "dist/index.js",
         "dist/index.mjs",
@@ -27,10 +22,7 @@
       ]
     },
     "@weaverse/hydrogen#build": {
-      "dependsOn": [
-        "@weaverse/core#build",
-        "@weaverse/react#build"
-      ],
+      "dependsOn": ["@weaverse/core#build", "@weaverse/react#build"],
       "outputs": [
         "dist/index.js",
         "dist/index.mjs",
@@ -39,10 +31,7 @@
       ]
     },
     "@weaverse/shopify#build": {
-      "dependsOn": [
-        "@weaverse/core#build",
-        "@weaverse/react#build"
-      ],
+      "dependsOn": ["@weaverse/core#build", "@weaverse/react#build"],
       "outputs": [
         "dist/index.js",
         "dist/index.mjs",
@@ -52,10 +41,7 @@
     },
     "typecheck": {
       "outputs": [],
-      "inputs": [
-        "packages/**/*.ts",
-        "packages/**/*.tsx"
-      ]
+      "inputs": ["packages/**/*.ts", "packages/**/*.tsx"]
     }
   }
 }

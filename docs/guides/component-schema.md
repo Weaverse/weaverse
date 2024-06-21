@@ -138,7 +138,11 @@ toolbar ? : (HydrogenToolbarAction | HydrogenToolbarAction[])[]
 Determines the available actions (like duplicate, delete, general settings) for the component in the studio.
 
 ```tsx
-type HydrogenToolbarAction = 'general-settings' | 'settings-level-2' | 'duplicate' | 'delete'
+type HydrogenToolbarAction =
+  | 'general-settings'
+  | 'settings-level-2'
+  | 'duplicate'
+  | 'delete'
 ```
 
 ## Example

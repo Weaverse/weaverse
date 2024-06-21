@@ -47,9 +47,9 @@ Next, you need to set up a directory for Weaverse in your project’s **app** fo
 ```typescript
 // weaverse/component.ts
 
-import type {HydrogenComponent} from '@weaverse/hydrogen';
+import type { HydrogenComponent } from '@weaverse/hydrogen'
 
-export const components: HydrogenComponent[] = [];
+export const components: HydrogenComponent[] = []
 ```
 
 **weaverse/schema.ts** – This file is where you define Project/Theme information so that users can later find that information in the Project information section in the Weaverse app.
@@ -57,7 +57,7 @@ export const components: HydrogenComponent[] = [];
 ```typescript
 // weaverse/schema.ts
 
-import type {HydrogenThemeSchema} from '@weaverse/hydrogen';
+import type { HydrogenThemeSchema } from '@weaverse/hydrogen'
 
 export const themeSchema: HydrogenThemeSchema = {
   info: {
@@ -69,10 +69,8 @@ export const themeSchema: HydrogenThemeSchema = {
     documentationUrl: 'https://weaverse.io/docs',
     supportUrl: 'https://weaverse.io/contact',
   },
-  inspector: [
-    
-  ],
-};
+  inspector: [],
+}
 ```
 
 At the same time, this is also where you will define Global Theme settings, similar to how you use `settings_schema.json` in Dawn theme (Shopify theme). I have also left a few settings available, so you can expand them later. Below is an example image of my theme settings:
@@ -87,31 +85,30 @@ Create a **weaverse/weaverse.server.ts** file. The “`server.ts`” extension i
 
 ```typescript
 // weaverse/weaverse.server.ts
-import {WeaverseClient} from '@weaverse/hydrogen';
-import type {CreateWeaverseClientArgs} from '@weaverse/hydrogen';
-
-import {components} from '~/weaverse/components';
-import {themeSchema} from '~/weaverse/schema.server';
+import { WeaverseClient } from '@weaverse/hydrogen'
+import type { CreateWeaverseClientArgs } from '@weaverse/hydrogen'
+import { components } from '~/weaverse/components'
+import { themeSchema } from '~/weaverse/schema.server'
 
 export function createWeaverseClient(args: CreateWeaverseClientArgs) {
   return new WeaverseClient({
     ...args,
     themeSchema,
     components,
-  });
+  })
 }
 
 export function getWeaverseCsp(request: Request) {
-  let url = new URL(request.url);
+  let url = new URL(request.url)
   // Get weaverse host from query params
-  let weaverseHost = url.searchParams.get('weaverseHost');
-  let isDesignMode = url.searchParams.get('weaverseHost');
-  let weaverseHosts = ['*.weaverse.io', '*.shopify.com', '*.myshopify.com'];
+  let weaverseHost = url.searchParams.get('weaverseHost')
+  let isDesignMode = url.searchParams.get('weaverseHost')
+  let weaverseHosts = ['*.weaverse.io', '*.shopify.com', '*.myshopify.com']
   if (weaverseHost) {
-    weaverseHosts.push(weaverseHost);
+    weaverseHosts.push(weaverseHost)
   }
   let updatedCsp: {
-    [x: string]: string[] | string | boolean;
+    [x: string]: string[] | string | boolean
   } = {
     defaultSrc: [
       'data:',
@@ -124,21 +121,19 @@ export function getWeaverseCsp(request: Request) {
     ],
     styleSrc: ['fonts.googleapis.com', ...weaverseHosts],
     connectSrc: ['https://vimeo.com', ...weaverseHosts],
-  };
-  if (isDesignMode) {
-    updatedCsp.frameAncestors = ['*'];
   }
-  return updatedCsp;
+  if (isDesignMode) {
+    updatedCsp.frameAncestors = ['*']
+  }
+  return updatedCsp
 }
-
 ```
 
 In this file, you’ll include:
 
-* `createWeaverseClient`: For interacting with the Weaverse API.
+- `createWeaverseClient`: For interacting with the Weaverse API.
 
-* `getWeaverseCsp`: For managing content security policies, ensuring your app adheres to best practices in web security.
-
+- `getWeaverseCsp`: For managing content security policies, ensuring your app adheres to best practices in web security.
 
 ### Step 4: Render Weaverse Content
 
@@ -167,58 +162,57 @@ In your **server.ts** file, incorporate **weaverse** into Remix's global context
 // server.ts
 
 // ...
-import {createWeaverseClient} from '~/weaverse/weaverse.server';
+import { createWeaverseClient } from '~/weaverse/weaverse.server'
+
 // ...
 
 /**
-* Create Hydrogen's Storefront client.
-*/
-const {storefront} = createStorefrontClient({/** ... */ });
+ * Create Hydrogen's Storefront client.
+ */
+const { storefront } = createStorefrontClient({
+  /** ... */
+})
 
 const weaverse = createWeaverseClient({
-        storefront,
-        request,
-        env,
-        cache,
-        waitUntil,
-});
-
-
+  storefront,
+  request,
+  env,
+  cache,
+  waitUntil,
+})
 
 /**
-* Create a Remix request handler and pass
-* Hydrogen's Storefront client to the loader context.
-*/
+ * Create a Remix request handler and pass
+ * Hydrogen's Storefront client to the loader context.
+ */
 const handleRequest = createRequestHandler({
-        build: remixBuild,
-        mode: process.env.NODE_ENV,
-        getLoadContext: () => ({
-          session,
-          storefront,
-          cart,
-          env,
-          waitUntil,
-          weaverse, // add weaverse to Remix loader context
-        }),
-});
+  build: remixBuild,
+  mode: process.env.NODE_ENV,
+  getLoadContext: () => ({
+    session,
+    storefront,
+    cart,
+    env,
+    waitUntil,
+    weaverse, // add weaverse to Remix loader context
+  }),
+})
 ```
 
 **TypeScript Error Handling**: If you encounter a TypeScript error like `TS2739, indicating that Type Env is missing properties from type HydrogenThemeEnv`, don't panic. Simply add the missing properties to `HydrogenThemeEnv` in your `env.d.ts` file. This step ensures your TypeScript environment recognizes the new Weaverse elements.
 
 ```typescript
 declare global {
-	
-	/** ... */
-  
-	/**
+  /** ... */
+
+  /**
    * Declare expected Env parameter in fetch handler.
    */
   interface Env {
-
     /** ... */
 
-    WEAVERSE_PROJECT_ID: string;
-    WEAVERSE_API_KEY: string;
+    WEAVERSE_PROJECT_ID: string
+    WEAVERSE_API_KEY: string
   }
 }
 ```
@@ -231,20 +225,20 @@ declare module '@shopify/remix-oxygen' {
    * Declare local additions to the Remix loader context.
    */
   export interface AppLoadContext {
-    env: Env;
-    cart: HydrogenCart;
-    storefront: Storefront;
-    session: HydrogenSession;
-    waitUntil: ExecutionContext['waitUntil'];
+    env: Env
+    cart: HydrogenCart
+    storefront: Storefront
+    session: HydrogenSession
+    waitUntil: ExecutionContext['waitUntil']
 
-    weaverse: WeaverseClient;
+    weaverse: WeaverseClient
   }
 
   /** ... */
 }
 ```
 
-### Implementing *getWeaverseCsp*
+### Implementing _getWeaverseCsp_
 
 Open your **app/entry.server.tsx** file and utilize the **getWeaverseCsp** function. This function is crucial for managing your content security policy, which is a key aspect of web application security.
 
@@ -252,12 +246,13 @@ Open your **app/entry.server.tsx** file and utilize the **getWeaverseCsp** funct
 // app/entry.server.tsx
 
 // ...
-import {getWeaverseCsp} from '~/weaverse/weaverse.server';
+import { getWeaverseCsp } from '~/weaverse/weaverse.server'
+
 // ...
 
-const {nonce, header, NonceProvider} = createContentSecurityPolicy(
-    getWeaverseCsp(request),
-);
+const { nonce, header, NonceProvider } = createContentSecurityPolicy(
+  getWeaverseCsp(request),
+)
 ```
 
 ### Updating app/root.tsx for Weaverse Theme Settings
@@ -267,18 +262,17 @@ In the **app/root.tsx** file, add **weaverseTheme** data to the loader function�
 ```typescript
 // app/root.tsx
 
-export async function loader({context}: LoaderFunctionArgs) {
-
+export async function loader({ context }: LoaderFunctionArgs) {
   /** ... */
 
   return defer(
     {
       /** ... */
       weaverseTheme: await context.weaverse.loadThemeSettings(),
-			/** ... */
+      /** ... */
     },
-    {headers},
-  );
+    { headers },
+  )
 }
 ```
 
@@ -333,7 +327,7 @@ export default function Homepage() {
 ```
 
 In your route components, explicitly render `WeaverseContent`. This direct rendering allows for the customized content to be displayed as intended.
-For more comprehensive setup, refer to the [Weaverse Hydrogen Pilot Routes](https://github.com/Weaverse/pilot/tree/main/app/routes) repository, and learn more about how to [Render a Weaverse Page](https://weaverse.io/docs/guides/rendering-page). 
+For more comprehensive setup, refer to the [Weaverse Hydrogen Pilot Routes](https://github.com/Weaverse/pilot/tree/main/app/routes) repository, and learn more about how to [Render a Weaverse Page](https://weaverse.io/docs/guides/rendering-page).
 
 ## Migrating Components to Weaverse
 
@@ -436,6 +430,6 @@ That concludes our basic tutorial on integrating Weaverse with your Shopify Hydr
 
 **References:**
 
-* Demo repository: [https://github.com/Weaverse/Naturelle](https://github.com/Weaverse/Naturelle)
+- Demo repository: [https://github.com/Weaverse/Naturelle](https://github.com/Weaverse/Naturelle)
 
-* Tutorial: [https://weaverse.io/docs/hydrogen/tutorial](https://weaverse.io/docs/hydrogen/tutorial)
+- Tutorial: [https://weaverse.io/docs/hydrogen/tutorial](https://weaverse.io/docs/hydrogen/tutorial)

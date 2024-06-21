@@ -27,13 +27,13 @@
     "@types/react-dom": "18.3.0",
     "cross-env": "7.0.3",
     "eslint": "8.57.0",
-    "prettier": "3.3.1",
+    "prettier": "3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "rimraf": "5.0.7",
     "tsup": "8.1.0",
-    "turbo": "2.0.1",
+    "turbo": "2.0.3",
     "typescript": "5.4.5"
   },
   "optionalDependencies": {
@@ -50,7 +50,19 @@
     "plugins": [
       "prettier-plugin-tailwindcss",
       "@ianvs/prettier-plugin-sort-imports"
-    ]
+    ],
+    "arrowParens": "always",
+    "bracketSpacing": true,
+    "embeddedLanguageFormatting": "auto",
+    "htmlWhitespaceSensitivity": "css",
+    "insertPragma": false,
+    "printWidth": 80,
+    "proseWrap": "preserve",
+    "quoteProps": "as-needed",
+    "requirePragma": false,
+    "tabWidth": 2,
+    "trailingComma": "all",
+    "useTabs": false
   },
   "dependencies": {
     "@changesets/cli": "^2.27.5"

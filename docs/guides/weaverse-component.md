@@ -22,7 +22,11 @@ A Weaverse Component file typically comprises these parts:
 An abbreviated glance at each part:
 
 ```tsx
-import type { ComponentLoaderArgs, HydrogenComponentProps, HydrogenComponentSchema } from '@weaverse/hydrogen'
+import type {
+  ComponentLoaderArgs,
+  HydrogenComponentProps,
+  HydrogenComponentSchema,
+} from '@weaverse/hydrogen'
 import { forwardRef } from 'react'
 
 type MyComponentData = {
@@ -30,7 +34,10 @@ type MyComponentData = {
   // More type definitions...
 }
 
-type MyComponentProps = HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> & MyComponentData
+type MyComponentProps = HydrogenComponentProps<
+  Awaited<ReturnType<typeof loader>>
+> &
+  MyComponentData
 
 let MyComponent = forwardRef<HTMLElement, MyComponentProps>((props, ref) => {
   let { heading, loaderData, ...rest } = props

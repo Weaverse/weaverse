@@ -52,6 +52,7 @@ Within your Shopify store's Hydrogen app, click the "**Create storefront**" butt
 ### Publish Your Storefront & Update Weaverse Preview URL
 
 After the GitHub Action completes:
+
 - **Make the storefront public**: Click "**...**" next to the Storefront name, select "**Edit environment**," and then choose "**Publish**."
   ![hydrogen edit environment](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/hydrogen_edit_environment.png?v=1713673181)
   ![Make Hydrogen storefront public](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/make_hydrogen_storefront_public.webp)

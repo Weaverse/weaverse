@@ -1,4 +1,5 @@
-export let isReactNative = typeof navigator === 'object' && navigator.product === 'ReactNative'
+export let isReactNative =
+  typeof navigator === 'object' && navigator.product === 'ReactNative'
 export let isBrowser = typeof window !== 'undefined' && !isReactNative
 export let isIframe = isBrowser && window.top !== window.self
 
@@ -7,7 +8,10 @@ export let isIframe = isBrowser && window.top !== window.self
  * @param target
  * @param source
  */
-export function merge(target: Record<string, any>, source: Record<string, any>) {
+export function merge(
+  target: Record<string, any>,
+  source: Record<string, any>,
+) {
   let t = { ...(target || {}) }
   // Iterate through `source` properties and if an `Object` set property to merge of `target` and `source` properties
   for (let key of Object.keys(source)) {

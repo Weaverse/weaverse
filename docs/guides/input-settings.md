@@ -299,12 +299,12 @@ process.
 
 **`configs` details**
 
-| Property   | Type                | Description                                                                                                                               | Required |
-| ---------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| `options`  | `Array<OptionType>` | An array of **`OptionType`** objects. See below for the details of each property on an option.                                            | ✅       |
-| ↳ `value`  | `string`            | A unique value for the option.                                                                                                            | ✅       |
-| ↳ `label`  | `string`            | Displayed text for the option.                                                                                                            | ✅       |
-| ↳ `icon`   | `string`            | Displayed icon for the option. When an **`icon`** is set, the **`label`** will act as its `tooltip`.                                      | ➖       |
+| Property   | Type                | Description                                                                                                                                | Required |
+| ---------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------- |
+| `options`  | `Array<OptionType>` | An array of **`OptionType`** objects. See below for the details of each property on an option.                                             | ✅       |
+| ↳ `value`  | `string`            | A unique value for the option.                                                                                                             | ✅       |
+| ↳ `label`  | `string`            | Displayed text for the option.                                                                                                             | ✅       |
+| ↳ `icon`   | `string`            | Displayed icon for the option. When an **`icon`** is set, the **`label`** will act as its `tooltip`.                                       | ➖       |
 | ↳ `weight` | `string`            | An optional weight for the icon, which can be one of the following values: `thin` \| `light` \| `regular` \| `bold` \| `fill` \| `duotone` | ➖       |
 
 💡 **Note for icons:**
@@ -419,15 +419,24 @@ interface ImageGalleryItemProps extends HydrogenComponentProps {
   source: WeaverseImage
 }
 
-let ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>((props, ref) => {
-  let { source, ...rest } = props
-  /*
+let ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>(
+  (props, ref) => {
+    let { source, ...rest } = props
+    /*
       Pass the object returned from the `image` input (name it as you like, e.g., `source`)
       directly to the `data` prop of the `Image` component.
       This will automatically generate all the necessary attributes for the image element.
     */
-  return <Image ref={ref} {...rest} data={source} sizes={`(min-width: 45em) 50vw, 100vw`} />
-})
+    return (
+      <Image
+        ref={ref}
+        {...rest}
+        data={source}
+        sizes={`(min-width: 45em) 50vw, 100vw`}
+      />
+    )
+  },
+)
 
 export default ImageGalleryItem
 ```
@@ -484,7 +493,13 @@ let date = new Date(timestamp)
 
 // Parsing examples:
 console.log(date.toISOString().split('T')[0]) // => "2024-01-01"
-console.log(date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })) // => "January 1, 2024"
+console.log(
+  date.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  }),
+) // => "January 1, 2024"
 ```
 
 #### `map-autocomplete`
