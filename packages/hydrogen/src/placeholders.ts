@@ -1,89 +1,60 @@
 export let IMAGES_PLACEHOLDERS = {
-  // Colored placeholders
-  image:
-    'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-image.svg',
-  banner:
-    'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-banner.svg',
-  backgroundImage:
-    'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-bg.svg',
-  blog_1:
-    'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-blog-1.svg',
-  blog_2:
-    'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-blog-2.svg',
-  blog_3:
-    'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-blog-3.svg',
-  collection_1:
-    'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-collection-1.svg',
-  collection_2:
-    'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-collection-2.svg',
-  collection_3:
-    'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-collection-3.svg',
-  product_1:
-    'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-tshirt-1.svg',
-  product_2:
-    'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-tshirt-2.svg',
-  product_3:
-    'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-tshirt-3.svg',
-  product_4:
-    'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/h2-placeholder-tshirt-4.svg',
-
-  // Greyscale placeholders
-  gs_logo_white:
+  logo_white:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-logo-w-600x200.svg',
-  gs_logo_black:
+  logo_black:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-logo-k-600x200.svg',
-  gs_image:
+  image:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-image-1024x1024.svg',
-  gs_banner_1:
+  banner_1:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-lifestyle-1-1800x900.svg',
-  gs_banner_2:
+  banner_2:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-lifestyle-2-1800x900.svg',
-  gs_collection_1:
+  collection_1:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-collection-hats-1024x1024.svg',
-  gs_collection_2:
+  collection_2:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-collection-shoes-1024x1024.svg',
-  gs_collection_3:
+  collection_3:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-collection-glasses-1024x1024.svg',
-  gs_collection_4:
+  collection_4:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-collection-lamps-1024x1024.svg',
-  gs_collection_5:
+  collection_5:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-collection-bags-1024x1024.svg',
-  gs_collection_6:
+  collection_6:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-collection-watches-1024x1024.svg',
-  gs_product_1:
+  product_1:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-product-watch-3-1024x1024.svg',
-  gs_product_2:
+  product_2:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-product-bag-2-1024x1024.svg',
-  gs_product_3:
+  product_3:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-product-shoe-1-1024x1024.svg',
-  gs_product_4:
+  product_4:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-product-lamp-2-1024x1024.svg',
-  gs_product_5:
+  product_5:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-product-glasses-1-1024x1024.svg',
-  gs_product_6:
+  product_6:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-product-lamp-1-1024x1024.svg',
-  gs_product_7:
+  product_7:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-product-glasses-2-1024x1024.svg',
-  gs_product_8:
+  product_8:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-product-hat-3-1024x1024.svg',
-  gs_product_9:
+  product_9:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-product-bag-1-1024x1024.svg',
-  gs_product_10:
+  product_10:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-product-shoe-2-1024x1024.svg',
-  gs_product_11:
+  product_11:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-product-hat-2-1024x1024.svg',
-  gs_product_12:
+  product_12:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-product-glasses-3-1024x1024.svg',
-  gs_product_13:
+  product_13:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-product-shoe-3-1024x1024.svg',
-  gs_product_14:
+  product_14:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-product-bag-3-1024x1024.svg',
-  gs_product_15:
+  product_15:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-product-hat-1-1024x1024.svg',
-  gs_product_16:
+  product_16:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-product-lamp-3-1024x1024.svg',
-  gs_product_17:
+  product_17:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-product-watch-1-1024x1024.svg',
-  gs_product_18:
+  product_18:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-product-watch-2-1024x1024.svg',
 }
