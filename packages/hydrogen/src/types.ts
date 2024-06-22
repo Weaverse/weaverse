@@ -73,7 +73,10 @@ export interface HydrogenComponentData extends ElementData {
 
 export type HydrogenToolbarAction =
   | 'general-settings'
-  | 'settings-level-2'
+  | 'global-section'
+  | 'move-up'
+  | 'move-down'
+  | 'toggle-visibility'
   | 'duplicate'
   | 'delete'
 
