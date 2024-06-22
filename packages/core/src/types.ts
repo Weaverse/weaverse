@@ -1,5 +1,6 @@
 import type * as Stitches from '@stitches/core'
 import type { ForwardRefExoticComponent } from 'react'
+import type { IconName } from './icon-name'
 import type { stitchesUtils } from './utils/stitches'
 
 // Simple types
@@ -148,7 +149,7 @@ export interface SelectInputConfigs {
 }
 
 export interface ToggleGroupConfigs {
-  options?: { value: string; label: string; icon?: string; weight?: string }[]
+  options?: { value: string; label: string; icon?: IconName }[]
 }
 
 export interface RangeInputConfigs {
