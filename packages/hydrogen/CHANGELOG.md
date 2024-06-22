@@ -1,5 +1,13 @@
 # @weaverse/hydrogen
 
+## 3.1.16
+
+### Patch Changes
+
+- Update hydrogen toolbar action types
+- Updated dependencies
+  - @weaverse/react@3.1.16
+
 ## 3.1.15
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 3.1.16
+
+### Patch Changes
+
+- Update hydrogen toolbar action types
+
 ## 3.1.15
 
 ### Patch Changes
