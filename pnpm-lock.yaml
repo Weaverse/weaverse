@@ -98,7 +98,7 @@ importers:
         specifier: '>=2023'
         version: 2024.4.7(@remix-run/react@2.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.2))(@remix-run/server-runtime@2.9.2(typescript@5.5.2))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.3.1(@types/node@20.14.8))
       '@weaverse/react':
-        specifier: 3.1.14
+        specifier: 3.1.15
         version: link:../react
       react:
         specifier: '>=18'
@@ -120,7 +120,7 @@ importers:
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: 3.1.14
+        specifier: 3.1.15
         version: link:../core
       clsx:
         specifier: ^2.1.1
@@ -141,7 +141,7 @@ importers:
         specifier: ^1.2.8
         version: 1.2.8(react@18.3.1)
       '@weaverse/react':
-        specifier: 3.1.14
+        specifier: 3.1.15
         version: link:../react
       clsx:
         specifier: ^2.1.1
