@@ -1,5 +1,13 @@
 # @weaverse/shopify
 
+## 3.1.15
+
+### Patch Changes
+
+- Update types, update hydrogen placeholder images
+- Updated dependencies
+  - @weaverse/react@3.1.15
+
 ## 3.1.14
 
 ### Patch Changes

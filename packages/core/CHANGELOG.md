@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 3.1.15
+
+### Patch Changes
+
+- Update types, update hydrogen placeholder images
+
 ## 3.1.14
 
 ### Patch Changes
