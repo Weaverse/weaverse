@@ -13,7 +13,7 @@ If you're using Oxygen deployment, you might encounter the following error when 
 
 ![preview error](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/preview_not_load.jpg?v=1719390592)
 
-This error is caused by the Preview URL is not set to public from Hydrogen's settings. Please follow this [instruction](https://weaverse.io/docs/deployment/oxygen#configure-the-environment) to set the Hydrogen Environment to public.
+This error is caused by the Preview URL is not set to public from Hydrogen's settings. Please follow this [instruction](https://weaverse.io/docs/deployment/oxygen#publish-your-storefront--update-weaverse-preview-url) to set the Hydrogen Environment to public.
 
 ## 404 - We've lost this page
 
