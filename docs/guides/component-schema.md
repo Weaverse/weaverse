@@ -10,7 +10,7 @@ published: true
 ## Anatomy
 
 In Weaverse, every component's behavior and interactivity within the Weaverse Studio is determined by its schema. This
-schema, named **`HydrogenComponentSchema`**, acts as a blueprint for your component, ensuring a consistent and
+schema, named _`HydrogenComponentSchema`_, acts as a blueprint for your component, ensuring a consistent and
 user-friendly experience.
 
 Before diving into the individual properties, let's get an overview of the full schema structure:
@@ -35,7 +35,7 @@ interface HydrogenComponentSchema {
 
 With that in mind, let's dive deeper into its properties:
 
-#### `title` and `type`
+### `title` and `type`
 
 ```tsx
 title: string

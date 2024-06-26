@@ -18,7 +18,7 @@ Input settings are generally composed of standard attributes. We can classify th
 
 - [Resource Picker Inputs](/docs/guides/input-settings#resource-picker-inputs)
 
-#### Overview
+### Overview
 
 A quick look at an `input` configs type:
 
@@ -26,29 +26,36 @@ A quick look at an `input` configs type:
 type Input = {
   type: InputType
   name: string
-  defaultValue: string | number | boolean | Partial<WeaverseImage>
   label?: string
-  placeholder?: string
-  configs?: AdditionalInputConfigs
+  configs?: ConfigsType
   condition?: string
+  defaultValue?:
+    | string
+    | number
+    | boolean
+    | Partial<WeaverseImage>
+    | { [x: string]: any }
+  placeholder?: string
   helpText?: string
+  shouldRevalidate?: boolean
 }
 ```
 
-#### Attributes Details
+### Attributes Details
 
 Here's a breakdown of the available attributes in an input setting:
 
-| Attribute      | Type                                                 | Description                                                                                                           | Required |
-| -------------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | -------- |
-| `type`         | `InputType`                                          | Specifies the kind of UI control the merchant will interact with.                                                     | ✅       |
-| `name`         | `string`                                             | The key of the value in the component's data. E.g., "title" binds to `component.data.title`.                          | ✅       |
-| `defaultValue` | `string` \| `number` \| `boolean` \| `WeaverseImage` | Sets initial values for inputs and initial data for the component.                                                    | ➖       |
-| `label`        | `string`                                             | A label for the input to show in the Weaverse Studio's Inspector                                                      | ➖       |
-| `placeholder`  | `string`                                             | A placeholder text to show when the input is empty.                                                                   | ➖       |
-| `configs`      | `AdditionalInputConfigs`                             | Additional options for inputs require more configuration. (Available for `select`, `toggle-group`, and `range` input) | ➖       |
-| `condition`    | `string`                                             | Only displays the input if the specified condition matches.                                                           | ➖       |
-| `helpText`     | `string`                                             | Provides additional information or instructions for the input setting (**HTML** format supported).                    | ➖       |
+| Attribute          | Type                                                 | Description                                                                                                           | Required |
+| ------------------ | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | -------- |
+| `type`             | `InputType`                                          | Specifies the kind of UI control the merchant will interact with.                                                     | ✅       |
+| `name`             | `string`                                             | The key of the value in the component's data. E.g., "title" binds to `component.data.title`.                          | ✅       |
+| `defaultValue`     | `string` \| `number` \| `boolean` \| `WeaverseImage` | Sets initial values for inputs and initial data for the component.                                                    | ➖       |
+| `label`            | `string`                                             | A label for the input to show in the Weaverse Studio's Inspector                                                      | ➖       |
+| `placeholder`      | `string`                                             | A placeholder text to show when the input is empty.                                                                   | ➖       |
+| `configs`          | `AdditionalInputConfigs`                             | Additional options for inputs require more configuration. (Available for `select`, `toggle-group`, and `range` input) | ➖       |
+| `condition`        | `string`                                             | Only displays the input if the specified condition matches.                                                           | ➖       |
+| `helpText`         | `string`                                             | Provides additional information or instructions for the input setting (**HTML** format supported).                    | ➖       |
+| `shouldRevalidate` | `boolean`                                            | Automatically revalidate the page when the input changes to apply new data from `loader` function.                    | ➖       |
 
 - `condition`
 
@@ -98,7 +105,7 @@ Here's a breakdown of the available attributes in an input setting:
 
 ## Basic Inputs
 
-#### `text`
+### `text`
 
 The text input allows merchants to enter a single line of plain text. It's frequently used for capturing headings,
 button text, or short promotional messages.
@@ -107,7 +114,7 @@ button text, or short promotional messages.
 
 **Example:**
 
-```txt
+```tsx
 {
   type: "text",
   label: "Heading",
@@ -121,7 +128,7 @@ button text, or short promotional messages.
 
 <img alt='text_attribute_example' src="https://downloads.intercomcdn.com/i/o/853523424/b36bfc7fe1d4cc5e95953423/image.png" width="300"/>
 
-#### `textarea`
+### `textarea`
 
 The textarea input provides a multi-line text box suitable for longer descriptions, like testimonials, user reviews, or
 shipping and return policies.
@@ -130,7 +137,7 @@ shipping and return policies.
 
 **Example:**
 
-```txt
+```tsx
 {
   type: "textarea",
   label: "Customer testimonial",
@@ -143,7 +150,8 @@ shipping and return policies.
 **Output:**
 
 <img alt="textarea_attribute_example" src="https://downloads.intercomcdn.com/i/o/853526819/4cd07fba93f159e18ec1c671/image.png" width="300"/>
-#### `switch`
+
+### `switch`
 
 The switch input provides a toggle option. This can be useful for enabling or disabling product availability,
 promotional features, or customer reviews.
@@ -152,7 +160,7 @@ promotional features, or customer reviews.
 
 **Example:**
 
-```txt
+```tsx
 {
   type: "switch",
   label: "Enable discount",
@@ -165,7 +173,7 @@ promotional features, or customer reviews.
 
 <img alt="switch_attribute_example" src="https://downloads.intercomcdn.com/i/o/853527375/2de182c3854357176a717e51/image.png" width="300"/>
 
-#### `range`
+### `range`
 
 The range input lets merchants select a value within a set range. This can be used for adjusting quantities, setting
 percentages, or customizing display sizes.
@@ -174,7 +182,7 @@ percentages, or customizing display sizes.
 
 **Example:**
 
-```txt
+```tsx
 {
   type: "range",
   label: "Discount percentage",
@@ -202,7 +210,7 @@ percentages, or customizing display sizes.
 | `step`   | `number` | The intervals between values in the range.                                                    | ✅       |
 | `unit`   | `string` | A unit of measure displayed next to the value (e.g., `px`, `%`). Purely for display purposes. | ➖       |
 
-#### `select`
+### `select`
 
 The select input provides a dropdown list, allowing merchants to select one option from a predefined list of options.
 
@@ -210,7 +218,7 @@ The select input provides a dropdown list, allowing merchants to select one opti
 
 **Example:**
 
-```txt
+```tsx
 {
   type: "select",
   label: "Image aspect ratio",
@@ -241,7 +249,7 @@ The select input provides a dropdown list, allowing merchants to select one opti
 | ↳ `value` | `string`            | A unique value for the option.                                  | ✅       |
 | ↳ `label` | `string`            | Displayed text for the option.                                  | ✅       |
 
-#### `toggle-group`
+### `toggle-group`
 
 The toggle group input allows merchants to make a selection from a group of toggleable options (**only one choice is
 allowed**).
@@ -254,7 +262,7 @@ process.
 
 **Example (Display as Text):**
 
-```txt
+```tsx
 {
   type: "select",
   label: "Image aspect ratio",
@@ -277,7 +285,7 @@ process.
 
 **Example (Display as Icon):**
 
-```txt
+```tsx
 {
   type: "toggle-group",
   name: "loading",
@@ -315,7 +323,7 @@ process.
 
 - Not all icons are supported yet. Please contact us if you need an icon that is missing from your configs.
 
-#### `richtext`
+### `richtext`
 
 The **`richtext`** input allows merchants to craft content using a rich text editor, providing flexibility and more
 advanced text formatting options.
@@ -324,7 +332,7 @@ advanced text formatting options.
 
 **Example:**
 
-```txt
+```tsx
 {
   type: "richtext",
   label: "Promotion details",
@@ -342,7 +350,7 @@ effortlessly craft top-notch content, from descriptions to promotional texts and
 
 <img alt="richtext_power_ai_output" src="https://downloads.intercomcdn.com/i/o/853957251/aed40de2d47ce9e232f6f5f0/image.png" width="300"/>
 
-#### `image`
+### `image`
 
 The **`image`** input offers merchants the ability to select or upload images.
 
@@ -360,7 +368,7 @@ Here's how it works:
 
 **`WeaverseImage`** type definition:
 
-```txt
+```tsx
 type WeaverseImage = {
   id: string
   url: string
@@ -372,7 +380,7 @@ type WeaverseImage = {
 
 **Example:**
 
-```txt
+```tsx
 {
   type: "image",
   name: "authorImage",
@@ -441,7 +449,7 @@ let ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>(
 export default ImageGalleryItem
 ```
 
-#### `color`
+### `color`
 
 The **`color`** input type allows merchants to select a color using a color picker. This can be handy for design-related
 settings, such as background color, text color, border color, etc.
@@ -449,7 +457,7 @@ settings, such as background color, text color, border color, etc.
 **Return:** `string` - A color in `hex` format (e.g., **`#RRGGBB`** or **`#RRGGBBAA`** if alpha is set).
 **Example:**
 
-```txt
+```tsx
 {
   type: "color",
   label: "Background color",
@@ -462,7 +470,7 @@ settings, such as background color, text color, border color, etc.
 
 <img alt="color_attr" src="https://downloads.intercomcdn.com/i/o/854847973/ec48b59238cd31ccd212ee09/image.png" width="300"/>
 
-#### `datepicker`
+### `datepicker`
 
 The `datepicker` input type provides merchants with a way to select a specific date and time, making it ideal for
 scheduling content, setting event dates, or determining promotional periods.
@@ -471,7 +479,7 @@ scheduling content, setting event dates, or determining promotional periods.
 
 **Example:**
 
-```txt
+```tsx
 {
   type: "datepicker",
   label: "Start date",
@@ -502,7 +510,7 @@ console.log(
 ) // => "January 1, 2024"
 ```
 
-#### `map-autocomplete`
+### `map-autocomplete`
 
 The `map-autocomplete` input provides merchants with a location-based autocomplete functionality. As merchants type in
 the input, a dropdown list of suggested places appears.
@@ -511,7 +519,7 @@ the input, a dropdown list of suggested places appears.
 
 **Example:**
 
-```txt
+```tsx
 {
   type: "map-autocomplete",
   name: "address",
@@ -524,7 +532,7 @@ the input, a dropdown list of suggested places appears.
 
 <img alt="map_autocomplete_attr" src="https://downloads.intercomcdn.com/i/o/855138136/aca08efac8fecde1f5d74fa8/image.png" width="300"/>
 
-#### `position`
+### `position`
 
 The **`position`** input enables merchants to select a content alignment from a predefined subset of positions using
 intuitive directional arrows.
@@ -536,7 +544,7 @@ values: `top left` | `top center` | `top right` | `center left` | `center center
 
 **Example:**
 
-```txt
+```tsx
 {
   type: "position",
   name: "contentPosition",
@@ -551,7 +559,7 @@ values: `top left` | `top center` | `top right` | `center left` | `center center
 
 ## Resource Picker Inputs
 
-#### `url`
+### `url`
 
 The **`url`** input allows merchants to enter a URL or select a page from their store using the internal link picker.
 
@@ -559,7 +567,7 @@ The **`url`** input allows merchants to enter a URL or select a page from their 
 
 **Example:**
 
-```txt
+```tsx
 {
   type: "url",
   label: "Button link",
@@ -572,7 +580,7 @@ The **`url`** input allows merchants to enter a URL or select a page from their 
 
 <img alt="product_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/url_input.png?v=1712823900" width="300"/>
 
-#### `product`
+### `product`
 
 The **`product`** input provides merchants with an intuitive search and select interface to choose a specific product
 from their store.
@@ -581,7 +589,7 @@ from their store.
 
 `WeaverseProduct` type definition:
 
-```txt
+```tsx
 type WeaverseProduct = {
   id: number
   handle: string
@@ -590,7 +598,7 @@ type WeaverseProduct = {
 
 **Example:**
 
-```txt
+```tsx
 {
   type: "product",
   name: "product",
@@ -603,7 +611,44 @@ type WeaverseProduct = {
 
 <img alt="product_attr" src="https://downloads.intercomcdn.com/i/o/856020670/e25984f0879ed95300da690b/image.png" width="300"/>
 
-#### `product-list`
+When selecting a product, the preview will automatically revalidate and run the `loader` function.
+The `loader` function will read the `handle` or `id` of the selected product and fetch all the product data from the Storefront API. Here's an example of how to use the `loader` function:
+
+```tsx
+// <root>/app/sections/single-product/index.tsx
+
+export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
+  let { weaverse, data } = args
+  let { storefront } = weaverse
+  if (!data?.product) {
+    return null
+  }
+  let productHandle = data.product.handle
+  let { product, shop } = await storefront.query<ProductQuery>(PRODUCT_QUERY, {
+    variables: {
+      handle: productHandle,
+      selectedOptions: [],
+      language: storefront.i18n.language,
+      country: storefront.i18n.country,
+    },
+  })
+  let variants = await storefront.query(VARIANTS_QUERY, {
+    variables: {
+      handle: productHandle,
+      language: storefront.i18n.language,
+      country: storefront.i18n.country,
+    },
+  })
+
+  return {
+    product,
+    variants,
+    storeDomain: shop.primaryDomain.url,
+  }
+}
+```
+
+### `product-list`
 
 The `product-list` input provides merchants with an intuitive search and select interface to choose multiple products
 from their store.
@@ -612,7 +657,7 @@ from their store.
 
 **Example:**
 
-```txt
+```tsx
 {
   label: "Select products",
   name: "products",
@@ -624,7 +669,9 @@ from their store.
 
 <img alt="product_list_attr" src="https://downloads.intercomcdn.com/i/o/856048741/4a8bed2630a0f1f454047e80/image.png" width="300"/>
 
-#### `collection`
+Similar to the `product` input, the preview will automatically revalidate and run the `loader` function when selecting products. Please use the `handle` or `id` of the selected product to fetch the full product data.
+
+### `collection`
 
 The `collection` input provides merchants with an intuitive search and select interface to choose a specific collection
 from their store.
@@ -633,7 +680,7 @@ from their store.
 
 **Example:**
 
-```txt
+```tsx
 {
   type: "collection",
   name: "collection",
@@ -645,7 +692,9 @@ from their store.
 
 <img alt="collection_attr" src="https://downloads.intercomcdn.com/i/o/856069172/ee5a9e5e663fc816ac837127/image.png" width="300"/>
 
-#### `collection-list`
+Similar to the `product` input, the preview will automatically revalidate and run the `loader` function when selecting a collection. Please use the `handle` or `id` of the selected collection to fetch the full collection data.
+
+### `collection-list`
 
 The `collection-list` input provides merchants with an intuitive search and select interface to choose multiple
 collections from their store.
@@ -654,7 +703,7 @@ collections from their store.
 
 **Example:**
 
-```txt
+```tsx
 {
   type: "collection-list",
   name: "collections",
@@ -666,7 +715,9 @@ collections from their store.
 
 <img alt="collection_list_attr" src="https://downloads.intercomcdn.com/i/o/856071108/d3baad59f89283e788ce04cc/image.png" width="300"/>
 
-#### `blog`
+Similar to the `product` input, the preview will automatically revalidate and run the `loader` function when selecting collections. Please use the `handle` or `id` of the selected collection to fetch the full collection data.
+
+### `blog`
 
 The `blog` input provides merchants with an intuitive search and select interface to choose a specific blog from their
 store.
@@ -675,7 +726,7 @@ store.
 
 **Example:**
 
-```txt
+```tsx
 {
   type: "blog",
   name: "blog",
@@ -686,6 +737,54 @@ store.
 **Output:**
 
 <img alt="blog_attr" src="https://downloads.intercomcdn.com/i/o/856089471/83cf34f9ba89fa9043db3293/image.png" width="300"/>
+
+Similar to the `product` input, the preview will automatically revalidate and run the `loader` function when selecting a blog. Please use the `handle` or `id` of the selected blog to fetch the full blog data.
+
+### `metaobject`
+
+The `metaobject` input provides merchants with an intuitive search and select interface to choose a specific metaobject definition from their store.
+
+**Return:** `object` **-** `{type: string}` - The selected metaobject definition.
+
+**Example:**
+
+```tsx
+{
+  label: "Select metaobject definition",
+  type: "metaobject",
+  name: "metaDemo"
+}
+```
+
+**Output:**
+
+<img alt="metaobject_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/metaobject_picker.png?v=1719394035" width="300"/>
+
+When selecting a metaobject definition, the preview will automatically revalidate and run the `loader` function.
+The `loader` function will read the `type` of the selected metaobject definition and fetch all the metaobject data from the Storefront API. Here's an example of how to use the `loader` function:
+
+```tsx
+// <root>/app/sections/meta-demo.tsx
+
+import type { ComponentLoaderArgs } from '@weaverse/hydrogen'
+
+export let loader = async (args: ComponentLoaderArgs) => {
+  let { weaverse, data } = args
+  let { storefront } = weaverse
+  if (!data.metaDemo) {
+    return null
+  }
+  let { metaobjects } = await storefront.query(METAOBJECTS_QUERY, {
+    variables: {
+      type: data.metaDemo.type,
+      first: 10,
+    },
+  })
+  return {
+    metaDemo: metaobjects.nodes,
+  }
+}
+```
 
 ## Querying Storefront Data
 

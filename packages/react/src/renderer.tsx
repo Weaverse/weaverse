@@ -19,7 +19,7 @@ export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
   let rootRef = useRef<HTMLElement>()
 
   useEffect(() => {
-    context.contentRootElement = rootRef?.current || null
+    context.contentRootElement = rootRef.current
   }, [context])
   usePixel(context)
 
