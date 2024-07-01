@@ -3,6 +3,7 @@
   "description": "Weaverse SDKs monorepo.",
   "version": "3.0.0",
   "license": "MIT",
+  "private": true,
   "scripts": {
     "dev": "npm run dev:pkg",
     "dev:pkg": "cross-env LOCAL_DEV=true FORCE_CHANGELOG_SOURCE=remote turbo dev --no-daemon --filter=./packages/*",
@@ -20,7 +21,8 @@
     "changeset": "changeset"
   },
   "devDependencies": {
-    "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
+    "@changesets/cli": "^2.27.6",
+    "@ianvs/prettier-plugin-sort-imports": "^4.3.0",
     "@remix-run/eslint-config": "2.9.2",
     "@types/node": "20.14.8",
     "@types/react": "18.3.3",
@@ -37,13 +39,13 @@
     "typescript": "5.5.2"
   },
   "optionalDependencies": {
-    "@esbuild/darwin-x64": "^0.21.4",
-    "turbo-darwin-arm64": "^2.0.4"
+    "@esbuild/darwin-x64": "^0.21.5",
+    "turbo-darwin-arm64": "^2.0.5"
   },
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "pnpm@9.1.4",
+  "packageManager": "pnpm@9.4.0",
   "prettier": {
     "semi": false,
     "singleQuote": true,
@@ -63,8 +65,5 @@
     "tabWidth": 2,
     "trailingComma": "all",
     "useTabs": false
-  },
-  "dependencies": {
-    "@changesets/cli": "^2.27.5"
   }
 }

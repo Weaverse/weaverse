@@ -15,7 +15,7 @@ Welcome to **Weaverse**! This guide will walk you through integrating the Weaver
 
 Not ready to install the app just yet? Try out our [Weaverse Playground](https://studio.weaverse.io/demo) to get a feel for the features. For guidance, watch our brief tutorial video below.
 
-<iframe src="https://www.youtube.com/embed/aQZdQ17kF1U?rel=0" frameBorder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowFullScreen></iframe>
+<iframe src="https://www.youtube.com/embed/1XwheeIImlE?rel=0" frameBorder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowFullScreen></iframe>
 
 ## Installing the Weaverse App from the Shopify App Store
 
