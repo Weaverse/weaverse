@@ -31,7 +31,7 @@ To configure the navigation in your Weaverse theme, follow these steps:
 You can rearrange the order of the menu items by dragging and dropping them.
 To create a nested dropdown menu, drag a menu item slightly to the right underneath another menu item. It will become a sub-menu item.
 
-![Arrange the menu](https://magecomp.com/blog/wp-content/uploads/2023/05/Nested-menu.png)
+![Arrange the menu](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/Nested_Menu.png?v=1719890300)
 
 ## 4 Types of Menu
 How the navigation menu is displayed in the storefront depends on how you nested the menu items.
