@@ -2,7 +2,7 @@
   "name": "@weaverse/core",
   "author": "Weaverse Team",
   "description": "Weaverse Core",
-  "version": "3.1.16",
+  "version": "3.2.1",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -22,11 +22,23 @@
     "node": ">=18"
   },
   "scripts": {
-    "start": "npm run dev",
-    "dev": "tsup src/index.ts --format esm,cjs --dts --outDir dist --watch --sourcemap",
-    "build": "tsup src/index.ts --format esm,cjs --dts --outDir dist",
+    "dev": "tsup --watch",
+    "build": "tsup",
     "clean": "rimraf dist",
     "prepublish": "npm run build"
+  },
+  "tsup": {
+    "entry": [
+      "src/index.ts"
+    ],
+    "format": [
+      "esm",
+      "cjs"
+    ],
+    "dts": true,
+    "sourcemap": true,
+    "clean": true,
+    "outDir": "dist"
   },
   "dependencies": {
     "@stitches/core": "^1.2.8"

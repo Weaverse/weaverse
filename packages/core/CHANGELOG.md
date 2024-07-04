@@ -1,5 +1,17 @@
 # @weaverse/core
 
+## 3.2.1
+
+### Patch Changes
+
+- chore: fix some typos
+
+## 3.2.0
+
+### Minor Changes
+
+- Update dependencies
+
 ## 3.1.16
 
 ### Patch Changes

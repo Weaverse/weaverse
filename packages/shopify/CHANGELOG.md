@@ -1,5 +1,24 @@
 # @weaverse/shopify
 
+## 3.2.1
+
+### Patch Changes
+
+- chore: fix some typos
+- Updated dependencies
+  - @weaverse/react@3.2.1
+
+## 3.2.0
+
+### Minor Changes
+
+- Update dependencies
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/react@3.2.0
+
 ## 3.1.16
 
 ### Patch Changes

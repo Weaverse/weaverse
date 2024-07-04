@@ -23,6 +23,7 @@ export let WeaverseHydrogenRoot = memo(
       weaverseData: WeaverseData
     }
     let data = loaderData?.weaverseData
+    
     if (data) {
       if (data instanceof Promise) {
         return (

@@ -2,7 +2,7 @@
   "name": "@weaverse/hydrogen",
   "author": "Weaverse Team",
   "description": "Components, hooks, and utilities for building Shopify Hydrogen websites with Weaverse",
-  "version": "3.1.16",
+  "version": "3.2.1",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -22,26 +22,40 @@
     "node": ">=18"
   },
   "scripts": {
-    "start": "npm run dev",
-    "dev": "tsup src/index.ts --format esm,cjs --dts --outDir dist --watch --external @remix-run/react,@shopify/hydrogen",
-    "build": "tsup src/index.ts --format esm,cjs --dts --outDir dist --external @remix-run/react,@shopify/hydrogen",
+    "dev": "tsup --watch",
+    "build": "tsup",
     "clean": "rimraf dist",
     "prepublish": "npm run build"
+  },
+  "tsup": {
+    "entry": [
+      "src/index.ts"
+    ],
+    "format": [
+      "esm",
+      "cjs"
+    ],
+    "dts": true,
+    "sourcemap": true,
+    "clean": true,
+    "outDir": "dist",
+    "external": [
+      "@remix-run/react",
+      "@shopify/hydrogen",
+      "react",
+      "react-dom",
+      "react-error-boundary"
+    ]
+  },
+  "dependencies": {
+    "@weaverse/react": "3.2.1",
+    "react-error-boundary": "^4.0.13"
   },
   "peerDependencies": {
     "@remix-run/react": "^2",
     "@shopify/hydrogen": ">=2023",
     "react": ">=18",
     "react-dom": ">=18"
-  },
-  "prettier": {
-    "printWidth": 80,
-    "semi": false,
-    "singleQuote": true
-  },
-  "dependencies": {
-    "@weaverse/react": "3.1.16",
-    "react-error-boundary": "^4.0.13"
   },
   "devDependencies": {
     "@shopify/oxygen-workers-types": "4",

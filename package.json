@@ -21,10 +21,10 @@
     "changeset": "changeset"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.6",
+    "@changesets/cli": "^2.27.7",
     "@ianvs/prettier-plugin-sort-imports": "^4.3.0",
-    "@remix-run/eslint-config": "2.9.2",
-    "@types/node": "20.14.8",
+    "@remix-run/eslint-config": "2.10.1",
+    "@types/node": "20.14.9",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "cross-env": "7.0.3",
@@ -35,12 +35,12 @@
     "react-dom": "18.3.1",
     "rimraf": "5.0.7",
     "tsup": "8.1.0",
-    "turbo": "2.0.4",
-    "typescript": "5.5.2"
+    "turbo": "2.0.6",
+    "typescript": "5.5.3"
   },
   "optionalDependencies": {
-    "@esbuild/darwin-x64": "^0.21.5",
-    "turbo-darwin-arm64": "^2.0.5"
+    "@esbuild/darwin-x64": "^0.23.0",
+    "turbo-darwin-arm64": "^2.0.6"
   },
   "engines": {
     "node": ">=18"

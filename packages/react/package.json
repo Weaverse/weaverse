@@ -2,7 +2,7 @@
   "name": "@weaverse/react",
   "author": "Weaverse Team",
   "description": "React bindings for Weaverse",
-  "version": "3.1.16",
+  "version": "3.2.1",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -22,23 +22,34 @@
     "node": ">=18"
   },
   "scripts": {
-    "start": "npm run dev",
-    "dev": "tsup src/index.ts --format esm,cjs --dts --outDir dist --watch --external react,clsx --sourcemap",
-    "build": "tsup src/index.ts --format esm,cjs --dts --outDir dist --external react,clsx",
+    "dev": "tsup --watch",
+    "build": "tsup",
     "clean": "rimraf dist",
     "prepublish": "npm run build"
+  },
+  "tsup": {
+    "entry": [
+      "src/index.ts"
+    ],
+    "format": [
+      "esm",
+      "cjs"
+    ],
+    "dts": true,
+    "sourcemap": true,
+    "clean": true,
+    "outDir": "dist",
+    "external": [
+      "react",
+      "clsx"
+    ]
   },
   "peerDependencies": {
     "react": ">=18",
     "react-dom": ">=18"
   },
-  "prettier": {
-    "printWidth": 80,
-    "semi": false,
-    "singleQuote": true
-  },
   "dependencies": {
-    "@weaverse/core": "3.1.16",
+    "@weaverse/core": "3.2.1",
     "clsx": "^2.1.1"
   }
 }
