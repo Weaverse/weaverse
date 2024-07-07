@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 3.2.4
+
+### Patch Changes
+
+- Update deps
+
 ## 3.2.3
 
 ### Patch Changes
