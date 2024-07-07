@@ -86,6 +86,8 @@ export interface ElementData {
 export interface WeaverseElement {
   Component: ForwardRefExoticComponent<any>
   type: string
+  'data-wv-id': string
+  'data-wv-type': string
 }
 
 export interface ElementSchema {
