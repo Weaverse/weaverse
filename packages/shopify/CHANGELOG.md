@@ -1,5 +1,13 @@
 # @weaverse/shopify
 
+## 3.2.2
+
+### Patch Changes
+
+- Update types, update deps
+- Updated dependencies
+  - @weaverse/react@3.2.2
+
 ## 3.2.1
 
 ### Patch Changes
