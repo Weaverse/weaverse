@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 3.2.3
+
+### Patch Changes
+
+- Update eslint
+
 ## 3.2.2
 
 ### Patch Changes

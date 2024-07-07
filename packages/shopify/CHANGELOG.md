@@ -1,5 +1,13 @@
 # @weaverse/shopify
 
+## 3.2.3
+
+### Patch Changes
+
+- Update eslint
+- Updated dependencies
+  - @weaverse/react@3.2.3
+
 ## 3.2.2
 
 ### Patch Changes

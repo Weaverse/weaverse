@@ -1,5 +1,13 @@
 # @weaverse/react
 
+## 3.2.3
+
+### Patch Changes
+
+- Update eslint
+- Updated dependencies
+  - @weaverse/core@3.2.3
+
 ## 3.2.2
 
 ### Patch Changes
