@@ -1,5 +1,4 @@
 import { createWithCache, generateCacheControlHeader } from '@shopify/hydrogen'
-
 import type {
   AllCacheOptions,
   FetchProjectPayload,
@@ -71,7 +70,10 @@ export class WeaverseClient {
     }
   }
 
-  fetchWithCache = <T>(url: string, options: FetchWithCacheOptions = {}) => {
+  fetchWithCache = async <T>(
+    url: string,
+    options: FetchWithCacheOptions = {},
+  ) => {
     let cacheKey = [url, options.body]
     let {
       strategy = this.storefront.CacheCustom({
@@ -81,22 +83,27 @@ export class WeaverseClient {
       }),
       ...reqInit
     } = options
+    if (this.configs.isDesignMode) {
+      try {
+        const res = await fetch(url, reqInit)
+        return await res.json<T>()
+      } catch (err) {
+        throw new Error(err)
+      }
+    }
     let res = this.withCache(cacheKey, strategy, async () => {
-      let cacheControlHeader = generateCacheControlHeader(strategy)
       let response = await fetch(url, {
         ...reqInit,
         headers: {
-          'Cache-Control': cacheControlHeader,
+          'Cache-Control': generateCacheControlHeader(strategy),
           ...reqInit.headers,
         },
       })
-
       if (!response.ok) {
         let error = await response.text()
         let { status, statusText } = response
         throw new Error(`${status} ${statusText} ${error}`)
       }
-
       return await response.json<T>()
     })
     return res as Promise<T>
