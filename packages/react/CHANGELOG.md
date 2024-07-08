@@ -1,5 +1,13 @@
 # @weaverse/react
 
+## 3.2.5
+
+### Patch Changes
+
+- Export more utils from `@weaverse/react` package
+- Updated dependencies
+  - @weaverse/core@3.2.5
+
 ## 3.2.4
 
 ### Patch Changes

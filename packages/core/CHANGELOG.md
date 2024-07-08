@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 3.2.5
+
+### Patch Changes
+
+- Export more utils from `@weaverse/react` package
+
 ## 3.2.4
 
 ### Patch Changes
