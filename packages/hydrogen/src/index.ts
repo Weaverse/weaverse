@@ -6,6 +6,8 @@ import {
   useParentInstance,
   useWeaverse,
   type PlatformTypeEnum,
+  isBrowser,
+  isIframe
 } from '@weaverse/react'
 import type {
   HydrogenComponentData,
@@ -24,7 +26,7 @@ export * from './utils'
 export * from './weaverse-client'
 export * from './wrappers'
 export * from './placeholders'
-export { useChildInstances, useItemInstance, useParentInstance, useWeaverse }
+export { useChildInstances, useItemInstance, useParentInstance, useWeaverse, isBrowser, isIframe }
 
 export class WeaverseHydrogen extends Weaverse {
   platformType: PlatformTypeEnum = 'shopify-hydrogen'
