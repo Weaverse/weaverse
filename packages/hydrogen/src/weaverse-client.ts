@@ -77,8 +77,8 @@ export class WeaverseClient {
     let cacheKey = [url, options.body]
     let {
       strategy = this.storefront.CacheCustom({
-        maxAge: 2,
-        sMaxAge: 2,
+        maxAge: 1,
+        sMaxAge: 1,
         staleWhileRevalidate: 82800,
       }),
       ...reqInit
