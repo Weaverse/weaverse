@@ -1,0 +1,65 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 80,
+    "attributePosition": "auto",
+    "ignore": [
+      "**/node_modules",
+      "**/*/dist",
+      "**/*/.turbo",
+      "**/.env",
+      "**/.idea",
+      "build/**",
+      "dist/**",
+      ".next/**",
+      "./.pnpm-store/",
+      "./pnpm-global/",
+      "./packages/core/pnpm-global/",
+      "./templates/**"
+    ]
+  },
+  "organizeImports": { "enabled": true },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": false,
+      "correctness": { "noSwitchDeclarations": "off" },
+      "style": { "useConst": "off" }
+    },
+    "ignore": [
+      "**/.vscode/",
+      "**/.DS_Store",
+      "**/node_modules/",
+      "./.cache",
+      "./build",
+      "./server-build",
+      "./public/build",
+      "./coverage",
+      "**/dist",
+      "app/styles",
+      "**/package.json"
+    ]
+  },
+  "javascript": {
+    "formatter": {
+      "jsxQuoteStyle": "double",
+      "quoteProperties": "asNeeded",
+      "trailingCommas": "all",
+      "semicolons": "asNeeded",
+      "arrowParentheses": "always",
+      "bracketSpacing": true,
+      "bracketSameLine": false,
+      "quoteStyle": "single",
+      "attributePosition": "auto"
+    }
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git"
+  }
+}

@@ -1,6 +1,6 @@
 import { Weaverse, type WeaverseItemStore } from '@weaverse/core'
-import { WeaverseContext, WeaverseItemContext } from '~/context'
 import { useContext, useEffect } from 'react'
+import { WeaverseContext, WeaverseItemContext } from '~/context'
 
 export function useWeaverse<T = Weaverse>() {
   let weaverse = useContext(WeaverseContext)
@@ -38,7 +38,7 @@ export let useChildInstances = (id?: string) => {
 let fetchingKey = ''
 
 export function usePixel(context: Weaverse) {
-  // @ts-expect-error
+  // @ts-expect-error - ignore
   let { projectId, pageId, weaverseHost, isDesignMode } = context
 
   useEffect(() => {
