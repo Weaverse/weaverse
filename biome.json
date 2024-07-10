@@ -1,62 +1,11 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
-  "formatter": {
+  "extends": ["./packages/biome/biome.json"],
+  "vcs": {
     "enabled": true,
-    "formatWithErrors": false,
-    "indentStyle": "space",
-    "indentWidth": 2,
-    "lineEnding": "lf",
-    "lineWidth": 80,
-    "attributePosition": "auto",
-    "ignore": [
-      "**/node_modules",
-      "**/*/dist",
-      "**/*/.turbo",
-      "**/.env",
-      "**/.idea",
-      "build/**",
-      "dist/**",
-      "./.pnpm-store/",
-      "./pnpm-global/",
-      "./templates/**"
-    ]
+    "clientKind": "git"
   },
-  "organizeImports": {
-    "enabled": true,
-    "ignore": ["**/node_modules/**", "./templates/**"]
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": false,
-      "correctness": { "noSwitchDeclarations": "off" },
-      "style": { "useConst": "off" }
-    },
-    "ignore": [
-      "**/.vscode/",
-      "**/.DS_Store",
-      "**/node_modules/",
-      "./.cache",
-      "./build",
-      "./server-build",
-      "./public/build",
-      "./coverage",
-      "**/dist",
-      "app/styles",
-      "./templates/**"
-    ]
-  },
-  "javascript": {
-    "formatter": {
-      "jsxQuoteStyle": "double",
-      "quoteProperties": "asNeeded",
-      "trailingCommas": "all",
-      "semicolons": "asNeeded",
-      "arrowParentheses": "always",
-      "bracketSpacing": true,
-      "bracketSameLine": false,
-      "quoteStyle": "single",
-      "attributePosition": "auto"
-    }
+  "files": {
+    "ignore": ["dist/**", "build/**", ".turbo/**", "templates/**"]
   }
 }

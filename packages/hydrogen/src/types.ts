@@ -25,7 +25,6 @@ import type {
   WeaverseProjectDataType,
   WeaverseResourcePickerData,
 } from '@weaverse/react'
-import type React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
 
 import type { STORE_PAGES } from './context'

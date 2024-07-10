@@ -1,7 +1,8 @@
 import { css as stitchesCss } from '@stitches/react'
 import type { ElementCSS } from '@weaverse/react'
 import clsx from 'clsx'
-import React, { forwardRef } from 'react'
+
+import { forwardRef } from 'react'
 
 import { useSlideshowConfigs } from './use-slideshow-configs'
 

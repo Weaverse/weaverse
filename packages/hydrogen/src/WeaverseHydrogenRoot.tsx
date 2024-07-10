@@ -1,6 +1,6 @@
 import { Await, useLoaderData } from '@remix-run/react'
 import { WeaverseRoot } from '@weaverse/react'
-import React, { memo, Suspense } from 'react'
+import { Suspense, memo } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { WeaverseEffect } from '~/Effect'

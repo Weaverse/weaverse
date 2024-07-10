@@ -1,5 +1,6 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef, useState } from 'react'
+
+import { forwardRef, useState } from 'react'
 
 import { QuantitySelector } from './quantity-selector'
 

@@ -15,7 +15,8 @@
     "build:graph": "turbo run build --graph=repo-graph.svg",
     "prepare": "npm run build",
     "typecheck": "turbo typecheck --parallel",
-    "biome": "biome check --write",
+    "biome": "biome check --diagnostic-level=error",
+    "biome:fix": "biome check --write",
     "changeset": "changeset",
     "postinstall": "lefthook install"
   },

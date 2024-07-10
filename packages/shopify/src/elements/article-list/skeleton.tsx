@@ -1,5 +1,4 @@
 import type { ElementCSS } from '@weaverse/react'
-import React from 'react'
 
 import { Components } from '~/components'
 import type { ArticleSkeletonProps } from '~/types'
@@ -16,6 +15,7 @@ export function Skeleton(props: ArticleSkeletonProps) {
     <>
       {Array.from({ length: articleCount }).map((_, index) => (
         <div
+          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
           key={index}
           className="wv-article-card-skeleton animate-pulse"
           style={style}

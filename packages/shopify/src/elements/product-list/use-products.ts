@@ -21,7 +21,7 @@ export function useProducts(input: UseProductHookInput) {
   }
   if (source === 'recommended' && isDesignMode) {
     let productsByCollection: number[] =
-      weaverseShopifyProductsByCollection['all'] || []
+      weaverseShopifyProductsByCollection.all || []
     products = productsByCollection.map((pId) => weaverseShopifyProducts[pId])
   }
   if (source === 'fixedProducts' && fixedProducts?.length) {
@@ -40,22 +40,21 @@ export function useProducts(input: UseProductHookInput) {
         .then((data) => {
           if (data.status === 404 || data.status === 422) {
             throw new Error(`${data.message} - (${data.description})`)
-          } else {
-            setRecommendedProducts(data.products)
-            data.products.forEach((p: ShopifyProduct) => {
-              if (!weaverseShopifyProducts[p.id]) {
-                weaverseShopifyProducts[p.id] = {
-                  ...p,
-                  images: p.media,
-                  has_only_default_variant:
-                    p.variants.length === 1 &&
-                    p.variants[0].title === 'Default Title',
-                  selected_or_first_available_variant:
-                    p.variants.find((v) => v.available) || null,
-                }
-              }
-            })
           }
+          setRecommendedProducts(data.products)
+          data.products.forEach((p: ShopifyProduct) => {
+            if (!weaverseShopifyProducts[p.id]) {
+              weaverseShopifyProducts[p.id] = {
+                ...p,
+                images: p.media,
+                has_only_default_variant:
+                  p.variants.length === 1 &&
+                  p.variants[0].title === 'Default Title',
+                selected_or_first_available_variant:
+                  p.variants.find((v) => v.available) || null,
+              }
+            }
+          })
         })
         .catch((err) => {
           console.log(`❌ Error fetching recommended products`, err)

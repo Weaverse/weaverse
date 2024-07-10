@@ -111,7 +111,7 @@ Options:
           stdio: 'inherit',
         })
 
-        install.on('data', function (data) {
+        install.on('data', (data) => {
           console.log(data.toString())
         })
         install.on('close', (code) => {

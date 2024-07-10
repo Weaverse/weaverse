@@ -1,5 +1,6 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef, useEffect, useState } from 'react'
+
+import { forwardRef, useEffect, useState } from 'react'
 
 import { Image } from './image'
 import {

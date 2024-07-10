@@ -147,7 +147,7 @@ export class WeaverseClient {
       }
       return data
     } catch (e) {
-      console.error(`❌ Theme settings load failed.`, e)
+      console.error('❌ Theme settings load failed.', e)
       return null
     }
   }
@@ -155,7 +155,7 @@ export class WeaverseClient {
   generateFallbackPage = (message: string): HydrogenPageData => {
     let rootId = crypto.randomUUID()
     return {
-      id: 'fallback_page_' + Date.now(),
+      id: `fallback_page_${Date.now()}`,
       rootId,
       name: 'Default Page',
       items: [
@@ -171,74 +171,72 @@ export class WeaverseClient {
   loadPage = async (
     params: LoadPageParams = {},
   ): Promise<WeaverseLoaderData | null> => {
-    // eslint-disable-next-line no-async-promise-executor
-    return new Promise(async (resolve, reject) => {
-      try {
-        let { request, storefront, basePageRequestBody, basePageConfigs } = this
-        let { projectId, isDesignMode, weaverseHost } = this.configs
+    try {
+      let { request, storefront, basePageRequestBody, basePageConfigs } = this
+      let { projectId, isDesignMode, weaverseHost } = this.configs
 
-        if (!projectId) {
-          throw new Error('Missing Weaverse projectId!')
-        }
-
-        let { strategy, ...pageLoadParams } = params
-        let body: FetchProjectRequestBody = {
-          ...basePageRequestBody,
-          params: pageLoadParams,
-          url: request.url,
-        }
-
-        let reqInit: RequestInit = {
-          method: 'POST',
-          body: JSON.stringify(body),
-        }
-        let url = `${weaverseHost}/${this.API}/project`
-        let payload: FetchProjectPayload
-
-        if (isDesignMode) {
-          payload = await fetch(url, reqInit).then((res) => res.json())
-        } else {
-          payload = await this.fetchWithCache(url, {
-            ...reqInit,
-            strategy,
-          })
-        }
-
-        if (payload?.error) {
-          throw new Error(payload?.error)
-        }
-        let { page, project, pageAssignment } = payload
-        if (!project) {
-          throw new Error(`Weaverse project not found. Id: ${projectId}`)
-        }
-        if (!page) {
-          page = this.generateFallbackPage(`Please add new section to start.`)
-        }
-        if (page?.items) {
-          let items = page.items
-          page.items = await Promise.all(items.map(this.execComponentLoader))
-        }
-        let data: WeaverseLoaderData = {
-          page,
-          project,
-          pageAssignment,
-          configs: {
-            ...basePageConfigs,
-            requestInfo: {
-              i18n: storefront.i18n,
-              // TODO: @hta218 - migrate to Remix hooks
-              queries: getRequestQueries<WeaverseStudioQueries>(request),
-              pathname: new URL(request.url).pathname,
-              search: new URL(request.url).search,
-            },
-          },
-        }
-        return resolve(data)
-      } catch (e) {
-        console.error(`❌ Page load failed.`, e)
-        reject(e)
+      if (!projectId) {
+        throw new Error('Missing Weaverse projectId!')
       }
-    })
+
+      let { strategy, ...pageLoadParams } = params
+      let body: FetchProjectRequestBody = {
+        ...basePageRequestBody,
+        params: pageLoadParams,
+        url: request.url,
+      }
+
+      let reqInit: RequestInit = {
+        method: 'POST',
+        body: JSON.stringify(body),
+      }
+      let url = `${weaverseHost}/${this.API}/project`
+      let payload: FetchProjectPayload
+
+      if (isDesignMode) {
+        payload = await fetch(url, reqInit).then((res) => res.json())
+      } else {
+        payload = await this.fetchWithCache(url, {
+          ...reqInit,
+          strategy,
+        })
+      }
+
+      if (payload?.error) {
+        throw new Error(payload?.error)
+      }
+      let { page, project, pageAssignment } = payload
+      if (!project) {
+        throw new Error(`Weaverse project not found. Id: ${projectId}`)
+      }
+      if (!page) {
+        page = this.generateFallbackPage('Please add new section to start.')
+      }
+      if (page?.items) {
+        let items = page.items
+        page.items = await Promise.all(items.map(this.execComponentLoader))
+      }
+      let data: WeaverseLoaderData = {
+        page,
+        project,
+        pageAssignment,
+        configs: {
+          ...basePageConfigs,
+          requestInfo: {
+            i18n: storefront.i18n,
+            // TODO: @hta218 - migrate to Remix hooks
+            queries: getRequestQueries<WeaverseStudioQueries>(request),
+            pathname: new URL(request.url).pathname,
+            search: new URL(request.url).search,
+          },
+        },
+      }
+      return data
+    } catch (e) {
+      // biome-ignore lint/style/noUnusedTemplateLiteral: <explanation>
+      console.error(`❌ Page load failed.`, e)
+      throw e
+    }
   }
 
   execComponentLoader = async (item: HydrogenComponentData) => {
@@ -255,7 +253,7 @@ export class WeaverseClient {
           }),
         }
       } catch (e) {
-        console.warn(`❌ Item loader run failed.`, type, id, e)
+        console.warn('❌ Item loader run failed.', type, id, e)
         return item
       }
     }

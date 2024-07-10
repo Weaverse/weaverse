@@ -108,10 +108,14 @@ export class Weaverse extends EventEmitter {
 
   constructor(params: WeaverseCoreParams) {
     super()
-    Object.entries(params).forEach(([k, v]) => {
-      let key = k as keyof typeof this
-      this[key] = v || this[key]
-    })
+    // Object.entries(params).forEach(([k, v]) => {
+    //   let key = k as keyof typeof this
+    //   this[key] = v || this[key]
+    // })
+    for (const param of Object.entries(params)) {
+      let [key, value] = param
+      this[key] = value || this[key]
+    }
     this.initProject()
     Weaverse.initStitches()
   }
@@ -126,14 +130,22 @@ export class Weaverse extends EventEmitter {
     let { data } = this
     let itemInstances = Weaverse.itemInstances
     if (data?.items) {
-      data.items.forEach((item) => {
+      // data.items.forEach((item) => {
+      //   let itemInstance = itemInstances.get(item.id)
+      //   if (itemInstance) {
+      //     itemInstance.setData(item)
+      //   } else {
+      //     this.createItemInstance(item)
+      //   }
+      // })
+      for (const item of data.items) {
         let itemInstance = itemInstances.get(item.id)
         if (itemInstance) {
           itemInstance.setData(item)
         } else {
           this.createItemInstance(item)
         }
-      })
+      }
     }
   }
 
@@ -183,9 +195,13 @@ export class Weaverse extends EventEmitter {
   }
 
   refreshAllItems() {
-    Weaverse.itemInstances.forEach((item) => {
+    // Weaverse.itemInstances.forEach((item) => {
+    //   item.triggerUpdate()
+    // })
+    for (const item of Weaverse.itemInstances) {
+      // @ts-ignore
       item.triggerUpdate()
-    })
+    }
   }
 
   /**

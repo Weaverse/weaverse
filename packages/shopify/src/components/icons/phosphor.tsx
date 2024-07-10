@@ -11,8 +11,8 @@ export let Circle = (props: HTMLAttributes<SVGElement>) => {
       viewBox="0 0 256 256"
       {...props}
     >
-      <rect width="256" height="256" fill="none"></rect>
-      <circle cx="128" cy="128" r="104"></circle>
+      <rect width="256" height="256" fill="none" />
+      <circle cx="128" cy="128" r="104" />
     </svg>
   )
 }

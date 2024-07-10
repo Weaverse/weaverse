@@ -6,7 +6,7 @@ import {
 } from '@remix-run/react'
 import { loadScript } from '@weaverse/react'
 import { useEffect } from 'react'
-import { type WeaverseHydrogen } from '~/index'
+import type { WeaverseHydrogen } from '~/index'
 import { useThemeSettingsStore } from './use-theme-settings'
 
 export function useStudio(weaverse: WeaverseHydrogen) {
@@ -17,6 +17,7 @@ export function useStudio(weaverse: WeaverseHydrogen) {
   let themeSettingsStore = useThemeSettingsStore()
   let { isDesignMode, weaverseHost, weaverseVersion } = weaverse
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (navigation.state === 'idle' && isDesignMode) {
       weaverse.internal = {
@@ -32,6 +33,5 @@ export function useStudio(weaverse: WeaverseHydrogen) {
         })
         .catch(console.error)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, search, navigation.state])
 }

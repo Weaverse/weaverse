@@ -1,6 +1,6 @@
 import type { ElementCSS } from '@weaverse/react'
 import clsx from 'clsx'
-import React from 'react'
+import type React from 'react'
 
 import type { ArticleCardProps } from '~/types'
 
