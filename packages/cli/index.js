@@ -92,7 +92,6 @@ Options:
   `)
   process.exit(0)
 }
-
 ;(async () => {
   if (argv.template) {
     let template = TEMPLATES.find((t) => t.name === argv.template)

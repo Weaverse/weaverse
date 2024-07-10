@@ -16,7 +16,7 @@
     "prepare": "npm run build",
     "lint": "biome lint --error-on-warnings",
     "lint:fix": "biome lint --write",
-    "format": "biome format",
+    "format": "biome format --write",
     "typecheck": "turbo typecheck --parallel",
     "changeset": "changeset",
     "postinstall": "lefthook install"
