@@ -1,7 +1,6 @@
 import { Weaverse, type WeaverseItemStore } from '@weaverse/core'
-import { useContext, useEffect } from 'react'
-
 import { WeaverseContext, WeaverseItemContext } from '~/context'
+import { useContext, useEffect } from 'react'
 
 export function useWeaverse<T = Weaverse>() {
   let weaverse = useContext(WeaverseContext)
@@ -40,17 +39,17 @@ let fetchingKey = ''
 
 export function usePixel(context: Weaverse) {
   // @ts-expect-error
-  let { projectId, pageId, weaverseHost } = context
+  let { projectId, pageId, weaverseHost, isDesignMode } = context
 
   useEffect(() => {
-    if (!projectId || !pageId || !weaverseHost) return
+    if (!projectId || !pageId || !weaverseHost || isDesignMode) return
     let currentKey = `${projectId}-${pageId}-${globalThis.location.pathname}`
     if (fetchingKey === currentKey) return
     fetchingKey = currentKey
     let url = `${weaverseHost}/api/public/px`
-    let xhr = new XMLHttpRequest()
-    xhr.open('POST', url, true)
-    xhr.send(JSON.stringify({ projectId, pageId }))
+    let img = new Image()
+    img.onload = () => {}
+    img.src = url + `?projectId=${projectId}&pageId=${pageId}`
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 }
