@@ -2,8 +2,8 @@ import type { ElementCSS } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext } from 'react'
 
-import type { CustomHTMLProps } from '~/types'
 import { Components } from '~/components'
+import type { CustomHTMLProps } from '~/types'
 
 let { Placeholder, NoHydrate } = Components
 

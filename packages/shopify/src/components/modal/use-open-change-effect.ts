@@ -1,6 +1,6 @@
 import type { DialogProps } from '@radix-ui/react-dialog'
-import { useContext, useEffect } from 'react'
 import { WeaverseContext } from '@weaverse/react'
+import { useContext, useEffect } from 'react'
 
 export function useOpenChangeEffect(props: DialogProps) {
   let { open, defaultOpen, onOpenChange } = props

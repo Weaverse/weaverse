@@ -2,8 +2,8 @@ import type { ElementCSS } from '@weaverse/react'
 import React from 'react'
 
 import {
-  css as productCardOptionsCss,
   ProductCardOptions,
+  css as productCardOptionsCss,
 } from './product-card-options'
 
 import { weaverseShopifyConfigs } from '~/proxy'

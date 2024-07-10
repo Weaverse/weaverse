@@ -16,14 +16,15 @@
       "**/.idea",
       "build/**",
       "dist/**",
-      ".next/**",
       "./.pnpm-store/",
       "./pnpm-global/",
-      "./packages/core/pnpm-global/",
       "./templates/**"
     ]
   },
-  "organizeImports": { "enabled": true },
+  "organizeImports": {
+    "enabled": true,
+    "ignore": ["**/node_modules/**", "./templates/**"]
+  },
   "linter": {
     "enabled": true,
     "rules": {
@@ -42,7 +43,7 @@
       "./coverage",
       "**/dist",
       "app/styles",
-      "**/package.json"
+      "./templates/**"
     ]
   },
   "javascript": {
@@ -57,9 +58,5 @@
       "quoteStyle": "single",
       "attributePosition": "auto"
     }
-  },
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git"
   }
 }

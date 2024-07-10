@@ -1,6 +1,6 @@
+import clsx from 'clsx'
 /* eslint-disable react/no-children-prop */
 import React, { memo, useEffect, useRef, useSyncExternalStore } from 'react'
-import clsx from 'clsx'
 
 import { WeaverseContextProvider, WeaverseItemContext } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'

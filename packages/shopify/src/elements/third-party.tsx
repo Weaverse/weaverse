@@ -1,9 +1,9 @@
-import React, { forwardRef, useContext } from 'react'
 import type { ElementCSS } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
+import React, { forwardRef, useContext } from 'react'
 
-import type { ThirdPartyProps } from '~/types'
 import { Components } from '~/components'
+import type { ThirdPartyProps } from '~/types'
 
 let NoHydrate = Components.NoHydrate
 let Placeholder = Components.Placeholder

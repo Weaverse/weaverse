@@ -14,10 +14,8 @@
     "build": "turbo run build --filter=./packages/*",
     "build:graph": "turbo run build --graph=repo-graph.svg",
     "prepare": "npm run build",
-    "lint": "biome lint --error-on-warnings",
-    "lint:fix": "biome lint --write",
-    "format": "biome format --write",
     "typecheck": "turbo typecheck --parallel",
+    "biome": "biome check --write",
     "changeset": "changeset",
     "postinstall": "lefthook install"
   },
