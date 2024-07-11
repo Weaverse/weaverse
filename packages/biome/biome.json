@@ -41,7 +41,8 @@
 	"javascript": {
 		"formatter": {
 			"semicolons": "asNeeded",
-			"quoteStyle": "single"
+			"quoteStyle": "single",
+			"indentStyle": "space"
 		}
 	},
 	"files": {

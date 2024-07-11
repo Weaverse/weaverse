@@ -11,7 +11,7 @@ export let useItemInstance = (id?: string) => {
   let { id: currentId } = useContext(WeaverseItemContext)
   let instance = Weaverse.itemInstances.get(id || currentId)
   if (!instance) {
-    console.warn(`Item instance ${id} not found`)
+    console.log(`Item instance ${id} not found`)
     return null
   }
   return instance as WeaverseItemStore

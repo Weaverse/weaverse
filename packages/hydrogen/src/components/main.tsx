@@ -12,11 +12,12 @@ let Main = forwardRef<
   let { children, dangerouslySetInnerHTML, ...rest } = props
 
   return (
-    // eslint-disable-next-line react/no-danger-with-children
     <div
       ref={ref}
       {...rest}
+      // biome-ignore lint/correctness/noChildrenProp: <explanation>
       children={children}
+      // biome-ignore lint/security/noDangerouslySetInnerHtmlWithChildren: <explanation>
       dangerouslySetInnerHTML={children ? undefined : dangerouslySetInnerHTML}
     />
   )
