@@ -22,7 +22,7 @@ export function ProductSkeleton() {
         </div>
       </div>
       <div className="wv-info">
-        <div className="wv-info-vendor"></div>
+        <div className="wv-info-vendor" />
         <div className="wv-info-title">
           <div className="wv-item" />
           <div className="wv-item" />
@@ -49,24 +49,24 @@ export function ProductSkeleton() {
           <Icon name="ShoppingCart" />
         </div>
         <div className="wv-info-description">
-          <div className="wv-line-1"></div>
-          <div className="wv-line-2"></div>
-          <div className="wv-line-3"></div>
-          <div className="wv-line-4"></div>
-          <div className="wv-line-5"></div>
+          <div className="wv-line-1" />
+          <div className="wv-line-2" />
+          <div className="wv-line-3" />
+          <div className="wv-line-4" />
+          <div className="wv-line-5" />
         </div>
         <div className="wv-info-meta">
           <div className="wv-item-1">
-            <div className="wv-label"></div>
-            <div className="wv-value"></div>
+            <div className="wv-label" />
+            <div className="wv-value" />
           </div>
           <div className="wv-item-2">
-            <div className="wv-label"></div>
-            <div className="wv-value"></div>
+            <div className="wv-label" />
+            <div className="wv-value" />
           </div>
           <div className="wv-item-3">
-            <div className="wv-label"></div>
-            <div className="wv-value"></div>
+            <div className="wv-label" />
+            <div className="wv-value" />
           </div>
         </div>
       </div>

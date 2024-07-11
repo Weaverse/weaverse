@@ -20,7 +20,7 @@ export function getOptionsGroupConfigs(option: ShopifyProductOption) {
     optionDesign = type
     if (type !== 'dropdown') {
       style = {
-        '--size': optionSizeMap[type]![size],
+        '--size': optionSizeMap[type]?.[size],
         '--radius': optionRadiusSizeMap[shape],
       }
     }

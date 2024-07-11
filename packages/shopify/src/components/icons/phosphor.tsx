@@ -436,7 +436,7 @@ export let HandBag = (props: HTMLAttributes<SVGElement>) => {
       viewBox="0 0 256 256"
       {...props}
     >
-      <rect width="256" height="256" fill="none"></rect>
+      <rect width="256" height="256" fill="none" />
       <path
         d="M208.8,72H47.2a8.1,8.1,0,0,0-8,7.1L25,207.1a8,8,0,0,0,7.9,8.9H223.1a8,8,0,0,0,7.9-8.9l-14.2-128A8.1,8.1,0,0,0,208.8,72Z"
         fill="none"
@@ -444,7 +444,7 @@ export let HandBag = (props: HTMLAttributes<SVGElement>) => {
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="16"
-      ></path>
+      />
       <path
         d="M88,104V72a40,40,0,0,1,80,0v32"
         fill="none"
@@ -452,7 +452,7 @@ export let HandBag = (props: HTMLAttributes<SVGElement>) => {
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="16"
-      ></path>
+      />
     </svg>
   )
 }
@@ -467,7 +467,7 @@ export let Tag = (props: HTMLAttributes<SVGElement>) => {
       viewBox="0 0 256 256"
       {...props}
     >
-      <rect width="256" height="256" fill="none"></rect>
+      <rect width="256" height="256" fill="none" />
       <path
         d="M122.7,25.9,42,42,25.9,122.7a8,8,0,0,0,2.2,7.2L132.5,234.3a7.9,7.9,0,0,0,11.3,0l90.5-90.5a7.9,7.9,0,0,0,0-11.3L129.9,28.1A8,8,0,0,0,122.7,25.9Z"
         fill="none"
@@ -475,8 +475,8 @@ export let Tag = (props: HTMLAttributes<SVGElement>) => {
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="16"
-      ></path>
-      <circle cx="84" cy="84" r="12"></circle>
+      />
+      <circle cx="84" cy="84" r="12" />
     </svg>
   )
 }

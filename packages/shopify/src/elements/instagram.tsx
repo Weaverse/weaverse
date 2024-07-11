@@ -44,7 +44,7 @@ let Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
 
     let style = {
       '--wv-ig-images-per-row': imagesPerRow,
-      '--wv-ig-images-gap': gap + 'px',
+      '--wv-ig-images-gap': `${gap}px`,
     } as React.CSSProperties
 
     return (

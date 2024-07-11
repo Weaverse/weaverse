@@ -12,9 +12,8 @@ export function addProductToCart(
     .then((data) => {
       if (data.status === 422) {
         throw new Error(data.description)
-      } else {
-        window?.weaverseCartHelpers?.notify('on_item_added', data)
       }
+      window?.weaverseCartHelpers?.notify('on_item_added', data)
     })
     .catch((err) =>
       console.error(`Error adding product to cart: ${err.message}`),

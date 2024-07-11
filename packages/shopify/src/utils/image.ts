@@ -13,11 +13,10 @@ export function resizeImage(imageURL: string, size: string): string {
   try {
     if (size === 'original') {
       return imageURL
-    } else {
-      let matches = imageURL.match(/(.*\/[\w\-_.]+)\.(\w{2,4})/)
-      // @ts-ignore
-      return matches[1] + '_' + size + '.' + matches[2]
     }
+    let matches = imageURL.match(/(.*\/[\w\-_.]+)\.(\w{2,4})/)
+    // @ts-ignore
+    return `${matches[1]}_${size}.${matches[2]}`
   } catch (e) {
     return imageURL
   }

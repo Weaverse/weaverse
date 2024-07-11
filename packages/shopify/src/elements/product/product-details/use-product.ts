@@ -14,7 +14,7 @@ export function useProduct(
 
   let product: ShopifyProduct = weaverseShopifyProducts[productId]
   if (useDefaultProduct && !isDesignMode) {
-    let defaultProduct = weaverseShopifyProducts['default']
+    let defaultProduct = weaverseShopifyProducts.default
     if (defaultProduct?.id) {
       product = defaultProduct
     }

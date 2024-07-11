@@ -22,7 +22,7 @@ export function formatMoney(cents: string | number, format: string): string {
     thousands = ',',
     decimal = '.',
   ): string | 0 {
-    if (isNaN(number) || number == null) {
+    if (Number.isNaN(number) || number == null) {
       return 0
     }
 

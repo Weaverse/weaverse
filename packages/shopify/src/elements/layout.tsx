@@ -25,12 +25,12 @@ let Layout = forwardRef<HTMLDivElement, LayoutElementProps>((props, ref) => {
   } = props
   let style = {
     '--layout-content-width': '100vw',
-    '--content-size': contentSize + 'px',
-    '--grid-size': gridSize + 'px',
+    '--content-size': `${contentSize}px`,
+    '--grid-size': `${gridSize}px`,
     '--rows': rows,
     '--columns': columns,
-    '--gap': gap + 'px',
-    '--row-size': rowSize + 'px',
+    '--gap': `${gap}px`,
+    '--row-size': `${rowSize}px`,
     '--col-size':
       'calc((var(--grid-size) - calc(var(--columns) - 1) * var(--gap)) / var(--columns))',
   } as React.CSSProperties

@@ -57,7 +57,7 @@ export function useProducts(input: UseProductHookInput) {
           })
         })
         .catch((err) => {
-          console.log(`❌ Error fetching recommended products`, err)
+          console.log('❌ Error fetching recommended products', err)
         })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
