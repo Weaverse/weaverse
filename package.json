@@ -1,49 +1,49 @@
 {
-	"name": "weaverse-sdks",
-	"description": "Weaverse SDKs monorepo.",
-	"version": "3.0.0",
-	"license": "MIT",
-	"private": true,
-	"scripts": {
-		"dev": "npm run dev:pkg",
-		"dev:pkg": "cross-env LOCAL_DEV=true FORCE_CHANGELOG_SOURCE=remote turbo dev --no-daemon --filter=./packages/*",
-		"clean": "bash ./scripts/clean.sh",
-		"upgrade-packages": "bash ./scripts/upgrade-packages.sh",
-		"update-deps": "bash ./scripts/update-deps.sh",
-		"test": "turbo run test",
-		"build": "turbo run build --filter=./packages/*",
-		"build:graph": "turbo run build --graph=repo-graph.svg",
-		"prepare": "npm run build",
-		"postinstall": "lefthook install -f",
-		"changeset": "changeset",
-		"typecheck": "turbo typecheck --parallel",
-		"biome": "biome check --diagnostic-level=error",
-		"biome:fix": "biome check --write",
-		"format": "biome format --write",
-		"format:check": "biome format",
-		"ci": "biome ci --changed"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "1.8.3",
-		"@changesets/cli": "^2.27.7",
-		"@types/node": "20.14.10",
-		"@types/react": "18.3.3",
-		"@types/react-dom": "18.3.0",
-		"cross-env": "7.0.3",
-		"lefthook": "^1.7.1",
-		"react": "18.3.1",
-		"react-dom": "18.3.1",
-		"rimraf": "5.0.8",
-		"tsup": "8.1.0",
-		"turbo": "2.0.6",
-		"typescript": "5.5.3"
-	},
-	"optionalDependencies": {
-		"@esbuild/darwin-x64": "^0.23.0",
-		"turbo-darwin-arm64": "^2.0.6"
-	},
-	"engines": {
-		"node": ">=18"
-	},
-	"packageManager": "pnpm@9.4.0"
+  "name": "weaverse-sdks",
+  "description": "Weaverse SDKs monorepo.",
+  "version": "3.0.0",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev:pkg",
+    "dev:pkg": "cross-env LOCAL_DEV=true FORCE_CHANGELOG_SOURCE=remote turbo dev --no-daemon --filter=./packages/*",
+    "clean": "bash ./scripts/clean.sh",
+    "upgrade-packages": "bash ./scripts/upgrade-packages.sh",
+    "update-deps": "bash ./scripts/update-deps.sh",
+    "test": "turbo run test",
+    "build": "turbo run build --filter=./packages/*",
+    "build:graph": "turbo run build --graph=repo-graph.svg",
+    "prepare": "npm run build",
+    "postinstall": "lefthook install -f",
+    "changeset": "changeset",
+    "typecheck": "turbo typecheck --parallel",
+    "biome": "biome check --diagnostic-level=error",
+    "biome:fix": "biome check --write",
+    "format": "biome format --write",
+    "format:check": "biome format",
+    "ci": "biome ci --changed"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.8.3",
+    "@changesets/cli": "^2.27.7",
+    "@types/node": "20.14.10",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "cross-env": "7.0.3",
+    "lefthook": "^1.7.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "rimraf": "5.0.8",
+    "tsup": "8.1.0",
+    "turbo": "2.0.6",
+    "typescript": "5.5.3"
+  },
+  "optionalDependencies": {
+    "@esbuild/darwin-x64": "^0.23.0",
+    "turbo-darwin-arm64": "^2.0.6"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "pnpm@9.4.0"
 }
