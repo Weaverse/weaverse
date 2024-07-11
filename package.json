@@ -20,7 +20,8 @@
 		"biome": "biome check --diagnostic-level=error",
 		"biome:fix": "biome check --write",
 		"format": "biome format --write",
-		"format:check": "biome format"
+		"format:check": "biome format",
+		"ci": "biome ci --changed"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.8.3",
