@@ -17,8 +17,9 @@
     "typecheck": "turbo typecheck --parallel",
     "biome": "biome check --diagnostic-level=error",
     "biome:fix": "biome check --write",
+    "postinstall": "lefthook install -f",
     "changeset": "changeset",
-    "postinstall": "lefthook install"
+    "uninstall": "lefthook uninstall -f"
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
