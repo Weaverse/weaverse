@@ -13,12 +13,12 @@ export function getVariantFromOptionArray(
   validateProductStructure(product)
   validateOptionsArray(options)
 
-  let result = product.variants.filter(function (variant) {
-    return options.every(function (option, index) {
+  let result = product.variants.filter((variant) =>
+    options.every((option, index) => {
       let variantOptions = getVariantOptions(variant)
       return variantOptions[index] === option
-    })
-  })
+    }),
+  )
 
   return result[0] || null
 }
@@ -39,11 +39,11 @@ export function getVariantOptions(variant: ShopifyProductVariant) {
  */
 function validateProductStructure(product: ShopifyProduct) {
   if (typeof product !== 'object') {
-    throw new TypeError(product + ' is not an object.')
+    throw new TypeError(`${product} is not an object.`)
   }
 
   if (Object.keys(product).length === 0 && product.constructor === Object) {
-    throw new Error(product + ' is empty.')
+    throw new Error(`${product} is empty.`)
   }
 }
 
@@ -54,6 +54,6 @@ function validateProductStructure(product: ShopifyProduct) {
  */
 function validateOptionsArray(options: string[]) {
   if (Array.isArray(options) && typeof options[0] === 'object') {
-    throw new Error(options + 'is not a valid array of options.')
+    throw new Error(`${options}is not a valid array of options.`)
   }
 }

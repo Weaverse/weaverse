@@ -1,0 +1,26 @@
+{
+  "name": "@weaverse/biome",
+  "version": "1.0.0",
+  "description": "Biome configuration for Weaverse",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Weaverse/weaverse.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "@weaverse:registry": "https://registry.npmjs.org"
+  },
+  "author": "The Weaverse Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Weaverse/weaverse/issues"
+  },
+  "homepage": "https://github.com/Weaverse/weaverse#readme",
+  "dependencies": {
+    "@biomejs/biome": "^1.8.3"
+  },
+  "files": ["biome.json"]
+}

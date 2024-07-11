@@ -3,10 +3,10 @@ import type { CSSProperties } from 'react'
 import React, { forwardRef } from 'react'
 
 import { Components } from '~/components'
+import { Image } from '~/elements/product/product-media/image'
 import { weaverseShopifyConfigs, weaverseShopifyProducts } from '~/proxy'
 import type { HotspotsProps } from '~/types'
 import type { ShopifyProduct } from '~/types/shopify'
-import { Image } from '~/elements/product/product-media/image'
 import { formatMoney } from '~/utils/money'
 
 let { Icon } = Components

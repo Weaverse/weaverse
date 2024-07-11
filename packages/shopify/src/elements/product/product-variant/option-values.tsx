@@ -5,8 +5,8 @@ import React from 'react'
 import { Components } from '~/components'
 import type { OptionValuesProps } from '~/types'
 import {
-  getSoldOutAndUnavailableState,
   getOptionItemStyle,
+  getSoldOutAndUnavailableState,
 } from '~/utils/option'
 
 let { Tooltip } = Components

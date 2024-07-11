@@ -1,13 +1,13 @@
 import { isBrowser } from '@weaverse/react'
 import { createContext } from 'react'
+import { defaultComponents } from '~/components'
+import { WeaverseHydrogen } from './index'
 import type {
   HydrogenComponent,
   HydrogenThemeSettings,
   WeaverseHydrogenParams,
   WeaverseLoaderData,
 } from './types'
-import { WeaverseHydrogen } from './index'
-import { defaultComponents } from '~/components'
 
 function registerComponents(components: HydrogenComponent[]) {
   components.forEach((comp) => {

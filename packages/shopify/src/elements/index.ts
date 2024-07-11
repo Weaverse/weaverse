@@ -17,9 +17,9 @@ import * as Slide from './slideshow/slide'
 import * as Text from './text'
 import * as Video from './video'
 
-import type { WeaverseElement } from '~/types/weaverse-shopify'
-import * as CollectionList from '~/elements/collection-list'
 import * as ArticleList from '~/elements/article-list'
+import * as CollectionList from '~/elements/collection-list'
+import type { WeaverseElement } from '~/types/weaverse-shopify'
 
 export let SHOPIFY_ELEMENTS: Record<string, WeaverseElement> = {
   ...productElements,

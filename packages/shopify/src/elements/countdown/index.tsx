@@ -1,6 +1,6 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef, useContext, useEffect } from 'react'
 import { WeaverseContext } from '@weaverse/react'
+import React, { forwardRef, useContext, useEffect } from 'react'
 
 import { TimerBlock } from './timer-block'
 

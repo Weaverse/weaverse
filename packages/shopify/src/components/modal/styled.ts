@@ -1,7 +1,7 @@
 import type { DialogTitleProps } from '@radix-ui/react-dialog'
 import { Content, Overlay, Title } from '@radix-ui/react-dialog'
 import { keyframes, styled } from '@stitches/react'
-import type React from 'react'
+
 import type { ModalContentProps } from '~/types/components'
 
 let overlayShow = keyframes({

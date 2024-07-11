@@ -1,6 +1,6 @@
 import type { DialogProps } from '@radix-ui/react-dialog'
-import { useContext, useEffect } from 'react'
 import { WeaverseContext } from '@weaverse/react'
+import { useContext, useEffect } from 'react'
 
 export function useOpenChangeEffect(props: DialogProps) {
   let { open, defaultOpen, onOpenChange } = props
@@ -17,10 +17,10 @@ export function useOpenChangeEffect(props: DialogProps) {
     }
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     let isOpen = open || defaultOpen
     toggleRootzIndex(isOpen)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, defaultOpen])
 
   let handleOpenChange = (open: boolean) => {

@@ -92,7 +92,6 @@ Options:
   `)
   process.exit(0)
 }
-
 ;(async () => {
   if (argv.template) {
     let template = TEMPLATES.find((t) => t.name === argv.template)
@@ -112,7 +111,7 @@ Options:
           stdio: 'inherit',
         })
 
-        install.on('data', function (data) {
+        install.on('data', (data) => {
           console.log(data.toString())
         })
         install.on('close', (code) => {

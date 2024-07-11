@@ -1,6 +1,6 @@
-import React, { forwardRef, useContext } from 'react'
 import type { ElementCSS, WeaverseElementProps } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
+import React, { forwardRef, useContext } from 'react'
 
 import { Components } from '~/components'
 

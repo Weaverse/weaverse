@@ -5,7 +5,6 @@ import { DEFAULT_INTEGRATIONS } from './constant'
 import { SHOPIFY_ELEMENTS } from './elements'
 
 import * as ThirdPartyElement from '~/elements/third-party'
-import type { ThirdPartyIntegration } from '~/types/shopify'
 import type {
   ElementData,
   ElementFlags,
@@ -14,6 +13,7 @@ import type {
   WeaverseShopifyParams,
   WeaverseShopifySectionData,
 } from '~/types'
+import type { ThirdPartyIntegration } from '~/types/shopify'
 
 export * from './WeaverseShopifyRoot'
 export * from './types'

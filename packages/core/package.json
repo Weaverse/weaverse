@@ -15,9 +15,7 @@
     "access": "public",
     "@weaverse:registry": "https://registry.npmjs.org"
   },
-  "files": [
-    "dist/*"
-  ],
+  "files": ["dist/*"],
   "engines": {
     "node": ">=18"
   },
@@ -28,13 +26,8 @@
     "prepublish": "npm run build"
   },
   "tsup": {
-    "entry": [
-      "src/index.ts"
-    ],
-    "format": [
-      "esm",
-      "cjs"
-    ],
+    "entry": ["src/index.ts"],
+    "format": ["esm", "cjs"],
     "dts": true,
     "sourcemap": true,
     "clean": true,

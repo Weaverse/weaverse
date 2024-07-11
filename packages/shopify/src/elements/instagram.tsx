@@ -1,8 +1,8 @@
-import React, { forwardRef, useEffect, useState } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 
+import { Components } from '~/components'
 import { INSTAGRAM_API } from '~/constant'
 import type { InstagramElementProps, InstagramMedia } from '~/types/components'
-import { Components } from '~/components'
 
 let Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
   (props, ref) => {

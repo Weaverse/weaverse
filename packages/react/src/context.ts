@@ -1,4 +1,4 @@
-import { type Weaverse } from '@weaverse/core'
+import type { Weaverse } from '@weaverse/core'
 import { createContext } from 'react'
 
 export let WeaverseContext = createContext<Weaverse>({} as Weaverse)

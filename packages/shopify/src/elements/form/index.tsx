@@ -1,5 +1,6 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef, useId } from 'react'
+
+import { forwardRef, useId } from 'react'
 
 import { FormField } from './form-field'
 
@@ -47,10 +48,11 @@ let Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
     return (
       <div ref={ref} {...rest} style={style}>
         {`{% form '${formType}' %}`}
-        {` {% if form.posted_successfully? %} `}
+        {' {% if form.posted_successfully? %} '}
         {`<h3>{% render 'icon-success' %}{{ 'newsletter.success' | t }}</h3>`}
         {targetLink && (
           <script
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
             dangerouslySetInnerHTML={{
               __html: `window.open(${targetLink},${
                 openInNewTab ? '_blank' : '_self'
@@ -58,10 +60,10 @@ let Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
             }}
           />
         )}
-        {` {%- endif -%} `}
-        {`{% if form.errors %}`}
-        {`<p>{{ form.errors | default_errors }}</p>`}
-        {`{% endif %}`}
+        {' {%- endif -%} '}
+        {'{% if form.errors %}'}
+        {'<p>{{ form.errors | default_errors }}</p>'}
+        {'{% endif %}'}
         {formContent}
         {'{% endform %}'}
       </div>

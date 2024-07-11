@@ -4,7 +4,7 @@ import React from 'react'
 
 import { Components } from '~/components'
 import type { ProductCardOptionsProps } from '~/types'
-import { getOptionsGroupConfigs, getOptionItemStyle } from '~/utils/option'
+import { getOptionItemStyle, getOptionsGroupConfigs } from '~/utils/option'
 let { Tooltip } = Components
 
 export function ProductCardOptions(props: ProductCardOptionsProps) {

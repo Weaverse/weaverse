@@ -1,18 +1,19 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef, useEffect, useState } from 'react'
+
+import { forwardRef, useEffect, useState } from 'react'
 
 import { Image } from './image'
 import {
-  css as fullscreenSliderCss,
   MediaFullscreenSlider,
+  css as fullscreenSliderCss,
 } from './media-fullscreen-slider'
 import { useMediaSlider } from './use-media-slider'
 import { useMediaZoomInEffect } from './use-media-zoom-in-effect'
 
+import { SliderComponents } from '~/components'
 import { PRODUCT_IMAGE_PLACEHOLDER } from '~/constant'
 import { useProductContext } from '~/hooks/use-product-context'
 import type { ProductMediaProps, ProductMediaSize } from '~/types'
-import { SliderComponents } from '~/components'
 
 let mediaSizesMap: Record<ProductMediaSize, string> = {
   small: '40%',

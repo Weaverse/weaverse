@@ -1,19 +1,18 @@
 import type { ElementCSS } from '@weaverse/react'
 import clsx from 'clsx'
-import React from 'react'
 
 import {
-  css as productCardButtonsCss,
   ProductCardButtons,
+  css as productCardButtonsCss,
 } from './product-card-buttons'
-import { css as productCardInfoCss, ProductCardInfo } from './product-card-info'
+import { ProductCardInfo, css as productCardInfoCss } from './product-card-info'
 import {
-  css as productCardSaleBadgeCss,
   ProductCardSaleBadge,
+  css as productCardSaleBadgeCss,
 } from './product-card-sale-badge'
 
-import type { ProductCardProps } from '~/types'
 import { Image } from '~/elements/product/product-media/image'
+import type { ProductCardProps } from '~/types'
 
 export function ProductCard(props: ProductCardProps) {
   let {

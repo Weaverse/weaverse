@@ -1,5 +1,6 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef } from 'react'
+
+import { forwardRef } from 'react'
 
 import { CombinedVariantSelector } from './combined-variant-selector'
 import { OptionValues, css as optionValuesCss } from './option-values'

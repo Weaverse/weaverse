@@ -2,6 +2,10 @@
 
 [![Better Stack Badge](https://uptime.betterstack.com/status-badges/v1/monitor/vif3.svg)](https://wvse.cc/weaverse-status)
 [![🚀 Lint & Typecheck](https://github.com/Weaverse/weaverse/actions/workflows/check.yml/badge.svg)](https://github.com/Weaverse/weaverse/actions/workflows/check.yml)
+[![Formatted with Biome](https://img.shields.io/badge/Formatted_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev/)
+[![Linted with Biome](https://img.shields.io/badge/Linted_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
+[![Checked with Biome](https://img.shields.io/badge/Checked_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
+
 
 ## Overview
 

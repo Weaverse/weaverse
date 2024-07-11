@@ -1,0 +1,67 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 80,
+    "attributePosition": "auto"
+  },
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "correctness": {
+        "noSwitchDeclarations": "warn",
+        "noChildrenProp": "warn",
+        "useExhaustiveDependencies": "warn"
+      },
+      "style": {
+        "useConst": "off",
+        "noUselessElse": "warn",
+        "noNonNullAssertion": "warn",
+        "useSelfClosingElements": "warn",
+        "useTemplate": "warn",
+        "noParameterAssign": "warn",
+        "noUnusedTemplateLiteral": "warn"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "off",
+        "noDangerouslySetInnerHtmlWithChildren": "warn"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "warn",
+        "noExplicitAny": "warn",
+        "noImplicitAnyLet": "warn",
+        "noShadowRestrictedNames": "warn",
+        "noGlobalIsNan": "warn"
+      },
+      "complexity": {
+        "noForEach": "warn",
+        "useLiteralKeys": "warn"
+      },
+      "a11y": {
+        "noSvgWithoutTitle": "warn",
+        "useMediaCaption": "warn",
+        "useKeyWithClickEvents": "warn"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "jsxQuoteStyle": "double",
+      "quoteProperties": "asNeeded",
+      "trailingCommas": "all",
+      "semicolons": "asNeeded",
+      "arrowParentheses": "always",
+      "bracketSpacing": true,
+      "bracketSameLine": false,
+      "quoteStyle": "single",
+      "attributePosition": "auto"
+    }
+  }
+}

@@ -1,6 +1,5 @@
-/* eslint-disable react/no-children-prop */
-import React, { memo, useEffect, useRef, useSyncExternalStore } from 'react'
 import clsx from 'clsx'
+import React, { memo, useEffect, useRef, useSyncExternalStore } from 'react'
 
 import { WeaverseContextProvider, WeaverseItemContext } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
@@ -78,8 +77,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
         current: document.querySelector(`[data-wv-id="${id}"]`),
       })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [instance])
+  }, [instance, id])
 
   if (__hidden) {
     return null
@@ -102,7 +100,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
           ? childIds.map((cid: string) => ({ id: cid }))
           : []
     ).map((item: { id: string }, index: number) => (
-      <ItemInstance key={item.id + '-' + index} id={item.id} parentId={id} />
+      <ItemInstance key={`${item.id}-${index}`} id={item.id} parentId={id} />
     ))
 
     return (
@@ -116,14 +114,14 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
             generateItemClassName(instance, stitchesInstance),
           rest.data?.className,
         )}
+        // biome-ignore lint/correctness/noChildrenProp: <explanation>
         children={renderChildren.length ? renderChildren : undefined}
       />
     )
-  } else {
-    instance._store.deleted = true
-    console.log(`❌ Unknown element: ${type}`)
-    return null
   }
+  instance._store.deleted = true
+  console.log(`❌ Unknown element: ${type}`)
+  return null
 })
 
 let ItemInstance = memo(

@@ -14,23 +14,20 @@
     "build": "turbo run build --filter=./packages/*",
     "build:graph": "turbo run build --graph=repo-graph.svg",
     "prepare": "npm run build",
-    "lint": "eslint packages --cache .",
-    "lint:fix": "eslint packages --fix --no-error-on-unmatched-pattern",
     "typecheck": "turbo typecheck --parallel",
-    "format": "prettier --write --cache .",
-    "changeset": "changeset"
+    "biome": "biome check --diagnostic-level=error",
+    "biome:fix": "biome check --write",
+    "changeset": "changeset",
+    "postinstall": "lefthook install"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.8.3",
     "@changesets/cli": "^2.27.7",
-    "@ianvs/prettier-plugin-sort-imports": "^4.3.0",
-    "@remix-run/eslint-config": "2.10.1",
     "@types/node": "20.14.10",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "cross-env": "7.0.3",
-    "eslint": "8.57.0",
-    "prettier": "3.3.2",
-    "prettier-plugin-tailwindcss": "^0.6.5",
+    "lefthook": "^1.7.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "rimraf": "5.0.8",
@@ -45,25 +42,5 @@
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "pnpm@9.4.0",
-  "prettier": {
-    "semi": false,
-    "singleQuote": true,
-    "plugins": [
-      "prettier-plugin-tailwindcss",
-      "@ianvs/prettier-plugin-sort-imports"
-    ],
-    "arrowParens": "always",
-    "bracketSpacing": true,
-    "embeddedLanguageFormatting": "auto",
-    "htmlWhitespaceSensitivity": "css",
-    "insertPragma": false,
-    "printWidth": 80,
-    "proseWrap": "preserve",
-    "quoteProps": "as-needed",
-    "requirePragma": false,
-    "tabWidth": 2,
-    "trailingComma": "all",
-    "useTabs": false
-  }
+  "packageManager": "pnpm@9.4.0"
 }

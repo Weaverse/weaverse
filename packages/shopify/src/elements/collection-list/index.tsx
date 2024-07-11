@@ -1,5 +1,6 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef } from 'react'
+
+import { forwardRef } from 'react'
 
 import { CollectionCard, css as collectionCardCss } from './collection-card'
 import { Skeleton, css as skeletonCss } from './skeleton'

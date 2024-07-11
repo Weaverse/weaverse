@@ -1,9 +1,10 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef } from 'react'
 
-import type { LayoutElementProps } from '~/types/components'
+import { forwardRef } from 'react'
+
 import { Background } from '~/components/background'
 import { Overlay } from '~/components/overlay'
+import type { LayoutElementProps } from '~/types/components'
 
 let Layout = forwardRef<HTMLDivElement, LayoutElementProps>((props, ref) => {
   let {
