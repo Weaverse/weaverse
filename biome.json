@@ -1,11 +1,13 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
-  "extends": ["./packages/biome/biome.json"],
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git"
-  },
-  "files": {
-    "ignore": ["dist/**", "build/**", ".turbo/**", "templates/**"]
-  }
+	"$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+	"extends": ["./packages/biome/biome.json"],
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true,
+		"defaultBranch": "main"
+	},
+	"files": {
+		"ignore": ["dist/**", "build/**", ".turbo/**", "templates/**"]
+	}
 }
