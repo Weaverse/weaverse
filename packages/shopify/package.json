@@ -1,53 +1,53 @@
 {
-  "name": "@weaverse/shopify",
-  "author": "Weaverse Team",
-  "description": "Weaverse Components for Shopify Online Store 2.0 Section builder",
-  "version": "3.2.5",
-  "license": "MIT",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
-  "module": "dist/index.mjs",
-  "publishConfig": {
-    "access": "public",
-    "@weaverse:registry": "https://registry.npmjs.org"
-  },
-  "repository": {
-    "url": "git+https://github.com/Weaverse/weaverse.git",
-    "directory": "packages/shopify"
-  },
-  "files": ["dist/*"],
-  "engines": {
-    "node": ">=18"
-  },
-  "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup",
-    "clean": "rimraf dist",
-    "prepublish": "npm run build"
-  },
-  "tsup": {
-    "entry": ["src/index.ts"],
-    "format": ["esm", "cjs"],
-    "dts": true,
-    "sourcemap": true,
-    "clean": true,
-    "outDir": "dist",
-    "external": [
-      "react",
-      "keen-slider",
-      "clsx",
-      "@stitches/react",
-      "@radix-ui/react-dialog"
-    ]
-  },
-  "peerDependencies": {
-    "react": ">=18",
-    "react-dom": ">=18"
-  },
-  "dependencies": {
-    "@radix-ui/react-dialog": "^1.1.1",
-    "@stitches/react": "^1.2.8",
-    "@weaverse/react": "3.2.5",
-    "keen-slider": "^6.8.6"
-  }
+	"name": "@weaverse/shopify",
+	"author": "Weaverse Team",
+	"description": "Weaverse Components for Shopify Online Store 2.0 Section builder",
+	"version": "3.2.5",
+	"license": "MIT",
+	"main": "dist/index.js",
+	"typings": "dist/index.d.ts",
+	"module": "dist/index.mjs",
+	"publishConfig": {
+		"access": "public",
+		"@weaverse:registry": "https://registry.npmjs.org"
+	},
+	"repository": {
+		"url": "git+https://github.com/Weaverse/weaverse.git",
+		"directory": "packages/shopify"
+	},
+	"files": ["dist/*"],
+	"engines": {
+		"node": ">=18"
+	},
+	"scripts": {
+		"dev": "tsup --watch",
+		"build": "tsup",
+		"clean": "rimraf dist",
+		"prepublish": "npm run build"
+	},
+	"tsup": {
+		"entry": ["src/index.ts"],
+		"format": ["esm", "cjs"],
+		"dts": true,
+		"sourcemap": true,
+		"clean": true,
+		"outDir": "dist",
+		"external": [
+			"react",
+			"keen-slider",
+			"clsx",
+			"@stitches/react",
+			"@radix-ui/react-dialog"
+		]
+	},
+	"peerDependencies": {
+		"react": ">=18",
+		"react-dom": ">=18"
+	},
+	"dependencies": {
+		"@radix-ui/react-dialog": "^1.1.1",
+		"@stitches/react": "^1.2.8",
+		"@weaverse/react": "3.2.5",
+		"keen-slider": "^6.8.6"
+	}
 }
