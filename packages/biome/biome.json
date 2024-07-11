@@ -1,51 +1,53 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
-	"linter": {
-		"rules": {
-			"correctness": {
-				"noSwitchDeclarations": "warn",
-				"noChildrenProp": "warn",
-				"useExhaustiveDependencies": "warn"
-			},
-			"style": {
-				"useConst": "off",
-				"noUselessElse": "warn",
-				"noNonNullAssertion": "warn",
-				"useSelfClosingElements": "warn",
-				"useTemplate": "warn",
-				"noParameterAssign": "warn",
-				"noUnusedTemplateLiteral": "warn"
-			},
-			"security": {
-				"noDangerouslySetInnerHtml": "off",
-				"noDangerouslySetInnerHtmlWithChildren": "warn"
-			},
-			"suspicious": {
-				"noArrayIndexKey": "warn",
-				"noExplicitAny": "warn",
-				"noImplicitAnyLet": "warn",
-				"noShadowRestrictedNames": "warn",
-				"noGlobalIsNan": "warn"
-			},
-			"complexity": {
-				"noForEach": "warn",
-				"useLiteralKeys": "warn"
-			},
-			"a11y": {
-				"noSvgWithoutTitle": "warn",
-				"useMediaCaption": "warn",
-				"useKeyWithClickEvents": "warn"
-			}
-		}
-	},
-	"javascript": {
-		"formatter": {
-			"semicolons": "asNeeded",
-			"quoteStyle": "single",
-			"indentStyle": "space"
-		}
-	},
-	"files": {
-		"ignoreUnknown": true
-	}
+  "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+  "linter": {
+    "rules": {
+      "correctness": {
+        "noSwitchDeclarations": "warn",
+        "noChildrenProp": "warn",
+        "useExhaustiveDependencies": "warn"
+      },
+      "style": {
+        "useConst": "off",
+        "noUselessElse": "warn",
+        "noNonNullAssertion": "warn",
+        "useSelfClosingElements": "warn",
+        "useTemplate": "warn",
+        "noParameterAssign": "warn",
+        "noUnusedTemplateLiteral": "warn"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "off",
+        "noDangerouslySetInnerHtmlWithChildren": "warn"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "warn",
+        "noExplicitAny": "warn",
+        "noImplicitAnyLet": "warn",
+        "noShadowRestrictedNames": "warn",
+        "noGlobalIsNan": "warn"
+      },
+      "complexity": {
+        "noForEach": "warn",
+        "useLiteralKeys": "warn"
+      },
+      "a11y": {
+        "noSvgWithoutTitle": "warn",
+        "useMediaCaption": "warn",
+        "useKeyWithClickEvents": "warn"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "semicolons": "asNeeded",
+      "quoteStyle": "single"
+    }
+  },
+  "formatter": {
+    "indentStyle": "space"
+  },
+  "files": {
+    "ignoreUnknown": true
+  }
 }
