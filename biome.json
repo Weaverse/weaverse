@@ -9,6 +9,12 @@
     "root": "."
   },
   "files": {
-    "ignore": ["dist/**", "build/**", ".turbo/**", "templates/**"]
+    "ignore": [
+      "dist/**",
+      "build/**",
+      ".turbo/**",
+      "templates/**",
+      "package-lock.json"
+    ]
   }
 }

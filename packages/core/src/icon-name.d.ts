@@ -120,6 +120,7 @@ export type IconName =
   | 'loader'
   | 'log-out'
   | 'map-pinned'
+  | 'map'
   | 'maximize'
   | 'message-circle'
   | 'message-square'
