@@ -195,11 +195,7 @@ export class Weaverse extends EventEmitter {
   }
 
   refreshAllItems() {
-    // Weaverse.itemInstances.forEach((item) => {
-    //   item.triggerUpdate()
-    // })
-    for (const item of Weaverse.itemInstances) {
-      // @ts-ignore
+    for (const item of Weaverse.itemInstances.values()) {
       item.triggerUpdate()
     }
   }
