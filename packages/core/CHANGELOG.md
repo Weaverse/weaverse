@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 3.2.6
+
+### Patch Changes
+
+- Update Types
+
 ## 3.2.5
 
 ### Patch Changes
