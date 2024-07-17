@@ -1,5 +1,12 @@
 # @weaverse/hydrogen
 
+## 3.2.7
+
+### Patch Changes
+
+- Minor update to theme settings instance
+  - @weaverse/react@3.2.7
+
 ## 3.2.6
 
 ### Patch Changes

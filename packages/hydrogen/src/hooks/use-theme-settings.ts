@@ -11,7 +11,7 @@ import type {
 
 export class ThemeSettingsStore {
   settings: HydrogenThemeSettings = {}
-  listeners: (() => void)[] = []
+  listeners = new Set<() => void>()
   countries?: Localizations
   schema?: HydrogenThemeSchema
   publicEnv?: PublicEnv
@@ -36,9 +36,9 @@ export class ThemeSettingsStore {
   }
 
   subscribe = (listener: () => void): (() => void) => {
-    this.listeners = [...this.listeners, listener]
+    this.listeners.add(listener)
     return () => {
-      this.listeners = this.listeners.filter((l) => l !== listener)
+      this.listeners.delete(listener)
     }
   }
 

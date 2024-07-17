@@ -16,9 +16,9 @@ export class EventEmitter {
     this.listeners.delete(fn)
   }
 
-  emit = (data?: any) => {
-    this.listeners.forEach((fn) => {
-      return fn(data)
-    })
+  emit = (data) => {
+    for (const fn of this.listeners) {
+      fn(data)
+    }
   }
 }

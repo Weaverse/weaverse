@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 3.2.7
+
+### Patch Changes
+
+- Minor update to theme settings instance
+
 ## 3.2.6
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @weaverse/react
 
+## 3.2.7
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/core@3.2.7
+
 ## 3.2.6
 
 ### Patch Changes

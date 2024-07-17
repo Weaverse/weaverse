@@ -30,20 +30,20 @@
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "cross-env": "7.0.3",
-    "lefthook": "^1.7.1",
+    "lefthook": "^1.7.2",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "rimraf": "5.0.8",
     "tsup": "8.1.0",
-    "turbo": "2.0.6",
+    "turbo": "2.0.7",
     "typescript": "5.5.3"
   },
   "optionalDependencies": {
     "@esbuild/darwin-x64": "^0.23.0",
-    "turbo-darwin-arm64": "^2.0.6"
+    "turbo-darwin-arm64": "^2.0.7"
   },
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "pnpm@9.4.0"
+  "packageManager": "pnpm@9.5.0"
 }

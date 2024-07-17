@@ -10,14 +10,15 @@ import type {
 } from './types'
 
 function registerComponents(components: HydrogenComponent[]) {
-  components.forEach((comp) => {
-    WeaverseHydrogen.registerElement({
-      type: comp?.schema?.type,
-      Component: comp?.default,
-      schema: comp?.schema,
-      loader: comp?.loader,
-    })
-  })
+  for (const comp of components) {
+    comp?.schema?.type &&
+      WeaverseHydrogen.registerElement({
+        type: comp?.schema.type,
+        Component: comp.default,
+        schema: comp.schema,
+        loader: comp.loader,
+      })
+  }
 }
 
 function createCachedWeaverseInstance(

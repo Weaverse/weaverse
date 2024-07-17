@@ -108,10 +108,6 @@ export class Weaverse extends EventEmitter {
 
   constructor(params: WeaverseCoreParams) {
     super()
-    // Object.entries(params).forEach(([k, v]) => {
-    //   let key = k as keyof typeof this
-    //   this[key] = v || this[key]
-    // })
     for (const param of Object.entries(params)) {
       let [key, value] = param
       this[key] = value || this[key]
@@ -191,7 +187,7 @@ export class Weaverse extends EventEmitter {
   triggerUpdate = () => {
     // make new copy of data to trigger update
     this.data = { ...this.data }
-    this.emit()
+    this.emit(this.data)
   }
 
   refreshAllItems() {
