@@ -106,7 +106,7 @@ Options:
         await fs.remove(`${outputPath}/package-lock.json`).catch(console.error)
 
         // run 'npm install'
-        const install = spawn('npm', ['install', '--ignore-scripts'], {
+        const install = spawn('npm', ['install', '--legacy-peer-deps'], {
           cwd: outputPath,
           stdio: 'inherit',
         })
