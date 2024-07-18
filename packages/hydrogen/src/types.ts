@@ -331,4 +331,15 @@ declare global {
     __weaverses: Record<string, WeaverseHydrogen>
     __weaverseThemeSettingsStore: ThemeSettingsStore
   }
+  interface Env {
+    WEAVERSE_PROJECT_ID: string
+    WEAVERSE_HOST: string
+    WEAVERSE_API_KEY: string
+  }
+}
+
+declare module '@shopify/remix-oxygen' {
+  export interface AppLoadContext {
+    weaverse: WeaverseClient
+  }
 }
