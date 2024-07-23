@@ -1,5 +1,13 @@
 # @weaverse/shopify
 
+## 3.2.9
+
+### Patch Changes
+
+- Fix linting errors, update linter rules
+- Updated dependencies
+  - @weaverse/react@3.2.9
+
 ## 3.2.8
 
 ### Patch Changes

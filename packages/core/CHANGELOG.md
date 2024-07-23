@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 3.2.9
+
+### Patch Changes
+
+- Fix linting errors, update linter rules
+
 ## 3.2.8
 
 ### Patch Changes
