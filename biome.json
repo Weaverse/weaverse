@@ -16,5 +16,21 @@
       "templates/**",
       "package-lock.json"
     ]
+  },
+  "linter": {
+    "rules": {
+      "suspicious": {
+        "noExplicitAny": "off",
+        "noImplicitAnyLet": "off",
+        "noArrayIndexKey": "off"
+      },
+      "style": {
+        "noParameterAssign": "off"
+      },
+      "a11y": {
+        "useKeyWithClickEvents": "off",
+        "noSvgWithoutTitle": "off"
+      }
+    }
   }
 }
