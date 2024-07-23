@@ -35,6 +35,7 @@ export let registerThirdPartyElements = () => {
 
 export let registerShopifyElements = () => {
   for (let elm of Object.values(SHOPIFY_ELEMENTS)) {
+    // @ts-ignore
     WeaverseShopify.registerElement(elm)
   }
   registerThirdPartyElements()
