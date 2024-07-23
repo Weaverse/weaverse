@@ -54,6 +54,7 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
         ResizePlugin,
       })
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
       if (created && cssLoaded) {
         window.requestAnimationFrame(() => {
@@ -63,7 +64,6 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
           setReady(true)
         })
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mediaSize, aspectRatio, created, cssLoaded])
 
     let { images, aspect_ratio } = context.product

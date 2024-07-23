@@ -8,7 +8,7 @@ let { Placeholder, NoHydrate } = Components
 
 export let AppBlock = forwardRef<HTMLDivElement, WeaverseElementProps>(
   (props, ref) => {
-    let id = props['data-wv-id']!
+    let id = props['data-wv-id']
     let { isDesignMode } = useContext(WeaverseContext)
     if (isDesignMode) {
       return (

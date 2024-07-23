@@ -17,7 +17,7 @@ export let Hotspots = forwardRef<HTMLDivElement, HotspotsProps>(
     let { money_format } = weaverseShopifyConfigs.shopData || {}
     let products: ShopifyProduct[] = hotspots
       .filter((hotspot) => hotspot.productId)
-      .map((hotspot) => weaverseShopifyProducts[hotspot.productId!])
+      .map((hotspot) => weaverseShopifyProducts[hotspot.productId])
     let style = {
       '--aspect-ratio': aspectRatio,
       '--color': color === 'light' ? '#000' : '#fff',

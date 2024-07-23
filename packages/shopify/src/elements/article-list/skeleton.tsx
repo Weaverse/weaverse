@@ -15,7 +15,6 @@ export function Skeleton(props: ArticleSkeletonProps) {
     <>
       {Array.from({ length: articleCount }).map((_, index) => (
         <div
-          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
           key={index}
           className="wv-article-card-skeleton animate-pulse"
           style={style}
@@ -28,7 +27,7 @@ export function Skeleton(props: ArticleSkeletonProps) {
             <div className="wv-article-card__author" />
           </div>
           <div className="wv-article-card-skeleton__title" />
-          <div className="wv-article-card__remore" />
+          <div className="wv-article-card__readmore" />
         </div>
       ))}
     </>
@@ -70,7 +69,7 @@ export let css: ElementCSS = {
         borderRadius: '4px',
         margin: '12px 0',
       },
-      '.wv-article-card__remore': {
+      '.wv-article-card__readmore': {
         display: 'block',
         height: '20px',
         backgroundColor: '#D1D5DB',

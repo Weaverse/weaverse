@@ -6,9 +6,9 @@ export function ThumbnailPlugin(
 ): KeenSliderPlugin {
   return (slider) => {
     function removeActive() {
-      slider.slides.forEach((slide) => {
+      for (let slide of slider.slides) {
         slide.classList.remove('active')
-      })
+      }
     }
     function addActive(idx: number) {
       slider.slides[idx].classList.add('active')

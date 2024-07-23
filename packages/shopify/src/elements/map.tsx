@@ -1,9 +1,8 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef } from 'react'
-
+import { forwardRef } from 'react'
 import type { MapElementProps } from '~/types/components'
 
-let Map = forwardRef<HTMLDivElement, MapElementProps>((props, ref) => {
+let MapElement = forwardRef<HTMLDivElement, MapElementProps>((props, ref) => {
   let { place, zoom, ...rest } = props
 
   return (
@@ -33,9 +32,9 @@ export let css: ElementCSS = {
   },
 }
 
-Map.defaultProps = {
+MapElement.defaultProps = {
   place: 'Hanoi',
   zoom: 14,
 }
 
-export default Map
+export default MapElement

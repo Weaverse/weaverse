@@ -35,7 +35,7 @@ export function ProductCard(props: ProductCardProps) {
   } as React.CSSProperties
 
   let isRecommendedProduct = Array.isArray(media)
-  let imageSource = isRecommendedProduct ? media! : images
+  let imageSource = isRecommendedProduct ? media : images
   let mainImage = imageSource[0]
   let secondImage = imageSource[1]
   let imagesClass = clsx(

@@ -40,6 +40,7 @@ export function useMediaSlider(input: ProductImageHooksInput) {
     [ThumbnailPlugin(instanceRef), ResizePlugin],
   )
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (context) {
       let targetMediaIndex = -1
@@ -51,7 +52,6 @@ export function useMediaSlider(input: ProductImageHooksInput) {
         instanceRef.current.moveToIdx(targetMediaIndex)
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context])
 
   return [sliderRef, thumbnailRef, instanceRef, thumbnailInstanceRef] as const

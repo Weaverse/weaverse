@@ -1,3 +1,6 @@
+import * as ArticleList from '~/elements/article-list'
+import * as CollectionList from '~/elements/collection-list'
+import type { WeaverseElement } from '~/types/weaverse-shopify'
 import * as AppBlock from './app-block'
 import * as Button from './button'
 import * as Container from './container'
@@ -8,7 +11,7 @@ import * as Hotspots from './hotspots'
 import * as Image from './image'
 import * as Instagram from './instagram'
 import * as Layout from './layout'
-import * as Map from './map'
+import * as MapElement from './map'
 import { productElements } from './product'
 import * as ProductList from './product-list'
 import * as ScrollingText from './scrolling-text'
@@ -17,11 +20,7 @@ import * as Slide from './slideshow/slide'
 import * as Text from './text'
 import * as Video from './video'
 
-import * as ArticleList from '~/elements/article-list'
-import * as CollectionList from '~/elements/collection-list'
-import type { WeaverseElement } from '~/types/weaverse-shopify'
-
-export let SHOPIFY_ELEMENTS: Record<string, WeaverseElement> = {
+export let SHOPIFY_ELEMENTS: Record<string, Partial<WeaverseElement>> = {
   ...productElements,
   ArticleList: {
     Component: ArticleList.default,
@@ -90,9 +89,9 @@ export let SHOPIFY_ELEMENTS: Record<string, WeaverseElement> = {
     defaultCss: Layout.css,
   },
   Map: {
-    Component: Map.default,
+    Component: MapElement.default,
     type: 'map',
-    defaultCss: Map.css,
+    defaultCss: MapElement.css,
   },
   Text: {
     Component: Text.default,

@@ -52,7 +52,6 @@ let Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
         {`<h3>{% render 'icon-success' %}{{ 'newsletter.success' | t }}</h3>`}
         {targetLink && (
           <script
-            // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
             dangerouslySetInnerHTML={{
               __html: `window.open(${targetLink},${
                 openInNewTab ? '_blank' : '_self'

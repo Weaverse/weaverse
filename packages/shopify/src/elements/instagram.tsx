@@ -61,6 +61,7 @@ let Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
             } = item
             if (media_type === 'VIDEO') {
               return (
+                // biome-ignore lint/a11y/useMediaCaption: <explanation>
                 <video key={id} controls poster={thumbnail_url}>
                   <source src={media_url} type="video/mp4" />
                 </video>

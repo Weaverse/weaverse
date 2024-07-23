@@ -11,7 +11,7 @@ let { Placeholder, NoHydrate } = Components
 export let CustomHTML = forwardRef<HTMLDivElement, CustomHTMLProps>(
   (props, ref) => {
     let { content, children, ...rest } = props
-    let id = rest['data-wv-id']!
+    let id = rest['data-wv-id']
     let { isDesignMode } = useContext(WeaverseContext)
     let style = {
       '--pointer-events': isDesignMode ? 'none' : 'auto',

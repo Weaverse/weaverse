@@ -32,6 +32,7 @@ export function useProducts(input: UseProductHookInput) {
     products = hasAllProducts ? _products : []
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (source === 'recommended' && !isDesignMode) {
       let { product_id, routes } = window.weaverseShopifyConfigs.shopData
@@ -42,7 +43,7 @@ export function useProducts(input: UseProductHookInput) {
             throw new Error(`${data.message} - (${data.description})`)
           }
           setRecommendedProducts(data.products)
-          data.products.forEach((p: ShopifyProduct) => {
+          for (let p of data.products) {
             if (!weaverseShopifyProducts[p.id]) {
               weaverseShopifyProducts[p.id] = {
                 ...p,
@@ -54,7 +55,7 @@ export function useProducts(input: UseProductHookInput) {
                   p.variants.find((v) => v.available) || null,
               }
             }
-          })
+          }
         })
         .catch((err) => {
           console.log('❌ Error fetching recommended products', err)

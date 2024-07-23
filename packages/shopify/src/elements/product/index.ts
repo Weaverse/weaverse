@@ -11,7 +11,7 @@ import * as ProductVendor from './product-vendor'
 
 import type { WeaverseElement } from '~/types'
 
-export let productElements: Record<string, WeaverseElement> = {
+export let productElements: Record<string, Partial<WeaverseElement>> = {
   ProductDetails: {
     type: 'product-details',
     Component: ProductDetails.default,

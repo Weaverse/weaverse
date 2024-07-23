@@ -1,7 +1,7 @@
 import type { ElementCSS } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
-import React, { forwardRef, useContext } from 'react'
-
+import type React from 'react'
+import { forwardRef, useContext } from 'react'
 import { HTMLVideo } from './html-video'
 import { Vimeo } from './vimeo'
 import { Youtube } from './youtube'
@@ -22,7 +22,7 @@ let Video = forwardRef<HTMLDivElement, VideoElementProps>((props, ref) => {
   } = props
   let autoPlay = !isDesignMode && originAutoPlay
   let videoProps = { src, controls, poster, autoPlay, loop, muted }
-  let content
+  let content: React.ReactNode
   let youtubeId = getYoutubeEmbedId(src)
   let vimeoId = getVimeoId(src)
   // youtube

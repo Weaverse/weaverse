@@ -67,6 +67,7 @@ let Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
       setRemaining(remainingTime)
     }
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
       let intervalFlag: ReturnType<typeof setInterval> = setInterval(
         handleRemaining,
