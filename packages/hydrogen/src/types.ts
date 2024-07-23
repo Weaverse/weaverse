@@ -24,6 +24,7 @@ import type {
   WeaverseImage,
   WeaverseProjectDataType,
   WeaverseResourcePickerData,
+  WeaverseVideo,
 } from '@weaverse/react'
 import type { ForwardRefExoticComponent } from 'react'
 
@@ -32,7 +33,7 @@ import type { ThemeSettingsStore } from './hooks/use-theme-settings'
 import type { WeaverseClient } from './weaverse-client'
 
 import type { WeaverseHydrogen } from './index'
-export type { InputType, PositionInputValue, WeaverseImage }
+export type { InputType, PositionInputValue, WeaverseImage, WeaverseVideo }
 
 export type Locale = {
   language: LanguageCode

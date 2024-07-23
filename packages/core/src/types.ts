@@ -38,6 +38,7 @@ export type InputType =
   | 'color'
   | 'datepicker'
   | 'image'
+  | 'video'
   | 'map-autocomplete'
   | 'position'
   | 'product'
@@ -61,6 +62,14 @@ export type ChildElementCSS = Partial<{
 }>
 export type WeaverseResourcePickerData = { id: number; handle: string }
 export type WeaverseImage = {
+  id: string
+  url: string
+  altText: string
+  width: number
+  height: number
+  previewSrc: string
+}
+export type WeaverseVideo = {
   id: string
   url: string
   altText: string
