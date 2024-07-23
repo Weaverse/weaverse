@@ -75,6 +75,7 @@ export type WeaverseVideo = {
   altText: string
   width: number
   height: number
+  previewSrc: string
 }
 export type AdditionalInputConfigs =
   | SelectInputConfigs
