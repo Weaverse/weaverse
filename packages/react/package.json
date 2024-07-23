@@ -2,7 +2,7 @@
   "name": "@weaverse/react",
   "author": "Weaverse Team",
   "description": "React bindings for Weaverse",
-  "version": "3.2.7",
+  "version": "3.2.8",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -15,7 +15,9 @@
     "access": "public",
     "@weaverse:registry": "https://registry.npmjs.org"
   },
-  "files": ["dist/*"],
+  "files": [
+    "dist/*"
+  ],
   "engines": {
     "node": ">=18"
   },
@@ -26,20 +28,28 @@
     "prepublish": "npm run build"
   },
   "tsup": {
-    "entry": ["src/index.ts"],
-    "format": ["esm", "cjs"],
+    "entry": [
+      "src/index.ts"
+    ],
+    "format": [
+      "esm",
+      "cjs"
+    ],
     "dts": true,
     "sourcemap": true,
     "clean": true,
     "outDir": "dist",
-    "external": ["react", "clsx"]
+    "external": [
+      "react",
+      "clsx"
+    ]
   },
   "peerDependencies": {
     "react": ">=18",
     "react-dom": ">=18"
   },
   "dependencies": {
-    "@weaverse/core": "3.2.7",
+    "@weaverse/core": "3.2.8",
     "clsx": "^2.1.1"
   }
 }

@@ -1,5 +1,13 @@
 # @weaverse/shopify
 
+## 3.2.8
+
+### Patch Changes
+
+- Add new `Video` input
+- Updated dependencies
+  - @weaverse/react@3.2.8
+
 ## 3.2.7
 
 ### Patch Changes

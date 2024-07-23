@@ -2,7 +2,7 @@
   "name": "@weaverse/hydrogen",
   "author": "Weaverse Team",
   "description": "Components, hooks, and utilities for building Shopify Hydrogen websites with Weaverse",
-  "version": "3.2.7",
+  "version": "3.2.8",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -15,7 +15,9 @@
     "url": "git+https://github.com/Weaverse/weaverse.git",
     "directory": "packages/hydrogen"
   },
-  "files": ["dist/*"],
+  "files": [
+    "dist/*"
+  ],
   "engines": {
     "node": ">=18"
   },
@@ -26,8 +28,13 @@
     "prepublish": "npm run build"
   },
   "tsup": {
-    "entry": ["src/index.ts"],
-    "format": ["esm", "cjs"],
+    "entry": [
+      "src/index.ts"
+    ],
+    "format": [
+      "esm",
+      "cjs"
+    ],
     "dts": true,
     "sourcemap": true,
     "clean": true,
@@ -41,7 +48,7 @@
     ]
   },
   "dependencies": {
-    "@weaverse/react": "3.2.7",
+    "@weaverse/react": "3.2.8",
     "react-error-boundary": "^4.0.13"
   },
   "peerDependencies": {

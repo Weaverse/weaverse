@@ -2,7 +2,7 @@
   "name": "@weaverse/shopify",
   "author": "Weaverse Team",
   "description": "Weaverse Components for Shopify Online Store 2.0 Section builder",
-  "version": "3.2.7",
+  "version": "3.2.8",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -15,7 +15,9 @@
     "url": "git+https://github.com/Weaverse/weaverse.git",
     "directory": "packages/shopify"
   },
-  "files": ["dist/*"],
+  "files": [
+    "dist/*"
+  ],
   "engines": {
     "node": ">=18"
   },
@@ -26,8 +28,13 @@
     "prepublish": "npm run build"
   },
   "tsup": {
-    "entry": ["src/index.ts"],
-    "format": ["esm", "cjs"],
+    "entry": [
+      "src/index.ts"
+    ],
+    "format": [
+      "esm",
+      "cjs"
+    ],
     "dts": true,
     "sourcemap": true,
     "clean": true,
@@ -47,7 +54,7 @@
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.1",
     "@stitches/react": "^1.2.8",
-    "@weaverse/react": "3.2.7",
+    "@weaverse/react": "3.2.8",
     "keen-slider": "^6.8.6"
   }
 }
