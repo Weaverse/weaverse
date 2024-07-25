@@ -34,7 +34,7 @@
       "a11y": {
         "noSvgWithoutTitle": "warn",
         "useMediaCaption": "warn",
-        "useKeyWithClickEvents": "warn"
+        "useKeyWithClickEvents": "off"
       }
     }
   },

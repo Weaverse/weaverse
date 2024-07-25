@@ -88,7 +88,7 @@ export class WeaverseClient {
         const res = await fetch(url, reqInit)
         return await res.json<T>()
       } catch (err) {
-        throw new Error(err)
+        throw new Error(`Failed to fetch data from ${url}`, { cause: err })
       }
     }
     let res = this.withCache(cacheKey, strategy, async () => {
@@ -102,7 +102,7 @@ export class WeaverseClient {
       if (!response.ok) {
         let error = await response.text()
         let { status, statusText } = response
-        throw new Error(`${status} ${statusText} ${error}`)
+        throw new Error(`${status} ${statusText} ${error}`, { cause: error })
       }
       return await response.json<T>()
     })
@@ -117,6 +117,7 @@ export class WeaverseClient {
         throw new Error('Missing Weaverse projectId!')
       }
       let url = `${weaverseHost}/${API}/project_configs`
+      // biome-ignore lint/suspicious/noImplicitAnyLet: <explanation>
       let res
       let body = JSON.stringify({ isDesignMode, projectId })
       if (isDesignMode) {
