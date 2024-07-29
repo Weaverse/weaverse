@@ -2,7 +2,7 @@
   "name": "@weaverse/react",
   "author": "Weaverse Team",
   "description": "React bindings for Weaverse",
-  "version": "3.2.9",
+  "version": "3.3.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -39,7 +39,7 @@
     "react-dom": ">=18"
   },
   "dependencies": {
-    "@weaverse/core": "3.2.9",
+    "@weaverse/core": "3.3.0",
     "clsx": "^2.1.1"
   }
 }
