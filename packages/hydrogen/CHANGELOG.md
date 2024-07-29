@@ -1,5 +1,15 @@
 # @weaverse/hydrogen
 
+## 3.3.0
+
+### Minor Changes
+
+- Fix Hydrogen Component loader data
+
+### Patch Changes
+
+- @weaverse/react@3.3.0
+
 ## 3.2.9
 
 ### Patch Changes
