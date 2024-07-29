@@ -1,6 +1,6 @@
 import { Await, useLoaderData } from '@remix-run/react'
 import { WeaverseRoot } from '@weaverse/react'
-import { Suspense, memo } from 'react'
+import { type ComponentType, type JSX, Suspense, memo } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { WeaverseEffect } from '~/Effect'
@@ -62,8 +62,8 @@ function RenderRoot(props: {
   )
 }
 
-export function withWeaverse(Component: React.ComponentType<any>) {
-  return (props: React.JSX.IntrinsicAttributes) => {
+export function withWeaverse(Component: ComponentType<any>) {
+  return (props: JSX.IntrinsicAttributes) => {
     let { settings } = useThemeSettingsStore()
     return (
       <ThemeSettingsProvider.Provider value={settings}>
