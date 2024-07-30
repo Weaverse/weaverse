@@ -97,9 +97,8 @@ export function resizeShopifyImage(imageURL: string, size: string): string {
     if (size === 'original') {
       return imageURL
     }
-    let matches = imageURL.match(/(.*\/[\w-_.]+)\.(\w{2,4})/)
-    // @ts-ignore
-    return `${matches[1]}_${size}.${matches[2]}`
+    let [, path, ext] = imageURL.match(/(.*\/[\w-_.]+)\.(\w{2,4})/)
+    return `${path}_${size}.${ext}`
   } catch (e) {
     return imageURL
   }
