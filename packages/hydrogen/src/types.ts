@@ -325,6 +325,7 @@ export type WeaverseProduct = WeaverseResourcePickerData
 export type WeaverseCollection = WeaverseResourcePickerData
 export type WeaverseBlog = WeaverseResourcePickerData
 export type WeaverseArticle = WeaverseResourcePickerData
+export type WeaverseMetaObject = WeaverseResourcePickerData
 
 declare global {
   interface Window {
