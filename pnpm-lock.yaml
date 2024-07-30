@@ -94,7 +94,7 @@ importers:
         specifier: '>=2023'
         version: 2024.7.2(@remix-run/react@2.10.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@remix-run/server-runtime@2.10.3(typescript@5.5.4))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.3.4(@types/node@20.14.10))
       '@weaverse/react':
-        specifier: 3.2.9
+        specifier: 3.3.1
         version: link:../react
       react:
         specifier: '>=18'
@@ -116,7 +116,7 @@ importers:
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: 3.2.9
+        specifier: 3.3.1
         version: link:../core
       clsx:
         specifier: ^2.1.1
@@ -137,7 +137,7 @@ importers:
         specifier: ^1.2.8
         version: 1.2.8(react@18.3.1)
       '@weaverse/react':
-        specifier: 3.2.9
+        specifier: 3.3.1
         version: link:../react
       keen-slider:
         specifier: ^6.8.6
@@ -148,158 +148,6 @@ importers:
       react-dom:
         specifier: '>=18'
         version: 18.3.1(react@18.3.1)
-
-  templates/pilot:
-    dependencies:
-      '@fontsource/poppins':
-        specifier: 5.0.14
-        version: 5.0.14
-      '@graphql-codegen/cli':
-        specifier: 5.0.2
-        version: 5.0.2(@types/node@20.14.10)(enquirer@2.4.1)(graphql@16.9.0)(typescript@5.5.4)
-      '@headlessui/react':
-        specifier: 2.1.2
-        version: 2.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@radix-ui/react-checkbox':
-        specifier: 1.1.1
-        version: 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@remix-run/react':
-        specifier: 2.10.3
-        version: 2.10.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4)
-      '@remix-run/server-runtime':
-        specifier: 2.10.3
-        version: 2.10.3(typescript@5.5.4)
-      '@shopify/cli':
-        specifier: ^3.64.0
-        version: 3.64.1
-      '@shopify/hydrogen':
-        specifier: 2024.7.2
-        version: 2024.7.2(@remix-run/react@2.10.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@remix-run/server-runtime@2.10.3(typescript@5.5.4))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.3.4(@types/node@20.14.10))
-      '@shopify/remix-oxygen':
-        specifier: ^2.0.5
-        version: 2.0.5(@remix-run/server-runtime@2.10.3(typescript@5.5.4))(@shopify/oxygen-workers-types@4.1.4)
-      '@weaverse/hydrogen':
-        specifier: ^3.2.9
-        version: link:../../packages/hydrogen
-      class-variance-authority:
-        specifier: 0.7.0
-        version: 0.7.0
-      clsx:
-        specifier: 2.1.1
-        version: 2.1.1
-      cross-env:
-        specifier: 7.0.3
-        version: 7.0.3
-      graphql:
-        specifier: 16.9.0
-        version: 16.9.0
-      graphql-tag:
-        specifier: 2.12.6
-        version: 2.12.6(graphql@16.9.0)
-      isbot:
-        specifier: 5.1.13
-        version: 5.1.13
-      lucide-react:
-        specifier: 0.414.0
-        version: 0.414.0(react@18.3.1)
-      react:
-        specifier: 18.3.1
-        version: 18.3.1
-      react-country-flag:
-        specifier: 3.1.0
-        version: 3.1.0(react@18.3.1)
-      react-dom:
-        specifier: 18.3.1
-        version: 18.3.1(react@18.3.1)
-      react-intersection-observer:
-        specifier: 9.13.0
-        version: 9.13.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      react-player:
-        specifier: 2.16.0
-        version: 2.16.0(react@18.3.1)
-      react-use:
-        specifier: 17.5.1
-        version: 17.5.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      schema-dts:
-        specifier: 1.1.2
-        version: 1.1.2(typescript@5.5.4)
-      swiper:
-        specifier: ^11.1.5
-        version: 11.1.5
-      tailwind-merge:
-        specifier: 2.4.0
-        version: 2.4.0
-      tiny-invariant:
-        specifier: 1.3.3
-        version: 1.3.3
-      typographic-base:
-        specifier: 1.0.4
-        version: 1.0.4
-    optionalDependencies:
-      '@esbuild/linux-x64':
-        specifier: 0.23.0
-        version: 0.23.0
-    devDependencies:
-      '@biomejs/biome':
-        specifier: ^1.8.3
-        version: 1.8.3
-      '@playwright/test':
-        specifier: 1.45.3
-        version: 1.45.3
-      '@remix-run/dev':
-        specifier: 2.10.3
-        version: 2.10.3(@remix-run/react@2.10.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@types/node@20.14.10)(ts-node@10.9.2(@types/node@20.14.10)(typescript@5.5.4))(typescript@5.5.4)(vite@5.3.4(@types/node@20.14.10))
-      '@shopify/hydrogen-codegen':
-        specifier: 0.3.1
-        version: 0.3.1(graphql@16.9.0)
-      '@shopify/mini-oxygen':
-        specifier: ^3.0.4
-        version: 3.0.4(vite@5.3.4(@types/node@20.14.10))
-      '@shopify/oxygen-workers-types':
-        specifier: 4.1.4
-        version: 4.1.4
-      '@tailwindcss/forms':
-        specifier: 0.5.7
-        version: 0.5.7(tailwindcss@3.4.6(ts-node@10.9.2(@types/node@20.14.10)(typescript@5.5.4)))
-      '@tailwindcss/typography':
-        specifier: 0.5.13
-        version: 0.5.13(tailwindcss@3.4.6(ts-node@10.9.2(@types/node@20.14.10)(typescript@5.5.4)))
-      '@total-typescript/ts-reset':
-        specifier: 0.5.1
-        version: 0.5.1
-      '@types/react':
-        specifier: 18.3.3
-        version: 18.3.3
-      '@types/react-dom':
-        specifier: 18.3.0
-        version: 18.3.0
-      '@weaverse/biome':
-        specifier: ^1.0.3
-        version: link:../../packages/biome
-      postcss:
-        specifier: 8.4.39
-        version: 8.4.39
-      postcss-import:
-        specifier: 16.1.0
-        version: 16.1.0(postcss@8.4.39)
-      postcss-preset-env:
-        specifier: 9.6.0
-        version: 9.6.0(postcss@8.4.39)
-      tailwindcss:
-        specifier: 3.4.6
-        version: 3.4.6(ts-node@10.9.2(@types/node@20.14.10)(typescript@5.5.4))
-      ts-node:
-        specifier: 10.9.2
-        version: 10.9.2(@types/node@20.14.10)(typescript@5.5.4)
-      typescript:
-        specifier: 5.5.4
-        version: 5.5.4
-      vite:
-        specifier: 5.3.4
-        version: 5.3.4(@types/node@20.14.10)
-      vite-tsconfig-paths:
-        specifier: 4.3.2
-        version: 4.3.2(typescript@5.5.4)(vite@5.3.4(@types/node@20.14.10))
 
 packages:
 
