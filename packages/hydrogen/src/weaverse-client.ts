@@ -117,8 +117,7 @@ export class WeaverseClient {
         throw new Error('Missing Weaverse projectId!')
       }
       let url = `${weaverseHost}/${API}/project_configs`
-      // biome-ignore lint/suspicious/noImplicitAnyLet: <explanation>
-      let res
+      let res: any
       let body = JSON.stringify({ isDesignMode, projectId })
       if (isDesignMode) {
         res = await fetch(url, { method: 'POST', body }).then((res) =>
@@ -217,7 +216,7 @@ export class WeaverseClient {
         let items = page.items
         page.items = await Promise.all(items.map(this.execComponentLoader))
       }
-      let data: WeaverseLoaderData = {
+      return {
         page,
         project,
         pageAssignment,
@@ -232,7 +231,6 @@ export class WeaverseClient {
           },
         },
       }
-      return data
     } catch (e) {
       // biome-ignore lint/style/noUnusedTemplateLiteral: <explanation>
       console.error(`❌ Page load failed.`, e)
@@ -242,16 +240,18 @@ export class WeaverseClient {
 
   execComponentLoader = async (item: HydrogenComponentData) => {
     let { data = {}, type, id } = item
-    let schema = this.components.find(({ schema }) => schema?.type === type)
-    let loader = schema?.loader
-    if (loader && typeof loader === 'function') {
+    let component = this.components.find(({ schema }) => schema?.type === type)
+    let loader = component?.loader
+    if (typeof loader === 'function') {
       try {
         return {
           ...item,
-          loaderData: await loader({
-            data,
-            weaverse: this,
-          }),
+          loaderData: await Promise.resolve(
+            loader({
+              data: { ...generateDataFromSchema(component.schema), ...data },
+              weaverse: this,
+            }),
+          ),
         }
       } catch (e) {
         console.warn('❌ Item loader run failed.', type, id, e)
