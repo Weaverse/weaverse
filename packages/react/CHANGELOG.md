@@ -1,5 +1,13 @@
 # @weaverse/react
 
+## 3.3.1
+
+### Patch Changes
+
+- Update metaobject input return type
+- Updated dependencies
+  - @weaverse/core@3.3.1
+
 ## 3.3.0
 
 ### Patch Changes

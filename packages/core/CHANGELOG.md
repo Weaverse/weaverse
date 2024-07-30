@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 3.3.1
+
+### Patch Changes
+
+- Update metaobject input return type
+
 ## 3.3.0
 
 ## 3.2.9
