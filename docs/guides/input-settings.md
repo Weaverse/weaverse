@@ -467,7 +467,7 @@ Here's how it works:
 **`WeaverseVideo`** type definition:
 
 ```tsx
-type WeaverseImage = {
+type WeaverseVideo = {
   id: string
   url: string
   altText: string
