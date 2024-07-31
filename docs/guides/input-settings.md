@@ -449,6 +449,48 @@ let ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>(
 export default ImageGalleryItem
 ```
 
+### `video`
+
+The **`video`** input offers merchants the ability to select or upload videos.
+
+Here's how it works:
+
+- **Media Manager**: on open, it displays the Media Manager modal with all videos from
+  the [Files page](https://help.shopify.com/en/manual/shopify-admin/productivity-tools/file-uploads#upload-a-file) of the merchant's Shopify Admin.
+
+- **Uploading Videos**: any video a merchant uploads through this input is saved to the Files page as well.
+
+- **Enhancing SEO**: merchants can edit the alt text of the videos they've uploaded.
+
+**Return**: `object` - A **`WeaverseVideo`** (type can be imported from **`@weaverse/hydrogen`** package).
+
+**`WeaverseVideo`** type definition:
+
+```tsx
+type WeaverseImage = {
+  id: string
+  url: string
+  altText: string
+  width: number
+  height: number
+  previewSrc: string
+}
+```
+
+**Example:**
+
+```tsx
+{
+  type: "video",
+  name: "video",
+  label: "Video",
+},
+```
+
+**Output:**
+
+<img alt="image_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_video_input.png?v=1722415681" width="300"/>
+
 ### `color`
 
 The **`color`** input type allows merchants to select a color using a color picker. This can be handy for design-related
