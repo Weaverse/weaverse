@@ -1,6 +1,6 @@
 ---
 title: Troubleshooting
-description: Common issues and solutions when using Weaverse Studio.
+description: Common errors or issues and solutions when using Weaverse Studio.
 publishedAt: June 26, 2024
 updatedAt: June 26, 2024
 order: 1
