@@ -7,7 +7,7 @@ order: 3
 published: true
 ---
 
-## **Deploying Your Weaverse Hydrogen Project to Vercel**
+## Deploying Your Weaverse Hydrogen Project to Vercel
 
 As a dynamic cloud platform, Vercel provides developers with robust tools for deploying, managing, and scaling their web and application projects. While it excels in deploying Next.js applications, its capabilities extend to a wide range of other application frameworks.
 
@@ -38,7 +38,7 @@ For a visual walkthrough, watch our video tutorial below:
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/gCKq5dB95uw" title="Deploying Your Weaverse Hydrogen Project to Vercel" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-## **Guided Deployment Procedure**
+## Guided Deployment Procedure
 
 ### Clone the Theme on GitHub
 
