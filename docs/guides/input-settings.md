@@ -554,6 +554,8 @@ console.log(
 
 ### `map-autocomplete`
 
+🚧 - Experimental feature, may not work as expected.
+
 The `map-autocomplete` input provides merchants with a location-based autocomplete functionality. As merchants type in
 the input, a dropdown list of suggested places appears.
 
@@ -597,7 +599,7 @@ values: `top left` | `top center` | `top right` | `center left` | `center center
 
 **Output:**
 
-<img alt="position_attr" src="https://downloads.intercomcdn.com/i/o/855185102/10d0807cd47ee9e9e60bc1d6/image.png" width="300"/>
+<img alt="position_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_position_input.png?v=1722416367" width="300"/>
 
 ## Resource Picker Inputs
 
