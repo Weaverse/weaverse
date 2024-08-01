@@ -802,7 +802,7 @@ The `metaobject` input provides merchants with an intuitive search and select in
 
 **Output:**
 
-<img alt="metaobject_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/metaobject_picker.png?v=1719394035" width="300"/>
+<img alt="metaobject_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_metaobject_input.png?v=1722477096" width="300"/>
 
 When selecting a metaobject definition, the preview will automatically revalidate and run the `loader` function.
 The `loader` function will read the `type` of the selected metaobject definition and fetch all the metaobject data from the Storefront API. Here's an example of how to use the `loader` function:
