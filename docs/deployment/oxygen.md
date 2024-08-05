@@ -7,13 +7,13 @@ order: 1
 published: true
 ---
 
-## **Deploying Your Weaverse Hydrogen Project to Shopify Oxygen**
+## Deploying Your Weaverse Hydrogen Project to Shopify Oxygen
 
 Enhance your e-commerce presence by deploying your Weaverse Hydrogen project to Shopify Oxygen. This guide aligns with the **[official Oxygen documentation](https://shopify.dev/docs/custom-storefronts/oxygen)** to streamline your deployment process.
 
 <iframe src="https://share.descript.com/embed/zWZHewI89tJ?transcript=false" frameBorder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowFullScreen></iframe>
 
-## **Deployment Steps**
+## Deployment Steps
 
 ### Install the Hydrogen App
 
@@ -60,7 +60,7 @@ After the GitHub Action completes:
 
 _Additional Note_: For Shopify Starter or Development plans, alternative deployment methods like [Vercel](/docs/deployment/vercel) are required, as the Hydrogen app cannot deploy to Oxygen.
 
-## **Additional Resources**
+## Additional Resources
 
 - [Shopify Oxygen documentation](https://shopify.dev/docs/custom-storefronts/oxygen)
 - [Environment Variables](/docs/guides/environment-variables)

@@ -7,11 +7,11 @@ order: 0
 published: true
 ---
 
-## **Overview**
+## Overview
 
 For a fluid and effective development journey with Weaverse Hydrogen, meeting specific system prerequisites is essential. This checklist is designed to help you prepare adequately and start your project on a strong foundation.
 
-## **Initial Setup**
+## Initial Setup
 
 Before embarking on your adventure with Weaverse Hydrogen theme development, ensure that you have:
 
@@ -23,7 +23,7 @@ Before embarking on your adventure with Weaverse Hydrogen theme development, ens
 
 Missed a step? Circle back to our **[Getting Started](/docs/hydrogen/getting-started)** guide for guidance.
 
-## **Shopify Essentials**
+## Shopify Essentials
 
 Your toolbox should include:
 
@@ -31,7 +31,7 @@ Your toolbox should include:
 
 - **Foundational Knowledge**: A comfortable grasp of Shopify app and theme development is beneficial.
 
-## **Node.js and npm**
+## Node.js and npm
 
 Your development environment should be equipped with:
 
@@ -39,7 +39,7 @@ Your development environment should be equipped with:
 
 - **npm** (Node Package Manager): Typically comes with Node.js. Make sure it's version `10.x` or later.
 
-## **Web Browsers**
+## Web Browsers
 
 To optimize your development and testing experience, we recommend using the latest versions of the following [Chrome-based browsers](https://www.google.com/search?q=chrome+based+web+browsers):
 
@@ -49,13 +49,13 @@ To optimize your development and testing experience, we recommend using the late
 
 - **Arc**
 
-## **Integrated Development Environment (IDE)**
+## Integrated Development Environment (IDE)
 
 Our suggestion for a seamless coding experience:
 
 - **Visual Studio Code** ([VSCode](https://code.visualstudio.com/)): A popular choice among developers, VSCode boasts a plethora of extensions and a supportive community. Enhance your Weaverse development with the [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) extension.
 
-## **Conclusion**
+## Conclusion
 
 Now that your environment is primed, you're ready to dive into Weaverse Hydrogen theme development. Up next, delve into the [Weaverse Hydrogen Project Structure](https://weaverse.io/docs/guides/8321058-project-structure) to further your journey.
 

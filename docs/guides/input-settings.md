@@ -47,15 +47,15 @@ Here's a breakdown of the available attributes in an input setting:
 
 | Attribute          | Type                                                 | Description                                                                                                           | Required |
 | ------------------ | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | -------- |
-| `type`             | `InputType`                                          | Specifies the kind of UI control the merchant will interact with.                                                     | ✅       |
-| `name`             | `string`                                             | The key of the value in the component's data. E.g., "title" binds to `component.data.title`.                          | ✅       |
-| `defaultValue`     | `string` \| `number` \| `boolean` \| `WeaverseImage` | Sets initial values for inputs and initial data for the component.                                                    | ➖       |
-| `label`            | `string`                                             | A label for the input to show in the Weaverse Studio's Inspector                                                      | ➖       |
-| `placeholder`      | `string`                                             | A placeholder text to show when the input is empty.                                                                   | ➖       |
-| `configs`          | `AdditionalInputConfigs`                             | Additional options for inputs require more configuration. (Available for `select`, `toggle-group`, and `range` input) | ➖       |
-| `condition`        | `string`                                             | Only displays the input if the specified condition matches.                                                           | ➖       |
-| `helpText`         | `string`                                             | Provides additional information or instructions for the input setting (**HTML** format supported).                    | ➖       |
-| `shouldRevalidate` | `boolean`                                            | Automatically revalidate the page when the input changes to apply new data from `loader` function.                    | ➖       |
+| `type`             | `InputType`                                          | Specifies the kind of UI control the merchant will interact with.                                                     | ✅        |
+| `name`             | `string`                                             | The key of the value in the component's data. E.g., "title" binds to `component.data.title`.                          | ✅        |
+| `defaultValue`     | `string` \| `number` \| `boolean` \| `WeaverseImage` | Sets initial values for inputs and initial data for the component.                                                    | ➖        |
+| `label`            | `string`                                             | A label for the input to show in the Weaverse Studio's Inspector                                                      | ➖        |
+| `placeholder`      | `string`                                             | A placeholder text to show when the input is empty.                                                                   | ➖        |
+| `configs`          | `AdditionalInputConfigs`                             | Additional options for inputs require more configuration. (Available for `select`, `toggle-group`, and `range` input) | ➖        |
+| `condition`        | `string`                                             | Only displays the input if the specified condition matches.                                                           | ➖        |
+| `helpText`         | `string`                                             | Provides additional information or instructions for the input setting (**HTML** format supported).                    | ➖        |
+| `shouldRevalidate` | `boolean`                                            | Automatically revalidate the page when the input changes to apply new data from `loader` function.                    | ➖        |
 
 - `condition`
 
@@ -205,10 +205,10 @@ percentages, or customizing display sizes.
 
 | Property | Type     | Description                                                                                   | Required |
 | -------- | -------- | --------------------------------------------------------------------------------------------- | -------- |
-| `min`    | `number` | The minimum value the range input can have.                                                   | ✅       |
-| `max`    | `number` | The maximum value the range input can have.                                                   | ✅       |
-| `step`   | `number` | The intervals between values in the range.                                                    | ✅       |
-| `unit`   | `string` | A unit of measure displayed next to the value (e.g., `px`, `%`). Purely for display purposes. | ➖       |
+| `min`    | `number` | The minimum value the range input can have.                                                   | ✅        |
+| `max`    | `number` | The maximum value the range input can have.                                                   | ✅        |
+| `step`   | `number` | The intervals between values in the range.                                                    | ✅        |
+| `unit`   | `string` | A unit of measure displayed next to the value (e.g., `px`, `%`). Purely for display purposes. | ➖        |
 
 ### `select`
 
@@ -245,9 +245,9 @@ The select input provides a dropdown list, allowing merchants to select one opti
 
 | Property  | Type                | Description                                                     | Required |
 | --------- | ------------------- | --------------------------------------------------------------- | -------- |
-| `options` | `Array<OptionType>` | An array containing all options. Each option must be an object. | ✅       |
-| ↳ `value` | `string`            | A unique value for the option.                                  | ✅       |
-| ↳ `label` | `string`            | Displayed text for the option.                                  | ✅       |
+| `options` | `Array<OptionType>` | An array containing all options. Each option must be an object. | ✅        |
+| ↳ `value` | `string`            | A unique value for the option.                                  | ✅        |
+| ↳ `label` | `string`            | Displayed text for the option.                                  | ✅        |
 
 ### `toggle-group`
 
@@ -309,11 +309,11 @@ process.
 
 | Property   | Type                | Description                                                                                                                                | Required |
 | ---------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------- |
-| `options`  | `Array<OptionType>` | An array of **`OptionType`** objects. See below for the details of each property on an option.                                             | ✅       |
-| ↳ `value`  | `string`            | A unique value for the option.                                                                                                             | ✅       |
-| ↳ `label`  | `string`            | Displayed text for the option.                                                                                                             | ✅       |
-| ↳ `icon`   | `string`            | Displayed icon for the option. When an **`icon`** is set, the **`label`** will act as its `tooltip`.                                       | ➖       |
-| ↳ `weight` | `string`            | An optional weight for the icon, which can be one of the following values: `thin` \| `light` \| `regular` \| `bold` \| `fill` \| `duotone` | ➖       |
+| `options`  | `Array<OptionType>` | An array of **`OptionType`** objects. See below for the details of each property on an option.                                             | ✅        |
+| ↳ `value`  | `string`            | A unique value for the option.                                                                                                             | ✅        |
+| ↳ `label`  | `string`            | Displayed text for the option.                                                                                                             | ✅        |
+| ↳ `icon`   | `string`            | Displayed icon for the option. When an **`icon`** is set, the **`label`** will act as its `tooltip`.                                       | ➖        |
+| ↳ `weight` | `string`            | An optional weight for the icon, which can be one of the following values: `thin` \| `light` \| `regular` \| `bold` \| `fill` \| `duotone` | ➖        |
 
 💡 **Note for icons:**
 
@@ -449,6 +449,48 @@ let ImageGalleryItem = forwardRef<HTMLImageElement, ImageGalleryItemProps>(
 export default ImageGalleryItem
 ```
 
+### `video`
+
+The **`video`** input offers merchants the ability to select or upload videos.
+
+Here's how it works:
+
+- **Media Manager**: on open, it displays the Media Manager modal with all videos from
+  the [Files page](https://help.shopify.com/en/manual/shopify-admin/productivity-tools/file-uploads#upload-a-file) of the merchant's Shopify Admin.
+
+- **Uploading Videos**: any video a merchant uploads through this input is saved to the Files page as well.
+
+- **Enhancing SEO**: merchants can edit the alt text of the videos they've uploaded.
+
+**Return**: `object` - A **`WeaverseVideo`** (type can be imported from **`@weaverse/hydrogen`** package).
+
+**`WeaverseVideo`** type definition:
+
+```tsx
+type WeaverseVideo = {
+  id: string
+  url: string
+  altText: string
+  width: number
+  height: number
+  previewSrc: string
+}
+```
+
+**Example:**
+
+```tsx
+{
+  type: "video",
+  name: "video",
+  label: "Video",
+},
+```
+
+**Output:**
+
+<img alt="image_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_video_input.png?v=1722415681" width="300"/>
+
 ### `color`
 
 The **`color`** input type allows merchants to select a color using a color picker. This can be handy for design-related
@@ -512,6 +554,8 @@ console.log(
 
 ### `map-autocomplete`
 
+🚧 - Experimental feature, may not work as expected.
+
 The `map-autocomplete` input provides merchants with a location-based autocomplete functionality. As merchants type in
 the input, a dropdown list of suggested places appears.
 
@@ -555,7 +599,7 @@ values: `top left` | `top center` | `top right` | `center left` | `center center
 
 **Output:**
 
-<img alt="position_attr" src="https://downloads.intercomcdn.com/i/o/855185102/10d0807cd47ee9e9e60bc1d6/image.png" width="300"/>
+<img alt="position_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_position_input.png?v=1722416367" width="300"/>
 
 ## Resource Picker Inputs
 
@@ -744,7 +788,7 @@ Similar to the `product` input, the preview will automatically revalidate and ru
 
 The `metaobject` input provides merchants with an intuitive search and select interface to choose a specific metaobject definition from their store.
 
-**Return:** `object` **-** `{type: string}` - The selected metaobject definition.
+**Return:** `object` **-** A `WeaverseMetaobject` (type can be imported from `@weaverse/hydrogen` package).
 
 **Example:**
 
@@ -752,38 +796,39 @@ The `metaobject` input provides merchants with an intuitive search and select in
 {
   label: "Select metaobject definition",
   type: "metaobject",
-  name: "metaDemo"
+  name: "ourTeam"
 }
 ```
 
 **Output:**
 
-<img alt="metaobject_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/metaobject_picker.png?v=1719394035" width="300"/>
+<img alt="metaobject_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_metaobject_input.png?v=1722477096" width="300"/>
 
 When selecting a metaobject definition, the preview will automatically revalidate and run the `loader` function.
 The `loader` function will read the `type` of the selected metaobject definition and fetch all the metaobject data from the Storefront API. Here's an example of how to use the `loader` function:
 
 ```tsx
-// <root>/app/sections/meta-demo.tsx
+import type { ComponentLoaderArgs, WeaverseMetaObject } from '@weaverse/hydrogen'
 
-import type { ComponentLoaderArgs } from '@weaverse/hydrogen'
+type OurTeamData = {
+  metaobject: WeaverseMetaObject;
+  membersCount: number;
+};
 
-export let loader = async (args: ComponentLoaderArgs) => {
-  let { weaverse, data } = args
-  let { storefront } = weaverse
-  if (!data.metaDemo) {
-    return null
+export let loader = async (args: ComponentLoaderArgs<OurTeamData>) => {
+  let { weaverse, data } = args;
+  let { storefront } = weaverse;
+  let { metaobject, membersCount } = data;
+  if (metaobject) {
+    return await storefront.query<OurTeamQuery>(OUR_TEAM_QUERY, {
+      variables: {
+        type: metaobject.handle,
+        first: membersCount,
+      },
+    });
   }
-  let { metaobjects } = await storefront.query(METAOBJECTS_QUERY, {
-    variables: {
-      type: data.metaDemo.type,
-      first: 10,
-    },
-  })
-  return {
-    metaDemo: metaobjects.nodes,
-  }
-}
+  return null;
+};
 ```
 
 ## Querying Storefront Data

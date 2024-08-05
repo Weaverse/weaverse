@@ -44,7 +44,7 @@ After project creation, dive into the theme editor to customize your theme, from
 
 To kickstart your local development with the Weaverse Hydrogen project, there are several methods to clone or set up the project on your local machine. Here's how you can proceed with the Pilot theme, available at: [Pilot Theme GitHub Repository](https://github.com/weaverse/pilot).
 
-#### **Method 1: Using Weaverse CLI**
+#### Method 1: Using Weaverse CLI
 
 The Weaverse CLI simplifies the setup process by configuring the project directly in your workspace.
 
@@ -54,7 +54,7 @@ The Weaverse CLI simplifies the setup process by configuring the project directl
    ```
    Replace `<your-project-id>` and `<your-project-name>` with your project's actual ID and name. This will set up the Pilot theme in the specified directory.
 
-#### **Method 2: Cloning from GitHub**
+#### Method 2: Cloning from GitHub
 
 Directly cloning the GitHub repository allows you to work with the latest version of the Pilot theme.
 
@@ -64,14 +64,14 @@ Directly cloning the GitHub repository allows you to work with the latest versio
    ```
    Substitute `<your-project-name>` with the desired name for your project directory.
 
-#### **Method 3: Downloading and Extracting ZIP**
+#### Method 3: Downloading and Extracting ZIP
 
 For those who prefer not to use Git, downloading the project as a ZIP file is a straightforward alternative.
 
 1. **Download ZIP**: Navigate to the [Pilot theme's GitHub page](https://github.com/weaverse/pilot) and click the "Code" dropdown button, then select "Download ZIP".
 2. **Extract Files**: After downloading, extract the ZIP file into your preferred project location.
 
-#### **Method 4: Using GitHub as a Template**
+#### Method 4: Using GitHub as a Template
 
 GitHub's repository template feature offers an easy way to create a new repository based on the Pilot theme.
 
@@ -82,7 +82,7 @@ GitHub's repository template feature offers an easy way to create a new reposito
    ```
    Replace `<your-new-repository-url>` with the URL of your newly created repository.
 
-### **Next Steps for Local Development Setup**
+### Next Steps for Local Development Setup
 
 After selecting one of the setup methods for your project, follow these steps to get your local development environment ready, ensuring to properly configure environment variables for a smooth workflow:
 
@@ -287,7 +287,7 @@ Upon completion, you should be able to add and preview the `UserProfiles` sectio
 
 Shopify MetaObjects offer a powerful way to add custom data to your Shopify store, enabling you to store additional information beyond the standard fields provided by Shopify. This feature is particularly useful for themes and apps that require custom data fields for products, customers, and other resources.
 
-#### **Creating a MetaObject for User Profiles**
+#### Creating a MetaObject for User Profiles
 
 To incorporate custom data for user profiles in your Weaverse Hydrogen project, you need to define a MetaObject in Shopify Admin. Here's how to set up a `UserProfile` MetaObject:
 
@@ -308,7 +308,7 @@ To incorporate custom data for user profiles in your Weaverse Hydrogen project, 
 
 4. **Save and Apply Changes**: After defining the fields, save the MetaObject definition and apply it to your store.
 
-### **Adding Sample Entries to UserProfile MetaObject**
+### Adding Sample Entries to UserProfile MetaObject
 
 1. **Access Shopify Admin**: Go to `Settings` > `Custom data`.
 

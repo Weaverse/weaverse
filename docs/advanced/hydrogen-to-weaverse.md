@@ -154,7 +154,7 @@ export function WeaverseContent() {
 
 Once you've set up the necessary files, it's time to fully integrate Weaverse into your Hydrogen project:
 
-### **Integrating weaverse in Remix's Global Context**
+### Integrating weaverse in Remix's Global Context
 
 In your **server.ts** file, incorporate **weaverse** into Remix's global context. This is done by defining **weaverse** in the fetch handler of Remix, ensuring it's accessible throughout your application. This step is crucial for making sure Weaverse functions correctly within your project.
 

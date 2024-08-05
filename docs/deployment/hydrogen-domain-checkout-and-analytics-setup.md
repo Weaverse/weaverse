@@ -10,7 +10,7 @@ published: true
 This article provides a comprehensive guide to setting up your custom domain and analytics for your Shopify Hydrogen project. We will also show you how to redirect traffic from your old native Shopify store to your new Hydrogen store. Before proceeding, ensure your Hydrogen storefront is deployed via Oxygen by following [instructions](/docs/deployment/oxygen).
 ![Deployed and Published Hydrogen Project](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_hydrogen_deployed.png?v=1713692590)
 
-## **Setting Up Your Custom Domain**
+## Setting Up Your Custom Domain
 
 Navigate to your Shopify store's admin panel, then go to Settings > Domains. Here, you can add your custom domain by clicking on **Connect existing domain** or **Buy new domain**.
 For reference, I already own the domain `weaverse.dev` and will connect it to my Hydrogen store.
@@ -34,7 +34,7 @@ Your Hydrogen storefront should now be accessible via your custom domain.
 The final step is to set your domain type to **Primary domain** to make it the default domain for your store.
 ![Shopify Primary Domain](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/domain_type.png?v=1713695844)
 
-## **Redirect Traffic from Liquid Storefront to Hydrogen**
+## Redirect Traffic from Liquid Storefront to Hydrogen
 
 To redirect traffic from your old Shopify Liquid storefront to the new Hydrogen store, follow these steps:
 
@@ -44,7 +44,7 @@ To redirect traffic from your old Shopify Liquid storefront to the new Hydrogen 
 - Save and publish the changes.
   ![Hydrogen Redirect Theme Setup](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/hydrogen_redirect_theme_setup.png?v=1713694951)
 
-## **Setup Checkout Domain**
+## Setup Checkout Domain
 
 While your Hydrogen store manages the storefront, the checkout process is still handled by Shopify (Liquid). To ensure a seamless checkout experience that matches your custom domain:
 
@@ -55,7 +55,7 @@ While your Hydrogen store manages the storefront, the checkout process is still 
 
 I recommend using the `www` subdomain for checkout to maintain a consistent URL format like `yourdomain.com`. Alternatively, you can use subdomains such as `checkout` or `buy` if you prefer.
 
-## **Setting Up Cookie Banner and Analytics**
+## Setting Up Cookie Banner and Analytics
 
 Following the [Hydrogen April 2024 updates](https://hydrogen.shopify.dev/update/april-2024), Shopify's Hydrogen now supports the Native Cookie Banner and Analytics. If your Hydrogen project has not been updated, please follow [these instructions](https://github.com/Shopify/hydrogen/tree/main/examples/gtm#1-enable-customer-privacy--cookie-consent-banner) to upgrade.
 
@@ -68,7 +68,7 @@ The [Weaverse Hydrogen theme](https://github.com/Weaverse/pilot/tree/main) has b
 After redeployment, the cookie banner and analytics will be active on your Hydrogen store.
 ![Hydrogen Cookie Banner and Analytics](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/hydrogen_cookie_banner_activated.jpg?v=1713697054)
 
-### **Optional: Google Tags Manager Integration**
+### Optional: Google Tags Manager Integration
 
 The Weaverse Hydrogen theme includes integration with Google Tags Manager for enhanced tracking and analytics. To activate this feature, follow these steps:
 
