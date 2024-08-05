@@ -34,4 +34,18 @@ export function useStudio(weaverse: WeaverseHydrogen) {
         .catch(console.error)
     }
   }, [pathname, search, navigation.state])
+  usePixel(weaverse)
+}
+
+
+export function usePixel(context: WeaverseHydrogen) {
+  let { projectId, pageId, weaverseHost, isDesignMode } = context
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (!projectId || !pageId || !weaverseHost || isDesignMode) return
+    let url = `${weaverseHost}/api/public/px`
+    let img = new Image()
+    img.onload = () => {}
+    img.src = `${url}?projectId=${projectId}&pageId=${pageId}`
+  }, [])
 }

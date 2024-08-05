@@ -14,7 +14,7 @@
     "build": "turbo run build --filter=./packages/*",
     "build:graph": "turbo run build --graph=repo-graph.svg",
     "prepare": "npm run build",
-    "postinstall": "lefthook install -f",
+    "postinstall": "lefthook install",
     "changeset": "changeset",
     "typecheck": "turbo typecheck --parallel",
     "biome": "biome check --diagnostic-level=error",
