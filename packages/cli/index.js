@@ -98,7 +98,9 @@ Options:
     if (template) {
       const outputPath = `./${toKebabCase(argv['project-name'])}`
 
-      await downloadAndExtractTemplate(template, outputPath)
+      await downloadAndExtractTemplate(template, outputPath).catch(
+        console.error,
+      )
       await createEnvFile(outputPath, argv['project-id'])
 
       if (!argv['no-install']) {
