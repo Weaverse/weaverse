@@ -1,6 +1,6 @@
+import type { HydrogenEnv } from '@shopify/hydrogen'
 import type {
   HydrogenComponentSchema,
-  HydrogenThemeEnv,
   HydrogenThemeSchema,
   WeaverseProjectConfigs,
   WeaverseStudioQueries,
@@ -21,7 +21,7 @@ export function getRequestQueries<T = Record<string, string | boolean>>(
 
 export function getWeaverseConfigs(
   request: Request,
-  env: HydrogenThemeEnv,
+  env: HydrogenEnv,
 ): WeaverseProjectConfigs {
   let queries = getRequestQueries<WeaverseStudioQueries>(request)
   let {

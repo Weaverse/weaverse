@@ -3,7 +3,7 @@
 /// <reference types="@shopify/oxygen-workers-types" />
 
 import type { NavigateFunction } from '@remix-run/react'
-import type { I18nBase, Storefront } from '@shopify/hydrogen'
+import type { HydrogenContext, I18nBase } from '@shopify/hydrogen'
 import type {
   CountryCode,
   CurrencyCode,
@@ -126,19 +126,8 @@ export type WeaverseLoaderRequestInfo = {
   i18n: I18nBase
 }
 
-export type WeaverseStorefrontData = {
-  id?: string
-  rootId: string
-  name: string
-  items: HydrogenComponentData[]
-}
-
 export type HydrogenThemeSettings = {
   [key: string]: any
-}
-
-export type HydrogenProjectConfig = {
-  theme: HydrogenThemeSettings
 }
 
 export type HydrogenProjectType = {
@@ -146,11 +135,6 @@ export type HydrogenProjectType = {
   weaverseShopId: string
   name: string
   [key: string]: any
-}
-
-export type WeaverseThemeConfigs = {
-  schema: HydrogenThemeSchema
-  countries: Localizations
 }
 
 export type WeaverseInternal = {
@@ -282,29 +266,12 @@ export type FetchProjectPayload = {
   error?: string
 }
 
-export type HydrogenThemeEnv = {
-  WEAVERSE_PROJECT_ID: string
-  WEAVERSE_API_KEY: string
-  WEAVERSE_HOST?: string
-  PUBLIC_STORE_DOMAIN?: string
-  PUBLIC_STOREFRONT_API_TOKEN?: string
-  SESSION_SECRET?: string
-  PRIVATE_STOREFRONT_API_TOKEN: string
-  PUBLIC_STOREFRONT_ID: string
-  PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID: string
-  PUBLIC_CUSTOMER_ACCOUNT_API_URL: string
-}
-export type CreateWeaverseClientArgs = {
-  request: Request
-  cache: Cache
-  waitUntil: ExecutionContext['waitUntil']
-  env: HydrogenThemeEnv
-  storefront: Storefront
-}
-export type WeaverseClientArgs = CreateWeaverseClientArgs & {
+export type WeaverseClientArgs = HydrogenContext & {
   components: HydrogenComponent[]
   countries?: Localizations
   themeSchema: HydrogenThemeSchema
+  request: Request
+  cache: Cache
 }
 
 export type FetchWithCacheOptions = RequestInit & {
@@ -343,5 +310,12 @@ declare global {
 declare module '@shopify/remix-oxygen' {
   export interface AppLoadContext {
     weaverse: WeaverseClient
+  }
+}
+declare module '@shopify/hydrogen' {
+  interface HydrogenEnv {
+    WEAVERSE_PROJECT_ID: string
+    WEAVERSE_HOST: string
+    WEAVERSE_API_KEY: string
   }
 }
