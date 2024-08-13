@@ -206,3 +206,5 @@ export class Weaverse extends EventEmitter {
     this.initProject()
   }
 }
+
+export { EventEmitter }

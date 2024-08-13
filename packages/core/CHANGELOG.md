@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 3.4.0
+
+### Minor Changes
+
+- Update using latest Shopify Hydrogen API
+
 ## 3.3.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @weaverse/cli
 
+## 1.3.0
+
+### Minor Changes
+
+- Update using latest Shopify Hydrogen API
+
 ## 1.2.0
 
 ### Minor Changes
