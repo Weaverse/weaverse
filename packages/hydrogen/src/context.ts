@@ -27,7 +27,11 @@ function createCachedWeaverseInstance(
   if (isBrowser) {
     window.__weaverses = window.__weaverses || {}
     let weaverse = window.__weaverses[params.pageId]
-    if (!weaverse) {
+    if (
+      !weaverse ||
+      weaverse?.requestInfo?.pathname !== params.requestInfo.pathname ||
+      weaverse?.requestInfo?.search !== params.requestInfo.search
+    ) {
       weaverse = new WeaverseHydrogen(params)
       window.__weaverses[params.pageId] = weaverse
     }

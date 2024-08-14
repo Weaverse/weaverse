@@ -1,5 +1,12 @@
 # @weaverse/hydrogen
 
+## 3.4.1
+
+### Patch Changes
+
+- Fix weaverseData being cached when url search query change
+  - @weaverse/react@3.4.1
+
 ## 3.4.0
 
 ### Minor Changes
