@@ -94,7 +94,7 @@ importers:
         specifier: '>=2023'
         version: 2024.7.3(@remix-run/react@2.11.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@remix-run/server-runtime@2.11.1(typescript@5.5.4))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.4.0(@types/node@22.3.0))
       '@weaverse/react':
-        specifier: 3.4.1
+        specifier: 3.4.2
         version: link:../react
       react:
         specifier: '>=18'
@@ -116,7 +116,7 @@ importers:
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: 3.4.1
+        specifier: 3.4.2
         version: link:../core
       clsx:
         specifier: ^2.1.1
@@ -137,7 +137,7 @@ importers:
         specifier: ^1.2.8
         version: 1.2.8(react@18.3.1)
       '@weaverse/react':
-        specifier: 3.4.1
+        specifier: 3.4.2
         version: link:../react
       keen-slider:
         specifier: ^6.8.6
