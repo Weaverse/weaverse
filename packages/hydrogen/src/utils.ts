@@ -94,7 +94,7 @@ export function generateDataFromSchema({
  */
 export function resizeShopifyImage(imageURL: string, size: string): string {
   try {
-    if (size === 'original') {
+    if (!imageURL.includes('cdn.shopify.com') || size === 'original') {
       return imageURL
     }
     let [, path, ext] = imageURL.match(/(.*\/[\w-_.]+)\.(\w{2,4})/)

@@ -11,3 +11,4 @@ dist/**
 .DS_Store
 /.eslintcache
 hooks/
+package-lock.json
