@@ -1,5 +1,5 @@
 import { useRouteLoaderData } from '@remix-run/react'
-import { isBrowser } from '@weaverse/react'
+import { isBrowser, EventEmitter } from '@weaverse/react'
 import { useSyncExternalStore } from 'react'
 import type {
   HydrogenThemeSchema,
@@ -9,14 +9,14 @@ import type {
   RootRouteData,
 } from '~/types'
 
-export class ThemeSettingsStore {
+export class ThemeSettingsStore extends EventEmitter{
   settings: HydrogenThemeSettings = {}
-  listeners = new Set<() => void>()
   countries?: Localizations
   schema?: HydrogenThemeSchema
   publicEnv?: PublicEnv
 
   constructor(data: RootRouteData['weaverseTheme']) {
+    super()
     let { theme, countries, schema, publicEnv } = data || {}
     this.settings = { ...theme } || {}
     this.countries = countries
@@ -32,15 +32,9 @@ export class ThemeSettingsStore {
       ...this.settings,
       ...newSettings,
     }
-    this.emitChange()
+    this.emit(this.settings)
   }
 
-  subscribe = (listener: () => void): (() => void) => {
-    this.listeners.add(listener)
-    return () => {
-      this.listeners.delete(listener)
-    }
-  }
 
   getSnapshot = () => {
     return this.settings
@@ -50,11 +44,6 @@ export class ThemeSettingsStore {
     return this.settings
   }
 
-  emitChange = () => {
-    for (let listener of this.listeners) {
-      listener()
-    }
-  }
 }
 
 export function useThemeSettingsStore() {

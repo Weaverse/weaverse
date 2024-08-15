@@ -5,7 +5,7 @@ import { WeaverseContextProvider, WeaverseItemContext } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
 import { generateItemClassName } from './utils/css'
 
-import { useItemInstance, usePixel, useWeaverse } from '~/hooks'
+import { useItemInstance, useWeaverse } from '~/hooks'
 
 let reactVersion = Number(React.version.split('.')[0])
 
@@ -20,7 +20,6 @@ export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
   useEffect(() => {
     context.contentRootElement = rootRef.current
   }, [context])
-  usePixel(context)
 
   let eventHandlers = context?.studioBridge?.eventHandlers || {}
   let themeClass = context.stitchesInstance.theme.className

@@ -1,4 +1,8 @@
-import { createWithCache, generateCacheControlHeader } from '@shopify/hydrogen'
+import {
+  type HydrogenEnv,
+  createWithCache,
+  generateCacheControlHeader,
+} from '@shopify/hydrogen'
 import type {
   AllCacheOptions,
   FetchProjectPayload,
@@ -55,7 +59,8 @@ export class WeaverseClient {
     this.countries = countries
     this.withCache = createWithCache({ cache, waitUntil })
 
-    this.configs = getWeaverseConfigs(request, env)
+    this.configs = getWeaverseConfigs(request, env as HydrogenEnv)
+
     this.basePageConfigs = {
       projectId: this.configs.projectId,
       weaverseHost: this.configs.weaverseHost,

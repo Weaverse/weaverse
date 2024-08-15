@@ -1,5 +1,16 @@
 # @weaverse/shopify
 
+## 3.4.0
+
+### Minor Changes
+
+- Update using latest Shopify Hydrogen API
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/react@3.4.0
+
 ## 3.3.1
 
 ### Patch Changes
