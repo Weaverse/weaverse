@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 3.4.2
+
+### Patch Changes
+
+- Add swatch config types, fix weaverse cached data
+
 ## 3.4.1
 
 ## 3.4.0

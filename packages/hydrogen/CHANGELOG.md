@@ -1,5 +1,13 @@
 # @weaverse/hydrogen
 
+## 3.4.2
+
+### Patch Changes
+
+- Add swatch config types, fix weaverse cached data
+- Updated dependencies
+  - @weaverse/react@3.4.2
+
 ## 3.4.1
 
 ### Patch Changes
