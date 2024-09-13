@@ -16,7 +16,6 @@ This guide will walk you through the process of creating a custom page in Weaver
 - Setting up a custom page in Weaverse
 - Configuring the Hydrogen catch-all route
 - Customizing the page in Weaverse
-- Adding custom components to the page
 
 By the end of this guide, you will have a custom page in Weaverse that is fully customizable and responsive.
 
