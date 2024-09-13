@@ -18,7 +18,7 @@ export class ThemeSettingsStore extends EventEmitter{
   constructor(data: RootRouteData['weaverseTheme']) {
     super()
     let { theme, countries, schema, publicEnv } = data || {}
-    this.settings = { ...theme } || {}
+    this.settings = { ...theme }
     this.countries = countries
     this.schema = schema
     this.publicEnv = publicEnv

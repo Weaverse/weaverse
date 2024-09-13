@@ -25,25 +25,25 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
-    "@changesets/cli": "^2.27.7",
-    "@types/node": "22.3.0",
-    "@types/react": "18.3.3",
+    "@changesets/cli": "^2.27.8",
+    "@types/node": "22.5.4",
+    "@types/react": "18.3.5",
     "@types/react-dom": "18.3.0",
     "cross-env": "7.0.3",
-    "lefthook": "^1.7.12",
+    "lefthook": "^1.7.15",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "rimraf": "6.0.1",
     "tsup": "8.2.4",
-    "turbo": "2.0.13",
-    "typescript": "5.5.4"
+    "turbo": "2.1.1",
+    "typescript": "5.6.2"
   },
   "optionalDependencies": {
-    "@esbuild/darwin-x64": "^0.23.0",
-    "turbo-darwin-arm64": "^2.0.13"
+    "@esbuild/darwin-x64": "^0.23.1",
+    "turbo-darwin-arm64": "^2.1.1"
   },
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "pnpm@9.5.0"
+  "packageManager": "pnpm@9.10.0"
 }
