@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.9.2/schema.json",
   "linter": {
     "rules": {
       "correctness": {
@@ -35,7 +35,8 @@
         "noSvgWithoutTitle": "warn",
         "useMediaCaption": "warn",
         "useKeyWithClickEvents": "off",
-        "useButtonType": "warn"
+        "useButtonType": "warn",
+        "noLabelWithoutControl": "warn"
       }
     }
   },
