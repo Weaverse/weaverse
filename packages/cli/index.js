@@ -25,7 +25,8 @@ const downloadAndExtractTemplate = async (template, outputPath) => {
   const fetch = (await import('node-fetch')).default
   let { downloadURL, defaultDownloadFolder } = template
   const response = await fetch(downloadURL)
-  const buffer = await response.buffer()
+  const arrayBuffer = await response.arrayBuffer()
+  const buffer = Buffer.from(arrayBuffer)
   await decompress(buffer, `${outputPath}/temp`)
 
   // Move contents from temp to the root of outputPath and then remove temp
