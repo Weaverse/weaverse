@@ -57,7 +57,7 @@ export class WeaverseClient {
     this.cache = cache
     this.waitUntil = waitUntil
     this.countries = countries
-    this.withCache = createWithCache({ cache, waitUntil })
+    this.withCache = createWithCache({ cache, waitUntil, request })
 
     this.configs = getWeaverseConfigs(request, env as HydrogenEnv)
 
