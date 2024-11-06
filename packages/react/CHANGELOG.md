@@ -1,5 +1,11 @@
 # @weaverse/react
 
+## 4.0.0
+
+### Patch Changes
+
+- @weaverse/core@4.0.0
+
 ## 3.4.2
 
 ### Patch Changes

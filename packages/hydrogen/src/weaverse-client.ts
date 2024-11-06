@@ -75,7 +75,7 @@ export class WeaverseClient {
     }
   }
 
-  fetchWithCache = async <T>(
+  fetchWithCache = async <T extends object>(
     url: string,
     options: FetchWithCacheOptions = {},
   ) => {
@@ -96,21 +96,29 @@ export class WeaverseClient {
         throw new Error(`Failed to fetch data from ${url}`, { cause: err })
       }
     }
-    let res = this.withCache(cacheKey, strategy, async () => {
-      let response = await fetch(url, {
-        ...reqInit,
-        headers: {
-          'Cache-Control': generateCacheControlHeader(strategy),
-          ...reqInit.headers,
-        },
-      })
-      if (!response.ok) {
-        let error = await response.text()
-        let { status, statusText } = response
-        throw new Error(`${status} ${statusText} ${error}`, { cause: error })
-      }
-      return await response.json<T>()
-    })
+    let res = this.withCache.run(
+      {
+        cacheKey,
+        cacheStrategy: strategy,
+        // @ts-expect-error
+        shouldCacheResult: (result) => result?.data,
+      },
+      async () => {
+        let response = await fetch(url, {
+          ...reqInit,
+          headers: {
+            'Cache-Control': generateCacheControlHeader(strategy),
+            ...reqInit.headers,
+          },
+        })
+        if (!response.ok) {
+          let error = await response.text()
+          let { status, statusText } = response
+          throw new Error(`${status} ${statusText} ${error}`, { cause: error })
+        }
+        return await response.json<T>()
+      },
+    )
     return res as Promise<T>
   }
 

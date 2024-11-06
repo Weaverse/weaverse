@@ -1,5 +1,15 @@
 # @weaverse/hydrogen
 
+## 4.0.0
+
+### Major Changes
+
+- update for Shopify Hydrogen v2024.10
+
+### Patch Changes
+
+- @weaverse/react@4.0.0
+
 ## 3.4.2
 
 ### Patch Changes

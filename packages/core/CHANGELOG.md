@@ -1,5 +1,7 @@
 # @weaverse/core
 
+## 4.0.0
+
 ## 3.4.2
 
 ### Patch Changes
