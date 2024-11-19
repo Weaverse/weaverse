@@ -137,7 +137,11 @@ export class WeaverseClient {
           res.json(),
         )
       } else {
-        res = await this.fetchWithCache(url, { method: 'POST', strategy, body })
+        res = await this.fetchWithCache(url, {
+          method: 'POST',
+          strategy,
+          body,
+        })
       }
       let data: any = res || {}
       if (data?.theme && this.themeSchema?.inspector) {
