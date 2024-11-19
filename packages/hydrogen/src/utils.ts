@@ -46,8 +46,8 @@ export function getWeaverseConfigs(
       envFromProcess.WEAVERSE_PROJECT_ID ||
       '',
     weaverseHost:
-      weaverseHost ||
       WEAVERSE_HOST ||
+      weaverseHost ||
       envFromProcess.WEAVERSE_HOST ||
       'https://studio.weaverse.io',
     weaverseApiKey:
