@@ -35,9 +35,7 @@ import type { WeaverseClient } from './weaverse-client'
 import type { WeaverseHydrogen } from './index'
 export type { InputType, PositionInputValue, WeaverseImage, WeaverseVideo }
 
-export type Locale = {
-  language: LanguageCode
-  country: CountryCode
+export type Locale = I18nBase & {
   label: string
   currency: CurrencyCode
 }
@@ -237,6 +235,7 @@ export type HydrogenThemeInfo = {
 export interface HydrogenThemeSchema {
   info: HydrogenThemeInfo
   inspector: InspectorGroup[]
+  i18n?: Array<I18nBase & { label?: string }>
 }
 
 export type PageType = keyof typeof STORE_PAGES
