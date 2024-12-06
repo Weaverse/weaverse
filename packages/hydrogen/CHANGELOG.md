@@ -1,5 +1,12 @@
 # @weaverse/hydrogen
 
+## 4.0.1
+
+### Patch Changes
+
+- update localization types
+  - @weaverse/react@4.0.1
+
 ## 4.0.0
 
 ### Major Changes
