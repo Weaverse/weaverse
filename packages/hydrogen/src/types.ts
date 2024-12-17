@@ -4,11 +4,7 @@
 
 import type { NavigateFunction } from '@remix-run/react'
 import type { HydrogenContext, I18nBase } from '@shopify/hydrogen'
-import type {
-  CountryCode,
-  CurrencyCode,
-  LanguageCode,
-} from '@shopify/hydrogen/storefront-api-types'
+import type { CurrencyCode } from '@shopify/hydrogen/storefront-api-types'
 import type {
   AppLoadContext,
   LoaderFunctionArgs as RemixOxygenLoaderArgs,

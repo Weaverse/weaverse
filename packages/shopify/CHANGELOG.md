@@ -1,5 +1,16 @@
 # @weaverse/shopify
 
+## 4.1.0
+
+### Minor Changes
+
+- Update dependencies
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/react@4.1.0
+
 ## 4.0.1
 
 ### Patch Changes
