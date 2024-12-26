@@ -232,6 +232,7 @@ export interface HydrogenThemeSchema {
   info: HydrogenThemeInfo
   inspector: InspectorGroup[]
   i18n?: Array<I18nBase & { label?: string }>
+  defaultLocale?: string
 }
 
 export type PageType = keyof typeof STORE_PAGES
