@@ -62,9 +62,13 @@ After integrating the Country Selector and configuring the theme schema, use Wea
 - Click on "Create localized page" to generate a specific version for the chosen market.
 - Localized pages are independent of the default version, ensuring changes apply only to the selected locale.
 
+![Create Localized Page](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/create_localized_page.png?v=1735900595)
+
 #### c. **Revert to Default Content**
 - Access the localization settings in the top bar of Weaverse Studio.
 - Select "Reset to default" to remove the localized version and revert to the global content.
+
+![Reset to Default](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/reset_localization.png?v=1735900576)
 
 ### Benefits of Localization
 
