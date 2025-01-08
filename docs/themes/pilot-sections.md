@@ -316,13 +316,21 @@ This form allows customers to subscribe to the latest news from the store. The s
 
 1. Obtain Klaviyo API Token
 1.1. Log in to your Klaviyo account.
+
 1.2. Navigate to **Settings**:
     - Click on your account name in the bottom-left corner.
     - Select **Settings → API Keys**.
+
 1.3. Click Create Private API Key.
+
 1.4. Copy the generated API key.
+
 2. Add Env in storefront settings
+
 2.1. In Hydrogen app, select **Storefront settings**
+
 2.2. Select **Environments and variables -> Add variable**
+
 2.3. Input key: **KLAVIYO_PRIVATE_API_TOKEN**
+
 2.4. Paste the API key in value input and save.
