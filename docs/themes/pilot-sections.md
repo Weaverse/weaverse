@@ -315,6 +315,7 @@ The Newsletter section helps store owners build and maintain strong relationship
 This form allows customers to subscribe to the latest news from the store. The subscription emails will be saved in klaviyo profile.
 
 1. Obtain Klaviyo API Token
+
 1.1. Log in to your Klaviyo account.
 
 1.2. Navigate to **Settings**:
