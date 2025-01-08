@@ -103,7 +103,7 @@ type HydrogenComponentPresets = {
 limit ? : number
 ```
 
-This optional property limits the number of times this component can appear on a page.
+This optional property limits the number of times this component can appear on its parent (on the page if there is no parent).
 
 #### `enabledOn`
 
