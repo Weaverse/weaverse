@@ -284,43 +284,6 @@ export type RootRouteData = {
   [key: string]: any
 }
 
-export type OptionDisplayType =
-  | 'dropdown'
-  | 'button'
-  | 'color'
-  | 'variant-image'
-  | 'custom-image'
-export type OptionSize = 'sm' | 'md' | 'lg'
-export type OptionShape = 'square' | 'round' | 'circle'
-
-export type OptionData = {
-  id: string
-  name: string
-  displayName: string
-  type: OptionDisplayType
-  size: OptionSize
-  shape: OptionShape
-}
-
-export type SwatchesConfigs = {
-  options: OptionData[]
-  swatches: {
-    colors: ColorSwatch[]
-    images: ImageSwatch[]
-  }
-}
-
-export type ColorSwatch = {
-  id: string
-  name: string
-  value: string
-}
-export type ImageSwatch = {
-  id: string
-  name: string
-  value: WeaverseImage | string
-}
-
 export type WeaverseProduct = WeaverseResourcePickerData
 export type WeaverseCollection = WeaverseResourcePickerData
 export type WeaverseBlog = WeaverseResourcePickerData
