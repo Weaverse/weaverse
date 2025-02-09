@@ -1,113 +1,83 @@
 ---
-title: Localization
-description: Explore how Weaverse empowers you to create a multilingual storefront with ease.
-publishedAt: November 20, 2023
-updatedAt: January 17, 2024
-order: 12
-published: false
+title: Localization  
+description: Learn how Weaverse enables you to build and manage a multilingual storefront effortlessly.  
+publishedAt: January 5, 2025  
+updatedAt: January 5, 2025  
+order: 12  
+published: true  
 ---
 
-**Weaverse** is designed to provide a seamless multilingual storefront experience,
-leveraging [Shopify Markets](https://help.shopify.com/en/manual/markets)
-and [Hydrogen's Internationalization](https://shopify.dev/docs/custom-storefronts/hydrogen/markets) features. This
-enables you to cater to a global audience by offering your storefront in multiple languages.
+# Localization
 
-## Default Locale
+## Overview
 
-The default locale for your Weaverse store is configured in
-the [`server.ts`](https://github.com/Weaverse/pilot/blob/main/server.ts) file. This setting is crucial, especially when
-your store does not support multiple languages. It ensures that your storefront always defaults to a specific language
-and country.
+Weaverse provides a streamlined solution for creating and managing multilingual storefronts. This guide walks you through the process of setting up localization in your Hydrogen theme with Weaverse, allowing you to customize content for various markets and audiences.
 
-```tsx
-const { storefront } = createStorefrontClient({
-  // Other configurations...
-  i18n: { language: 'EN', country: 'CA' },
-  // More configurations...
-})
+### Watch the Video Demo
+
+For a quick overview of the localization process, watch this video demonstration:
+
+[![Localization Demo](https://img.youtube.com/vi/LJy_KxVeUcs/0.jpg)](https://www.youtube.com/watch?v=LJy_KxVeUcs)
+
+## Prerequisites
+
+Before implementing localization, ensure your project is up-to-date with the latest versions of the Hydrogen library and the `@weaverse/hydrogen` package:
+
+```bash
+npx shopify hydrogen upgrade
+npm install @weaverse/hydrogen@latest
 ```
 
-## Multilingual with URL Paths
+## Implementation Steps
 
-Weaverse currently supports multilingual storefronts using URL paths. For example, you can have URLs
-like `example.com/en-ca` for **English** in **Canada**. The URL paths method offers a straightforward advantage: you can
-set it up directly within the app without the need for configuring complex domain infrastructure.
+### Step 1: Add a Country Selector
 
-#### Detecting Locale from Requests
+Follow [Shopify’s Country Selector guide](https://shopify.dev/docs/storefronts/headless/hydrogen/markets/country-selector) to integrate a Country Selector component into your Hydrogen storefront. This feature allows users to switch between markets and languages seamlessly.
 
-To determine the user's preferred locale, Weaverse uses
-the [`getLocaleFromRequest`](https://github.com/Weaverse/pilot/blob/main/app/lib/utils.ts#L282) utility. This ensures
-that the storefront is displayed in the most relevant language based on the user's request.
+### Step 2: Configure Localization in the Theme Schema
 
-```tsx
-// <root>/app/lib/utils.ts
+Update your theme schema to include localization settings. Modify the `schema.server.ts` file to define `i18n` configurations and set a default locale:
 
-import { countries } from '~/data/countries'
-
-export function getLocaleFromRequest(request: Request): I18nLocale {
-  const url = new URL(request.url)
-  const firstPathPart =
-    '/' + url.pathname.substring(1).split('/')[0].toLowerCase()
-
-  return countries[firstPathPart]
-    ? {
-        ...countries[firstPathPart],
-        pathPrefix: firstPathPart,
-      }
-    : {
-        ...countries['default'],
-        pathPrefix: '',
-      }
-}
+```typescript
+export let themeSchema: HydrogenThemeSchema = {
+  i18n: Object.values(COUNTRIES).map((i) => ({
+    language: i.language,
+    country: i.country,
+    label: i.label,
+  })),
+  defaultLocale: "en-us",
+};
 ```
 
-#### Customizing Supported Countries
+### Step 3: Manage Localized Content in Weaverse Studio
 
-The list of countries supported by your store can be customized to match the specific needs of your merchants. This list
-is defined in a [`countries.ts`](https://github.com/Weaverse/pilot/blob/main/app/data/countries.ts) file. Developers
-have the flexibility to update this list according to the merchant's requirements.
+After integrating the Country Selector and configuring the theme schema, use Weaverse Studio to manage localized content effectively:
 
-#### Integrating Supported Countries
+#### a. **Switch Between Markets/Locales**
+- Open your site in Weaverse Studio.
+- Use the Country Selector to switch to the desired market or locale.
+- You will be prompted to create a localized version of the selected page.
 
-For the changes to take effect, you need to pass the list of supported countries as an argument to the `WeaverseClient`.
-This is done in
-the [`weaverse/create-weaverse.server.ts`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/create-weaverse.server.ts#L15)
-file:
+#### b. **Create Localized Pages**
+- Click on "Create localized page" to generate a specific version for the chosen market.
+- Localized pages are independent of the default version, ensuring changes apply only to the selected locale.
 
-```tsx
-// <root>/app/weaverse/create-weaverse.server.ts
+![Create Localized Page](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/create_localized_page.png?v=1735900595)
 
-import { Storefront } from '@shopify/hydrogen'
-import { I18nLocale, WeaverseClient } from '@weaverse/hydrogen'
-import { countries } from '~/data/countries'
+#### c. **Revert to Default Content**
+- Access the localization settings in the top bar of Weaverse Studio.
+- Select "Reset to default" to remove the localized version and revert to the global content.
 
-type CreateWeaverseArgs = {
-  storefront: Storefront<I18nLocale>
-  request: Request
-  env: Env
-  cache: Cache
-  waitUntil: ExecutionContext['waitUntil']
-}
+![Reset to Default](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/reset_localization.png?v=1735900576)
 
-export function createWeaverseClient(args: CreateWeaverseArgs) {
-  return new WeaverseClient({
-    ...args,
-    countries,
-    themeSchema,
-    components,
-  })
-}
-```
+### Benefits of Localization
 
-This step allows merchants to select the country they want to preview, update, or create page data and content within \*
-\*Weaverse Studio\*\*:
+Using Weaverse’s localization capabilities, you can:
+- Deliver market-specific content while maintaining a global default version.
+- Easily manage and update localized content for specific markets.
+- Preview localized storefronts to ensure alignment with audience preferences.
+- Revert localized pages to default content when necessary.
 
-<img alt="localization" src="https://downloads.intercomcdn.com/i/o/864542510/3c5654419d7600127cdb7957/image.png" width="300"/>
+## Conclusion
 
-## Multi-Page Support (Under Construction 🚧)
-
-Weaverse is continually evolving to provide even more multilingual capabilities. Shortly, merchants will be able to
-create multiple pages tailored to each selected locale. This feature will further enhance the localization and
-accessibility of your Weaverse Hydrogen storefront.
-
-Stay tuned for these exciting enhancements as Weaverse continues to grow and support your internationalization needs.
+Weaverse simplifies the localization process, enabling you to efficiently manage multilingual content and provide tailored shopping experiences. By following this guide, you can ensure your storefront meets the needs of diverse markets and audiences.
