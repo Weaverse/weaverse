@@ -1,5 +1,6 @@
 import type { HydrogenEnv } from '@shopify/hydrogen'
 import type {
+  HydrogenComponent,
   HydrogenComponentSchema,
   HydrogenThemeSchema,
   WeaverseProjectConfigs,
@@ -36,6 +37,8 @@ export function getWeaverseConfigs(
     weaverseProjectId,
     weaverseHost,
     isDesignMode,
+    isPreviewMode,
+    sectionType,
     weaverseVersion,
     weaverseApiKey,
   } = queries
@@ -57,6 +60,8 @@ export function getWeaverseConfigs(
       '',
     weaverseVersion: weaverseVersion || '',
     isDesignMode: isDesignMode || false,
+    isPreviewMode: isPreviewMode || false,
+    sectionType: sectionType || '',
     publicEnv: {
       PUBLIC_STORE_DOMAIN: PUBLIC_STORE_DOMAIN || '',
       PUBLIC_STOREFRONT_API_TOKEN: PUBLIC_STOREFRONT_API_TOKEN || '',
@@ -102,4 +107,100 @@ export function resizeShopifyImage(imageURL: string, size: string): string {
   } catch (e) {
     return imageURL
   }
+}
+
+export function recursivelyAddDataItem(
+  type: string,
+  components: HydrogenComponent<any>[],
+  items: any[],
+  initData?: object,
+) {
+  const component = components.find((c) => c.schema.type === type)
+  if (!component) {
+    return
+  }
+  let childIDs = []
+  // generate id for item
+  const id = crypto.randomUUID()
+  const { children, ...data } = component.schema?.presets || {}
+  if (children) {
+    for (const child of children) {
+      const { type, children, ...data } = child
+      const childID = recursivelyAddDataItem(
+        child.type,
+        components,
+        items,
+        data,
+      )
+      childIDs.push({
+        id: childID,
+      })
+    }
+  }
+  items.push({
+    data: { ...data, ...initData },
+    id,
+    type,
+    children: childIDs,
+  })
+  return id
+}
+
+export function getPreviewData(type: string, components, weaverseHost: string) {
+  const initialData = {
+    project: {
+      id: 'x',
+      weaverseShopId: 'shopid',
+      name: 'Section Preview',
+    },
+    // pageAssignment: {
+    //   projectId: "x",
+    //   type: "CUSTOM",
+    //   locale: "en-us",
+    //   handle: "",
+    // },
+    configs: {
+      projectId: 'x',
+      weaverseHost,
+      isDesignMode: false,
+      isPreviewMode: true,
+      requestInfo: {
+        i18n: {
+          label: 'United States (USD $)',
+          language: 'EN',
+          country: 'US',
+          currency: 'USD',
+          pathPrefix: '',
+        },
+        queries: {},
+        pathname: '/',
+        search: '',
+      },
+    },
+  }
+  let items = []
+  const id = recursivelyAddDataItem(type, components, items)
+  const page = {
+    id: '0',
+    name: 'Preview section',
+    rootId: '1',
+    items: [
+      {
+        data: {},
+        id: '1',
+        type: 'main',
+        children: [
+          {
+            id,
+          },
+        ],
+      },
+      ...items,
+    ],
+  }
+  const previewData = {
+    ...initialData,
+    page,
+  }
+  return previewData
 }

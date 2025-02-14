@@ -15,10 +15,14 @@ export function useStudio(weaverse: WeaverseHydrogen) {
   let { pathname, search } = useLocation()
   let navigate = useNavigate()
   let themeSettingsStore = useThemeSettingsStore()
-  let { isDesignMode, weaverseHost, weaverseVersion } = weaverse
+  let { isDesignMode, weaverseHost, weaverseVersion, isPreviewMode } = weaverse
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
+    if (navigation.state === 'idle' && isPreviewMode) {
+      let previewSrc = `${weaverseHost}/static/studio/hydrogen/preview.js?v=${weaverseVersion}`
+      loadScript(previewSrc).catch(console.error)
+    }
     if (navigation.state === 'idle' && isDesignMode) {
       weaverse.internal = {
         ...weaverse.internal,
@@ -36,7 +40,6 @@ export function useStudio(weaverse: WeaverseHydrogen) {
   }, [pathname, search, navigation.state])
   usePixel(weaverse)
 }
-
 
 export function usePixel(context: WeaverseHydrogen) {
   let { projectId, pageId, weaverseHost, isDesignMode } = context
