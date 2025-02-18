@@ -18,6 +18,7 @@ import type {
 } from './types'
 import {
   generateDataFromSchema,
+  getPreviewData,
   getRequestQueries,
   getWeaverseConfigs,
 } from './utils'
@@ -190,7 +191,21 @@ export class WeaverseClient {
   ): Promise<WeaverseLoaderData | null> => {
     try {
       let { request, storefront, basePageRequestBody, basePageConfigs } = this
-      let { projectId, isDesignMode, weaverseHost } = this.configs
+      let {
+        projectId,
+        isDesignMode,
+        weaverseHost,
+        isPreviewMode,
+        sectionType,
+      } = this.configs
+      if (isPreviewMode) {
+        const previewData = getPreviewData(
+          sectionType,
+          this.components,
+          weaverseHost,
+        )
+        return previewData as unknown as WeaverseLoaderData
+      }
 
       if (!projectId) {
         throw new Error('Missing Weaverse projectId!')

@@ -172,6 +172,8 @@ export type WeaverseStudioQueries = {
   weaverseHost: string
   weaverseVersion: string
   isDesignMode: boolean
+  isPreviewMode?: boolean
+  sectionType?: string
 }
 
 export type PublicEnv = {
@@ -185,6 +187,8 @@ export type WeaverseProjectConfigs = {
   weaverseApiKey: string
   weaverseVersion?: string
   isDesignMode?: boolean
+  isPreviewMode?: boolean
+  sectionType?: string
   publicEnv?: PublicEnv
 }
 
