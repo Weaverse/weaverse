@@ -48,7 +48,7 @@ export interface AllCacheOptions {
 
 export type ComponentLoaderArgs<T = any, E = any> = {
   data: T
-  weaverse: Omit<WeaverseClient, 'env'> & { env: E }
+  weaverse: WeaverseClient
 }
 
 export interface RouteLoaderArgs extends RemixOxygenLoaderArgs {
