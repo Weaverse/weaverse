@@ -86,8 +86,11 @@ export interface HydrogenComponentSchema extends ElementSchema {
   toolbar?: (HydrogenToolbarAction | HydrogenToolbarAction[])[]
 }
 
-export type BasicInput = CoreBasicInput & {
+export type BasicInput = Omit<CoreBasicInput, 'condition'> & {
   shouldRevalidate?: boolean
+  condition?:
+    | string
+    | ((data: ElementData, weaverse: WeaverseHydrogen) => boolean)
 }
 
 export type HeadingInputType = 'heading'
