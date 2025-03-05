@@ -23,24 +23,34 @@ import {
   getWeaverseConfigs,
 } from './utils'
 
-export class WeaverseClient {
-  API = 'api/public'
-  basePageConfigs: Omit<WeaverseProjectConfigs, 'requestInfo'>
-  basePageRequestBody: Omit<FetchProjectRequestBody, 'url' | 'countries'>
-  configs: WeaverseProjectConfigs
-  withCache: ReturnType<typeof createWithCache>
+// Constants at the top
+const API_PATH = 'api/public'
+const DEFAULT_CACHE_STRATEGY = {
+  maxAge: 5,
+  sMaxAge: 5,
+  staleWhileRevalidate: 82800,
+}
 
-  request: WeaverseClientArgs['request']
-  storefront: WeaverseClientArgs['storefront']
-  components: WeaverseClientArgs['components']
-  themeSchema: WeaverseClientArgs['themeSchema']
-  env: WeaverseClientArgs['env']
-  cache: WeaverseClientArgs['cache']
-  waitUntil: WeaverseClientArgs['waitUntil']
-  countries?: WeaverseClientArgs['countries']
+export class WeaverseClient {
+  public API = API_PATH
+  public basePageConfigs: Omit<WeaverseProjectConfigs, 'requestInfo'>
+  public basePageRequestBody: Omit<FetchProjectRequestBody, 'url' | 'countries'>
+  public configs: WeaverseProjectConfigs
+  public withCache: ReturnType<typeof createWithCache>
+
+  // Required dependencies
+  public request: WeaverseClientArgs['request']
+  public storefront: WeaverseClientArgs['storefront']
+  public components: WeaverseClientArgs['components']
+  public themeSchema: WeaverseClientArgs['themeSchema']
+  public env: WeaverseClientArgs['env']
+  public cache: WeaverseClientArgs['cache']
+  public waitUntil: WeaverseClientArgs['waitUntil']
+  public countries?: WeaverseClientArgs['countries']
 
   constructor(args: WeaverseClientArgs) {
-    let {
+    // Destructure and initialize all dependencies
+    const {
       env,
       storefront,
       components,
@@ -50,6 +60,8 @@ export class WeaverseClient {
       themeSchema,
       request,
     } = args
+
+    // Initialize required properties
     this.request = request
     this.storefront = storefront
     this.components = components
@@ -60,8 +72,10 @@ export class WeaverseClient {
     this.countries = countries
     this.withCache = createWithCache({ cache, waitUntil, request })
 
+    // Initialize configs
     this.configs = getWeaverseConfigs(request, env as HydrogenEnv)
 
+    // Initialize base configurations
     this.basePageConfigs = {
       projectId: this.configs.projectId,
       weaverseHost: this.configs.weaverseHost,
@@ -69,6 +83,7 @@ export class WeaverseClient {
       weaverseVersion: this.configs.weaverseVersion,
       isDesignMode: this.configs.isDesignMode,
     }
+
     this.basePageRequestBody = {
       isDesignMode: this.configs.isDesignMode,
       i18n: storefront.i18n,
@@ -76,54 +91,60 @@ export class WeaverseClient {
     }
   }
 
-  fetchWithCache = async <T extends object>(
+  // Helper method for direct fetching in design mode
+  private async directFetch<T>(
+    url: string,
+    options: RequestInit = {},
+  ): Promise<T> {
+    try {
+      const res = await fetch(url, options)
+      if (!res.ok) {
+        const error = await res.text()
+        throw new Error(`${res.status} ${res.statusText} ${error}`)
+      }
+      return res.json()
+    } catch (err) {
+      throw new Error(`Failed to fetch data from ${url}`, { cause: err })
+    }
+  }
+
+  public async fetchWithCache<T extends object>(
     url: string,
     options: FetchWithCacheOptions = {},
-  ) => {
-    let cacheKey = [url, options.body]
-    let {
-      strategy = this.storefront.CacheCustom({
-        maxAge: 1,
-        sMaxAge: 1,
-        staleWhileRevalidate: 82800,
-      }),
+  ): Promise<T> {
+    const {
+      strategy = this.storefront.CacheCustom(DEFAULT_CACHE_STRATEGY),
       ...reqInit
     } = options
+    const cacheKey = [url, options.body]
+
     if (this.configs.isDesignMode) {
-      try {
-        const res = await fetch(url, reqInit)
-        return await res.json<T>()
-      } catch (err) {
-        throw new Error(`Failed to fetch data from ${url}`, { cause: err })
-      }
+      return this.directFetch<T>(url, reqInit)
     }
-    let res = this.withCache.run(
+
+    return this.withCache.run(
       {
         cacheKey,
         cacheStrategy: strategy,
-        // @ts-expect-error
-        shouldCacheResult: (result) => result?.data,
+        shouldCacheResult: (result: any) => result?.data,
       },
       async () => {
-        let response = await fetch(url, {
+        return this.directFetch<T>(url, {
           ...reqInit,
           headers: {
             'Cache-Control': generateCacheControlHeader(strategy),
             ...reqInit.headers,
           },
         })
-        if (!response.ok) {
-          let error = await response.text()
-          let { status, statusText } = response
-          throw new Error(`${status} ${statusText} ${error}`, { cause: error })
-        }
-        return await response.json<T>()
       },
-    )
-    return res as Promise<T>
+    ) as Promise<T>
   }
 
   loadThemeSettings = async (strategy?: AllCacheOptions) => {
+    let defaultThemeSettings = {}
+    if (this.themeSchema) {
+      defaultThemeSettings = generateDataFromSchema(this.themeSchema)
+    }
     try {
       let { API, configs } = this
       let { weaverseHost, projectId, isDesignMode } = configs
@@ -146,10 +167,6 @@ export class WeaverseClient {
       }
       let data: any = res || {}
       if (data?.theme && this.themeSchema?.inspector) {
-        let defaultThemeSettings = {}
-        if (this.themeSchema) {
-          defaultThemeSettings = generateDataFromSchema(this.themeSchema)
-        }
         data.theme = {
           ...defaultThemeSettings,
           ...data.theme,
@@ -165,8 +182,8 @@ export class WeaverseClient {
       }
       return data
     } catch (e) {
-      console.error('❌ Theme settings load failed.', e)
-      return null
+      console.info('Unable to load theme settings', e)
+      return defaultThemeSettings
     }
   }
 
@@ -239,7 +256,13 @@ export class WeaverseClient {
       }
       let { page, project, pageAssignment } = payload
       if (!project) {
-        throw new Error(`Weaverse project not found. Id: ${projectId}`)
+        console.error('Weaverse project not found. Id:', projectId)
+        project = {
+          id: projectId,
+          name: 'Weaverse project not found.',
+          weaverseShopId: '',
+        }
+        page = this.generateFallbackPage('Weaverse project not found.')
       }
       if (!page) {
         page = this.generateFallbackPage('Please add new section to start.')
@@ -266,7 +289,7 @@ export class WeaverseClient {
     } catch (e) {
       // biome-ignore lint/style/noUnusedTemplateLiteral: <explanation>
       console.error(`❌ Page load failed.`, e)
-      throw e
+      return null
     }
   }
 

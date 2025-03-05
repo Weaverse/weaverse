@@ -1,5 +1,22 @@
 # @weaverse/hydrogen
 
+## 4.2.1
+
+### Patch Changes
+
+- improve weaverse-client
+  - @weaverse/react@4.2.1
+
+## 4.2.0
+
+### Minor Changes
+
+- update preview mode
+
+### Patch Changes
+
+- @weaverse/react@4.2.0
+
 ## 4.1.2
 
 ### Patch Changes
