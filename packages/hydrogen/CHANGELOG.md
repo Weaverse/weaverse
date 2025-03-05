@@ -1,5 +1,12 @@
 # @weaverse/hydrogen
 
+## 4.2.2
+
+### Patch Changes
+
+- update types
+  - @weaverse/react@4.2.2
+
 ## 4.2.1
 
 ### Patch Changes
