@@ -42,7 +42,6 @@ export function useStudio(weaverse: WeaverseHydrogen) {
   usePixel(weaverse)
 }
 
-
 export function usePixel(context: WeaverseHydrogen) {
   let { projectId, pageId, weaverseHost, isDesignMode } = context
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -50,7 +49,10 @@ export function usePixel(context: WeaverseHydrogen) {
     if (!projectId || !pageId || !weaverseHost || isDesignMode) return
     let url = `${weaverseHost}/api/public/px`
     let img = new Image()
-    img.onload = () => {}
+    img.onload = () => {
+      // clear the image node
+      img.remove()
+    }
     img.src = `${url}?projectId=${projectId}&pageId=${pageId}`
   }, [])
 }
