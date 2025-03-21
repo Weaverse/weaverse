@@ -9,11 +9,11 @@ published: true
 
 # Weaverse Hydrogen Tutorial
 
-Welcome to this step-by-step guide on setting up a Weaverse Hydrogen project using the pre-made "Pilot" theme. Aimed at providing a hands-on experience, this tutorial is structured to guide you from installation through to deployment, ensuring you're ready to launch your Shopify store with a custom theme. Whether you're coding along or just browsing, expect to spend about 20 minutes on this guide.
+Welcome to this comprehensive guide on setting up a Weaverse Hydrogen project using the pre-made "Pilot" theme. This tutorial is designed to walk you through the entire process, from installation to deployment, enabling you to launch your Shopify store with a custom theme. Whether you're following along or exploring the content, this guide should take approximately 20 minutes to complete.
 
 ## Prerequisites
 
-This tutorial is built for developers with a foundational understanding of several key technologies. If you're unfamiliar with any of the following, please refer to the provided links before proceeding:
+Before diving into this tutorial, you should have a solid understanding of the following technologies. If you're new to any of these, we recommend reviewing the linked resources first:
 
 - [React](https://react.dev)
 - [Remix](https://remix.run/docs/en/main/start/tutorial)
@@ -23,142 +23,127 @@ This tutorial is built for developers with a foundational understanding of sever
 - [TypeScript](https://www.typescriptlang.org/docs/)
 - [Shopify Storefront API](https://shopify.dev/docs/api/storefront)
 
-## Installation Steps
+## Getting Started
 
-### Install Weaverse App
+### Installing Weaverse
 
-Weaverse can be installed directly from the Shopify App Store. After installation, access it from your Shopify Admin Dashboard. [Install Weaverse App](https://apps.shopify.com/weaverse?utm_source=tutorial)
+Begin your journey by installing Weaverse directly from the Shopify App Store. Once installed, you can access it through your Shopify Admin Dashboard. [Install Weaverse App](https://apps.shopify.com/weaverse?utm_source=tutorial)
 
-### Create a New Project
+### Creating Your Project
 
-With Weaverse installed, create a new project by selecting the "Create Project" button. By default, the Pilot theme is selected. Follow the on-screen instructions to finalize the project setup.
+After installation, create a new project by clicking the "Create Project" button. The Pilot theme will be selected by default. Follow the on-screen instructions to complete your project setup.
 
 ![Create Project in Weaverse](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/create_weaverse_hydrogen_project.webp?width=1400&crop=center)
 
-### Theme Editor Exploration
+### Exploring the Theme Editor
 
-After project creation, dive into the theme editor to customize your theme, from adding new sections and blocks to previewing changes in real-time.
+Once your project is created, you'll have access to the theme editor where you can customize your theme, add new sections and blocks, and preview changes in real-time.
 ![Weaverse Studio](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/Pilot_v2_4_0__Dec_06__-_Project_Editor_-_Weaverse_Hydrogen.jpg?v=1712225542)
 
-### Setup Local Development
+### Setting Up Local Development
 
-To kickstart your local development with the Weaverse Hydrogen project, there are several methods to clone or set up the project on your local machine. Here's how you can proceed with the Pilot theme, available at: [Pilot Theme GitHub Repository](https://github.com/weaverse/pilot).
+To begin local development with your Weaverse Hydrogen project, you have several options for cloning or setting up the project. The Pilot theme is available at: [Pilot Theme GitHub Repository](https://github.com/weaverse/pilot).
 
-#### Method 1: Using Weaverse CLI
+#### Option 1: Using Weaverse CLI
 
-The Weaverse CLI simplifies the setup process by configuring the project directly in your workspace.
+The Weaverse CLI streamlines the setup process by automatically configuring your project:
 
-1. **Install Weaverse CLI**: Execute the following command in your terminal:
+1. **Install Weaverse CLI**: Run the following command in your terminal:
    ```bash
    npx @weaverse/cli@latest create --template=pilot --project-id=<your-project-id> --project-name=<your-project-name>
    ```
-   Replace `<your-project-id>` and `<your-project-name>` with your project's actual ID and name. This will set up the Pilot theme in the specified directory.
+   Replace `<your-project-id>` and `<your-project-name>` with your actual project details.
 
-#### Method 2: Cloning from GitHub
+#### Option 2: Cloning from GitHub
 
-Directly cloning the GitHub repository allows you to work with the latest version of the Pilot theme.
+Clone the GitHub repository to work with the latest version of the Pilot theme:
 
-1. **Clone Repository**: Use the clone command to copy the Pilot theme repository to your local machine.
+1. **Clone Repository**: Use the following command:
    ```bash
    git clone https://github.com/weaverse/pilot.git <your-project-name>
    ```
-   Substitute `<your-project-name>` with the desired name for your project directory.
+   Replace `<your-project-name>` with your preferred project directory name.
 
-#### Method 3: Downloading and Extracting ZIP
+#### Option 3: Downloading ZIP
 
-For those who prefer not to use Git, downloading the project as a ZIP file is a straightforward alternative.
+For those who prefer not to use Git, downloading the project as a ZIP file is a simple alternative:
 
-1. **Download ZIP**: Navigate to the [Pilot theme's GitHub page](https://github.com/weaverse/pilot) and click the "Code" dropdown button, then select "Download ZIP".
-2. **Extract Files**: After downloading, extract the ZIP file into your preferred project location.
+1. **Download ZIP**: Visit the [Pilot theme's GitHub page](https://github.com/weaverse/pilot), click the "Code" dropdown, and select "Download ZIP".
+2. **Extract Files**: Extract the ZIP file to your desired project location.
 
-#### Method 4: Using GitHub as a Template
+#### Option 4: Using GitHub Template
 
-GitHub's repository template feature offers an easy way to create a new repository based on the Pilot theme.
+GitHub's repository template feature provides an easy way to create a new repository based on the Pilot theme:
 
-1. **Generate from Template**: Visit the [Pilot theme's GitHub page](https://github.com/weaverse/pilot) and click the "Use this template" button. Follow GitHub's prompts to create a new repository.
-2. **Clone Your New Repository**: Once your repository is set up, clone it to your local machine:
+1. **Generate from Template**: Go to the [Pilot theme's GitHub page](https://github.com/weaverse/pilot) and click "Use this template".
+2. **Clone Your Repository**: After creating your repository, clone it locally:
    ```bash
    git clone <your-new-repository-url>
    ```
-   Replace `<your-new-repository-url>` with the URL of your newly created repository.
+   Replace `<your-new-repository-url>` with your new repository's URL.
 
-### Next Steps for Local Development Setup
+### Configuring Your Local Environment
 
-After selecting one of the setup methods for your project, follow these steps to get your local development environment ready, ensuring to properly configure environment variables for a smooth workflow:
+After setting up your project, follow these steps to prepare your local development environment:
 
-1. **Navigate to Your Project Directory**:
+1. **Navigate to Project Directory**:
+   ```bash
+   cd <your-project-name>
+   ```
 
-- Switch to your project's directory with:
-  ```bash
-  cd <your-project-name>
-  ```
+2. **Configure Environment Variables**:
+   - Create a `.env` file in your project root
+   - Install either [Headless](https://apps.shopify.com) or [Hydrogen](https://apps.shopify.com) app on your Shopify store
+   - Add the following environment variables to your `.env` file:
 
-2. **Setting Up Environment Variables**:
+   For demo setup with `mock.shop`:
+   ```plaintext
+   SESSION_SECRET="your-randomly-generated-secret"
+   PUBLIC_STORE_DOMAIN="mock.shop"
+   WEAVERSE_PROJECT_ID="your-weaverse-project-id"
+   ```
 
-- Create a `.env` file in the root of your project directory.
-- Install [Headless](https://apps.shopify.com) or [Hydrogen](https://apps.shopify.com) (paid store only) app on your Shopify store to obtain necessary API keys and tokens. [Learn more](/docs/guides/environment-variables)
-- Populate the `.env` file with necessary environment variables. Here are examples for both the demo setup and a setup with real store data.
-- If you already got a store with Hydrogen app installed, you can pull the ENV with this command:
+   For real store setup:
+   ```plaintext
+   SESSION_SECRET="your-randomly-generated-secret"
+   PUBLIC_STOREFRONT_API_TOKEN="your-public-storefront-api-token"
+   PUBLIC_STORE_DOMAIN="your-store.myshopify.com"
+   WEAVERSE_PROJECT_ID="your-weaverse-project-id"
+   PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID="your-customer-account-api-client-id"
+   PUBLIC_CUSTOMER_ACCOUNT_API_URL="https://your-shopify-store.myshopify.com/api/2022-01/graphql"
 
-  ```bash
-  npx shopify hydrogen env pull
-  ```
+   ### Optional Variables:
+   #PRIVATE_STOREFRONT_API_TOKEN="your-private-storefront-api-token"
+   #PUBLIC_STOREFRONT_API_VERSION="unstable"
+   #WEAVERSE_API_KEY="your-weaverse-api-key"
+   #WEAVERSE_HOST="https://studio.weaverse.io"
+   ```
 
-  **For a demo setup using `mock.shop`:**
-
-  ```plaintext
-  SESSION_SECRET="your-randomly-generated-secret"
-  PUBLIC_STORE_DOMAIN="mock.shop"
-  WEAVERSE_PROJECT_ID="your-weaverse-project-id"
-  ```
-
-  **For a setup with real store data:**
-
-  ```plaintext
-  SESSION_SECRET="your-randomly-generated-secret"
-  PUBLIC_STOREFRONT_API_TOKEN="your-public-storefront-api-token"
-  PUBLIC_STORE_DOMAIN="your-store.myshopify.com"
-  WEAVERSE_PROJECT_ID="your-weaverse-project-id"
-  PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID="your-customer-account-api-client-id"
-  PUBLIC_CUSTOMER_ACCOUNT_API_URL="https://your-shopify-store.myshopify.com/api/2022-01/graphql"
-
-  ### Optional:
-  #PRIVATE_STOREFRONT_API_TOKEN="your-private-storefront-api-token" # Optional
-  #PUBLIC_STOREFRONT_API_VERSION="unstable" # Optional, defaults to Hydrogen's version
-  #WEAVERSE_API_KEY="your-weaverse-api-key" # Optional
-  #WEAVERSE_HOST="https://studio.weaverse.io" # Optional, defaults to Weaverse's studio URL
-  ```
-
-- 📌 **Important**: To safeguard sensitive information, do not commit the `.env` file to version control. Instead, use an `.env.example` file to share the structure of environment variables without revealing the actual values.
+   📌 **Note**: Never commit your `.env` file to version control. Instead, use an `.env.example` file to share the structure without exposing sensitive information.
 
 3. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-- Run the following command to install all required dependencies for your project:
-  ```bash
-  npm install
-  ```
+4. **Start Development Server**:
+   ```bash
+   npm run dev
+   ```
+   Your project will be available at `http://localhost:3456`.
+   ![Weaverse Local Development](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/pilot_development_server.png?v=1712226407)
 
-4. **Start the Development Server**:
+5. **Update Preview URL**:
+   - In Weaverse Studio, set the Project Preview URL to `http://localhost:3456`
+   ![Weaverse Preview URL](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/update_preview_url.png?v=1712226429)
 
-- With dependencies installed, launch your local development server:
-  ```bash
-  npm run dev
-  ```
-- Your project will now be accessible at `http://localhost:3456`, allowing you to view and interact with it in real-time.
-  ![Weaverse Local Development](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/pilot_development_server.png?v=1712226407)
+## Understanding the Pilot Theme
 
-5. **Update Weaverse Preview URL**:
+The Pilot theme provides a robust foundation for your Shopify Hydrogen store, equipped with essential components and structures for rapid customization.
 
-- In Weaverse Studio, update the Project Preview URL to `http://localhost:3456` to preview your local development changes within the Weaverse environment.
-  ![Weaverse Preview URL](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/update_preview_url.png?v=1712226429)
+### Project Structure
 
-## Learning and Customizing the Pilot Theme
-
-The Pilot theme serves as a fully functional base for your Shopify Hydrogen store, complete with necessary components and structures for quick customization.
-
-### Project Structure Overview
-
-Your project structure will include several directories and files crucial for theme customization, notably within the `app/weaverse` and `app/sections` folders.
+Your project includes several key directories and files, particularly within the `app/weaverse` and `app/sections` folders:
 
 ```text data-line-numbers=false
 🌳 <root>
@@ -194,13 +179,13 @@ Your project structure will include several directories and files crucial for th
 └── 📄 ...
 ```
 
-### Adding Customizable Sections
+### Creating Custom Sections
 
-Creating customizable sections enriches the user experience. Let's add a new section called `UserProfiles` to display user profiles, utilizing Shopify's Metaobject for data storage.
+Let's enhance your theme by adding a customizable `UserProfiles` section that displays user profiles using Shopify's MetaObject for data storage.
 
-### Implementing `UserProfiles`
+### Implementing the UserProfiles Section
 
-1. **Create `UserProfiles` Section**: In `app/sections`, create a `user-profiles` folder and add an `index.tsx` file. Implement the `UserCard` component from the provided code snippet (which I found from [V0.dev](https://v0.dev/t/AokCsMvkYGf)).
+1. **Create the Section**: In `app/sections`, create a `user-profiles` folder and add an `index.tsx` file. Implement the `UserCard` component:
 
 ```jsx
 const UserCard = () => {
@@ -241,7 +226,7 @@ const UserCard = () => {
 }
 ```
 
-2. **Define `UserProfiles` Component**: Incorporate the `UserCard` component within `UserProfiles`, exporting it as the default component.
+2. **Define the Component**: Create the `UserProfiles` component that incorporates the `UserCard`:
 
 ```tsx
 interface UserProfilesProps extends HydrogenComponentProps {}
@@ -258,7 +243,7 @@ const UserProfiles = forwardRef<HTMLDivElement, UserProfilesProps>(
 export default UserProfiles
 ```
 
-3. **Schema Definition**: Define a basic schema for `UserProfiles` to ensure proper rendering and integration with the Weaverse theme editor.
+3. **Create Schema**: Define a schema for the `UserProfiles` component:
 
 ```tsx
 export const schema: HydrogenComponentSchema = {
@@ -268,7 +253,7 @@ export const schema: HydrogenComponentSchema = {
 }
 ```
 
-4. **Registration**: Register `UserProfiles` in `app/weaverse/components.ts` for it to appear in the Weaverse Studio, enabling its addition to pages.
+4. **Register Component**: Add `UserProfiles` to `app/weaverse/components.ts`:
 
 ```tsx
 import * as UserProfiles from '~/sections/user-profiles'
@@ -279,63 +264,51 @@ export let components: HydrogenComponent[] = [
 ]
 ```
 
-Upon completion, you should be able to add and preview the `UserProfiles` section within Weaverse Studio, marking the beginning of your theme's customization journey.
+After completing these steps, you can add and preview the `UserProfiles` section in Weaverse Studio.
 
 ![Weaverse User Profiles Preview](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/user_profile_demo1.png?v=1712226694)
 
-## Next Steps: Defining Shopify MetaObject
+## Working with Shopify MetaObjects
 
-Shopify MetaObjects offer a powerful way to add custom data to your Shopify store, enabling you to store additional information beyond the standard fields provided by Shopify. This feature is particularly useful for themes and apps that require custom data fields for products, customers, and other resources.
+Shopify MetaObjects provide a powerful way to extend your store's data model with custom fields. This feature is particularly valuable for themes and apps that require additional data beyond Shopify's standard fields.
 
-#### Creating a MetaObject for User Profiles
+### Creating a UserProfile MetaObject
 
-To incorporate custom data for user profiles in your Weaverse Hydrogen project, you need to define a MetaObject in Shopify Admin. Here's how to set up a `UserProfile` MetaObject:
+To store custom data for user profiles, you'll need to create a MetaObject in your Shopify Admin:
 
-1. **Navigate to Shopify Admin**: Access your store's admin panel and go to `Settings` > `Custom data`.
-2. **Add a MetaObject Definition**:
+1. **Access Shopify Admin**: Navigate to `Settings` > `Custom data`
+2. **Create MetaObject Definition**:
+   - Click "Add definition"
+   - Name it `UserProfile`
 
-- In the "Metaobject definitions" section, click "Add definition".
-- Enter a definition name, such as `UserProfile`, to start creating your custom data structure.
-
-3. **Define Fields for UserProfile**:
-
-- `name` (Single line text): The user's full name.
-- `avatar` (File): Choose the File type and accept only image file types for the user's avatar.
-- `role` (Single line text): The user's role or position.
-- `description` (Multiple line text): A detailed bio or user description.
+3. **Define Fields**:
+   - `name` (Single line text): User's full name
+   - `avatar` (File): User's profile picture (image files only)
+   - `role` (Single line text): User's position or role
+   - `description` (Multiple line text): User's bio or description
 
 ![Shopify MetaObject Definition](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/metaobject_definition1.png?v=1712226924)
 
-4. **Save and Apply Changes**: After defining the fields, save the MetaObject definition and apply it to your store.
+4. **Save Changes**: Save your MetaObject definition
 
-### Adding Sample Entries to UserProfile MetaObject
+### Adding Sample Data
 
-1. **Access Shopify Admin**: Go to `Settings` > `Custom data`.
-
-2. **Find MetaObjects**: Click on `MetaObjects`, then select your `UserProfile` definition.
-
-3. **Add Sample Entry**:
-
-- Click “Add entry”.
-- Fill in the fields: `Name`, `Avatar` (image file), `Role`, and `Description`.
-
-4. **Save Entry**: Ensure each entry is saved.
-
-5. **Repeat**: Add more entries to test various data presentations.
+1. **Access MetaObjects**: Go to `Settings` > `Custom data` > `MetaObjects`
+2. **Select Definition**: Choose your `UserProfile` definition
+3. **Add Entries**: Click "Add entry" and fill in the fields
+4. **Save and Repeat**: Save each entry and add more as needed
 
 ![Shopify MetaObject Entries](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/metaobject_entry.png?v=1712227679)
 
-## Querying the UserProfile MetaObject
+## Querying MetaObject Data
 
-To leverage the custom data stored in UserProfile MetaObjects within your Shopify store, you'll need to craft a GraphQL query that fetches this data from the Shopify Storefront API. The query and its implementation are outlined below:
+To display the custom data from your UserProfile MetaObjects, you'll need to create a GraphQL query to fetch the data from Shopify's Storefront API.
 
-### Fetching MetaObject Data
+### Creating the Query
 
-Add the following query to your `app/data/queries.ts` file to retrieve MetaObject data. This query is designed to fetch a specific type of MetaObject, including details such as key, type, value, and any associated media images.
+Add this query to your `app/data/queries.ts` file:
 
 ```tsx
-// app/data/queries.ts
-
 export const METAOBJECTS_QUERY = `#graphql
   query MetaObjects($type: String!, $first: Int) {
     metaobjects(type: $type, first: $first) {
@@ -365,15 +338,11 @@ export const METAOBJECTS_QUERY = `#graphql
 `
 ```
 
-This query has been added to [`app/data/queries.ts`](https://github.com/Weaverse/pilot/blob/main/app/data/queries.ts#L480) in the Weaverse Pilot theme repository for your reference.
+### Implementing the Loader
 
-### Implementing the Loader Function
-
-Next, define a metaobject picker input and a loader function within your component to utilize this query. This example demonstrates how to set up the loader function in `app/sections/user-profiles/index.tsx`:
+Add the following code to your `app/sections/user-profiles/index.tsx`:
 
 ```tsx
-// app/sections/user-profiles/index.tsx
-
 export let schema: HydrogenComponentSchema = {
   type: 'meta-demo',
   title: 'Metaobject Demo',
@@ -421,17 +390,13 @@ export let loader = async (args: ComponentLoaderArgs<UserProfilesProps>) => {
 }
 ```
 
-The `shouldRevalidate` property in the metaobject input ensures the page revalidates, allowing the loader function to fetch new data whenever a different metaobject definition is selected.
+The `shouldRevalidate` property ensures the page updates when a different metaobject definition is selected.
 
-The loader function returns a `userProfiles` object containing the fetched MetaObject data, making it accessible through `props.loaderData` in your component for rendering user profiles.
+## Finalizing the UserProfiles Section
 
-## Finishing the UserProfiles Section
-
-It's time to finalize the `UserProfiles` section. Update your code with the following snippet in the `app/sections/user-profiles/index.tsx` file:
+Update your `app/sections/user-profiles/index.tsx` with this complete implementation:
 
 ```tsx
-// app/sections/user-profiles/index.tsx
-
 import { Image } from '@shopify/hydrogen'
 import type {
   ComponentLoaderArgs,
@@ -529,19 +494,16 @@ const UserProfiles = forwardRef<HTMLDivElement, UserProfilesProps>(
 )
 ```
 
-The updated `UserProfiles` component utilizes data fetched by the loader function. This data is passed from the `loaderData` prop and used to render individual `UserCard` components for each user profile, displaying the user's name, role, description, and avatar.
-
-To preview the user profiles within Weaverse Studio:
-
-- Navigate back to Weaverse Studio.
-- Add the `UserProfiles` section to your page.
-- Select the `UserProfile` MetaObject definition to display the profiles.
+To preview your user profiles in Weaverse Studio:
+1. Return to Weaverse Studio
+2. Add the `UserProfiles` section to your page
+3. Select the `UserProfile` MetaObject definition
 
 ![Weaverse User Profiles Preview](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_metaobject_demo_tutorial.jpg?v=1712900443)
 
-## Conclusion
+## Next Steps
 
-You now have the essential skills to set up a Weaverse Hydrogen project using the Pilot theme, customize sections, and utilize MetaObjects for sophisticated data management. Here are some resources to further expand your expertise:
+You've now mastered the basics of setting up a Weaverse Hydrogen project with the Pilot theme, creating custom sections, and implementing MetaObjects for advanced data management. To further enhance your skills, explore these resources:
 
 - [Weaverse Hydrogen Components](/docs/guides/weaverse-component)
 - [Component Schema](/docs/guides/component-schema)
