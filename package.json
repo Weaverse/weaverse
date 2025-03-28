@@ -43,7 +43,7 @@
     "turbo-darwin-arm64": "^2.4.4"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "packageManager": "pnpm@10.6.5",
   "pnpm": {
