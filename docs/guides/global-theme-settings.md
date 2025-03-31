@@ -13,7 +13,7 @@ your store across all routes and components.
 Merchants can easily tweak these settings in Weaverse Studio's "**Theme Settings**" panel, which provides a familiar
 experience akin to editing settings in the native **Shopify Theme Customizer**.
 
-<img alt="theme_settings" src="https://downloads.intercomcdn.com/i/o/861762015/d981e4a16f51e9989e35a2d9/image.png" width="300"/>
+<img alt="theme_settings" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/theme-setting.webp?v=1743409893" width="300"/>
 
 ## Define Theme Schema
 
@@ -66,7 +66,7 @@ details such as:
 
 - **`supportUrl`**: A link for users to seek support or assistance.
 
-<img alt="support_url_img" src="https://downloads.intercomcdn.com/i/o/861810489/562ba304e8777bee837032ef/image.png" width="300"/>
+<img alt="support_url_img" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/theme-info.webp?v=1743410159" width="300"/>
 
 #### Inspector
 

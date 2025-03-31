@@ -4,7 +4,7 @@ description: Submitting a theme to the Weaverse Marketplace is a process that in
 publishedAt: November 20, 2023
 updatedAt: January 17, 2024
 order: 1
-published: true
+published: false
 ---
 
 Join the Weaverse community as a theme developer and contribute to a growing marketplace. By submitting your theme, you

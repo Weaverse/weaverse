@@ -45,7 +45,7 @@ type: string
 - **`title`**: A user-friendly name for the component, displayed within the Weaverse Studio in the **Page Outline**
   section.
 
-<img alt="title_attr_img" src="https://downloads.intercomcdn.com/i/o/852278015/5220dc968e21cc6c7e17453b/image.png" width="300"/>
+<img alt="title_attr_img" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/tittle-and-type.webp?v=1743409496" width="300"/>
 
 - **`type`**: A _unique_ identifier for the component, ensuring differentiation between various components.
 

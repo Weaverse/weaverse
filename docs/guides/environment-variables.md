@@ -61,7 +61,7 @@ To get your **`PUBLIC_STOREFRONT_API_TOKEN`** and preview your real store data, 
 
 <doc-warning>If you are on the Shopify Starter plan, please create a custom app to obtain the Storefront API token. [Learn more](https://help.shopify.com/en/manual/apps/app-types/custom-apps)</doc-warning>
 
-![API Token](https://downloads.intercomcdn.com/i/o/848678475/033f78182979523f9a7a23e1/image.png)
+![API Token](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/API-Token.webp?v=1743408636)
 
 Then, add them to the **.env** file.
 

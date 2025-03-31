@@ -23,7 +23,7 @@ Refer to detailed examples provided by app libraries, such
 as [Okendo's Shopify Hydrogen Tutorial](https://github.com/okendo/okendo-shopify-hydrogen-demo/wiki/Okendo-Shopify-Hydrogen---Tutorial)
 for guidance.
 
-![Okendo package](https://downloads.intercomcdn.com/i/o/865601463/0e9171c3e19436415e4c09cb/image.png)
+![Okendo package](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/okendo-app.webp?v=1743410806)
 
 ## Querying App Data from App's API
 
@@ -48,7 +48,7 @@ If the third-party app provides an API:
 - Consult examples like the [Judge.me Shopify Hydrogen package](https://www.npmjs.com/package/@judgeme/shopify-hydrogen)
   to understand data querying and rendering.
 
-  ![Judge.me package](https://downloads.intercomcdn.com/i/o/865603384/c38414f7308b69a55d7a1730/image.png)
+  ![Judge.me package](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/judge-me-app.webp?v=1743410807)
 
 ## Conclusion
 
