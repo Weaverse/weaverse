@@ -2,80 +2,80 @@
 title: Getting Started
 description: 'Begin your Weaverse journey: Learn how to install the app on Shopify and set up your first Weaverse Hydrogen project.'
 publishedAt: November 20, 2023
-updatedAt: January 18, 2024
+updatedAt: April 03, 2025
 order: 1
 published: true
 ---
 
 ## Welcome to Weaverse
 
-Ready to transform your Shopify store with Weaverse Hydrogen? This guide will walk you through integrating the Weaverse app with your Shopify store and launching your first Weaverse Hydrogen project in just a few simple steps.
+Transform your Shopify store with Weaverse Hydrogen - the modern solution for building fast, customizable storefronts. This guide will help you get started with your first Weaverse project in minutes.
 
-## Try Before You Commit: The Weaverse Playground
+## Try the Weaverse Playground
 
-Not ready to install yet? Experience Weaverse firsthand through our [interactive Playground](https://studio.weaverse.io/demo). Get a feel for the powerful features without any commitment. Watch our quick tutorial below to see what's possible:
+Want to explore before installing? Visit our [interactive Playground](https://studio.weaverse.io/demo) to experience Weaverse's features firsthand. Watch our quick demo:
 
 <iframe src="https://www.youtube.com/embed/1XwheeIImlE?rel=0" frameBorder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowFullScreen></iframe>
 
-## Installing Weaverse from the Shopify App Store
+## Install Weaverse
 
-Getting started is simple:
-1. Visit the [Shopify app store](https://apps.shopify.com/weaverse)
-2. Search for "Weaverse" 
-3. Follow the quick installation prompts
+1. Go to [Weaverse on Shopify App Store](https://apps.shopify.com/weaverse)
+2. Click "Add app"
+3. Follow the installation prompts
 
 ![Weaverse on Shopify Apps Store](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/weaverse_on_shopify_apps_store.png)
 
-## Creating Your First Weaverse Hydrogen Project
+## Create Your First Project
 
-### Step 1: Initiate a New Project
+### 1. Start a New Project
+
+In your Weaverse dashboard, click "Create New Project" to begin.
 
 ![Create Weaverse Hydrogen Project](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/create_weaverse_hydrogen_project.webp)
 
-From your Weaverse dashboard, simply click "Create New Project" to begin your journey.
+### 2. Choose Your Theme
 
-### Step 2: Select Your Starter Theme
+Select from our Hydrogen starter themes. We recommend our free "Pilot" theme - it's packed with essential features and best practices.
 
 ![Select Weaverse Starter Theme](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/select_weaverse_starter_theme.webp)
 
-Browse our collection of Hydrogen starter themes. We recommend the "Pilot" theme for beginners—it's free and packed with essential features to get you started quickly.
+### 3. Preview and Configure
 
-### Step 3: Preview Your Theme
-
-Take advantage of the default Preview URL to explore your theme's features and interface before making any commitments.
+Use the Preview URL to explore your theme before proceeding. When ready, click "Start Setup".
 
 ![Start setup Weaverse Project](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/start_setup_weaverse_project.webp)
 
-When you're satisfied with your preview, click "Start Setup" to move forward with building or deploying your project.
+### 4. Choose Your Path
 
-### Step 4: Choose Your Setup Path
+Pick the option that suits your needs:
 
-Select the option that matches your technical expertise:
+- **For Developers**: Use our CLI command to create and run your project locally
+- **For Store Owners**: Follow our simple deployment guide to launch without coding. See our [deployment guide](/docs/deployment/oxygen) for details
 
-- **Developer Path**: Clone the project locally or use our provided command to launch the development server
-- **No-Code Path**: Follow our streamlined deployment guide to take your project live with minimal technical knowledge. For detailed instructions, check our [deployment guide](/docs/deployment/oxygen)
+### 5. Connect Your Development Server
 
-### Step 5: Connect to Your Development Server
+After setup:
+- Run your local server (default URL: `http://localhost:3456`)
+- Enter your preview URL in the dashboard
+- Click "Next" to proceed
 
-After setup, enter your development server preview URL (default: `http://localhost:3456`) in the Preview URL field and click "Next."
-
-**Pro Tip**: You can update your Preview URL anytime through the **Project Settings**:
+**Tip**: You can update your Preview URL anytime in **Project Settings**:
 
 ![Weaverse Project Settings](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/weaverse_project_settings.webp)
 
-💡 **Best Practice**: For the optimal experience, use a **Chrome-based browser**. Some browsers like **Safari** may have limitations with `localhost` connections.
+💡 **Note**: For the best experience, use a **Chrome-based browser**. Some features may be limited in browsers like Safari when working with `localhost`.
 
-### Step 6: Master the Theme Customizer
+### 6. Start Customizing
 
-Our intuitive Theme Customizer mirrors Shopify's OS2 interface, making it familiar and easy to use for Shopify store owners.
+Our visual editor mirrors Shopify's familiar interface, making it easy to:
+- Add and arrange sections
+- Customize components
+- Adjust layouts and styles
+- Preview changes in real-time
 
-### Step 7: Customize to Your Heart's Content
+## Next Steps
 
-Start adding sections, adjusting layouts, and personalizing your theme with our user-friendly visual editor—no coding required!
-
-## Ready for More?
-
-You've completed the setup and are ready to explore the full potential of Weaverse! Take your skills to the next level with our comprehensive guide:
+Ready to dive deeper? Learn how to build custom themes and components:
 
 👉 [Build Your First Weaverse Hydrogen Theme](/docs/guides/prerequisites)
 

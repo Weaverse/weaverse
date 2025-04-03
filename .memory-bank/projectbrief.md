@@ -1,31 +1,60 @@
-# Weaverse SDKs Project Brief
+# Weaverse Project Brief
 
 ## Project Overview
-Weaverse SDKs is a monorepo containing a collection of SDKs for integrating Weaverse Headless CMS with modern React/JamStack frameworks. The project is developed by The Weaverse Team and aims to simplify CMS integration for various frameworks.
+Weaverse is a powerful visual builder and theme development platform for Shopify Hydrogen, enabling both developers and store owners to create and customize their storefronts.
 
-## Key Components
-- Core SDK (@weaverse/core): Foundation package with core logic
-- React SDK (@weaverse/react): React components and utilities
-- Hydrogen SDK (@weaverse/hydrogen): Shopify Hydrogen integration
-- Remix SDK (@weaverse/remix): Remix framework integration (in development)
-- Next.js SDK (@weaverse/next): Next.js integration (in development)
-- CLI Tools (@weaverse/cli): Command line utilities
-- Shopify Integration (@weaverse/shopify): Shopify-specific tools
+## Core Objectives
+1. Provide a seamless visual building experience
+2. Maintain developer-friendly code architecture
+3. Ensure high performance and scalability
+4. Enable easy theme customization
+5. Support both no-code and code-first approaches
+
+## Target Audience
+- Shopify store owners
+- Hydrogen developers
+- Theme developers
+- Agency teams
+- No-code users
+
+## Key Features
+1. Visual Builder
+   - Drag-and-drop interface
+   - Real-time preview
+   - Responsive design tools
+   - Component library
+
+2. Developer Tools
+   - Custom component development
+   - Theme schema configuration
+   - TypeScript support
+   - Performance optimization
+
+3. Theme System
+   - Pre-built components
+   - Customizable sections
+   - Global styles
+   - Layout management
 
 ## Technical Stack
+- Shopify Hydrogen
+- React/Remix
 - TypeScript
-- React 18
-- Turbo for monorepo management
-- Biome for linting and formatting
-- PNPM for package management
-- Node.js >= 22
+- Tailwind CSS
+- Node.js
 
-## Development Workflow
-- Uses Changesets for version management
-- Lefthook for git hooks
-- GitHub Actions for CI/CD
-- Biome for code quality checks
+## Project Structure
+```text
+weaverse/
+├── docs/           # Documentation
+├── templates/      # Starter templates
+│   └── pilot/      # Main starter theme
+├── packages/       # Core packages
+└── examples/       # Example implementations
+```
 
-## Project Status
-Current version: 3.2.9
-Active development with community contributions 
+## Current Focus
+- Documentation improvement
+- Pilot theme enhancement
+- Developer experience optimization
+- Getting started workflow simplification 
