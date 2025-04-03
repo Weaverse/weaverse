@@ -1,63 +1,154 @@
 ---
 title: Prerequisites
-description: 'Essential System Requirements for Developing with Weaverse Hydrogen'
+description: 'Essential requirements and setup guide for developing with Weaverse Hydrogen'
 publishedAt: November 20, 2023
-updatedAt: January 30, 2024
+updatedAt: April 03, 2025
 order: 0
 published: true
 ---
 
 ## Overview
 
-Before diving into Weaverse Hydrogen development, ensure your system meets these essential requirements. This comprehensive checklist will help you establish a robust foundation for your project.
+Welcome to Weaverse! Before you begin building your Hydrogen-powered storefront, let's ensure your development environment is properly configured. This guide covers everything you need to get started.
 
-## Initial Setup
+## Quick Requirements Checklist
 
-To begin developing with Weaverse Hydrogen themes, complete these preliminary steps:
+✅ Node.js 18.x or higher
+✅ PNPM 8.x or higher (recommended)
+✅ Git for version control
+✅ Chrome-based browser
+✅ Shopify store (Basic plan or higher)
+✅ Basic React/TypeScript knowledge
 
-1. Install the **[Weaverse](https://apps.shopify.com/weaverse)** app from the **Shopify** app store
-2. Create a new project in Weaverse
-3. Select a Weaverse Hydrogen starter theme:
-   - [Pilot](https://github.com/weaverse/pilot) - A versatile, modern theme
-   - [Naturelle](https://github.com/weaverse/naturelle) - An elegant, nature-inspired design
+## Detailed Requirements
 
-*Note: More themes will be available soon through our upcoming theme marketplace.*
+### 1. Development Environment
 
-Need help with setup? Refer to our **[Getting Started](/docs/hydrogen/getting-started)** guide.
+#### Node.js Setup
+- **Node.js**: `18.x` or higher
+  ```bash
+  # Check your Node version
+  node --version
+  ```
+  - 💡 Tip: Use [nvm](https://github.com/nvm-sh/nvm) to manage Node versions
+  ```bash
+  # Install and use Node 18 with nvm
+  nvm install 18
+  nvm use 18
+  ```
 
-## Shopify Requirements
+#### Package Manager
+We recommend using PNPM for better performance and disk space efficiency:
+- **PNPM** `8.x` or higher (Recommended)
+  ```bash
+  # Install pnpm
+  corepack enable
+  corepack prepare pnpm@latest --activate
+  ```
 
-Essential Shopify components:
+Alternative package managers:
+- **npm**: `10.x` or higher (included with Node.js)
+- **Yarn**: `1.22.x` or higher
 
-- A Basic Shopify plan or higher to access the Shopify Hydrogen app
-- Working knowledge of Shopify app and theme development
+### 2. Code Editor
 
-## Development Environment
+#### Recommended: AI-Powered Editors
+Modern AI-assisted development tools can significantly boost your productivity:
 
-Ensure your system has:
+- **[Cursor](https://cursor.sh/)** (Highly Recommended)
+  - Built-in AI pair programming
+  - Native terminal integration
+  - Git integration
+  - Real-time collaboration
 
-- **Node.js**: Version `18.x` or higher ([Download here](https://nodejs.org))
-- **npm**: Version `10.x` or higher (included with Node.js)
+- **[GitHub Copilot](https://github.com/features/copilot)**
+  - Works with most popular editors
+  - Advanced code completion
+  - Natural language to code
 
-## Browser Support
+#### Alternative: Visual Studio Code
+If you prefer VS Code, install these essential extensions:
+- [Biome](https://marketplace.visualstudio.com/items?itemName=biomejs.biome) - Code formatting and linting
+- [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
+- [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
 
-For optimal development and testing, use the latest versions of these [Chrome-based browsers](https://www.google.com/search?q=chrome+based+web+browsers):
+### 3. Version Control
 
-- Google Chrome
-- Microsoft Edge
-- Arc
+- **Git**: Latest version
+  ```bash
+  # Verify Git installation
+  git --version
+  ```
 
-## Development Tools
+### 4. Browser Requirements
 
-Recommended IDE:
+For the best development experience, use a Chrome-based browser:
+- **Google Chrome** (Recommended)
+- **Arc Browser**
+- **Microsoft Edge**
 
-**Visual Studio Code** ([VSCode](https://code.visualstudio.com/))
-- Industry-standard code editor
-- Rich extension ecosystem
-- Install the [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) extension for consistent code formatting
+> 💡 Chrome DevTools are essential for debugging and performance optimization
+
+### 5. Shopify Requirements
+
+#### Store Setup
+- Active Shopify store (Basic plan or higher)
+- Admin access to your store
+- [Shopify Partner](https://partners.shopify.com/) account (recommended)
+
+#### Technical Prerequisites
+- Basic understanding of:
+  - React fundamentals
+  - TypeScript basics
+  - Shopify theme structure
+  - GraphQL concepts (for advanced usage)
+
+## Getting Started with Weaverse
+
+### 1. Install the Weaverse App
+
+1. Visit [Weaverse on Shopify App Store](https://apps.shopify.com/weaverse)
+2. Click "Add app"
+3. Follow the installation wizard
+
+### 2. Choose Your Path
+
+#### Starter Theme (Recommended for Beginners)
+Choose from our curated themes:
+- [Pilot](https://github.com/weaverse/pilot) - Modern, versatile starter
+- [Naturelle](https://github.com/weaverse/naturelle) - Nature-inspired design
+
+#### Custom Development
+Start from scratch:
+- Create a new project
+- Follow our [custom development guide](/docs/guides/custom-development)
+
+## Verify Your Setup
+
+Run these commands to ensure everything is properly installed:
+
+```bash
+# Environment checks
+node --version     # Should be ≥ 18.x
+pnpm --version     # Should be ≥ 8.x
+git --version      # Should show latest version
+
+# Optional: Install global dependencies
+pnpm install -g @shopify/cli
+```
 
 ## Next Steps
 
-With your development environment configured, you're ready to explore Weaverse Hydrogen theme development. Continue to the [Weaverse Hydrogen Project Structure](https://weaverse.io/docs/guides/8321058-project-structure) guide to begin building your theme.
+Ready to start building? Continue with:
+
+1. 📚 [Getting Started Guide](/docs/hydrogen/getting-started)
+2. 🏗️ [Project Structure](/docs/guides/project-structure)
+3. 🧱 [Component Development](/docs/guides/weaverse-component)
+
+## Need Help?
+
+- Join our [Community Slack](https://wvse.cc/weaverse-slack)
+- Check our [GitHub Discussions](https://github.com/weaverse/weaverse/discussions)
+- Follow [@WeaverseIO](https://twitter.com/WeaverseIO) for updates
 
 ---

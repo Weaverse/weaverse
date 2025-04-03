@@ -1,210 +1,257 @@
 ---
 title: Project Structure
-description: 'Explore the core structure of a Weaverse Hydrogen theme.'
+description: 'Essential guide to Weaverse Hydrogen theme structure'
 publishedAt: November 20, 2023
-updatedAt: January 17, 2024
+updatedAt: April 03, 2025
 order: 1
 published: true
 ---
 
-## Basic Structure Overview
+## Overview
 
-Before getting into the finer details, let's get a top-level overview of the project:
+The Weaverse Hydrogen theme follows a modern Shopify Hydrogen structure, optimized for performance and developer experience. Let's explore the key components of your theme.
 
-```text data-line-numbers=false
-🌳 <root>
-├── 📁 app
-│   ├── 📁 ...
-│   ├── 📁 components
-│   ├── 📁 data
-│   ├── 📁 graphql
-│   ├── 📁 hooks
-│   ├── 📁 libs
-│   ├── 📁 routes
-│   ├── 📁 sections
-│   ├── 📁 styles
-│   ├── 📁 weaverse
-│   │   └── 📄 components.ts
-│   │   └── 📄 create-weaverse.server.ts
-│   │   └── 📄 index.tsx
-│   │   └── 📄 schema.server.ts
-│   │   └── 📄 style.tsx
+## Core Structure
+
+```text
+🌳 my-theme
+├── 📁 app/
+│   ├── 📁 components/     # Reusable UI components
+│   ├── 📁 graphql/       # GraphQL queries and fragments
+│   ├── 📁 hooks/         # Custom React hooks
+│   ├── 📁 routes/        # Application routes
+│   ├── 📁 sections/      # Theme sections
+│   ├── 📁 styles/        # Global styles and Tailwind
+│   ├── 📁 types/         # TypeScript definitions
+│   ├── 📁 utils/         # Helper functions
+│   ├── 📁 weaverse/      # Weaverse configuration
 │   ├── 📄 entry.client.tsx
 │   ├── 📄 entry.server.tsx
 │   └── 📄 root.tsx
-├── 📁 public
-│   └── 📄 favicon.svg
-├── 📄 .editorconfig
-├── 📄 .env
-├── 📄 package.json
-├── 📄 remix.config.js
-├── 📄 remix.env.d.ts
-├── 📄 server.ts
-├── 📄 sync-project.md
-└── 📄 tailwind.config.js
-└── 📄 ...
+├── 📁 public/            # Static assets
+├── 📄 server.ts          # Server configuration
+├── 📄 vite.config.ts     # Build configuration
+├── 📄 tailwind.config.js # Tailwind settings
+└── 📄 .env              # Environment variables
 ```
 
-## Base Files Explained
+## Key Directories
 
-- [`server.ts`](https://github.com/Weaverse/pilot/blob/main/server.ts): This is the main server entry point. Among other
-  responsibilities, it injects the **`weaverseClient`** into the app load context, ensuring that Weaverse
-  functionalities are available throughout your application.
-
+### `/app/components`
+Reusable UI components:
 ```tsx
-// <root>/server.ts
+// Example: app/components/Button.tsx
+export function Button({ children, className = '', ...props }) {
+  return (
+    <button 
+      className={`px-4 py-2 bg-primary text-white ${className}`} 
+      {...props}
+    >
+      {children}
+    </button>
+  );
+}
+```
 
-import { createWeaverseClient } from '~/weaverse/create-weaverse.server'
+### `/app/sections`
+Theme sections for Weaverse Studio:
+```tsx
+// Example: app/sections/Hero.tsx
+import { forwardRef } from 'react';
 
-const handleRequest = createRequestHandler({
-  // ...
-  getLoadContext: () => ({
-    // Injecting the Weaverse client into the loader context.
-    weaverse: createWeaverseClient({
-      storefront,
+export type HeroProps = {
+  heading: string;
+  description: string;
+  className?: string;
+};
+
+export let schema = {
+  title: 'Hero',
+  type: 'hero',
+  inspector: [
+    {
+      group: 'Content',
+      inputs: [
+        { type: 'text', name: 'heading', label: 'Heading' },
+        { type: 'textarea', name: 'description', label: 'Description' }
+      ]
+    }
+  ]
+};
+
+export let Hero = forwardRef<HTMLElement, HeroProps>((props, ref) => {
+  let { heading, description, className = '' } = props;
+  
+  return (
+    <section 
+      ref={ref}
+      className={`py-12 px-4 max-w-7xl mx-auto ${className}`}
+    >
+      <div className="text-center">
+        <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
+          {heading}
+        </h1>
+        <p className="mt-6 text-lg leading-8 text-gray-600">
+          {description}
+        </p>
+      </div>
+    </section>
+  );
+});
+
+Hero.displayName = 'Hero';
+```
+
+### `/app/weaverse`
+Core Weaverse configuration files:
+- `components.ts` - Component registry
+- `schema.server.ts` - Theme schema
+- `create-weaverse.server.ts` - Client setup
+
+## Essential Files
+
+### `server.ts`
+Server configuration and Weaverse client integration:
+```ts
+import { WeaverseClient } from '@weaverse/hydrogen';
+import { components } from '~/weaverse/components';
+import { themeSchema } from '~/weaverse/schema.server';
+
+export async function createAppLoadContext(request, env, executionContext) {
+  // Initialize Hydrogen context
+  let hydrogenContext = createHydrogenContext({
+    env,
+    request,
+    cache,
+    waitUntil,
+    session,
+    i18n: getLocaleFromRequest(request),
+    cart: { queryFragment: CART_QUERY_FRAGMENT },
+  });
+
+  // Initialize Weaverse client
+  return {
+    ...hydrogenContext,
+    weaverse: new WeaverseClient({
+      ...hydrogenContext,
       request,
-      env,
       cache,
-      waitUntil,
+      themeSchema,
+      components,
     }),
-    // ... more app context properties
-  }),
-})
+  };
+}
 ```
 
-- [`.env`](https://github.com/Weaverse/pilot/blob/main/.env): This file holds your project-specific environment
-  variables. Always keep this file secure and never expose sensitive data. For a detailed guide on setting up and
-  managing environment variables, refer to
-  the [Environment Variables article](/docs/guides/environment-variables).
-
-- [`tailwind.config.js`](https://github.com/Weaverse/pilot/blob/main/tailwind.config.js): This file configures **TailwindCSS**, a utility-first CSS framework that developers love 💚. Using TailwindCSS, you can quickly design and
-  customize your theme components.
-
-- [`remix.env.d.ts`](https://github.com/Weaverse/pilot/blob/main/remix.env.d.ts): This **TypeScript** definition file is
-  where we define global types, including environment variables and additions to the **Remix** loader context
-
+### `entry.server.tsx`
+Server-side rendering setup:
 ```tsx
-// <root>/remix.env.d.ts
+import { RemixServer } from "@remix-run/react";
+import { createContentSecurityPolicy } from "@shopify/hydrogen";
+import type { AppLoadContext, EntryContext } from "@shopify/remix-oxygen";
+import { isbot } from "isbot";
+import { renderToReadableStream } from "react-dom/server";
+import { getWeaverseCsp } from "~/weaverse/csp";
 
-import type { WeaverseClient } from '@weaverse/hydrogen'
+export default async function handleRequest(
+  request: Request,
+  responseStatusCode: number,
+  responseHeaders: Headers,
+  remixContext: EntryContext,
+  context: AppLoadContext,
+) {
+  const { nonce, header, NonceProvider } = createContentSecurityPolicy({
+    ...getWeaverseCsp(request, context),
+    shop: {
+      checkoutDomain: context.env?.PUBLIC_CHECKOUT_DOMAIN || context.env?.PUBLIC_STORE_DOMAIN,
+      storeDomain: context.env?.PUBLIC_STORE_DOMAIN,
+    },
+  });
 
-/**
- * Declare expected Env parameter in fetch handler.
- */
-interface Env {
-  SESSION_SECRET: string
-  PUBLIC_STOREFRONT_API_TOKEN: string
-  PRIVATE_STOREFRONT_API_TOKEN: string
-  PUBLIC_STORE_DOMAIN: string
-  PUBLIC_STOREFRONT_ID: string
-  /**
-   * Include the Weaverse Project's ID - you'll find this in the Weaverse Editor under Project Settings.
-   * And the optional Weaverse Host - which value is https://weaverse.io by default.
-   */
-  WEAVERSE_PROJECT_ID: string
-  WEAVERSE_HOST: string
-}
+  const body = await renderToReadableStream(
+    <NonceProvider>
+      <RemixServer context={remixContext} url={request.url} nonce={nonce} />
+    </NonceProvider>,
+    {
+      nonce,
+      signal: request.signal,
+      onError(error) {
+        console.error(error);
+        responseStatusCode = 500;
+      },
+    },
+  );
 
-/**
- * Declare local additions to the Remix loader context.
- */
-export interface AppLoadContext {
-  waitUntil: ExecutionContext['waitUntil']
-  session: HydrogenSession
-  storefront: Storefront
-  cart: HydrogenCart
-  env: Env
-  // Include the Weaverse Client in the Remix loader context.
-  weaverse: WeaverseClient
-}
-```
+  if (isbot(request.headers.get("user-agent"))) {
+    await body.allReady;
+  }
 
-- [`remix.config.js`](https://github.com/Weaverse/pilot/blob/main/remix.config.js): This configuration file is central
-  to the operation of your **Remix** application. For a comprehensive understanding of its contents and purpose, refer
-  to the [Remix documentation](https://remix.run/docs/en/main/file-conventions/remix-config).
+  responseHeaders.set("Content-Type", "text/html");
+  responseHeaders.set("Content-Security-Policy-Report-Only", header);
 
-- [`sync-project.md`](https://github.com/Weaverse/pilot/blob/main/sync-project.md): If you ever need to sync your
-  project with the latest version of Pilot, this markdown file will guide you through the process.
-
-## Key Files and Directories within **`app`**
-
-- [`root.tsx`](https://github.com/Weaverse/pilot/blob/main/app/entry.client.tsx): This is the root route of any Remix
-  application. Within this file, global theme settings are loaded and rendered. Dive deeper into how global theme
-  settings are handled in
-  the [Global Theme Settings article](/docs/guides/global-theme-settings).
-
-- [`entry.server.tsx`](https://github.com/Weaverse/pilot/blob/main/app/entry.server.tsx): This is the server-side entry
-  to your application. Not only does it handle the initial rendering of your app, but it also manages server-side
-  functionalities like setting up a custom **Content Security Policy** (CSP). For more details on configuring and
-  understanding CSP, refer to the [CSP article](/docs/guides/csp).
-
-- [`/routes`](https://github.com/Weaverse/pilot/tree/main/app/routes): This directory contains your app's routes. Each
-  file inside this directory becomes a page in your app that **Remix** will load and render. Learn about the intricate
-  details of how Weaverse pages are loaded and rendered in
-  the [Rendering a Page article](/docs/guides/rendering-page).
-
-- [`/sections`](https://github.com/Weaverse/pilot/tree/main/app/sections): Here, you write the code for different
-  sections of your theme. Once the section code is crafted, you also need to register the section. For a comprehensive
-  understanding of section crafting and registration, refer to
-  the [Weaverse Hydrogen Component article](/docs/guides/weaverse-component).
-
-- [`/weaverse`](https://github.com/Weaverse/pilot/tree/main/app/weaverse):
-
-```text data-line-numbers=false
-📁 weaverse
-├── 📄 components.ts
-├── 📄 create-weaverse.server.ts
-├── 📄 index.tsx
-├── 📄 schema.server.ts
-└── 📄 style.tsx
-```
-
-- [`components.ts`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/components.ts): This file register all the
-  Hydrogen components in your theme. Learn more about it
-  in [Weaverse Hydrogen Component article](/docs/guides/weaverse-component).
-
-- [`create-weaverse.server.ts`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/create-weaverse.server.ts):
-  This file is pivotal for integrating Weaverse's capabilities into your project. It exports the **`createWeaverseClient`** function that sets up the Weaverse client.
-
-```tsx
-// <root>/app/weaverse/create-weaverse.server.ts
-
-import { Storefront } from '@shopify/hydrogen'
-import { I18nLocale, WeaverseClient } from '@weaverse/hydrogen'
-import { countries } from '~/data/countries'
-import { components } from '~/weaverse/components'
-import { themeSchema } from '~/weaverse/schema.server'
-
-type CreateWeaverseArgs = {
-  storefront: Storefront<I18nLocale>
-  request: Request
-  env: Env
-  cache: Cache
-  waitUntil: ExecutionContext['waitUntil']
-}
-
-export function createWeaverseClient(args: CreateWeaverseArgs) {
-  return new WeaverseClient({
-    ...args,
-    countries,
-    themeSchema,
-    components,
-  })
+  return new Response(body, {
+    headers: responseHeaders,
+    status: responseStatusCode,
+  });
 }
 ```
 
-- [`index.tsx`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/index.tsx): This file export the main Weaverse
-  content. Refer to the [Rendering a Page article](/docs/guides/rendering-page) to learn
-  more.
+### `.env`
+Required environment variables:
+```bash
+# Core Configuration
+SESSION_SECRET="foobar"
 
-- [`schema.server.ts`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/schema.server.ts)
-  and [`style.tsx`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/style.tsx): these files define the global
-  theme schema and how you render them. See how global settings are handled in
-  the [Global Theme Settings article](/docs/guides/global-theme-settings).
+# Shopify Configuration
+PUBLIC_STORE_DOMAIN=your-store.myshopify.com
+PUBLIC_STOREFRONT_API_TOKEN=your-token
+PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID=your-client-id
+SHOP_ID=your-shop-id
+PUBLIC_CHECKOUT_DOMAIN=your-checkout-domain
 
----
+# Optional Shopify Configuration
+PUBLIC_STOREFRONT_ID=your-storefront-id
+# PRIVATE_STOREFRONT_API_TOKEN=your-private-token
+
+# Weaverse Configuration
+WEAVERSE_PROJECT_ID=your-project-id
+# WEAVERSE_API_KEY=your-api-key
+
+# Additional Services (Optional)
+# PUBLIC_GOOGLE_GTM_ID=your-gtm-id
+# JUDGEME_PRIVATE_API_TOKEN=your-judgeme-token
+# ALI_REVIEWS_API_KEY=your-ali-reviews-key
+
+# Custom Metafields & Metaobjects
+METAOBJECT_COLORS_TYPE=shopify--color-pattern
+CUSTOM_COLLECTION_BANNER_METAFIELD=custom.collection_banner
+
+# Shopify Inbox (Optional)
+# PUBLIC_SHOPIFY_INBOX_SHOP_ID=your-inbox-shop-id
+```
+
+## Development Commands
+
+```bash
+# Install dependencies
+npm install
+
+# Start development
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
 
 ## Next Steps
 
-Now that you're familiar with the project structure, it's crucial to understand how to set up and
-manage [Environment Variables](/docs/guides/environment-variables).
+- [Component Development](/docs/guides/weaverse-component)
+- [Theme Customization](/docs/guides/global-theme-settings)
+- [Environment Setup](/docs/guides/environment-variables)
+
+Need help? Join our [Community Slack](https://wvse.cc/weaverse-slack).
+
+---
