@@ -2,7 +2,7 @@
 title: Prerequisites
 description: 'Essential requirements and setup guide for developing with Weaverse Hydrogen'
 publishedAt: November 20, 2023
-updatedAt: April 03, 2025
+updatedAt: April 11, 2025
 order: 0
 published: true
 ---
@@ -13,11 +13,16 @@ Welcome to Weaverse! Before you begin building your Hydrogen-powered storefront,
 
 ## Quick Requirements Checklist
 
-✅ Node.js 18.x or higher
+✅ Node.js 22.x or higher (18.x minimum)
+
 ✅ PNPM 8.x or higher (recommended)
+
 ✅ Git for version control
+
 ✅ Chrome-based browser
+
 ✅ Shopify store (Basic plan or higher)
+
 ✅ Basic React/TypeScript knowledge
 
 ## Detailed Requirements
@@ -25,16 +30,16 @@ Welcome to Weaverse! Before you begin building your Hydrogen-powered storefront,
 ### 1. Development Environment
 
 #### Node.js Setup
-- **Node.js**: `18.x` or higher
+- **Node.js**: `22.x` or higher recommended (`18.x` minimum)
   ```bash
   # Check your Node version
   node --version
   ```
   - 💡 Tip: Use [nvm](https://github.com/nvm-sh/nvm) to manage Node versions
   ```bash
-  # Install and use Node 18 with nvm
-  nvm install 18
-  nvm use 18
+  # Install and use latest LTS Node version with nvm
+  nvm install --lts
+  nvm use --lts
   ```
 
 #### Package Manager
@@ -50,21 +55,29 @@ Alternative package managers:
 - **npm**: `10.x` or higher (included with Node.js)
 - **Yarn**: `1.22.x` or higher
 
-### 2. Code Editor
+### 2. Development Tools
 
-#### Recommended: AI-Powered Editors
-Modern AI-assisted development tools can significantly boost your productivity:
-
+#### Recommended IDE
 - **[Cursor](https://cursor.sh/)** (Highly Recommended)
   - Built-in AI pair programming
   - Native terminal integration
   - Git integration
   - Real-time collaboration
 
+#### AI Coding Assistants
 - **[GitHub Copilot](https://github.com/features/copilot)**
   - Works with most popular editors
   - Advanced code completion
-  - Natural language to code
+  - Natural language to code assistance
+
+#### MCP Servers
+To enhance your development experience with AI-powered tools, we recommend these Model Context Protocol servers:
+
+- **[Weaverse MCP](https://github.com/weaverse/mcp)** - Quick access to Weaverse documentation
+- **[Shopify MCP](https://github.com/Shopify/dev-mcp)** - Shopify API integration and documentation
+- **[Figma MCP](https://github.com/GLips/Figma-Context-MCP)** - For implementing Figma designs
+
+> 💡 Tip: These MCPs work best with Cursor IDE. Follow the setup instructions in each repository.
 
 #### Alternative: Visual Studio Code
 If you prefer VS Code, install these essential extensions:
