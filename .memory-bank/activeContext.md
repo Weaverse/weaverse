@@ -21,6 +21,12 @@ Improving documentation and developer experience:
    - Improved technical accuracy
    - Enhanced readability
 
+3. Environment Variables:
+   - Updated documentation (April 11, 2025)
+   - Added Storefront API permission requirements
+   - Improved setup instructions
+   - Added TypeScript support documentation
+
 ## Active Development
 1. Pilot Theme:
    - Core components
@@ -56,11 +62,17 @@ IMPLEMENT - Documentation and DX improvement phase
    - Update style system
    - Add example customizations
 
+3. Environment Variables:
+   - Review other documentation sections for updates
+   - Verify API integration functionality
+   - Update related documentation as needed
+   - Add more examples and troubleshooting guides
+
 ## Current Focus
-- Core SDK development and maintenance
-- Framework-specific SDK integrations
-- Type safety and documentation
-- Community contributions and support
+- Environment variables documentation
+- API integration setup
+- Development environment configuration
+- Security best practices
 
 ## Active Development Areas
 - Core package (@weaverse/core)
@@ -83,4 +95,14 @@ IMPLEMENT - Documentation and DX improvement phase
 - Remix and Next.js SDKs in development
 - Framework-specific edge cases
 - Documentation gaps
-- Performance optimization opportunities 
+- Performance optimization opportunities
+
+## Notes
+- MCP servers are now recommended rather than required
+- Development tools section has been reorganized
+- Node.js version requirements have been updated
+- Documentation structure has been improved
+- Storefront API requires all permissions enabled
+- Environment variables are properly categorized
+- TypeScript support is documented
+- Security best practices are emphasized 
