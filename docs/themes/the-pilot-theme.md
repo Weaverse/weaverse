@@ -3,7 +3,7 @@ title: Pilot - Shopify Hydrogen Starter Theme
 description: Elevate your Shopify Headless storefront with Pilot, the robust and versatile starter theme by Weaverse.
 publishedAt: January 11, 2024
 updatedAt: January 15, 2024
-order: 2
+order: 1
 published: true
 ---
 
