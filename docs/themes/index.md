@@ -1,5 +1,5 @@
 ---
 title: Themes
 description: Theme tutorials
-order: 8
+order: 7
 ---

@@ -73,15 +73,15 @@ A Weaverse Component consists of three essential parts:
 
 ### Component Lifecycle
 
-```mermaid
-graph TD
-    A[Component Creation] --> B[Schema Definition]
-    B --> C[Component Logic]
-    C --> D[Data Integration]
-    D --> E[Render]
-    E --> F[Update]
-    F --> G[Cleanup]
-```
+A Weaverse component follows this lifecycle:
+
+1. **Component Creation**: Define the component file
+2. **Schema Definition**: Configure how the component appears in the editor
+3. **Component Logic**: Implement the React component with proper props
+4. **Data Integration**: Set up data fetching if needed
+5. **Render**: Component is rendered on the page
+6. **Update**: Component re-renders when props or state change
+7. **Cleanup**: Component unmounts and cleans up resources
 
 ## Component Structure
 
@@ -91,15 +91,17 @@ Every Weaverse component follows a consistent structure:
 
 1. **Imports**: Import necessary types and utilities from Weaverse and React
 2. **Interface**: Define the component's props interface
-3. **Component**: Create the component using `forwardRef`
+3. **Component**: Create the component (with or without `forwardRef`, see note below)
 4. **Schema**: Export the schema that defines how the component appears in Weaverse Studio
 5. **Export**: Export the component as default
+
+> **Note about `forwardRef`**: While many examples use `forwardRef`, it's actually optional in Weaverse components. It helps pass the ref to the component's DOM element so that Weaverse Editor can render essential UI elements like overlays and toolbars in the editor. However, if you spread all props to your root DOM element (e.g., `<div {...props}>`), Weaverse will automatically detect the DOM element. Additionally, with React 19, `forwardRef` will become less necessary due to improvements in ref handling.
 
 ### Basic Component Template
 
 ```tsx
 import type { HydrogenComponentProps, HydrogenComponentSchema } from '@weaverse/hydrogen';
-import { forwardRef } from 'react';
+import { forwardRef } from 'react';  // Optional but recommended for now
 
 interface MyComponentProps extends HydrogenComponentProps {
   // Add your custom props here
@@ -107,6 +109,7 @@ interface MyComponentProps extends HydrogenComponentProps {
   description?: string;
 }
 
+// Using forwardRef (recommended approach for React 18)
 const MyComponent = forwardRef<HTMLElement, MyComponentProps>((props, ref) => {
   const { title, description, children, ...rest } = props;
   
@@ -118,6 +121,19 @@ const MyComponent = forwardRef<HTMLElement, MyComponentProps>((props, ref) => {
     </section>
   );
 });
+
+// Alternative: Without forwardRef (will work if you spread props to root element)
+// function MyComponent(props: MyComponentProps) {
+//   const { title, description, children, ...rest } = props;
+//   
+//   return (
+//     <section {...rest}>  // Make sure to spread remaining props here
+//       {title && <h2>{title}</h2>}
+//       {description && <p>{description}</p>}
+//       {children}
+//     </section>
+//   );
+// }
 
 export const schema: HydrogenComponentSchema = {
   type: 'my-component',
@@ -147,7 +163,7 @@ export default MyComponent;
 ### Key Elements
 
 1. **HydrogenComponentProps**: Base props interface that all Weaverse components extend
-2. **forwardRef**: Required to properly pass refs through the component tree
+2. **forwardRef**: Used to properly pass refs through the component tree (optional if props are spread correctly)
 3. **type property in schema**: Unique identifier for the component (must be unique across all components)
 4. **inspector**: Defines the UI controls in Weaverse Studio
 5. **children prop**: Components can render child components or elements
@@ -765,7 +781,7 @@ const data = await storefront.query(QUERY, {
 });
 ```
 
-For more details, see [Hydrogen Documentation on Caching](https://shopify.dev/custom-storefronts/hydrogen/framework/cache).
+For more details, see [Hydrogen Documentation on Caching](https://shopify.dev/docs/storefronts/headless/hydrogen/caching).
 
 ## Component Organization Patterns
 
@@ -955,7 +971,112 @@ const Hotspots = forwardRef<HTMLElement, HotspotsProps>((props, ref) => {
 
 ## Best Practices
 
-### 1. Component Architecture
+### 1. Using CVA with Select Inputs
+
+Class Variance Authority (CVA) provides an elegant way to handle component variants that map directly to schema select inputs. This pattern creates a strong connection between your schema inputs and component styling:
+
+```tsx
+// Example from hero-image.tsx
+import { type VariantProps, cva } from "class-variance-authority";
+
+// Define variants using CVA
+const variants = cva("flex flex-col [&_.paragraph]:mx-[unset]", {
+  variants: {
+    height: {
+      small: "min-h-[40vh] lg:min-h-[50vh]",
+      medium: "min-h-[50vh] lg:min-h-[60vh]",
+      large: "min-h-[70vh] lg:min-h-[80vh]",
+      full: "",
+    },
+    contentPosition: {
+      "top left": "justify-start items-start [&_.paragraph]:[text-align:left]",
+      "top center": "justify-start items-center [&_.paragraph]:[text-align:center]",
+      "top right": "justify-start items-end [&_.paragraph]:[text-align:right]",
+      "center left": "justify-center items-start [&_.paragraph]:[text-align:left]",
+      "center center": "justify-center items-center [&_.paragraph]:[text-align:center]",
+      "center right": "justify-center items-end [&_.paragraph]:[text-align:right]",
+      "bottom left": "justify-end items-start [&_.paragraph]:[text-align:left]",
+      "bottom center": "justify-end items-center [&_.paragraph]:[text-align:center]",
+      "bottom right": "justify-end items-end [&_.paragraph]:[text-align:right]",
+    },
+  },
+  defaultVariants: {
+    height: "large",
+    contentPosition: "center center",
+  },
+});
+
+// Extend component props with CVA variants
+export interface HeroImageProps extends VariantProps<typeof variants> {}
+
+// Use variants in component
+const HeroImage = forwardRef<HTMLElement, HeroImageProps & SectionProps>(
+  (props, ref) => {
+    const { children, height, contentPosition, ...rest } = props;
+    
+    return (
+      <Section
+        ref={ref}
+        {...rest}
+        containerClassName={variants({
+          contentPosition,
+          height,
+        })}
+      >
+        {children}
+      </Section>
+    );
+  },
+);
+
+// Define schema with matching select inputs
+export const schema: HydrogenComponentSchema = {
+  type: "hero-image",
+  title: "Hero image",
+  inspector: [
+    {
+      group: "Layout",
+      inputs: [
+        {
+          type: "select",
+          name: "height",
+          label: "Section height",
+          configs: {
+            options: [
+              { value: "small", label: "Small" },
+              { value: "medium", label: "Medium" },
+              { value: "large", label: "Large" },
+              { value: "full", label: "Fullscreen" },
+            ],
+          },
+        },
+        {
+          type: "position",
+          name: "contentPosition",
+          label: "Content position",
+          defaultValue: "center center",
+        },
+        // ... more inputs
+      ],
+    },
+    // ... more groups
+  ],
+  // ... schema continues
+};
+```
+
+**Benefits of this approach:**
+
+1. **Type Safety**: CVA provides type checking for variant values
+2. **Single Source of Truth**: Variant options in schema match exact keys in CVA
+3. **Maintainability**: Changes to variant names only need to happen in one place
+4. **Composition**: Easily combine multiple variants for complex styling
+5. **Default Values**: Set defaults in CVA that match schema defaults
+6. **Responsive Design**: Apply responsive styles within variant definitions
+
+This pattern works particularly well for components with multiple configurable aspects like layout, sizing, positioning, or appearance variants.
+
+### 2. Component Architecture
 
 - **Use TypeScript for better type safety**
   - Define explicit prop interfaces
@@ -974,7 +1095,7 @@ const Hotspots = forwardRef<HTMLElement, HotspotsProps>((props, ref) => {
   - Use meaningful names for components and props
   - Document complex logic with comments
 
-### 2. State Management
+### 3. State Management
 
 ```tsx
 import { useState, useReducer } from 'react';
@@ -1016,7 +1137,7 @@ const ComplexComponent = forwardRef<HTMLElement, ComplexComponentProps>((props, 
 });
 ```
 
-### 3. Error Handling
+### 4. Error Handling
 
 ```tsx
 import { ErrorBoundary } from 'react-error-boundary';
@@ -1042,7 +1163,7 @@ const SafeComponent = forwardRef<HTMLElement, SafeComponentProps>((props, ref) =
 });
 ```
 
-### 4. Accessibility
+### 5. Accessibility
 
 - **Follow WAI-ARIA Guidelines**
   - Use semantic HTML elements
@@ -1069,7 +1190,7 @@ const AccessibleComponent = forwardRef<HTMLElement, AccessibleComponentProps>((p
 });
 ```
 
-### 5. Performance Considerations
+### 6. Performance Considerations
 
 - Memoize expensive calculations with `useMemo`
 - Optimize callback functions with `useCallback`
