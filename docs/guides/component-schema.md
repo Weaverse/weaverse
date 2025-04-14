@@ -2,14 +2,14 @@
 title: Component Schema
 description: The blueprint of a Weaverse component.
 publishedAt: November 20, 2023
-updatedAt: January 17, 2024
+updatedAt: April 14, 2025
 order: 4
 published: true
 ---
 
 ## Anatomy
 
-In Weaverse, every component's behavior and interactivity within the Weaverse Studio is determined by its schema. This
+In Weaverse, each component's behavior and interactivity within the Weaverse Studio is determined by its schema. This
 schema, named _`HydrogenComponentSchema`_, acts as a blueprint for your component, ensuring a consistent and
 user-friendly experience.
 
@@ -47,7 +47,7 @@ type: string
 
 <img alt="title_attr_img" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/tittle-and-type.webp?v=1743409496" width="300"/>
 
-- **`type`**: A _unique_ identifier for the component, ensuring differentiation between various components.
+- **`type`**: A _unique_ identifier for the component, ensuring differentiation among various components.
 
 #### `inspector`
 
