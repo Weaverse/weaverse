@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 4.2.5
+
+### Patch Changes
+
+- Restructure, remove unused types and unneccessary exports
+
 ## 4.2.4
 
 ### Patch Changes

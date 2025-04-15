@@ -1,5 +1,13 @@
 # @weaverse/shopify
 
+## 4.2.5
+
+### Patch Changes
+
+- Restructure, remove unused types and unneccessary exports
+- Updated dependencies
+  - @weaverse/react@4.2.5
+
 ## 4.2.4
 
 ### Patch Changes
