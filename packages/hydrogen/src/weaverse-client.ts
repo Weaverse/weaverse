@@ -290,7 +290,6 @@ export class WeaverseClient {
           ...basePageConfigs,
           requestInfo: {
             i18n: storefront.i18n,
-            // TODO: @hta218 - migrate to Remix hooks
             queries: getRequestQueries<WeaverseStudioQueries>(request),
             pathname: new URL(request.url).pathname,
             search: new URL(request.url).search,

@@ -1,28 +1,163 @@
 import { Await, useLoaderData } from '@remix-run/react'
-import { WeaverseRoot } from '@weaverse/react'
-import { type ComponentType, type JSX, Suspense, memo } from 'react'
+import {
+  type PlatformTypeEnum,
+  Weaverse,
+  WeaverseItemStore,
+  WeaverseRoot,
+  isBrowser,
+} from '@weaverse/react'
+import {
+  type ComponentType,
+  type JSX,
+  Suspense,
+  createContext,
+  memo,
+  useSyncExternalStore,
+} from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-
-import { WeaverseEffect } from '~/Effect'
-import { ThemeSettingsProvider, createWeaverseInstance } from './context'
-import { useThemeSettingsStore } from './hooks/use-theme-settings'
+import { defaultComponents } from '~/components'
+import type {
+  HydrogenComponentData,
+  HydrogenElement,
+  HydrogenPageData,
+  HydrogenThemeSettings,
+  WeaverseInternal,
+  WeaverseLoaderRequestInfo,
+} from './index'
 import type {
   HydrogenComponent,
-  WeaverseHydrogenRootProps,
+  WeaverseHydrogenParams,
   WeaverseLoaderData,
 } from './types'
+import type { WeaverseHydrogenRootProps } from './types'
+import { useStudio } from './utils/use-studio'
+import { useThemeSettingsStore } from './utils/use-theme-settings-store'
 
-type WeaverseData = WeaverseLoaderData | Promise<WeaverseLoaderData>
+export class WeaverseHydrogenItem extends WeaverseItemStore {
+  declare weaverse: WeaverseHydrogen
+
+  constructor(initialData: HydrogenComponentData, weaverse: WeaverseHydrogen) {
+    super(initialData, weaverse)
+    let { data, ...rest } = initialData
+    Object.assign(this._store, this._schemaData, data, rest)
+  }
+
+  get Element(): HydrogenElement {
+    return super.Element
+  }
+
+  get _schemaData() {
+    if (this.Element?.schema) {
+      let data: Record<string, any> = {}
+      let { inspector } = this.Element.schema
+      if (inspector) {
+        for (let group of inspector) {
+          for (let input of group.inputs) {
+            let { name, defaultValue } = input
+            if (name && defaultValue !== null && defaultValue !== undefined) {
+              data[name] = defaultValue
+            }
+          }
+        }
+      }
+      return data
+    }
+    return {}
+  }
+}
+
+Weaverse.ItemConstructor = WeaverseHydrogenItem
+
+export class WeaverseHydrogen extends Weaverse {
+  platformType: PlatformTypeEnum = 'shopify-hydrogen'
+  pageId: string
+  internal: Partial<WeaverseInternal>
+  requestInfo: WeaverseLoaderRequestInfo
+  declare ItemConstructor: typeof WeaverseHydrogenItem
+  declare data: HydrogenPageData
+  static itemInstances: Map<string, WeaverseHydrogenItem>
+  static elementRegistry: Map<string, HydrogenElement>
+
+  constructor(params: WeaverseHydrogenParams) {
+    let { internal, pageId, requestInfo, ...coreParams } = params
+    super({ ...coreParams })
+    this.internal = internal
+    this.pageId = pageId
+    this.requestInfo = requestInfo
+  }
+}
+
+function createWeaverseInstance(
+  params: WeaverseHydrogenParams,
+): WeaverseHydrogen {
+  if (isBrowser) {
+    // Check if the weaverse instance already exists in the window object
+    window.__weaverses = window.__weaverses || {}
+    let weaverse = window.__weaverses[params.pageId]
+    // If the weaverse instance does not exist, or the pathname or search has changed, create a new instance
+    if (
+      !weaverse ||
+      weaverse?.requestInfo?.pathname !== params.requestInfo.pathname ||
+      weaverse?.requestInfo?.search !== params.requestInfo.search
+    ) {
+      weaverse = new WeaverseHydrogen(params)
+      window.__weaverses[params.pageId] = weaverse
+    }
+    if (weaverse?.isDesignMode) {
+      weaverse.requestInfo = params.requestInfo
+      window.weaverseStudio?.refreshStudio(params)
+    }
+    return weaverse
+  }
+  return new WeaverseHydrogen(params)
+}
+
+let StudioBridge = memo(({ context }: { context: WeaverseHydrogen }) => {
+  useStudio(context)
+  return null
+})
+
+function RenderRoot(props: {
+  data: WeaverseLoaderData
+  components: HydrogenComponent[]
+}) {
+  let { data, components } = props
+  for (let comp of [...components, ...defaultComponents]) {
+    comp?.schema?.type &&
+      WeaverseHydrogen.registerElement({
+        type: comp?.schema.type,
+        Component: comp.default,
+        schema: comp.schema,
+        loader: comp.loader,
+      })
+  }
+  let { page, configs, project, pageAssignment } = data || {}
+  let weaverse = createWeaverseInstance({
+    ...configs,
+    data: page,
+    pageId: page?.id,
+    internal: { project, pageAssignment },
+  })
+  return (
+    <>
+      <WeaverseRoot context={weaverse} />
+      <StudioBridge context={weaverse} />
+    </>
+  )
+}
 
 export let WeaverseHydrogenRoot = memo(
   ({
-    errorComponent: ErrorComponent = FallbackError,
     components,
+    errorComponent: ErrorComponent = ({ error }) => (
+      <div>{error?.message || 'An unexpected error occurred'}</div>
+    ),
   }: WeaverseHydrogenRootProps) => {
-    let loaderData = useLoaderData() as {
-      weaverseData: WeaverseData
-    }
-    let data = loaderData?.weaverseData
+    let loaderData = useLoaderData()
+    // @ts-ignore
+    let data = loaderData?.weaverseData as
+      | WeaverseLoaderData
+      | Promise<WeaverseLoaderData>
 
     if (data) {
       if (data instanceof Promise) {
@@ -48,19 +183,8 @@ export let WeaverseHydrogenRoot = memo(
   },
 )
 
-function RenderRoot(props: {
-  data: WeaverseLoaderData
-  components: HydrogenComponent[]
-}) {
-  let { data, components } = props
-  let weaverse = createWeaverseInstance(data, components)
-  return (
-    <>
-      <WeaverseRoot context={weaverse} />
-      <WeaverseEffect context={weaverse} />
-    </>
-  )
-}
+let ThemeSettingsProvider = createContext<HydrogenThemeSettings | null>(null)
+ThemeSettingsProvider.displayName = 'WeaverseThemeSettingsProvider'
 
 export function withWeaverse(Component: ComponentType<any>) {
   return (props: JSX.IntrinsicAttributes) => {
@@ -73,6 +197,12 @@ export function withWeaverse(Component: ComponentType<any>) {
   }
 }
 
-function FallbackError({ error }: { error?: { message?: string } }) {
-  return <div>{error?.message || 'An unexpected error occurred'}</div>
+export function useThemeSettings<T = HydrogenThemeSettings>() {
+  let themeSettingsStore = useThemeSettingsStore()
+  let settings = useSyncExternalStore(
+    themeSettingsStore.subscribe,
+    themeSettingsStore.getSnapshot,
+    themeSettingsStore.getServerSnapshot,
+  )
+  return settings as T
 }

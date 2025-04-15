@@ -7,7 +7,7 @@ import {
 import { loadScript } from '@weaverse/react'
 import { useEffect } from 'react'
 import type { WeaverseHydrogen } from '~/index'
-import { useThemeSettingsStore } from './use-theme-settings'
+import { useThemeSettingsStore } from './use-theme-settings-store'
 
 export function useStudio(weaverse: WeaverseHydrogen) {
   let { revalidate } = useRevalidator()
@@ -49,10 +49,7 @@ export function usePixel(context: WeaverseHydrogen) {
     if (!projectId || !pageId || !weaverseHost || isDesignMode) return
     let url = `${weaverseHost}/api/public/px`
     let img = new Image()
-    img.onload = () => {
-      // clear the image node
-      img.remove()
-    }
+    img.onload = () => img.remove()
     img.src = `${url}?projectId=${projectId}&pageId=${pageId}`
   }, [])
 }

@@ -22,12 +22,9 @@ import type {
   WeaverseVideo,
 } from '@weaverse/react'
 import type { ForwardRefExoticComponent } from 'react'
-
-import type { STORE_PAGES } from './context'
-import type { ThemeSettingsStore } from './hooks/use-theme-settings'
-import type { WeaverseClient } from './weaverse-client'
-
 import type { WeaverseHydrogen } from './index'
+import type { ThemeSettingsStore } from './internal/use-theme-settings-store'
+import type { WeaverseClient } from './weaverse-client'
 export type { InputType, PositionInputValue, WeaverseImage, WeaverseVideo }
 
 export interface AllCacheOptions {
@@ -237,7 +234,16 @@ export interface HydrogenThemeSchema {
   }
 }
 
-export type PageType = keyof typeof STORE_PAGES
+export type PageType =
+  | 'INDEX'
+  | 'PRODUCT'
+  | 'ALL_PRODUCTS'
+  | 'COLLECTION'
+  | 'COLLECTION_LIST'
+  | 'PAGE'
+  | 'BLOG'
+  | 'ARTICLE'
+  | 'CUSTOM'
 
 export type FetchProjectRequestBody = {
   projectId: string

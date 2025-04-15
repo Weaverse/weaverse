@@ -1,11 +1,10 @@
-import { useRouteLoaderData } from "@remix-run/react"
-import { isBrowser, EventEmitter } from "@weaverse/react"
-import { useSyncExternalStore } from "react"
+import { useRouteLoaderData } from '@remix-run/react'
+import { EventEmitter, isBrowser } from '@weaverse/react'
 import type {
   HydrogenThemeSchema,
   HydrogenThemeSettings,
   PublicEnv,
-} from "~/types"
+} from '~/types'
 
 type WeaverseThemeData = {
   theme: HydrogenThemeSettings
@@ -47,19 +46,9 @@ export class ThemeSettingsStore extends EventEmitter {
 }
 
 export function useThemeSettingsStore() {
-  let data = useRouteLoaderData("root") as { weaverseTheme: WeaverseThemeData }
+  let data = useRouteLoaderData('root') as { weaverseTheme: WeaverseThemeData }
   if (isBrowser && window.__weaverseThemeSettingsStore) {
     return window.__weaverseThemeSettingsStore
   }
   return new ThemeSettingsStore(data?.weaverseTheme)
-}
-
-export function useThemeSettings<T = HydrogenThemeSettings>() {
-  let themeSettingsStore = useThemeSettingsStore()
-  let settings = useSyncExternalStore(
-    themeSettingsStore.subscribe,
-    themeSettingsStore.getSnapshot,
-    themeSettingsStore.getServerSnapshot
-  )
-  return settings as T
 }
