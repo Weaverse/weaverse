@@ -23,7 +23,7 @@ import type {
 } from '@weaverse/react'
 import type { ForwardRefExoticComponent } from 'react'
 import type { WeaverseHydrogen } from './index'
-import type { ThemeSettingsStore } from './internal/use-theme-settings-store'
+import type { ThemeSettingsStore } from './utils/use-theme-settings-store'
 import type { WeaverseClient } from './weaverse-client'
 export type { InputType, PositionInputValue, WeaverseImage, WeaverseVideo }
 
