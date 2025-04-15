@@ -101,7 +101,7 @@ Here's a breakdown of the available attributes in an input setting:
 
   Will appear as:
 
-  <img alt="example" src="https://downloads.intercomcdn.com/i/o/853117817/24e20664c5cc4668c0a7a4ca/image.png" width="300"/>
+  <img alt="example" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/help-text-input.webp?v=1743390826" width="300"/>
 
 ## Basic Inputs
 
@@ -126,7 +126,7 @@ button text, or short promotional messages.
 
 **Output:**
 
-<img alt='text_attribute_example' src="https://downloads.intercomcdn.com/i/o/853523424/b36bfc7fe1d4cc5e95953423/image.png" width="300"/>
+<img alt='text_attribute_example' src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/text-input.webp?v=1743407119" width="300"/>
 
 ### `textarea`
 
@@ -149,7 +149,7 @@ shipping and return policies.
 
 **Output:**
 
-<img alt="textarea_attribute_example" src="https://downloads.intercomcdn.com/i/o/853526819/4cd07fba93f159e18ec1c671/image.png" width="300"/>
+<img alt="textarea_attribute_example" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/text-area-input.webp?v=1743407119" width="300"/>
 
 ### `switch`
 
@@ -171,7 +171,7 @@ promotional features, or customer reviews.
 
 **Output:**
 
-<img alt="switch_attribute_example" src="https://downloads.intercomcdn.com/i/o/853527375/2de182c3854357176a717e51/image.png" width="300"/>
+<img alt="switch_attribute_example" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/switch-input.webp?v=1743407119" width="300"/>
 
 ### `range`
 
@@ -199,7 +199,7 @@ percentages, or customizing display sizes.
 
 **Output:**
 
-<img alt="range_attr_example" src="https://downloads.intercomcdn.com/i/o/853529726/f21af857ecba39099bd8fca6/image.png" width="300"/>
+<img alt="range_attr_example" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/range-input.webp?v=1743407874" width="300"/>
 
 **`configs` details:**
 
@@ -237,9 +237,7 @@ The select input provides a dropdown list, allowing merchants to select one opti
 
 **Output:**
 
-<img alt="aspect_ratio_select_0" src="https://downloads.intercomcdn.com/i/o/853536003/389c8a3340b9dba42c539e73/image.png" width="300"/>
-
-<img alt="aspect_ratio_select_1" src="https://downloads.intercomcdn.com/i/o/853536156/7ff5f0a96a77d7ef2b48f7c3/image.png" width="300"/>
+<img alt="aspect_ratio_select_0" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/sellect-input.webp?v=1743407118" width="300"/>
 
 `configs` **details:**
 
@@ -264,7 +262,7 @@ process.
 
 ```tsx
 {
-  type: "select",
+  type: "toggle-group",
   label: "Image aspect ratio",
   name: "imageAspectRatio",
   configs: {
@@ -281,7 +279,7 @@ process.
 
 **Output:**
 
-<img alt="display_as_text" src="https://downloads.intercomcdn.com/i/o/853548031/e61ae5709eba893c8f58e375/image.png" width="300"/>
+<img alt="display_as_text" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/toggle-group-input.webp?v=1743407874" width="300"/>
 
 **Example (Display as Icon):**
 
@@ -292,8 +290,8 @@ process.
   label: "Background image loading",
   configs: {
     options: [
-      {label: "Eager", value: "eager", icon: "Lightning"},
-      {label: "Lazy", value: "lazy", icon: "SpinnerGap"},
+      {label: "Eager", value: "eager", icon: "facebook"},
+      {label: "Lazy", value: "lazy", icon: "github"},
     ],
   },
   defaultValue: "eager",
@@ -303,7 +301,7 @@ process.
 
 **Output:**
 
-<img alt="display_as_icon" src="https://downloads.intercomcdn.com/i/o/853553481/2622731c03fb54b97d93cc50/image.png" width="300"/>
+<img alt="display_as_icon" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/toggle-group-icon-input.webp?v=1743407119" width="300"/>
 
 **`configs` details**
 
@@ -343,12 +341,12 @@ advanced text formatting options.
 
 **Output:**
 
-<img alt="richtext_output" src="https://downloads.intercomcdn.com/i/o/853955513/d0657f49a2d017ac0a01ecb1/image.png" width="300"/>
+<img alt="richtext_output" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/rich-text-input.webp?v=1743407119" width="300"/>
 
 🌟 **Pro Tip**: our **`richtext`** input comes with **AI-powered** content generation capabilities, allowing merchants to
 effortlessly craft top-notch content, from descriptions to promotional texts and more.
 
-<img alt="richtext_power_ai_output" src="https://downloads.intercomcdn.com/i/o/853957251/aed40de2d47ce9e232f6f5f0/image.png" width="300"/>
+<img alt="richtext_power_ai_output" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/rich-text-ai-input.webp?v=1743407119" width="300"/>
 
 ### `image`
 
@@ -408,7 +406,7 @@ type WeaverseImage = {
 
 **Output:**
 
-<img alt="image_attr" src="https://downloads.intercomcdn.com/i/o/854078553/0287d7d2d96404caf442954a/image.png" width="300"/>
+<img alt="image_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/image-input.webp?v=1743407119" width="300"/>
 
 **Usage**
 
@@ -510,7 +508,7 @@ settings, such as background color, text color, border color, etc.
 
 **Output:**
 
-<img alt="color_attr" src="https://downloads.intercomcdn.com/i/o/854847973/ec48b59238cd31ccd212ee09/image.png" width="300"/>
+<img alt="color_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/color-input.webp?v=1743407119" width="300"/>
 
 ### `datepicker`
 
@@ -532,7 +530,7 @@ scheduling content, setting event dates, or determining promotional periods.
 
 **Output:**
 
-<img alt="datapicker_attr" src="https://downloads.intercomcdn.com/i/o/855105562/73bcbd974a3b74d986450806/image.png" width="300"/>
+<img alt="datapicker_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/date-picker-input.webp?v=1743407119" width="300"/>
 
 💡 **Parsing:** The returned timestamp should be transformed into a readable date-time string, for example:
 
@@ -574,7 +572,7 @@ the input, a dropdown list of suggested places appears.
 
 **Output:**
 
-<img alt="map_autocomplete_attr" src="https://downloads.intercomcdn.com/i/o/855138136/aca08efac8fecde1f5d74fa8/image.png" width="300"/>
+<img alt="map_autocomplete_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/map-input.webp?v=1743407119" width="300"/>
 
 ### `position`
 
@@ -653,7 +651,7 @@ type WeaverseProduct = {
 
 **Output:**
 
-<img alt="product_attr" src="https://downloads.intercomcdn.com/i/o/856020670/e25984f0879ed95300da690b/image.png" width="300"/>
+<img alt="product_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/product-input.webp?v=1743407119" width="300"/>
 
 When selecting a product, the preview will automatically revalidate and run the `loader` function.
 The `loader` function will read the `handle` or `id` of the selected product and fetch all the product data from the Storefront API. Here's an example of how to use the `loader` function:
@@ -711,7 +709,7 @@ from their store.
 
 **Output:**
 
-<img alt="product_list_attr" src="https://downloads.intercomcdn.com/i/o/856048741/4a8bed2630a0f1f454047e80/image.png" width="300"/>
+<img alt="product_list_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/product-list-input.webp?v=1743407119" width="300"/>
 
 Similar to the `product` input, the preview will automatically revalidate and run the `loader` function when selecting products. Please use the `handle` or `id` of the selected product to fetch the full product data.
 
@@ -734,7 +732,7 @@ from their store.
 
 **Output:**
 
-<img alt="collection_attr" src="https://downloads.intercomcdn.com/i/o/856069172/ee5a9e5e663fc816ac837127/image.png" width="300"/>
+<img alt="collection_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/collection-input.webp?v=1743407119" width="300"/>
 
 Similar to the `product` input, the preview will automatically revalidate and run the `loader` function when selecting a collection. Please use the `handle` or `id` of the selected collection to fetch the full collection data.
 
@@ -757,7 +755,7 @@ collections from their store.
 
 **Output:**
 
-<img alt="collection_list_attr" src="https://downloads.intercomcdn.com/i/o/856071108/d3baad59f89283e788ce04cc/image.png" width="300"/>
+<img alt="collection_list_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/collection-list-input.webp?v=1743407119" width="300"/>
 
 Similar to the `product` input, the preview will automatically revalidate and run the `loader` function when selecting collections. Please use the `handle` or `id` of the selected collection to fetch the full collection data.
 
@@ -780,7 +778,7 @@ store.
 
 **Output:**
 
-<img alt="blog_attr" src="https://downloads.intercomcdn.com/i/o/856089471/83cf34f9ba89fa9043db3293/image.png" width="300"/>
+<img alt="blog_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/blog-input.webp?v=1743407119" width="300"/>
 
 Similar to the `product` input, the preview will automatically revalidate and run the `loader` function when selecting a blog. Please use the `handle` or `id` of the selected blog to fetch the full blog data.
 

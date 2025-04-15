@@ -50,4 +50,4 @@ npx @weaverse/cli@latest create --template=pilot --project-id=clocwvm3y08j2r79n3
 It is recommended to create your project within the Weaverse app first. Doing so will allow you to copy the full
 command, complete with the project ID and project name, ensuring accuracy.
 
-![](https://downloads.intercomcdn.com/i/o/848671954/f560c61a70f6c75f88567e78/image.png)
+![](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/CLI-newProject.png?v=1743412008)

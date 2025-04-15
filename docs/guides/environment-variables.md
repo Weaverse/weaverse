@@ -2,7 +2,7 @@
 title: Environment Variables
 description: Setting up and managing environment variables in Weaverse Hydrogen theme.
 publishedAt: November 20, 2023
-updatedAt: Jun 7, 2024
+updatedAt: April 11, 2025
 order: 2
 published: true
 ---
@@ -11,26 +11,38 @@ published: true
 
 Environment variables provide a mechanism to protect sensitive data, manage configurations, and streamline different environments like development, testing, and production. In **Weaverse Hydrogen**, you'll frequently interact with a set of predefined variables tailored specifically for the framework.
 
-## Essential Environment Variables for a Hydrogen Theme
+## Essential Environment Variables
 
+### Core Variables
 1. **`SESSION_SECRET`**: A secret key used to sign session cookies. For more details, refer to the [Remix documentation on using sessions](https://remix.run/docs/en/v1/api/remix#use-session).
 2. **`PUBLIC_STOREFRONT_API_TOKEN`**: The public access token for the Storefront API. This is not required if you are using the **`mock.shop`** demo setup.
-3. **`PUBLIC_STORE_DOMAIN`**: The domain of the store used to communicate with the Storefront API. By default, if you're using the demo setup, the **`.env`** file will point to **`mock.shop`**.
-4. **`PUBLIC_CHECKOUT_DOMAIN`**: The domain of the checkout page (or the original Online Store domain). This is used for the consent banner and analytics.
-5. **`PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID`**: The public access token for the Customer Account API. This is not required if you are using the old login method with a password.
-6. **`PUBLIC_CUSTOMER_ACCOUNT_API_URL`**: The API URL for the Customer Account API, which should look like this: `https://shopify.com/12345678`.
-7. **`PRIVATE_STOREFRONT_API_TOKEN`** (optional): The private access token for the Storefront API.
-8. **`PUBLIC_STOREFRONT_API_VERSION`** (optional): The Storefront API version. If not specified, it defaults to the version used by Hydrogen.
+3. **`PUBLIC_STORE_DOMAIN`**: The domain of the store used to communicate with the Storefront API.
+4. **`PUBLIC_CHECKOUT_DOMAIN`**: The domain of the checkout page (or the original Online Store domain).
+5. **`PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID`**: The public access token for the Customer Account API.
+6. **`PUBLIC_CUSTOMER_ACCOUNT_API_URL`**: The API URL for the Customer Account API, format: `https://shopify.com/{SHOP_ID}`.
+7. **`SHOP_ID`**: Your Shopify store ID.
 
-## Weaverse Specific Environment Variables
-
+### Weaverse Specific Variables
 1. **`WEAVERSE_PROJECT_ID`**: A unique ID representing your specific **Weaverse** project. You can find this ID inside the Weaverse Studio under **Project Settings**.
-2. **`WEAVERSE_API_KEY`** (optional): Weaverse API Key retrieved from your Weaverse Account settings. This is used for some secured backend operations.
-3. **`WEAVERSE_HOST`** (optional): The host URL for Weaverse services. If not specified, the default value is **`https://studio.weaverse.io`**.
+2. **`WEAVERSE_API_KEY`** (optional): Weaverse API Key retrieved from your Weaverse Account settings.
+3. **`WEAVERSE_HOST`** (optional): The host URL for Weaverse services. Default: **`https://studio.weaverse.io`**.
+
+### Optional Variables
+1. **`PUBLIC_STOREFRONT_ID`**: The ID of your storefront.
+2. **`PRIVATE_STOREFRONT_API_TOKEN`**: The private access token for the Storefront API.
+3. **`PUBLIC_STOREFRONT_API_VERSION`**: The Storefront API version. Defaults to the version used by Hydrogen.
+
+### Third-Party Integration Variables
+1. **`PUBLIC_GOOGLE_GTM_ID`**: Google Tag Manager ID for analytics.
+2. **`JUDGEME_PRIVATE_API_TOKEN`**: API token for Judge.me reviews integration.
+3. **`KLAVIYO_PRIVATE_API_TOKEN`**: API token for Klaviyo integration.
+4. **`PUBLIC_SHOPIFY_INBOX_SHOP_ID`**: Shopify Inbox shop ID for chat functionality.
+
+### Custom Metafields & Metaobjects
+1. **`METAOBJECT_COLORS_TYPE`**: Type identifier for color metaobjects.
+2. **`CUSTOM_COLLECTION_BANNER_METAFIELD`**: Metafield identifier for collection banners.
 
 ## Setting Up Environment Variables
-
-Define these environment variables in your **`.env`** file located at the root of your theme.
 
 ### Using Demo Setup (with `mock.shop`)
 
@@ -40,69 +52,127 @@ PUBLIC_STORE_DOMAIN="mock.shop"
 WEAVERSE_PROJECT_ID="weaverse-project-id"
 ```
 
-### When Using a Token
+### Production Setup
 
 ```plaintext
-# These variables are only available locally in MiniOxygen
+# Core Variables
+SESSION_SECRET="your-session-secret"
+PUBLIC_STORE_DOMAIN="your-store.myshopify.com"
+PUBLIC_CHECKOUT_DOMAIN="your-store.myshopify.com"
+PUBLIC_STOREFRONT_API_TOKEN="your-storefront-api-token"
+PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID="your-customer-account-api-client-id"
+PUBLIC_CUSTOMER_ACCOUNT_API_URL="https://shopify.com/your-shop-id"
+SHOP_ID="your-shop-id"
 
-SESSION_SECRET="my-secret-key"
-PUBLIC_STOREFRONT_API_TOKEN="storefront-api-token"
-PUBLIC_STORE_DOMAIN="my-store.myshopify.com"
-PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID="customer-account-api-client-id"
-PUBLIC_CUSTOMER_ACCOUNT_API_URL="https://shopify.com/12345678"
-WEAVERSE_PROJECT_ID="weaverse-project-id"
+# Weaverse Variables
+WEAVERSE_PROJECT_ID="your-weaverse-project-id"
+WEAVERSE_API_KEY="your-weaverse-api-key"  # Optional
+WEAVERSE_HOST="https://studio.weaverse.io"  # Optional
+
+# Optional Variables
+PUBLIC_STOREFRONT_ID="your-storefront-id"  # Optional
+PRIVATE_STOREFRONT_API_TOKEN="your-private-storefront-api-token"  # Optional
+
+# Third-Party Integrations
+PUBLIC_GOOGLE_GTM_ID="your-gtm-id"  # Optional
+JUDGEME_PRIVATE_API_TOKEN="your-judgeme-token"  # Optional
+KLAVIYO_PRIVATE_API_TOKEN="your-klaviyo-token"  # Optional
+PUBLIC_SHOPIFY_INBOX_SHOP_ID="your-inbox-shop-id"  # Optional
+
+# Custom Metafields
+METAOBJECT_COLORS_TYPE="shopify--color-pattern"  # Optional
+CUSTOM_COLLECTION_BANNER_METAFIELD="custom.collection_banner"  # Optional
 ```
 
-📌 **Note**: Avoid committing the **`.env`** file to version control to prevent exposing sensitive data. Use the **`.env.example`** file to display required variables without revealing actual values.
+## TypeScript Support
 
-## Obtaining the Public Storefront API Token
+For TypeScript support, add your environment variables to `env.d.ts`:
 
-To get your **`PUBLIC_STOREFRONT_API_TOKEN`** and preview your real store data, install the [Headless](https://apps.shopify.com/headless) or [Hydrogen](https://apps.shopify.com/hydrogen) app and follow [these instructions](https://shopify.dev/docs/custom-storefronts/building-with-the-storefront-api/manage-headless-channels) to obtain the _Storefront API Token_.
+```typescript
+interface Env extends HydrogenEnv {
+  // Core Variables
+  PUBLIC_STORE_DOMAIN: string;
+  PUBLIC_STOREFRONT_API_TOKEN: string;
+  PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID: string;
+  SHOP_ID: string;
+  
+  // Weaverse Variables
+  WEAVERSE_PROJECT_ID: string;
+  WEAVERSE_API_KEY?: string;
+  WEAVERSE_HOST?: string;
+  
+  // Optional Variables
+  PUBLIC_STOREFRONT_ID?: string;
+  PRIVATE_STOREFRONT_API_TOKEN?: string;
+  
+  // Third-Party Integrations
+  PUBLIC_GOOGLE_GTM_ID?: string;
+  JUDGEME_PRIVATE_API_TOKEN?: string;
+  KLAVIYO_PRIVATE_API_TOKEN?: string;
+  PUBLIC_SHOPIFY_INBOX_SHOP_ID?: string;
+  
+  // Custom Metafields
+  METAOBJECT_COLORS_TYPE?: string;
+  CUSTOM_COLLECTION_BANNER_METAFIELD?: string;
+}
+```
+
+## Best Practices
+
+1. **Security**:
+   - Never commit `.env` files to version control
+   - Use `.env.example` for required variables
+   - Keep sensitive tokens private
+   - Rotate tokens regularly
+
+2. **Organization**:
+   - Group related variables together
+   - Use clear, descriptive names
+   - Document all variables in your project
+   - Keep development and production variables separate
+
+3. **Development**:
+   - Use different values for development and production
+   - Validate environment variables at startup
+   - Provide fallback values where appropriate
+   - Use TypeScript for type safety
+
+## Obtaining Required Tokens
+
+### Storefront API Token
+1. Install the [Headless](https://apps.shopify.com/headless) or [Hydrogen](https://apps.shopify.com/hydrogen) app
+2. Follow [these instructions](https://shopify.dev/docs/custom-storefronts/building-with-the-storefront-api/manage-headless-channels) to obtain the Storefront API Token
+3. When setting permissions, enable all Storefront API access scopes to avoid unexpected errors during development
+
+> 💡 **Tip**: Always enable all Storefront API permissions when generating your token. This prevents access-related errors that can be difficult to troubleshoot during development.
 
 <doc-warning>If you are on the Shopify Starter plan, please create a custom app to obtain the Storefront API token. [Learn more](https://help.shopify.com/en/manual/apps/app-types/custom-apps)</doc-warning>
 
-![API Token](https://downloads.intercomcdn.com/i/o/848678475/033f78182979523f9a7a23e1/image.png)
+![API Token](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/API-Token.webp?v=1743408636)
 
-Then, add them to the **.env** file.
+### Weaverse Project ID
+1. Log in to [Weaverse Studio](https://studio.weaverse.io)
+2. Navigate to Project Settings
+3. Copy your Project ID
 
 ## Using Environment Variables
 
-Within your Weaverse Hydrogen theme, access environment variables via routes' `loader` function or Weaverse component's `loader` function.
-
-For instance, within a **`loader`** function:
+Access environment variables in your code:
 
 ```tsx
-import { json, type LoaderArgs } from '@shopify/remix-oxygen'
-
+// In route loaders
 export async function loader({ context }: LoaderArgs) {
-  // Get `env` variables from App Load Context
-  let { env } = context
-
-  return json({
-    // ... route data
-  })
+  const { env } = context;
+  return json({ storeDomain: env.PUBLIC_STORE_DOMAIN });
 }
-```
 
-Inside a **Weaverse** component's `loader`:
-
-```tsx
-import type { ComponentLoaderArgs } from '@weaverse/hydrogen'
-
+// In Weaverse components
 export let loader = async ({ weaverse }: ComponentLoaderArgs<{}, Env>) => {
-  // Get `env` variables from `weaverse` client
-  let { env } = weaverse
-
-  return {
-    // ... component loader data
-  }
+  const { env } = weaverse;
+  return { projectId: env.WEAVERSE_PROJECT_ID };
 }
 ```
 
-You can pass the `env` type to the `ComponentLoaderArgs` generics as the second argument to ensure that the type of the environment variables is correct.
+## Next Steps
 
-## Conclusion
-
-Correctly understanding and managing environment variables is crucial for both the security and functionality of your Weaverse Hydrogen theme. Always ensure that they are treated with the utmost care, keeping any sensitive data well protected.
-
-Next, learn about creating and managing **[Weaverse Components](/docs/guides/weaverse-component)** – the foundational building blocks of your theme.
+Learn about creating and managing **[Weaverse Components](/docs/guides/weaverse-component)** – the foundational building blocks of your theme.

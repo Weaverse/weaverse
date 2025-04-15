@@ -1,63 +1,167 @@
 ---
 title: Prerequisites
-description: 'Essential System Requirements for Developing with Weaverse Hydrogen'
+description: 'Essential requirements and setup guide for developing with Weaverse Hydrogen'
 publishedAt: November 20, 2023
-updatedAt: January 30, 2024
+updatedAt: April 11, 2025
 order: 0
 published: true
 ---
 
 ## Overview
 
-Before diving into Weaverse Hydrogen development, ensure your system meets these essential requirements. This comprehensive checklist will help you establish a robust foundation for your project.
+Welcome to Weaverse! Before you begin building your Hydrogen-powered storefront, let's ensure your development environment is properly configured. This guide covers everything you need to get started.
 
-## Initial Setup
+## Quick Requirements Checklist
 
-To begin developing with Weaverse Hydrogen themes, complete these preliminary steps:
+✅ Node.js 22.x or higher (18.x minimum)
 
-1. Install the **[Weaverse](https://apps.shopify.com/weaverse)** app from the **Shopify** app store
-2. Create a new project in Weaverse
-3. Select a Weaverse Hydrogen starter theme:
-   - [Pilot](https://github.com/weaverse/pilot) - A versatile, modern theme
-   - [Naturelle](https://github.com/weaverse/naturelle) - An elegant, nature-inspired design
+✅ PNPM 8.x or higher (recommended)
 
-*Note: More themes will be available soon through our upcoming theme marketplace.*
+✅ Git for version control
 
-Need help with setup? Refer to our **[Getting Started](/docs/hydrogen/getting-started)** guide.
+✅ Chrome-based browser
 
-## Shopify Requirements
+✅ Shopify store (Basic plan or higher)
 
-Essential Shopify components:
+✅ Basic React/TypeScript knowledge
 
-- A Basic Shopify plan or higher to access the Shopify Hydrogen app
-- Working knowledge of Shopify app and theme development
+## Detailed Requirements
 
-## Development Environment
+### 1. Development Environment
 
-Ensure your system has:
+#### Node.js Setup
+- **Node.js**: `22.x` or higher recommended (`18.x` minimum)
+  ```bash
+  # Check your Node version
+  node --version
+  ```
+  - 💡 Tip: Use [nvm](https://github.com/nvm-sh/nvm) to manage Node versions
+  ```bash
+  # Install and use latest LTS Node version with nvm
+  nvm install --lts
+  nvm use --lts
+  ```
 
-- **Node.js**: Version `18.x` or higher ([Download here](https://nodejs.org))
-- **npm**: Version `10.x` or higher (included with Node.js)
+#### Package Manager
+We recommend using PNPM for better performance and disk space efficiency:
+- **PNPM** `8.x` or higher (Recommended)
+  ```bash
+  # Install pnpm
+  corepack enable
+  corepack prepare pnpm@latest --activate
+  ```
 
-## Browser Support
+Alternative package managers:
+- **npm**: `10.x` or higher (included with Node.js)
+- **Yarn**: `1.22.x` or higher
 
-For optimal development and testing, use the latest versions of these [Chrome-based browsers](https://www.google.com/search?q=chrome+based+web+browsers):
+### 2. Development Tools
 
-- Google Chrome
-- Microsoft Edge
-- Arc
+#### Recommended IDE
+- **[Cursor](https://cursor.sh/)** (Highly Recommended)
+  - Built-in AI pair programming
+  - Native terminal integration
+  - Git integration
+  - Real-time collaboration
 
-## Development Tools
+#### AI Coding Assistants
+- **[GitHub Copilot](https://github.com/features/copilot)**
+  - Works with most popular editors
+  - Advanced code completion
+  - Natural language to code assistance
 
-Recommended IDE:
+#### MCP Servers
+To enhance your development experience with AI-powered tools, we recommend these Model Context Protocol servers:
 
-**Visual Studio Code** ([VSCode](https://code.visualstudio.com/))
-- Industry-standard code editor
-- Rich extension ecosystem
-- Install the [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) extension for consistent code formatting
+- **[Weaverse MCP](https://github.com/weaverse/mcp)** - Quick access to Weaverse documentation
+- **[Shopify MCP](https://github.com/Shopify/dev-mcp)** - Shopify API integration and documentation
+- **[Figma MCP](https://github.com/GLips/Figma-Context-MCP)** - For implementing Figma designs
+
+> 💡 Tip: These MCPs work best with Cursor IDE. Follow the setup instructions in each repository.
+
+#### Alternative: Visual Studio Code
+If you prefer VS Code, install these essential extensions:
+- [Biome](https://marketplace.visualstudio.com/items?itemName=biomejs.biome) - Code formatting and linting
+- [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
+- [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
+
+### 3. Version Control
+
+- **Git**: Latest version
+  ```bash
+  # Verify Git installation
+  git --version
+  ```
+
+### 4. Browser Requirements
+
+For the best development experience, use a Chrome-based browser:
+- **Google Chrome** (Recommended)
+- **Arc Browser**
+- **Microsoft Edge**
+
+> 💡 Chrome DevTools are essential for debugging and performance optimization
+
+### 5. Shopify Requirements
+
+#### Store Setup
+- Active Shopify store (Basic plan or higher)
+- Admin access to your store
+- [Shopify Partner](https://partners.shopify.com/) account (recommended)
+
+#### Technical Prerequisites
+- Basic understanding of:
+  - React fundamentals
+  - TypeScript basics
+  - Shopify theme structure
+  - GraphQL concepts (for advanced usage)
+
+## Getting Started with Weaverse
+
+### 1. Install the Weaverse App
+
+1. Visit [Weaverse on Shopify App Store](https://apps.shopify.com/weaverse)
+2. Click "Add app"
+3. Follow the installation wizard
+
+### 2. Choose Your Path
+
+#### Starter Theme (Recommended for Beginners)
+Choose from our curated themes:
+- [Pilot](https://github.com/weaverse/pilot) - Modern, versatile starter
+- [Naturelle](https://github.com/weaverse/naturelle) - Nature-inspired design
+
+#### Custom Development
+Start from scratch:
+- Create a new project
+- Follow our [custom development guide](/docs/guides/custom-development)
+
+## Verify Your Setup
+
+Run these commands to ensure everything is properly installed:
+
+```bash
+# Environment checks
+node --version     # Should be ≥ 18.x
+pnpm --version     # Should be ≥ 8.x
+git --version      # Should show latest version
+
+# Optional: Install global dependencies
+pnpm install -g @shopify/cli
+```
 
 ## Next Steps
 
-With your development environment configured, you're ready to explore Weaverse Hydrogen theme development. Continue to the [Weaverse Hydrogen Project Structure](https://weaverse.io/docs/guides/8321058-project-structure) guide to begin building your theme.
+Ready to start building? Continue with:
+
+1. 📚 [Getting Started Guide](/docs/hydrogen/getting-started)
+2. 🏗️ [Project Structure](/docs/guides/project-structure)
+3. 🧱 [Component Development](/docs/guides/weaverse-component)
+
+## Need Help?
+
+- Join our [Community Slack](https://wvse.cc/weaverse-slack)
+- Check our [GitHub Discussions](https://github.com/weaverse/weaverse/discussions)
+- Follow [@WeaverseIO](https://twitter.com/WeaverseIO) for updates
 
 ---
