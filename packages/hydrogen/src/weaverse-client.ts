@@ -1,5 +1,6 @@
 import {
   type HydrogenEnv,
+  type I18nBase,
   createWithCache,
   generateCacheControlHeader,
 } from '@shopify/hydrogen'
@@ -7,10 +8,9 @@ import type {
   AllCacheOptions,
   FetchProjectPayload,
   FetchProjectRequestBody,
-  FetchWithCacheOptions,
   HydrogenComponentData,
   HydrogenPageData,
-  LoadPageParams,
+  PageType,
   WeaverseClientArgs,
   WeaverseLoaderData,
   WeaverseProjectConfigs,
@@ -34,7 +34,7 @@ const DEFAULT_CACHE_STRATEGY = {
 export class WeaverseClient {
   public API = API_PATH
   public basePageConfigs: Omit<WeaverseProjectConfigs, 'requestInfo'>
-  public basePageRequestBody: Omit<FetchProjectRequestBody, 'url' | 'countries'>
+  public basePageRequestBody: Omit<FetchProjectRequestBody, 'url'>
   public configs: WeaverseProjectConfigs
   public withCache: ReturnType<typeof createWithCache>
 
@@ -46,7 +46,6 @@ export class WeaverseClient {
   public env: WeaverseClientArgs['env']
   public cache: WeaverseClientArgs['cache']
   public waitUntil: WeaverseClientArgs['waitUntil']
-  public countries?: WeaverseClientArgs['countries']
 
   constructor(args: WeaverseClientArgs) {
     // Destructure and initialize all dependencies
@@ -54,7 +53,6 @@ export class WeaverseClient {
       env,
       storefront,
       components,
-      countries,
       cache,
       waitUntil,
       themeSchema,
@@ -69,7 +67,6 @@ export class WeaverseClient {
     this.env = env
     this.cache = cache
     this.waitUntil = waitUntil
-    this.countries = countries
     this.withCache = createWithCache({ cache, waitUntil, request })
 
     // Initialize configs
@@ -110,7 +107,7 @@ export class WeaverseClient {
 
   public async fetchWithCache<T extends object>(
     url: string,
-    options: FetchWithCacheOptions = {},
+    options: RequestInit & { strategy?: AllCacheOptions } = {},
   ): Promise<T> {
     const {
       strategy = this.storefront.CacheCustom(DEFAULT_CACHE_STRATEGY),
@@ -176,7 +173,6 @@ export class WeaverseClient {
         data = {
           ...data,
           schema: this.themeSchema,
-          countries: this.countries || [],
           publicEnv: this.configs.publicEnv,
         }
       }
@@ -204,7 +200,12 @@ export class WeaverseClient {
   }
 
   loadPage = async (
-    params: LoadPageParams = {},
+    params: {
+      type?: PageType
+      locale?: string
+      handle?: string
+      strategy?: AllCacheOptions
+    } = {},
   ): Promise<WeaverseLoaderData | null> => {
     try {
       let { request, storefront, basePageRequestBody, basePageConfigs } = this
@@ -229,7 +230,17 @@ export class WeaverseClient {
       }
 
       let { strategy, ...pageLoadParams } = params
-      let body: FetchProjectRequestBody = {
+      let body: {
+        projectId: string
+        url: string
+        i18n?: I18nBase
+        params?: {
+          type?: PageType
+          locale?: string
+          handle?: string
+        }
+        isDesignMode?: boolean
+      } = {
         ...basePageRequestBody,
         params: pageLoadParams,
         url: request.url,

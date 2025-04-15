@@ -4,7 +4,6 @@
 
 import type { NavigateFunction } from '@remix-run/react'
 import type { HydrogenContext, I18nBase } from '@shopify/hydrogen'
-import type { CurrencyCode } from '@shopify/hydrogen/storefront-api-types'
 import type {
   AppLoadContext,
   LoaderFunctionArgs as RemixOxygenLoaderArgs,
@@ -30,13 +29,6 @@ import type { WeaverseClient } from './weaverse-client'
 
 import type { WeaverseHydrogen } from './index'
 export type { InputType, PositionInputValue, WeaverseImage, WeaverseVideo }
-
-export type Locale = I18nBase & {
-  label: string
-  currency: CurrencyCode
-}
-
-export type Localizations = { [key: string]: Locale }
 
 export interface AllCacheOptions {
   mode?: string
@@ -112,15 +104,11 @@ export interface HydrogenComponentProps<L = any> extends WeaverseElement {
   children?: React.JSX.Element[]
 }
 
-export type I18nLocale = Locale & {
-  pathPrefix: string
-}
-
 export type WeaverseLoaderRequestInfo = {
   search: string
   pathname: string
   queries: { [key: string]: string | boolean }
-  i18n: I18nBase
+  i18n: WeaverseI18n
 }
 
 export type HydrogenThemeSettings = {
@@ -226,39 +214,40 @@ export interface WeaverseHydrogenRootProps {
   errorComponent?: React.FC<{ error: { message: string; stack?: string } }>
 }
 
-export type HydrogenThemeInfo = {
-  name: string
-  version: string
-  author: string
-  authorProfilePhoto: string
-  documentationUrl: string
-  supportUrl: string
+export type WeaverseI18n = I18nBase & {
+  label?: string
+  pathPrefix?: string
+  [key: string]: any
 }
 
 export interface HydrogenThemeSchema {
-  info: HydrogenThemeInfo
+  info: {
+    name: string
+    version: string
+    author: string
+    authorProfilePhoto: string
+    documentationUrl: string
+    supportUrl: string
+  }
   inspector: InspectorGroup[]
-  i18n?: Array<I18nBase & { label?: string }>
-  defaultLocale?: string
+  i18n?: {
+    urlStructure: 'url-path' | 'subdomain' | 'top-level-domain'
+    defaultLocale: WeaverseI18n
+    shopLocales: WeaverseI18n[]
+  }
 }
 
 export type PageType = keyof typeof STORE_PAGES
 
-export type PageAssignmentParams = {
-  type?: PageType
-  locale?: string
-  handle?: string
-}
-
-export type LoadPageParams = PageAssignmentParams & {
-  strategy?: AllCacheOptions
-}
-
 export type FetchProjectRequestBody = {
   projectId: string
   url: string
-  i18n?: I18nBase
-  params?: PageAssignmentParams
+  i18n?: WeaverseI18n
+  params?: {
+    type?: PageType
+    locale?: string
+    handle?: string
+  }
   isDesignMode?: boolean
 }
 
@@ -271,24 +260,9 @@ export type FetchProjectPayload = {
 
 export type WeaverseClientArgs = HydrogenContext & {
   components: HydrogenComponent[]
-  countries?: Localizations
   themeSchema: HydrogenThemeSchema
   request: Request
   cache: Cache
-}
-
-export type FetchWithCacheOptions = RequestInit & {
-  strategy?: AllCacheOptions
-}
-
-export type RootRouteData = {
-  weaverseTheme?: {
-    theme: HydrogenThemeSettings
-    countries?: Localizations
-    schema?: HydrogenThemeSchema
-    publicEnv?: PublicEnv
-  }
-  [key: string]: any
 }
 
 export type WeaverseProduct = WeaverseResourcePickerData
