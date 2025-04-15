@@ -27,7 +27,6 @@ interface HydrogenComponentSchema {
     pages?: ('*' | PageType)[]
     groups?: ('*' | 'header' | 'footer' | 'body')[]
   }
-  toolbar?: (HydrogenToolbarAction | HydrogenToolbarAction[])[]
 }
 ```
 
@@ -129,22 +128,6 @@ type PageType =
   | 'CUSTOM'
 ```
 
-#### `toolbar`
-
-```tsx
-toolbar ? : (HydrogenToolbarAction | HydrogenToolbarAction[])[]
-```
-
-Determines the available actions (like duplicate, delete, general settings) for the component in the studio.
-
-```tsx
-type HydrogenToolbarAction =
-  | 'general-settings'
-  | 'settings-level-2'
-  | 'duplicate'
-  | 'delete'
-```
-
 ## Example
 
 To make all of this a bit more tangible, let's take a look at a real-world example of a component schema:
@@ -171,7 +154,6 @@ export let schema: HydrogenComponentSchema = {
     pages: ['INDEX', 'PRODUCT', 'ALL_PRODUCTS'],
     groups: ['body'],
   },
-  toolbar: ['general-settings', ['duplicate', 'delete']],
 }
 ```
 

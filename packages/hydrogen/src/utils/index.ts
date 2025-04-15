@@ -5,7 +5,7 @@ import type {
   HydrogenThemeSchema,
   WeaverseProjectConfigs,
   WeaverseStudioQueries,
-} from './types'
+} from '../types'
 
 export function getRequestQueries<T = Record<string, string | boolean>>(
   request: Request,
@@ -86,30 +86,7 @@ export function generateDataFromSchema({
   return data
 }
 
-/**
- * Resize an image to the specified dimensions.
- *
- * @param imageURL {string} URL of the image
- * @param size {string} Shopify size attribute
- * @returns {string} URL with size attribute
- *
- * @example
- * resizeImage('https://cdn.shopify.com/image.jpg', '100x')
- * resizeImage('https://cdn.shopify.com/image.jpg', '100x100')
- */
-export function resizeShopifyImage(imageURL: string, size: string): string {
-  try {
-    if (!imageURL.includes('cdn.shopify.com') || size === 'original') {
-      return imageURL
-    }
-    let [, path, ext] = imageURL.match(/(.*\/[\w-_.]+)\.(\w{2,4})/)
-    return `${path}_${size}.${ext}`
-  } catch (e) {
-    return imageURL
-  }
-}
-
-export function recursivelyAddDataItem(
+function recursivelyAddDataItem(
   type: string,
   components: HydrogenComponent<any>[],
   items: any[],
@@ -145,19 +122,14 @@ export function recursivelyAddDataItem(
   })
   return id
 }
-export function getPreviewData(type: string, components, weaverseHost: string) {
-  const initialData = {
-    project: {
-      id: 'x',
-      weaverseShopId: 'shopid',
-      name: 'Section Preview',
-    },
-    // pageAssignment: {
-    //   projectId: "x",
-    //   type: "CUSTOM",
-    //   locale: "en-us",
-    //   handle: "",
-    // },
+
+export function getPreviewData(
+  type: string,
+  components: HydrogenComponent[],
+  weaverseHost: string,
+) {
+  return {
+    project: { id: 'x', weaverseShopId: 'shop-id', name: 'Section Preview' },
     configs: {
       projectId: 'x',
       weaverseHost,
@@ -176,30 +148,18 @@ export function getPreviewData(type: string, components, weaverseHost: string) {
         search: '',
       },
     },
+    page: {
+      id: '0',
+      name: 'Preview section',
+      rootId: '1',
+      items: [
+        {
+          data: {},
+          id: '1',
+          type: 'main',
+          children: [{ id: recursivelyAddDataItem(type, components, []) }],
+        },
+      ],
+    },
   }
-  let items = []
-  const id = recursivelyAddDataItem(type, components, items)
-  const page = {
-    id: '0',
-    name: 'Preview section',
-    rootId: '1',
-    items: [
-      {
-        data: {},
-        id: '1',
-        type: 'main',
-        children: [
-          {
-            id,
-          },
-        ],
-      },
-      ...items,
-    ],
-  }
-  const previewData = {
-    ...initialData,
-    page,
-  }
-  return previewData
 }

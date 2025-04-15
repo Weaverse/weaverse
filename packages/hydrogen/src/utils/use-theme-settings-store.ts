@@ -1,25 +1,26 @@
 import { useRouteLoaderData } from '@remix-run/react'
-import { isBrowser, EventEmitter } from '@weaverse/react'
-import { useSyncExternalStore } from 'react'
+import { EventEmitter, isBrowser } from '@weaverse/react'
 import type {
   HydrogenThemeSchema,
   HydrogenThemeSettings,
-  Localizations,
   PublicEnv,
-  RootRouteData,
 } from '~/types'
 
-export class ThemeSettingsStore extends EventEmitter{
+type WeaverseThemeData = {
+  theme: HydrogenThemeSettings
+  schema?: HydrogenThemeSchema
+  publicEnv?: PublicEnv
+}
+
+export class ThemeSettingsStore extends EventEmitter {
   settings: HydrogenThemeSettings = {}
-  countries?: Localizations
   schema?: HydrogenThemeSchema
   publicEnv?: PublicEnv
 
-  constructor(data: RootRouteData['weaverseTheme']) {
+  constructor(data: WeaverseThemeData) {
     super()
-    let { theme, countries, schema, publicEnv } = data || {}
+    let { theme, schema, publicEnv } = data || {}
     this.settings = { ...theme }
-    this.countries = countries
     this.schema = schema
     this.publicEnv = publicEnv
     if (isBrowser) {
@@ -35,7 +36,6 @@ export class ThemeSettingsStore extends EventEmitter{
     this.emit(this.settings)
   }
 
-
   getSnapshot = () => {
     return this.settings
   }
@@ -43,23 +43,12 @@ export class ThemeSettingsStore extends EventEmitter{
   getServerSnapshot = () => {
     return this.settings
   }
-
 }
 
 export function useThemeSettingsStore() {
-  let data = useRouteLoaderData('root') as RootRouteData
+  let data = useRouteLoaderData('root') as { weaverseTheme: WeaverseThemeData }
   if (isBrowser && window.__weaverseThemeSettingsStore) {
     return window.__weaverseThemeSettingsStore
   }
   return new ThemeSettingsStore(data?.weaverseTheme)
-}
-
-export function useThemeSettings<T = HydrogenThemeSettings>() {
-  let themeSettingsStore = useThemeSettingsStore()
-  let settings = useSyncExternalStore(
-    themeSettingsStore.subscribe,
-    themeSettingsStore.getSnapshot,
-    themeSettingsStore.getServerSnapshot,
-  )
-  return settings as T
 }

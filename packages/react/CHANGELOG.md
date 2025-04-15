@@ -1,5 +1,13 @@
 # @weaverse/react
 
+## 4.2.4
+
+### Patch Changes
+
+- Patch release with minor improvements and bug fixes
+- Updated dependencies
+  - @weaverse/core@4.2.4
+
 ## 4.2.2
 
 ### Patch Changes

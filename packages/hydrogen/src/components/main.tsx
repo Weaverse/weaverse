@@ -1,4 +1,4 @@
-import React, { forwardRef, type HTMLAttributes } from 'react'
+import { type HTMLAttributes, forwardRef } from 'react'
 import type { HydrogenComponentProps, HydrogenComponentSchema } from '~/types'
 
 /*
