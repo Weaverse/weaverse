@@ -54,15 +54,6 @@ export interface HydrogenComponentData extends ElementData {
   deletedAt?: string
 }
 
-export type HydrogenToolbarAction =
-  | 'general-settings'
-  | 'global-section'
-  | 'move-up'
-  | 'move-down'
-  | 'toggle-visibility'
-  | 'duplicate'
-  | 'delete'
-
 export interface HydrogenComponentSchema extends ElementSchema {
   childTypes?: string[]
   inspector: InspectorGroup[]
@@ -72,7 +63,6 @@ export interface HydrogenComponentSchema extends ElementSchema {
     pages?: ('*' | PageType)[]
     groups?: ('*' | 'header' | 'footer' | 'body')[]
   }
-  toolbar?: (HydrogenToolbarAction | HydrogenToolbarAction[])[]
 }
 
 export type BasicInput = Omit<CoreBasicInput, 'condition'> & {
@@ -187,12 +177,10 @@ export type HydrogenPageAssignment = {
   locale: string
 }
 
-export type HydrogenPageConfigs = Omit<WeaverseProjectConfigs, 'publicEnv'> & {
-  requestInfo: WeaverseLoaderRequestInfo
-}
-
 export interface WeaverseLoaderData {
-  configs: HydrogenPageConfigs
+  configs: Omit<WeaverseProjectConfigs, 'publicEnv'> & {
+    requestInfo: WeaverseLoaderRequestInfo
+  }
   page: HydrogenPageData
   project: HydrogenProjectType
   pageAssignment: HydrogenPageAssignment
@@ -204,11 +192,6 @@ export interface HydrogenPageData extends WeaverseProjectDataType {
   items: HydrogenComponentData[]
   __cacheId?: string
   [key: string]: any
-}
-
-export interface WeaverseHydrogenRootProps {
-  components: HydrogenComponent[]
-  errorComponent?: React.FC<{ error: { message: string; stack?: string } }>
 }
 
 export type WeaverseI18n = I18nBase & {

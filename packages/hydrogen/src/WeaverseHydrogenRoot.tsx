@@ -29,7 +29,6 @@ import type {
   WeaverseHydrogenParams,
   WeaverseLoaderData,
 } from './types'
-import type { WeaverseHydrogenRootProps } from './types'
 import { useStudio } from './utils/use-studio'
 import { useThemeSettingsStore } from './utils/use-theme-settings-store'
 
@@ -152,7 +151,10 @@ export let WeaverseHydrogenRoot = memo(
     errorComponent: ErrorComponent = ({ error }) => (
       <div>{error?.message || 'An unexpected error occurred'}</div>
     ),
-  }: WeaverseHydrogenRootProps) => {
+  }: {
+    components: HydrogenComponent[]
+    errorComponent?: React.FC<{ error }>
+  }) => {
     let loaderData = useLoaderData()
     // @ts-ignore
     let data = loaderData?.weaverseData as
