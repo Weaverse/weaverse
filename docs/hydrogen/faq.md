@@ -1,5 +1,5 @@
 ---
-title: Frequently Asked Questions
+title: FAQs
 description: Answers to common questions about Weaverse, its features, and implementation.
 publishedAt: April 14, 2025
 updatedAt: April 14, 2025
@@ -207,6 +207,24 @@ Weaverse follows Hydrogen's caching recommendations, using the cache API for dat
 2. Add console logs in your loader function to track data flow
 3. Verify your GraphQL queries are correctly formed
 4. Check that you're properly accessing the data in your component
+
+### Why can't I load Preview with Oxygen deployment?
+
+If you're using Oxygen deployment, you might encounter the following error when trying to preview your Weaverse Hydrogen project:
+
+![preview error](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/preview_not_load.jpg?v=1719390592)
+
+This error is caused by the Preview URL not being set to public from Hydrogen's settings. Please follow this [instruction](https://weaverse.io/docs/deployment/oxygen#publish-your-storefront--update-weaverse-preview-url) to set the Hydrogen Environment to public.
+
+### Why am I getting "404 - We've lost this page" errors?
+
+Sometimes, you may click a link in your Hydrogen page and get a 404 error. This happens because the route you clicked on either does not exist or does not include the `<WeaverseContent />` component.
+
+To fix this issue, please follow this [instruction](https://weaverse.io/docs/guides/rendering-page) to add the `<WeaverseContent />` component to your page.
+
+You can refer to our demo repositories for complete examples:
+- [Pilot Demo](https://github.com/Weaverse/pilot)
+- [Naturelle Demo](https://github.com/Weaverse/naturelle)
 
 ---
 
