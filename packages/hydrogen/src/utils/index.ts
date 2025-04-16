@@ -69,10 +69,11 @@ export function getWeaverseConfigs(
   }
 }
 
-export function generateDataFromSchema({
-  inspector,
-}: HydrogenComponentSchema | HydrogenThemeSchema) {
+export function generateDataFromSchema(
+  schema: HydrogenComponentSchema | HydrogenThemeSchema,
+) {
   let data: Record<string, any> = {}
+  let inspector = schema?.inspector
   if (inspector) {
     for (let group of inspector) {
       for (let input of group.inputs) {

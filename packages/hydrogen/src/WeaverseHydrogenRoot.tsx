@@ -29,6 +29,7 @@ import type {
   WeaverseHydrogenParams,
   WeaverseLoaderData,
 } from './types'
+import { generateDataFromSchema } from './utils'
 import { useStudio } from './utils/use-studio'
 import { useThemeSettingsStore } from './utils/use-theme-settings-store'
 
@@ -38,30 +39,12 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
   constructor(initialData: HydrogenComponentData, weaverse: WeaverseHydrogen) {
     super(initialData, weaverse)
     let { data, ...rest } = initialData
-    Object.assign(this._store, this._schemaData, data, rest)
+    let schemaData = generateDataFromSchema(this.Element.schema)
+    Object.assign(this._store, schemaData, data, rest)
   }
 
   get Element(): HydrogenElement {
     return super.Element
-  }
-
-  get _schemaData() {
-    if (this.Element?.schema) {
-      let data: Record<string, any> = {}
-      let { inspector } = this.Element.schema
-      if (inspector) {
-        for (let group of inspector) {
-          for (let input of group.inputs) {
-            let { name, defaultValue } = input
-            if (name && defaultValue !== null && defaultValue !== undefined) {
-              data[name] = defaultValue
-            }
-          }
-        }
-      }
-      return data
-    }
-    return {}
   }
 }
 

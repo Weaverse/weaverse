@@ -138,10 +138,7 @@ export class WeaverseClient {
   }
 
   loadThemeSettings = async (strategy?: AllCacheOptions) => {
-    let defaultThemeSettings = {}
-    if (this.themeSchema) {
-      defaultThemeSettings = generateDataFromSchema(this.themeSchema)
-    }
+    let defaultThemeSettings = generateDataFromSchema(this.themeSchema)
     try {
       let { API, configs } = this
       let { weaverseHost, projectId, isDesignMode } = configs
