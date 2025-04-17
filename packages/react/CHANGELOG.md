@@ -1,5 +1,13 @@
 # @weaverse/react
 
+## 4.2.6
+
+### Patch Changes
+
+- Fix generate default theme settings, clean up
+- Updated dependencies
+  - @weaverse/core@4.2.6
+
 ## 4.2.5
 
 ### Patch Changes
