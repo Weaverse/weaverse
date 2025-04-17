@@ -94,9 +94,9 @@ export class WeaverseClient {
     options: RequestInit = {},
   ): Promise<T> {
     try {
-      const res = await fetch(url, options)
+      let res = await fetch(url, options)
       if (!res.ok) {
-        const error = await res.text()
+        let error = await res.text()
         throw new Error(`${res.status} ${res.statusText} ${error}`)
       }
       return res.json()
@@ -109,11 +109,11 @@ export class WeaverseClient {
     url: string,
     options: RequestInit & { strategy?: AllCacheOptions } = {},
   ): Promise<T> {
-    const {
+    let {
       strategy = this.storefront.CacheCustom(DEFAULT_CACHE_STRATEGY),
       ...reqInit
     } = options
-    const cacheKey = [url, options.body]
+    let cacheKey = [url, options.body]
 
     if (this.configs.isDesignMode) {
       return this.directFetch<T>(url, reqInit)
@@ -213,13 +213,9 @@ export class WeaverseClient {
         isPreviewMode,
         sectionType,
       } = this.configs
+
       if (isPreviewMode) {
-        const previewData = getPreviewData(
-          sectionType,
-          this.components,
-          weaverseHost,
-        )
-        return previewData as unknown as WeaverseLoaderData
+        return getPreviewData(sectionType, this.components, weaverseHost)
       }
 
       if (!projectId) {

@@ -3,6 +3,7 @@ import type {
   HydrogenComponent,
   HydrogenComponentSchema,
   HydrogenThemeSchema,
+  WeaverseLoaderData,
   WeaverseProjectConfigs,
   WeaverseStudioQueries,
 } from '../types'
@@ -103,9 +104,8 @@ function recursivelyAddDataItem(
   if (children) {
     for (let c of children) {
       let { type, children, ...data } = c
-      childIds.push({
-        id: recursivelyAddDataItem(type, components, items, data),
-      })
+      let childId = recursivelyAddDataItem(type, components, items, data)
+      childIds.push({ id: childId })
     }
   }
   items.push({
@@ -122,6 +122,7 @@ export function getPreviewData(
   components: HydrogenComponent[],
   weaverseHost: string,
 ) {
+  let items = []
   return {
     project: { id: 'x', weaverseShopId: 'shop-id', name: 'Section Preview' },
     configs: {
@@ -151,9 +152,10 @@ export function getPreviewData(
           data: {},
           id: '1',
           type: 'main',
-          children: [{ id: recursivelyAddDataItem(type, components, []) }],
+          children: [{ id: recursivelyAddDataItem(type, components, items) }],
         },
+        ...items,
       ],
     },
-  }
+  } as unknown as WeaverseLoaderData
 }
