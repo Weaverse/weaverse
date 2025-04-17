@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 4.2.7
+
+### Patch Changes
+
+- Fix get section preview data
+
 ## 4.2.6
 
 ### Patch Changes

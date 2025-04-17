@@ -1,5 +1,13 @@
 # @weaverse/react
 
+## 4.2.7
+
+### Patch Changes
+
+- Fix get section preview data
+- Updated dependencies
+  - @weaverse/core@4.2.7
+
 ## 4.2.6
 
 ### Patch Changes
