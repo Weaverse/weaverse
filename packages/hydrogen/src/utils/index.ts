@@ -93,25 +93,18 @@ function recursivelyAddDataItem(
   items: any[],
   initData?: object,
 ) {
-  const component = components.find((c) => c.schema.type === type)
+  let component = components.find((c) => c.schema.type === type)
   if (!component) {
     return
   }
-  let childIDs = []
-  // generate id for item
-  const id = crypto.randomUUID()
-  const { children, ...data } = component.schema?.presets || {}
+  let childIds = []
+  let id = crypto.randomUUID()
+  let { children, ...data } = component.schema?.presets || {}
   if (children) {
-    for (const child of children) {
-      const { type, children, ...data } = child
-      const childID = recursivelyAddDataItem(
-        child.type,
-        components,
-        items,
-        data,
-      )
-      childIDs.push({
-        id: childID,
+    for (let c of children) {
+      let { type, children, ...data } = c
+      childIds.push({
+        id: recursivelyAddDataItem(type, components, items, data),
       })
     }
   }
@@ -119,7 +112,7 @@ function recursivelyAddDataItem(
     data: { ...data, ...initData },
     id,
     type,
-    children: childIDs,
+    children: childIds,
   })
   return id
 }
