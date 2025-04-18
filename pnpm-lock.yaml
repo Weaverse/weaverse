@@ -106,7 +106,7 @@ importers:
         specifier: '2'
         version: 2.0.12(@remix-run/server-runtime@2.16.3(typescript@5.8.2))(@shopify/oxygen-workers-types@4.1.6)
       '@weaverse/react':
-        specifier: 4.2.2
+        specifier: 4.2.7
         version: link:../react
       react:
         specifier: '>=18'
@@ -121,7 +121,7 @@ importers:
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: 4.2.2
+        specifier: 4.2.7
         version: link:../core
       clsx:
         specifier: ^2.1.1
@@ -142,7 +142,7 @@ importers:
         specifier: ^1.2.8
         version: 1.2.8(react@18.3.1)
       '@weaverse/react':
-        specifier: 4.2.2
+        specifier: 4.2.7
         version: link:../react
       keen-slider:
         specifier: ^6.8.6
