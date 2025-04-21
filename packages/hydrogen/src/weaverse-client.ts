@@ -29,6 +29,7 @@ const DEFAULT_CACHE_STRATEGY = {
   maxAge: 10,
   sMaxAge: 10,
   staleWhileRevalidate: 82800,
+  staleIfError: 82800,
 }
 
 export class WeaverseClient {
