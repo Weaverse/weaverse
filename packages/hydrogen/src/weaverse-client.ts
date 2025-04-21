@@ -26,8 +26,8 @@ import {
 // Constants at the top
 const API_PATH = 'api/public'
 const DEFAULT_CACHE_STRATEGY = {
-  maxAge: 5,
-  sMaxAge: 5,
+  maxAge: 10,
+  sMaxAge: 10,
   staleWhileRevalidate: 82800,
 }
 
