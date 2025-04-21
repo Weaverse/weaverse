@@ -2,7 +2,7 @@
 title: Input Settings
 description: Input settings to allow section components customizable via Weaverse Theme Customizer.
 publishedAt: September 27, 2023
-updatedAt: January 17, 2024
+updatedAt: April 21, 2025
 order: 5
 published: true
 ---
@@ -28,7 +28,7 @@ type Input = {
   name: string
   label?: string
   configs?: ConfigsType
-  condition?: string
+  condition?: string | ((data: ElementData, weaverse: WeaverseHydrogen) => boolean)
   defaultValue?:
     | string
     | number
@@ -53,34 +53,37 @@ Here's a breakdown of the available attributes in an input setting:
 | `label`            | `string`                                             | A label for the input to show in the Weaverse Studio's Inspector                                                      | ➖        |
 | `placeholder`      | `string`                                             | A placeholder text to show when the input is empty.                                                                   | ➖        |
 | `configs`          | `AdditionalInputConfigs`                             | Additional options for inputs require more configuration. (Available for `select`, `toggle-group`, and `range` input) | ➖        |
-| `condition`        | `string`                                             | Only displays the input if the specified condition matches.                                                           | ➖        |
+| `condition`        | `string` \| `function`                               | Only displays the input if the specified condition matches. Supports both string and function-based conditions.       | ➖        |
 | `helpText`         | `string`                                             | Provides additional information or instructions for the input setting (**HTML** format supported).                    | ➖        |
 | `shouldRevalidate` | `boolean`                                            | Automatically revalidate the page when the input changes to apply new data from `loader` function.                    | ➖        |
 
 - `condition`
 
-  The **`condition`** attribute enables developers to define conditions under which an input will be displayed. It
-  supports the following operators:
+  The **`condition`** attribute enables developers to define conditions under which an input will be displayed. It supports two formats:
 
-- **`eq`**: equals
+  1. **Function-based conditions** (Recommended):
+     ```tsx
+     {
+       type: 'text',
+       name: 'buttonText',
+       label: 'Button Text',
+       condition: (data) => data.showButton === true
+     }
+     ```
 
-- **`ne`**: not equals
+  2. **String-based conditions** (Deprecated):
+     ```tsx
+     {
+       type: 'text',
+       name: 'buttonText',
+       label: 'Button Text',
+       condition: 'showButton.eq.true'
+     }
+     ```
 
-- **`gt`**: greater than
+  > **Note to users:** String-based conditions are deprecated. For new components, we strongly recommend using function-based conditions which offer more flexibility and better type safety.
 
-- **`gte`**: greater than or equal to
-
-- **`lt`**: less than
-
-- **`lte`**: less than or equal to
-
-  The format is as follows: **`bindingName.conditionalOperator.value`**.
-
-  **Examples**:
-
-  - `clickAction.eq.openLink` - Displays the input if the **`clickAction`** is set to **`openLink`**.
-
-  - `imagesPerRow.gt.1` - Displays the input if the number of **`imagesPerRow`** is greater than 1.
+  Function-based conditions receive the component's current data and the Weaverse instance, allowing for more complex conditional logic that can reference multiple fields or perform calculations.
 
 - `helpText`
 
@@ -104,6 +107,21 @@ Here's a breakdown of the available attributes in an input setting:
   <img alt="example" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/help-text-input.webp?v=1743390826" width="300"/>
 
 ## Basic Inputs
+
+### `heading`
+
+The **`heading`** input type is a special input that creates a heading or section title in the inspector panel. It's used to organize inputs into logical groups.
+
+**Example:**
+```tsx
+{
+  type: "heading",
+  label: "Content Settings"
+}
+```
+
+**Output:**
+<img alt="heading_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/heading-input.png?v=1745227001" width="300"/>
 
 ### `text`
 
@@ -362,9 +380,7 @@ Here's how it works:
 
 - **Enhancing SEO**: merchants can edit the alt text of the images they've uploaded.
 
-**Return**: `object` - A **`WeaverseImage`** (type can be imported from **`@weaverse/hydrogen`** package).
-
-**`WeaverseImage`** type definition:
+**Return**: `object` - A **`WeaverseImage`** object with the following structure:
 
 ```tsx
 type WeaverseImage = {
@@ -373,6 +389,7 @@ type WeaverseImage = {
   altText: string
   width: number
   height: number
+  previewSrc: string
 }
 ```
 
@@ -460,9 +477,7 @@ Here's how it works:
 
 - **Enhancing SEO**: merchants can edit the alt text of the videos they've uploaded.
 
-**Return**: `object` - A **`WeaverseVideo`** (type can be imported from **`@weaverse/hydrogen`** package).
-
-**`WeaverseVideo`** type definition:
+**Return**: `object` - A **`WeaverseVideo`** object with the following structure:
 
 ```tsx
 type WeaverseVideo = {
@@ -579,10 +594,10 @@ the input, a dropdown list of suggested places appears.
 The **`position`** input enables merchants to select a content alignment from a predefined subset of positions using
 intuitive directional arrows.
 
-**Return:** `string` - The selected content position from the available choices.
-
-The position can be one of the following
-values: `top left` | `top center` | `top right` | `center left` | `center center` | `center right` | `bottom left` | `bottom center` | `bottom right`
+**Return**: `string` - The selected content position from the following allowed values:
+- `top left` | `top center` | `top right`
+- `center left` | `center center` | `center right`
+- `bottom left` | `bottom center` | `bottom right`
 
 **Example:**
 
@@ -598,6 +613,130 @@ values: `top left` | `top center` | `top right` | `center left` | `center center
 **Output:**
 
 <img alt="position_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_position_input.png?v=1722416367" width="300"/>
+
+### `swatches`
+
+The **`swatches`** input provides merchants with a color palette selection interface, allowing them to choose from predefined color options.
+
+**Return**: `string` - The selected color value in hex format.
+
+**Example:**
+```tsx
+{
+  type: "swatches",
+  label: "Color palette",
+  name: "colorPalette",
+  configs: {
+    options: [
+      { value: "#FF0000", label: "Red" },
+      { value: "#00FF00", label: "Green" },
+      { value: "#0000FF", label: "Blue" }
+    ]
+  },
+  defaultValue: "#FF0000"
+}
+```
+
+### `blog`
+
+The `blog` input provides merchants with an intuitive search and select interface to choose a specific blog from their store.
+
+**Return:** `object` - A `WeaverseBlog` object (type can be imported from `@weaverse/hydrogen` package).
+
+**Example:**
+
+```tsx
+{
+  type: "blog",
+  name: "blog",
+  label: "Blog",
+}
+```
+
+**Output:**
+
+<img alt="blog_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/blog-input.webp?v=1743407119" width="300"/>
+
+Similar to the `product` input, the preview will automatically revalidate and run the `loader` function when selecting a blog. Please use the `handle` or `id` of the selected blog to fetch the full blog data.
+
+### `metaobject`
+
+The **`metaobject`** input provides merchants with an intuitive search and select interface to choose a specific metaobject definition from their store.
+
+**Return**: `object` - A **`WeaverseMetaobject`** object with the following structure:
+
+```tsx
+type WeaverseMetaobject = {
+  id: number
+  handle: string
+}
+```
+
+**Example:**
+```tsx
+{
+  type: "metaobject",
+  name: "teamMember",
+  label: "Team Member"
+}
+```
+
+**Output:**
+<img alt="metaobject_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_metaobject_input.png?v=1722477096" width="300"/>
+
+Similar to other resource picker inputs, when selecting a metaobject definition, the preview will automatically revalidate and run the `loader` function. Use the `handle` or `id` of the selected metaobject to fetch the full data from the Storefront API.
+
+### `collection`
+
+The `collection` input provides merchants with an intuitive search and select interface to choose a specific collection from their store.
+
+**Return:** `object` - A `WeaverseCollection` object (type can be imported from `@weaverse/hydrogen` package).
+
+**Example:**
+
+```tsx
+{
+  type: "collection",
+  name: "collection",
+  label: "Collection",
+}
+```
+
+**Output:**
+
+<img alt="collection_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/collection-input.webp?v=1743407119" width="300"/>
+
+Similar to the `product` input, the preview will automatically revalidate and run the `loader` function when selecting a collection. Please use the `handle` or `id` of the selected collection to fetch the full collection data.
+
+### `collection-list`
+
+The `collection-list` input provides merchants with an intuitive search and select interface to choose multiple collections from their store.
+
+**Return:** `array` - An array of `WeaverseCollection` object with their respective IDs and handles.
+
+**Example:**
+
+```tsx
+{
+  type: "collection-list",
+  name: "collections",
+  label: "Select collections",
+}
+```
+
+**Output:**
+
+<img alt="collection_list_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/collection-list-input.webp?v=1743407119" width="300"/>
+
+Similar to the `product` input, the preview will automatically revalidate and run the `loader` function when selecting collections. Please use the `handle` or `id` of the selected collection to fetch the full collection data.
+
+## Querying Storefront Data
+
+After using the Resource Picker inputs, you might notice that the returned data is limited, typically just the `id` and `handle` of the selected resource. In most cases, you'll need more detailed data for your components or routes.
+
+This is where the **Weaverse** client comes in handy. Using its **`storefront.query`** function, you can fetch the full set of data related to your selection from [Shopify's Storefront API](https://shopify.dev/docs/api/storefront).
+
+To learn more about how to effectively fetch and utilize data within Weaverse, refer to our dedicated section on [Data Fetching & Caching](/docs/guides/data-fetching-and-caching#querying-storefront-data-inside-weaverses-component).
 
 ## Resource Picker Inputs
 
@@ -620,23 +759,13 @@ The **`url`** input allows merchants to enter a URL or select a page from their 
 
 **Output:**
 
-<img alt="product_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/url_input.png?v=1712823900" width="300"/>
+<img alt="url_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/url_input.png?v=1712823900" width="300"/>
 
 ### `product`
 
-The **`product`** input provides merchants with an intuitive search and select interface to choose a specific product
-from their store.
+The **`product`** input provides merchants with an intuitive search and select interface to choose a specific product from their store.
 
-**Return:** `object` **-** A `WeaverseProduct` object (type can be imported from `@weaverse/hydrogen` package).
-
-`WeaverseProduct` type definition:
-
-```tsx
-type WeaverseProduct = {
-  id: number
-  handle: string
-}
-```
+**Return:** `object` - A `WeaverseProduct` object (type can be imported from `@weaverse/hydrogen` package).
 
 **Example:**
 
@@ -646,7 +775,6 @@ type WeaverseProduct = {
   name: "product",
   label: "Featured product",
 }
-
 ```
 
 **Output:**
@@ -692,10 +820,9 @@ export let loader = async (args: ComponentLoaderArgs<SingleProductData>) => {
 
 ### `product-list`
 
-The `product-list` input provides merchants with an intuitive search and select interface to choose multiple products
-from their store.
+The `product-list` input provides merchants with an intuitive search and select interface to choose multiple products from their store.
 
-**Return:** `array` **-** An array of `WeaverseProduct` object with their respective IDs and handles.
+**Return:** `array` - An array of `WeaverseProduct` object with their respective IDs and handles.
 
 **Example:**
 
@@ -715,10 +842,9 @@ Similar to the `product` input, the preview will automatically revalidate and ru
 
 ### `collection`
 
-The `collection` input provides merchants with an intuitive search and select interface to choose a specific collection
-from their store.
+The `collection` input provides merchants with an intuitive search and select interface to choose a specific collection from their store.
 
-**Return:** `object` **-** A `WeaverseCollection` object (type can be imported from `@weaverse/hydrogen` package).
+**Return:** `object` - A `WeaverseCollection` object (type can be imported from `@weaverse/hydrogen` package).
 
 **Example:**
 
@@ -738,10 +864,9 @@ Similar to the `product` input, the preview will automatically revalidate and ru
 
 ### `collection-list`
 
-The `collection-list` input provides merchants with an intuitive search and select interface to choose multiple
-collections from their store.
+The `collection-list` input provides merchants with an intuitive search and select interface to choose multiple collections from their store.
 
-**Return:** `array` **-** An array of `WeaverseCollection` object with their respective IDs and handles.
+**Return:** `array` - An array of `WeaverseCollection` object with their respective IDs and handles.
 
 **Example:**
 
@@ -761,10 +886,9 @@ Similar to the `product` input, the preview will automatically revalidate and ru
 
 ### `blog`
 
-The `blog` input provides merchants with an intuitive search and select interface to choose a specific blog from their
-store.
+The `blog` input provides merchants with an intuitive search and select interface to choose a specific blog from their store.
 
-**Return:** `object` **-** A `WeaverseBlog` object (type can be imported from `@weaverse/hydrogen` package).
+**Return:** `object` - A `WeaverseBlog` object (type can be imported from `@weaverse/hydrogen` package).
 
 **Example:**
 
@@ -784,63 +908,39 @@ Similar to the `product` input, the preview will automatically revalidate and ru
 
 ### `metaobject`
 
-The `metaobject` input provides merchants with an intuitive search and select interface to choose a specific metaobject definition from their store.
+The **`metaobject`** input provides merchants with an intuitive search and select interface to choose a specific metaobject definition from their store.
 
-**Return:** `object` **-** A `WeaverseMetaobject` (type can be imported from `@weaverse/hydrogen` package).
-
-**Example:**
+**Return**: `object` - A **`WeaverseMetaobject`** object with the following structure:
 
 ```tsx
+type WeaverseMetaobject = {
+  id: number
+  handle: string
+}
+```
+
+**Example:**
+```tsx
 {
-  label: "Select metaobject definition",
   type: "metaobject",
-  name: "ourTeam"
+  name: "teamMember",
+  label: "Team Member"
 }
 ```
 
 **Output:**
-
 <img alt="metaobject_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_metaobject_input.png?v=1722477096" width="300"/>
 
-When selecting a metaobject definition, the preview will automatically revalidate and run the `loader` function.
-The `loader` function will read the `type` of the selected metaobject definition and fetch all the metaobject data from the Storefront API. Here's an example of how to use the `loader` function:
-
-```tsx
-import type { ComponentLoaderArgs, WeaverseMetaObject } from '@weaverse/hydrogen'
-
-type OurTeamData = {
-  metaobject: WeaverseMetaObject;
-  membersCount: number;
-};
-
-export let loader = async (args: ComponentLoaderArgs<OurTeamData>) => {
-  let { weaverse, data } = args;
-  let { storefront } = weaverse;
-  let { metaobject, membersCount } = data;
-  if (metaobject) {
-    return await storefront.query<OurTeamQuery>(OUR_TEAM_QUERY, {
-      variables: {
-        type: metaobject.handle,
-        first: membersCount,
-      },
-    });
-  }
-  return null;
-};
-```
+Similar to other resource picker inputs, when selecting a metaobject definition, the preview will automatically revalidate and run the `loader` function. Use the `handle` or `id` of the selected metaobject to fetch the full data from the Storefront API.
 
 ## Querying Storefront Data
 
-After using the Resource Picker inputs, you might notice that the returned data is limited, typically just the `id`
-and `handle` of the selected resource. In most cases, you'll need more detailed data for your components or routes.
+After using the Resource Picker inputs, you might notice that the returned data is limited, typically just the `id` and `handle` of the selected resource. In most cases, you'll need more detailed data for your components or routes.
 
-This is where the **Weaverse** client comes in handy. Using its **`storefront.query`** function, you can fetch the full
-set of data related to your selection from [Shopify's Storefront API](https://shopify.dev/docs/api/storefront).
+This is where the **Weaverse** client comes in handy. Using its **`storefront.query`** function, you can fetch the full set of data related to your selection from [Shopify's Storefront API](https://shopify.dev/docs/api/storefront).
 
-To learn more about how to effectively fetch and utilize data within Weaverse, refer to our dedicated section
-on [Data Fetching & Caching](/docs/guides/data-fetching-and-caching#querying-storefront-data-inside-weaverses-component).
+To learn more about how to effectively fetch and utilize data within Weaverse, refer to our dedicated section on [Data Fetching & Caching](/docs/guides/data-fetching-and-caching#querying-storefront-data-inside-weaverses-component).
 
 ## Next Steps
 
-Now that you have a solid understanding of Input Settings, let's learn how to render a Weaverse page in the next
-article: [Rendering a Weaverse Page](/docs/guides/rendering-page).
+Now that you have a solid understanding of Input Settings, let's learn how to render a Weaverse page in the next article: [Rendering a Weaverse Page](/docs/guides/rendering-page).
