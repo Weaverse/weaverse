@@ -15,6 +15,8 @@ published: true
 >
 > For a complete working example, check out our [Naturelle Demo Repository](https://github.com/Weaverse/naturelle-demo) which demonstrates Docker deployment configuration in a real Weaverse theme project.
 
+For other options to deploy your Hydrogen project, including platforms like Vercel, Netlify, and Cloudflare Workers, please refer to the [Shopify documentation on self-hosting Hydrogen](https://shopify.dev/docs/storefronts/headless/hydrogen/deployments/self-hosting).
+
 ## Understanding Docker Deployment
 
 Docker deployment for Weaverse themes uses mini-oxygen, a Node.js-based simulation of the Shopify Workers environment. This approach has several important characteristics:
@@ -47,7 +49,7 @@ Docker deployment for Weaverse themes uses mini-oxygen, a Node.js-based simulati
 
 Create a `Dockerfile` in your project root:
 
-```dockerfile
+```bash
 FROM node:lts-bookworm-slim as base
 
 # Install essential SSL and security certificates

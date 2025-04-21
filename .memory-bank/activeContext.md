@@ -21,7 +21,17 @@ Improving documentation and developer experience:
    - Improved technical accuracy
    - Enhanced readability
 
-3. Environment Variables:
+3. Component Schema Guide:
+   - Enhanced documentation structure
+   - Added comprehensive examples
+   - Included best practices
+   - Added troubleshooting section
+   - Improved property explanations
+   - Added visual representations
+   - Created cross-references to related guides
+   - Updated: April 15, 2025
+
+4. Environment Variables:
    - Updated documentation (April 11, 2025)
    - Added Storefront API permission requirements
    - Improved setup instructions
@@ -45,6 +55,7 @@ IMPLEMENT - Documentation and DX improvement phase
 
 ## Status
 ✅ Getting Started guide updated
+✅ Component Schema guide updated
 🔄 Prerequisites under review
 🔄 Project structure documentation in progress
 📋 Development guides planned
@@ -105,4 +116,5 @@ IMPLEMENT - Documentation and DX improvement phase
 - Storefront API requires all permissions enabled
 - Environment variables are properly categorized
 - TypeScript support is documented
-- Security best practices are emphasized 
+- Security best practices are emphasized
+- Component Schema documentation now provides detailed examples and best practices 
