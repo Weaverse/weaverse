@@ -9,7 +9,7 @@ published: true
 
 # Deploying Weaverse Themes with Docker
 
-> **Important**: For production deployments, use [Shopify Oxygen](docs/deployment/oxygen). Docker deployment is recommended only for development and testing.
+> **Important**: For production deployments, use [Shopify Oxygen](/docs/deployment/oxygen). Docker deployment is recommended only for development and testing.
 >
 > Note: mini-oxygen in Docker simulates the Workers environment and requires environment variables to be set via `.env` file, not through cloud platform settings.
 >
