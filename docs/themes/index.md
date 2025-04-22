@@ -1,5 +1,5 @@
 ---
 title: Themes
-description: Theme tutorials
+description: Comprehensive documentation and guides for our collection of free, professionally designed Shopify themes.
 order: 7
 ---
