@@ -2,93 +2,100 @@
 title: Pilot - Shopify Hydrogen Starter Theme
 description: Elevate your Shopify Headless storefront with Pilot, the robust and versatile starter theme by Weaverse.
 publishedAt: January 11, 2024
-updatedAt: January 15, 2024
+updatedAt: April 24, 2025
 order: 1
 published: true
 ---
 
-Discover the [Pilot theme](https://pilot.weaverse.dev/), a comprehensive starter theme brought to you by Weaverse. It's engineered to serve as a dependable cornerstone for your theme development and customization needs. Envision Pilot as the Dawn theme's counterpart for the Shopify Online Store 2.0.
+Meet the [Pilot theme](https://pilot.weaverse.dev/), a comprehensive starter theme from Weaverse designed to be a solid foundation for your Shopify Hydrogen storefront. Think of Pilot as fulfilling a similar foundational role for Hydrogen projects as the Dawn theme does for Shopify Online Store 2.0.
 
-Pilot finds its roots in Shopify's [Hydrogen Demo Store](https://github.com/Shopify/hydrogen/tree/main/templates/demo-store) and is seamlessly integrated with Weaverse. This integration facilitates efficient theme building and customization, ensuring adherence to industry best practices and standards.
+Pilot builds upon Shopify's [Hydrogen Demo Store](https://github.com/Shopify/hydrogen/tree/main/templates/demo-store) and is tightly integrated with Weaverse. This integration streamlines theme development and customization, promoting best practices and ensuring high performance.
 
-[![Pilot](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/landing_hero.webp?v=1703568247)](https://pilot.weaverse.dev/)
+[![Pilot Theme Preview](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/landing_hero.webp?v=1703568247)](https://pilot.weaverse.dev/)
 
-## Features
+## Key Features
 
 ---
 
-- **Live Preview:** Instantly see your theme changes in Weaverse Studio.
-- **Component Schema Definition:** Create a customizable component schema in Weaverse Studio.
-- **Component-Level Loader:** Incorporate a Remix-style loader at the component level, fetching data from the Shopify Storefront API or other third-party resources.
-- **Tailwind CSS Integration:** Design with ease using Tailwind CSS, a utility-first framework for crafting custom interfaces.
-- **Shopify Resource Picker:** Conveniently select Shopify resources like products, collections, pages, blogs, articles, etc.
-- **Multi-Market and Language Support:** Expand your reach by selling in various markets and languages.
-- **Global Theme Settings:** Customize broad theme aspects such as colors, fonts, and more.
+*   **Instant Live Preview:** See your theme modifications immediately in Weaverse Studio.
+*   **Customizable Component Schema:** Define configurable settings for your components within Weaverse Studio.
+*   **Component-Level Data Loading:** Utilize Remix-style loaders within individual components to fetch data efficiently from the Shopify Storefront API or third-party sources.
+*   **Tailwind CSS Integration:** Leverage the utility-first power of Tailwind CSS for rapid UI development.
+*   **Easy Shopify Resource Selection:** Conveniently select products, collections, pages, blogs, articles, and more directly within the editor.
+*   **Multi-Market & Language Ready:** Built to support sales across different markets and languages.
+*   **Global Theme Settings:** Easily customize site-wide elements like colors, fonts, and layout options.
 
 ## Getting Started
 
 ---
 
-Access the Pilot theme on [GitHub](https://github.com/weaverse/pilot). As an open-source project, you can deploy it directly to platforms like Oxygen/Vercel or clone it to your local environment for further customization.
+The Pilot theme is open-source and available on [GitHub](https://github.com/weaverse/pilot). You can deploy it directly to platforms like Oxygen or Vercel, or clone the repository to your local machine for development and customization.
 
 ## Available Sections
 
 ---
 
-- **Image with Text:** Showcase an image with a text overlay.
-- **Image Gallery:** Create a stunning gallery of images.
-- **Featured Product:** Highlight a product of your choice.
-- **Featured Collection:** Showcase a specific collection.
-- **Related Products:** Suggest related products to your customers.
-- **Blog Posts:** Display recent blog entries.
-- **Rich Text:** Present rich text content.
-- **Newsletter:** Incorporate a newsletter subscription form.
-- **Map:** Add an interactive map.
-- **Video:** Embed a video.
-- **Testimonials:** Share customer testimonials.
-- **Custom HTML:** Include custom HTML content.
-- **Metaobject Demo:** Demonstrate a Shopify metaobject.
+Pilot includes a variety of pre-built sections to help you build pages quickly:
+
+*   Image with Text
+*   Image Gallery
+*   Featured Product
+*   Featured Collection
+*   Related Products
+*   Blog Posts
+*   Rich Text
+*   Newsletter Form
+*   Map
+*   Video Embed
+*   Testimonials
+*   Custom HTML
+*   Metaobject Demo
 
 ## Global Theme Settings
 
 ---
 
-Pilot comes equipped with comprehensive global theme settings, offering extensive customization options. Learn more about these settings in our [Global Theme Settings](/docs/guides/global-theme-settings) guide.
+Pilot offers extensive global theme settings for site-wide customization. Learn more about configuring these options in our [Global Theme Settings](/docs/guides/global-theme-settings) guide.
 
-## Metaobjects
+## Using Metaobjects with Pilot
 
 ---
 
-Weaverse introduces a metaobject picker input, enabling users to select and display Shopify metaobjects within the theme. Here's how you can set up and use metaobjects with the Pilot theme.
+Weaverse integrates a metaobject picker, allowing you to easily select and display Shopify metaobjects within your theme. Follow these steps to set up and use metaobjects with Pilot:
 
-### Setting Up Metaobjects in Shopify
+### 1. Define Your Metaobject Structure in Shopify
 
-1. In Shopify Admin, navigate to _Settings_ > _Custom data_.
-2. Under _Metaobjects_, click _Add definition_.
-3. Name your metaobject definition.
-4. Add fields by clicking _Add field_. These fields determine the content of your metaobject, with each offering specific options and validations. For instance, to create a member's profile, include fields for an avatar, name, and title:
+1.  Navigate to **Settings > Custom data** in your Shopify Admin.
+2.  Under **Metaobjects**, click **Add definition**.
+3.  Give your metaobject definition a clear name (e.g., "Team Member Profile").
+4.  Add the necessary fields using **Add field**. Each field has specific types and validation options. For a team member profile, you might add:
+    *   `avatar`: File type (restrict to images).
+    *   `name`: Single line text.
+    *   `title`: Single line text.
+5.  Configure any additional options like access controls.
+6.  **Save** the definition.
 
-- **Avatar:** File type (limit to images by deselecting videos)
-- **Name:** Single line text
-- **Title:** Single line text
-- Save your settings.
-  Here's what your setup might look like:
-  [![Metaobject definition](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/metaobject_definition.png)](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/metaobject_definition.png)
+    *Example Setup:*
+    [![Metaobject definition example](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/metaobject_definition.png)](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/metaobject_definition.png)
 
-### Creating a Metaobject Entry in Shopify
+### 2. Create Metaobject Entries in Shopify
 
-1. Navigate to _Content_ > _Metaobjects_ in Shopify Admin.
-2. Click _Add entry_ and select your previously created metaobject definition.
-3. Fill out the fields for your metaobject entry, such as avatar, name, and title for a member profile.
-4. Save your entry.
-5. Repeat to add more entries as needed.
-   [![Metaobject entry](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/Screenshot_2024-01-11_at_14.23.52.png?v=1704968599)](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/Screenshot_2024-01-11_at_14.23.52.png?v=1704968599)
+1.  Navigate to **Content > Metaobjects** in your Shopify Admin.
+2.  Click **Add entry** and select the definition you just created (e.g., "Team Member Profile").
+3.  Fill in the content for each field (upload an avatar, enter name and title).
+4.  **Save** the entry.
+5.  Repeat this process to add more entries (e.g., for each team member).
 
-### Integrating Metaobjects in the Pilot Theme
+    *Example Entry:*
+    [![Metaobject entry example](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/Screenshot_2024-01-11_at_14.23.52.png?v=1704968599)](https://cdn.shopify.com/s/files/1/0728/0410/6547/files/Screenshot_2024-01-11_at_14.23.52.png?v=1704968599)
 
-1. In Weaverse Studio, go to _Theme_ > _Sections_ > _Add section_.
-2. Choose the _Metaobject demo_ section.
-3. From the Inspector, select your created metaobject.
-4. Preview your changes. Check out this video demo:
+### 3. Display Metaobjects in the Pilot Theme
 
-<iframe src="https://www.youtube.com/embed/BEf6jfjloiE?rel=0" frameBorder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowFullScreen></iframe>
+1.  Open your page in Weaverse Studio.
+2.  Click **Add section** in the Page Outline (left panel).
+3.  Select the **Metaobject demo** section (or another section you've configured to use metaobjects).
+4.  In the Inspector panel (right panel), use the metaobject picker input field to select the specific metaobject entry you want to display.
+5.  Observe the changes in the live preview.
+
+    *Video Demonstration:*
+<iframe width="560" height="315" src="https://www.youtube.com/embed/BEf6jfjloiE?rel=0" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
