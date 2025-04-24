@@ -3,7 +3,7 @@ title: useParentInstance
 description: Hook for accessing the parent component instance in Weaverse Hydrogen components.
 publishedAt: April 24, 2025
 updatedAt: April 24, 2025
-order: 3
+order: 6
 published: true
 ---
 

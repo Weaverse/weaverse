@@ -3,7 +3,7 @@ title: Types
 description: TypeScript interfaces and types for Weaverse Hydrogen development.
 publishedAt: April 24, 2025
 updatedAt: April 24, 2025
-order: 8
+order: 12
 published: true
 ---
 

@@ -3,7 +3,7 @@ title: WeaverseClient
 description: The WeaverseClient class provides server-side methods to interact with Weaverse content and services in a Hydrogen storefront.
 publishedAt: October 10, 2023
 updatedAt: April 24, 2025
-order: 0
+order: 2
 published: true
 ---
 

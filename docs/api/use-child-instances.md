@@ -3,7 +3,7 @@ title: useChildInstances
 description: Hook for accessing child component instances in Weaverse Hydrogen components.
 publishedAt: April 24, 2025
 updatedAt: April 24, 2025
-order: 4
+order: 7
 published: true
 ---
 

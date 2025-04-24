@@ -3,7 +3,7 @@ title: useWeaverse
 description: Hook for accessing the global Weaverse instance in Weaverse Hydrogen components.
 publishedAt: October 10, 2023
 updatedAt: April 24, 2025
-order: 6
+order: 4
 published: true
 ---
 

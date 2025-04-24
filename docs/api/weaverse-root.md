@@ -3,7 +3,7 @@ title: WeaverseRoot
 description: The core rendering component for Weaverse content in React-based applications.
 publishedAt: April 24, 2025
 updatedAt: April 24, 2025
-order: 5
+order: 3
 published: true
 ---
 

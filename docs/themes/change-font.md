@@ -3,7 +3,7 @@ title: How to Change the Font in Your Weaverse Theme
 description: Learn how to update, extend, or customize fonts in your Weaverse Hydrogen storefront using Fontsource, Google Fonts, or custom uploads.
 publishedAt: April 24, 2025
 updatedAt: April 24, 2025
-order: 1
+order: 3
 published: true
 ---
 

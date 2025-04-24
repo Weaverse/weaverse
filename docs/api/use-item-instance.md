@@ -3,7 +3,7 @@ title: useItemInstance
 description: Hook for accessing specific component instances in Weaverse Hydrogen components.
 publishedAt: October 10, 2023
 updatedAt: April 24, 2025
-order: 5
+order: 8
 published: true
 ---
 

@@ -3,7 +3,7 @@ title: IMAGES_PLACEHOLDERS
 description: A collection of placeholder images for development in Weaverse Hydrogen themes.
 publishedAt: April 24, 2025
 updatedAt: April 24, 2025
-order: 7
+order: 11
 published: true
 ---
 
