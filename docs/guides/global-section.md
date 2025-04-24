@@ -1,13 +1,15 @@
 ---
-title: Global Section
-description: Learn how to create and reuse global sections in your Weaverse theme.
+title: Global Sections
+description: Learn how to define and manage global sections across your Weaverse Hydrogen storefront, enabling reusable content blocks and simplified updates.
 publishedAt: May 31, 2024
-updatedAt: Jun 7, 2024
+updatedAt: April 24, 2025
 order: 9
 published: true
 ---
 
-**Global Sections** in Weaverse empower you to create and reuse sections across multiple pages and components. This feature enhances the organization and structure of your theme’s content, making maintenance and updates more efficient.
+# Global Sections
+
+Global Sections in Weaverse empower you to create reusable content blocks that can be inserted across multiple pages and components, ensuring consistency and simplifying theme maintenance.
 
 In this guide, we’ll explore how to create, use, and customize global sections in your Weaverse theme.
 

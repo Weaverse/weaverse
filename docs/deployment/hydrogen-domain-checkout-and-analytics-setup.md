@@ -1,77 +1,93 @@
 ---
 title: Hydrogen Domain, Checkout, and Analytics Setup
-description: Step-by-step guide to setting up your custom domain and analytics for your Shopify Hydrogen project.
+description: Comprehensive guide to setting up your custom domain, checkout, and analytics for your Weaverse Hydrogen project on Shopify.
 publishedAt: April 18, 2024
-updatedAt: April 21, 2024
+updatedAt: April 24, 2025
 order: 2
 published: true
 ---
 
-This article provides a comprehensive guide to setting up your custom domain and analytics for your Shopify Hydrogen project. We will also show you how to redirect traffic from your old native Shopify store to your new Hydrogen store. Before proceeding, ensure your Hydrogen storefront is deployed via Oxygen by following [instructions](/docs/deployment/oxygen).
+# Hydrogen Domain, Checkout, and Analytics Setup
+
+This guide walks you through setting up a custom domain, configuring checkout, and enabling analytics (including cookie banner and Google Tag Manager) for your Weaverse Hydrogen storefront. You’ll also learn how to redirect traffic from your old Shopify Liquid store to your new Hydrogen experience.
+
+> **Prerequisites:**
+> - Your Hydrogen storefront is deployed via Oxygen ([deployment guide](/docs/deployment/oxygen)).
+> - You have access to your Shopify admin and DNS provider (if using a custom domain).
+> - You have your Weaverse Project ID and any analytics IDs ready.
+
 ![Deployed and Published Hydrogen Project](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_hydrogen_deployed.png?v=1713692590)
 
-## Setting Up Your Custom Domain
+## 1. Setting Up Your Custom Domain
 
-Navigate to your Shopify store's admin panel, then go to Settings > Domains. Here, you can add your custom domain by clicking on **Connect existing domain** or **Buy new domain**.
-For reference, I already own the domain `weaverse.dev` and will connect it to my Hydrogen store.
-![Shopify Domain Settings](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/connect_existing_domain.png?v=1713694033)
+1. In Shopify admin, go to **Settings > Domains**.
+2. Click **Connect existing domain** (or **Buy new domain** if needed).
+   - Enter your domain (e.g., `weaverse.dev`).
+   ![Shopify Domain Settings](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/connect_existing_domain.png?v=1713694033)
+3. If your domain is managed by Shopify, DNS is handled automatically. Otherwise, update DNS at your domain provider:
+   - **CNAME**: Host: `@` (or subdomain), Points to: `shops.myshopify.com`.
+   ![Shopify Domain DNS Records](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/dns_settings.png?v=1713694183)
+4. Click **Verify connection** in Shopify.
+5. Once verified, click the domain and select **Change target** → choose your Hydrogen storefront and environment → **Save**.
+   ![Shopify Domain Target](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/set_hydrogen_target.png?v=1713694386)
+6. Set your custom domain as **Primary domain** to make it the default for your store.
+   ![Shopify Primary Domain](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/domain_type.png?v=1713695844)
 
-If your domain is purchased and managed by Shopify, you can skip the step of updating DNS records as Shopify will automatically handle this for you.
+## 2. Redirect Traffic from Liquid Storefront to Hydrogen
 
-For domains not managed by Shopify, you will need to update the DNS records in your domain provider's dashboard. Here are the DNS records you need to add:
+To ensure a smooth transition, redirect all traffic from your old Shopify Liquid storefront:
+1. Download the [Hydrogen Redirect Theme](https://github.com/Shopify/hydrogen-redirect-theme/archive/refs/heads/master.zip).
+2. In Shopify admin: **Online Store > Themes > Add Theme > Upload zip file**.
+3. Publish the theme, then in the theme customizer go to **Theme settings > Storefront** and set the Hostname to your Hydrogen store URL (e.g., `weaverse.dev`).
+4. Save and publish.
+   ![Hydrogen Redirect Theme Setup](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/hydrogen_redirect_theme_setup.png?v=1713694951)
 
-- **CNAME**: Host: `@` (or the subdomain you want to connect), Points to: `shops.myshopify.com`.
-  ![Shopify Domain DNS Records](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/dns_settings.png?v=1713694183)
+## 3. Setup Checkout Domain
 
-After updating the DNS records, click **Verify connection**. Once verified, your domain will be linked to your Shopify store. It's then time to update the domain target to your Hydrogen store:
+Shopify still manages checkout. For a seamless experience:
+1. In Shopify admin, go to **Settings > Domains**.
+2. Add your checkout domain (e.g., `www.yourdomain.com`) and set it as the primary for the Online Store.
+3. Update DNS at your provider:
+   - **CNAME**: Host: `www`, Points to: `shops.myshopify.com`.
+4. Use the `www` subdomain for checkout for consistency (or use `checkout`/`buy` if preferred).
+5. In your Hydrogen environment variables, set `PUBLIC_CHECKOUT_DOMAIN` to your checkout domain.
+6. Redeploy your Hydrogen project to apply changes.
 
-- Click on the domain you've added and select **Change target** to choose the Hydrogen target.
-- Select the Hydrogen store and environment you wish to connect and click **Save**.
-  ![Shopify Domain Target](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/set_hydrogen_target.png?v=1713694386)
+## 4. Setting Up Cookie Banner and Analytics
 
-Your Hydrogen storefront should now be accessible via your custom domain.
+Hydrogen supports Shopify’s native cookie banner and analytics (April 2024+):
+1. Follow the [official guide](https://github.com/Shopify/hydrogen/tree/main/examples/gtm#1-enable-customer-privacy--cookie-consent-banner) to enable the cookie banner.
+2. Add `PUBLIC_CHECKOUT_DOMAIN` to your storefront’s environment variables.
+3. Redeploy your Hydrogen project (`npx shopify hydrogen deploy`).
 
-The final step is to set your domain type to **Primary domain** to make it the default domain for your store.
-![Shopify Primary Domain](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/domain_type.png?v=1713695844)
-
-## Redirect Traffic from Liquid Storefront to Hydrogen
-
-To redirect traffic from your old Shopify Liquid storefront to the new Hydrogen store, follow these steps:
-
-- Download the [Hydrogen Redirect Theme](https://github.com/Shopify/hydrogen-redirect-theme/archive/refs/heads/master.zip) and navigate to your Shopify store's admin > Online Store > Themes > Add Theme > Upload zip file.
-- Publish the theme, then access the theme customizer.
-- In the theme customizer, go to "Theme settings" > "Storefront" and set the Hostname to your Hydrogen store URL, for example, `weaverse.dev`.
-- Save and publish the changes.
-  ![Hydrogen Redirect Theme Setup](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/hydrogen_redirect_theme_setup.png?v=1713694951)
-
-## Setup Checkout Domain
-
-While your Hydrogen store manages the storefront, the checkout process is still handled by Shopify (Liquid). To ensure a seamless checkout experience that matches your custom domain:
-
-- Go to your Shopify store's admin > Settings > Domain.
-- Add a domain and set it as the primary target for the Online Store.
-- Update the DNS records in your domain provider's dashboard with the following:
-  - **CNAME**: Host: `www`, Points to: `shops.myshopify.com`.
-
-I recommend using the `www` subdomain for checkout to maintain a consistent URL format like `yourdomain.com`. Alternatively, you can use subdomains such as `checkout` or `buy` if you prefer.
-
-## Setting Up Cookie Banner and Analytics
-
-Following the [Hydrogen April 2024 updates](https://hydrogen.shopify.dev/update/april-2024), Shopify's Hydrogen now supports the Native Cookie Banner and Analytics. If your Hydrogen project has not been updated, please follow [these instructions](https://github.com/Shopify/hydrogen/tree/main/examples/gtm#1-enable-customer-privacy--cookie-consent-banner) to upgrade.
-
-The [Weaverse Hydrogen theme](https://github.com/Weaverse/pilot/tree/main) has been updated to the latest version to include these features. To enable the cookie banner and analytics, follow these steps:
-
-- Enable the cookie banner by following [this guide](https://github.com/Shopify/hydrogen/tree/main/examples/gtm#1-enable-customer-privacy--cookie-consent-banner).
-- Add the `PUBLIC_CHECKOUT_DOMAIN` to your storefront's environment variables. Set this variable to your checkout domain, such as `www.yourdomain.com`.
-- Redeploy your Hydrogen project to apply these changes using the command `npx shopify hydrogen deploy`.
-
-After redeployment, the cookie banner and analytics will be active on your Hydrogen store.
 ![Hydrogen Cookie Banner and Analytics](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/hydrogen_cookie_banner_activated.jpg?v=1713697054)
 
-### Optional: Google Tags Manager Integration
+### Google Tag Manager Integration (Optional)
 
-The Weaverse Hydrogen theme includes integration with Google Tags Manager for enhanced tracking and analytics. To activate this feature, follow these steps:
+1. Get your Google Tag Manager ID.
+2. Add `PUBLIC_GOOGLE_GTM_ID` to your storefront’s environment variables.
+3. Redeploy your Hydrogen project.
 
-- Obtain your Google Tags Manager ID from your account.
-- Add the `PUBLIC_GOOGLE_GTM_ID` to your storefront's environment variables.
-- Redeploy your Hydrogen project to implement these changes.
+## Troubleshooting
+- **DNS not propagating:** DNS changes can take up to 24 hours. Use tools like [whatsmydns.net](https://www.whatsmydns.net/) to check.
+- **Domain not verifying:** Double-check CNAME and other DNS records for typos or missing entries.
+- **Checkout not working:** Ensure `PUBLIC_CHECKOUT_DOMAIN` matches your checkout domain and is set in both Shopify and your Hydrogen env.
+- **Analytics not firing:** Confirm analytics IDs are correct and scripts are enabled in your theme/environment.
+- **Cookie banner not showing:** Make sure you’ve updated Hydrogen to the latest version and followed Shopify’s guide.
+
+## Best Practices
+- Always use HTTPS for all domains.
+- Keep environment variables (especially analytics and checkout) secure and up-to-date.
+- Test checkout and analytics after every deployment.
+- Monitor analytics dashboards to verify data is flowing.
+- Review Shopify and Hydrogen docs for updates.
+
+## Summary
+Setting up a custom domain, checkout, and analytics ensures your Weaverse Hydrogen storefront is professional, secure, and ready to scale. Follow the steps above for a seamless launch and reliable analytics tracking.
+
+## Further Reading
+- [Shopify Domains documentation](https://help.shopify.com/en/manual/domains)
+- [Shopify Checkout configuration](https://shopify.dev/docs/custom-storefronts/checkout)
+- [Shopify Analytics with Hydrogen](https://shopify.dev/docs/storefronts/headless/hydrogen/analytics/tracking?framework=hydrogen&extension=javascript)
+- [Hydrogen Cookie Banner & Analytics](https://github.com/Shopify/hydrogen/tree/main/examples/gtm)
+- [Weaverse Hydrogen Deployment](/docs/deployment/oxygen)
