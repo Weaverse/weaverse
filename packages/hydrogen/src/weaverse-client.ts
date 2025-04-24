@@ -90,10 +90,10 @@ export class WeaverseClient {
   }
 
   // Helper method for direct fetching in design mode
-  private async directFetch<T>(
+  private directFetch = async <T>(
     url: string,
     options: RequestInit = {},
-  ): Promise<T> {
+  ): Promise<T> => {
     try {
       let res = await fetch(url, options)
       if (!res.ok) {
@@ -106,10 +106,10 @@ export class WeaverseClient {
     }
   }
 
-  public async fetchWithCache<T extends object>(
+  public fetchWithCache = async <T extends object>(
     url: string,
     options: RequestInit & { strategy?: AllCacheOptions } = {},
-  ): Promise<T> {
+  ): Promise<T> => {
     let {
       strategy = this.storefront.CacheCustom(DEFAULT_CACHE_STRATEGY),
       ...reqInit

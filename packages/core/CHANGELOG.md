@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 4.2.8
+
+### Patch Changes
+
+- Update weaverse client methods to use arrow functions for better binding
+
 ## 4.2.7
 
 ### Patch Changes
