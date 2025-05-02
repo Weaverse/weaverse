@@ -112,73 +112,92 @@ export let themeSchema: HydrogenThemeSchema = {
 };
 ```
 
-### 2. Global Styles ([`~/weaverse/style.ts`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/style.ts))
+### 2. Global Styles ([`~/weaverse/style.tsx`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/style.tsx))
 
 This component applies global CSS variables based on the theme settings defined in `schema.server.ts` and configured in Weaverse Studio.
 
-```typescript
-// app/weaverse/style.ts
+```tsx
+// app/weaverse/style.tsx
 import { useThemeSettings } from "@weaverse/hydrogen";
-import type { CSSProperties } from "react";
 
-// Example based on Weaverse Pilot theme
-// See: [Pilot style file on GitHub](https://github.com/Weaverse/pilot/blob/main/app/weaverse/style.ts)
 export function GlobalStyle() {
   let settings = useThemeSettings();
-  if (!settings) {
-    return null;
+  if (settings) {
+    let {
+      colorBackground,
+      colorText,
+      // ... other settings extracted from theme
+      pageWidth,
+    } = settings;
+
+    return (
+      <style
+        id="global-theme-style"
+        key="global-theme-style"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{
+          __html: `
+            :root {
+              /* Layout */
+              --height-nav: ${settings.navHeightMobile}rem;
+              --page-width: ${pageWidth}px;
+              
+              /* Add more CSS variables based on your settings */
+            }
+          `,
+        }}
+      />
+    );
   }
-  let { /* Extract settings like primaryButtonColor, pageWidth, etc. */ } = settings;
+  return null;
+}
+```
 
-  let cssVariables: CSSProperties = {
-    // Example: '--color-primary-button': primaryButtonColor,
-    '--page-width': `${settings.pageWidth || 1280}px`, 
-    // Add more CSS variables based on your settings
-  } as CSSProperties;
+### 3. Component Registration ([`~/weaverse/components.ts`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/components.ts))
 
+This is the central file where you register all the React components that you want to be available for use within the Weaverse editor.
+
+```typescript
+// app/weaverse/components.ts
+import type { HydrogenComponent } from "@weaverse/hydrogen";
+import * as Heading from "~/components/heading";
+import * as Link from "~/components/link";
+// Import your theme components
+import * as HeroImage from "~/sections/hero-image";
+import * as FeaturedProducts from "~/sections/featured-products";
+// ... other component imports
+
+// Register the components you want to use in Weaverse
+export let components: HydrogenComponent[] = [
+  Heading,
+  Link,
+  HeroImage,
+  FeaturedProducts,
+  // Add all components intended for Weaverse editing...
+];
+```
+
+### 4. WeaverseContent Component ([`~/weaverse/index.tsx`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/index.tsx))
+
+This component renders the Weaverse content by using the `WeaverseHydrogenRoot` component and passing the registered components.
+
+```tsx
+// app/weaverse/index.tsx
+import { WeaverseHydrogenRoot } from "@weaverse/hydrogen";
+import { GenericError } from "~/components/root/generic-error";
+import { components } from "./components";
+
+export function WeaverseContent() {
   return (
-    <style
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
-      dangerouslySetInnerHTML={{
-        __html: `:root {
-          ${Object.entries(cssVariables)
-            .map(([key, value]) => `${key}: ${value};`)
-            .join('\n')}
-        }`,
-      }}
+    <WeaverseHydrogenRoot
+      components={components}
+      errorComponent={GenericError}
     />
   );
 }
 ```
 
-### 3. Component Registration ([`~/weaverse.tsx`](https://github.com/Weaverse/pilot/blob/main/app/weaverse.tsx))
-
-This is the central file where you register all the React components that you want to be available for use within the Weaverse editor.
-
-```typescript
-// app/weaverse.tsx
-import type { HydrogenComponent } from "@weaverse/hydrogen";
-import { WeaverseContent } from "@weaverse/hydrogen";
-
-// Import your theme components
-// Example: import { ProductInformation } from "~/components/product/product-information";
-// Example: import { RelatedProducts } from "~/components/product/related-products";
-// Example: import { Hero } from "~/components/sections/hero";
-
-// Register the components you want to use in Weaverse
-// See: [Pilot weaverse.tsx file on GitHub](https://github.com/Weaverse/pilot/blob/main/app/weaverse.tsx)
-export let components: HydrogenComponent[] = [
-  // Example: Hero,
-  // Example: ProductInformation,
-  // Example: RelatedProducts,
-  // Add all components intended for Weaverse editing...
-];
-
-// Re-export WeaverseContent for use in route components
-export { WeaverseContent };
-```
-
-### 4. Content Security Policy (CSP) ([`~/weaverse/csp.ts`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/csp.ts))
+### 5. Content Security Policy (CSP) ([`~/weaverse/csp.ts`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/csp.ts))
 
 This utility helps configure the Content Security Policy headers required for the Weaverse editor iframe to function correctly.
 
@@ -281,39 +300,48 @@ export default async function handleRequest(
 }
 ```
 
-### 2. Wrap Layout with `withWeaverse` in `root.tsx`
+### 2. Update Root Component
 
-The `withWeaverse` Higher-Order Component (HOC) provides the necessary context for Weaverse to function. Wrap your main `Layout` component with it.
+The root component needs to be wrapped with `withWeaverse` to enable the Weaverse functionality. Here's how to implement it in your `app/root.tsx` file:
 
-```typescript
+```tsx
 // app/root.tsx
 import {
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
   // ... other imports
 } from "@remix-run/react";
-import { withWeaverse } from "@weaverse/hydrogen";
-import { components } from "~/weaverse"; // Import registered components
-import { GlobalStyle } from "~/weaverse/style"; // Import global style component
-// Import your existing Layout components like Header, Footer, etc.
-// Example: import { Header } from "./components/layout/header";
-// Example: import { Footer } from "./components/layout/footer";
+import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
+import { GlobalStyle } from "./weaverse/style";
+// ... other imports
 
-// ... other imports, links function, root loader
+// Your App component that renders the Outlet
+function App() {
+  return <Outlet />;
+}
 
-// Your existing Layout component
+// Your Layout component
 export function Layout({ children }: { children: React.ReactNode }) {
-  // ... (fetch header/footer data using useRouteLoaderData('root'))
-  const nonce = useNonce();
-
+  let nonce = useNonce();
+  // ... other setup code
+  
   return (
-    <html lang="en">
+    <html lang={locale.language}>
       <head>
-        {/* ... meta, links */}
-        <GlobalStyle /> {/* Add GlobalStyle */} 
+        {/* ... meta tags, links */}
+        <Meta />
+        <Links />
+        <GlobalStyle /> {/* Include the GlobalStyle component */}
       </head>
       <body>
-        {/* Example: <Header data={headerData} /> */}
-        {children}
-        {/* Example: <Footer data={footerData} /> */}
+        {/* ... your layout structure */}
+        <main>
+          {children}
+        </main>
+        {/* ... footer, etc */}
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
       </body>
@@ -321,78 +349,89 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Wrap the Layout component with withWeaverse
-export default withWeaverse({ components })(function App() {
-  // The Outlet will render the matched route's component (wrapped by Layout)
-  return <Outlet />;
-});
-
-// Your existing ErrorBoundary component
-export function ErrorBoundary({ error }: { error: Error }) {
-  // ... (keep your existing error boundary logic)
-}
+// Simply wrap the App component with withWeaverse
+export default withWeaverse(App);
 ```
-**Note:** Ensure your root loader (`app/root.tsx -> loader`) fetches any data needed by your `Layout` (like header/footer menus, cart count, etc.). `withWeaverse` handles Weaverse-specific context internally.
 
-### 3. Adapt Route Loaders and Components
+**Note:** The `withWeaverse` HOC doesn't require components to be passed directly here. The components are imported from the `components.ts` file and used by the `WeaverseContent` component.
+
+### 3. Adapt Route Components
 
 For each route you want to make editable with Weaverse (e.g., Homepage, Product pages, Collection pages, Custom pages), you need to:
 
-**a) Modify the Loader:**
-   - Determine the `PageType` (e.g., `INDEX`, `PRODUCT`, `COLLECTION`, `PAGE`).
-   - Call `context.weaverse.loadPage()` to fetch the Weaverse page data.
-   - Fetch any other required data for the page (e.g., Shopify product/collection data).
-   - Return `weaverseData` along with other data.
+1. Import the `WeaverseContent` component
+2. Use it in your route component
+3. Load the necessary Weaverse data in your loader
 
-**b) Modify the Component:**
-   - Import `WeaverseContent` from `~/weaverse.tsx`.
-   - Replace the main content rendering logic with `<WeaverseContent />`. `WeaverseContent` will automatically render the components based on the `weaverseData` fetched in the loader.
+Here's an example for a homepage route (`app/routes/($locale)._index.tsx`):
 
-**Example: `app/routes/($locale)._index.tsx` (Homepage)**
-
-```typescript
-// app/routes/($locale)._index.tsx
+```tsx
+import { WeaverseContent } from "~/weaverse";
 import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
 import type { PageType } from "@weaverse/hydrogen";
-import { WeaverseContent } from "~/weaverse"; // Import WeaverseContent
-// ... other imports (seoPayload, queries, etc.)
 
-export async function loader({ context }: LoaderFunctionArgs) {
-  const type: PageType = "INDEX"; // Page type for homepage
-  const { weaverse, storefront } = context;
+export async function loader(args: LoaderFunctionArgs) {
+  let { params, context } = args;
+  let { pathPrefix } = context.storefront.i18n;
+  let locale = pathPrefix.slice(1);
+  let type: PageType = "INDEX";
 
-  // Fetch Weaverse data and Shopify data (if needed for SEO/Analytics) concurrently
-  const [weaverseData, { shop } ] = await Promise.all([
-    weaverse.loadPage({ type }),
-    storefront.query(SHOP_QUERY) // Example: Fetch shop data for SEO
-  ]);
-
-  // Handle case where Weaverse page data isn't found
+  // Load the Weaverse page data
+  let weaverseData = await context.weaverse.loadPage({ type });
   if (!weaverseData?.page?.id || weaverseData.page.id.includes("fallback")) {
-    // Decide how to handle - throw 404 or maybe render without Weaverse
-    console.warn(`Weaverse page data not found for type: ${type}`);
-    throw new Response("Not Found", { status: 404 });
+    throw new Response(null, { status: 404 });
   }
 
-  const seo = seoPayload.home(); // Example SEO data
+  // Load other data needed for the page
+  // ...
 
   return {
-    weaverseData, // Pass Weaverse data to the component
-    shop,
-    seo,
-    analytics: { pageType: AnalyticsPageType.home },
+    weaverseData,
+    // other data...
   };
 }
 
-// Component renders WeaverseContent
 export default function Homepage() {
+  // Simply render the WeaverseContent component
   return <WeaverseContent />;
 }
-
-// ... (Meta function, SHOP_QUERY, etc.)
 ```
 
-Apply this pattern to other routes like `products.$productHandle.tsx`, `collections.$collectionHandle.tsx`, etc., adjusting the `PageType` and Shopify data fetching accordingly.
+For a product page (`app/routes/($locale).products.$productHandle.tsx`):
+
+```tsx
+import { useLoaderData } from "@remix-run/react";
+import { WeaverseContent } from "~/weaverse";
+import { Analytics } from "@shopify/hydrogen";
+
+export async function loader({ params, request, context }: LoaderFunctionArgs) {
+  let { productHandle: handle } = params;
+  
+  // Load the product data
+  // ...
+
+  // Load the Weaverse page data for this product
+  let weaverseData = await context.weaverse.loadPage({ type: "PRODUCT", handle });
+  
+  return {
+    product,
+    weaverseData,
+    // other data...
+  };
+}
+
+export default function Product() {
+  let { product } = useLoaderData<typeof loader>();
+  return (
+    <>
+      <WeaverseContent />
+      {/* Optional: Add Analytics or other components */}
+    </>
+  );
+}
+```
+
+The `WeaverseContent` component will automatically render the content based on the page type and handle, using the components registered in your `components.ts` file.
 
 ## Step 5: Run and Connect
 
