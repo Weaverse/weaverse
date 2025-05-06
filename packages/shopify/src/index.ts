@@ -20,24 +20,25 @@ export * from './types'
 export * from './utils/fetch-project-data'
 
 export let registerThirdPartyElements = () => {
-  let elements = WeaverseShopify.integrations?.flatMap(
-    ({ elements }) => elements,
-  )
-  for (let { type, extraData } of elements) {
-    WeaverseShopify.registerElement({
-      type,
-      extraData,
-      Component: ThirdPartyElement.default,
-      defaultCss: ThirdPartyElement.css,
+  // biome-ignore lint/complexity/noForEach: <explanation>
+  WeaverseShopify.integrations
+    ?.flatMap(({ elements }) => elements)
+    .forEach(({ type, extraData }) => {
+      WeaverseShopify.registerElement({
+        type,
+        extraData,
+        Component: ThirdPartyElement.default,
+        defaultCss: ThirdPartyElement.css,
+      })
     })
-  }
 }
 
 export let registerShopifyElements = () => {
-  for (let elm of Object.values(SHOPIFY_ELEMENTS)) {
+  // biome-ignore lint/complexity/noForEach: <explanation>
+  Object.values(SHOPIFY_ELEMENTS).forEach((elm) => {
     // @ts-ignore
     WeaverseShopify.registerElement(elm)
-  }
+  })
   registerThirdPartyElements()
 }
 export class WeaverseShopify extends Weaverse {
