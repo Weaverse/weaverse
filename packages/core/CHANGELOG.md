@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 4.2.10
+
+### Patch Changes
+
+- 9ce8f2c: Hot fix for shopify package
+
 ## 4.2.9
 
 ### Patch Changes
