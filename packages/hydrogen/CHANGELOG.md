@@ -1,5 +1,13 @@
 # @weaverse/hydrogen
 
+## 4.2.9
+
+### Patch Changes
+
+- Fix shopify package
+- Updated dependencies
+  - @weaverse/react@4.2.9
+
 ## 4.2.8
 
 ### Patch Changes
