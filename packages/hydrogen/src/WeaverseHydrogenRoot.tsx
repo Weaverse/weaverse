@@ -39,6 +39,10 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
   constructor(initialData: HydrogenComponentData, weaverse: WeaverseHydrogen) {
     super(initialData, weaverse)
     let { data, ...rest } = initialData
+    if (!this.Element?.schema) {
+      console.error('Element is missing schema or not found!')
+      return
+    }
     let schemaData = generateDataFromSchema(this.Element.schema)
     Object.assign(this._store, schemaData, data, rest)
   }
