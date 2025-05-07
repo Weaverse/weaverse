@@ -2,7 +2,7 @@
 title: Integrating Weaverse into an Existing Hydrogen Project
 description: Enhance your existing Hydrogen project by integrating the Weaverse SDK for visual page building and theme customization.
 publishedAt: November 20, 2023
-updatedAt: April 24, 2025
+updatedAt: May 07, 2025
 order: 0
 published: true
 ---
@@ -258,7 +258,94 @@ export function getWeaverseCsp(request: Request, context: AppLoadContext) {
 }
 ```
 
-## Step 4: Integrate Weaverse into Your Application
+## Step 4: Add Weaverse Client to Hydrogen App Context
+
+A crucial step is to initialize the Weaverse client and add it to your Hydrogen app load context. This allows your application to access Weaverse functionality throughout your routes.
+
+### 1. Update Your Context File
+
+Modify your app context file (usually `app/lib/context.ts` or similar) to initialize and include the WeaverseClient:
+
+```typescript
+// app/lib/context.ts
+import { WeaverseClient } from "@weaverse/hydrogen";
+import { themeSchema } from "~/weaverse/schema.server";
+import { components } from "~/weaverse/components";
+// ... other imports
+
+export async function createAppLoadContext(
+  request: Request,
+  env: Env,
+  executionContext: ExecutionContext,
+) {
+  // Your existing context setup code...
+  // Create the Hydrogen context
+  const hydrogenContext = createHydrogenContext({
+    env,
+    request,
+    cache,
+    waitUntil,
+    session,
+    i18n: getLocaleFromRequest(request),
+    // ... other Hydrogen context options
+  });
+
+  // Return the context with Weaverse client added
+  return {
+    ...hydrogenContext,
+    weaverse: new WeaverseClient({
+      ...hydrogenContext,
+      request,
+      cache,
+      themeSchema,
+      components,
+    }),
+  };
+}
+```
+
+This modification:
+1. Imports the `WeaverseClient` from the Weaverse Hydrogen SDK
+2. Imports your theme schema and components from the files created in the previous step
+3. Initializes a new `WeaverseClient` instance with necessary context
+4. Adds the Weaverse client to your app context, making it available via `context.weaverse` in loaders and actions
+
+### 2. Ensure Server Entry Point Uses Updated Context
+
+Your server entry point (typically `server.ts`) should already use your context function:
+
+```typescript
+// server.ts
+import { createAppLoadContext } from '~/lib/context';
+
+export default {
+  async fetch(
+    request: Request,
+    env: Env,
+    executionContext: ExecutionContext,
+  ): Promise<Response> {
+    // Create app context with Weaverse client
+    const appLoadContext = await createAppLoadContext(
+      request,
+      env,
+      executionContext,
+    );
+    
+    // Use context in request handler
+    const handleRequest = createRequestHandler({
+      build: remixBuild,
+      mode: process.env.NODE_ENV,
+      getLoadContext: () => appLoadContext,
+    });
+    
+    // ... rest of your server code
+  }
+}
+```
+
+---
+
+## Step 5: Integrate Weaverse into Your Application
 
 Now, let's modify your existing Hydrogen files to enable Weaverse.
 
@@ -433,7 +520,7 @@ export default function Product() {
 
 The `WeaverseContent` component will automatically render the content based on the page type and handle, using the components registered in your `components.ts` file.
 
-## Step 5: Run and Connect
+## Step 6: Run and Connect
 
 1.  **Start your dev server:** `npm run dev`
 2.  **Open Weaverse Studio:** Go to your project in Weaverse.
