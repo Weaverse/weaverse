@@ -1,5 +1,13 @@
 # @weaverse/core
 
+## 4.3.4
+
+### Patch Changes
+
+- bump version
+
+## 4.3.3
+
 ## 4.3.1
 
 ### Patch Changes

@@ -2,7 +2,7 @@
 title: Weaverse CLI
 description: The Weaverse CLI facilitates tasks such as project setup, theme scaffolding, and other common developer operations.
 publishedAt: November 20, 2023
-updatedAt: July 20, 2024
+updatedAt: May 13, 2025
 order: 0
 published: true
 ---

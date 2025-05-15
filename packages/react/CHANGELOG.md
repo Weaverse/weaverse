@@ -1,5 +1,19 @@
 # @weaverse/react
 
+## 4.3.4
+
+### Patch Changes
+
+- bump version
+- Updated dependencies
+  - @weaverse/core@4.3.4
+
+## 4.3.3
+
+### Patch Changes
+
+- @weaverse/core@4.3.3
+
 ## 4.3.1
 
 ### Patch Changes

@@ -1,5 +1,20 @@
 # @weaverse/hydrogen
 
+## 4.3.4
+
+### Patch Changes
+
+- bump version
+- Updated dependencies
+  - @weaverse/react@4.3.4
+
+## 4.3.3
+
+### Patch Changes
+
+- update for local development
+  - @weaverse/react@4.3.3
+
 ## 4.3.1
 
 ### Patch Changes

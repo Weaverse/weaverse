@@ -2,7 +2,7 @@
 title: Weaverse MCP
 description: The Weaverse MCP server enhances AI assistants by providing tools to search Weaverse documentation for accurate, contextual help.
 publishedAt: July 20, 2024
-updatedAt: July 20, 2024
+updatedAt: May 13, 2025
 order: 2
 published: true
 ---
