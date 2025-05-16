@@ -66,6 +66,7 @@ export class WeaverseShopifyItem extends WeaverseItemStore {
 
   constructor(initialData: ElementData, weaverse: WeaverseShopify) {
     super(initialData, weaverse)
+    // @ts-expect-error
     let defaultData = this.Element?.Component?.defaultProps || {}
     let extraData = this.Element?.extraData
     Object.assign(this._store, defaultData, extraData, initialData)

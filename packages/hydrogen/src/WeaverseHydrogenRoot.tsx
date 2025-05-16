@@ -5,6 +5,7 @@ import {
   WeaverseItemStore,
   WeaverseRoot,
   isBrowser,
+  useSafeExternalStore,
 } from '@weaverse/react'
 import {
   type ComponentType,
@@ -12,7 +13,6 @@ import {
   Suspense,
   createContext,
   memo,
-  useSyncExternalStore,
 } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { defaultComponents } from '~/components'
@@ -151,7 +151,7 @@ export let WeaverseHydrogenRoot = memo(
     if (data) {
       if (data instanceof Promise) {
         return (
-          <ErrorBoundary fallbackRender={ErrorComponent}>
+          <ErrorBoundary fallbackRender={ErrorComponent as any}>
             <Suspense>
               <Await resolve={data}>
                 {(resolvedData) => (
@@ -188,7 +188,7 @@ export function withWeaverse(Component: ComponentType<any>) {
 
 export function useThemeSettings<T = HydrogenThemeSettings>() {
   let themeSettingsStore = useThemeSettingsStore()
-  let settings = useSyncExternalStore(
+  let settings = useSafeExternalStore(
     themeSettingsStore.subscribe,
     themeSettingsStore.getSnapshot,
     themeSettingsStore.getServerSnapshot,
