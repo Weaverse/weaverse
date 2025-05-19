@@ -2,7 +2,7 @@
   "name": "@weaverse/core",
   "author": "Weaverse Team",
   "description": "Weaverse Core",
-  "version": "4.2.8",
+  "version": "4.3.4",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -22,8 +22,7 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
-    "clean": "rimraf dist",
-    "prepublish": "npm run build"
+    "clean": "rimraf dist"
   },
   "tsup": {
     "entry": ["src/index.ts"],

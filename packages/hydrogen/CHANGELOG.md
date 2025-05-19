@@ -1,5 +1,54 @@
 # @weaverse/hydrogen
 
+## 4.3.4
+
+### Patch Changes
+
+- bump version
+- Updated dependencies
+  - @weaverse/react@4.3.4
+
+## 4.3.3
+
+### Patch Changes
+
+- update for local development
+  - @weaverse/react@4.3.3
+
+## 4.3.1
+
+### Patch Changes
+
+- bump version
+- Updated dependencies
+  - @weaverse/react@4.3.1
+
+## 4.3.0
+
+### Minor Changes
+
+- fix minor bug when initializing Weaverse section component
+
+### Patch Changes
+
+- @weaverse/react@4.3.0
+
+## 4.2.10
+
+### Patch Changes
+
+- 9ce8f2c: Hot fix for shopify package
+- Updated dependencies [9ce8f2c]
+  - @weaverse/react@4.2.10
+
+## 4.2.9
+
+### Patch Changes
+
+- Fix shopify package
+- Updated dependencies
+  - @weaverse/react@4.2.9
+
 ## 4.2.8
 
 ### Patch Changes

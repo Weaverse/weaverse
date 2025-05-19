@@ -1,5 +1,33 @@
 # @weaverse/core
 
+## 4.3.4
+
+### Patch Changes
+
+- bump version
+
+## 4.3.3
+
+## 4.3.1
+
+### Patch Changes
+
+- bump version
+
+## 4.3.0
+
+## 4.2.10
+
+### Patch Changes
+
+- 9ce8f2c: Hot fix for shopify package
+
+## 4.2.9
+
+### Patch Changes
+
+- Fix shopify package
+
 ## 4.2.8
 
 ### Patch Changes

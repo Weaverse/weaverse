@@ -113,7 +113,7 @@ There are many ways to contribute to the Weaverse community:
 
 ## Stay Updated
 
-- Follow us on [Twitter](https://twitter.com/weaverse)
+- Follow us on [X](https://x.com/weaverseio)
 - Subscribe to our [Newsletter](https://weaverse.io/#newsletter) - Find the subscription form in the footer
 - Watch our [GitHub Repository](https://github.com/weaverse/weaverse)
 

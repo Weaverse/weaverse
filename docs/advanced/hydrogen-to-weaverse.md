@@ -1,435 +1,537 @@
 ---
-title: Migrating Hydrogen Project to Weaverse
-description: Enhance your Hydrogen project by integrating Weaverse SDKs and Theme Customizer.
+title: Integrating Weaverse into an Existing Hydrogen Project
+description: Enhance your existing Hydrogen project by integrating the Weaverse SDK for visual page building and theme customization.
 publishedAt: November 20, 2023
-updatedAt: January 17, 2024
+updatedAt: May 07, 2025
 order: 0
 published: true
 ---
 
-This guide focuses on integrating the Weaverse SDKs and Theme Customizer into your existing Hydrogen project, providing
-detailed steps to enhance your theme with Weaverse’s powerful features.
+This guide details how to integrate the Weaverse SDK into your **existing** Shopify Hydrogen project. By adding Weaverse, you empower your storefront with visual page building, theme customization through the Weaverse Studio, and access to a growing library of components, significantly speeding up development and content management.
 
-## Getting Started
+## Prerequisites
 
-First, let's set up your Shopify Hydrogen project. Open your command line and enter:
+Before you start, ensure you have:
 
-```bash
-npm create @shopify/hydrogen@latest
-```
+*   An existing Shopify Hydrogen project set up and running locally.
+*   Node.js (version recommended by Hydrogen) and npm/yarn installed.
+*   Your Hydrogen project connected to your Shopify store.
+*   A Weaverse account and a Weaverse Project created for your storefront.
+*   Basic familiarity with Remix and Hydrogen concepts.
 
-After setting up, go to your Hydrogen project folder and start it with:
+## Step 1: Install Weaverse SDK
 
-```bash
-npm run dev
-```
-
-Now you will see your Hydrogen storefront running like this:
-
-![Weaverse Shopify Hydrogen store](https://cdn.hashnode.com/res/hashnode/image/upload/v1702459684104/22cc8e05-ed20-4e3a-8d4f-06591e7ec205.png)
-
-## Integrating Weaverse: Step-by-Step
-
-### Step 1: Install Weaverse
-
-Begin by adding Weaverse to your project. Enter the following command:
+Navigate to your Hydrogen project directory in your terminal and add the Weaverse Hydrogen SDK:
 
 ```bash
 npm install @weaverse/hydrogen
+# or
+yarn add @weaverse/hydrogen
 ```
 
-### Step 2: Create the Weaverse Directory
+## Step 2: Configure Environment Variables
 
-Next, you need to set up a directory for Weaverse in your project’s **app** folder. Create two files:
+Weaverse needs credentials to connect to your project. Add the following variables to your `.env` file (create one if it doesn't exist) at the root of your Hydrogen project:
 
-**weaverse/component.ts** – This file is for registering components in Weaverse. Start with an empty array.
+```env
+# .env
+WEAVERSE_PROJECT_ID="your-project-id"
+WEAVERSE_API_KEY="your-api-key"
 
-```typescript
-// weaverse/component.ts
-
-import type { HydrogenComponent } from '@weaverse/hydrogen'
-
-export const components: HydrogenComponent[] = []
+# Ensure your existing Shopify variables are also present
+# PUBLIC_STORE_DOMAIN=...
+# PUBLIC_STOREFRONT_API_TOKEN=...
+# ... other variables
 ```
 
-**weaverse/schema.ts** – This file is where you define Project/Theme information so that users can later find that information in the Project information section in the Weaverse app.
+Replace `"your-project-id"` and `"your-api-key"` with the actual credentials found in your Weaverse project settings.
+
+## Step 3: Set Up Core Weaverse Files
+
+Create a `weaverse` folder inside your `app` directory (`app/weaverse/`). This folder will house Weaverse-specific configurations and utilities.
+
+### 1. Theme Schema ([`~/weaverse/schema.server.ts`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/schema.server.ts))
+
+This file defines your theme's metadata (name, author, version), global settings schema (which populates the Theme Customizer in Weaverse Studio), and i18n configurations.
 
 ```typescript
-// weaverse/schema.ts
+// app/weaverse/schema.server.ts
+import type { HydrogenThemeSchema } from "@weaverse/hydrogen";
+import pkg from "../../package.json"; // Use your project's package
 
-import type { HydrogenThemeSchema } from '@weaverse/hydrogen'
-
-export const themeSchema: HydrogenThemeSchema = {
+// Example based on Weaverse Pilot theme
+// See: [Pilot schema file on GitHub](https://github.com/Weaverse/pilot/blob/main/app/weaverse/schema.server.ts)
+export let themeSchema: HydrogenThemeSchema = {
   info: {
-    version: '1.0.0',
-    author: 'Weaverse',
-    name: 'Pilot',
+    version: pkg.version,
+    author: "Your Store Name", // Customize
+    name: "Your Theme Name", // Customize
     authorProfilePhoto:
-      'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/Weaverse_logo_-_3000x_e2fa8c13-dac2-4dcb-a2c2-f7aaf7a58169.png?v=1698245759',
-    documentationUrl: 'https://weaverse.io/docs',
-    supportUrl: 'https://weaverse.io/contact',
+      "", // Optional: URL to author photo
+    documentationUrl: "https://weaverse.io/docs",
+    supportUrl: "https://weaverse.io/contact",
   },
-  inspector: [],
+  // Define Theme settings accessible in Weaverse Studio > Theme > Customize
+  inspector: [
+    {
+      group: "Colors",
+      inputs: [
+        {
+          type: "color",
+          label: "Primary Button",
+          name: "primaryButtonColor",
+          defaultValue: "#000000",
+        },
+        // Add more color settings...
+      ],
+    },
+    {
+      group: "Layout",
+      inputs: [
+        {
+          type: "range",
+          label: "Page width",
+          name: "pageWidth",
+          configs: {
+            min: 1000,
+            max: 1600,
+            step: 10,
+            unit: "px",
+          },
+          defaultValue: 1280,
+        },
+        // Add more layout settings...
+      ],
+    },
+    // Add more groups like Typography, etc.
+  ],
+  // Define i18n settings (optional but recommended)
+  i18n: {
+    // Refer to Pilot schema for a full example
+  },
+};
+```
+
+### 2. Global Styles ([`~/weaverse/style.tsx`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/style.tsx))
+
+This component applies global CSS variables based on the theme settings defined in `schema.server.ts` and configured in Weaverse Studio.
+
+```tsx
+// app/weaverse/style.tsx
+import { useThemeSettings } from "@weaverse/hydrogen";
+
+export function GlobalStyle() {
+  let settings = useThemeSettings();
+  if (settings) {
+    let {
+      colorBackground,
+      colorText,
+      // ... other settings extracted from theme
+      pageWidth,
+    } = settings;
+
+    return (
+      <style
+        id="global-theme-style"
+        key="global-theme-style"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{
+          __html: `
+            :root {
+              /* Layout */
+              --height-nav: ${settings.navHeightMobile}rem;
+              --page-width: ${pageWidth}px;
+              
+              /* Add more CSS variables based on your settings */
+            }
+          `,
+        }}
+      />
+    );
+  }
+  return null;
 }
 ```
 
-At the same time, this is also where you will define Global Theme settings, similar to how you use `settings_schema.json` in Dawn theme (Shopify theme). I have also left a few settings available, so you can expand them later. Below is an example image of my theme settings:
+### 3. Component Registration ([`~/weaverse/components.ts`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/components.ts))
 
-![Weaverse Theme Information](https://cdn.hashnode.com/res/hashnode/image/upload/v1702459910453/79e5d08c-dbc5-409c-a5f9-3bc738385e34.png)
-
-![Weaverse Theme Settings](https://cdn.hashnode.com/res/hashnode/image/upload/v1702459928397/21317bb3-1458-4d15-99ee-ef60c79bede1.png)
-
-### Step 3: Set Up a Weaverse Client
-
-Create a **weaverse/weaverse.server.ts** file. The “`server.ts`” extension indicates that the code within is intended for server-side execution. This distinction is crucial for maintaining a separation between server-side and client-side logic, ensuring better security and performance.
+This is the central file where you register all the React components that you want to be available for use within the Weaverse editor.
 
 ```typescript
-// weaverse/weaverse.server.ts
-import { WeaverseClient } from '@weaverse/hydrogen'
-import type { CreateWeaverseClientArgs } from '@weaverse/hydrogen'
-import { components } from '~/weaverse/components'
-import { themeSchema } from '~/weaverse/schema.server'
+// app/weaverse/components.ts
+import type { HydrogenComponent } from "@weaverse/hydrogen";
+import * as Heading from "~/components/heading";
+import * as Link from "~/components/link";
+// Import your theme components
+import * as HeroImage from "~/sections/hero-image";
+import * as FeaturedProducts from "~/sections/featured-products";
+// ... other component imports
 
-export function createWeaverseClient(args: CreateWeaverseClientArgs) {
-  return new WeaverseClient({
-    ...args,
-    themeSchema,
-    components,
-  })
-}
-
-export function getWeaverseCsp(request: Request) {
-  let url = new URL(request.url)
-  // Get weaverse host from query params
-  let weaverseHost = url.searchParams.get('weaverseHost')
-  let isDesignMode = url.searchParams.get('weaverseHost')
-  let weaverseHosts = ['*.weaverse.io', '*.shopify.com', '*.myshopify.com']
-  if (weaverseHost) {
-    weaverseHosts.push(weaverseHost)
-  }
-  let updatedCsp: {
-    [x: string]: string[] | string | boolean
-  } = {
-    defaultSrc: [
-      'data:',
-      '*.youtube.com',
-      '*.youtu.be',
-      '*.vimeo.com',
-      '*.google.com',
-      'fonts.gstatic.com',
-      ...weaverseHosts,
-    ],
-    styleSrc: ['fonts.googleapis.com', ...weaverseHosts],
-    connectSrc: ['https://vimeo.com', ...weaverseHosts],
-  }
-  if (isDesignMode) {
-    updatedCsp.frameAncestors = ['*']
-  }
-  return updatedCsp
-}
+// Register the components you want to use in Weaverse
+export let components: HydrogenComponent[] = [
+  Heading,
+  Link,
+  HeroImage,
+  FeaturedProducts,
+  // Add all components intended for Weaverse editing...
+];
 ```
 
-In this file, you’ll include:
+### 4. WeaverseContent Component ([`~/weaverse/index.tsx`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/index.tsx))
 
-- `createWeaverseClient`: For interacting with the Weaverse API.
+This component renders the Weaverse content by using the `WeaverseHydrogenRoot` component and passing the registered components.
 
-- `getWeaverseCsp`: For managing content security policies, ensuring your app adheres to best practices in web security.
-
-### Step 4: Render Weaverse Content
-
-Add a **weaverse/index.tsx** file to render Weaverse content. This file acts as a bridge between your Shopify Hydrogen project and the dynamic content managed through Weaverse.
-
-```typescript
-// weaverse/index.tsx
-
-import {WeaverseHydrogenRoot} from '@weaverse/hydrogen';
-import {components} from './components';
+```tsx
+// app/weaverse/index.tsx
+import { WeaverseHydrogenRoot } from "@weaverse/hydrogen";
+import { GenericError } from "~/components/root/generic-error";
+import { components } from "./components";
 
 export function WeaverseContent() {
-  return <WeaverseHydrogenRoot components={components} />;
+  return (
+    <WeaverseHydrogenRoot
+      components={components}
+      errorComponent={GenericError}
+    />
+  );
 }
 ```
 
-## Completing the Integration
+### 5. Content Security Policy (CSP) ([`~/weaverse/csp.ts`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/csp.ts))
 
-Once you've set up the necessary files, it's time to fully integrate Weaverse into your Hydrogen project:
+This utility helps configure the Content Security Policy headers required for the Weaverse editor iframe to function correctly.
 
-### Integrating weaverse in Remix's Global Context
+```typescript
+// app/weaverse/csp.ts
+import type { AppLoadContext } from "@shopify/remix-oxygen";
 
-In your **server.ts** file, incorporate **weaverse** into Remix's global context. This is done by defining **weaverse** in the fetch handler of Remix, ensuring it's accessible throughout your application. This step is crucial for making sure Weaverse functions correctly within your project.
+// Example based on Weaverse Pilot theme
+// See: [Pilot csp file on GitHub](https://github.com/Weaverse/pilot/blob/main/app/weaverse/csp.ts)
+export function getWeaverseCsp(request: Request, context: AppLoadContext) {
+  let url = new URL(request.url);
+  let weaverseHost = context.env?.WEAVERSE_HOST || "https://weaverse.io";
+  let isDesignMode = url.searchParams.get("weaverse_design_mode") === "true";
+
+  let weaverseHosts = [
+    new URL(weaverseHost).host,
+    "weaverse.io",
+    "*.weaverse.io",
+    "shopify.com",
+    "*.shopify.com",
+    "*.myshopify.com",
+  ];
+
+  let updatedCsp: { [key: string]: string[] | string | boolean } = {
+    frameAncestors: weaverseHosts,
+    defaultSrc: [
+      "'self'",
+      "data:",
+      // Add other necessary sources like CDN, fonts, etc.
+      ...weaverseHosts,
+    ],
+    scriptSrc: [
+      "'self'",
+      "'unsafe-inline'",
+      // Add other necessary sources
+      ...weaverseHosts,
+    ],
+    styleSrc: [
+      "'self'",
+      "'unsafe-inline'",
+      // Add other necessary sources
+      ...weaverseHosts,
+    ],
+    connectSrc: [
+      "'self'",
+      // Add other necessary sources (APIs, etc.)
+      ...weaverseHosts,
+    ],
+    // Add other directives as needed (imgSrc, fontSrc, etc.)
+  };
+
+  // In design mode, allow broader frame ancestors
+  if (isDesignMode) {
+    updatedCsp.frameAncestors = ["*"];
+  }
+
+  return updatedCsp;
+}
+```
+
+## Step 4: Add Weaverse Client to Hydrogen App Context
+
+A crucial step is to initialize the Weaverse client and add it to your Hydrogen app load context. This allows your application to access Weaverse functionality throughout your routes.
+
+### 1. Update Your Context File
+
+Modify your app context file (usually `app/lib/context.ts` or similar) to initialize and include the WeaverseClient:
+
+```typescript
+// app/lib/context.ts
+import { WeaverseClient } from "@weaverse/hydrogen";
+import { themeSchema } from "~/weaverse/schema.server";
+import { components } from "~/weaverse/components";
+// ... other imports
+
+export async function createAppLoadContext(
+  request: Request,
+  env: Env,
+  executionContext: ExecutionContext,
+) {
+  // Your existing context setup code...
+  // Create the Hydrogen context
+  const hydrogenContext = createHydrogenContext({
+    env,
+    request,
+    cache,
+    waitUntil,
+    session,
+    i18n: getLocaleFromRequest(request),
+    // ... other Hydrogen context options
+  });
+
+  // Return the context with Weaverse client added
+  return {
+    ...hydrogenContext,
+    weaverse: new WeaverseClient({
+      ...hydrogenContext,
+      request,
+      cache,
+      themeSchema,
+      components,
+    }),
+  };
+}
+```
+
+This modification:
+1. Imports the `WeaverseClient` from the Weaverse Hydrogen SDK
+2. Imports your theme schema and components from the files created in the previous step
+3. Initializes a new `WeaverseClient` instance with necessary context
+4. Adds the Weaverse client to your app context, making it available via `context.weaverse` in loaders and actions
+
+### 2. Ensure Server Entry Point Uses Updated Context
+
+Your server entry point (typically `server.ts`) should already use your context function:
 
 ```typescript
 // server.ts
+import { createAppLoadContext } from '~/lib/context';
 
-// ...
-import { createWeaverseClient } from '~/weaverse/weaverse.server'
-
-// ...
-
-/**
- * Create Hydrogen's Storefront client.
- */
-const { storefront } = createStorefrontClient({
-  /** ... */
-})
-
-const weaverse = createWeaverseClient({
-  storefront,
-  request,
-  env,
-  cache,
-  waitUntil,
-})
-
-/**
- * Create a Remix request handler and pass
- * Hydrogen's Storefront client to the loader context.
- */
-const handleRequest = createRequestHandler({
-  build: remixBuild,
-  mode: process.env.NODE_ENV,
-  getLoadContext: () => ({
-    session,
-    storefront,
-    cart,
-    env,
-    waitUntil,
-    weaverse, // add weaverse to Remix loader context
-  }),
-})
-```
-
-**TypeScript Error Handling**: If you encounter a TypeScript error like `TS2739, indicating that Type Env is missing properties from type HydrogenThemeEnv`, don't panic. Simply add the missing properties to `HydrogenThemeEnv` in your `env.d.ts` file. This step ensures your TypeScript environment recognizes the new Weaverse elements.
-
-```typescript
-declare global {
-  /** ... */
-
-  /**
-   * Declare expected Env parameter in fetch handler.
-   */
-  interface Env {
-    /** ... */
-
-    WEAVERSE_PROJECT_ID: string
-    WEAVERSE_API_KEY: string
+export default {
+  async fetch(
+    request: Request,
+    env: Env,
+    executionContext: ExecutionContext,
+  ): Promise<Response> {
+    // Create app context with Weaverse client
+    const appLoadContext = await createAppLoadContext(
+      request,
+      env,
+      executionContext,
+    );
+    
+    // Use context in request handler
+    const handleRequest = createRequestHandler({
+      build: remixBuild,
+      mode: process.env.NODE_ENV,
+      getLoadContext: () => appLoadContext,
+    });
+    
+    // ... rest of your server code
   }
 }
 ```
 
-Also, define **weaverse** in the **AppLoadContext** interface to ensure it's recognized as part of your application's context.
+---
 
-```typescript
-declare module '@shopify/remix-oxygen' {
-  /**
-   * Declare local additions to the Remix loader context.
-   */
-  export interface AppLoadContext {
-    env: Env
-    cart: HydrogenCart
-    storefront: Storefront
-    session: HydrogenSession
-    waitUntil: ExecutionContext['waitUntil']
+## Step 5: Integrate Weaverse into Your Application
 
-    weaverse: WeaverseClient
-  }
+Now, let's modify your existing Hydrogen files to enable Weaverse.
 
-  /** ... */
-}
-```
+### 1. Update CSP in `entry.server.tsx`
 
-### Implementing _getWeaverseCsp_
-
-Open your **app/entry.server.tsx** file and utilize the **getWeaverseCsp** function. This function is crucial for managing your content security policy, which is a key aspect of web application security.
+Modify your `app/entry.server.tsx` to use the `getWeaverseCsp` function.
 
 ```typescript
 // app/entry.server.tsx
+import { RemixServer } from "@remix-run/react";
+import { createContentSecurityPolicy } from "@shopify/hydrogen";
+// ... other imports
+import { getWeaverseCsp } from "~/weaverse/csp"; // Import the CSP utility
 
-// ...
-import { getWeaverseCsp } from '~/weaverse/weaverse.server'
-
-// ...
-
-const { nonce, header, NonceProvider } = createContentSecurityPolicy(
-  getWeaverseCsp(request),
-)
-```
-
-### Updating app/root.tsx for Weaverse Theme Settings
-
-In the **app/root.tsx** file, add **weaverseTheme** data to the loader function’s return value. This addition is vital for enabling Weaverse theme settings within your application.
-
-```typescript
-// app/root.tsx
-
-export async function loader({ context }: LoaderFunctionArgs) {
-  /** ... */
-
-  return defer(
-    {
-      /** ... */
-      weaverseTheme: await context.weaverse.loadThemeSettings(),
-      /** ... */
+export default async function handleRequest(
+  request: Request,
+  responseStatusCode: number,
+  responseHeaders: Headers,
+  remixContext: EntryContext,
+  context: AppLoadContext,
+) {
+  // Get Weaverse CSP settings and combine with Hydrogen's defaults
+  const { nonce, header, NonceProvider } = createContentSecurityPolicy({
+    // Pass the Weaverse CSP directives here by spreading the result
+    ...getWeaverseCsp(request, context),
+    // Ensure your existing shop CSP config remains
+    shop: {
+      checkoutDomain: context.env?.PUBLIC_CHECKOUT_DOMAIN || context.env?.PUBLIC_STORE_DOMAIN,
+      storeDomain: context.env?.PUBLIC_STORE_DOMAIN,
     },
-    { headers },
-  )
+    // Add other directives if needed (e.g., connectSrc for other APIs)
+  });
+
+  // ... rest of the function (renderToReadableStream, etc.) using NonceProvider
+
+  responseHeaders.set("Content-Security-Policy", header); // Use 'Content-Security-Policy', not 'Report-Only' for production
+
+  return new Response(/* ... */);
 }
 ```
 
-Next, wrap your App component with the **withWeaverse** function. This wrapping is necessary because **withWeaverse** provides your App component with the Global Theme Settings Provider that you can use everywhere from the App context.
+### 2. Update Root Component
 
-```typescript
+The root component needs to be wrapped with `withWeaverse` to enable the Weaverse functionality. Here's how to implement it in your `app/root.tsx` file:
+
+```tsx
+// app/root.tsx
+import {
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  // ... other imports
+} from "@remix-run/react";
+import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
+import { GlobalStyle } from "./weaverse/style";
+// ... other imports
+
+// Your App component that renders the Outlet
 function App() {
-  const nonce = useNonce();
-  const data = useLoaderData<typeof loader>();
+  return <Outlet />;
+}
 
+// Your Layout component
+export function Layout({ children }: { children: React.ReactNode }) {
+  let nonce = useNonce();
+  // ... other setup code
+  
   return (
-    <html lang="en">
-      /** ... */
+    <html lang={locale.language}>
+      <head>
+        {/* ... meta tags, links */}
+        <Meta />
+        <Links />
+        <GlobalStyle /> {/* Include the GlobalStyle component */}
+      </head>
+      <body>
+        {/* ... your layout structure */}
+        <main>
+          {children}
+        </main>
+        {/* ... footer, etc */}
+        <ScrollRestoration nonce={nonce} />
+        <Scripts nonce={nonce} />
+      </body>
     </html>
   );
 }
 
+// Simply wrap the App component with withWeaverse
 export default withWeaverse(App);
 ```
 
-### Handling Remix Routes for WeaverseContent
+**Note:** The `withWeaverse` HOC doesn't require components to be passed directly here. The components are imported from the `components.ts` file and used by the `WeaverseContent` component.
 
-For rendering WeaverseContent on routes, include **weaverseData** in the return result of the **loader** function. This ensures that the dynamic content from Weaverse is properly loaded and displayed on each route.
+### 3. Adapt Route Components
 
-```typescript
-// app/routes/_index.tsx
+For each route you want to make editable with Weaverse (e.g., Homepage, Product pages, Collection pages, Custom pages), you need to:
 
-/** ... */
+1. Import the `WeaverseContent` component
+2. Use it in your route component
+3. Load the necessary Weaverse data in your loader
 
-import {WeaverseContent} from '~/weaverse';
+Here's an example for a homepage route (`app/routes/($locale)._index.tsx`):
 
+```tsx
+import { WeaverseContent } from "~/weaverse";
+import type { LoaderFunctionArgs } from "@shopify/remix-oxygen";
+import type { PageType } from "@weaverse/hydrogen";
 
-export async function loader({context}: LoaderFunctionArgs) {
-  const {storefront} = context;
-  const recommendedProducts = await storefront.query(
-    RECOMMENDED_PRODUCTS_QUERY,
-  );
-	/** ... */
-  return defer({
-    recommendedProducts,
-    weaverseData: await context.weaverse.loadPage({type: 'INDEX'}),
-  });
+export async function loader(args: LoaderFunctionArgs) {
+  let { params, context } = args;
+  let { pathPrefix } = context.storefront.i18n;
+  let locale = pathPrefix.slice(1);
+  let type: PageType = "INDEX";
+
+  // Load the Weaverse page data
+  let weaverseData = await context.weaverse.loadPage({ type });
+  if (!weaverseData?.page?.id || weaverseData.page.id.includes("fallback")) {
+    throw new Response(null, { status: 404 });
+  }
+
+  // Load other data needed for the page
+  // ...
+
+  return {
+    weaverseData,
+    // other data...
+  };
 }
 
 export default function Homepage() {
+  // Simply render the WeaverseContent component
+  return <WeaverseContent />;
+}
+```
+
+For a product page (`app/routes/($locale).products.$productHandle.tsx`):
+
+```tsx
+import { useLoaderData } from "@remix-run/react";
+import { WeaverseContent } from "~/weaverse";
+import { Analytics } from "@shopify/hydrogen";
+
+export async function loader({ params, request, context }: LoaderFunctionArgs) {
+  let { productHandle: handle } = params;
+  
+  // Load the product data
+  // ...
+
+  // Load the Weaverse page data for this product
+  let weaverseData = await context.weaverse.loadPage({ type: "PRODUCT", handle });
+  
+  return {
+    product,
+    weaverseData,
+    // other data...
+  };
+}
+
+export default function Product() {
+  let { product } = useLoaderData<typeof loader>();
   return (
-    <div className="home">
+    <>
       <WeaverseContent />
-    </div>
+      {/* Optional: Add Analytics or other components */}
+    </>
   );
 }
 ```
 
-In your route components, explicitly render `WeaverseContent`. This direct rendering allows for the customized content to be displayed as intended.
-For more comprehensive setup, refer to the [Weaverse Hydrogen Pilot Routes](https://github.com/Weaverse/pilot/tree/main/app/routes) repository, and learn more about how to [Render a Weaverse Page](https://weaverse.io/docs/guides/rendering-page).
+The `WeaverseContent` component will automatically render the content based on the page type and handle, using the components registered in your `components.ts` file.
 
-## Migrating Components to Weaverse
+## Step 6: Run and Connect
 
-Begin migrating your default components to Weaverse Components. This migration will enable these components to utilize the dynamic customization features provided by Weaverse.
+1.  **Start your dev server:** `npm run dev`
+2.  **Open Weaverse Studio:** Go to your project in Weaverse.
+3.  **Enter Development Mode:** Click the "Development" button (often looks like `< >`) and enter your local dev server URL (usually `http://localhost:3000`).
 
-### Connecting to Weaverse CMS / Studio
+You should now see your Hydrogen storefront loaded inside the Weaverse editor, ready for visual editing!
 
-Ensure the [Weaverse Hydrogen](https://apps.shopify.com/weaverse) app is installed in your Shopify store. Create a storefront, copy the Weaverse Project ID, and add it to your Hydrogen project's **.env** file. This step connects your project with the Weaverse CMS.
+## Next Steps
 
-![Weaverse Project ID](https://cdn.hashnode.com/res/hashnode/image/upload/v1702460415617/15b47a1f-952a-4a28-ba0c-3bca22a59858.png)
+*   **Create Custom Components:** Learn how to build your own React components and make them editable in Weaverse. ([Link to relevant doc when available])
+*   **Explore Theme Settings:** Customize the global styles defined in `schema.server.ts` via the Weaverse Studio.
+*   **Utilize Weaverse Features:** Explore Custom Pages, Custom Templates, AI features, and more.
 
-Now start the development server and update the Preview URL in Weaverse Project settings. By default, our Weaverse projects are set to [http://localhost:3456](http://localhost:3456).
-
-```bash
-# .env
-
-SESSION_SECRET="foobar"
-PUBLIC_STORE_DOMAIN="mock.shop"
-WEAVERSE_PROJECT_ID="your-project-id-here"
-```
-
-Once saved, you should see your Hydrogen page loaded in Weaverse Studio.
-
-### Customizing Sections with Weaverse
-
-Begin by creating a **recommended-products.tsx** file in the **app/sections** folder. Adapt the original RecommendedProducts component to a **forwardRef** component. This adaptation allows Weaverse Studio to identify and edit the component more easily.
-
-```typescript
-// app/sections/recommended-products.tsx
-
-import {forwardRef} from 'react';
-import {Link, useLoaderData} from '@remix-run/react';
-import {Image, Money} from '@shopify/hydrogen';
-
-const RecommendedProducts = forwardRef<HTMLDivElement, {productsCount: number}>(
-  ({productsCount}, ref) => {
-    const {
-      recommendedProducts: {products},
-    } = useLoaderData<any>();
-    const displayProducts = products.nodes.slice(0, productsCount);
-    return (
-      <div className="recommended-products" ref={ref}>
-        <h2>Recommended Products</h2>
-        <div className="recommended-products-grid">
-          {displayProducts.map((product: any) => (
-            <Link
-              key={product.id}
-              className="recommended-product"
-              to={`/products/${product.handle}`}
-            >
-              <Image
-                data={product.images.nodes[0]}
-                aspectRatio="1/1"
-                sizes="(min-width: 45em) 20vw, 50vw"
-              />
-              <h4>{product.title}</h4>
-              <small>
-                <Money data={product.priceRange.minVariantPrice} />
-              </small>
-            </Link>
-          ))}
-        </div>
-        <br />
-      </div>
-    );
-  },
-);
-
-export default RecommendedProducts;
-
-export const schema = {
-  type: 'recommended-products',
-  title: 'Recommended products',
-  inspector: [
-    {
-      group: 'Settings',
-      inputs: [
-        {
-          type: 'range',
-          name: 'productsCount',
-          label: 'Number of products',
-          defaultValue: 4,
-          configs: {
-            min: 1,
-            max: 12,
-            step: 1,
-          },
-        },
-      ],
-    },
-  ],
-};
-```
-
-And the result:
-
-![](https://cdn.hashnode.com/res/hashnode/image/upload/v1702460530797/277694f4-2614-473b-a244-763839fedd3d.png)
-
-That concludes our basic tutorial on integrating Weaverse with your Shopify Hydrogen project. Keep an eye out for our next blog, where we'll delve into more advanced features like using schema, loaders in Weaverse Components.
-
-**References:**
-
-- Demo repository: [https://github.com/Weaverse/Naturelle](https://github.com/Weaverse/Naturelle)
-
-- Tutorial: [https://weaverse.io/docs/hydrogen/tutorial](https://weaverse.io/docs/hydrogen/tutorial)
+By following these steps, you can successfully integrate Weaverse into your existing Hydrogen project, unlocking powerful visual editing and customization capabilities.

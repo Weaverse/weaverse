@@ -1,5 +1,6 @@
 import clsx from 'clsx'
-import React, { memo, useEffect, useRef, useSyncExternalStore } from 'react'
+import * as React from 'react'
+import { memo, useEffect, useRef } from 'react'
 
 import { WeaverseContextProvider, WeaverseItemContext } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
@@ -7,15 +8,35 @@ import { generateItemClassName } from './utils/css'
 
 import { useItemInstance, useWeaverse } from '~/hooks'
 
-let reactVersion = Number(React.version.split('.')[0])
+let reactVersion = Number(React.version?.split('.')[0]) || 0
+
+// Create a safe version of useSyncExternalStore that works in both client and server environments
+export const useSafeExternalStore = (
+  subscribe: any,
+  getSnapshot: any,
+  getServerSnapshot: any = getSnapshot,
+) => {
+  // In server environment or during SSR, just return the snapshot directly
+  if (typeof window === 'undefined') {
+    return getServerSnapshot()
+  }
+
+  // In client environment, use React.useSyncExternalStore if available (React 18+)
+  if (React.useSyncExternalStore) {
+    return React.useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
+  }
+
+  // Fallback for older React versions - just return the current snapshot
+  return getSnapshot()
+}
 
 export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
-  let data = useSyncExternalStore(
+  let data = useSafeExternalStore(
     context.subscribe,
     context.getSnapShot,
     context.getSnapShot,
   )
-  let rootRef = useRef<HTMLElement>()
+  let rootRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     context.contentRootElement = rootRef.current
@@ -44,11 +65,11 @@ export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
   }
   return null
 })
-
+WeaverseRoot.displayName = 'WeaverseRoot'
 const ItemComponent = memo(({ instance }: ItemComponentProps) => {
   let context = useWeaverse()
   let { stitchesInstance, elementRegistry, platformType } = context
-  let data = useSyncExternalStore(
+  let data = useSafeExternalStore(
     instance.subscribe,
     instance.getSnapShot,
     instance.getSnapShot,
@@ -86,6 +107,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
 
   if (Element?.Component) {
     let Component = Element.Component
+    Component.displayName = type
     if (
       Component.$$typeof === Symbol.for('react.forward_ref') ||
       reactVersion > 18
@@ -122,6 +144,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
   console.log(`❌ Unknown element: ${type}`)
   return null
 })
+ItemComponent.displayName = 'WeaverseComponent'
 
 let ItemInstance = memo(
   ({ id, parentId }: { id: string; parentId: string }) => {
@@ -136,3 +159,4 @@ let ItemInstance = memo(
     )
   },
 )
+ItemInstance.displayName = 'WeaverseInstanceProvider'
