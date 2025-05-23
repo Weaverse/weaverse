@@ -104,7 +104,7 @@ Here's a breakdown of the available attributes in an input setting:
 
   Will appear as:
 
-  <img alt="example" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/help-text-input.webp?v=1743390826" width="300"/>
+  ![Help text input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/help-text-input.webp?v=1743390826)
 
 ## Basic Inputs
 
@@ -121,7 +121,7 @@ The **`heading`** input type is a special input that creates a heading or sectio
 ```
 
 **Output:**
-<img alt="heading_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/heading-input.png?v=1745227001" width="300"/>
+![Heading input type example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/heading-input.png?v=1745227001)
 
 ### `text`
 
@@ -144,7 +144,7 @@ button text, or short promotional messages.
 
 **Output:**
 
-<img alt='text_attribute_example' src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/text-input.webp?v=1743407119" width="300"/>
+![Text input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/text-input.webp?v=1743407119)
 
 ### `textarea`
 
@@ -167,7 +167,7 @@ shipping and return policies.
 
 **Output:**
 
-<img alt="textarea_attribute_example" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/text-area-input.webp?v=1743407119" width="300"/>
+![Textarea input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/text-area-input.webp?v=1743407119)
 
 ### `switch`
 
@@ -189,7 +189,7 @@ promotional features, or customer reviews.
 
 **Output:**
 
-<img alt="switch_attribute_example" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/switch-input.webp?v=1743407119" width="300"/>
+![Switch input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/switch-input.webp?v=1743407119)
 
 ### `range`
 
@@ -217,7 +217,7 @@ percentages, or customizing display sizes.
 
 **Output:**
 
-<img alt="range_attr_example" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/range-input.webp?v=1743407874" width="300"/>
+![Range input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/range-input.webp?v=1743407874)
 
 **`configs` details:**
 
@@ -255,7 +255,7 @@ The select input provides a dropdown list, allowing merchants to select one opti
 
 **Output:**
 
-<img alt="aspect_ratio_select_0" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/sellect-input.webp?v=1743407118" width="300"/>
+![Select input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/sellect-input.webp?v=1743407118)
 
 `configs` **details:**
 
@@ -297,7 +297,7 @@ process.
 
 **Output:**
 
-<img alt="display_as_text" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/toggle-group-input.webp?v=1743407874" width="300"/>
+![Toggle group text input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/toggle-group-input.webp?v=1743407874)
 
 **Example (Display as Icon):**
 
@@ -319,7 +319,7 @@ process.
 
 **Output:**
 
-<img alt="display_as_icon" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/toggle-group-icon-input.webp?v=1743407119" width="300"/>
+![Toggle group icon input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/toggle-group-icon-input.webp?v=1743407119)
 
 **`configs` details**
 
@@ -359,12 +359,12 @@ advanced text formatting options.
 
 **Output:**
 
-<img alt="richtext_output" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/rich-text-input.webp?v=1743407119" width="300"/>
+![Rich text input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/rich-text-input.webp?v=1743407119)
 
 🌟 **Pro Tip**: our **`richtext`** input comes with **AI-powered** content generation capabilities, allowing merchants to
 effortlessly craft top-notch content, from descriptions to promotional texts and more.
 
-<img alt="richtext_power_ai_output" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/rich-text-ai-input.webp?v=1743407119" width="300"/>
+![Rich text AI-powered input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/rich-text-ai-input.webp?v=1743407119)
 
 ### `image`
 
@@ -423,7 +423,7 @@ type WeaverseImage = {
 
 **Output:**
 
-<img alt="image_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/image-input.webp?v=1743407119" width="300"/>
+![Image input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/image-input.webp?v=1743407119)
 
 **Usage**
 
@@ -502,7 +502,7 @@ type WeaverseVideo = {
 
 **Output:**
 
-<img alt="image_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_video_input.png?v=1722415681" width="300"/>
+![Video input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_video_input.png?v=1722415681)
 
 ### `color`
 
@@ -523,7 +523,7 @@ settings, such as background color, text color, border color, etc.
 
 **Output:**
 
-<img alt="color_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/color-input.webp?v=1743407119" width="300"/>
+![Color input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/color-input.webp?v=1743407119)
 
 ### `datepicker`
 
@@ -545,7 +545,7 @@ scheduling content, setting event dates, or determining promotional periods.
 
 **Output:**
 
-<img alt="datapicker_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/date-picker-input.webp?v=1743407119" width="300"/>
+![Date picker input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/date-picker-input.webp?v=1743407119)
 
 💡 **Parsing:** The returned timestamp should be transformed into a readable date-time string, for example:
 
@@ -587,7 +587,7 @@ the input, a dropdown list of suggested places appears.
 
 **Output:**
 
-<img alt="map_autocomplete_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/map-input.webp?v=1743407119" width="300"/>
+![Map autocomplete input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/map-input.webp?v=1743407119)
 
 ### `position`
 
@@ -612,7 +612,7 @@ intuitive directional arrows.
 
 **Output:**
 
-<img alt="position_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_position_input.png?v=1722416367" width="300"/>
+![Position input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_position_input.png?v=1722416367)
 
 ### `swatches`
 
@@ -655,7 +655,7 @@ The `blog` input provides merchants with an intuitive search and select interfac
 
 **Output:**
 
-<img alt="blog_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/blog-input.webp?v=1743407119" width="300"/>
+![Blog input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/blog-input.webp?v=1743407119)
 
 Similar to the `product` input, the preview will automatically revalidate and run the `loader` function when selecting a blog. Please use the `handle` or `id` of the selected blog to fetch the full blog data.
 
@@ -682,7 +682,7 @@ type WeaverseMetaobject = {
 ```
 
 **Output:**
-<img alt="metaobject_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_metaobject_input.png?v=1722477096" width="300"/>
+![Metaobject input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_metaobject_input.png?v=1722477096)
 
 Similar to other resource picker inputs, when selecting a metaobject definition, the preview will automatically revalidate and run the `loader` function. Use the `handle` or `id` of the selected metaobject to fetch the full data from the Storefront API.
 
@@ -704,7 +704,7 @@ The `collection` input provides merchants with an intuitive search and select in
 
 **Output:**
 
-<img alt="collection_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/collection-input.webp?v=1743407119" width="300"/>
+![Collection input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/collection-input.webp?v=1743407119)
 
 Similar to the `product` input, the preview will automatically revalidate and run the `loader` function when selecting a collection. Please use the `handle` or `id` of the selected collection to fetch the full collection data.
 
@@ -726,7 +726,7 @@ The `collection-list` input provides merchants with an intuitive search and sele
 
 **Output:**
 
-<img alt="collection_list_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/collection-list-input.webp?v=1743407119" width="300"/>
+![Collection list input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/collection-list-input.webp?v=1743407119)
 
 Similar to the `product` input, the preview will automatically revalidate and run the `loader` function when selecting collections. Please use the `handle` or `id` of the selected collection to fetch the full collection data.
 
@@ -759,7 +759,7 @@ The **`url`** input allows merchants to enter a URL or select a page from their 
 
 **Output:**
 
-<img alt="url_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/url_input.png?v=1712823900" width="300"/>
+![URL input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/url_input.png?v=1712823900)
 
 ### `product`
 
@@ -779,7 +779,7 @@ The **`product`** input provides merchants with an intuitive search and select i
 
 **Output:**
 
-<img alt="product_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/product-input.webp?v=1743407119" width="300"/>
+![Product input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/product-input.webp?v=1743407119)
 
 When selecting a product, the preview will automatically revalidate and run the `loader` function.
 The `loader` function will read the `handle` or `id` of the selected product and fetch all the product data from the Storefront API. Here's an example of how to use the `loader` function:
@@ -836,7 +836,7 @@ The `product-list` input provides merchants with an intuitive search and select 
 
 **Output:**
 
-<img alt="product_list_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/product-list-input.webp?v=1743407119" width="300"/>
+![Product list input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/product-list-input.webp?v=1743407119)
 
 Similar to the `product` input, the preview will automatically revalidate and run the `loader` function when selecting products. Please use the `handle` or `id` of the selected product to fetch the full product data.
 
@@ -858,7 +858,7 @@ The `collection` input provides merchants with an intuitive search and select in
 
 **Output:**
 
-<img alt="collection_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/collection-input.webp?v=1743407119" width="300"/>
+![Collection input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/collection-input.webp?v=1743407119)
 
 Similar to the `product` input, the preview will automatically revalidate and run the `loader` function when selecting a collection. Please use the `handle` or `id` of the selected collection to fetch the full collection data.
 
@@ -880,7 +880,7 @@ The `collection-list` input provides merchants with an intuitive search and sele
 
 **Output:**
 
-<img alt="collection_list_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/collection-list-input.webp?v=1743407119" width="300"/>
+![Collection list input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/collection-list-input.webp?v=1743407119)
 
 Similar to the `product` input, the preview will automatically revalidate and run the `loader` function when selecting collections. Please use the `handle` or `id` of the selected collection to fetch the full collection data.
 
@@ -902,7 +902,7 @@ The `blog` input provides merchants with an intuitive search and select interfac
 
 **Output:**
 
-<img alt="blog_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/blog-input.webp?v=1743407119" width="300"/>
+![Blog input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/blog-input.webp?v=1743407119)
 
 Similar to the `product` input, the preview will automatically revalidate and run the `loader` function when selecting a blog. Please use the `handle` or `id` of the selected blog to fetch the full blog data.
 
@@ -929,7 +929,7 @@ type WeaverseMetaobject = {
 ```
 
 **Output:**
-<img alt="metaobject_attr" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_metaobject_input.png?v=1722477096" width="300"/>
+![Metaobject input example](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_metaobject_input.png?v=1722477096)
 
 Similar to other resource picker inputs, when selecting a metaobject definition, the preview will automatically revalidate and run the `loader` function. Use the `handle` or `id` of the selected metaobject to fetch the full data from the Storefront API.
 

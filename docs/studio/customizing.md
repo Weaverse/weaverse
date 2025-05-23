@@ -13,7 +13,7 @@ Weaverse Studio provides a powerful yet intuitive interface for visually buildin
 
 The top bar provides access to essential navigation controls and core actions.
 
-<img alt="Weaverse Studio Top Bar" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/locale-and-pageSelector.webp?v=1743413657" width="600"/>
+![Weaverse Studio Top Bar](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/locale-and-pageSelector.webp?v=1743413657)
 
 *   **Locale Selector:** If your store supports multiple languages (configured in `themeSchema.i18n`), use this dropdown to switch between locales and edit content for specific language versions.
 *   **Page Selector:** Choose the page you want to edit. This list is populated based on the pages loaded via `context.weaverse.loadPage()` in your Hydrogen project's route loaders. Common examples include the Homepage, Product pages, Collection pages, standard Pages, and any Custom Pages you've defined.
@@ -23,7 +23,7 @@ The top bar provides access to essential navigation controls and core actions.
 
 The left panel displays the structure of your currently selected page.
 
-<img alt="Weaverse Studio Page Outline" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/pageoutline.webp?v=1743413723" width="300"/>
+![Weaverse Studio Page Outline](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/pageoutline.webp?v=1743413723)
 
 *   **Page Outline:** This tree view shows the hierarchical structure of all components (sections, elements) on the page.
     *   **Selection:** Clicking a component name highlights it on the canvas and opens its details in the Inspector panel (right panel).
@@ -40,8 +40,8 @@ This is the main area where you see a live, interactive preview of the page you 
 
 The Inspector panel on the right is where you configure selected components or global theme settings.
 
-<img alt="Weaverse Studio Component Inspector" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/component-inspector.webp?v=1743413912" width="300"/>
-<img alt="Weaverse Studio Theme Settings Inspector" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/theme-setting.webp?v=1743409893" width="300"/>
+![Weaverse Studio Component Inspector](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/component-inspector.webp?v=1743413912)
+![Weaverse Studio Theme Settings Inspector](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/theme-setting.webp?v=1743409893)
 
 *   **Component Inspector:** When a component is selected (either from the Outline or the Canvas), this panel shows its specific configuration options, typically organized into tabs:
     *   **Settings:** Modify the component's specific properties. These options are defined in the `inspector` array within the component's `schema` (e.g., text content, image selection, number of items, layout choices).
@@ -56,7 +56,7 @@ The Inspector panel on the right is where you configure selected components or g
 
 The bottom bar provides tools for controlling the preview and accessing global settings.
 
-<img alt="Weaverse Studio Bottom Bar" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/device-switcher-inspector.webp?v=1743413912" width="600"/>
+![Weaverse Studio Bottom Bar](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/device-switcher-inspector.webp?v=1743413912)
 
 *   **Device Switcher:** Preview your page layout on different screen sizes (Desktop, Tablet, Mobile) to ensure responsiveness.
 *   **Inspector Toggle (Panel Icon):** Show or hide the right Inspector panel.
@@ -67,8 +67,8 @@ The bottom bar provides tools for controlling the preview and accessing global s
 
 Accessed via the bottom bar, this modal contains administrative settings for your Weaverse project.
 
-<img alt="Weaverse Studio Project Settings" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/project-setting.webp?v=1743413912" width="300"/>
-<img alt="Weaverse Studio Theme Info" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/theme-info.webp?v=1743410159" width="300"/>
+![Weaverse Studio Project Settings](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/project-setting.webp?v=1743413912)
+![Weaverse Studio Theme Info](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/theme-info.webp?v=1743410159)
 
 *   **General:** Manage project name, view Project ID and API Key (needed for your `.env` file).
 *   **Domains:** Configure custom domains for your Weaverse-hosted storefront (if applicable).
