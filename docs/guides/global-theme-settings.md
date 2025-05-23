@@ -13,7 +13,7 @@ published: true
 
 Merchants can easily customize these settings through Weaverse Studio's **Theme Settings** panel, which provides an intuitive interface similar to the native **Shopify Theme Customizer**.
 
-<img alt="Theme Settings Panel" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/theme-setting.webp?v=1743409893" width="400"/>
+![Weaverse Studio Theme Settings Panel](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/theme-setting.webp?v=1743409893)
 
 ## Defining Your Theme Schema
 
@@ -76,7 +76,7 @@ The **`info`** section contains metadata displayed within **Weaverse Studio**, h
 - **`documentationUrl`**: Link to your theme's documentation
 - **`supportUrl`**: Link for customer support or assistance
 
-<img alt="Theme Info Display" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/theme-info.webp?v=1743410159" width="400"/>
+![Weaverse Studio Theme Information Display](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/theme-info.webp?v=1743410159)
 
 #### 2. Internationalization (i18n)
 

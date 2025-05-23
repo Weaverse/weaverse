@@ -127,7 +127,7 @@ The `title` property defines the human-readable name for your component. This na
 - Reflect the component's purpose or functionality
 - Avoid technical jargon that merchants might not understand
 
-<img alt="title_attr_img" src="https://cdn.shopify.com/s/files/1/0838/0052/3057/files/tittle-and-type.webp?v=1743409496" width="300"/>
+![Page outline](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/tittle-and-type.webp?v=1743409496)
 
 #### `type`
 
