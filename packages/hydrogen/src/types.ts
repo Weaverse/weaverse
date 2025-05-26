@@ -2,7 +2,6 @@
 /// <reference types="@shopify/remix-oxygen" />
 /// <reference types="@shopify/oxygen-workers-types" />
 
-import type { NavigateFunction } from '@remix-run/react'
 import type { HydrogenContext, I18nBase } from '@shopify/hydrogen'
 import type {
   AppLoadContext,
@@ -22,6 +21,7 @@ import type {
   WeaverseVideo,
 } from '@weaverse/react'
 import type { ForwardRefExoticComponent } from 'react'
+import type { NavigateFunction } from 'react-router'
 import type { WeaverseHydrogen } from './index'
 import type { ThemeSettingsStore } from './utils/use-theme-settings-store'
 import type { WeaverseClient } from './weaverse-client'

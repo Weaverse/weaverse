@@ -170,15 +170,7 @@ export class Weaverse extends EventEmitter {
   /**
    * Register the custom React Component to Weaverse, store it into Weaverse.elementRegistry
    */
-  static registerElement(element: { type: string; [x: string]: any }) {
-    if (element?.type) {
-      if (!Weaverse.elementRegistry.has(element.type)) {
-        Weaverse.elementRegistry.set(element?.type, element)
-      }
-    } else {
-      console.error("Cannot register element without 'type'.")
-    }
-  }
+  static registerElement = registerElement
 
   get elementRegistry() {
     return Weaverse.elementRegistry
@@ -204,6 +196,15 @@ export class Weaverse extends EventEmitter {
   setProjectData = (data: WeaverseProjectDataType) => {
     this.data = data
     this.initProject()
+  }
+}
+export function registerElement(element: { type: string; [x: string]: any }) {
+  if (element?.type) {
+    if (!Weaverse.elementRegistry.has(element.type)) {
+      Weaverse.elementRegistry.set(element?.type, element)
+    }
+  } else {
+    console.error("Cannot register element without 'type'.")
   }
 }
 

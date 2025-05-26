@@ -1,5 +1,12 @@
 # @weaverse/react
 
+## 5.0.0-next.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/core@5.0.0-next.0
+
 ## 4.3.4
 
 ### Patch Changes
