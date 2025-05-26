@@ -35,12 +35,11 @@
   },
   "dependencies": {
     "@shopify/hydrogen": ">=2025.5",
-    "@shopify/oxygen-workers-types": "4",
-    "@shopify/remix-oxygen": "2",
+    "@shopify/remix-oxygen": "3",
     "@weaverse/react": "5.0.0-next.0",
     "react": ">=18",
     "react-dom": ">=18",
-    "react-error-boundary": "^4.0.13",
-    "react-router": "^7.0.0"
+    "react-error-boundary": "^6",
+    "react-router": "^7"
   }
 }

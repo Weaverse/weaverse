@@ -96,14 +96,11 @@ importers:
       '@shopify/hydrogen':
         specifier: '>=2025.5'
         version: 2025.5.0(@react-router/dev@7.6.1(@types/node@22.15.18)(jiti@2.4.2)(react-router@7.6.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.18)(jiti@2.4.2)(yaml@2.8.0))(yaml@2.8.0))(@types/react@19.1.4)(react-dom@19.1.0(react@19.1.0))(react-router@7.6.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(three@0.172.0)(vite@6.3.5(@types/node@22.15.18)(jiti@2.4.2)(yaml@2.8.0))
-      '@shopify/oxygen-workers-types':
-        specifier: '4'
-        version: 4.1.9
       '@shopify/remix-oxygen':
-        specifier: '2'
-        version: 2.0.12(@remix-run/server-runtime@2.16.7(typescript@5.8.3))(@shopify/oxygen-workers-types@4.1.9)
+        specifier: '3'
+        version: 3.0.0(@shopify/oxygen-workers-types@4.1.9)(react-router@7.6.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       '@weaverse/react':
-        specifier: 4.3.4
+        specifier: 5.0.0-next.0
         version: link:../react
       react:
         specifier: '>=18'
@@ -112,16 +109,16 @@ importers:
         specifier: '>=18'
         version: 19.1.0(react@19.1.0)
       react-error-boundary:
-        specifier: ^4.0.13
-        version: 4.1.2(react@19.1.0)
+        specifier: ^6
+        version: 6.0.0(react@19.1.0)
       react-router:
-        specifier: ^7.0.0
+        specifier: ^7
         version: 7.6.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
 
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: 4.3.4
+        specifier: 5.0.0-next.0
         version: link:../core
       clsx:
         specifier: ^2.1.1
@@ -142,7 +139,7 @@ importers:
         specifier: ^1.2.8
         version: 1.2.8(react@19.1.0)
       '@weaverse/react':
-        specifier: 4.3.4
+        specifier: 5.0.0-next.0
         version: link:../react
       keen-slider:
         specifier: ^6.8.6
@@ -208,7 +205,7 @@ importers:
         specifier: 3.0.0
         version: 3.0.0(@shopify/oxygen-workers-types@4.1.9)(react-router@7.6.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       '@weaverse/hydrogen':
-        specifier: 4.3.4
+        specifier: 5.0.0-next.0
         version: link:../../packages/hydrogen
       class-variance-authority:
         specifier: 0.7.1
@@ -314,7 +311,7 @@ importers:
         specifier: 19.1.5
         version: 19.1.5(@types/react@19.1.5)
       '@weaverse/biome':
-        specifier: 1.1.0
+        specifier: 1.1.1-next.0
         version: link:../../packages/biome
       postcss:
         specifier: 8.5.3
@@ -1971,19 +1968,6 @@ packages:
       typescript:
         optional: true
 
-  '@remix-run/router@1.23.0':
-    resolution: {integrity: sha512-O3rHJzAQKamUz1fvE0Qaw0xSFqsA/yafi2iqeE0pvdFtCO1viYx8QL6f3Ln/aCCTLxs68SLf0KPM9eSeM8yBnA==}
-    engines: {node: '>=14.0.0'}
-
-  '@remix-run/server-runtime@2.16.7':
-    resolution: {integrity: sha512-3aZZG8KBUQTenscOnV68AEwStRgx/rVvD8tkxwm92Zx7QMO/UZhhuNcZE9bvD5zTpp2sLwjwCTUK1eEJgTpKfg==}
-    engines: {node: '>=18.0.0'}
-    peerDependencies:
-      typescript: ^5.1.0
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
   '@repeaterjs/repeater@3.0.6':
     resolution: {integrity: sha512-Javneu5lsuhwNCryN+pXH93VPQ8g0dBX7wItHFgYiwQmzE1sVdg5tWHiOgHywzL2W21XQopa7IwIEnNbmeUJYA==}
 
@@ -2133,12 +2117,6 @@ packages:
   '@shopify/oxygen-workers-types@4.1.9':
     resolution: {integrity: sha512-glFNW1i57hu2EYjR3y34k6laXniKh5b8MHdCTmfo+fdw7hznCZLrMWsrvZZSEJnaUkvvs1FIKGTi5W7m0mjxiA==}
 
-  '@shopify/remix-oxygen@2.0.12':
-    resolution: {integrity: sha512-GThkuiL3FzuA5pVxCRSvsGOTYx92EjMbGBn3GUMSWspkXmjIUffB5KDsbVeTh9Lf/U5Do6lVeHrveW5hIEiqRg==}
-    peerDependencies:
-      '@remix-run/server-runtime': ^2.16.1
-      '@shopify/oxygen-workers-types': ^3.17.3 || ^4.1.2
-
   '@shopify/remix-oxygen@3.0.0':
     resolution: {integrity: sha512-dMEM2FJPo6f/+0q/knJruGXeDjVNen2ADrTX+3QDdced06suQ3bZLQUEsq5J04Nqm091bvhvPtUkFO/Bd5g06g==}
     peerDependencies:
@@ -2181,9 +2159,6 @@ packages:
   '@types/better-sqlite3@7.6.13':
     resolution: {integrity: sha512-NMv9ASNARoKksWtsq/SHakpYAYnhBrQgGD8zkLYk/jaK8jUGn08CfEdTRgYhMypUQAfzSP8W6gNLe0q19/t4VA==}
 
-  '@types/cookie@0.6.0':
-    resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
-
   '@types/estree@1.0.7':
     resolution: {integrity: sha512-w28IoSUCJpidD/TGviZwwMJckNESJZXFu7NBZ5YJ4mEUnNraUn9Pm8HSZm/jDF1pDWYKspWE7oVphigUPRakIQ==}
 
@@ -2215,9 +2190,6 @@ packages:
 
   '@types/ws@8.18.1':
     resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
-
-  '@web3-storage/multipart-parser@1.0.0':
-    resolution: {integrity: sha512-BEO6al7BYqcnfX15W2cnGR+Q566ACXAT9UQykORCWW80lmkpWsnEob6zJS1ZVBKsSJC8+7vJkHwlp+lXG1UCdw==}
 
   '@whatwg-node/disposablestack@0.0.6':
     resolution: {integrity: sha512-LOtTn+JgJvX8WfBVJtF08TGrdjuFzGJc4mkP8EdDI8ADbvO7kiexYep1o8dwnt0okb0jYclCDXF13xU7Ge4zSw==}
@@ -4243,8 +4215,8 @@ packages:
     peerDependencies:
       react: ^19.1.0
 
-  react-error-boundary@4.1.2:
-    resolution: {integrity: sha512-GQDxZ5Jd+Aq/qUxbCm1UtzmL/s++V7zKgE8yMktJiCQXCCFZnMZh9ng+6/Ne6PjNSXH0L9CjeOEREfRnq6Duag==}
+  react-error-boundary@6.0.0:
+    resolution: {integrity: sha512-gdlJjD7NWr0IfkPlaREN2d9uUZUlksrfOx7SX62VRerwXbMY6ftGCIZua1VG1aXFNOimhISsTq+Owp725b9SiA==}
     peerDependencies:
       react: '>=16.13.1'
 
@@ -4862,9 +4834,6 @@ packages:
     resolution: {integrity: sha512-auJRbYZ8SGJVqvzTikpg1bsRAsiI9Tk0/SDkA5Xgg0GdiHDH/BOzv1ZjDE2mjmlrO/obr19Dw+39OlMhwLffrw==}
     cpu: [arm64]
     os: [linux]
-
-  turbo-stream@2.4.1:
-    resolution: {integrity: sha512-v8kOJXpG3WoTN/+at8vK7erSzo6nW6CIaeOvNOkHQVDajfz1ZVeSxCbc6tOH4hrGZW7VUCV0TOXd8CPzYnYkrw==}
 
   turbo-windows-64@2.5.3:
     resolution: {integrity: sha512-arLQYohuHtIEKkmQSCU9vtrKUg+/1TTstWB9VYRSsz+khvg81eX6LYHtXJfH/dK7Ho6ck+JaEh5G+QrE1jEmCQ==}
@@ -6440,7 +6409,7 @@ snapshots:
   '@graphql-tools/optimize@2.0.0(graphql@16.11.0)':
     dependencies:
       graphql: 16.11.0
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   '@graphql-tools/prisma-loader@8.0.17(@types/node@22.15.18)(graphql@16.11.0)':
     dependencies:
@@ -6476,7 +6445,7 @@ snapshots:
       '@ardatan/relay-compiler': 12.0.3(graphql@16.11.0)
       '@graphql-tools/utils': 10.8.6(graphql@16.11.0)
       graphql: 16.11.0
-      tslib: 2.6.3
+      tslib: 2.8.1
     transitivePeerDependencies:
       - encoding
 
@@ -7222,20 +7191,6 @@ snapshots:
     optionalDependencies:
       typescript: 5.8.3
 
-  '@remix-run/router@1.23.0': {}
-
-  '@remix-run/server-runtime@2.16.7(typescript@5.8.3)':
-    dependencies:
-      '@remix-run/router': 1.23.0
-      '@types/cookie': 0.6.0
-      '@web3-storage/multipart-parser': 1.0.0
-      cookie: 0.7.2
-      set-cookie-parser: 2.7.1
-      source-map: 0.7.4
-      turbo-stream: 2.4.1
-    optionalDependencies:
-      typescript: 5.8.3
-
   '@repeaterjs/repeater@3.0.6': {}
 
   '@rollup/rollup-android-arm-eabi@4.41.1':
@@ -7423,11 +7378,6 @@ snapshots:
 
   '@shopify/oxygen-workers-types@4.1.9': {}
 
-  '@shopify/remix-oxygen@2.0.12(@remix-run/server-runtime@2.16.7(typescript@5.8.3))(@shopify/oxygen-workers-types@4.1.9)':
-    dependencies:
-      '@remix-run/server-runtime': 2.16.7(typescript@5.8.3)
-      '@shopify/oxygen-workers-types': 4.1.9
-
   '@shopify/remix-oxygen@3.0.0(@shopify/oxygen-workers-types@4.1.9)(react-router@7.6.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))':
     dependencies:
       '@shopify/oxygen-workers-types': 4.1.9
@@ -7466,8 +7416,6 @@ snapshots:
     dependencies:
       '@types/node': 22.15.18
 
-  '@types/cookie@0.6.0': {}
-
   '@types/estree@1.0.7': {}
 
   '@types/js-cookie@2.2.7': {}
@@ -7501,8 +7449,6 @@ snapshots:
   '@types/ws@8.18.1':
     dependencies:
       '@types/node': 22.15.18
-
-  '@web3-storage/multipart-parser@1.0.0': {}
 
   '@whatwg-node/disposablestack@0.0.6':
     dependencies:
@@ -9528,7 +9474,7 @@ snapshots:
       react: 19.1.0
       scheduler: 0.26.0
 
-  react-error-boundary@4.1.2(react@19.1.0):
+  react-error-boundary@6.0.0(react@19.1.0):
     dependencies:
       '@babel/runtime': 7.27.1
       react: 19.1.0
@@ -10177,8 +10123,6 @@ snapshots:
 
   turbo-linux-arm64@2.5.3:
     optional: true
-
-  turbo-stream@2.4.1: {}
 
   turbo-windows-64@2.5.3:
     optional: true
