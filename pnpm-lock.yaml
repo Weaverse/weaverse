@@ -100,7 +100,7 @@ importers:
         specifier: '3'
         version: 3.0.0(@shopify/oxygen-workers-types@4.1.9)(react-router@7.6.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       '@weaverse/react':
-        specifier: 5.0.0-next.0
+        specifier: 5.0.0
         version: link:../react
       react:
         specifier: '>=18'
@@ -118,7 +118,7 @@ importers:
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: 5.0.0-next.0
+        specifier: 5.0.0
         version: link:../core
       clsx:
         specifier: ^2.1.1
@@ -139,7 +139,7 @@ importers:
         specifier: ^1.2.8
         version: 1.2.8(react@19.1.0)
       '@weaverse/react':
-        specifier: 5.0.0-next.0
+        specifier: 5.0.0
         version: link:../react
       keen-slider:
         specifier: ^6.8.6
@@ -205,7 +205,7 @@ importers:
         specifier: 3.0.0
         version: 3.0.0(@shopify/oxygen-workers-types@4.1.9)(react-router@7.6.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       '@weaverse/hydrogen':
-        specifier: 5.0.0-next.0
+        specifier: 5.0.0
         version: link:../../packages/hydrogen
       class-variance-authority:
         specifier: 0.7.1
@@ -311,7 +311,7 @@ importers:
         specifier: 19.1.5
         version: 19.1.5(@types/react@19.1.5)
       '@weaverse/biome':
-        specifier: 1.1.1-next.0
+        specifier: 1.1.1
         version: link:../../packages/biome
       postcss:
         specifier: 8.5.3
