@@ -9,7 +9,7 @@
 
 import * as stitches from '@stitches/core'
 import type Stitches from '@stitches/core/types/stitches'
-import type { RefObject } from 'react'
+import { type RefObject, createRef } from 'react'
 import pkg from '../package.json'
 import type {
   BreakPoints,
@@ -25,7 +25,7 @@ import { stitchesUtils } from './utils/stitches'
 
 export class WeaverseItemStore extends EventEmitter {
   weaverse: Weaverse
-  ref: RefObject<HTMLElement> = { current: null }
+  ref: RefObject<HTMLElement> = createRef<HTMLElement>()
   _store: ElementData = { id: '', type: '' }
   stitchesClass = ''
 
