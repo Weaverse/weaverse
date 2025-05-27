@@ -6,12 +6,12 @@ order: 0
 
 # Weaverse Hydrogen Documentation
 
-> **🚀 New in v5**: Weaverse now uses React Router v7! [See the announcement](/docs/hydrogen/v5-announcement) and [migration guide](/docs/hydrogen/migration-to-v5).
+> **🚀 Weaverse v5 & React Router v7 Migration Guide**: Everything you need to know about v5 and upgrading is in our [Comprehensive Migration Guide](/docs/hydrogen/migration-to-v5).
 
 ## Quick Start
 
 - [Getting Started](/docs/hydrogen/getting-started) - Set up your first Weaverse Hydrogen project
-- [Migration to v5](/docs/hydrogen/migration-to-v5) - Upgrade from previous versions to React Router v7
+- [Weaverse v5 & React Router v7 Migration Guide](/docs/hydrogen/migration-to-v5) - Key features, benefits, and upgrade instructions.
 
 ## Documentation
 

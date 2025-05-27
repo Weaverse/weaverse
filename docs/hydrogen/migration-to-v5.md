@@ -1,25 +1,46 @@
 ---
-title: Migrating to Weaverse v5 (React Router v7)
-description: 'Complete guide for upgrading your Weaverse Hydrogen project from Remix to React Router v7'
+title: Weaverse v5 & React Router v7 Migration Guide
+description: 'Comprehensive guide to Weaverse v5, including the migration from Remix to React Router v7, new features, and upgrade instructions.'
 publishedAt: May 27, 2025
 updatedAt: May 27, 2025
-order: 10
+order: 1 # Make this a prominent guide
 published: true
+featured: true # Highlight this guide
 ---
 
-# Migrating to Weaverse v5 (React Router v7)
+# 🚀 Weaverse v5 is Here - Powered by React Router v7
 
-Weaverse v5 introduces a major architectural change, migrating from Remix to React Router v7 to align with [Shopify Hydrogen's May 2025 release](https://hydrogen.shopify.dev/update/may-2025). This guide will help you upgrade your existing Weaverse Hydrogen project.
+We're excited to announce the release of **Weaverse v5**, marking a major milestone in our journey to provide the best developer experience for building Shopify Hydrogen storefronts. This guide provides all the information you need about this release, including how to upgrade your existing Weaverse Hydrogen project from Remix to React Router v7.
 
-## Overview
+Weaverse v5 introduces a major architectural change, migrating from Remix to React Router v7 to align with [Shopify Hydrogen's May 2025 release](https://hydrogen.shopify.dev/update/may-2025).
 
-The migration to React Router v7 brings several benefits:
-- **Better Performance**: Improved tree-shaking and bundle optimization
-- **Enhanced Developer Experience**: Faster hot reloading and better error messages
+## What's New in v5?
+
+### React Router v7 Foundation
+- **Modern Architecture**: Complete migration from Remix to React Router v7
+- **Better Performance**: Improved tree-shaking, faster builds, and better runtime performance
+- **Enhanced DX**: Faster hot reloading and clearer error messages
 - **Future-Proof**: Aligned with Shopify Hydrogen's long-term roadmap
-- **Modern Architecture**: Latest React Router patterns and conventions
 
-## Before You Begin
+### Key Benefits
+
+**🚀 Performance Improvements**
+- Faster build times with better tree-shaking
+- Optimized bundle sizes for production
+- Improved development server startup times
+
+**🛠️ Developer Experience**
+- Enhanced hot module reloading
+- Better TypeScript integration
+- Clearer error messages and debugging
+- Modern React patterns and best practices
+
+**🔮 Future-Ready**
+- Aligned with [Shopify Hydrogen May 2025 release](https://hydrogen.shopify.dev/update/may-2025)
+- Compatible with the latest React ecosystem
+- Foundation for upcoming Weaverse features
+
+## Before You Begin Migration
 
 ⚠️ **Important**: This is a major version upgrade with breaking changes. Please:
 
@@ -69,7 +90,7 @@ Follow the manual migration steps to upgrade your current project in place.
 - Complex deployment configurations
 - Want to maintain project history
 
-## Option 1: Creating a New Project
+## Option 1: Creating a New Project (Fresh Start)
 
 ### Step 1: Create New Project
 
@@ -102,7 +123,7 @@ In your Weaverse dashboard:
 2. Update your Weaverse project's production URL
 3. Test thoroughly before switching traffic
 
-## Option 2: Manual Migration
+## Option 2: Manual Migration (In-Place Upgrade)
 
 ### Prerequisites
 
@@ -174,18 +195,7 @@ export default defineConfig({
     tailwindcss(),
     hydrogen(),
     oxygen(),
--   reactRouter({
--     presets: [hydrogen.v3preset()],
--     future: {
--       v3_fetcherPersist: true,
--       v3_relativeSplatPath: true,
--       v3_throwAbortReason: true,
--       v3_lazyRouteDiscovery: true,
--       v3_routeConfig: true,
--       v3_singleFetch: true,
--     },
--   }),
-+   reactRouter(),
+    reactRouter(),
     tsconfigPaths(),
   ],
   // ... rest of config
@@ -208,19 +218,18 @@ Update `env.d.ts`:
 
 ```typescript
 // env.d.ts
-- declare module '@shopify/remix-oxygen' {
-+ declare module 'react-router' {
-+   // TODO: remove this once we've migrated to `Route.LoaderArgs` for our loaders
-+   interface LoaderFunctionArgs {
-+     context: AppLoadContext;
-+   }
-+
-+   // TODO: remove this once we've migrated to `Route.ActionArgs` for our actions
-+   interface ActionFunctionArgs {
-+     context: AppLoadContext;
-+   }
-    // ... rest of your types
+declare module 'react-router' {
+  // TODO: remove this once we've migrated to `Route.LoaderArgs` for our loaders
+  interface LoaderFunctionArgs {
+    context: AppLoadContext;
   }
+
+  // TODO: remove this once we've migrated to `Route.ActionArgs` for our actions
+  interface ActionFunctionArgs {
+    context: AppLoadContext;
+  }
+  // ... rest of your types
+}
 ```
 
 Update `tsconfig.json`:
@@ -231,10 +240,10 @@ Update `tsconfig.json`:
     "./**/*.d.ts",
     "./**/*.ts",
     "./**/*.tsx",
-+   ".react-router/types/**/*"
+    ".react-router/types/**/*"
   ],
   "compilerOptions": {
-+   "rootDirs": [".", "./.react-router/types"],
+    "rootDirs": [".", "./.react-router/types"],
     // ... rest of options
   }
 }
@@ -331,23 +340,48 @@ import type { LoaderFunctionArgs } from 'react-router';
 4. **Preview Mode**: Test preview functionality
 5. **Section Management**: Test adding/removing/reordering sections
 
+## What This Means for You (If Upgrading)
+
+### If You're Just Getting Started with Weaverse
+- **No action needed for new projects** - all new projects created with `npx @weaverse/cli@latest create` will use React Router v7.
+- Enjoy better performance and developer experience out of the box.
+- Access to the latest Weaverse features and improvements.
+
+### If You Have an Existing Weaverse Project (v4 or older)
+- **Plan your migration** - this is a major version with breaking changes.
+- **Test thoroughly** - use this guide and test in a development environment first.
+- **Take your time** - v4 will continue to receive critical bug fixes, but we recommend upgrading for the best experience and future features.
+
+## Timeline & Backwards Compatibility
+
+- **v5.0.0**: React Router v7 support released.
+- **v4.x**: Continues to receive critical bug fixes for a limited time.
+- **Migration Period**: We recommend migrating within 6 months for the best experience and continued support.
+- **Support**: Full support and guidance available during the migration period.
+
 ## Getting Help
 
 If you encounter issues during migration:
 
-1. **Check the Console**: Look for specific error messages
-2. **Review Documentation**: Refer to [React Router v7 docs](https://reactrouter.com/7.0.0)
-3. **Community Support**: Join our [Discord community](https://discord.gg/weaverse)
-4. **Official Support**: Contact support@weaverse.io
+1. **Check the Console**: Look for specific error messages.
+2. **Review Documentation**: Refer to [React Router v7 docs](https://reactrouter.com/7.0.0).
+3. **Community Support**: Join our [Slack Community](https://wvse.cc/weaverse-slack).
+4. **Official Support**: Contact support@weaverse.io.
 
 ## What's Next?
 
 After successful migration:
 
-1. **Update Documentation**: Update your project's README and docs
-2. **Train Your Team**: Familiarize your team with React Router v7 patterns
-3. **Optimize Performance**: Take advantage of new React Router v7 features
-4. **Plan Updates**: Schedule regular updates to stay current
+1. **Update Documentation**: Update your project's README and internal docs.
+2. **Train Your Team**: Familiarize your team with React Router v7 patterns.
+3. **Optimize Performance**: Take advantage of new React Router v7 features.
+4. **Plan Updates**: Schedule regular updates to stay current.
+
+## Thank You
+
+This release represents months of work to ensure Weaverse stays at the forefront of modern web development. We're grateful for our community's feedback and support throughout this journey.
+
+Ready to upgrade? Follow the steps above or [create a new project](/docs/hydrogen/getting-started) to experience the power of Weaverse v5!
 
 ---
 
@@ -356,4 +390,5 @@ After successful migration:
 - [Shopify Hydrogen May 2025 Release](https://hydrogen.shopify.dev/update/may-2025)
 - [React Router v7 Documentation](https://reactrouter.com/7.0.0)
 - [Weaverse Documentation](/docs)
-- [Migration Support Forum](https://community.weaverse.io) 
+- [Full Weaverse Changelog](../../CHANGELOG.md#500---2025-05-27)
+- *Questions about the migration? Join our [Slack community](https://wvse.cc/weaverse-slack) or reach out to our support team at support@weaverse.io* 
