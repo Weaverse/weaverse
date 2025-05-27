@@ -9,7 +9,7 @@
 
 import * as stitches from '@stitches/core'
 import type Stitches from '@stitches/core/types/stitches'
-import type { RefObject } from 'react'
+import { type RefObject, createRef } from 'react'
 import pkg from '../package.json'
 import type {
   BreakPoints,
@@ -25,7 +25,7 @@ import { stitchesUtils } from './utils/stitches'
 
 export class WeaverseItemStore extends EventEmitter {
   weaverse: Weaverse
-  ref: RefObject<HTMLElement> = { current: null }
+  ref: RefObject<HTMLElement> = createRef<HTMLElement>()
   _store: ElementData = { id: '', type: '' }
   stitchesClass = ''
 
@@ -170,15 +170,7 @@ export class Weaverse extends EventEmitter {
   /**
    * Register the custom React Component to Weaverse, store it into Weaverse.elementRegistry
    */
-  static registerElement(element: { type: string; [x: string]: any }) {
-    if (element?.type) {
-      if (!Weaverse.elementRegistry.has(element.type)) {
-        Weaverse.elementRegistry.set(element?.type, element)
-      }
-    } else {
-      console.error("Cannot register element without 'type'.")
-    }
-  }
+  static registerElement = registerElement
 
   get elementRegistry() {
     return Weaverse.elementRegistry
@@ -204,6 +196,15 @@ export class Weaverse extends EventEmitter {
   setProjectData = (data: WeaverseProjectDataType) => {
     this.data = data
     this.initProject()
+  }
+}
+export function registerElement(element: { type: string; [x: string]: any }) {
+  if (element?.type) {
+    if (!Weaverse.elementRegistry.has(element.type)) {
+      Weaverse.elementRegistry.set(element?.type, element)
+    }
+  } else {
+    console.error("Cannot register element without 'type'.")
   }
 }
 

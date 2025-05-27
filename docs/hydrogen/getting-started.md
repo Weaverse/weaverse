@@ -1,15 +1,17 @@
 ---
 title: Getting Started
-description: 'Begin your Weaverse journey: Learn how to install the app on Shopify and set up your first Weaverse Hydrogen project.'
+description: 'Begin your Weaverse journey: Learn how to install the app on Shopify and set up your first Weaverse Hydrogen project with React Router v7.'
 publishedAt: November 20, 2023
-updatedAt: April 03, 2025
+updatedAt: May 27, 2025
 order: 1
 published: true
 ---
 
 ## Welcome to Weaverse
 
-Transform your Shopify store with Weaverse Hydrogen - the modern solution for building fast, customizable storefronts. This guide will help you get started with your first Weaverse project in minutes.
+Transform your Shopify store with Weaverse Hydrogen - the modern solution for building fast, customizable storefronts powered by React Router v7. This guide will help you get started with your first Weaverse project in minutes.
+
+> **🚀 New in v5**: Weaverse now uses React Router v7 for improved performance and developer experience. If you're upgrading from a previous version, see our [Migration Guide](/docs/hydrogen/migration-to-v5).
 
 ## Try the Weaverse Playground
 

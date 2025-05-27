@@ -1,5 +1,5 @@
-import { useRouteLoaderData } from '@remix-run/react'
 import { EventEmitter, isBrowser } from '@weaverse/react'
+import { useRouteLoaderData } from 'react-router'
 import type {
   HydrogenThemeSchema,
   HydrogenThemeSettings,

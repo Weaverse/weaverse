@@ -2,12 +2,21 @@
 title: Integrating Weaverse into an Existing Hydrogen Project
 description: Enhance your existing Hydrogen project by integrating the Weaverse SDK for visual page building and theme customization.
 publishedAt: November 20, 2023
-updatedAt: May 07, 2025
+updatedAt: May 27, 2025
 order: 0
 published: true
 ---
 
 This guide details how to integrate the Weaverse SDK into your **existing** Shopify Hydrogen project. By adding Weaverse, you empower your storefront with visual page building, theme customization through the Weaverse Studio, and access to a growing library of components, significantly speeding up development and content management.
+
+> **🚀 Important: React Router v7 Migration**
+> 
+> Weaverse v5 has migrated to React Router v7, aligning with [Shopify Hydrogen's May 2025 release](https://hydrogen.shopify.dev/update/may-2025). Choose the correct version:
+> 
+> - **Hydrogen with React Router v7**: Use `@weaverse/hydrogen@5.0.0+` (latest)
+> - **Hydrogen with Remix**: Use `@weaverse/hydrogen@4.x` (legacy support)
+> 
+> If you're unsure which version you have, check your `package.json` for `react-router` vs `@remix-run/react` dependencies.
 
 ## Prerequisites
 
@@ -17,16 +26,48 @@ Before you start, ensure you have:
 *   Node.js (version recommended by Hydrogen) and npm/yarn installed.
 *   Your Hydrogen project connected to your Shopify store.
 *   A Weaverse account and a Weaverse Project created for your storefront.
-*   Basic familiarity with Remix and Hydrogen concepts.
+*   Basic familiarity with Hydrogen concepts and either:
+    *   **React Router v7** (for Hydrogen 2025.5.0+) - recommended for new projects
+    *   **Remix** (for older Hydrogen versions) - legacy support
+
+### Migration Consideration
+
+If you're currently using Hydrogen with Remix and want to upgrade to React Router v7, consider following the [official Shopify migration guide](https://hydrogen.shopify.dev/update/may-2025) first, then install Weaverse v5. Alternatively, you can use Weaverse v4 with your current Remix setup.
 
 ## Step 1: Install Weaverse SDK
 
-Navigate to your Hydrogen project directory in your terminal and add the Weaverse Hydrogen SDK:
+Navigate to your Hydrogen project directory in your terminal and add the Weaverse Hydrogen SDK.
+
+### For Hydrogen with React Router v7 (Recommended)
+
+If your project uses React Router v7 (Hydrogen 2025.5.0+), install the latest version:
 
 ```bash
-npm install @weaverse/hydrogen
+npm install @weaverse/hydrogen@latest
 # or
-yarn add @weaverse/hydrogen
+yarn add @weaverse/hydrogen@latest
+```
+
+### For Hydrogen with Remix (Legacy)
+
+If your project still uses Remix (Hydrogen versions before 2025.5.0), install v4:
+
+```bash
+npm install @weaverse/hydrogen@4
+# or  
+yarn add @weaverse/hydrogen@4
+```
+
+### How to Check Your Hydrogen Version
+
+Check your `package.json` dependencies:
+
+- **React Router v7**: Contains `react-router` and `@shopify/hydrogen@2025.5.0+`
+- **Remix**: Contains `@remix-run/react` and `@shopify/remix-oxygen`
+
+```bash
+# Check your Hydrogen version
+npm list @shopify/hydrogen
 ```
 
 ## Step 2: Configure Environment Variables
@@ -265,6 +306,8 @@ A crucial step is to initialize the Weaverse client and add it to your Hydrogen 
 ### 1. Update Your Context File
 
 Modify your app context file (usually `app/lib/context.ts` or similar) to initialize and include the WeaverseClient:
+
+> **Note**: The code examples below show the React Router v7 version (Weaverse v5). If you're using Remix with Weaverse v4, the import paths will be `@shopify/remix-oxygen` instead of the native React Router modules.
 
 ```typescript
 // app/lib/context.ts
@@ -524,7 +567,7 @@ The `WeaverseContent` component will automatically render the content based on t
 
 1.  **Start your dev server:** `npm run dev`
 2.  **Open Weaverse Studio:** Go to your project in Weaverse.
-3.  **Enter Development Mode:** Click the "Development" button (often looks like `< >`) and enter your local dev server URL (usually `http://localhost:3000`).
+3.  **Update Preview URL:** In Weaverse Studio, update the preview URL in your project settings to your local dev server URL (usually `http://localhost:3000`).
 
 You should now see your Hydrogen storefront loaded inside the Weaverse editor, ready for visual editing!
 
