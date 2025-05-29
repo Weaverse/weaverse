@@ -1,5 +1,11 @@
 # @weaverse/biome
 
+## 1.2.2
+
+### Patch Changes
+
+- update biome rules
+
 ## 1.2.1
 
 ### Patch Changes

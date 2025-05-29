@@ -19,29 +19,6 @@
     ]
   },
   "linter": {
-    "rules": {
-      "suspicious": {
-        "noExplicitAny": "off",
-        "noImplicitAnyLet": "off",
-        "noArrayIndexKey": "off"
-      },
-      "style": {
-        "noParameterAssign": "off",
-        "useAsConstAssertion": "error",
-        "useDefaultParameterLast": "error",
-        "useEnumInitializers": "error",
-        "useSelfClosingElements": "error",
-        "useSingleVarDeclarator": "error",
-        "noUnusedTemplateLiteral": "error",
-        "useNumberNamespace": "error",
-        "noInferrableTypes": "error",
-        "noUselessElse": "error"
-      },
-      "a11y": {
-        "useKeyWithClickEvents": "off",
-        "noSvgWithoutTitle": "off",
-        "noStaticElementInteractions": "warn"
-      }
-    }
+    "rules": {}
   }
 }
