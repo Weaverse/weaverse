@@ -42,7 +42,8 @@
         "useMediaCaption": "warn",
         "useKeyWithClickEvents": "off",
         "useButtonType": "warn",
-        "noLabelWithoutControl": "warn"
+        "noLabelWithoutControl": "warn",
+        "noStaticElementInteractions": "warn"
       }
     }
   },
