@@ -1,17 +1,17 @@
 import {
+  isBrowser,
   type PlatformTypeEnum,
+  useSafeExternalStore,
   Weaverse,
   WeaverseItemStore,
   WeaverseRoot,
-  isBrowser,
-  useSafeExternalStore,
 } from '@weaverse/react'
 import {
   type ComponentType,
-  type JSX,
-  Suspense,
   createContext,
+  type JSX,
   memo,
+  Suspense,
 } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Await, useLoaderData } from 'react-router'

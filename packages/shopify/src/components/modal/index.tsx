@@ -7,9 +7,8 @@ import type {
 import { Close, Portal, Root, Trigger } from '@radix-ui/react-dialog'
 
 import { forwardRef } from 'react'
-
+import type { ModalContentProps } from '~/types/components'
 import { Icon } from '../icons'
-
 import {
   StyledCloseIcon,
   StyledContent,
@@ -17,8 +16,6 @@ import {
   StyledTitle,
 } from './styled'
 import { useOpenChangeEffect } from './use-open-change-effect'
-
-import type { ModalContentProps } from '~/types/components'
 
 export let Modal = (props: DialogProps) => {
   let { children, open, defaultOpen, onOpenChange, ...rest } = props

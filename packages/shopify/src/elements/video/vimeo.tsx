@@ -1,5 +1,3 @@
-import React from 'react'
-
 import type { VimeoElementProps } from '~/types/components'
 
 export function Vimeo(props: VimeoElementProps) {

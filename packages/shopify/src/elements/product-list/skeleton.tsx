@@ -2,6 +2,7 @@ import type { ElementCSS } from '@weaverse/react'
 
 import { Components } from '~/components'
 import type { ProductSkeletonProps } from '~/types'
+
 let { Icon } = Components
 
 export function Skeleton(props: ProductSkeletonProps) {

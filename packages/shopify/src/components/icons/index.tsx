@@ -1,9 +1,6 @@
 import clsx from 'clsx'
-import React from 'react'
-
-import * as PhosphorIcons from './phosphor'
-
 import type { WeaverseIconProps } from '~/types/components'
+import * as PhosphorIcons from './phosphor'
 
 export function Icon({ name, className, ...props }: WeaverseIconProps) {
   let WeaverseIcon = PhosphorIcons[name]

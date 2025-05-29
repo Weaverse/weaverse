@@ -15,7 +15,9 @@
     "url": "git+https://github.com/Weaverse/weaverse.git",
     "directory": "packages/hydrogen"
   },
-  "files": ["dist/*"],
+  "files": [
+    "dist/*"
+  ],
   "engines": {
     "node": ">=20"
   },
@@ -25,8 +27,13 @@
     "clean": "rimraf dist"
   },
   "tsup": {
-    "entry": ["src/index.ts"],
-    "format": ["esm", "cjs"],
+    "entry": [
+      "src/index.ts"
+    ],
+    "format": [
+      "esm",
+      "cjs"
+    ],
     "dts": true,
     "sourcemap": true,
     "clean": true,

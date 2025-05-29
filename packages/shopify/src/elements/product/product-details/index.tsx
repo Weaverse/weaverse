@@ -1,13 +1,11 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef } from 'react'
-
-import { ProductSkeleton, css as skeletonCss } from './skeleton'
-import { useProduct } from './use-product'
-
+import { forwardRef } from 'react'
 import { Components } from '~/components'
 import { ProductContext } from '~/context'
 import { useWeaverseShopify } from '~/hooks/use-weaverse-shopify'
 import type { ProductDetailsProps } from '~/types'
+import { ProductSkeleton, css as skeletonCss } from './skeleton'
+import { useProduct } from './use-product'
 
 let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
   (props, ref) => {

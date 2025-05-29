@@ -3,12 +3,10 @@ import type { ElementCSS } from '@weaverse/react'
 import clsx from 'clsx'
 
 import { forwardRef } from 'react'
-
-import { useSlideshowConfigs } from './use-slideshow-configs'
-
 import { Arrows } from '~/components/slider/arrows'
 import { Dots } from '~/components/slider/dots'
 import type { SlideshowProps } from '~/types/components'
+import { useSlideshowConfigs } from './use-slideshow-configs'
 
 let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
   let {

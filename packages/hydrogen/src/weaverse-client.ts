@@ -1,8 +1,8 @@
 import {
-  type HydrogenEnv,
-  type I18nBase,
   createWithCache,
   generateCacheControlHeader,
+  type HydrogenEnv,
+  type I18nBase,
 } from '@shopify/hydrogen'
 import type {
   AllCacheOptions,

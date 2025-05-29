@@ -1,5 +1,5 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { Children, forwardRef } from 'react'
+import { Children, forwardRef } from 'react'
 
 import { Components } from '~/components'
 import type { ContainerElementProps } from '~/types/components'

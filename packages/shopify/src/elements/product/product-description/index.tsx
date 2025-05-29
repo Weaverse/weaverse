@@ -2,11 +2,9 @@ import type { ElementCSS } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
 
 import { forwardRef, useContext } from 'react'
-
-import { ViewDetails } from './view-details'
-
 import { useProductContext } from '~/hooks/use-product-context'
 import type { ProductDescriptionProps } from '~/types'
+import { ViewDetails } from './view-details'
 
 let ProductDescription = forwardRef<HTMLDivElement, ProductDescriptionProps>(
   (props, ref) => {

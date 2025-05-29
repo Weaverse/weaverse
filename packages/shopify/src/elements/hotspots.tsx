@@ -1,6 +1,6 @@
 import type { ElementCSS } from '@weaverse/react'
 import type { CSSProperties } from 'react'
-import React, { forwardRef } from 'react'
+import { forwardRef } from 'react'
 
 import { Components } from '~/components'
 import { Image } from '~/elements/product/product-media/image'

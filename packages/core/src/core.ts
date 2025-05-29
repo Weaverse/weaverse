@@ -9,7 +9,7 @@
 
 import * as stitches from '@stitches/core'
 import type Stitches from '@stitches/core/types/stitches'
-import { type RefObject, createRef } from 'react'
+import { createRef, type RefObject } from 'react'
 import pkg from '../package.json'
 import type {
   BreakPoints,

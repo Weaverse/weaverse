@@ -1,12 +1,10 @@
 import type { ElementCSS } from '@weaverse/react'
-import React, { forwardRef } from 'react'
-
-import { slidePositionMap } from './position'
-
+import { forwardRef } from 'react'
 import { Background } from '~/components/background'
 import { Overlay } from '~/components/overlay'
 import Placeholder from '~/components/placeholder'
 import type { SlideProps } from '~/types/components'
+import { slidePositionMap } from './position'
 
 let Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
   let {

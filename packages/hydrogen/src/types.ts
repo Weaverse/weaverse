@@ -16,8 +16,8 @@ import type {
   WeaverseResourcePickerData,
   WeaverseVideo,
 } from '@weaverse/react'
-import type { ForwardRefExoticComponent } from 'react'
 import type * as React from 'react'
+import type { ForwardRefExoticComponent } from 'react'
 import type { NavigateFunction } from 'react-router'
 import type { WeaverseHydrogen } from './index'
 import type { ThemeSettingsStore } from './utils/use-theme-settings-store'
