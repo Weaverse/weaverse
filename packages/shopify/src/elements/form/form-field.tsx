@@ -1,5 +1,3 @@
-import React from 'react'
-
 import type { FieldProps } from '~/types'
 
 export function FormField({ field, formId }: FieldProps) {

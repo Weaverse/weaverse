@@ -1,7 +1,7 @@
 {
   "name": "weaverse-sdks",
   "description": "Weaverse SDKs monorepo.",
-  "version": "3.2.9",
+  "version": "5.0.0",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -18,13 +18,13 @@
     "changeset": "changeset",
     "typecheck": "turbo typecheck --parallel",
     "biome": "biome check --diagnostic-level=error",
-    "biome:fix": "biome check --write",
+    "biome:fix": "biome check --write --diagnostic-level=error",
     "format": "biome format --write",
     "format:check": "biome format",
     "ci": "biome ci --changed"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
+    "@biomejs/biome": "^2.0.0-beta.5",
     "@changesets/cli": "^2.29.4",
     "@types/node": "22.15.18",
     "@types/react": "19.1.4",

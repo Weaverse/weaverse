@@ -1,13 +1,11 @@
 import type { ElementCSS } from '@weaverse/react'
 
 import { forwardRef, useState } from 'react'
-
-import { QuantitySelector } from './quantity-selector'
-
 import { Components } from '~/components'
 import { useProductContext } from '~/hooks/use-product-context'
 import type { ProductBuyButtonProps } from '~/types'
 import { addProductToCart } from '~/utils/cart'
+import { QuantitySelector } from './quantity-selector'
 
 let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
   (props, ref) => {

@@ -1,7 +1,7 @@
 import type { ElementCSS } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
 import clsx from 'clsx'
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 
 import { Components } from '~/components'
 import { PRODUCT_IMAGE_PLACEHOLDER } from '~/constant'

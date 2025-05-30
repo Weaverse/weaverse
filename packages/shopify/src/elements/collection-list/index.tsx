@@ -1,14 +1,12 @@
 import type { ElementCSS } from '@weaverse/react'
 
 import { forwardRef } from 'react'
-
-import { CollectionCard, css as collectionCardCss } from './collection-card'
-import { Skeleton, css as skeletonCss } from './skeleton'
-import { useCollections } from './use-collections'
-
 import { Components } from '~/components'
 import { useWeaverseShopify } from '~/hooks/use-weaverse-shopify'
 import type { CollectionListProps } from '~/types'
+import { CollectionCard, css as collectionCardCss } from './collection-card'
+import { Skeleton, css as skeletonCss } from './skeleton'
+import { useCollections } from './use-collections'
 
 let { Placeholder, Slider } = Components
 

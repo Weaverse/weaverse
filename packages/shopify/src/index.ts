@@ -1,9 +1,5 @@
 import type { PlatformTypeEnum } from '@weaverse/react'
 import { Weaverse, WeaverseItemStore } from '@weaverse/react'
-
-import { DEFAULT_INTEGRATIONS } from './constant'
-import { SHOPIFY_ELEMENTS } from './elements'
-
 import * as ThirdPartyElement from '~/elements/third-party'
 import type {
   ElementData,
@@ -14,10 +10,12 @@ import type {
   WeaverseShopifySectionData,
 } from '~/types'
 import type { ThirdPartyIntegration } from '~/types/shopify'
+import { DEFAULT_INTEGRATIONS } from './constant'
+import { SHOPIFY_ELEMENTS } from './elements'
 
-export * from './WeaverseShopifyRoot'
 export * from './types'
 export * from './utils/fetch-project-data'
+export * from './WeaverseShopifyRoot'
 
 export let registerThirdPartyElements = () => {
   // biome-ignore lint/complexity/noForEach: <explanation>

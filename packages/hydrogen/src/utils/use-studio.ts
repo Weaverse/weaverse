@@ -1,11 +1,11 @@
+import { loadScript } from '@weaverse/react'
+import { useEffect } from 'react'
 import {
   useLocation,
   useNavigate,
   useNavigation,
   useRevalidator,
-} from '@remix-run/react'
-import { loadScript } from '@weaverse/react'
-import { useEffect } from 'react'
+} from 'react-router'
 import type { WeaverseHydrogen } from '~/index'
 import { useThemeSettingsStore } from './use-theme-settings-store'
 

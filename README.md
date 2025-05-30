@@ -6,11 +6,12 @@
 [![Linted with Biome](https://img.shields.io/badge/Linted_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
 [![Checked with Biome](https://img.shields.io/badge/Checked_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
 
+> **🚀 Weaverse v5 is here!** Now powered by React Router v7 for better performance and developer experience. [See what's new →](./CHANGELOG.md#500---2024-12-20)
 
 ## Overview
 
 The **Weaverse SDKs** is a public collection of SDKs for integrating **Weaverse Headless CMS** with modern `React/JamStack`
-frameworks such as _Shopify Hydrogen_, _Remix_, or _Next.js_. Developed by The Weaverse Team, these SDKs are designed to
+frameworks such as _Shopify Hydrogen_, _React Router_, or _Next.js_. Developed by The Weaverse Team, these SDKs are designed to
 simplify and enhance the integration of dynamic, content-rich web applications with the Weaverse CMS.
 
 ## Quick Links
@@ -41,11 +42,7 @@ Engage with the Weaverse community through these channels:
 - [`@weaverse/react`](https://github.com/Weaverse/weaverse/tree/main/packages/react): React components and utilities for
   CMS integration.
 - [`@weaverse/hydrogen`](https://github.com/Weaverse/weaverse/tree/main/packages/hydrogen): SDK for Shopify Hydrogen
-  integration with Weaverse CMS.
-- 🚧 [`@weaverse/remix`](https://github.com/Weaverse/weaverse/tree/main/packages/remix): Integration tools for Remix
-  applications with Weaverse CMS.
-- 🚧 [`@weaverse/next`](https://github.com/Weaverse/weaverse/tree/main/packages/next): Utilities for integrating Next.js
-  applications with Weaverse CMS.
+  integration with Weaverse CMS, now powered by React Router v7.
 
 ## Contribution Guidelines
 

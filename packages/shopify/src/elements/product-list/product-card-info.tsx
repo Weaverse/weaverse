@@ -1,14 +1,11 @@
 import type { ElementCSS } from '@weaverse/react'
-import React from 'react'
-
+import { weaverseShopifyConfigs } from '~/proxy'
+import type { ProductCardInfoProps } from '~/types'
+import { formatMoney } from '~/utils/money'
 import {
   ProductCardOptions,
   css as productCardOptionsCss,
 } from './product-card-options'
-
-import { weaverseShopifyConfigs } from '~/proxy'
-import type { ProductCardInfoProps } from '~/types'
-import { formatMoney } from '~/utils/money'
 
 export function ProductCardInfo(props: ProductCardInfoProps) {
   let { product, showProductOption, optionName, optionLimit } = props

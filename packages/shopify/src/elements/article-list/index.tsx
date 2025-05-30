@@ -1,14 +1,12 @@
 import type { ElementCSS } from '@weaverse/react'
 import { forwardRef } from 'react'
-
-import { ArticleCard, css as articleCardCss } from './article-card'
-import { Skeleton, css as skeletonCss } from './skeleton'
-
 import { Components } from '~/components'
 import { useWeaverseShopify } from '~/hooks/use-weaverse-shopify'
 import { weaverseShopifyArticles, weaverseShopifyArticlesByBlog } from '~/proxy'
 import type { ArticleListProps } from '~/types'
 import type { ShopifyArticle } from '~/types/shopify'
+import { ArticleCard, css as articleCardCss } from './article-card'
+import { Skeleton, css as skeletonCss } from './skeleton'
 
 let { Placeholder, Slider } = Components
 

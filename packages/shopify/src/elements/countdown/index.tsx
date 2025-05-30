@@ -1,12 +1,10 @@
 import type { ElementCSS } from '@weaverse/react'
 import { WeaverseContext } from '@weaverse/react'
 import React, { forwardRef, useContext, useEffect } from 'react'
-
-import { TimerBlock } from './timer-block'
-
 import { COUNTDOWN_KEY, TIMES } from '~/constant'
 import type { CountdownElementProps } from '~/types/components'
 import { getTime } from '~/utils'
+import { TimerBlock } from './timer-block'
 
 let Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
   (props, ref) => {

@@ -1,12 +1,10 @@
 import clsx from 'clsx'
 import * as React from 'react'
 import { memo, useEffect, useRef } from 'react'
-
+import { useItemInstance, useWeaverse } from '~/hooks'
 import { WeaverseContextProvider, WeaverseItemContext } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
 import { generateItemClassName } from './utils/css'
-
-import { useItemInstance, useWeaverse } from '~/hooks'
 
 let reactVersion = Number(React.version?.split('.')[0]) || 0
 
@@ -23,6 +21,7 @@ export const useSafeExternalStore = (
 
   // In client environment, use React.useSyncExternalStore if available (React 18+)
   if (React.useSyncExternalStore) {
+    // biome-ignore lint/correctness/useHookAtTopLevel: <$>
     return React.useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
   }
 

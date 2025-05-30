@@ -1,20 +1,20 @@
-import { Await, useLoaderData } from '@remix-run/react'
 import {
+  isBrowser,
   type PlatformTypeEnum,
+  useSafeExternalStore,
   Weaverse,
   WeaverseItemStore,
   WeaverseRoot,
-  isBrowser,
-  useSafeExternalStore,
 } from '@weaverse/react'
 import {
   type ComponentType,
-  type JSX,
-  Suspense,
   createContext,
+  type JSX,
   memo,
+  Suspense,
 } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
+import { Await, useLoaderData } from 'react-router'
 import { defaultComponents } from '~/components'
 import type {
   HydrogenComponentData,
@@ -110,7 +110,7 @@ function RenderRoot(props: {
   let { data, components } = props
   for (let comp of [...components, ...defaultComponents]) {
     comp?.schema?.type &&
-      WeaverseHydrogen.registerElement({
+      registerComponent({
         type: comp?.schema.type,
         Component: comp.default,
         schema: comp.schema,
@@ -130,6 +130,10 @@ function RenderRoot(props: {
       <StudioBridge context={weaverse} />
     </>
   )
+}
+
+export function registerComponent(element: HydrogenElement) {
+  WeaverseHydrogen.registerElement(element)
 }
 
 export let WeaverseHydrogenRoot = memo(

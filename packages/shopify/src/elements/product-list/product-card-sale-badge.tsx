@@ -1,5 +1,4 @@
 import type { ElementCSS } from '@weaverse/react'
-import React from 'react'
 
 export function ProductCardSaleBadge() {
   return <span className="wv-pcard__sale-badge">Sale</span>

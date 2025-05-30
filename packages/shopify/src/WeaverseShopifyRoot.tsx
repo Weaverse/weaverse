@@ -1,10 +1,9 @@
 import { WeaverseRoot } from '@weaverse/react'
-import React from 'react'
 
 import type { WeaverseShopifyParams } from '~/types'
 import { useStudio } from './hooks/use-studio'
 
-import { WeaverseShopify, registerShopifyElements } from './index'
+import { registerShopifyElements, WeaverseShopify } from './index'
 
 export function createWeaverseShopify(params: WeaverseShopifyParams) {
   registerShopifyElements()

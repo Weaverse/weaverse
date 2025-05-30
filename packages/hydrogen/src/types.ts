@@ -1,8 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/triple-slash-reference
-/// <reference types="@shopify/remix-oxygen" />
-/// <reference types="@shopify/oxygen-workers-types" />
-
-import type { NavigateFunction } from '@remix-run/react'
 import type { HydrogenContext, I18nBase } from '@shopify/hydrogen'
 import type {
   AppLoadContext,
@@ -21,7 +16,9 @@ import type {
   WeaverseResourcePickerData,
   WeaverseVideo,
 } from '@weaverse/react'
+import type * as React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
+import type { NavigateFunction } from 'react-router'
 import type { WeaverseHydrogen } from './index'
 import type { ThemeSettingsStore } from './utils/use-theme-settings-store'
 import type { WeaverseClient } from './weaverse-client'
@@ -124,7 +121,9 @@ export type HydrogenComponentPresets = {
 }
 
 export interface HydrogenElement {
-  Component: ForwardRefExoticComponent<HydrogenComponentProps>
+  Component:
+    | ForwardRefExoticComponent<HydrogenComponentProps>
+    | ((props: HydrogenComponentProps) => React.JSX.Element)
   type: string
   schema?: HydrogenComponentSchema
   loader?: (args: ComponentLoaderArgs) => Promise<unknown>
@@ -139,7 +138,7 @@ export interface WeaverseHydrogenParams
 }
 
 export interface HydrogenComponent<T extends HydrogenComponentProps = any> {
-  default: ForwardRefExoticComponent<T>
+  default: ForwardRefExoticComponent<T> | ((props: T) => React.JSX.Element)
   schema: HydrogenComponentSchema
   loader?: (args: ComponentLoaderArgs) => Promise<unknown>
 }

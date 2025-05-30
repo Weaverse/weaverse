@@ -1,11 +1,9 @@
 import { styled } from '@stitches/react'
 import clsx from 'clsx'
-import type { MouseEvent } from 'react'
 import type React from 'react'
-
-import { Icon } from '../icons'
-
+import type { MouseEvent } from 'react'
 import type { SliderArrowsProps } from '~/types/components'
+import { Icon } from '../icons'
 
 export function Arrows(props: SliderArrowsProps) {
   let { currentSlide, instanceRef, className, icon, offset } = props

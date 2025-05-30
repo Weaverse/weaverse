@@ -88,5 +88,5 @@ export {
   useWeaverse,
 }
 export * from './types'
-export * from './weaverse-client'
 export * from './WeaverseHydrogenRoot'
+export * from './weaverse-client'

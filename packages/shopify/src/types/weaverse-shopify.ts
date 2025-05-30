@@ -11,8 +11,8 @@ import type {
   RangeInputConfigs,
   SelectInputConfigs,
   ToggleGroupConfigs,
-  WeaverseCSSProperties,
   WeaverseCoreParams,
+  WeaverseCSSProperties,
   WeaverseProjectDataType,
 } from '@weaverse/react'
 

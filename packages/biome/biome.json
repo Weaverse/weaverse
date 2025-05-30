@@ -1,42 +1,31 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.2/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.0.0-beta.5/schema.json",
   "linter": {
     "rules": {
-      "correctness": {
-        "noSwitchDeclarations": "warn",
-        "noChildrenProp": "warn",
-        "useExhaustiveDependencies": "warn"
-      },
       "style": {
-        "useConst": "off",
-        "noUselessElse": "warn",
-        "noNonNullAssertion": "warn",
-        "useSelfClosingElements": "warn",
-        "useTemplate": "warn",
-        "noParameterAssign": "warn",
-        "noUnusedTemplateLiteral": "warn"
+        "useConst": "off"
       },
-      "security": {
-        "noDangerouslySetInnerHtml": "off",
-        "noDangerouslySetInnerHtmlWithChildren": "warn"
+      "a11y": {
+        "noStaticElementInteractions": "off",
+        "useKeyWithClickEvents": "off",
+        "useAriaPropsSupportedByRole": "warn",
+        "noSvgWithoutTitle": "off",
+        "useButtonType": "warn",
+        "useSemanticElements": "warn",
+        "useFocusableInteractive": "warn",
+        "noLabelWithoutControl": "warn",
+        "useKeyWithMouseEvents": "warn"
       },
       "suspicious": {
         "noArrayIndexKey": "warn",
-        "noExplicitAny": "warn",
-        "noImplicitAnyLet": "warn",
-        "noShadowRestrictedNames": "warn",
-        "noGlobalIsNan": "warn"
+        "noAssignInExpressions": "warn",
+        "noImplicitAnyLet": "warn"
       },
-      "complexity": {
-        "noForEach": "warn",
-        "useLiteralKeys": "warn"
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
       },
-      "a11y": {
-        "noSvgWithoutTitle": "warn",
-        "useMediaCaption": "warn",
-        "useKeyWithClickEvents": "off",
-        "useButtonType": "warn",
-        "noLabelWithoutControl": "warn"
+      "correctness": {
+        "useHookAtTopLevel": "warn"
       }
     }
   },

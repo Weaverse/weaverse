@@ -2,7 +2,7 @@
   "name": "@weaverse/react",
   "author": "Weaverse Team",
   "description": "React bindings for Weaverse",
-  "version": "4.3.4",
+  "version": "5.0.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -15,7 +15,9 @@
     "access": "public",
     "@weaverse:registry": "https://registry.npmjs.org"
   },
-  "files": ["dist/*"],
+  "files": [
+    "dist/*"
+  ],
   "engines": {
     "node": ">=18"
   },
@@ -25,15 +27,20 @@
     "clean": "rimraf dist"
   },
   "tsup": {
-    "entry": ["src/index.ts"],
-    "format": ["esm", "cjs"],
+    "entry": [
+      "src/index.ts"
+    ],
+    "format": [
+      "esm",
+      "cjs"
+    ],
     "dts": true,
     "sourcemap": true,
     "clean": true,
     "outDir": "dist"
   },
   "dependencies": {
-    "@weaverse/core": "4.3.4",
+    "@weaverse/core": "5.0.0",
     "clsx": "^2.1.1",
     "react": ">=18",
     "react-dom": ">=18"

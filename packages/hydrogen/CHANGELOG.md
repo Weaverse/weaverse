@@ -1,5 +1,37 @@
 # @weaverse/hydrogen
 
+## 5.0.0
+
+### Major Changes
+
+- 7164bdb: Migrate to React Router v7 from Remix
+
+### Patch Changes
+
+- Release Candidate
+- RC.1
+- Updated dependencies
+- Updated dependencies
+  - @weaverse/react@5.0.0
+
+## 5.0.0-next.1
+
+### Patch Changes
+
+- Release Candidate
+- Updated dependencies
+  - @weaverse/react@5.0.0-next.1
+
+## 5.0.0-next.0
+
+### Major Changes
+
+- Migrate to React Router v7 from Remix
+
+### Patch Changes
+
+- @weaverse/react@5.0.0-next.0
+
 ## 4.3.4
 
 ### Patch Changes
