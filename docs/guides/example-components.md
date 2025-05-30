@@ -73,7 +73,7 @@ const variants = cva("flex flex-col [&_.paragraph]:mx-[unset]", {
     {
       height: "full",
       enableTransparentHeader: false,
-      className: "h-screen-no-nav",
+      className: "h-screen-dynamic",
     },
   ],
   defaultVariants: {
