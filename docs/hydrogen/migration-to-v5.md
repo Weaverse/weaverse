@@ -391,4 +391,218 @@ Ready to upgrade? Follow the steps above or [create a new project](/docs/hydroge
 - [React Router v7 Documentation](https://reactrouter.com/7.0.0)
 - [Weaverse Documentation](/docs)
 - [Full Weaverse Changelog](../../CHANGELOG.md#500---2025-05-27)
-- *Questions about the migration? Join our [Slack community](https://wvse.cc/weaverse-slack) or reach out to our support team at support@weaverse.io* 
+- *Questions about the migration? Join our [Slack community](https://wvse.cc/weaverse-slack) or reach out to our support team at support@weaverse.io*
+
+## Migration to v5
+
+Weaverse v5 introduces several important changes, including the migration to React Router v7 and updates to component schema properties. This guide will help you migrate from v4 to v5 smoothly.
+
+### Breaking Changes
+
+#### 1. React Router v7 Migration
+
+Weaverse v5 has migrated from Remix to React Router v7, aligning with Shopify Hydrogen's latest architecture. This affects import statements and some routing patterns.
+
+**Before (v4 with Remix):**
+```tsx
+import { useLoaderData } from '@remix-run/react'
+import type { LoaderFunction } from '@remix-run/node'
+```
+
+**After (v5 with React Router v7):**
+```tsx
+import { useLoaderData } from 'react-router'
+import type { Route } from './+types/page'
+```
+
+#### 2. Component Schema: Inspector → Settings
+
+The `inspector` property in component schemas has been deprecated in favor of `settings`. While `inspector` is still supported for backward compatibility, new components should use `settings`.
+
+**Before (v4):**
+```tsx
+export const schema: HydrogenComponentSchema = {
+  type: 'my-component',
+  title: 'My Component',
+  inspector: [
+    {
+      group: 'Content',
+      inputs: [
+        {
+          type: 'text',
+          name: 'heading',
+          label: 'Heading',
+          defaultValue: 'Welcome'
+        }
+      ]
+    }
+  ]
+}
+```
+
+**After (v5):**
+```tsx
+export const schema: HydrogenComponentSchema = {
+  type: 'my-component',
+  title: 'My Component',
+  settings: [
+    {
+      group: 'Content',
+      inputs: [
+        {
+          type: 'text',
+          name: 'heading',
+          label: 'Heading',
+          defaultValue: 'Welcome'
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Migration Notes:**
+- The system automatically handles both `inspector` and `settings` during the transition
+- When both properties exist, `settings` takes priority
+- Components using only `inspector` will show deprecation warnings but continue to work
+- The structure of the inputs array remains exactly the same
+
+#### 3. Theme Schema Migration
+
+Theme schemas should also be updated to use `settings` instead of `inspector`:
+
+**Before (v4):**
+```tsx
+export const themeSchema: HydrogenThemeSchema = {
+  info: {
+    name: 'My Theme',
+    version: '1.0.0',
+    author: 'Developer'
+  },
+  inspector: [
+    {
+      group: 'Colors',
+      inputs: [
+        {
+          type: 'color',
+          name: 'primaryColor',
+          label: 'Primary Color',
+          defaultValue: '#000000'
+        }
+      ]
+    }
+  ]
+}
+```
+
+**After (v5):**
+```tsx
+export const themeSchema: HydrogenThemeSchema = {
+  info: {
+    name: 'My Theme',
+    version: '1.0.0',
+    author: 'Developer'
+  },
+  settings: [
+    {
+      group: 'Colors',
+      inputs: [
+        {
+          type: 'color',
+          name: 'primaryColor',
+          label: 'Primary Color',
+          defaultValue: '#000000'
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Migration Steps
+
+#### Step 1: Update Dependencies
+
+Update your Weaverse dependencies to v5:
+
+```bash
+npm install @weaverse/hydrogen@latest
+```
+
+#### Step 2: Migrate Component Schemas
+
+1. **Rename `inspector` to `settings`** in all component schemas:
+   ```bash
+   # You can use find and replace in your editor
+   # Find: inspector: [
+   # Replace: settings: [
+   ```
+
+2. **Update TypeScript types** if you have any custom type definitions referencing the `inspector` property.
+
+#### Step 3: Update Theme Schema
+
+Update your theme schema file (`app/weaverse/schema.server.ts`) to use `settings` instead of `inspector`.
+
+#### Step 4: Test Your Components
+
+1. **Start your development server** and verify that all components render correctly
+2. **Check the Weaverse Studio** to ensure all settings panels work as expected
+3. **Look for deprecation warnings** in the console and address any remaining `inspector` usage
+
+#### Step 5: React Router Migration (if needed)
+
+If you're also migrating from Remix to React Router v7, follow these additional steps:
+
+1. **Update import statements** throughout your codebase
+2. **Update route configurations** to use React Router v7 patterns
+3. **Update type definitions** to use React Router v7 types
+
+## Backward Compatibility
+
+Weaverse v5 maintains backward compatibility for the `inspector` property:
+
+- Components with only `inspector` will continue to work but show deprecation warnings
+- Components with both `inspector` and `settings` will use `settings` and ignore `inspector`
+- The input structure and all input types remain unchanged
+
+## Common Issues and Solutions
+
+### Issue: Deprecation Warnings
+
+**Problem:** Console shows warnings about `inspector` property usage.
+
+**Solution:** Update your schemas to use `settings` instead of `inspector`.
+
+### Issue: Settings Not Appearing
+
+**Problem:** Component settings don't appear in Weaverse Studio after migration.
+
+**Solution:** 
+1. Ensure you've renamed `inspector` to `settings` correctly
+2. Restart your development server
+3. Clear browser cache and refresh Weaverse Studio
+
+### Issue: Type Errors
+
+**Problem:** TypeScript errors related to schema properties.
+
+**Solution:** Update your TypeScript types to reference `settings` instead of `inspector`.
+
+## Need Help?
+
+If you encounter issues during migration:
+
+1. Check the [Component Schema Guide](/docs/guides/component-schema) for detailed information
+2. Review the [API Types documentation](/docs/api/types) for updated type definitions
+3. Join our [Discord community](https://discord.gg/weaverse) for support
+4. Open an issue on [GitHub](https://github.com/weaverse/weaverse) if you find bugs
+
+## Benefits of v5
+
+After migration, you'll benefit from:
+
+- **Improved performance** with React Router v7
+- **Better type safety** with updated schema properties
+- **Enhanced developer experience** with clearer naming conventions
+- **Future-proof architecture** aligned with the latest Shopify Hydrogen standards 

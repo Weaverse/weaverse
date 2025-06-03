@@ -39,12 +39,13 @@ interface HydrogenComponentProps<L = any> extends WeaverseElement {
 
 ### HydrogenComponentSchema
 
-Defines the schema for a component, including inspector inputs and settings.
+Defines the schema for a component, including settings inputs and configuration.
 
 ```typescript
 interface HydrogenComponentSchema {
   childTypes?: string[];
-  inspector: InspectorGroup[];
+  settings: InspectorGroup[];
+  inspector?: InspectorGroup[]; // Deprecated: use 'settings' instead
   presets?: Omit<HydrogenComponentPresets, 'type'>;
   limit?: number;
   enabledOn?: {
@@ -55,6 +56,8 @@ interface HydrogenComponentSchema {
   groups?: ('*' | 'header' | 'footer' | 'body')[];
 }
 ```
+
+> **Note**: The `inspector` property has been deprecated in favor of `settings`. While `inspector` is still supported for backward compatibility, new components should use `settings`.
 
 ### HydrogenComponentData
 
@@ -73,7 +76,9 @@ interface HydrogenComponentData {
 
 ## Inspector Types
 
-Types used for defining the inspector UI in Weaverse Studio.
+Types used for defining the settings UI in Weaverse Studio.
+
+> **Note**: These types are still called "Inspector" types for historical reasons, but they are used to define the `settings` property in component schemas. The `inspector` property itself has been deprecated in favor of `settings`.
 
 ### InspectorGroup
 
@@ -163,7 +168,8 @@ interface HydrogenThemeSchema {
     documentationUrl: string;
     supportUrl: string;
   };
-  inspector: InspectorGroup[];
+  settings: InspectorGroup[];
+  inspector?: InspectorGroup[]; // Deprecated: use 'settings' instead
   i18n?: {
     urlStructure: 'url-path' | 'subdomain' | 'top-level-domain';
     defaultLocale: WeaverseI18n;
@@ -171,6 +177,8 @@ interface HydrogenThemeSchema {
   };
 }
 ```
+
+> **Note**: The `inspector` property has been deprecated in favor of `settings`. While `inspector` is still supported for backward compatibility, new theme schemas should use `settings`.
 
 ## Miscellaneous Types
 
@@ -256,7 +264,7 @@ function HeroBanner({
 
 const schema: HydrogenComponentSchema = {
   type: 'hero-banner',
-  inspector: [
+  settings: [
     {
       group: 'Content',
       inputs: [

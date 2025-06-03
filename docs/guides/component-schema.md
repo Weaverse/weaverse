@@ -67,7 +67,7 @@ There are two ways to register components in Weaverse:
      enabledOn: {
        pages: ['PRODUCT']
      },
-     inspector: [
+     settings: [
        {
          group: 'Layout',
          inputs: layoutInputs
@@ -95,7 +95,8 @@ The `HydrogenComponentSchema` acts as a comprehensive definition for your compon
 interface HydrogenComponentSchema extends ElementSchema {
   title: string
   type: string
-  inspector: InspectorGroup[]
+  settings: InspectorGroup[]
+  inspector?: InspectorGroup[] // Deprecated: use 'settings' instead
   childTypes?: string[]
   presets?: Omit<HydrogenComponentPresets, 'type'>
   limit?: number
@@ -105,6 +106,8 @@ interface HydrogenComponentSchema extends ElementSchema {
   }
 }
 ```
+
+> **⚠️ Migration Notice**: The `inspector` property has been deprecated in favor of `settings`. While `inspector` is still supported for backward compatibility, new components should use `settings`. The Weaverse system automatically handles both properties during the transition period.
 
 Each property serves a specific purpose in defining how your component behaves in the Weaverse ecosystem. Let's explore each in detail.
 
@@ -151,15 +154,17 @@ When components are registered with Weaverse, they're stored in a registry using
 }
 ```
 
-### `inspector`
+### `settings`
 
 ```tsx
-inspector: InspectorGroup[]
+settings: InspectorGroup[]
 ```
 
-The `inspector` property defines what customization options are available to users in the Weaverse Studio. It's organized into groups that appear as collapsible sections in the editor interface.
+The `settings` property defines what customization options are available to users in the Weaverse Studio. It's organized into groups that appear as collapsible sections in the editor interface.
 
-#### Inspector Group Structure
+> **Note**: This property was previously called `inspector` and that name is still supported for backward compatibility. However, new components should use `settings` as the canonical property name.
+
+#### Settings Group Structure
 
 ```tsx
 interface InspectorGroup {
@@ -173,7 +178,7 @@ interface InspectorGroup {
 - **`inputs`**: An array of input configurations that determine the UI controls available for customization.
 
 **Under the Hood:**
-The `inspector` property is used by the Weaverse Studio to generate the UI controls. When a user changes a value in the inspector, the Weaverse Studio updates the component's data, which triggers a re-render with the new values.
+The `settings` property is used by the Weaverse Studio to generate the UI controls. When a user changes a value in the settings panel, the Weaverse Studio updates the component's data, which triggers a re-render with the new values.
 
 The schema also influences data initialization. The `generateDataFromSchema` utility function extracts default values from your schema to create the initial state of a component when it's added to a page.
 
@@ -185,7 +190,7 @@ The schema also influences data initialization. The `generateDataFromSchema` uti
 
 **Example:**
 ```tsx
-inspector: [
+settings: [
   {
     group: "Content",
     inputs: [
@@ -376,7 +381,7 @@ Understanding how data flows through the component schema system is crucial for 
 
 3. **Preset Application**: If presets are defined, they're applied on top of the default schema values.
 
-4. **User Customization**: When a user changes settings in the inspector, those values are saved to the component's data.
+4. **User Customization**: When a user changes settings in the settings panel, those values are saved to the component's data.
 
 5. **Component Rendering**: The component receives its data as props when rendered, allowing it to display the appropriate UI based on user customizations.
 
@@ -432,7 +437,7 @@ import type { HydrogenComponentSchema } from '@weaverse/hydrogen'
 export const schema: HydrogenComponentSchema = {
   title: 'Product Showcase',
   type: 'product-showcase',
-  inspector: [
+  settings: [
     {
       group: 'Content',
       inputs: [
@@ -585,7 +590,7 @@ The `shouldRevalidate` property on input settings allows you to trigger data rel
 
 ### Custom Heading Inputs
 
-The schema system supports special heading inputs that don't represent data, but help organize the inspector UI with section titles.
+The schema system supports special heading inputs that don't represent data, but help organize the settings UI with section titles.
 
 ```tsx
 // HeadingInput type from source code
@@ -606,9 +611,9 @@ export type HeadingInput = {
 
 ## Common Patterns and Best Practices
 
-### Organizing Inspector Groups
+### Organizing Settings Groups
 
-A consistent approach to inspector groups improves usability:
+A consistent approach to settings groups improves usability:
 
 1. **Content**: Text, images, and other primary content
 2. **Style**: Visual presentation, colors, typography, layouts
@@ -694,7 +699,7 @@ const typographyInputs = [
 
 export const schema: HydrogenComponentSchema = {
   // ...
-  inspector: [
+  settings: [
     {
       group: 'Typography',
       inputs: typographyInputs
@@ -704,13 +709,71 @@ export const schema: HydrogenComponentSchema = {
 }
 ```
 
+## Migration from Inspector to Settings
+
+If you have existing components using the `inspector` property, here's how to migrate them:
+
+### 1. Simple Rename
+
+```tsx
+// Before (deprecated)
+export const schema: HydrogenComponentSchema = {
+  type: 'my-component',
+  title: 'My Component',
+  inspector: [
+    {
+      group: 'Content',
+      inputs: [/* ... */]
+    }
+  ]
+}
+
+// After (recommended)
+export const schema: HydrogenComponentSchema = {
+  type: 'my-component',
+  title: 'My Component',
+  settings: [
+    {
+      group: 'Content',
+      inputs: [/* ... */]
+    }
+  ]
+}
+```
+
+### 2. Gradual Migration
+
+During the transition period, you can keep both properties. The system will use `settings` as the primary source and fall back to `inspector` if `settings` is not available:
+
+```tsx
+// Transition approach (will show deprecation warning)
+export const schema: HydrogenComponentSchema = {
+  type: 'my-component',
+  title: 'My Component',
+  settings: [
+    {
+      group: 'Content',
+      inputs: [/* new inputs */]
+    }
+  ],
+  inspector: [
+    {
+      group: 'Legacy',
+      inputs: [/* legacy inputs for backward compatibility */]
+    }
+  ]
+}
+```
+
+**Note**: When both properties exist, only `settings` will be used. The `inspector` property is ignored to prevent duplication.
+
 ## Troubleshooting
 
 ### Common Schema Issues
 
 1. **Duplicate Type Error**: Each component must have a unique `type`. Check for duplicates across your entire theme.
 
-2. **Missing Required Properties**: Ensure all required properties (`title`, `type`, `inspector`) are defined.
+2. **Missing Required Properties**: Ensure all required properties (`title`, `type`, `settings`) are defined.
 
 3. **Invalid Input Types**: Verify that all input `type` values match those supported by Weaverse.
 
@@ -722,6 +785,8 @@ export const schema: HydrogenComponentSchema = {
 
 7. **Schema Changes Not Reflecting**: Remember that schema changes require a server restart to take effect in development mode.
 
+8. **Deprecation Warnings**: If you see warnings about the `inspector` property, update your schema to use `settings` instead.
+
 ## Related Resources
 
 - [Input Settings Guide](/docs/guides/input-settings): Detailed information on all available input types
@@ -732,4 +797,4 @@ export const schema: HydrogenComponentSchema = {
 
 The `HydrogenComponentSchema` is the foundation of your component's interaction with the Weaverse ecosystem. A well-designed schema creates an intuitive editing experience, ensures components are used appropriately, and provides the flexibility merchants need.
 
-By understanding the properties and patterns described in this guide, you can create components that are both powerful for developers and accessible to merchants.
+By understanding the properties and patterns described in this guide, you can create components that are both powerful for developers and accessible to merchants. Remember to use `settings` for new components and migrate existing `inspector` properties when convenient.

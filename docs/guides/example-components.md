@@ -110,7 +110,7 @@ export default HeroImage;
 export const schema: HydrogenComponentSchema = {
   type: "hero-image",
   title: "Hero image",
-  inspector: [
+  settings: [
     {
       group: "Layout",
       inputs: [
@@ -257,7 +257,7 @@ export default FeaturedProduct;
 export const schema: HydrogenComponentSchema = {
   type: 'featured-product',
   title: 'Featured Product',
-  inspector: [
+  settings: [
     {
       group: 'Product',
       inputs: [
@@ -408,7 +408,7 @@ export default TeamMembers;
 export const schema: HydrogenComponentSchema = {
   type: "team-members",
   title: "Team Members",
-  inspector: [
+  settings: [
     {
       group: "Layout",
       inputs: [
@@ -569,7 +569,7 @@ export default ReviewList;
 export const schema: HydrogenComponentSchema = {
   type: "review-list",
   title: "Review List",
-  inspector: [
+  settings: [
     {
       group: "Display",
       inputs: [
@@ -668,7 +668,7 @@ export default ImageWithText;
 export const schema: HydrogenComponentSchema = {
   type: 'image-with-text',
   title: 'Image with Text',
-  inspector: [
+  settings: [
     {
       group: 'Layout',
       inputs: [

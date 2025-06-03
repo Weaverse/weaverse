@@ -112,7 +112,7 @@ export function generateDataFromSchema(
   const isComponentSchema = (
     s: HydrogenComponentSchema | HydrogenThemeSchema,
   ): s is HydrogenComponentSchema => {
-    return 'type' in s || 'childTypes' in s
+    return 'type' in s && typeof s.type === 'string'
   }
 
   if (isComponentSchema(schema)) {

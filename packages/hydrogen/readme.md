@@ -104,29 +104,46 @@ export default function Homepage() {
 
 Define your component's schema to control its behavior and interactivity within Weaverse Studio:
 
-```typescript
+```tsx
+// app/sections/Hero.tsx
 import type { HydrogenComponentSchema } from '@weaverse/hydrogen'
 
-export let schema: HydrogenComponentSchema = {
-  title: 'Product Card',
-  type: 'product-card',
-  inspector: [
+export type HeroProps = {
+  heading: string
+  description: string
+}
+
+export const schema: HydrogenComponentSchema = {
+  type: 'hero',
+  title: 'Hero Section',
+  settings: [
     {
-      group: 'Settings',
-      inputs: [], // Defining input settings
-    },
-  ],
-  childTypes: ['image', 'product-title', 'price'],
-  presets: {
-    type: 'product-card',
-    children: [{ type: 'image' }, { type: 'product-title' }, { type: 'price' }],
-  },
-  limit: 3,
-  enabledOn: {
-    pages: ['INDEX', 'PRODUCT', 'ALL_PRODUCTS'],
-    groups: ['body'],
-  },
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+      group: 'Content',
+      inputs: [
+        {
+          type: 'text',
+          name: 'heading',
+          label: 'Heading',
+          defaultValue: 'Welcome to our store'
+        },
+        {
+          type: 'textarea',
+          name: 'description', 
+          label: 'Description',
+          defaultValue: 'Discover amazing products'
+        }
+      ]
+    }
+  ]
+}
+
+export default function Hero({ heading, description }: HeroProps) {
+  return (
+    <section className="hero">
+      <h1>{heading}</h1>
+      <p>{description}</p>
+    </section>
+  )
 }
 ```
 
