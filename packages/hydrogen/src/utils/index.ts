@@ -112,7 +112,7 @@ export function generateDataFromSchema(
   const isComponentSchema = (
     s: HydrogenComponentSchema | HydrogenThemeSchema,
   ): s is HydrogenComponentSchema => {
-    return 'type' in s || 'settings' in s || 'childTypes' in s
+    return 'type' in s || 'childTypes' in s
   }
 
   if (isComponentSchema(schema)) {
@@ -141,9 +141,27 @@ export function generateDataFromSchema(
       }
     }
   } else {
-    // Handle HydrogenThemeSchema - it only has inspector
+    // Handle HydrogenThemeSchema
+    if (schema.settings) {
+      inspectorGroups = schema.settings
+    }
+
     if (schema.inspector) {
-      inspectorGroups = schema.inspector
+      if (schema.settings?.length) {
+        // Both exist - merge with settings taking priority
+        inspectorGroups = mergeInspectorSettings(
+          schema.settings,
+          schema.inspector,
+          'Theme Schema',
+        )
+      } else {
+        // Only inspector exists - use it but warn about deprecation
+        inspectorGroups = schema.inspector
+        logOnce(
+          'ThemeSchema',
+          `⚠️  Theme Schema: The 'inspector' property is deprecated. Please use 'settings' instead.`,
+        )
+      }
     }
   }
 
