@@ -1,5 +1,16 @@
 # @weaverse/react
 
+## 5.1.0
+
+### Minor Changes
+
+- Migrate `inspector` field to new `settings` property.
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/core@5.1.0
+
 ## 5.0.0
 
 ### Patch Changes

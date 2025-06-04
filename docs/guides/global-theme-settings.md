@@ -55,8 +55,24 @@ export let themeSchema: HydrogenThemeSchema = {
       }
     ),
   },
-  inspector: [
-    // Inspector groups will be defined here
+  settings: [
+    {
+      group: 'Layout',
+      inputs: [
+        {
+          type: 'range',
+          label: 'Container width',
+          name: 'pageWidth',
+          configs: {
+            min: 1000,
+            max: 1600,
+            step: 10,
+            unit: 'px',
+          },
+          defaultValue: 1200,
+        },
+      ],
+    },
   ],
 }
 ```
@@ -109,9 +125,9 @@ i18n: {
 },
 ```
 
-#### 3. Inspector
+#### 3. Settings
 
-The **`inspector`** section contains an array of **`InspectorGroup`** objects, each defining a logical group of related settings.
+The **`settings`** section contains an array of **`InspectorGroup`** objects, each defining a logical group of related settings.
 
 Each group contains:
 - A descriptive **`group`** name (e.g., "Layout", "Colors", "Typography")

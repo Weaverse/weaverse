@@ -53,7 +53,8 @@ export interface HydrogenComponentData extends ElementData {
 
 export interface HydrogenComponentSchema extends ElementSchema {
   childTypes?: string[]
-  inspector: InspectorGroup[]
+  inspector?: InspectorGroup[]
+  settings?: InspectorGroup[]
   presets?: Omit<HydrogenComponentPresets, 'type'>
   limit?: number
   enabledOn?: {
@@ -208,7 +209,8 @@ export interface HydrogenThemeSchema {
     documentationUrl: string
     supportUrl: string
   }
-  inspector: InspectorGroup[]
+  inspector?: InspectorGroup[]
+  settings?: InspectorGroup[]
   i18n?: {
     urlStructure: 'url-path' | 'subdomain' | 'top-level-domain'
     defaultLocale: WeaverseI18n

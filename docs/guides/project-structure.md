@@ -68,7 +68,7 @@ export type HeroProps = {
 export let schema = {
   title: 'Hero',
   type: 'hero',
-  inspector: [
+  settings: [
     {
       group: 'Content',
       inputs: [
