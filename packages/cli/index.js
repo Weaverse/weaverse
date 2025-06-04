@@ -192,7 +192,9 @@ Options:
             spinner.succeed('Dependencies installed successfully')
             console.log(chalk.green('\n🎉 Project created successfully!'))
             console.log(chalk.blue('\nNext steps:'))
-            console.log(chalk.gray(`1. cd ${argv['project-name']}`))
+            console.log(
+              chalk.gray(`1. cd ${toKebabCase(argv['project-name'])}`),
+            )
             console.log(
               chalk.gray('2. Pull your Shopify environment variables:'),
             )
@@ -217,7 +219,7 @@ Options:
         } else {
           console.log(chalk.green('\n🎉 Project created successfully!'))
           console.log(chalk.blue('\nNext steps:'))
-          console.log(chalk.gray(`1. cd ${argv['project-name']}`))
+          console.log(chalk.gray(`1. cd ${toKebabCase(argv['project-name'])}`))
           console.log(chalk.gray('2. Pull your Shopify environment variables:'))
           console.log(chalk.gray('   npx shopify hydrogen env pull'))
           console.log(chalk.gray('3. npm install'))
