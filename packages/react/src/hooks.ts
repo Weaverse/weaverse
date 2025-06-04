@@ -30,7 +30,7 @@ export let useChildInstances = (id?: string) => {
   let {
     data: { children },
   } = currentInstance
-  return children.map(({ id }: { id: string }) => {
-    return itemInstances.get(id)
-  }) as WeaverseItemStore[]
+  return children
+    .map(({ id }: { id: string }) => itemInstances.get(id))
+    .filter(Boolean) as WeaverseItemStore[]
 }
