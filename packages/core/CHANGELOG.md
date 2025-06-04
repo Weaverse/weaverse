@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 5.1.0
+
+### Minor Changes
+
+- Migrate `inspector` field to new `settings` property.
+
 ## 5.0.0
 
 ### Major Changes

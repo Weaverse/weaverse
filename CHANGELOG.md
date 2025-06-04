@@ -19,6 +19,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [5.1.0] - 2025-06-04
+
+### Added
+- Support for the new `settings` property in component and theme schemas.
+
+### Changed
+- Deprecated the old `inspector` property. Schemas should now use `settings`.
+
+### Migration
+- Refer to the updated documentation for guidance on migrating existing
+  components from `inspector` to `settings`.
+
 ## [5.0.0] - 2025-05-27
 
 ### 🚀 MAJOR RELEASE: React Router v7 Migration
