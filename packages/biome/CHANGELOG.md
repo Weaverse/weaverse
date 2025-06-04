@@ -1,5 +1,11 @@
 # @weaverse/biome
 
+## 1.2.3
+
+### Patch Changes
+
+- update biome config
+
 ## 1.2.2
 
 ### Patch Changes
