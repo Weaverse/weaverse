@@ -23,13 +23,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Support for the new `settings` property in component and theme schemas.
+- **Pilot Theme TailwindCSS v4 Migration**: The Pilot Weaverse Hydrogen Theme now uses TailwindCSS v4, bringing improved performance, better CSS-in-JS integration, and enhanced developer experience.
 
 ### Changed
 - Deprecated the old `inspector` property. Schemas should now use `settings`.
+- **TailwindCSS Configuration**: Updated Pilot theme build system and styling architecture to leverage TailwindCSS v4's new features including automatic CSS-in-JS support and improved build performance.
 
 ### Migration
 - Refer to the updated documentation for guidance on migrating existing
   components from `inspector` to `settings`.
+- **TailwindCSS v4 Migration**: For existing Pilot theme users, we recommend creating a new project with `npx @weaverse/cli@latest create` to get the latest TailwindCSS v4 setup, or cloning the updated Pilot template. TailwindCSS v4 introduces significant architectural changes that are best adopted in a fresh project setup. Refer to the [TailwindCSS v4 migration guide](https://tailwindcss.com/docs/upgrade-guide) for detailed information about the new features and improvements.
 
 ## [5.0.0] - 2025-05-27
 
