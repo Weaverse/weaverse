@@ -133,9 +133,9 @@ Each group contains:
 - A descriptive **`group`** name (e.g., "Layout", "Colors", "Typography")
 - An array of **`inputs`** representing individual settings
 
-### Inspector Group Example
+### Settings Group Example
 
-Here's a real example of an inspector group from the Pilot theme:
+Here's a real example of a settings group from the Pilot theme:
 
 ```tsx
 {
@@ -172,7 +172,7 @@ Here's a real example of an inspector group from the Pilot theme:
 
 ## Input Settings Reference
 
-Theme inspector inputs use the same structure as component inputs. Each input setting has standard attributes that determine how it appears and functions in the Weaverse Studio interface.
+Theme settings inputs use the same structure as component inputs. Each input setting has standard attributes that determine how it appears and functions in the Weaverse Studio interface.
 
 ```tsx
 {

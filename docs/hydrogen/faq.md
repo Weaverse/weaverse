@@ -90,7 +90,7 @@ export default CustomComponent;
 export const schema: HydrogenComponentSchema = {
   type: 'custom-component',
   title: 'Custom Component',
-  inspector: [
+  settings: [
     {
       group: 'Content',
       inputs: [
@@ -134,7 +134,7 @@ export const loader = async ({ weaverse, data }: ComponentLoaderArgs) => {
 
 The data is then available in your component via `props.loaderData`.
 
-### What inspector input types are available for component customization?
+### What settings input types are available for component customization?
 
 Weaverse provides a variety of input types to customize your components, including:
 - Text fields

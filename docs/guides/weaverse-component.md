@@ -138,7 +138,7 @@ const MyComponent = forwardRef<HTMLElement, MyComponentProps>((props, ref) => {
 export const schema: HydrogenComponentSchema = {
   type: 'my-component',
   title: 'My Component',
-  inspector: [
+  settings: [
     {
       group: 'Content',
       inputs: [
@@ -165,7 +165,7 @@ export default MyComponent;
 1. **HydrogenComponentProps**: Base props interface that all Weaverse components extend
 2. **forwardRef**: Used to properly pass refs through the component tree (optional if props are spread correctly)
 3. **type property in schema**: Unique identifier for the component (must be unique across all components)
-4. **inspector**: Defines the UI controls in Weaverse Studio
+4. **settings**: Defines the UI controls in Weaverse Studio
 5. **children prop**: Components can render child components or elements
 
 ### Advanced Component Structure
@@ -260,7 +260,7 @@ export const schema: HydrogenComponentSchema = {
   enabledOn: {
     pages: ["PRODUCT"],
   },
-  inspector: [
+  settings: [
     {
       group: "Layout",
       inputs: layoutInputs.filter((i) => i.name !== "borderRadius"),
@@ -320,7 +320,7 @@ The schema defines how your component appears and behaves in Weaverse Studio. It
 export const schema: HydrogenComponentSchema = {
   type: 'component-type',      // Unique identifier
   title: 'Component Title',    // Display name in the Studio
-  inspector: [                 // Controls in the inspector panel
+  settings: [                 // Controls in the settings panel
     {
       group: 'Group Name',     // Groups related controls
       inputs: [
@@ -432,7 +432,7 @@ Each input type has specific configuration options:
 export const schema: HydrogenComponentSchema = {
   type: "hero-image",
   title: "Hero image",
-  inspector: [
+  settings: [
     {
       group: "Layout",
       inputs: [
@@ -598,7 +598,7 @@ export default FeaturedProduct;
 export const schema: HydrogenComponentSchema = {
   type: 'featured-product',
   title: 'Featured Product',
-  inspector: [
+  settings: [
     {
       group: 'Product',
       inputs: [
@@ -1033,7 +1033,7 @@ const HeroImage = forwardRef<HTMLElement, HeroImageProps & SectionProps>(
 export const schema: HydrogenComponentSchema = {
   type: "hero-image",
   title: "Hero image",
-  inspector: [
+  settings: [
     {
       group: "Layout",
       inputs: [

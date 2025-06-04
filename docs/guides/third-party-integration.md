@@ -100,7 +100,7 @@ Many third-party applications provide React components that you can incorporate 
    export const schema: HydrogenComponentSchema = {
      type: 'third-party-widget',
      title: 'Third Party Widget',
-     inspector: [
+     settings: [
        {
          group: 'Widget Settings',
          inputs: [
@@ -232,7 +232,7 @@ For third-party services that offer a REST or GraphQL API, Weaverse's loader pat
    export let schema: HydrogenComponentSchema = {
      type: 'api-widget',
      title: 'API Widget',
-     inspector: [
+     settings: [
        {
          group: 'API Settings',
          inputs: [
@@ -440,7 +440,7 @@ export default AliReviewSection;
 export let schema: HydrogenComponentSchema = {
   type: "ali-reviews",
   title: "Ali Reviews box",
-  inspector: [
+  settings: [
     {
       group: "Integration",
       inputs: [
@@ -455,7 +455,7 @@ export let schema: HydrogenComponentSchema = {
         },
       ],
     },
-    // Other inspector groups...
+    // Other settings groups...
   ],
   childTypes: [
     "ali-reviews--list",

@@ -378,7 +378,7 @@ The `shouldRevalidate` property, when added to an input in your component schema
 
 ```tsx
 // In your component schema
-inspector: [
+settings: [
   {
     group: 'Settings',
     inputs: [
@@ -429,7 +429,7 @@ You can create powerful data-driven components by combining `shouldRevalidate` w
 // app/sections/dynamic-product-grid/schema.ts
 export const schema = {
   // ... other schema properties
-  inspector: [
+  settings: [
     {
       group: 'Content',
       inputs: [
@@ -883,3 +883,48 @@ To further enhance your understanding of Weaverse's data fetching capabilities a
 - [Input Settings](/docs/guides/input-settings) - Comprehensive guide to all input types available in Weaverse
 - [Rendering a Weaverse Page](/docs/guides/rendering-page) - Understanding how Weaverse pages are rendered
 - [Project Structure](/docs/guides/project-structure) - Learn how the project is organized
+
+export let schema: HydrogenComponentSchema = {
+  type: "featured-collection",
+  title: "Featured collection",
+  settings: [
+    {
+      group: "Collection",
+      inputs: [
+        {
+          type: "collection",
+          name: "collection",
+          label: "Collection",
+        },
+        {
+          type: "range",
+          name: "productsCount",
+          label: "Number of products",
+          defaultValue: 8,
+          configs: {
+            min: 1,
+            max: 12,
+            step: 1,
+          },
+        },
+      ],
+    },
+  ],
+}
+
+export let schema: HydrogenComponentSchema = {
+  type: "single-product",
+  title: "Single product",
+  settings: [
+    {
+      group: "Product",
+      inputs: [
+        {
+          type: "product",
+          name: "product",
+          label: "Product",
+        },
+      ],
+    },
+  ],
+}

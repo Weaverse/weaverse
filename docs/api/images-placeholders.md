@@ -46,18 +46,18 @@ const IMAGES_PLACEHOLDERS = {
 
 ```tsx
 export const schema: HydrogenComponentSchema = {
-  type: 'banner',
-  inspector: [
+  type: 'hero-section',
+  title: 'Hero Section',
+  settings: [
     {
-      group: 'Banner',
+      group: 'Image',
       inputs: [
         {
           type: 'image',
-          name: 'image',
+          name: 'backgroundImage',
           label: 'Background Image',
-          defaultValue: IMAGES_PLACEHOLDERS.banner_1,
+          defaultValue: IMAGES_PLACEHOLDERS.hero_1,
         },
-        // ... other inputs
       ],
     },
   ],

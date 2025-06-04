@@ -94,7 +94,7 @@ Weaverse integrates a metaobject picker, allowing you to easily select and displ
 1.  Open your page in Weaverse Studio.
 2.  Click **Add section** in the Page Outline (left panel).
 3.  Select the **Metaobject demo** section (or another section you've configured to use metaobjects).
-4.  In the Inspector panel (right panel), use the metaobject picker input field to select the specific metaobject entry you want to display.
+4.  In the Settings panel (right panel), use the metaobject picker input field to select the specific metaobject entry you want to display.
 5.  Observe the changes in the live preview.
 
     *Video Demonstration:*

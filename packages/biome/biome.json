@@ -27,6 +27,9 @@
       },
       "correctness": {
         "useHookAtTopLevel": "warn"
+      },
+      "nursery": {
+        "useUniqueElementIds": "warn"
       }
     }
   },

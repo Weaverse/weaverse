@@ -246,10 +246,24 @@ export default UserProfiles
 3. **Create Schema**: Define a schema for the `UserProfiles` component:
 
 ```tsx
-export const schema: HydrogenComponentSchema = {
-  title: 'User Profiles',
-  type: 'user-profiles',
-  inspector: [],
+export let schema: HydrogenComponentSchema = {
+  type: 'hero-banner',
+  title: 'Hero Banner',
+  settings: [],
+  childTypes: ['button', 'heading'],
+  presets: {
+    children: [
+      {
+        type: 'heading',
+        content: 'Shop our latest collection',
+      },
+      {
+        type: 'button',
+        content: 'Shop now',
+        link: '/collections/all',
+      },
+    ],
+  },
 }
 ```
 
@@ -344,32 +358,34 @@ Add the following code to your `app/sections/user-profiles/index.tsx`:
 
 ```tsx
 export let schema: HydrogenComponentSchema = {
-  type: 'meta-demo',
-  title: 'Metaobject Demo',
-  toolbar: ['general-settings', ['duplicate', 'delete']],
-  inspector: [
+  type: 'hero-banner',
+  title: 'Hero Banner',
+  settings: [
     {
-      group: 'Metaobject Demo',
+      group: 'Content',
       inputs: [
         {
-          label: 'Select metaobject definition',
-          type: 'metaobject',
-          name: 'metaObjectData',
-          shouldRevalidate: true,
-        },
-        {
-          label: 'Items per row',
-          name: 'itemsPerRow',
-          type: 'range',
-          configs: {
-            min: 1,
-            max: 10,
-          },
-          defaultValue: 3,
+          type: 'image',
+          name: 'backgroundImage',
+          label: 'Background Image',
         },
       ],
     },
   ],
+  childTypes: ['button', 'heading'],
+  presets: {
+    children: [
+      {
+        type: 'heading',
+        content: 'Shop our latest collection',
+      },
+      {
+        type: 'button',
+        content: 'Shop now',
+        link: '/collections/all',
+      },
+    ],
+  },
 }
 
 export let loader = async (args: ComponentLoaderArgs<UserProfilesProps>) => {

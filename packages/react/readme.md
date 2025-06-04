@@ -36,15 +36,15 @@ Next, register your React components with the Weaverse instance:
 
 ```jsx
 weaverse.registerElement({
-  type: 'Button',
-  Component: ButtonComponent,
+  type: 'MyButton',
+  Component: MyButtonComponent,
   schema: {
-    title: 'Button',
-    type: 'Button',
-    inspector: {
-      // define settings inputs for customizing the Component here
-    },
-  },
+    title: 'My Button',
+    type: 'MyButton',
+    settings: {
+      // Configuration options
+    }
+  }
 })
 ```
 
