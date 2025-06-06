@@ -1,5 +1,11 @@
 # @weaverse/shopify
 
+## 5.2.1
+
+### Patch Changes
+
+- @weaverse/react@5.2.1
+
 ## 5.2.0
 
 ### Patch Changes

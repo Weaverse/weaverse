@@ -1,5 +1,7 @@
 # @weaverse/core
 
+## 5.2.1
+
 ## 5.2.0
 
 ### Minor Changes

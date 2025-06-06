@@ -1,5 +1,12 @@
 # @weaverse/hydrogen
 
+## 5.2.1
+
+### Patch Changes
+
+- fix wrong imports
+  - @weaverse/react@5.2.1
+
 ## 5.2.0
 
 ### Minor Changes
