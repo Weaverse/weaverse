@@ -64,18 +64,7 @@ export interface HydrogenComponentData extends ElementData {
   deletedAt?: string
 }
 
-export interface HydrogenComponentSchema extends SchemaElementSchema {
-  childTypes?: string[]
-  /** @deprecated Use settings instead */
-  inspector?: InspectorGroup[]
-  settings?: InspectorGroup[]
-  presets?: Omit<HydrogenComponentPresets, 'type'>
-  limit?: number
-  enabledOn?: {
-    pages?: ('*' | PageType)[]
-    groups?: ('*' | 'header' | 'footer' | 'body')[]
-  }
-}
+export interface HydrogenComponentSchema extends SchemaElementSchema {}
 
 export interface HydrogenComponentProps<L = any> extends WeaverseElement {
   className?: string

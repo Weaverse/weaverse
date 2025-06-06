@@ -66,7 +66,8 @@ Yes, Weaverse fully supports TypeScript and provides type definitions for all it
 Creating custom components involves defining the component logic, schema, and integrating it with Weaverse. A basic component looks like this:
 
 ```tsx
-import type { HydrogenComponentProps, HydrogenComponentSchema } from '@weaverse/hydrogen';
+import type { HydrogenComponentProps } from '@weaverse/hydrogen';
+import { createSchema } from '@weaverse/hydrogen';
 import { forwardRef } from 'react';
 
 interface CustomComponentProps extends HydrogenComponentProps {
@@ -87,7 +88,7 @@ const CustomComponent = forwardRef<HTMLElement, CustomComponentProps>((props, re
 
 export default CustomComponent;
 
-export const schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: 'custom-component',
   title: 'Custom Component',
   settings: [
@@ -109,7 +110,7 @@ export const schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});
 ```
 
 For more details, see our [Component Development Guide](/docs/guides/weaverse-component).

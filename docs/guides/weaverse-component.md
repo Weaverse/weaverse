@@ -100,7 +100,8 @@ Every Weaverse component follows a consistent structure:
 ### Basic Component Template
 
 ```tsx
-import type { HydrogenComponentProps, HydrogenComponentSchema } from '@weaverse/hydrogen';
+import type { HydrogenComponentProps } from '@weaverse/hydrogen';
+import { createSchema } from '@weaverse/hydrogen';
 import { forwardRef } from 'react';  // Optional but recommended for now
 
 interface MyComponentProps extends HydrogenComponentProps {
@@ -135,7 +136,7 @@ const MyComponent = forwardRef<HTMLElement, MyComponentProps>((props, ref) => {
 //   );
 // }
 
-export const schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: 'my-component',
   title: 'My Component',
   settings: [
@@ -155,7 +156,7 @@ export const schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});
 
 export default MyComponent;
 ```
@@ -174,7 +175,7 @@ For more complex components, you may need to handle data loading, custom styling
 
 ```tsx
 import { Await, useLoaderData } from "@remix-run/react";
-import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import { createSchema } from "@weaverse/hydrogen";
 import { Suspense, forwardRef } from "react";
 import type { ProductCardFragment } from "storefront-api.generated";
 import Heading, { type HeadingProps, headingInputs } from "~/components/heading";
@@ -253,7 +254,7 @@ const RelatedProducts = forwardRef<HTMLElement, RelatedProductsProps>((props, re
 
 export default RelatedProducts;
 
-export const schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "related-products",
   title: "Related products",
   limit: 1,
@@ -283,7 +284,7 @@ export const schema: HydrogenComponentSchema = {
     width: "full",
     content: "You may also like",
   },
-};
+});
 ```
 
 ## Component Types
@@ -317,7 +318,7 @@ The schema defines how your component appears and behaves in Weaverse Studio. It
 ### Schema Structure
 
 ```tsx
-export const schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: 'component-type',      // Unique identifier
   title: 'Component Title',    // Display name in the Studio
   settings: [                 // Controls in the settings panel
@@ -343,7 +344,7 @@ export const schema: HydrogenComponentSchema = {
   },
   childTypes: ['component-type'], // Allowed child components
   limit: 1,                    // Maximum instances
-};
+});
 ```
 
 ### Common Input Types
@@ -429,7 +430,7 @@ Each input type has specific configuration options:
 ### Advanced Schema Example
 
 ```tsx
-export const schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "hero-image",
   title: "Hero image",
   settings: [
@@ -500,7 +501,7 @@ export const schema: HydrogenComponentSchema = {
       },
     ],
   },
-};
+});
 ```
 
 ## Data Integration
@@ -549,7 +550,7 @@ Weaverse components can define their own loaders, which fetch data specifically 
 
 ```tsx
 // app/sections/featured-product/index.tsx
-import type { ComponentLoaderArgs, HydrogenComponentProps, HydrogenComponentSchema } from '@weaverse/hydrogen';
+import type { ComponentLoaderArgs, HydrogenComponentProps } from '@weaverse/hydrogen';
 import { forwardRef } from 'react';
 import { PRODUCT_QUERY } from '~/graphql/queries';
 
@@ -595,7 +596,7 @@ const FeaturedProduct = forwardRef<HTMLElement, FeaturedProductProps>((props, re
 
 export default FeaturedProduct;
 
-export const schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: 'featured-product',
   title: 'Featured Product',
   settings: [
@@ -610,7 +611,7 @@ export const schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});
 ```
 
 ### Key Differences
@@ -810,13 +811,13 @@ const ImageWithTextContent = forwardRef<HTMLDivElement, ImageWithTextContentProp
   );
 });
 
-export const schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "image-with-text--content",
   title: "Content",
   limit: 1,
   childTypes: ["subheading", "heading", "paragraph", "button"],
   // ... schema configuration
-};
+});
 ```
 
 ### 2. Reusable Component Parts
@@ -1030,7 +1031,7 @@ const HeroImage = forwardRef<HTMLElement, HeroImageProps & SectionProps>(
 );
 
 // Define schema with matching select inputs
-export const schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "hero-image",
   title: "Hero image",
   settings: [
@@ -1062,7 +1063,7 @@ export const schema: HydrogenComponentSchema = {
     // ... more groups
   ],
   // ... schema continues
-};
+});
 ```
 
 **Benefits of this approach:**

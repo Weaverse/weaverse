@@ -884,22 +884,22 @@ To further enhance your understanding of Weaverse's data fetching capabilities a
 - [Rendering a Weaverse Page](/docs/guides/rendering-page) - Understanding how Weaverse pages are rendered
 - [Project Structure](/docs/guides/project-structure) - Learn how the project is organized
 
-export let schema: HydrogenComponentSchema = {
-  type: "featured-collection",
-  title: "Featured collection",
+export let schema = createSchema({
+  type: 'featured-collection',
+  title: 'Featured Collection',
   settings: [
     {
-      group: "Collection",
+      group: 'Collection',
       inputs: [
         {
-          type: "collection",
-          name: "collection",
-          label: "Collection",
+          type: 'collection',
+          name: 'collection',
+          label: 'Collection',
         },
         {
-          type: "range",
-          name: "productsCount",
-          label: "Number of products",
+          type: 'range',
+          name: 'productsCount',
+          label: 'Number of products',
           defaultValue: 8,
           configs: {
             min: 1,
@@ -910,21 +910,21 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-}
+});
 
-export let schema: HydrogenComponentSchema = {
-  type: "single-product",
-  title: "Single product",
+export let schema = createSchema({
+  type: 'single-product',
+  title: 'Single Product',
   settings: [
     {
-      group: "Product",
+      group: 'Product',
       inputs: [
         {
-          type: "product",
-          name: "product",
-          label: "Product",
+          type: 'product',
+          name: 'product',
+          label: 'Product',
         },
       ],
     },
   ],
-}
+});

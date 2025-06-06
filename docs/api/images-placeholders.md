@@ -45,7 +45,9 @@ const IMAGES_PLACEHOLDERS = {
 ### As default values in a component schema
 
 ```tsx
-export const schema: HydrogenComponentSchema = {
+import { createSchema, IMAGES_PLACEHOLDERS } from '@weaverse/hydrogen';
+
+export let schema = createSchema({
   type: 'hero-section',
   title: 'Hero Section',
   settings: [
@@ -61,7 +63,7 @@ export const schema: HydrogenComponentSchema = {
       ],
     },
   ],
-}
+});
 ```
 
 ### In a component for fallback images

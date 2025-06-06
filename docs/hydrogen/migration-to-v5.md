@@ -442,7 +442,9 @@ export const schema: HydrogenComponentSchema = {
 
 **After (v5):**
 ```tsx
-export const schema: HydrogenComponentSchema = {
+import { createSchema } from '@weaverse/hydrogen';
+
+export let schema = createSchema({
   type: 'my-component',
   title: 'My Component',
   settings: [
@@ -458,7 +460,7 @@ export const schema: HydrogenComponentSchema = {
       ]
     }
   ]
-}
+});
 ```
 
 **Migration Notes:**
@@ -605,4 +607,4 @@ After migration, you'll benefit from:
 - **Improved performance** with React Router v7
 - **Better type safety** with updated schema properties
 - **Enhanced developer experience** with clearer naming conventions
-- **Future-proof architecture** aligned with the latest Shopify Hydrogen standards 
+- **Future-proof architecture** aligned with the latest Shopify Hydrogen standards

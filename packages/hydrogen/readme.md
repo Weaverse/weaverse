@@ -15,7 +15,7 @@ provides a client for easy setup and data fetching from Weaverse CMS.
 - **Component Registration and Rendering**: Register React components with Weaverse and render them using
   the `WeaverseHydrogenRoot` component.
 - **Flexible Schema Definition**: Define behavior and interactivity of components within Weaverse Studio through
-  the `HydrogenComponentSchema`.
+  the `createSchema()` function.
 - **Customizable Input Settings**: Specify configurations for merchant-customizable component settings in Weaverse
   Studio.
 
@@ -106,14 +106,14 @@ Define your component's schema to control its behavior and interactivity within 
 
 ```tsx
 // app/sections/Hero.tsx
-import type { HydrogenComponentSchema } from '@weaverse/hydrogen'
+import { createSchema } from '@weaverse/hydrogen'
 
 export type HeroProps = {
   heading: string
   description: string
 }
 
-export const schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: 'hero',
   title: 'Hero Section',
   settings: [
@@ -135,7 +135,7 @@ export const schema: HydrogenComponentSchema = {
       ]
     }
   ]
-}
+});
 
 export default function Hero({ heading, description }: HeroProps) {
   return (

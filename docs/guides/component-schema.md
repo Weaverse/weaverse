@@ -13,77 +13,100 @@ published: true
 
 In the Weaverse ecosystem, a component's schema is the critical link between code and the visual editor. The schema defines how components appear in the Weaverse Studio, what customization options are available, and how components interact with each other. Think of it as both a blueprint and an interface that empowers developers and merchants alike.
 
-### Component Registration Methods
+### Component Registration Method
 
-There are two ways to register components in Weaverse:
+Weaverse components are registered using static exports and configuration.
 
-1. **Using `registerElement` Function**:
-   ```tsx
-   import { WeaverseHydrogen } from '@weaverse/hydrogen'
-   import { MyComponent } from './MyComponent'
-   import { schema } from './schema'
-   import { loader } from './loader'
+**Static Export Pattern**
 
-   WeaverseHydrogen.registerElement({
-     type: 'my-component',
-     component: MyComponent,
-     schema,
-     loader
-   })
-   ```
+```tsx
+// components.ts
+import type { HydrogenComponent } from '@weaverse/hydrogen';
+import * as RelatedProducts from './sections/related-products';
 
-2. **Declaring in `components.ts`** (Recommended):
-   ```tsx
-   // components.ts
-   import type { HydrogenComponent } from '@weaverse/hydrogen'
-   import * as RelatedProducts from './sections/related-products'
+export let components: HydrogenComponent[] = [
+  RelatedProducts,
+  // Other components...
+];
+```
 
-   export let components: HydrogenComponent[] = [
-     RelatedProducts,
-     // Other components...
-   ]
-   ```
+Each section component should be structured like this:
 
-   Each section component should be structured like this:
-   ```tsx
-   // sections/related-products.tsx
-   import { forwardRef } from 'react'
-   import type { HydrogenComponentSchema } from '@weaverse/hydrogen'
-   import { Section } from '~/components/section'
+```tsx
+// sections/related-products.tsx
+import { forwardRef } from 'react';
+import { createSchema } from '@weaverse/hydrogen';
+import { Section } from '~/components/section';
 
-   let RelatedProducts = forwardRef<HTMLElement, RelatedProductsProps>(
-     (props, ref) => {
-       // Component implementation
-       return <Section ref={ref} {...props} />
-     }
-   )
+let RelatedProducts = forwardRef<HTMLElement, RelatedProductsProps>(
+  (props, ref) => {
+    // Component implementation
+    return <Section ref={ref} {...props} />;
+  }
+);
 
-   export default RelatedProducts
+export default RelatedProducts;
 
-   export let schema: HydrogenComponentSchema = {
-     type: 'related-products',
-     title: 'Related products',
-     limit: 1,
-     enabledOn: {
-       pages: ['PRODUCT']
-     },
-     settings: [
-       {
-         group: 'Layout',
-         inputs: layoutInputs
-       }
-     ],
-     presets: {
-       gap: 32,
-       content: 'You may also like'
-     }
-   }
-   ```
+export let schema = createSchema({
+  type: 'related-products',
+  title: 'Related products',
+  limit: 1,
+  enabledOn: {
+    pages: ['PRODUCT'],
+  },
+  settings: [
+    {
+      group: 'Layout',
+      inputs: layoutInputs,
+    },
+  ],
+  presets: {
+    gap: 32,
+    content: 'You may also like',
+  },
+});
+```
 
-While both methods are valid, we recommend using the `components.ts` approach because:
-- It centralizes component registration in one file
-- Makes it easier to manage and maintain components
-- Follows the standard pattern used in the Weaverse ecosystem
+This pattern centralizes component registration in one file and makes it easier to manage and maintain components.
+
+## The createSchema() Function
+
+Weaverse provides the `createSchema()` function as the modern, recommended way to define component schemas. This function offers several advantages over the traditional manual type definition approach:
+
+### Why Use createSchema()?
+
+1. **Runtime Validation**: Validates your schema configuration at build time using Zod, catching errors before they reach production
+2. **Type Safety**: Provides excellent TypeScript inference and autocompletion
+3. **Consistent Standards**: Ensures all schemas follow the same validation rules
+4. **Future-Proof**: Ready for new schema features and validation rules
+
+### Basic Usage
+
+```tsx
+import { createSchema } from '@weaverse/hydrogen';
+
+export let schema = createSchema({
+  type: 'my-component',
+  title: 'My Component',
+  settings: [
+    // Your settings configuration
+  ],
+});
+```
+
+The `createSchema()` function takes a schema object and returns a validated schema that Weaverse can use. If your schema has any validation errors, you'll get clear error messages at build time.
+
+### Import Options
+
+You can import `createSchema` from either package:
+
+```tsx
+// From @weaverse/hydrogen (recommended for Hydrogen projects)
+import { createSchema } from '@weaverse/hydrogen';
+
+// Or directly from @weaverse/schema (for advanced use cases)
+import { createSchema } from '@weaverse/schema';
+```
 
 ## Anatomy
 
@@ -91,8 +114,12 @@ The `HydrogenComponentSchema` acts as a comprehensive definition for your compon
 
 ### Core Schema Structure
 
+The modern way to define component schemas is using the `createSchema()` function, which provides runtime validation and type safety:
+
 ```tsx
-interface HydrogenComponentSchema extends ElementSchema {
+import { createSchema } from '@weaverse/hydrogen';
+
+export let schema = createSchema({
   title: string
   type: string
   settings: InspectorGroup[]
@@ -104,8 +131,14 @@ interface HydrogenComponentSchema extends ElementSchema {
     pages?: ('*' | PageType)[]
     groups?: ('*' | 'header' | 'footer' | 'body')[]
   }
-}
+});
 ```
+
+The `createSchema()` function:
+- **Validates your schema at build time** using Zod validation
+- **Provides better TypeScript inference** and error messages
+- **Catches configuration errors early** before they reach the editor
+- **Ensures consistency** across all component schemas
 
 > **⚠️ Migration Notice**: The `inspector` property has been deprecated in favor of `settings`. While `inspector` is still supported for backward compatibility, new components should use `settings`. The Weaverse system automatically handles both properties during the transition period.
 
@@ -147,11 +180,11 @@ When components are registered with Weaverse, they're stored in a registry using
 
 **Example:**
 ```tsx
-{
+export let schema = createSchema({
   title: "Featured Collection",
   type: "featured-collection",
   // other properties...
-}
+});
 ```
 
 ### `settings`
@@ -190,43 +223,46 @@ The schema also influences data initialization. The `generateDataFromSchema` uti
 
 **Example:**
 ```tsx
-settings: [
-  {
-    group: "Content",
-    inputs: [
-      {
-        type: "text",
-        name: "heading",
-        label: "Heading",
-        defaultValue: "Featured Products"
-      },
-      {
-        type: "textarea",
-        name: "description",
-        label: "Description",
-        defaultValue: "Shop our most popular items"
-      }
-    ]
-  },
-  {
-    group: "Style",
-    inputs: [
-      {
-        type: "select",
-        name: "textAlignment",
-        label: "Text Alignment",
-        defaultValue: "center",
-        configs: {
-          options: [
-            { value: "left", label: "Left" },
-            { value: "center", label: "Center" },
-            { value: "right", label: "Right" }
-          ]
+export let schema = createSchema({
+  // other properties...
+  settings: [
+    {
+      group: "Content",
+      inputs: [
+        {
+          type: "text",
+          name: "heading",
+          label: "Heading",
+          defaultValue: "Featured Products"
+        },
+        {
+          type: "textarea",
+          name: "description",
+          label: "Description",
+          defaultValue: "Shop our most popular items"
         }
-      }
-    ]
-  }
-]
+      ]
+    },
+    {
+      group: "Style",
+      inputs: [
+        {
+          type: "select",
+          name: "textAlignment",
+          label: "Text Alignment",
+          defaultValue: "center",
+          configs: {
+            options: [
+              { value: "left", label: "Left" },
+              { value: "center", label: "Center" },
+              { value: "right", label: "Right" }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+});
 ```
 
 For a complete reference on input types and configurations, refer to the [Input Settings guide](/docs/guides/input-settings).
@@ -254,12 +290,12 @@ The Weaverse engine uses the `childTypes` array to filter the available componen
 
 **Example:**
 ```tsx
-{
+export let schema = createSchema({
   title: "Product Grid",
   type: "product-grid",
   childTypes: ["product-card", "loading-indicator", "empty-state"],
   // other properties...
-}
+});
 ```
 
 ### `presets`
@@ -291,23 +327,26 @@ When a component is added to a page, the Weaverse engine uses the `presets` prop
 
 **Example:**
 ```tsx
-presets: {
-  heading: "Featured Products",
-  description: "Shop our most popular items this season",
-  showViewAllButton: true,
-  viewAllButtonText: 'View All Products',
-  layout: 'grid',
-  productsPerRow: 3,
-  backgroundColor: '#f7f7f7',
-  productLimit: 4,
-  sortBy: 'BEST_SELLING',
-  children: [
-    { type: "product-card" },
-    { type: "product-card" },
-    { type: "product-card" },
-    { type: "product-card" }
-  ]
-}
+export let schema = createSchema({
+  // other properties...
+  presets: {
+    heading: "Featured Products",
+    description: "Shop our most popular items this season",
+    showViewAllButton: true,
+    viewAllButtonText: 'View All Products',
+    layout: 'grid',
+    productsPerRow: 3,
+    backgroundColor: '#f7f7f7',
+    productLimit: 4,
+    sortBy: 'BEST_SELLING',
+    children: [
+      { type: "product-card" },
+      { type: "product-card" },
+      { type: "product-card" },
+      { type: "product-card" }
+    ]
+  }
+});
 ```
 
 ## Component Limitations and Placement
@@ -331,12 +370,12 @@ When a user tries to add a component, the Weaverse Studio checks the current cou
 
 **Example:**
 ```tsx
-{
+export let schema = createSchema({
   title: "Store Announcement",
   type: "announcement-bar",
   limit: 1,  // Only one announcement bar allowed
   // other properties...
-}
+});
 ```
 
 ### `enabledOn`
@@ -432,9 +471,9 @@ Function-based conditions receive the component's current data and the Weaverse 
 Let's look at a comprehensive, real-world example of a component schema:
 
 ```tsx
-import type { HydrogenComponentSchema } from '@weaverse/hydrogen'
+import { createSchema } from '@weaverse/hydrogen'
 
-export const schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   title: 'Product Showcase',
   type: 'product-showcase',
   settings: [
@@ -570,7 +609,7 @@ export const schema: HydrogenComponentSchema = {
   enabledOn: {
     pages: ['INDEX', 'COLLECTION', 'PRODUCT']
   }
-}
+});
 ```
 
 ## Advanced Features
@@ -709,11 +748,13 @@ export const schema: HydrogenComponentSchema = {
 }
 ```
 
-## Migration from Inspector to Settings
+## Migration Guide
+
+### Migration from Inspector to Settings
 
 If you have existing components using the `inspector` property, here's how to migrate them:
 
-### 1. Simple Rename
+#### 1. Simple Rename
 
 ```tsx
 // Before (deprecated)
@@ -729,7 +770,7 @@ export const schema: HydrogenComponentSchema = {
 }
 
 // After (recommended)
-export const schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: 'my-component',
   title: 'My Component',
   settings: [
@@ -738,16 +779,54 @@ export const schema: HydrogenComponentSchema = {
       inputs: [/* ... */]
     }
   ]
-}
+});
 ```
 
-### 2. Gradual Migration
+### Migration to createSchema()
+
+The modern approach uses the `createSchema()` function instead of manual type definitions:
+
+#### 1. Update Imports
+
+```tsx
+// Before (old approach)
+import type { HydrogenComponentSchema } from '@weaverse/hydrogen';
+
+// After (new approach)
+import { createSchema } from '@weaverse/hydrogen';
+```
+
+#### 2. Wrap Schema with createSchema()
+
+```tsx
+// Before (old approach)
+export const schema: HydrogenComponentSchema = {
+  type: 'my-component',
+  title: 'My Component',
+  // ... rest of schema
+};
+
+// After (new approach)
+export let schema = createSchema({
+  type: 'my-component',
+  title: 'My Component',
+  // ... rest of schema
+});
+```
+
+**Benefits of the new approach:**
+- ✅ **Runtime validation** catches errors early
+- ✅ **Better TypeScript inference** and autocomplete
+- ✅ **Consistent validation** across all schemas
+- ✅ **Future-proof** for new schema features
+
+#### 3. Gradual Migration
 
 During the transition period, you can keep both properties. The system will use `settings` as the primary source and fall back to `inspector` if `settings` is not available:
 
 ```tsx
 // Transition approach (will show deprecation warning)
-export const schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: 'my-component',
   title: 'My Component',
   settings: [
@@ -762,7 +841,7 @@ export const schema: HydrogenComponentSchema = {
       inputs: [/* legacy inputs for backward compatibility */]
     }
   ]
-}
+});
 ```
 
 **Note**: When both properties exist, only `settings` will be used. The `inspector` property is ignored to prevent duplication.
@@ -771,21 +850,28 @@ export const schema: HydrogenComponentSchema = {
 
 ### Common Schema Issues
 
-1. **Duplicate Type Error**: Each component must have a unique `type`. Check for duplicates across your entire theme.
+1. **Schema Validation Errors**: When using `createSchema()`, you may encounter validation errors at build time. These errors provide clear messages about what's wrong with your schema configuration. Common validation issues include:
+   - Missing required fields (`title`, `type`)
+   - Invalid input types
+   - Malformed configuration objects
 
-2. **Missing Required Properties**: Ensure all required properties (`title`, `type`, `settings`) are defined.
+2. **Duplicate Type Error**: Each component must have a unique `type`. Check for duplicates across your entire theme.
 
-3. **Invalid Input Types**: Verify that all input `type` values match those supported by Weaverse.
+3. **Missing Required Properties**: Ensure all required properties (`title`, `type`) are defined. The `createSchema()` function will catch these at build time.
 
-4. **Child Component Not Available**: If a child component doesn't appear in the editor, check that its type is included in the parent's `childTypes` array.
+4. **Invalid Input Types**: Verify that all input `type` values match those supported by Weaverse. The validation will show allowed types if you use an invalid one.
 
-5. **Component Not Appearing on Specific Pages**: Verify that the `enabledOn.pages` array includes the intended page types.
+5. **Child Component Not Available**: If a child component doesn't appear in the editor, check that its type is included in the parent's `childTypes` array.
 
-6. **Data Not Refreshing**: For components with loaders, check if relevant inputs have `shouldRevalidate: true` set to trigger data refetching.
+6. **Component Not Appearing on Specific Pages**: Verify that the `enabledOn.pages` array includes the intended page types.
 
-7. **Schema Changes Not Reflecting**: Remember that schema changes require a server restart to take effect in development mode.
+7. **Data Not Refreshing**: For components with loaders, check if relevant inputs have `shouldRevalidate: true` set to trigger data refetching.
 
-8. **Deprecation Warnings**: If you see warnings about the `inspector` property, update your schema to use `settings` instead.
+8. **Schema Changes Not Reflecting**: Remember that schema changes require a server restart to take effect in development mode.
+
+9. **Deprecation Warnings**: If you see warnings about the `inspector` property, update your schema to use `settings` instead.
+
+10. **Type Errors with createSchema()**: If you're getting TypeScript errors, ensure you're importing `createSchema` correctly and that your schema object matches the expected structure.
 
 ## Related Resources
 
