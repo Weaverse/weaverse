@@ -1,5 +1,17 @@
 # @weaverse/hydrogen
 
+## 5.2.0
+
+### Minor Changes
+
+- update type system with new schema validation util
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/schema@0.4.0
+  - @weaverse/react@5.2.0
+
 ## 5.1.0
 
 ### Minor Changes
