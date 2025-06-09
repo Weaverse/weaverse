@@ -89,7 +89,18 @@ const createEnvFile = async (path, projectId) => {
   try {
     const envExamplePath = `${path}/.env.example`
     const envExampleContent = await fs.readFile(envExamplePath, 'utf-8')
-    const envContent = `${envExampleContent}\nWEAVERSE_PROJECT_ID=${projectId}`
+
+    // Replace existing WEAVERSE_PROJECT_ID or add it if it doesn't exist
+    let envContent
+    if (envExampleContent.includes('WEAVERSE_PROJECT_ID=')) {
+      envContent = envExampleContent.replace(
+        /WEAVERSE_PROJECT_ID=.*/,
+        `WEAVERSE_PROJECT_ID=${projectId}`,
+      )
+    } else {
+      envContent = `${envExampleContent}\nWEAVERSE_PROJECT_ID=${projectId}`
+    }
+
     await fs.writeFile(`${path}/.env`, envContent)
     spinner.succeed('Environment variables configured')
   } catch (error) {
