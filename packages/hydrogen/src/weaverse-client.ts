@@ -161,7 +161,7 @@ export class WeaverseClient {
         })
       }
       let data: any = res || {}
-      if (this.themeSchema?.inspector) {
+      if (this.themeSchema?.settings || this.themeSchema?.inspector) {
         data.theme = {
           ...defaultThemeSettings,
           ...data.theme,

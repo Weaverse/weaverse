@@ -17,7 +17,7 @@ import type {
   InspectorGroup,
   PageType,
   ComponentPresets as SchemaComponentPresets,
-  SchemaType as SchemaElementSchema,
+  SchemaType as WeaverseSchema,
 } from '@weaverse/schema'
 
 import type * as React from 'react'
@@ -64,7 +64,7 @@ export interface HydrogenComponentData extends ElementData {
   deletedAt?: string
 }
 
-export interface HydrogenComponentSchema extends SchemaElementSchema {}
+export interface HydrogenComponentSchema extends WeaverseSchema {}
 
 export interface HydrogenComponentProps<L = any> extends WeaverseElement {
   className?: string
