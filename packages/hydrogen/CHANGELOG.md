@@ -1,5 +1,12 @@
 # @weaverse/hydrogen
 
+## 5.2.2
+
+### Patch Changes
+
+- fix minor bug with previewing section feature
+  - @weaverse/react@5.2.2
+
 ## 5.2.1
 
 ### Patch Changes

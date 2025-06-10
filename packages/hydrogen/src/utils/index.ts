@@ -234,7 +234,7 @@ export function getPreviewData(
       },
     },
     page: {
-      id: '0',
+      id: 'weaverse-preview-page',
       name: 'Preview section',
       rootId: '1',
       items: [
