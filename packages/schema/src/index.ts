@@ -280,7 +280,17 @@ export type SchemaTypeStrict = {
 }
 
 export function createSchema(schema: SchemaType) {
-  return ElementSchema.parse(schema)
+  // Use safeParse for both dev and production - only warn about validation issues
+  const result = ElementSchema.safeParse(schema)
+  if (!result.success) {
+    console.warn('⚠️ Schema validation issues found:', result.error.message)
+    console.warn(
+      'Using original schema with potential issues. Consider fixing these validation errors:',
+    )
+    console.warn(JSON.stringify(result.error.issues, null, 2))
+    return schema as SchemaType
+  }
+  return result.data
 }
 
 // Type-safe helper that enforces required fields even without strict mode
@@ -300,5 +310,15 @@ export function createSchemaTypeSafe(schema: {
     [key: string]: any
   }
 }): SchemaType {
-  return ElementSchema.parse(schema)
+  // Use safeParse for both dev and production - only warn about validation issues
+  const result = ElementSchema.safeParse(schema)
+  if (!result.success) {
+    console.warn('⚠️ Schema validation issues found:', result.error.message)
+    console.warn(
+      'Using original schema with potential issues. Consider fixing these validation errors:',
+    )
+    console.warn(JSON.stringify(result.error.issues, null, 2))
+    return schema as SchemaType
+  }
+  return result.data
 }
