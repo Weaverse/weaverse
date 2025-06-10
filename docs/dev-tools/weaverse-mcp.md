@@ -9,6 +9,8 @@ published: true
 
 The Weaverse MCP (Model Context Protocol) server enables AI assistants like Claude and GitHub Copilot to search Weaverse documentation directly, delivering accurate, context-aware assistance for developers working with Weaverse products.
 
+[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=weaverse-mcp&config=eyJjb21tYW5kIjoibnB4IC15IEB3ZWF2ZXJzZS9tY3AifQ%3D%3D)
+
 ## What is an MCP?
 
 MCP stands for Model Context Protocol - a protocol that allows AI assistants to access external tools and data sources. By implementing the MCP protocol, Weaverse provides AI models with direct access to our documentation, enabling them to give precise, up-to-date answers about Weaverse functionality.

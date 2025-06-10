@@ -8,6 +8,36 @@ import type {
   WeaverseStudioQueries,
 } from '../types'
 
+// Track warned types to avoid spam
+let warnedTypes = new Set<string>()
+
+function logOnce(type: string, message: string) {
+  if (!warnedTypes.has(type)) {
+    console.warn(message)
+    warnedTypes.add(type)
+  }
+}
+
+function deepMergeArrays<T>(target: T[], source: T[]): T[] {
+  return [...target, ...source]
+}
+
+function mergeInspectorSettings(
+  settings: any[],
+  inspector: any[],
+  type: string,
+): any[] {
+  if (!inspector?.length) return settings
+  if (!settings?.length) return inspector
+
+  // Log collision notice
+  console.info(
+    `Schema "${type}": Both 'settings' and 'inspector' found. Using 'settings' with 'inspector' as fallback.`,
+  )
+
+  return deepMergeArrays(settings, inspector)
+}
+
 export function getRequestQueries<T = Record<string, string | boolean>>(
   request: Request,
 ) {
@@ -74,9 +104,69 @@ export function generateDataFromSchema(
   schema: HydrogenComponentSchema | HydrogenThemeSchema,
 ) {
   let data: Record<string, any> = {}
-  let inspector = schema?.inspector
-  if (inspector) {
-    for (let group of inspector) {
+
+  // Handle migration from inspector to settings
+  let inspectorGroups: any[] = []
+
+  // Type guard to check if it's a component schema
+  const isComponentSchema = (
+    s: HydrogenComponentSchema | HydrogenThemeSchema,
+  ): s is HydrogenComponentSchema => {
+    return 'type' in s && typeof s.type === 'string'
+  }
+
+  if (isComponentSchema(schema)) {
+    // Handle HydrogenComponentSchema
+    if (schema.settings) {
+      inspectorGroups = schema.settings
+    }
+
+    if (schema.inspector) {
+      if (schema.settings?.length) {
+        // Both exist - merge with settings taking priority
+        inspectorGroups = mergeInspectorSettings(
+          schema.settings,
+          schema.inspector,
+          schema.type || 'unknown',
+        )
+      } else {
+        // Only inspector exists - use it but warn about deprecation
+        inspectorGroups = schema.inspector
+        if (schema.type) {
+          logOnce(
+            schema.type,
+            `⚠️  Schema "${schema.type}": The 'inspector' property is deprecated. Please use 'settings' instead.`,
+          )
+        }
+      }
+    }
+  } else {
+    // Handle HydrogenThemeSchema
+    if (schema.settings) {
+      inspectorGroups = schema.settings
+    }
+
+    if (schema.inspector) {
+      if (schema.settings?.length) {
+        // Both exist - merge with settings taking priority
+        inspectorGroups = mergeInspectorSettings(
+          schema.settings,
+          schema.inspector,
+          'Theme Schema',
+        )
+      } else {
+        // Only inspector exists - use it but warn about deprecation
+        inspectorGroups = schema.inspector
+        logOnce(
+          'ThemeSchema',
+          `⚠️  Theme Schema: The 'inspector' property is deprecated. Please use 'settings' instead.`,
+        )
+      }
+    }
+  }
+
+  if (inspectorGroups?.length) {
+    for (let group of inspectorGroups) {
       for (let input of group.inputs) {
         let { name, defaultValue } = input
         if (name && defaultValue !== null && defaultValue !== undefined) {

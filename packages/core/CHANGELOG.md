@@ -1,5 +1,19 @@
 # @weaverse/core
 
+## 5.2.1
+
+## 5.2.0
+
+### Minor Changes
+
+- update type system with new schema validation util
+
+## 5.1.0
+
+### Minor Changes
+
+- Migrate `inspector` field to new `settings` property.
+
 ## 5.0.0
 
 ### Major Changes

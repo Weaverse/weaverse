@@ -1,5 +1,28 @@
 # @weaverse/shopify
 
+## 5.2.1
+
+### Patch Changes
+
+- @weaverse/react@5.2.1
+
+## 5.2.0
+
+### Patch Changes
+
+- @weaverse/react@5.2.0
+
+## 5.1.0
+
+### Minor Changes
+
+- Migrate `inspector` field to new `settings` property.
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/react@5.1.0
+
 ## 5.0.0
 
 ### Patch Changes

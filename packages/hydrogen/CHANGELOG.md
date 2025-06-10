@@ -1,5 +1,35 @@
 # @weaverse/hydrogen
 
+## 5.2.1
+
+### Patch Changes
+
+- fix wrong imports
+  - @weaverse/react@5.2.1
+
+## 5.2.0
+
+### Minor Changes
+
+- update type system with new schema validation util
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/schema@0.4.0
+  - @weaverse/react@5.2.0
+
+## 5.1.0
+
+### Minor Changes
+
+- Migrate `inspector` field to new `settings` property.
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/react@5.1.0
+
 ## 5.0.0
 
 ### Major Changes

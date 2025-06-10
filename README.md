@@ -6,6 +6,8 @@
 [![Linted with Biome](https://img.shields.io/badge/Linted_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
 [![Checked with Biome](https://img.shields.io/badge/Checked_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
 
+[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=weaverse-mcp&config=eyJjb21tYW5kIjoibnB4IC15IEB3ZWF2ZXJzZS9tY3AifQ%3D%3D)
+
 > **🚀 Weaverse v5 is here!** Now powered by React Router v7 for better performance and developer experience. [See what's new →](./CHANGELOG.md#500---2024-12-20)
 
 ## Overview

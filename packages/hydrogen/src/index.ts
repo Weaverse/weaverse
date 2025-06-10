@@ -87,6 +87,8 @@ export {
   useParentInstance,
   useWeaverse,
 }
+
+export * from '@weaverse/schema'
 export * from './types'
 export * from './WeaverseHydrogenRoot'
 export * from './weaverse-client'

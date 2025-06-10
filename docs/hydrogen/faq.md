@@ -66,7 +66,8 @@ Yes, Weaverse fully supports TypeScript and provides type definitions for all it
 Creating custom components involves defining the component logic, schema, and integrating it with Weaverse. A basic component looks like this:
 
 ```tsx
-import type { HydrogenComponentProps, HydrogenComponentSchema } from '@weaverse/hydrogen';
+import type { HydrogenComponentProps } from '@weaverse/hydrogen';
+import { createSchema } from '@weaverse/hydrogen';
 import { forwardRef } from 'react';
 
 interface CustomComponentProps extends HydrogenComponentProps {
@@ -87,10 +88,10 @@ const CustomComponent = forwardRef<HTMLElement, CustomComponentProps>((props, re
 
 export default CustomComponent;
 
-export const schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: 'custom-component',
   title: 'Custom Component',
-  inspector: [
+  settings: [
     {
       group: 'Content',
       inputs: [
@@ -109,7 +110,7 @@ export const schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});
 ```
 
 For more details, see our [Component Development Guide](/docs/guides/weaverse-component).
@@ -134,7 +135,7 @@ export const loader = async ({ weaverse, data }: ComponentLoaderArgs) => {
 
 The data is then available in your component via `props.loaderData`.
 
-### What inspector input types are available for component customization?
+### What settings input types are available for component customization?
 
 Weaverse provides a variety of input types to customize your components, including:
 - Text fields

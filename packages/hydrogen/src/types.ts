@@ -4,10 +4,7 @@ import type {
   LoaderFunctionArgs as RemixOxygenLoaderArgs,
 } from '@shopify/remix-oxygen'
 import type {
-  BasicInput as CoreBasicInput,
   ElementData,
-  ElementSchema,
-  InputType,
   PositionInputValue,
   WeaverseCoreParams,
   WeaverseElement,
@@ -16,13 +13,29 @@ import type {
   WeaverseResourcePickerData,
   WeaverseVideo,
 } from '@weaverse/react'
+import type {
+  InspectorGroup,
+  PageType,
+  ComponentPresets as SchemaComponentPresets,
+  SchemaType as SchemaElementSchema,
+} from '@weaverse/schema'
+
 import type * as React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
 import type { NavigateFunction } from 'react-router'
 import type { WeaverseHydrogen } from './index'
 import type { ThemeSettingsStore } from './utils/use-theme-settings-store'
 import type { WeaverseClient } from './weaverse-client'
-export type { InputType, PositionInputValue, WeaverseImage, WeaverseVideo }
+
+// Re-export types from schema for backward compatibility
+export type {
+  PositionInputValue,
+  WeaverseImage,
+  WeaverseVideo,
+  PageType,
+  InspectorGroup,
+}
+// Note: InputType, BasicInput, HeadingInput are now exported directly from @weaverse/schema in index.ts
 
 export interface AllCacheOptions {
   mode?: string
@@ -51,36 +64,7 @@ export interface HydrogenComponentData extends ElementData {
   deletedAt?: string
 }
 
-export interface HydrogenComponentSchema extends ElementSchema {
-  childTypes?: string[]
-  inspector: InspectorGroup[]
-  presets?: Omit<HydrogenComponentPresets, 'type'>
-  limit?: number
-  enabledOn?: {
-    pages?: ('*' | PageType)[]
-    groups?: ('*' | 'header' | 'footer' | 'body')[]
-  }
-}
-
-export type BasicInput = Omit<CoreBasicInput, 'condition'> & {
-  shouldRevalidate?: boolean
-  condition?:
-    | string
-    | ((data: ElementData, weaverse: WeaverseHydrogen) => boolean)
-}
-
-export type HeadingInputType = 'heading'
-
-export type HeadingInput = {
-  type: HeadingInputType
-  label: string
-  [key: string]: any
-}
-
-export interface InspectorGroup {
-  group: string
-  inputs: (BasicInput | HeadingInput)[]
-}
+export interface HydrogenComponentSchema extends SchemaElementSchema {}
 
 export interface HydrogenComponentProps<L = any> extends WeaverseElement {
   className?: string
@@ -114,11 +98,7 @@ export type WeaverseInternal = {
   themeSettingsStore: ThemeSettingsStore
 }
 
-export type HydrogenComponentPresets = {
-  type: string
-  children?: HydrogenComponentPresets[]
-  [key: string]: any
-}
+export type HydrogenComponentPresets = SchemaComponentPresets
 
 export interface HydrogenElement {
   Component:
@@ -208,24 +188,15 @@ export interface HydrogenThemeSchema {
     documentationUrl: string
     supportUrl: string
   }
-  inspector: InspectorGroup[]
+  /** @deprecated Use settings instead */
+  inspector?: InspectorGroup[]
+  settings?: InspectorGroup[]
   i18n?: {
     urlStructure: 'url-path' | 'subdomain' | 'top-level-domain'
     defaultLocale: WeaverseI18n
     shopLocales: WeaverseI18n[]
   }
 }
-
-export type PageType =
-  | 'INDEX'
-  | 'PRODUCT'
-  | 'ALL_PRODUCTS'
-  | 'COLLECTION'
-  | 'COLLECTION_LIST'
-  | 'PAGE'
-  | 'BLOG'
-  | 'ARTICLE'
-  | 'CUSTOM'
 
 export type FetchProjectRequestBody = {
   projectId: string
