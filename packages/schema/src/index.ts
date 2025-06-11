@@ -83,10 +83,20 @@ export const BasicInputSchema = z.object({
       'Whether to revalidate the prop when the value changes, use for product, product-list, collection, collection-list, blog, metaobject',
     ),
   condition: z
-    .any()
+    .unknown()
     .optional()
+    .refine(
+      (val) =>
+        val === undefined ||
+        typeof val === 'string' ||
+        typeof val === 'function',
+      {
+        message:
+          'Condition must be a string (deprecated) or function: (data) => boolean',
+      },
+    )
     .describe(
-      'Condition for conditional rendering. Use function-based conditions: (data) => boolean',
+      'Condition for conditional rendering. Use function-based conditions: (data) => boolean. String conditions are deprecated.',
     ),
   defaultValue: z
     .union([
