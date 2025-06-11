@@ -1,5 +1,13 @@
 # @weaverse/react
 
+## 5.3.2
+
+### Patch Changes
+
+- Serialize condition functions before sending to client
+- Updated dependencies
+  - @weaverse/core@5.3.2
+
 ## 5.3.1
 
 ### Patch Changes

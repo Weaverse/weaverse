@@ -20,7 +20,13 @@
   },
   "linter": {
     "rules": {
-      "style": {}
+      "style": {},
+      "suspicious": {
+        "noExplicitAny": "off"
+      },
+      "correctness": {
+        "noUnusedVariables": "off"
+      }
     }
   }
 }
