@@ -1,5 +1,13 @@
 # @weaverse/core
 
+## 5.3.0
+
+### Minor Changes
+
+- update schema validation
+
+## 5.2.5
+
 ## 5.2.4
 
 ### Patch Changes

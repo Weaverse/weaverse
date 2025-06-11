@@ -79,6 +79,7 @@ export const IMAGES_PLACEHOLDERS = {
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-product-watch-2-1024x1024.svg',
 }
 
+// Re-export utilities from @weaverse/react
 export {
   isBrowser,
   isIframe,
@@ -88,7 +89,11 @@ export {
   useWeaverse,
 }
 
+// Re-export all types and utilities from schema package
 export * from '@weaverse/schema'
+export * from './components'
+// Export hydrogen-specific modules
 export * from './types'
+export * from './utils'
 export * from './WeaverseHydrogenRoot'
 export * from './weaverse-client'

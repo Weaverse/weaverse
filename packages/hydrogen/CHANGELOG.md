@@ -1,5 +1,26 @@
 # @weaverse/hydrogen
 
+## 5.3.0
+
+### Minor Changes
+
+- update schema validation
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/schema@0.7.0
+  - @weaverse/react@5.3.0
+
+## 5.2.5
+
+### Patch Changes
+
+- update zod validation
+- Updated dependencies
+  - @weaverse/schema@0.6.1
+  - @weaverse/react@5.2.5
+
 ## 5.2.4
 
 ### Patch Changes

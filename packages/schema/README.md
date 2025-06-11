@@ -108,6 +108,221 @@ export const myComponent: HydrogenComponent = {
 }
 ```
 
+## Enhanced API Features
+
+### Structured Validation Results
+
+The enhanced validation system provides detailed error information:
+
+```typescript
+import { validateSchema, parseSchema, isValidSchema } from '@weaverse/schema'
+
+// Get detailed validation results
+const result = validateSchema(mySchema)
+if (!result.success) {
+  result.issues.forEach(issue => {
+    console.log(`Error: ${issue.message}`)
+    if (issue.path) {
+      console.log(`At: ${issue.path.join('.')}`)
+    }
+    if (issue.expected) {
+      console.log(`Expected: ${JSON.stringify(issue.expected)}`)
+    }
+  })
+}
+
+// Parse with throwing on errors
+try {
+  const validSchema = parseSchema(unknownData)
+} catch (error) {
+  console.error('Schema validation failed:', error.message)
+}
+
+// Simple validation check
+if (isValidSchema(data)) {
+  // TypeScript knows data is SchemaType
+  console.log(data.title)
+}
+```
+
+### Schema Builder Pattern
+
+Create schemas fluently with the builder pattern:
+
+```typescript
+import { schemaBuilder, inputHelpers, groupHelpers } from '@weaverse/schema'
+
+const schema = schemaBuilder()
+  .title('Product Card')
+  .type('product-card')
+  .limit(10)
+  .addSetting(
+    groupHelpers.content([
+      inputHelpers.text('title', 'Product Title'),
+      inputHelpers.textarea('description', 'Product Description'),
+      inputHelpers.image('image', 'Product Image')
+    ])
+  )
+  .addSetting(
+    groupHelpers.style([
+      inputHelpers.select('layout', 'Layout', [
+        { label: 'Card', value: 'card' },
+        { label: 'List', value: 'list' }
+      ]),
+      inputHelpers.switch('showPrice', 'Show Price', true)
+    ])
+  )
+  .enabledOn({
+    pages: ['PRODUCT', 'COLLECTION'],
+    groups: ['body']
+  })
+  .build()
+```
+
+### Input Helpers
+
+Create common inputs easily:
+
+```typescript
+import { inputHelpers } from '@weaverse/schema'
+
+// Text inputs
+const titleInput = inputHelpers.text('title', 'Title', {
+  placeholder: 'Enter title...',
+  helpText: 'This will be displayed as the main heading'
+})
+
+// Range inputs with configuration
+const paddingInput = inputHelpers.range('padding', 'Padding', {
+  min: 0,
+  max: 100,
+  step: 5,
+  unit: 'px'
+})
+
+// Select inputs with options
+const alignmentInput = inputHelpers.select('alignment', 'Text Alignment', [
+  { label: 'Left', value: 'left' },
+  { label: 'Center', value: 'center' },
+  { label: 'Right', value: 'right' }
+])
+
+// Switch with default value
+const visibleInput = inputHelpers.switch('visible', 'Visible', true)
+
+// Heading separators
+const sectionHeading = inputHelpers.heading('Advanced Settings')
+```
+
+### Group Helpers
+
+Create common setting groups:
+
+```typescript
+import { groupHelpers, inputHelpers } from '@weaverse/schema'
+
+const contentGroup = groupHelpers.content([
+  inputHelpers.text('title'),
+  inputHelpers.textarea('description'),
+  inputHelpers.image('backgroundImage')
+])
+
+const layoutGroup = groupHelpers.layout([
+  inputHelpers.range('columns', 'Columns', { min: 1, max: 4 }),
+  inputHelpers.select('spacing', 'Spacing', [
+    { label: 'Small', value: 'sm' },
+    { label: 'Medium', value: 'md' },
+    { label: 'Large', value: 'lg' }
+  ])
+])
+
+const styleGroup = groupHelpers.style([
+  inputHelpers.heading('Colors'),
+  inputHelpers.text('backgroundColor', 'Background Color'),
+  inputHelpers.text('textColor', 'Text Color')
+])
+```
+
+### Schema Composition
+
+Merge and extend existing schemas:
+
+```typescript
+import { mergeSchemas, createSchema } from '@weaverse/schema'
+
+const baseCardSchema = createSchema({
+  title: 'Base Card',
+  type: 'base-card',
+  settings: [
+    groupHelpers.content([
+      inputHelpers.text('title'),
+      inputHelpers.textarea('description')
+    ])
+  ]
+})
+
+const productCardSchema = mergeSchemas(baseCardSchema, {
+  title: 'Product Card',
+  type: 'product-card',
+  settings: [
+    groupHelpers.content([
+      inputHelpers.image('productImage'),
+      inputHelpers.switch('showPrice', 'Show Price', true)
+    ])
+  ]
+})
+```
+
+### Schema Registry
+
+Manage multiple schemas centrally:
+
+```typescript
+import { schemaRegistry } from '@weaverse/schema'
+
+// Register schemas
+schemaRegistry.register('hero-banner', heroSchema)
+schemaRegistry.register('product-card', productCardSchema)
+schemaRegistry.register('testimonial', testimonialSchema)
+
+// Retrieve schemas
+const heroSchema = schemaRegistry.get('hero-banner')
+
+// List all schemas
+const allSchemas = schemaRegistry.list()
+
+// Validate all registered schemas
+const validation = schemaRegistry.validateAll()
+console.log(`Valid schemas: ${validation.valid.length}`)
+console.log(`Invalid schemas: ${validation.invalid.length}`)
+```
+
+### Development Tools
+
+Debug and analyze schemas:
+
+```typescript
+import { devTools } from '@weaverse/schema'
+
+// Analyze schema structure
+const analysis = devTools.analyzeSchema(mySchema)
+console.log(`Schema "${analysis.stats.title}" has ${analysis.stats.inputCount} inputs`)
+
+// Pretty print for debugging
+console.log(devTools.prettyPrint(mySchema))
+
+// Generate TypeScript interface
+const tsInterface = devTools.generateTypeInterface(mySchema)
+console.log(tsInterface)
+// Output:
+// interface ProductCardProps {
+//   title: string
+//   description: string
+//   showPrice?: boolean
+//   layout: 'card' | 'list'
+// }
+```
+
 ## Type Safety
 
 All types are inferred from Zod schemas, ensuring:
