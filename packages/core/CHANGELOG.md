@@ -1,5 +1,15 @@
 # @weaverse/core
 
+## 5.2.4
+
+### Patch Changes
+
+- 43f3da3: update schema
+
+## 5.2.3
+
+## 5.2.2
+
 ## 5.2.1
 
 ## 5.2.0

@@ -1,5 +1,29 @@
 # @weaverse/hydrogen
 
+## 5.2.4
+
+### Patch Changes
+
+- 43f3da3: update schema
+- Updated dependencies [43f3da3]
+  - @weaverse/schema@0.5.1
+  - @weaverse/react@5.2.4
+
+## 5.2.3
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/schema@0.5.0
+  - @weaverse/react@5.2.3
+
+## 5.2.2
+
+### Patch Changes
+
+- fix minor bug with previewing section feature
+  - @weaverse/react@5.2.2
+
 ## 5.2.1
 
 ### Patch Changes
