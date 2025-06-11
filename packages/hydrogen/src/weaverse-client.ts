@@ -174,9 +174,9 @@ export class WeaverseClient {
             this.themeSchema && typeof this.themeSchema === 'object'
               ? {
                   ...this.themeSchema,
-                  settings: this.themeSchema?.settings.map((group) => ({
+                  settings: this.themeSchema?.settings?.map((group) => ({
                     ...group,
-                    inputs: group?.inputs.map((input) => {
+                    inputs: group?.inputs?.map((input) => {
                       if (typeof input?.condition === 'function') {
                         return {
                           ...input,
