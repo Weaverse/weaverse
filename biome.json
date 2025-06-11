@@ -23,6 +23,9 @@
       "style": {},
       "suspicious": {
         "noExplicitAny": "off"
+      },
+      "correctness": {
+        "noUnusedVariables": "off"
       }
     }
   }
