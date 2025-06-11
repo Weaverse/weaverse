@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 5.3.2
+
+### Patch Changes
+
+- Serialize condition functions before sending to client
+
 ## 5.3.1
 
 ### Patch Changes
