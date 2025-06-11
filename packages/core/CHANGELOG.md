@@ -1,16 +1,18 @@
 # @weaverse/core
 
-## 5.2.6
+## 5.3.1
 
 ### Patch Changes
 
-- Serialize condition functions in theme schema before sending to client
+- minor update schema
+
+## 5.3.0
+
+### Minor Changes
+
+- update schema validation
 
 ## 5.2.5
-
-### Patch Changes
-
-- Serialize condition functions in theme schema before sending to client
 
 ## 5.2.4
 

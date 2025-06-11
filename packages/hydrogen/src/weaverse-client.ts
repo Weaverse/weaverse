@@ -315,7 +315,7 @@ export class WeaverseClient {
 
   execComponentLoader = async (item: HydrogenComponentData) => {
     let { data = {}, type, id } = item
-    let component = this.components.find(({ schema }) => schema?.type === type)
+    let component = this.components?.find(({ schema }) => schema?.type === type)
     let loader = component?.loader
     if (typeof loader === 'function') {
       try {

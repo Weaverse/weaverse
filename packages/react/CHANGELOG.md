@@ -1,20 +1,29 @@
 # @weaverse/react
 
-## 5.2.6
+## 5.3.1
 
 ### Patch Changes
 
-- Serialize condition functions in theme schema before sending to client
+- minor update schema
 - Updated dependencies
-  - @weaverse/core@5.2.6
+  - @weaverse/core@5.3.1
+
+## 5.3.0
+
+### Minor Changes
+
+- update schema validation
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/core@5.3.0
 
 ## 5.2.5
 
 ### Patch Changes
 
-- Serialize condition functions in theme schema before sending to client
-- Updated dependencies
-  - @weaverse/core@5.2.5
+- @weaverse/core@5.2.5
 
 ## 5.2.4
 
