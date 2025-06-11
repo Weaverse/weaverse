@@ -100,10 +100,10 @@ importers:
         specifier: '3'
         version: 3.0.0(@shopify/oxygen-workers-types@4.1.10)(react-router@7.6.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       '@weaverse/react':
-        specifier: 5.3.0
+        specifier: 5.3.1
         version: link:../react
       '@weaverse/schema':
-        specifier: 0.7.0
+        specifier: 0.7.1
         version: link:../schema
       react:
         specifier: '>=18'
@@ -121,7 +121,7 @@ importers:
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: 5.3.0
+        specifier: 5.3.1
         version: link:../core
       clsx:
         specifier: ^2.1.1
@@ -136,8 +136,8 @@ importers:
   packages/schema:
     dependencies:
       zod:
-        specifier: ^3.25.0
-        version: 3.25.55
+        specifier: ^3.25.61
+        version: 3.25.61
     devDependencies:
       vitest:
         specifier: ^2.0.0
@@ -152,7 +152,7 @@ importers:
         specifier: ^1.2.8
         version: 1.2.8(react@19.1.0)
       '@weaverse/react':
-        specifier: 5.3.0
+        specifier: 5.3.1
         version: link:../react
       keen-slider:
         specifier: ^6.8.6
@@ -221,7 +221,7 @@ importers:
         specifier: ^4.1.7
         version: 4.1.8(vite@6.3.5(@types/node@24.0.0)(jiti@2.4.2)(lightningcss@1.30.1)(yaml@2.8.0))
       '@weaverse/hydrogen':
-        specifier: 5.3.0
+        specifier: 5.3.1
         version: link:../../packages/hydrogen
       class-variance-authority:
         specifier: 0.7.1
@@ -5352,8 +5352,8 @@ packages:
   zod@3.22.3:
     resolution: {integrity: sha512-EjIevzuJRiRPbVH4mGc8nApb/lVLKVpmUhAaR5R5doKGfAnGJ6Gr3CViAVjP+4FWSxCsybeWQdcgCtbX+7oZug==}
 
-  zod@3.25.55:
-    resolution: {integrity: sha512-219huNnkSLQnLsQ3uaRjXsxMrVm5C9W3OOpEVt2k5tvMKuA8nBSu38e0B//a+he9Iq2dvmk2VyYVlHqiHa4YBA==}
+  zod@3.25.61:
+    resolution: {integrity: sha512-fzfJgUw78LTNnHujj9re1Ov/JJQkRZZGDMcYqSx7Hp4rPOkKywaFHq0S6GoHeXs0wGNE/sIOutkXgnwzrVOGCQ==}
 
 snapshots:
 
@@ -10673,4 +10673,4 @@ snapshots:
 
   zod@3.22.3: {}
 
-  zod@3.25.55: {}
+  zod@3.25.61: {}
