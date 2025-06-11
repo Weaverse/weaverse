@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.1
+
+### Patch Changes
+
+- minor update schema
+
 ## 0.7.0
 
 ### Minor Changes

@@ -1,5 +1,14 @@
 # @weaverse/hydrogen
 
+## 5.3.1
+
+### Patch Changes
+
+- minor update schema
+- Updated dependencies
+  - @weaverse/schema@0.7.1
+  - @weaverse/react@5.3.1
+
 ## 5.3.0
 
 ### Minor Changes

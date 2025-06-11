@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 5.3.1
+
+### Patch Changes
+
+- minor update schema
+
 ## 5.3.0
 
 ### Minor Changes
