@@ -170,7 +170,24 @@ export class WeaverseClient {
       if (this.configs.isDesignMode) {
         data = {
           ...data,
-          schema: this.themeSchema,
+          schema:
+            this.themeSchema && typeof this.themeSchema === 'object'
+              ? {
+                  ...this.themeSchema,
+                  settings: this.themeSchema?.settings.map((group) => ({
+                    ...group,
+                    inputs: group?.inputs.map((input) => {
+                      if (typeof input?.condition === 'function') {
+                        return {
+                          ...input,
+                          condition: input.condition.toString(),
+                        }
+                      }
+                      return input
+                    }),
+                  })),
+                }
+              : null,
           publicEnv: this.configs.publicEnv,
         }
       }
@@ -291,8 +308,7 @@ export class WeaverseClient {
         },
       }
     } catch (e) {
-      // biome-ignore lint/style/noUnusedTemplateLiteral: <explanation>
-      console.error(`❌ Page load failed.`, e)
+      console.error('❌ Page load failed.', e)
       return null
     }
   }
