@@ -1,5 +1,30 @@
 # @weaverse/react
 
+## 5.3.1
+
+### Patch Changes
+
+- minor update schema
+- Updated dependencies
+  - @weaverse/core@5.3.1
+
+## 5.3.0
+
+### Minor Changes
+
+- update schema validation
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/core@5.3.0
+
+## 5.2.5
+
+### Patch Changes
+
+- @weaverse/core@5.2.5
+
 ## 5.2.4
 
 ### Patch Changes

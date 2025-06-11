@@ -144,7 +144,7 @@ export let WeaverseHydrogenRoot = memo(
     ),
   }: {
     components: HydrogenComponent[]
-    errorComponent?: React.FC<{ error }>
+    errorComponent?: React.FC<{ error: any }>
   }) => {
     let loaderData = useLoaderData()
     // @ts-ignore
