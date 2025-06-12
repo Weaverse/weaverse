@@ -1,5 +1,6 @@
 import {
   BasicInputSchema,
+  createSchema,
   inputHelpers,
   RangeInputConfigsSchema,
   type SchemaType,
@@ -7,6 +8,61 @@ import {
   ToggleGroupConfigsSchema,
   validateSchema,
 } from '../src'
+
+// Test validate schema
+function testValidateSchema() {
+  console.log('Testing validate schema...')
+  let schema = createSchema({
+    type: 'test-component',
+    title: 'Test Component',
+    settings: [
+      {
+        group: 'General',
+        inputs: [
+          {
+            type: 'range',
+            name: 'padding',
+            label: 'Padding',
+            configs: {
+              min: 0,
+              max: 100,
+            },
+          },
+          {
+            type: 'select',
+            name: 'alignment',
+            label: 'Alignment',
+            configs: {
+              options: [
+                { label: 'Left', value: 'left' },
+                { label: 'Right', value: 'right' },
+              ],
+            },
+          },
+          {
+            type: 'toggle-group',
+            name: 'display',
+            label: 'Display Mode',
+            configs: {
+              options: [
+                { label: 'Grid', value: 'grid', icon: 'grid-icon' },
+                { label: 'List', value: 'list', icon: 'list-icon' },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  })
+
+  const result = validateSchema(schema)
+  if (result.success) {
+    console.log('✓ Schema validated successfully')
+  } else {
+    console.log('✗ Schema validation failed')
+    console.log('Issues:', result.issues)
+  }
+}
 
 // Test range input configs preservation
 function testRangeInputConfigs() {
@@ -376,6 +432,7 @@ function testIndividualConfigsSchemas() {
 function runConfigsValidationTests() {
   console.log('Running configs validation tests...\n')
 
+  testValidateSchema()
   testRangeInputConfigs()
   testSelectInputConfigs()
   testToggleGroupInputConfigs()
