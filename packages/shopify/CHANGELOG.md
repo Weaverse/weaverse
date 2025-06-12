@@ -1,5 +1,21 @@
 # @weaverse/shopify
 
+## 5.3.4
+
+### Patch Changes
+
+- Preserve configs types while still keep the validation
+- Updated dependencies
+  - @weaverse/react@5.3.4
+
+## 5.3.3
+
+### Patch Changes
+
+- Upgrade schema builder package to fix validation errors
+- Updated dependencies
+  - @weaverse/react@5.3.3
+
 ## 5.3.2
 
 ### Patch Changes
