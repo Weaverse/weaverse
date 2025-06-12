@@ -64,51 +64,87 @@ export const ConfigsPropsSchema = z.union([
   RangeInputConfigsSchema,
 ])
 
-export const BasicInputSchema = z.object({
-  type: inputTypeSchema,
-  name: z
-    .string()
-    .min(1, 'Name is required')
-    .describe(
-      'The name of the prop(camelCase) which will be used in the component',
-    ),
-  label: z.string().optional().describe('The label of the prop'),
-  placeholder: z.string().optional(),
-  helpText: z.string().optional(),
-  configs: ConfigsPropsSchema.optional(),
-  shouldRevalidate: z
-    .boolean()
-    .optional()
-    .describe(
-      'Whether to revalidate the prop when the value changes, use for product, product-list, collection, collection-list, blog, metaobject',
-    ),
-  condition: z
-    .unknown()
-    .optional()
-    .refine(
-      (val) =>
-        val === undefined ||
-        typeof val === 'string' ||
-        typeof val === 'function',
-      {
-        message:
-          'Condition must be a string (deprecated) or function: (data) => boolean',
-      },
-    )
-    .describe(
-      'Condition for conditional rendering. Use function-based conditions: (data) => boolean. String conditions are deprecated.',
-    ),
-  defaultValue: z
-    .union([
-      z.string(),
-      z.number(),
-      z.boolean(),
-      z.record(z.string(), z.unknown()),
-      z.unknown(),
-    ])
-    .optional()
-    .describe('The default value of the prop'),
-})
+export const BasicInputSchema = z
+  .object({
+    type: inputTypeSchema,
+    name: z
+      .string()
+      .min(1, 'Name is required')
+      .describe(
+        'The name of the prop(camelCase) which will be used in the component',
+      ),
+    label: z.string().optional().describe('The label of the prop'),
+    placeholder: z.string().optional(),
+    helpText: z.string().optional(),
+    configs: z.unknown().optional(), // Changed from ConfigsPropsSchema.optional() to fix union parsing issue
+    shouldRevalidate: z
+      .boolean()
+      .optional()
+      .describe(
+        'Whether to revalidate the prop when the value changes, use for product, product-list, collection, collection-list, blog, metaobject',
+      ),
+    condition: z
+      .unknown()
+      .optional()
+      .refine(
+        (val) =>
+          val === undefined ||
+          typeof val === 'string' ||
+          typeof val === 'function',
+        {
+          message:
+            'Condition must be a string (deprecated) or function: (data) => boolean',
+        },
+      )
+      .describe(
+        'Condition for conditional rendering. Use function-based conditions: (data) => boolean. String conditions are deprecated.',
+      ),
+    defaultValue: z
+      .union([
+        z.string(),
+        z.number(),
+        z.boolean(),
+        z.record(z.string(), z.unknown()),
+        z.unknown(),
+      ])
+      .optional()
+      .describe('The default value of the prop'),
+  })
+  .check((ctx) => {
+    // Validate configs based on input type to prevent union parsing issues
+    if (ctx.value.configs !== undefined) {
+      let configsSchema: z.ZodSchema | null = null
+
+      switch (ctx.value.type) {
+        case 'select':
+          configsSchema = SelectInputConfigsSchema
+          break
+        case 'toggle-group':
+          configsSchema = ToggleGroupConfigsSchema
+          break
+        case 'range':
+          configsSchema = RangeInputConfigsSchema
+          break
+        default:
+          // For other input types, configs should be undefined or allow any structure
+          return
+      }
+
+      if (configsSchema) {
+        const result = configsSchema.safeParse(ctx.value.configs)
+        if (!result.success) {
+          result.error.issues.forEach((issue) => {
+            ctx.issues.push({
+              code: z.ZodIssueCode.custom,
+              path: ['configs', ...issue.path],
+              message: issue.message,
+              input: ctx.value,
+            })
+          })
+        }
+      }
+    }
+  })
 
 export const HeadingInputSchema = z
   .object({
