@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import {
   BasicInputSchema,
   createSchema,
@@ -9,438 +10,327 @@ import {
   validateSchema,
 } from '../src'
 
-// Test validate schema
-function testValidateSchema() {
-  console.log('Testing validate schema...')
-  let schema = createSchema({
-    type: 'test-component',
-    title: 'Test Component',
-    settings: [
-      {
-        group: 'General',
-        inputs: [
+describe('Configs Validation Tests', () => {
+  describe('Schema Validation', () => {
+    it('should validate schema with mixed input configs', () => {
+      const schema = createSchema({
+        type: 'test-component',
+        title: 'Test Component',
+        settings: [
           {
-            type: 'range',
-            name: 'padding',
-            label: 'Padding',
-            configs: {
-              min: 0,
-              max: 100,
-            },
-          },
-          {
-            type: 'select',
-            name: 'alignment',
-            label: 'Alignment',
-            configs: {
-              options: [
-                { label: 'Left', value: 'left' },
-                { label: 'Right', value: 'right' },
-              ],
-            },
-          },
-          {
-            type: 'toggle-group',
-            name: 'display',
-            label: 'Display Mode',
-            configs: {
-              options: [
-                { label: 'Grid', value: 'grid', icon: 'grid-icon' },
-                { label: 'List', value: 'list', icon: 'list-icon' },
-              ],
-            },
+            group: 'General',
+            inputs: [
+              {
+                type: 'range',
+                name: 'padding',
+                label: 'Padding',
+                configs: {
+                  min: 0,
+                  max: 100,
+                },
+              },
+              {
+                type: 'select',
+                name: 'alignment',
+                label: 'Alignment',
+                configs: {
+                  options: [
+                    { label: 'Left', value: 'left' },
+                    { label: 'Right', value: 'right' },
+                  ],
+                },
+              },
+              {
+                type: 'toggle-group',
+                name: 'display',
+                label: 'Display Mode',
+                configs: {
+                  options: [
+                    { label: 'Grid', value: 'grid', icon: 'grid-icon' },
+                    { label: 'List', value: 'list', icon: 'list-icon' },
+                  ],
+                },
+              },
+            ],
           },
         ],
-      },
-    ],
-  })
+      })
 
-  const result = validateSchema(schema)
-  if (result.success) {
-    console.log('✓ Schema validated successfully')
-  } else {
-    console.log('✗ Schema validation failed')
-    console.log('Issues:', result.issues)
-  }
-}
-
-// Test range input configs preservation
-function testRangeInputConfigs() {
-  console.log('Testing range input configs preservation...')
-
-  // Test with all range config properties
-  const rangeInputFull = {
-    type: 'range',
-    name: 'padding',
-    label: 'Padding',
-    configs: {
-      min: 0,
-      max: 100,
-      step: 5,
-      unit: 'px',
-    },
-  }
-
-  const fullResult = BasicInputSchema.safeParse(rangeInputFull)
-
-  if (
-    fullResult.success &&
-    JSON.stringify(fullResult.data.configs) ===
-      JSON.stringify(rangeInputFull.configs)
-  ) {
-    console.log('✓ Range input with all configs properties preserved correctly')
-  } else {
-    console.log('✗ Range input configs not preserved properly')
-    console.log('Expected:', rangeInputFull.configs)
-    console.log(
-      'Received:',
-      fullResult.success ? fullResult.data.configs : 'FAILED',
-    )
-  }
-
-  // Test with partial range config properties
-  const rangeInputPartial = {
-    type: 'range',
-    name: 'margin',
-    label: 'Margin',
-    configs: {
-      min: 0,
-      max: 50,
-    },
-  }
-
-  const partialResult = BasicInputSchema.safeParse(rangeInputPartial)
-
-  if (
-    partialResult.success &&
-    JSON.stringify(partialResult.data.configs) ===
-      JSON.stringify(rangeInputPartial.configs)
-  ) {
-    console.log(
-      '✓ Range input with partial configs properties preserved correctly',
-    )
-  } else {
-    console.log('✗ Range input partial configs not preserved properly')
-    console.log('Expected:', rangeInputPartial.configs)
-    console.log(
-      'Received:',
-      partialResult.success ? partialResult.data.configs : 'FAILED',
-    )
-  }
-
-  // Test with invalid range configs
-  const rangeInputInvalid = {
-    type: 'range',
-    name: 'size',
-    label: 'Size',
-    configs: {
-      min: 'invalid', // Should be number
-      max: 100,
-    },
-  }
-
-  const invalidResult = BasicInputSchema.safeParse(rangeInputInvalid)
-
-  if (!invalidResult.success) {
-    const hasConfigsError = invalidResult.error.issues.some(
-      (issue) => issue.path.includes('configs') && issue.path.includes('min'),
-    )
-    if (hasConfigsError) {
-      console.log('✓ Range input with invalid configs properly rejected')
-    } else {
-      console.log(
-        '✗ Range input validation should have failed on invalid configs',
-      )
-    }
-  } else {
-    console.log(
-      '✗ Range input with invalid configs should have failed validation',
-    )
-  }
-}
-
-// Test select input configs preservation
-function testSelectInputConfigs() {
-  console.log('Testing select input configs preservation...')
-
-  const selectInput = {
-    type: 'select',
-    name: 'alignment',
-    label: 'Text Alignment',
-    configs: {
-      options: [
-        { label: 'Left', value: 'left' },
-        { label: 'Center', value: 'center' },
-        { label: 'Right', value: 'right' },
-      ],
-    },
-  }
-
-  const result = BasicInputSchema.safeParse(selectInput)
-
-  if (
-    result.success &&
-    JSON.stringify(result.data.configs) === JSON.stringify(selectInput.configs)
-  ) {
-    console.log('✓ Select input configs preserved correctly')
-  } else {
-    console.log('✗ Select input configs not preserved properly')
-    console.log('Expected:', selectInput.configs)
-    console.log('Received:', result.success ? result.data.configs : 'FAILED')
-  }
-}
-
-// Test toggle group input configs preservation
-function testToggleGroupInputConfigs() {
-  console.log('Testing toggle group input configs preservation...')
-
-  const toggleInput = {
-    type: 'toggle-group',
-    name: 'layout',
-    label: 'Layout Type',
-    configs: {
-      options: [
-        { label: 'Grid', value: 'grid', icon: 'grid' },
-        { label: 'List', value: 'list', icon: 'list' },
-      ],
-    },
-  }
-
-  const result = BasicInputSchema.safeParse(toggleInput)
-
-  if (
-    result.success &&
-    JSON.stringify(result.data.configs) === JSON.stringify(toggleInput.configs)
-  ) {
-    console.log('✓ Toggle group input configs preserved correctly')
-  } else {
-    console.log('✗ Toggle group input configs not preserved properly')
-    console.log('Expected:', toggleInput.configs)
-    console.log('Received:', result.success ? result.data.configs : 'FAILED')
-  }
-}
-
-// Test input helpers with configs
-function testInputHelpersWithConfigs() {
-  console.log('Testing input helpers with configs...')
-
-  // Test range helper
-  const rangeInput = inputHelpers.range('spacing', 'Spacing', {
-    min: 0,
-    max: 200,
-    step: 10,
-    unit: 'rem',
-  })
-
-  const rangeResult = BasicInputSchema.safeParse(rangeInput)
-
-  if (
-    rangeResult.success &&
-    rangeResult.data.type === 'range' &&
-    rangeResult.data.name === 'spacing' &&
-    JSON.stringify(rangeResult.data.configs) ===
-      JSON.stringify({ min: 0, max: 200, step: 10, unit: 'rem' })
-  ) {
-    console.log('✓ Range input helper with configs works correctly')
-  } else {
-    console.log('✗ Range input helper with configs failed')
-    console.log('Expected configs:', {
-      min: 0,
-      max: 200,
-      step: 10,
-      unit: 'rem',
+      const result = validateSchema(schema)
+      expect(result.success).toBe(true)
     })
-    console.log(
-      'Received configs:',
-      rangeResult.success ? rangeResult.data.configs : 'FAILED',
-    )
-  }
+  })
 
-  // Test select helper
-  const selectInput = inputHelpers.select('variant', 'Button Variant', [
-    { label: 'Primary', value: 'primary' },
-    { label: 'Secondary', value: 'secondary' },
-  ])
+  describe('Range Input Configs', () => {
+    it('should preserve all range config properties', () => {
+      const rangeInputFull = {
+        type: 'range' as const,
+        name: 'padding',
+        label: 'Padding',
+        configs: {
+          min: 0,
+          max: 100,
+          step: 5,
+          unit: 'px',
+        },
+      }
 
-  const selectResult = BasicInputSchema.safeParse(selectInput)
+      const result = BasicInputSchema.safeParse(rangeInputFull)
 
-  if (
-    selectResult.success &&
-    selectResult.data.type === 'select' &&
-    Array.isArray((selectResult.data.configs as any)?.options)
-  ) {
-    console.log('✓ Select input helper with configs works correctly')
-  } else {
-    console.log('✗ Select input helper with configs failed')
-  }
-}
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.data.configs).toEqual(rangeInputFull.configs)
+      }
+    })
 
-// Test complete schema validation with mixed inputs
-function testSchemaWithMixedInputs() {
-  console.log('Testing complete schema with mixed input types...')
+    it('should preserve partial range config properties', () => {
+      const rangeInputPartial = {
+        type: 'range' as const,
+        name: 'margin',
+        label: 'Margin',
+        configs: {
+          min: 0,
+          max: 50,
+        },
+      }
 
-  const schema: SchemaType = {
-    title: 'Test Component',
-    type: 'test-component',
-    settings: [
-      {
-        group: 'Layout',
-        inputs: [
-          {
-            type: 'range',
-            name: 'padding',
-            label: 'Padding',
-            configs: {
-              min: 0,
-              max: 100,
-              step: 5,
-              unit: 'px',
-            },
-          },
-          {
-            type: 'select',
-            name: 'alignment',
-            label: 'Alignment',
-            configs: {
-              options: [
-                { label: 'Left', value: 'left' },
-                { label: 'Right', value: 'right' },
-              ],
-            },
-          },
-          {
-            type: 'toggle-group',
-            name: 'display',
-            label: 'Display Mode',
-            configs: {
-              options: [
-                { label: 'Grid', value: 'grid', icon: 'grid-icon' },
-                { label: 'List', value: 'list' },
-              ],
-            },
-          },
-        ],
-      },
-    ],
-  }
+      const result = BasicInputSchema.safeParse(rangeInputPartial)
 
-  const result = validateSchema(schema)
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.data.configs).toEqual(rangeInputPartial.configs)
+      }
+    })
 
-  if (result.success) {
-    const rangeInput = result.data.settings?.[0]?.inputs[0]
-    const selectInput = result.data.settings?.[0]?.inputs[1]
-    const toggleInput = result.data.settings?.[0]?.inputs[2]
+    it('should reject invalid range configs', () => {
+      const rangeInputInvalid = {
+        type: 'range' as const,
+        name: 'size',
+        label: 'Size',
+        configs: {
+          min: 'invalid', // Should be number
+          max: 100,
+        },
+      }
 
-    const rangeConfigsMatch =
-      JSON.stringify(rangeInput?.configs) ===
-      JSON.stringify({
+      const result = BasicInputSchema.safeParse(rangeInputInvalid)
+
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        const hasConfigsError = result.error.issues.some(
+          (issue) =>
+            issue.path.includes('configs') && issue.path.includes('min'),
+        )
+        expect(hasConfigsError).toBe(true)
+      }
+    })
+  })
+
+  describe('Select Input Configs', () => {
+    it('should preserve select input configs correctly', () => {
+      const selectInput = {
+        type: 'select' as const,
+        name: 'alignment',
+        label: 'Text Alignment',
+        configs: {
+          options: [
+            { label: 'Left', value: 'left' },
+            { label: 'Center', value: 'center' },
+            { label: 'Right', value: 'right' },
+          ],
+        },
+      }
+
+      const result = BasicInputSchema.safeParse(selectInput)
+
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.data.configs).toEqual(selectInput.configs)
+      }
+    })
+  })
+
+  describe('Toggle Group Input Configs', () => {
+    it('should preserve toggle group input configs correctly', () => {
+      const toggleInput = {
+        type: 'toggle-group' as const,
+        name: 'layout',
+        label: 'Layout Type',
+        configs: {
+          options: [
+            { label: 'Grid', value: 'grid', icon: 'grid' },
+            { label: 'List', value: 'list', icon: 'list' },
+          ],
+        },
+      }
+
+      const result = BasicInputSchema.safeParse(toggleInput)
+
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.data.configs).toEqual(toggleInput.configs)
+      }
+    })
+  })
+
+  describe('Input Helpers with Configs', () => {
+    it('should work correctly with range helper', () => {
+      const rangeInput = inputHelpers.range('spacing', 'Spacing', {
         min: 0,
-        max: 100,
-        step: 5,
-        unit: 'px',
+        max: 200,
+        step: 10,
+        unit: 'rem',
       })
 
-    const selectConfigsMatch =
-      JSON.stringify(selectInput?.configs) ===
-      JSON.stringify({
-        options: [
-          { label: 'Left', value: 'left' },
-          { label: 'Right', value: 'right' },
+      const result = BasicInputSchema.safeParse(rangeInput)
+
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.data.type).toBe('range')
+        expect(result.data.name).toBe('spacing')
+        expect(result.data.configs).toEqual({
+          min: 0,
+          max: 200,
+          step: 10,
+          unit: 'rem',
+        })
+      }
+    })
+
+    it('should work correctly with select helper', () => {
+      const selectInput = inputHelpers.select('variant', 'Button Variant', [
+        { label: 'Primary', value: 'primary' },
+        { label: 'Secondary', value: 'secondary' },
+      ])
+
+      const result = BasicInputSchema.safeParse(selectInput)
+
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.data.type).toBe('select')
+        expect(Array.isArray((result.data.configs as any)?.options)).toBe(true)
+      }
+    })
+  })
+
+  describe('Complete Schema with Mixed Inputs', () => {
+    it('should preserve all configs correctly in complete schema validation', () => {
+      const schema: SchemaType = {
+        title: 'Test Component',
+        type: 'test-component',
+        settings: [
+          {
+            group: 'Layout',
+            inputs: [
+              {
+                type: 'range',
+                name: 'padding',
+                label: 'Padding',
+                configs: {
+                  min: 0,
+                  max: 100,
+                  step: 5,
+                  unit: 'px',
+                },
+              },
+              {
+                type: 'select',
+                name: 'alignment',
+                label: 'Alignment',
+                configs: {
+                  options: [
+                    { label: 'Left', value: 'left' },
+                    { label: 'Right', value: 'right' },
+                  ],
+                },
+              },
+              {
+                type: 'toggle-group',
+                name: 'display',
+                label: 'Display Mode',
+                configs: {
+                  options: [
+                    { label: 'Grid', value: 'grid', icon: 'grid-icon' },
+                    { label: 'List', value: 'list' },
+                  ],
+                },
+              },
+            ],
+          },
         ],
-      })
+      }
 
-    const toggleConfigsMatch =
-      JSON.stringify(toggleInput?.configs) ===
-      JSON.stringify({
+      const result = validateSchema(schema)
+
+      expect(result.success).toBe(true)
+      if (result.success) {
+        const rangeInput = result.data.settings?.[0]?.inputs[0]
+        const selectInput = result.data.settings?.[0]?.inputs[1]
+        const toggleInput = result.data.settings?.[0]?.inputs[2]
+
+        expect(rangeInput?.configs).toEqual({
+          min: 0,
+          max: 100,
+          step: 5,
+          unit: 'px',
+        })
+
+        expect(selectInput?.configs).toEqual({
+          options: [
+            { label: 'Left', value: 'left' },
+            { label: 'Right', value: 'right' },
+          ],
+        })
+
+        expect(toggleInput?.configs).toEqual({
+          options: [
+            { label: 'Grid', value: 'grid', icon: 'grid-icon' },
+            { label: 'List', value: 'list' },
+          ],
+        })
+      }
+    })
+  })
+
+  describe('Individual Configs Schemas', () => {
+    it('should validate RangeInputConfigsSchema correctly', () => {
+      const rangeConfigs = { min: 0, max: 100, step: 5, unit: 'px' }
+      const result = RangeInputConfigsSchema.safeParse(rangeConfigs)
+
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.data).toEqual(rangeConfigs)
+      }
+    })
+
+    it('should validate SelectInputConfigsSchema correctly', () => {
+      const selectConfigs = {
+        options: [
+          { label: 'Option 1', value: 'opt1' },
+          { label: 'Option 2', value: 'opt2' },
+        ],
+      }
+      const result = SelectInputConfigsSchema.safeParse(selectConfigs)
+
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.data).toEqual(selectConfigs)
+      }
+    })
+
+    it('should validate ToggleGroupConfigsSchema correctly', () => {
+      const toggleConfigs = {
         options: [
           { label: 'Grid', value: 'grid', icon: 'grid-icon' },
           { label: 'List', value: 'list' },
         ],
-      })
+      }
+      const result = ToggleGroupConfigsSchema.safeParse(toggleConfigs)
 
-    if (rangeConfigsMatch && selectConfigsMatch && toggleConfigsMatch) {
-      console.log(
-        '✓ Complete schema with mixed input types preserves all configs correctly',
-      )
-    } else {
-      console.log('✗ Some configs not preserved in complete schema validation')
-      console.log('Range configs match:', rangeConfigsMatch)
-      console.log('Select configs match:', selectConfigsMatch)
-      console.log('Toggle configs match:', toggleConfigsMatch)
-    }
-  } else {
-    console.log('✗ Complete schema validation failed')
-    console.log('Issues:', result.issues)
-  }
-}
-
-// Test individual configs schemas
-function testIndividualConfigsSchemas() {
-  console.log('Testing individual configs schemas...')
-
-  // Test RangeInputConfigsSchema
-  const rangeConfigs = { min: 0, max: 100, step: 5, unit: 'px' }
-  const rangeResult = RangeInputConfigsSchema.safeParse(rangeConfigs)
-
-  if (
-    rangeResult.success &&
-    JSON.stringify(rangeResult.data) === JSON.stringify(rangeConfigs)
-  ) {
-    console.log('✓ RangeInputConfigsSchema validation works correctly')
-  } else {
-    console.log('✗ RangeInputConfigsSchema validation failed')
-  }
-
-  // Test SelectInputConfigsSchema
-  const selectConfigs = {
-    options: [
-      { label: 'Option 1', value: 'opt1' },
-      { label: 'Option 2', value: 'opt2' },
-    ],
-  }
-  const selectResult = SelectInputConfigsSchema.safeParse(selectConfigs)
-
-  if (
-    selectResult.success &&
-    JSON.stringify(selectResult.data) === JSON.stringify(selectConfigs)
-  ) {
-    console.log('✓ SelectInputConfigsSchema validation works correctly')
-  } else {
-    console.log('✗ SelectInputConfigsSchema validation failed')
-  }
-
-  // Test ToggleGroupConfigsSchema
-  const toggleConfigs = {
-    options: [
-      { label: 'Grid', value: 'grid', icon: 'grid-icon' },
-      { label: 'List', value: 'list' },
-    ],
-  }
-  const toggleResult = ToggleGroupConfigsSchema.safeParse(toggleConfigs)
-
-  if (
-    toggleResult.success &&
-    JSON.stringify(toggleResult.data) === JSON.stringify(toggleConfigs)
-  ) {
-    console.log('✓ ToggleGroupConfigsSchema validation works correctly')
-  } else {
-    console.log('✗ ToggleGroupConfigsSchema validation failed')
-  }
-}
-
-// Run all tests
-function runConfigsValidationTests() {
-  console.log('Running configs validation tests...\n')
-
-  testValidateSchema()
-  testRangeInputConfigs()
-  testSelectInputConfigs()
-  testToggleGroupInputConfigs()
-  testInputHelpersWithConfigs()
-  testSchemaWithMixedInputs()
-  testIndividualConfigsSchemas()
-
-  console.log('\n✓ All configs validation tests completed!')
-}
-
-runConfigsValidationTests()
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.data).toEqual(toggleConfigs)
+      }
+    })
+  })
+})
