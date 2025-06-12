@@ -76,7 +76,7 @@ export const BasicInputSchema = z
     label: z.string().optional().describe('The label of the prop'),
     placeholder: z.string().optional(),
     helpText: z.string().optional(),
-    configs: z.unknown().optional(), // Changed from ConfigsPropsSchema.optional() to fix union parsing issue
+    configs: z.custom<ConfigsProps | undefined>().optional(),
     shouldRevalidate: z
       .boolean()
       .optional()
