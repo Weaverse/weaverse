@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 5.3.4
+
+### Patch Changes
+
+- Preserve configs types while still keep the validation
+
 ## 5.3.3
 
 ### Patch Changes

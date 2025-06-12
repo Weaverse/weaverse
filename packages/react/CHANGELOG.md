@@ -1,5 +1,13 @@
 # @weaverse/react
 
+## 5.3.4
+
+### Patch Changes
+
+- Preserve configs types while still keep the validation
+- Updated dependencies
+  - @weaverse/core@5.3.4
+
 ## 5.3.3
 
 ### Patch Changes
