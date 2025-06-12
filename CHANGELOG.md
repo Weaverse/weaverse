@@ -19,6 +19,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [5.3.3] - 2025-01-26
+
+### Fixed
+- **Schema Validation**: Fixed range input configs validation bug where min, max, step, and unit properties were being stripped during safeParse operations
+- **Union Type Handling**: Improved Zod v3 union type parsing to maintain context-aware validation for different input types
+- **Config Preservation**: Ensured all input type configurations are properly preserved during schema validation
+
+### Changed
+- **Schema Package**: Upgraded `@weaverse/schema` to 0.7.2 with enhanced validation logic
+- **Dependencies**: Updated all dependent packages to maintain consistency across the SDK
+
+## [5.3.2] - 2025-01-26
+
+### Fixed
+- **Function Serialization**: Fixed issue with condition functions not being properly serialized before sending to client
+- **Client-Side Validation**: Improved client-side condition function handling to prevent runtime errors
+
+### Changed
+- **Function Handling**: Enhanced function serialization mechanism for better client-server communication
+
 ## [5.1.0] - 2025-06-04
 
 ### Added
