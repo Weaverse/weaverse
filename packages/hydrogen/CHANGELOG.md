@@ -1,5 +1,13 @@
 # @weaverse/hydrogen
 
+## 5.3.3
+
+### Patch Changes
+
+- Upgrade schema builder package to fix validation errors
+- Updated dependencies
+  - @weaverse/react@5.3.3
+
 ## 5.3.2
 
 ### Patch Changes

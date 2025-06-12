@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 5.3.3
+
+### Patch Changes
+
+- Upgrade schema builder package to fix validation errors
+
 ## 5.3.2
 
 ### Patch Changes
