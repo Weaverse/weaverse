@@ -3,8 +3,8 @@ applyTo: "**"
 ---
 
 # Copilot Instructions
-This project is a page builder web application that allows users to create and manage sections/pages. 
-The application is built using ReactRouter, and it uses MySQL as the database, and Prisma as the ORM.
+This project is a monorepo for Weaverse SDK packages, including Weaverse Hydrogen, Weaverse CLI, Weaverse Schema, and other related packages. 
+The codebase is written in TypeScript and follows modern JavaScript standards, using turborepo for package management and changeset for versioning.
 
 ## Coding Standards
 - Use camelCase for variable and function names.
