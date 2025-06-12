@@ -19,6 +19,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [5.3.4] - 2025-01-27
+
+### Fixed
+- **Better Tests**: Migrated old test files to use proper Vitest instead of console.log statements 🧪
+- **Schema Updates**: Updated to use the latest `@weaverse/schema` v0.7.3 for better validation
+
+### Changed
+- **All Packages**: Updated core, hydrogen, react, and shopify packages to work together smoothly
+
 ## [5.3.3] - 2025-01-26
 
 ### Fixed
