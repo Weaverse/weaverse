@@ -1,10 +1,10 @@
 ---
-applyTo: '**'
+applyTo: "**/*.md(x)"
 ---
 
 ## Writing Instructions
 
-When generating content for blogs, documentation, or any other text-based content, follow these guidelines:
+When generating content for blogs, documentation, or any other text-based content in markdown files, please follow these guidelines:
 
 - ALWAYS KEEPING THINGS SIMPLE!
 - Use simple English, direct language, avoiding complex jargon.
