@@ -1,0 +1,46 @@
+{
+  "name": "@weaverse/schema",
+  "version": "0.7.3",
+  "description": "Schema definitions for Weaverse",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "clean": "rimraf dist",
+    "test": "vitest",
+    "test:watch": "vitest --watch"
+  },
+  "tsup": {
+    "entry": [
+      "src/index.ts"
+    ],
+    "format": [
+      "esm"
+    ],
+    "dts": true,
+    "sourcemap": true,
+    "clean": true,
+    "outDir": "dist"
+  },
+  "author": "Weaverse",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/weaverse/weaverse.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "@weaverse:registry": "https://registry.npmjs.org"
+  },
+  "dependencies": {
+    "zod": "^3.25.61"
+  },
+  "devDependencies": {
+    "vitest": "^2.0.0"
+  }
+}

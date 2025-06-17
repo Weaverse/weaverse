@@ -1,5 +1,61 @@
 # @weaverse/core
 
+## 5.3.4
+
+### Patch Changes
+
+- Preserve configs types while still keep the validation
+
+## 5.3.3
+
+### Patch Changes
+
+- Upgrade schema builder package to fix validation errors
+
+## 5.3.2
+
+### Patch Changes
+
+- Serialize condition functions before sending to client
+
+## 5.3.1
+
+### Patch Changes
+
+- minor update schema
+
+## 5.3.0
+
+### Minor Changes
+
+- update schema validation
+
+## 5.2.5
+
+## 5.2.4
+
+### Patch Changes
+
+- 43f3da3: update schema
+
+## 5.2.3
+
+## 5.2.2
+
+## 5.2.1
+
+## 5.2.0
+
+### Minor Changes
+
+- update type system with new schema validation util
+
+## 5.1.0
+
+### Minor Changes
+
+- Migrate `inspector` field to new `settings` property.
+
 ## 5.0.0
 
 ### Major Changes

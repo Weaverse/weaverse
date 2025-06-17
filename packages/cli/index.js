@@ -89,7 +89,18 @@ const createEnvFile = async (path, projectId) => {
   try {
     const envExamplePath = `${path}/.env.example`
     const envExampleContent = await fs.readFile(envExamplePath, 'utf-8')
-    const envContent = `${envExampleContent}\nWEAVERSE_PROJECT_ID=${projectId}`
+
+    // Replace existing WEAVERSE_PROJECT_ID or add it if it doesn't exist
+    let envContent
+    if (envExampleContent.includes('WEAVERSE_PROJECT_ID=')) {
+      envContent = envExampleContent.replace(
+        /WEAVERSE_PROJECT_ID=.*/,
+        `WEAVERSE_PROJECT_ID=${projectId}`,
+      )
+    } else {
+      envContent = `${envExampleContent}\nWEAVERSE_PROJECT_ID=${projectId}`
+    }
+
     await fs.writeFile(`${path}/.env`, envContent)
     spinner.succeed('Environment variables configured')
   } catch (error) {
@@ -192,7 +203,9 @@ Options:
             spinner.succeed('Dependencies installed successfully')
             console.log(chalk.green('\n🎉 Project created successfully!'))
             console.log(chalk.blue('\nNext steps:'))
-            console.log(chalk.gray(`1. cd ${argv['project-name']}`))
+            console.log(
+              chalk.gray(`1. cd ${toKebabCase(argv['project-name'])}`),
+            )
             console.log(
               chalk.gray('2. Pull your Shopify environment variables:'),
             )
@@ -217,7 +230,7 @@ Options:
         } else {
           console.log(chalk.green('\n🎉 Project created successfully!'))
           console.log(chalk.blue('\nNext steps:'))
-          console.log(chalk.gray(`1. cd ${argv['project-name']}`))
+          console.log(chalk.gray(`1. cd ${toKebabCase(argv['project-name'])}`))
           console.log(chalk.gray('2. Pull your Shopify environment variables:'))
           console.log(chalk.gray('   npx shopify hydrogen env pull'))
           console.log(chalk.gray('3. npm install'))

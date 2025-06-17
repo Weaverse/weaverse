@@ -113,7 +113,7 @@ export let themeSchema: HydrogenThemeSchema = {
     supportUrl: "https://weaverse.io/contact",
   },
   // Define Theme settings accessible in Weaverse Studio > Theme > Customize
-  inspector: [
+  settings: [
     {
       group: "Colors",
       inputs: [
@@ -151,6 +151,9 @@ export let themeSchema: HydrogenThemeSchema = {
     // Refer to Pilot schema for a full example
   },
 };
+
+// Note: The 'inspector' property is deprecated but still supported for backward compatibility.
+// New themes should use 'settings' as shown above.
 ```
 
 ### 2. Global Styles ([`~/weaverse/style.tsx`](https://github.com/Weaverse/pilot/blob/main/app/weaverse/style.tsx))

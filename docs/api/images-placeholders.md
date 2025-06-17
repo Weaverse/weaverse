@@ -45,23 +45,25 @@ const IMAGES_PLACEHOLDERS = {
 ### As default values in a component schema
 
 ```tsx
-export const schema: HydrogenComponentSchema = {
-  type: 'banner',
-  inspector: [
+import { createSchema, IMAGES_PLACEHOLDERS } from '@weaverse/hydrogen';
+
+export let schema = createSchema({
+  type: 'hero-section',
+  title: 'Hero Section',
+  settings: [
     {
-      group: 'Banner',
+      group: 'Image',
       inputs: [
         {
           type: 'image',
-          name: 'image',
+          name: 'backgroundImage',
           label: 'Background Image',
-          defaultValue: IMAGES_PLACEHOLDERS.banner_1,
+          defaultValue: IMAGES_PLACEHOLDERS.hero_1,
         },
-        // ... other inputs
       ],
     },
   ],
-}
+});
 ```
 
 ### In a component for fallback images

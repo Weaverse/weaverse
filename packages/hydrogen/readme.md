@@ -15,7 +15,7 @@ provides a client for easy setup and data fetching from Weaverse CMS.
 - **Component Registration and Rendering**: Register React components with Weaverse and render them using
   the `WeaverseHydrogenRoot` component.
 - **Flexible Schema Definition**: Define behavior and interactivity of components within Weaverse Studio through
-  the `HydrogenComponentSchema`.
+  the `createSchema()` function.
 - **Customizable Input Settings**: Specify configurations for merchant-customizable component settings in Weaverse
   Studio.
 
@@ -104,29 +104,46 @@ export default function Homepage() {
 
 Define your component's schema to control its behavior and interactivity within Weaverse Studio:
 
-```typescript
-import type { HydrogenComponentSchema } from '@weaverse/hydrogen'
+```tsx
+// app/sections/Hero.tsx
+import { createSchema } from '@weaverse/hydrogen'
 
-export let schema: HydrogenComponentSchema = {
-  title: 'Product Card',
-  type: 'product-card',
-  inspector: [
+export type HeroProps = {
+  heading: string
+  description: string
+}
+
+export let schema = createSchema({
+  type: 'hero',
+  title: 'Hero Section',
+  settings: [
     {
-      group: 'Settings',
-      inputs: [], // Defining input settings
-    },
-  ],
-  childTypes: ['image', 'product-title', 'price'],
-  presets: {
-    type: 'product-card',
-    children: [{ type: 'image' }, { type: 'product-title' }, { type: 'price' }],
-  },
-  limit: 3,
-  enabledOn: {
-    pages: ['INDEX', 'PRODUCT', 'ALL_PRODUCTS'],
-    groups: ['body'],
-  },
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+      group: 'Content',
+      inputs: [
+        {
+          type: 'text',
+          name: 'heading',
+          label: 'Heading',
+          defaultValue: 'Welcome to our store'
+        },
+        {
+          type: 'textarea',
+          name: 'description', 
+          label: 'Description',
+          defaultValue: 'Discover amazing products'
+        }
+      ]
+    }
+  ]
+});
+
+export default function Hero({ heading, description }: HeroProps) {
+  return (
+    <section className="hero">
+      <h1>{heading}</h1>
+      <p>{description}</p>
+    </section>
+  )
 }
 ```
 

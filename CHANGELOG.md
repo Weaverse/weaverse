@@ -19,6 +19,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [5.3.4] - 2025-01-27
+
+### Fixed
+- **Better Tests**: Migrated old test files to use proper Vitest instead of console.log statements 🧪
+- **Schema Updates**: Updated to use the latest `@weaverse/schema` v0.7.3 for better validation
+
+### Changed
+- **All Packages**: Updated core, hydrogen, react, and shopify packages to work together smoothly
+
+## [5.3.3] - 2025-01-26
+
+### Fixed
+- **Schema Validation**: Fixed range input configs validation bug where min, max, step, and unit properties were being stripped during safeParse operations
+- **Union Type Handling**: Improved Zod v3 union type parsing to maintain context-aware validation for different input types
+- **Config Preservation**: Ensured all input type configurations are properly preserved during schema validation
+
+### Changed
+- **Schema Package**: Upgraded `@weaverse/schema` to 0.7.2 with enhanced validation logic
+- **Dependencies**: Updated all dependent packages to maintain consistency across the SDK
+
+## [5.3.2] - 2025-01-26
+
+### Fixed
+- **Function Serialization**: Fixed issue with condition functions not being properly serialized before sending to client
+- **Client-Side Validation**: Improved client-side condition function handling to prevent runtime errors
+
+### Changed
+- **Function Handling**: Enhanced function serialization mechanism for better client-server communication
+
+## [5.1.0] - 2025-06-04
+
+### Added
+- Support for the new `settings` property in component and theme schemas.
+- **Pilot Theme TailwindCSS v4 Migration**: The Pilot Weaverse Hydrogen Theme now uses TailwindCSS v4, bringing improved performance, better CSS-in-JS integration, and enhanced developer experience.
+
+### Changed
+- Deprecated the old `inspector` property. Schemas should now use `settings`.
+- **TailwindCSS Configuration**: Updated Pilot theme build system and styling architecture to leverage TailwindCSS v4's new features including automatic CSS-in-JS support and improved build performance.
+
+### Migration
+- Refer to the updated documentation for guidance on migrating existing
+  components from `inspector` to `settings`.
+- **TailwindCSS v4 Migration**: For existing Pilot theme users, we recommend creating a new project with `npx @weaverse/cli@latest create` to get the latest TailwindCSS v4 setup, or cloning the updated Pilot template. TailwindCSS v4 introduces significant architectural changes that are best adopted in a fresh project setup. Refer to the [TailwindCSS v4 migration guide](https://tailwindcss.com/docs/upgrade-guide) for detailed information about the new features and improvements.
+
 ## [5.0.0] - 2025-05-27
 
 ### 🚀 MAJOR RELEASE: React Router v7 Migration

@@ -50,7 +50,7 @@ Here's a breakdown of the available attributes in an input setting:
 | `type`             | `InputType`                                          | Specifies the kind of UI control the merchant will interact with.                                                     | ✅        |
 | `name`             | `string`                                             | The key of the value in the component's data. E.g., "title" binds to `component.data.title`.                          | ✅        |
 | `defaultValue`     | `string` \| `number` \| `boolean` \| `WeaverseImage` | Sets initial values for inputs and initial data for the component.                                                    | ➖        |
-| `label`            | `string`                                             | A label for the input to show in the Weaverse Studio's Inspector                                                      | ➖        |
+| `label`            | `string`                                             | A label for the input to show in the Weaverse Studio's settings panel                                                      | ➖        |
 | `placeholder`      | `string`                                             | A placeholder text to show when the input is empty.                                                                   | ➖        |
 | `configs`          | `AdditionalInputConfigs`                             | Additional options for inputs require more configuration. (Available for `select`, `toggle-group`, and `range` input) | ➖        |
 | `condition`        | `string` \| `function`                               | Only displays the input if the specified condition matches. Supports both string and function-based conditions.       | ➖        |
@@ -110,7 +110,7 @@ Here's a breakdown of the available attributes in an input setting:
 
 ### `heading`
 
-The **`heading`** input type is a special input that creates a heading or section title in the inspector panel. It's used to organize inputs into logical groups.
+The **`heading`** input type is a special input that creates a heading or section title in the settings panel. It's used to organize inputs into logical groups.
 
 **Example:**
 ```tsx

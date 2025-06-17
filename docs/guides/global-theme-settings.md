@@ -55,8 +55,24 @@ export let themeSchema: HydrogenThemeSchema = {
       }
     ),
   },
-  inspector: [
-    // Inspector groups will be defined here
+  settings: [
+    {
+      group: 'Layout',
+      inputs: [
+        {
+          type: 'range',
+          label: 'Container width',
+          name: 'pageWidth',
+          configs: {
+            min: 1000,
+            max: 1600,
+            step: 10,
+            unit: 'px',
+          },
+          defaultValue: 1200,
+        },
+      ],
+    },
   ],
 }
 ```
@@ -109,17 +125,17 @@ i18n: {
 },
 ```
 
-#### 3. Inspector
+#### 3. Settings
 
-The **`inspector`** section contains an array of **`InspectorGroup`** objects, each defining a logical group of related settings.
+The **`settings`** section contains an array of **`InspectorGroup`** objects, each defining a logical group of related settings.
 
 Each group contains:
 - A descriptive **`group`** name (e.g., "Layout", "Colors", "Typography")
 - An array of **`inputs`** representing individual settings
 
-### Inspector Group Example
+### Settings Group Example
 
-Here's a real example of an inspector group from the Pilot theme:
+Here's a real example of a settings group from the Pilot theme:
 
 ```tsx
 {
@@ -156,7 +172,7 @@ Here's a real example of an inspector group from the Pilot theme:
 
 ## Input Settings Reference
 
-Theme inspector inputs use the same structure as component inputs. Each input setting has standard attributes that determine how it appears and functions in the Weaverse Studio interface.
+Theme settings inputs use the same structure as component inputs. Each input setting has standard attributes that determine how it appears and functions in the Weaverse Studio interface.
 
 ```tsx
 {

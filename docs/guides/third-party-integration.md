@@ -95,12 +95,12 @@ Many third-party applications provide React components that you can incorporate 
 
    ```tsx
    // app/sections/third-party-widget/schema.ts
-   import type { HydrogenComponentSchema } from '@weaverse/hydrogen'
+   import { createSchema } from '@weaverse/hydrogen'
    
-   export const schema: HydrogenComponentSchema = {
+   export let schema = createSchema({
      type: 'third-party-widget',
      title: 'Third Party Widget',
-     inspector: [
+     settings: [
        {
          group: 'Widget Settings',
          inputs: [
@@ -126,7 +126,7 @@ Many third-party applications provide React components that you can incorporate 
          // Default children if needed
        ]
      }
-   }
+   })
    ```
 
 4. **Register the Section in Weaverse**
@@ -164,8 +164,9 @@ For third-party services that offer a REST or GraphQL API, Weaverse's loader pat
 
    ```tsx
    // app/sections/api-widget/index.tsx
-   import type { ComponentLoaderArgs, HydrogenComponentSchema } from '@weaverse/hydrogen'
-   import { forwardRef } from 'react'
+   import type { ComponentLoaderArgs } from '@weaverse/hydrogen'
+import { createSchema } from '@weaverse/hydrogen'
+import { forwardRef } from 'react'
    import { Section, type SectionProps } from '~/components/section'
    
    type ApiWidgetData = {
@@ -229,10 +230,10 @@ For third-party services that offer a REST or GraphQL API, Weaverse's loader pat
    
    export default ApiWidget
    
-   export let schema: HydrogenComponentSchema = {
+   export let schema = createSchema({
      type: 'api-widget',
      title: 'API Widget',
-     inspector: [
+     settings: [
        {
          group: 'API Settings',
          inputs: [
@@ -258,7 +259,7 @@ For third-party services that offer a REST or GraphQL API, Weaverse's loader pat
          ]
        }
      ]
-   }
+   })
    ```
 
 ## Data Fetching Patterns
@@ -380,11 +381,11 @@ Ali Reviews is a popular Shopify app for collecting and displaying product revie
 
 ```tsx
 // app/sections/ali-reviews/index.tsx
-import type {
-  ComponentLoaderArgs,
-  HydrogenComponentSchema,
-} from "@weaverse/hydrogen";
-import { forwardRef } from "react";
+  import type {
+    ComponentLoaderArgs,
+  } from "@weaverse/hydrogen";
+  import { createSchema } from "@weaverse/hydrogen";
+  import { forwardRef } from "react";
 import { Section, type SectionProps } from "~/components/section";
 import type { AliReview } from "./review-item";
 
@@ -435,12 +436,10 @@ export let loader = async ({
   return res?.data?.reviews;
 };
 
-export default AliReviewSection;
-
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "ali-reviews",
   title: "Ali Reviews box",
-  inspector: [
+  settings: [
     {
       group: "Integration",
       inputs: [
@@ -455,7 +454,7 @@ export let schema: HydrogenComponentSchema = {
         },
       ],
     },
-    // Other inspector groups...
+    // Other settings groups...
   ],
   childTypes: [
     "ali-reviews--list",
@@ -465,7 +464,7 @@ export let schema: HydrogenComponentSchema = {
     "button",
   ],
   // Preset configuration...
-};
+});
 ```
 
 The implementation:
@@ -480,7 +479,7 @@ Judge.me is another popular reviews platform that can be integrated with Weavers
 
 ```tsx
 // app/sections/judgeme-reviews/index.tsx
-import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import type { ComponentLoaderArgs } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import { Section, type SectionProps } from "~/components/section";
 
@@ -497,7 +496,7 @@ let JudgemeReviewSection = forwardRef<HTMLElement, SectionProps>(
 
 export default JudgemeReviewSection;
 
-export let schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "judgeme-reviews",
   title: "Judgeme Reviews",
   enabledOn: {
@@ -506,7 +505,7 @@ export let schema: HydrogenComponentSchema = {
   // Schema configuration...
   childTypes: ["heading", "paragraph", "judgeme-review--index"],
   // Preset configuration...
-};
+});
 ```
 
 The Judge.me integration leverages Hydrogen's existing product route data by accessing it through the Remix loader:
@@ -514,7 +513,8 @@ The Judge.me integration leverages Hydrogen's existing product route data by acc
 ```tsx
 // app/sections/judgeme-reviews/review-index.tsx
 import { useLoaderData } from "@remix-run/react";
-import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
+import type { ComponentLoaderArgs } from "@weaverse/hydrogen";
+import { createSchema } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
 import type { loader as productRouteLoader } from "~/routes/($locale).products.$productHandle";
 import ReviewForm from "./review-form";

@@ -73,7 +73,7 @@ weaverse.registerElement({
   schema: {
     title: 'Button',
     type: 'Button',
-    inspector: {
+    settings: {
       // Configuration options
     }
   }

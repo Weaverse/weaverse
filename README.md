@@ -16,9 +16,11 @@ simplify and enhance the integration of dynamic, content-rich web applications w
 
 ## Quick Links
 
+- **Install Weaverse MCP server**: [![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=weaverse-mcp&config=eyJjb21tYW5kIjoibnB4IC15IEB3ZWF2ZXJzZS9tY3AifQ%3D%3D)
 - **Home page**: https://weaverse.io
 - **Weaverse Studio playground**: https://studio.weaverse.io/demo
 - **Pilot theme demo**: https://pilot.weaverse.dev
+- **Changelog**: [CHANGELOG.md](./CHANGELOG.md)
 
 ## Community Engagement
 
@@ -51,8 +53,8 @@ Please refer to the [Contribution Guidelines](./CONTRIBUTING.md) for information
 Your contributions are welcome to further enhance the Weaverse SDKs. Feel free to fork the repository, make changes, and
 submit pull requests with your improvements.
 
-## About The Weaverse Team
+## About us
 
-Passionate about empowering developers, The Weaverse Team is committed to creating innovative tools and solutions that
+Passionate about empowering developers, Weaverse Team is committed to creating innovative tools and solutions that
 simplify and enhance web development. Our focus is on fostering a vibrant community and driving forward the evolution of
 web technologies.

@@ -37,14 +37,18 @@ interface HydrogenComponentProps<L = any> extends WeaverseElement {
 }
 ```
 
-### HydrogenComponentSchema
+### HydrogenComponentSchema (Legacy)
 
-Defines the schema for a component, including inspector inputs and settings.
+> **⚠️ Deprecated**: Use the `createSchema()` function instead of manually defining schema types. See the [Component Schema](#component-schema) section above for the modern approach.
+
+For legacy reference, the manual schema interface was:
 
 ```typescript
+// Legacy approach - use createSchema() instead
 interface HydrogenComponentSchema {
   childTypes?: string[];
-  inspector: InspectorGroup[];
+  settings: InspectorGroup[];
+  inspector?: InspectorGroup[]; // Deprecated: use 'settings' instead
   presets?: Omit<HydrogenComponentPresets, 'type'>;
   limit?: number;
   enabledOn?: {
@@ -54,6 +58,16 @@ interface HydrogenComponentSchema {
   pages?: ('*' | PageType)[];
   groups?: ('*' | 'header' | 'footer' | 'body')[];
 }
+```
+
+**Migration**: Replace manual schema definitions with `createSchema()`:
+
+```tsx
+// Old approach
+export const schema: HydrogenComponentSchema = { /* ... */ };
+
+// New approach
+export let schema = createSchema({ /* ... */ });
 ```
 
 ### HydrogenComponentData
@@ -73,7 +87,9 @@ interface HydrogenComponentData {
 
 ## Inspector Types
 
-Types used for defining the inspector UI in Weaverse Studio.
+Types used for defining the settings UI in Weaverse Studio.
+
+> **Note**: These types are still called "Inspector" types for historical reasons, but they are used to define the `settings` property in component schemas. The `inspector` property itself has been deprecated in favor of `settings`.
 
 ### InspectorGroup
 
@@ -163,7 +179,8 @@ interface HydrogenThemeSchema {
     documentationUrl: string;
     supportUrl: string;
   };
-  inspector: InspectorGroup[];
+  settings: InspectorGroup[];
+  inspector?: InspectorGroup[]; // Deprecated: use 'settings' instead
   i18n?: {
     urlStructure: 'url-path' | 'subdomain' | 'top-level-domain';
     defaultLocale: WeaverseI18n;
@@ -171,6 +188,8 @@ interface HydrogenThemeSchema {
   };
 }
 ```
+
+> **Note**: The `inspector` property has been deprecated in favor of `settings`. While `inspector` is still supported for backward compatibility, new theme schemas should use `settings`.
 
 ## Miscellaneous Types
 
@@ -211,8 +230,8 @@ Here's how you might use these types to define a component:
 import type {
   HydrogenComponent,
   HydrogenComponentProps,
-  HydrogenComponentSchema,
 } from '@weaverse/hydrogen';
+import { createSchema } from '@weaverse/hydrogen';
 
 type HeroBannerProps = HydrogenComponentProps<{
   featuredProducts: any[];
@@ -254,9 +273,10 @@ function HeroBanner({
   );
 }
 
-const schema: HydrogenComponentSchema = {
+let schema = createSchema({
   type: 'hero-banner',
-  inspector: [
+  title: 'Hero Banner',
+  settings: [
     {
       group: 'Content',
       inputs: [
@@ -290,7 +310,7 @@ const schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});
 
 async function loader({ data, weaverse }) {
   // Fetch featured products
@@ -335,3 +355,74 @@ declare module '@shopify/hydrogen' {
 
 - [WeaverseHydrogenRoot](/docs/api/weaverse-hydrogen-root) - The main component that uses these types
 - [WeaverseClient](/docs/api/weaverse-client) - Client for fetching Weaverse content
+
+### Component Schema
+
+The modern way to define component schemas is using the `createSchema()` function:
+
+```tsx
+import { createSchema } from '@weaverse/hydrogen';
+
+export let schema = createSchema({
+  type: 'my-component',
+  title: 'My Component',
+  settings: [
+    // ... settings configuration
+  ],
+});
+```
+
+The `createSchema()` function provides:
+- Runtime validation using Zod
+- Better TypeScript inference
+- Consistent validation across all schemas
+- Future-proof schema definitions
+
+### Schema Properties
+
+When using `createSchema()`, you can define the following properties:
+
+```tsx
+export let schema = createSchema({
+  title: string;                    // Display name in Weaverse Studio
+  type: string;                     // Unique component identifier
+  settings?: InspectorGroup[];      // UI controls configuration
+  childTypes?: string[];            // Allowed child component types
+  limit?: number;                   // Maximum instances allowed
+  enabledOn?: {                     // Where component can be used
+    pages?: PageType[];
+    groups?: ('*' | 'header' | 'footer' | 'body')[];
+  };
+  presets?: {                       // Default values and children
+    children?: ComponentPresets[];
+    [key: string]: any;
+  };
+});
+```
+
+### Example Usage
+
+```tsx
+import { createSchema } from '@weaverse/hydrogen';
+
+export let schema = createSchema({
+  type: 'product-showcase',
+  title: 'Product Showcase',
+  settings: [
+    {
+      group: 'Content',
+      inputs: [
+        {
+          type: 'product',
+          name: 'product',
+          label: 'Featured Product',
+          shouldRevalidate: true,
+        },
+      ],
+    },
+  ],
+  enabledOn: {
+    pages: ['INDEX', 'COLLECTION'],
+  },
+});
+```

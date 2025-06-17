@@ -31,6 +31,8 @@ export type PositionInputValue =
   | 'bottom left'
   | 'bottom center'
   | 'bottom right'
+// InputType is now defined in @weaverse/schema
+// This is kept for backward compatibility
 export type InputType =
   | 'blog'
   | 'collection'
@@ -100,6 +102,8 @@ export interface WeaverseElement {
   'data-wv-type': string
 }
 
+// ElementSchema is now defined in @weaverse/schema as SchemaType
+// This is kept for backward compatibility
 export interface ElementSchema {
   title: string
   type: string
@@ -156,6 +160,8 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
   helpText?: string
 }
 
+// Input config types are now defined in @weaverse/schema
+// These are kept for backward compatibility
 export interface SelectInputConfigs {
   options?: { value: string; label: string }[]
 }

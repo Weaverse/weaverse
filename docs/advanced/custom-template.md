@@ -57,8 +57,8 @@ Once your custom template is created, it will open in Weaverse Studio. You can t
 1.  **Locate Assignment Options:** You have two main ways to open the template assignment panel:
     *   **Left Panel:** In the left-hand panel, under the template name, find the **Assign** button next to "Custom template".
         ![Assign Button in Left Panel](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/assign_template_left_panel.webp?v=1745484491) 
-    *   **Inspector Panel (Right):** Alternatively, look for the **Template assignments** button in the Inspector panel on the right side of the Studio. It might be grouped under sections like "Layout".
-        ![Template Assignments Button in Inspector Panel](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/template_assignments_button_inspector.webp?v=1745484491)
+    *   **Settings Panel (Right):** Alternatively, look for the **Template assignments** button in the Settings panel on the right side of the Studio. It might be grouped under sections like "Layout".
+        ![Template Assignments Button in Settings Panel](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/template_assignments_button_inspector.webp?v=1745484491)
 
 2.  **Open Assignment Panel:** Click either the **Assign** button or the **Template assignments** button.
 

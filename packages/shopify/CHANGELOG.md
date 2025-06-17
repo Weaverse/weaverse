@@ -1,5 +1,97 @@
 # @weaverse/shopify
 
+## 5.3.4
+
+### Patch Changes
+
+- Preserve configs types while still keep the validation
+- Updated dependencies
+  - @weaverse/react@5.3.4
+
+## 5.3.3
+
+### Patch Changes
+
+- Upgrade schema builder package to fix validation errors
+- Updated dependencies
+  - @weaverse/react@5.3.3
+
+## 5.3.2
+
+### Patch Changes
+
+- Serialize condition functions before sending to client
+- Updated dependencies
+  - @weaverse/react@5.3.2
+
+## 5.3.1
+
+### Patch Changes
+
+- minor update schema
+- Updated dependencies
+  - @weaverse/react@5.3.1
+
+## 5.3.0
+
+### Minor Changes
+
+- update schema validation
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/react@5.3.0
+
+## 5.2.5
+
+### Patch Changes
+
+- @weaverse/react@5.2.5
+
+## 5.2.4
+
+### Patch Changes
+
+- 43f3da3: update schema
+- Updated dependencies [43f3da3]
+  - @weaverse/react@5.2.4
+
+## 5.2.3
+
+### Patch Changes
+
+- @weaverse/react@5.2.3
+
+## 5.2.2
+
+### Patch Changes
+
+- @weaverse/react@5.2.2
+
+## 5.2.1
+
+### Patch Changes
+
+- @weaverse/react@5.2.1
+
+## 5.2.0
+
+### Patch Changes
+
+- @weaverse/react@5.2.0
+
+## 5.1.0
+
+### Minor Changes
+
+- Migrate `inspector` field to new `settings` property.
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/react@5.1.0
+
 ## 5.0.0
 
 ### Patch Changes

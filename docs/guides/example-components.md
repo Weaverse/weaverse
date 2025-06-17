@@ -27,7 +27,7 @@ A versatile hero section component that supports different heights, content posi
 ```tsx
 // app/sections/hero-image.tsx
 import {
-  type HydrogenComponentSchema,
+  createSchema,
   IMAGES_PLACEHOLDERS,
   useThemeSettings,
 } from "@weaverse/hydrogen";
@@ -107,10 +107,10 @@ const HeroImage = forwardRef<HTMLElement, HeroImageProps & SectionProps>(
 
 export default HeroImage;
 
-export const schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "hero-image",
   title: "Hero image",
-  inspector: [
+  settings: [
     {
       group: "Layout",
       inputs: [
@@ -178,7 +178,7 @@ export const schema: HydrogenComponentSchema = {
       },
     ],
   },
-};
+});
 ```
 
 ### Key Features
@@ -208,7 +208,8 @@ A component that displays a featured product with its details and purchase optio
 
 ```tsx
 // app/sections/featured-product/index.tsx
-import type { ComponentLoaderArgs, HydrogenComponentProps, HydrogenComponentSchema } from '@weaverse/hydrogen';
+import type { ComponentLoaderArgs, HydrogenComponentProps } from '@weaverse/hydrogen';
+import { createSchema } from '@weaverse/hydrogen';
 import { forwardRef } from 'react';
 import { PRODUCT_QUERY } from '~/graphql/queries';
 
@@ -254,10 +255,10 @@ const FeaturedProduct = forwardRef<HTMLElement, FeaturedProductProps>((props, re
 
 export default FeaturedProduct;
 
-export const schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: 'featured-product',
   title: 'Featured Product',
-  inspector: [
+  settings: [
     {
       group: 'Product',
       inputs: [
@@ -269,7 +270,7 @@ export const schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});
 ```
 
 ### Key Features
@@ -405,10 +406,10 @@ const TeamMembers = forwardRef<HTMLDivElement, HydrogenComponentProps>(
 
 export default TeamMembers;
 
-export const schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "team-members",
   title: "Team Members",
-  inspector: [
+  settings: [
     {
       group: "Layout",
       inputs: [
@@ -427,7 +428,7 @@ export const schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});
 ```
 
 ### Key Features
@@ -566,10 +567,10 @@ const ReviewList = forwardRef<
 
 export default ReviewList;
 
-export const schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: "review-list",
   title: "Review List",
-  inspector: [
+  settings: [
     {
       group: "Display",
       inputs: [
@@ -606,7 +607,7 @@ export const schema: HydrogenComponentSchema = {
       ],
     },
   ],
-};
+});
 ```
 
 ### Key Features
@@ -665,10 +666,10 @@ const ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
 
 export default ImageWithText;
 
-export const schema: HydrogenComponentSchema = {
+export let schema = createSchema({
   type: 'image-with-text',
   title: 'Image with Text',
-  inspector: [
+  settings: [
     {
       group: 'Layout',
       inputs: [
@@ -701,7 +702,7 @@ export const schema: HydrogenComponentSchema = {
     },
   ],
   childTypes: ['subheading', 'heading', 'paragraph', 'button'],
-};
+});
 ```
 
 ### Key Features

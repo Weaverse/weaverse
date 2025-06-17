@@ -246,11 +246,31 @@ export default UserProfiles
 3. **Create Schema**: Define a schema for the `UserProfiles` component:
 
 ```tsx
-export const schema: HydrogenComponentSchema = {
-  title: 'User Profiles',
-  type: 'user-profiles',
-  inspector: [],
-}
+import { createSchema } from '@weaverse/hydrogen';
+
+export let schema = createSchema({
+  type: 'hero-section',
+  title: 'Hero Section',
+  settings: [
+    {
+      group: 'Content',
+      inputs: [
+        {
+          type: 'text',
+          name: 'heading',
+          label: 'Heading',
+          defaultValue: 'Welcome to our store',
+        },
+        {
+          type: 'textarea',
+          name: 'description',
+          label: 'Description',
+          defaultValue: 'Discover amazing products',
+        },
+      ],
+    },
+  ],
+});
 ```
 
 4. **Register Component**: Add `UserProfiles` to `app/weaverse/components.ts`:
@@ -343,34 +363,34 @@ export const METAOBJECTS_QUERY = `#graphql
 Add the following code to your `app/sections/user-profiles/index.tsx`:
 
 ```tsx
-export let schema: HydrogenComponentSchema = {
-  type: 'meta-demo',
-  title: 'Metaobject Demo',
-  toolbar: ['general-settings', ['duplicate', 'delete']],
-  inspector: [
+export let schema = createSchema({
+  type: 'featured-products',
+  title: 'Featured Products',
+  settings: [
     {
-      group: 'Metaobject Demo',
+      group: 'Content',
       inputs: [
         {
-          label: 'Select metaobject definition',
-          type: 'metaobject',
-          name: 'metaObjectData',
-          shouldRevalidate: true,
+          type: 'text',
+          name: 'heading',
+          label: 'Section Heading',
+          defaultValue: 'Featured Products',
         },
         {
-          label: 'Items per row',
-          name: 'itemsPerRow',
           type: 'range',
+          name: 'productsToShow',
+          label: 'Products to show',
+          defaultValue: 8,
           configs: {
             min: 1,
-            max: 10,
+            max: 20,
+            step: 1,
           },
-          defaultValue: 3,
         },
       ],
     },
   ],
-}
+});
 
 export let loader = async (args: ComponentLoaderArgs<UserProfilesProps>) => {
   let { weaverse, data } = args
@@ -399,9 +419,9 @@ Update your `app/sections/user-profiles/index.tsx` with this complete implementa
 ```tsx
 import { Image } from '@shopify/hydrogen'
 import type {
+  createSchema,
   ComponentLoaderArgs,
   HydrogenComponentProps,
-  HydrogenComponentSchema,
 } from '@weaverse/hydrogen'
 import { Button } from '~/components'
 import { METAOBJECTS_QUERY } from '~/data/queries'
