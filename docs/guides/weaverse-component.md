@@ -12,6 +12,7 @@ published: true
 Weaverse Components are the building blocks of your Hydrogen theme. They combine React's component model with Weaverse's powerful schema system to create customizable, performant sections for your storefront. This guide provides a comprehensive overview of how to create, configure, and optimize Weaverse components.
 
 ## Table of Contents
+
 - [Getting Started](#getting-started)
 - [Core Concepts](#core-concepts)
 - [Component Structure](#component-structure)
@@ -290,6 +291,7 @@ export let schema = createSchema({
 ## Component Types
 
 ### 1. Content Sections
+
 - Hero sections (images, videos)
 - Text blocks and rich content
 - Media galleries and sliders
@@ -297,6 +299,7 @@ export let schema = createSchema({
 - Testimonial sections
 
 ### 2. E-commerce Components
+
 - Product displays
 - Collection grids
 - Related products
@@ -305,6 +308,7 @@ export let schema = createSchema({
 - Checkout components
 
 ### 3. Interactive Elements
+
 - Forms and newsletters
 - Reviews and testimonials
 - Maps and location displays
@@ -745,12 +749,14 @@ export async function loader({ context }: ComponentLoaderArgs) {
 ```
 
 **Weaverse's `fetchWithCache`** is a convenient utility that simplifies cached data fetching from external APIs:
+
 - Available through `context.weaverse.fetchWithCache`
 - Automatically handles JSON parsing
 - Applies the specified caching strategy
 - Provides a cleaner syntax compared to Hydrogen's native `fetchSync`
 
 Hydrogen provides several caching strategies out of the box:
+
 - `CacheNone()`: No caching, always fetches fresh data
 - `CacheShort()`: Short-term caching (a few minutes)
 - `CacheLong()`: Long-term caching (1 day by default)
@@ -1287,4 +1293,3 @@ Remember that great components are:
 - **Maintainable**: They follow clean code principles and are well-documented
 
 As you build your Weaverse components, focus on creating a consistent user experience while enabling flexibility and customization through the schema system.
-
