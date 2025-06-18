@@ -1,5 +1,6 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.0.0-beta.6/schema.json",
+  "root": true,
+  "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
   "extends": ["./packages/biome/biome.json"],
   "vcs": {
     "enabled": true,
@@ -15,7 +16,8 @@
       "!**/build/**",
       "!**/.turbo/**",
       "!**/templates/**",
-      "!**/package-lock.json"
+      "!**/package-lock.json",
+      "!**/app/styles/app.css"
     ]
   },
   "linter": {
