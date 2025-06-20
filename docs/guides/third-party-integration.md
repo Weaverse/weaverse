@@ -10,6 +10,7 @@ published: true
 # Third-party Integration
 
 ## Table of Contents
+
 - [Third-party Integration](#third-party-integration)
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
@@ -165,19 +166,20 @@ For third-party services that offer a REST or GraphQL API, Weaverse's loader pat
    ```tsx
    // app/sections/api-widget/index.tsx
    import type { ComponentLoaderArgs } from '@weaverse/hydrogen'
+
 import { createSchema } from '@weaverse/hydrogen'
 import { forwardRef } from 'react'
    import { Section, type SectionProps } from '~/components/section'
-   
+
    type ApiWidgetData = {
      resourceId: string
      itemsToShow: number
    }
-   
+
    export const loader = async ({ weaverse, data }: ComponentLoaderArgs<ApiWidgetData>) => {
      const { fetchWithCache, env, storefront } = weaverse
      const { resourceId, itemsToShow = 5 } = data
-     
+
      if (!resourceId) return { items: [] }
      
      try {
@@ -197,13 +199,13 @@ import { forwardRef } from 'react'
        return { items: [], error: true }
      }
    }
-   
+
    type ApiWidgetProps = SectionProps<Awaited<ReturnType<typeof loader>>> & ApiWidgetData
-   
+
    const ApiWidget = forwardRef<HTMLElement, ApiWidgetProps>((props, ref) => {
      const { loaderData, resourceId, itemsToShow, ...rest } = props
      const { items, error } = loaderData || { items: [] }
-     
+
      if (error) {
        return (
          <Section ref={ref} {...rest}>
@@ -227,9 +229,9 @@ import { forwardRef } from 'react'
        </Section>
      )
    })
-   
+
    export default ApiWidget
-   
+
    export let schema = createSchema({
      type: 'api-widget',
      title: 'API Widget',
@@ -260,6 +262,7 @@ import { forwardRef } from 'react'
        }
      ]
    })
+
    ```
 
 ## Data Fetching Patterns
@@ -283,6 +286,7 @@ export const loader = async ({ weaverse, data }: ComponentLoaderArgs<WidgetData>
 ```
 
 Benefits:
+
 - API keys remain secure on the server
 - Reduced JavaScript bundle size
 - Better performance for initial page load
@@ -320,6 +324,7 @@ export function AnalyticsClient({ trackingId }) {
 ```
 
 Use this approach when:
+
 - The integration requires browser-specific APIs
 - The third-party service needs to track user interactions
 - The widget needs to be initialized after the page loads
@@ -367,6 +372,7 @@ function ClientInteractivity({ initialData, settings }) {
 ```
 
 This pattern is ideal for:
+
 - Review systems that need initial content rendered server-side but allow client-side submissions
 - Interactive widgets that need to show initial data quickly but then become interactive
 - Progressive enhancement scenarios
@@ -468,6 +474,7 @@ export let schema = createSchema({
 ```
 
 The implementation:
+
 1. Defines a schema with an API key input that triggers revalidation when changed
 2. Uses a loader to securely fetch reviews from the Ali Reviews API
 3. Structures the component to render Ali Review data
@@ -540,6 +547,7 @@ export default ReviewIndex;
 ```
 
 This approach:
+
 1. Leverages existing Hydrogen route data instead of making additional API calls
 2. Separates the display components from the data fetching logic
 3. Optimizes performance by reusing already fetched data
@@ -815,6 +823,7 @@ Common issues and their solutions:
    - Look for rate limiting or quota issues
 
    Solution:
+
    ```tsx
    try {
      // Make your API call here
@@ -836,6 +845,7 @@ Common issues and their solutions:
    - Ensure your component handles the absence of data gracefully
 
    Solution:
+
    ```tsx
    const Widget = forwardRef((props, ref) => {
      const { loaderData } = props
@@ -859,6 +869,7 @@ Common issues and their solutions:
    - Use client components with careful boundaries
 
    Solution:
+
    ```tsx
    'use client'
    import { useEffect, useState } from 'react'
