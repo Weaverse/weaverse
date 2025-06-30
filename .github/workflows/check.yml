@@ -3,11 +3,9 @@ name: 🚀 Lint & Typecheck
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
+    # Run on every push to any branch
   pull_request:
-    branches:
-      - main
+    # Run on all pull requests regardless of target branch
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
