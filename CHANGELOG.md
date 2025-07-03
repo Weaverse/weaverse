@@ -19,7 +19,72 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
-## [5.3.4] - 2025-01-27
+## [2025.07] - 2025-07-03
+
+### 🎨 Weaverse Studio
+*For users customizing Hydrogen themes in the Weaverse visual editor*
+
+#### 🎉 New Features
+- **Better Documentation Experience**: Added a new feedback system so you can easily tell us what's helpful or confusing in our docs
+- **Faster Blog Loading**: Blog pages now load much faster with smarter pagination that handles large amounts of content efficiently
+- **Improved Content Management**: Enhanced blog integration makes it easier to manage and display your content
+
+#### ✨ Improvements
+- **Smoother Color Picker**: The color selection tool now works more smoothly and calculates colors more accurately
+- **Unified Blog Experience**: Streamlined how blog posts are displayed across different parts of your site
+- **More Content Per Page**: Blog listings now show 9 posts instead of 6, giving visitors more content to explore
+- **Better Code Organization**: New tools automatically organize your code for better readability and consistency
+- **Cleaner Project Structure**: Automatic cleanup tools keep your project files organized
+
+#### 🐛 Bug Fixes
+- **Fixed Database Issues**: Resolved problems with data storage and project configuration
+- **Better Communication**: Improved integration between studio interface and theme files
+
+---
+
+### 🔧 Weaverse SDKs
+*For developers building Hydrogen themes with Weaverse components*
+
+#### 🎉 New Features
+- **Modern Code Quality Tools**: Updated to Biome v2.0.0 for better code formatting and linting
+- **Enhanced Schema Validation**: Improved component schema validation with better error reporting
+- **Function-Based Conditions**: New powerful conditional logic system for component settings
+
+#### ✨ Improvements
+- **Updated Documentation**: All guides now use clearer, more consistent terminology (replaced 'inspector' with 'settings')
+- **Better Form Validation**: Enhanced validation system prevents configuration errors
+- **Improved Reliability**: Better automated testing and deployment processes mean fewer bugs
+- **Enhanced Developer Tools**: Updated to latest versions of essential development tools
+
+#### 🔧 Behind the Scenes
+- **Smarter Configuration**: New function-based settings that are more flexible and powerful than the old text-based ones
+- **Better Type Safety**: Improved TypeScript definitions and runtime validation
+
+#### 🐛 Bug Fixes
+- **Better Form Validation**: Fixed issues where some form settings weren't being saved properly (Zod v3 union type parsing)
+- **Improved Error Handling**: Better handling of complex form configurations
+- **Fixed Communication Issues**: Resolved problems where some features weren't working properly between different parts of the system
+
+#### 🔒 Security
+- **Enhanced Deployment Security**: Improved security configurations for safer website deployment
+
+---
+
+### 🚀 Weaverse Pilot Theme
+*The official Hydrogen starter theme with Weaverse integration*
+
+#### ✨ Improvements
+- **Modern Styling System**: Updated to the latest CSS framework versions for faster loading and better performance
+- **Better Code Quality**: Enhanced code formatting tools ensure your project stays clean and professional
+- **Improved Build Tools**: Updated build configuration for better development experience
+- **Enhanced Development Workflow**: Better tooling integration for smoother development
+
+#### 🐛 Bug Fixes
+- **Fixed Configuration Issues**: Resolved problems that could cause issues during development
+- **Better Runtime Stability**: Fixed issues that could cause crashes when using certain features
+- **Improved Build Process**: Fixed configuration issues that could cause problems during development
+
+## [5.3.4] - 2025-06-12
 
 ### Fixed
 - **Better Tests**: Migrated old test files to use proper Vitest instead of console.log statements 🧪
@@ -28,7 +93,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - **All Packages**: Updated core, hydrogen, react, and shopify packages to work together smoothly
 
-## [5.3.3] - 2025-01-26
+## [5.3.3] - 2025-06-11
 
 ### Fixed
 - **Schema Validation**: Fixed range input configs validation bug where min, max, step, and unit properties were being stripped during safeParse operations
@@ -39,7 +104,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Schema Package**: Upgraded `@weaverse/schema` to 0.7.2 with enhanced validation logic
 - **Dependencies**: Updated all dependent packages to maintain consistency across the SDK
 
-## [5.3.2] - 2025-01-26
+## [5.3.2] - 2025-06-10
 
 ### Fixed
 - **Function Serialization**: Fixed issue with condition functions not being properly serialized before sending to client
