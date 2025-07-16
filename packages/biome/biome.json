@@ -14,7 +14,15 @@
         "useDefaultSwitchClause": "warn",
         "useConsistentBuiltinInstantiation": "warn",
         "useFilenamingConvention": "warn",
-        "useConsistentArrayType": "warn"
+        "useConsistentArrayType": "warn",
+        "useShorthandAssign": "warn",
+        "useForOf": "warn",
+        "noNonNullAssertion": "warn",
+        "useTemplate": "warn",
+        "useAtIndex": "warn",
+        "useCollapsedIf": "warn",
+        "useCollapsedElseIf": "warn",
+        "noParameterProperties": "warn"
       },
       "a11y": {
         "noStaticElementInteractions": "off",
@@ -25,13 +33,17 @@
         "useSemanticElements": "warn",
         "useFocusableInteractive": "warn",
         "noLabelWithoutControl": "warn",
-        "useKeyWithMouseEvents": "warn"
+        "useKeyWithMouseEvents": "warn",
+        "noRedundantAlt": "warn"
       },
       "complexity": {
         "useOptionalChain": "warn",
         "useLiteralKeys": "warn",
         "noForEach": "warn",
-        "noExcessiveCognitiveComplexity": "warn"
+        "noExcessiveCognitiveComplexity": "warn",
+        "noStaticOnlyClass": "off",
+        "noUselessCatch": "warn",
+        "noVoid": "warn"
       },
       "suspicious": {
         "noArrayIndexKey": "warn",
@@ -41,7 +53,9 @@
         "noEvolvingTypes": "warn",
         "noExplicitAny": "warn",
         "useAwait": "warn",
-        "noTemplateCurlyInString": "warn"
+        "noTemplateCurlyInString": "warn",
+        "noEmptyBlockStatements": "warn",
+        "noDocumentCookie": "warn"
       },
       "security": {
         "noDangerouslySetInnerHtml": "off"
@@ -50,7 +64,10 @@
         "useHookAtTopLevel": "warn",
         "useExhaustiveDependencies": "warn",
         "noChildrenProp": "warn",
-        "noUnusedVariables": "warn"
+        "noUnusedVariables": "warn",
+        "noUnusedImports": "warn",
+        "noUnusedFunctionParameters": "warn",
+        "noInvalidUseBeforeDeclaration": "warn"
       },
       "nursery": {
         "useUniqueElementIds": "warn",
@@ -60,13 +77,19 @@
         "noConstantBinaryExpression": "warn",
         "noNoninteractiveElementInteractions": "warn",
         "useIterableCallbackReturn": "warn",
-        "noAwaitInLoop": "warn"
+        "noAwaitInLoop": "warn",
+        "useSortedClasses": "off",
+        "noBitwiseOperators": "warn",
+        "useSingleJsDocAsterisk": "warn",
+        "noUnknownAtRule": "warn",
+        "noImportantStyles": "warn"
       },
       "performance": {
         "noNamespaceImport": "warn",
         "useTopLevelRegex": "warn",
         "noImgElement": "warn",
-        "noDynamicNamespaceImportAccess": "warn"
+        "noDynamicNamespaceImportAccess": "warn",
+        "noDelete": "warn"
       }
     }
   },
@@ -80,6 +103,31 @@
     "indentStyle": "space"
   },
   "files": {
-    "ignoreUnknown": true
+    "ignoreUnknown": true,
+    "includes": [
+      "**",
+      "!**/node_modules/**",
+      "!**/dist/**",
+      "!**/build/**",
+      "!**/public/**",
+      "!**/.wrangler/**",
+      "!**/icons/**",
+      "!**/patches/**",
+      "!**/*.css",
+      "!**/*.scss",
+      "!**/storefront-api.generated.d.ts",
+      "!**/customer-account-api.generated.d.ts",
+      "!**/.shopify/**",
+      "!**/.react-router/**",
+      "!**/app/styles/app.css",
+      "!**/app/utils/string-parser.ts",
+      "!**/app/hooks/use-3rd-stuff.ts",
+      "!**/pnpm-lock.yaml",
+      "!**/.vscode/**",
+      "!**/prisma/**",
+      "!**/vite.config.ts",
+      "!**/app/styles/tailwind.css"
+    ],
+    "maxSize": 512000
   }
 }
