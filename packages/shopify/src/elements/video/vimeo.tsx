@@ -6,11 +6,11 @@ export function Vimeo(props: VimeoElementProps) {
   let vimeoSrc = `https://player.vimeo.com/video/${vimeoId}?${params}`
   return (
     <iframe
-      src={vimeoSrc}
-      width="100%"
-      height="100%"
       allowFullScreen
+      height="100%"
+      src={vimeoSrc}
       title="Vimeo embed video"
+      width="100%"
     />
   )
 }

@@ -6,7 +6,7 @@ const Placeholder = forwardRef<HTMLDivElement, PlaceholderProps>(
   (props, ref) => {
     let { element, className, children, ...rest } = props
     return (
-      <div data-wv-placeholder ref={ref} className={className} {...rest}>
+      <div className={className} data-wv-placeholder ref={ref} {...rest}>
         <div
           style={{ fontWeight: 600, margin: '10px 0 5px', padding: '0 10px' }}
         >
@@ -23,7 +23,7 @@ const Placeholder = forwardRef<HTMLDivElement, PlaceholderProps>(
         </div>
       </div>
     )
-  },
+  }
 )
 
 export default Placeholder

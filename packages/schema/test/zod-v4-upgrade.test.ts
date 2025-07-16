@@ -84,7 +84,7 @@ describe('Zod v4 Upgrade Tests', () => {
 
         // Check for specific validation issues
         const titleIssue = result.issues.find(
-          (issue) => issue.path && issue.path.includes('title'),
+          (issue) => issue.path && issue.path.includes('title')
         )
         expect(titleIssue).toBeDefined()
       }

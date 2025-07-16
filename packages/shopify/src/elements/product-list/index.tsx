@@ -41,7 +41,7 @@ let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
   })
 
   let mainProductId = 0
-  if (!ssrMode && !isDesignMode) {
+  if (!(ssrMode || isDesignMode)) {
     mainProductId = window.weaverseShopifyConfigs.shopData.product_id
   }
   let shouldShowPlaceholder =
@@ -88,8 +88,8 @@ let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
     return (
       <div ref={ref} {...rest} style={style}>
         <Skeleton
-          productCount={layout === 'slider' ? productsPerRow : productCount}
           imageAspectRatio={imageAspectRatio}
+          productCount={layout === 'slider' ? productsPerRow : productCount}
         />
       </div>
     )
@@ -100,18 +100,18 @@ let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
     .slice(0, productCount)
     .map((product) => (
       <ProductCard
-        key={product.id}
-        product={product}
+        className={layout === 'slider' ? 'keen-slider__slide' : ''}
         imageAspectRatio={imageAspectRatio}
-        showSecondImageOnHover={showSecondImageOnHover}
+        key={product.id}
+        optionLimit={optionLimit}
+        optionName={optionName}
+        product={product}
+        showProductOption={showProductOption}
+        showQuickViewButton={showQuickViewButton}
         showSaleBadge={showSaleBadge}
+        showSecondImageOnHover={showSecondImageOnHover}
         showViewDetailsButton={showViewDetailsButton}
         viewDetailsButtonText={viewDetailsButtonText}
-        showQuickViewButton={showQuickViewButton}
-        showProductOption={showProductOption}
-        optionName={optionName}
-        optionLimit={optionLimit}
-        className={layout === 'slider' ? 'keen-slider__slide' : ''}
       />
     ))
 
@@ -119,9 +119,9 @@ let ProductList = forwardRef<HTMLDivElement, ProductListProps>((props, ref) => {
     return (
       <div ref={ref} {...rest} style={style}>
         <Slider
+          arrowOffset={-80}
           className="wv-product-list__slider"
           gap={gap}
-          arrowOffset={-80}
           slidesPerView={productsPerRow}
         >
           {productCards}

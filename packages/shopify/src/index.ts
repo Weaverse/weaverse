@@ -34,7 +34,7 @@ export let registerThirdPartyElements = () => {
 export let registerShopifyElements = () => {
   // biome-ignore lint/complexity/noForEach: <explanation>
   Object.values(SHOPIFY_ELEMENTS).forEach((elm) => {
-    // @ts-ignore
+    // @ts-expect-error
     WeaverseShopify.registerElement(elm)
   })
   registerThirdPartyElements()
@@ -54,7 +54,7 @@ export class WeaverseShopify extends Weaverse {
       params
     super({ ...coreParams, platformType: 'shopify-section' })
     this.elementSchemas = elementSchemas || []
-    this.ssrMode = ssrMode || false
+    this.ssrMode = ssrMode ?? false
     WeaverseShopify.integrations = thirdPartyIntegration || DEFAULT_INTEGRATIONS
   }
 }

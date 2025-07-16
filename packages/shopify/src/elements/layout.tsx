@@ -38,9 +38,9 @@ let Layout = forwardRef<HTMLDivElement, LayoutElementProps>((props, ref) => {
   return (
     <div ref={ref} {...rest} style={style}>
       <Background
-        backgroundImage={backgroundImage}
         backgroundColor={backgroundColor}
         backgroundFit={objectFit}
+        backgroundImage={backgroundImage}
         backgroundPosition={objectPosition}
       />
       <Overlay enableOverlay={enableOverlay} overlayOpacity={overlayOpacity} />

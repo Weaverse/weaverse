@@ -18,15 +18,15 @@ export function MediaFullscreenSlider(props: MediaFullscreenSliderProps) {
   })
 
   return (
-    <Modal open={open} onOpenChange={onOpenChange}>
-      <ModalContent size="fullscreen" className="wv-product-media-fullscreen">
+    <Modal onOpenChange={onOpenChange} open={open}>
+      <ModalContent className="wv-product-media-fullscreen" size="fullscreen">
         <div
-          ref={sliderRef}
           className="keen-slider wv-produt-media__fullscreen-slider"
+          ref={sliderRef}
         >
           {images.map((image) => (
-            <div key={image.id} className="keen-slider__slide">
-              <img src={image.src} alt={image.alt || ''} loading="lazy" />
+            <div className="keen-slider__slide" key={image.id}>
+              <img alt={image.alt || ''} loading="lazy" src={image.src} />
             </div>
           ))}
         </div>

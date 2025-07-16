@@ -33,7 +33,7 @@ let ArticleList = forwardRef<HTMLDivElement, ArticleListProps>((props, ref) => {
   let { ssrMode } = useWeaverseShopify()
   let articleIds: number[] = weaverseShopifyArticlesByBlog[blogId] || []
   let articles: ShopifyArticle[] = articleIds.map(
-    (id) => weaverseShopifyArticles[id],
+    (id) => weaverseShopifyArticles[id]
   )
 
   if (!blogId) {
@@ -77,17 +77,17 @@ let ArticleList = forwardRef<HTMLDivElement, ArticleListProps>((props, ref) => {
     .slice(0, articleCount)
     .map((article) => (
       <ArticleCard
-        key={article.id}
         article={article}
+        className={layout === 'slider' ? 'keen-slider__slide' : ''}
+        excerptLineClamp={excerptLineClamp}
         imageAspectRatio={imageAspectRatio}
-        zoomInOnHover={zoomInOnHover}
+        key={article.id}
+        readMoreButtonText={readMoreButtonText}
         showAuthor={showAuthor}
         showDate={showDate}
         showExcerpt={showExcerpt}
-        excerptLineClamp={excerptLineClamp}
         showReadMoreButton={showReadMoreButton}
-        readMoreButtonText={readMoreButtonText}
-        className={layout === 'slider' ? 'keen-slider__slide' : ''}
+        zoomInOnHover={zoomInOnHover}
       />
     ))
 
@@ -95,9 +95,9 @@ let ArticleList = forwardRef<HTMLDivElement, ArticleListProps>((props, ref) => {
     return (
       <div ref={ref} {...rest} style={style}>
         <Slider
+          arrowOffset={-80}
           className="wv-article-list__slider"
           gap={gap}
-          arrowOffset={-80}
           slidesPerView={articlesPerRow}
         >
           {collectionCards}

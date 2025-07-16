@@ -26,7 +26,7 @@ export function ArticleCard(props: ArticleCardProps) {
   let cardClass = clsx(
     'wv-article-card',
     zoomInOnHover && 'zoom-in-on-hover',
-    className,
+    className
   )
   let excerptStyle = {
     WebkitBoxOrient: 'vertical',
@@ -42,6 +42,11 @@ export function ArticleCard(props: ArticleCardProps) {
         {image && (
           <div className="wv-article-card__image">
             <img
+              alt={imageAltText}
+              height="1600"
+              loading="lazy"
+              sizes="(min-width: 1200px) 366px, (min-width: 750px) calc((100vw - 10rem) / 2), calc(100vw - 3rem)"
+              src={`${imageSrc}&width=1500`}
               srcSet={`
                 ${imageSrc}&width=165 165w,
                 ${imageSrc}&width=330 330w,
@@ -50,12 +55,7 @@ export function ArticleCard(props: ArticleCardProps) {
                 ${imageSrc}&width=1000 1000w,
                 ${imageSrc} 1200w
               `}
-              src={`${imageSrc}&width=1500`}
-              sizes="(min-width: 1200px) 366px, (min-width: 750px) calc((100vw - 10rem) / 2), calc(100vw - 3rem)"
-              alt={imageAltText}
-              height="1600"
               width="1200"
-              loading="lazy"
             />
           </div>
         )}
@@ -80,7 +80,7 @@ export function ArticleCard(props: ArticleCardProps) {
         </div>
       </a>
       {showReadMoreButton && readMoreButtonText && (
-        <a href={url} target="_self" className="wv-article-card__read-more">
+        <a className="wv-article-card__read-more" href={url} target="_self">
           {readMoreButtonText}
         </a>
       )}

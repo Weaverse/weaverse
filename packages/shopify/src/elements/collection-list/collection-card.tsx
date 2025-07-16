@@ -19,7 +19,7 @@ export function CollectionCard(props: CollectionCardProps) {
   let cardClass = clsx(
     'wv-collection-card',
     zoomInOnHover && 'zoom-in-on-hover',
-    className,
+    className
   )
   let imageSrc =
     typeof featured_image === 'string' ? featured_image : featured_image?.src
@@ -32,6 +32,11 @@ export function CollectionCard(props: CollectionCardProps) {
         {featured_image && (
           <div className="wv-col-card__image">
             <img
+              alt={imageAltText}
+              height="1600"
+              loading="lazy"
+              sizes="(min-width: 1200px) 366px, (min-width: 750px) calc((100vw - 10rem) / 2), calc(100vw - 3rem)"
+              src={`${imageSrc}&width=1500`}
               srcSet={`
             ${imageSrc}&width=165 165w,
             ${imageSrc}&width=330 330w,
@@ -40,12 +45,7 @@ export function CollectionCard(props: CollectionCardProps) {
             ${imageSrc}&width=1000 1000w,
             ${imageSrc} 1200w
           `}
-              src={`${imageSrc}&width=1500`}
-              sizes="(min-width: 1200px) 366px, (min-width: 750px) calc((100vw - 10rem) / 2), calc(100vw - 3rem)"
-              alt={imageAltText}
-              height="1600"
               width="1200"
-              loading="lazy"
             />
           </div>
         )}

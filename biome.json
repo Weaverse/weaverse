@@ -1,7 +1,7 @@
 {
   "root": true,
-  "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
-  "extends": ["./packages/biome/biome.json"],
+  "$schema": "https://biomejs.dev/schemas/2.1.1/schema.json",
+  "extends": ["ultracite", "./packages/biome/biome.json"],
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -23,11 +23,10 @@
   "linter": {
     "rules": {
       "style": {},
-      "suspicious": {
-        "noExplicitAny": "off"
-      },
-      "correctness": {
-        "noUnusedVariables": "off"
+      "suspicious": {},
+      "correctness": {},
+      "nursery": {
+        "useJsonImportAttribute": "off"
       }
     }
   }

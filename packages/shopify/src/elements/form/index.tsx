@@ -25,18 +25,18 @@ let Form = forwardRef<HTMLDivElement, FormElementProps>((props, ref) => {
   let formContent = (
     <div ref={ref} {...rest} style={style}>
       <form
-        method="post"
-        action="/contact#contact_form"
-        id={formId}
         acceptCharset="UTF-8"
+        action="/contact#contact_form"
         className="contact-form wv-form"
+        id={formId}
+        method="post"
       >
-        <input type="hidden" name="form_type" value={formType} />
-        <input type="hidden" name="utf8" value="✓" />
+        <input name="form_type" type="hidden" value={formType} />
+        <input name="utf8" type="hidden" value="✓" />
         {fields.map((field) => (
-          <FormField key={field.id} formId={formId} field={field} />
+          <FormField field={field} formId={formId} key={field.id} />
         ))}
-        <button type="submit" className="wv-form__submit">
+        <button className="wv-form__submit" type="submit">
           {submitText}
         </button>
       </form>

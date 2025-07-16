@@ -25,21 +25,21 @@ function deepMergeArrays<T>(target: T[], source: T[]): T[] {
 function mergeInspectorSettings(
   settings: any[],
   inspector: any[],
-  type: string,
+  type: string
 ): any[] {
   if (!inspector?.length) return settings
   if (!settings?.length) return inspector
 
   // Log collision notice
   console.info(
-    `Schema "${type}": Both 'settings' and 'inspector' found. Using 'settings' with 'inspector' as fallback.`,
+    `Schema "${type}": Both 'settings' and 'inspector' found. Using 'settings' with 'inspector' as fallback.`
   )
 
   return deepMergeArrays(settings, inspector)
 }
 
 export function getRequestQueries<T = Record<string, string | boolean>>(
-  request: Request,
+  request: Request
 ) {
   let url = new URL(request.url)
   return Array.from(url.searchParams.entries()).reduce(
@@ -47,13 +47,13 @@ export function getRequestQueries<T = Record<string, string | boolean>>(
       q[k] = v === 'true' ? true : v === 'false' ? false : v
       return q
     },
-    {},
+    {}
   ) as T
 }
 
 export function getWeaverseConfigs(
   request: Request,
-  env: HydrogenEnv,
+  env: HydrogenEnv
 ): WeaverseProjectConfigs {
   let queries = getRequestQueries<WeaverseStudioQueries>(request)
   let {
@@ -90,8 +90,8 @@ export function getWeaverseConfigs(
       envFromProcess.WEAVERSE_API_KEY ||
       '',
     weaverseVersion: weaverseVersion || '',
-    isDesignMode: isDesignMode || false,
-    isPreviewMode: isPreviewMode || false,
+    isDesignMode,
+    isPreviewMode,
     sectionType: sectionType || '',
     publicEnv: {
       PUBLIC_STORE_DOMAIN: PUBLIC_STORE_DOMAIN || '',
@@ -101,7 +101,7 @@ export function getWeaverseConfigs(
 }
 
 export function generateDataFromSchema(
-  schema: HydrogenComponentSchema | HydrogenThemeSchema,
+  schema: HydrogenComponentSchema | HydrogenThemeSchema
 ) {
   let data: Record<string, any> = {}
 
@@ -110,7 +110,7 @@ export function generateDataFromSchema(
 
   // Type guard to check if it's a component schema
   const isComponentSchema = (
-    s: HydrogenComponentSchema | HydrogenThemeSchema,
+    s: HydrogenComponentSchema | HydrogenThemeSchema
   ): s is HydrogenComponentSchema => {
     return 'type' in s && typeof s.type === 'string'
   }
@@ -127,7 +127,7 @@ export function generateDataFromSchema(
         inspectorGroups = mergeInspectorSettings(
           schema.settings,
           schema.inspector,
-          schema.type || 'unknown',
+          schema.type || 'unknown'
         )
       } else {
         // Only inspector exists - use it but warn about deprecation
@@ -135,7 +135,7 @@ export function generateDataFromSchema(
         if (schema.type) {
           logOnce(
             schema.type,
-            `⚠️  Schema "${schema.type}": The 'inspector' property is deprecated. Please use 'settings' instead.`,
+            `⚠️  Schema "${schema.type}": The 'inspector' property is deprecated. Please use 'settings' instead.`
           )
         }
       }
@@ -152,14 +152,14 @@ export function generateDataFromSchema(
         inspectorGroups = mergeInspectorSettings(
           schema.settings,
           schema.inspector,
-          'Theme Schema',
+          'Theme Schema'
         )
       } else {
         // Only inspector exists - use it but warn about deprecation
         inspectorGroups = schema.inspector
         logOnce(
           'ThemeSchema',
-          `⚠️  Theme Schema: The 'inspector' property is deprecated. Please use 'settings' instead.`,
+          `⚠️  Theme Schema: The 'inspector' property is deprecated. Please use 'settings' instead.`
         )
       }
     }
@@ -182,7 +182,7 @@ function recursivelyAddDataItem(
   type: string,
   components: HydrogenComponent<any>[],
   items: any[],
-  initData?: object,
+  initData?: object
 ) {
   let component = components.find((c) => c.schema.type === type)
   if (!component) {
@@ -195,7 +195,7 @@ function recursivelyAddDataItem(
     for (let c of children) {
       let { type, children, ...data } = c
       let childId = recursivelyAddDataItem(type, components, items, data)
-      childIds.push({ id: childId })
+      childIds.push({ id: childId } as never)
     }
   }
   items.push({
@@ -210,7 +210,7 @@ function recursivelyAddDataItem(
 export function getPreviewData(
   type: string,
   components: HydrogenComponent[],
-  weaverseHost: string,
+  weaverseHost: string
 ) {
   let items = []
   return {

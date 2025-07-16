@@ -19,22 +19,22 @@ export function Arrows(props: SliderArrowsProps) {
   return (
     <StyledArrows className={className} style={style}>
       <button
-        type="button"
         className={clsx('arrow arrow--left', isFirst && 'arrow--disabled')}
         onClick={(e: MouseEvent) => {
           e.stopPropagation()
           instanceRef?.current?.prev()
         }}
+        type="button"
       >
         <Icon name={icon === 'caret' ? 'CaretLeft' : 'ArrowLeft'} />
       </button>
       <button
-        type="button"
         className={clsx('arrow arrow--right', isLast && 'arrow--disabled')}
         onClick={(e: MouseEvent) => {
           e.stopPropagation()
           instanceRef?.current?.next()
         }}
+        type="button"
       >
         <Icon name={icon === 'caret' ? 'CaretRight' : 'ArrowRight'} />
       </button>

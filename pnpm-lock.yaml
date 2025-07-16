@@ -47,6 +47,9 @@ importers:
       typescript:
         specifier: 5.8.3
         version: 5.8.3
+      ultracite:
+        specifier: 5.0.36
+        version: 5.0.36(@types/node@24.0.14)(jiti@2.4.2)(lightningcss@1.30.1)(yaml@2.8.0)
     optionalDependencies:
       '@esbuild/darwin-x64':
         specifier: ^0.25.6
@@ -331,7 +334,7 @@ importers:
         version: 19.1.6(@types/react@19.1.8)
       '@weaverse/biome':
         specifier: 1.3.0
-        version: link:../../packages/biome
+        version: 1.3.0
       tailwindcss:
         specifier: ^4.1.10
         version: 4.1.11
@@ -2441,6 +2444,9 @@ packages:
 
   '@vitest/utils@3.2.4':
     resolution: {integrity: sha512-fB2V0JFrQSMsCo9HiSq3Ezpdv4iYaXRG1Sx8edX3MwxfyNn83mKiGzOcH+Fkxt4MHxr3y42fQi1oeAInqgX2QA==}
+
+  '@weaverse/biome@1.3.0':
+    resolution: {integrity: sha512-RAFbVw6xiufC4XzBZ+BApAIjiwGXBmXu46MC8ng8lIAUewRPX9EtaJsNyW2dkTiQMiHQ5pMqcQlmQoUKaDeH2A==, tarball: https://registry.npmjs.org/@weaverse/biome/-/biome-1.3.0.tgz}
 
   '@whatwg-node/disposablestack@0.0.6':
     resolution: {integrity: sha512-LOtTn+JgJvX8WfBVJtF08TGrdjuFzGJc4mkP8EdDI8ADbvO7kiexYep1o8dwnt0okb0jYclCDXF13xU7Ge4zSw==}
@@ -7911,6 +7917,10 @@ snapshots:
       '@vitest/pretty-format': 3.2.4
       loupe: 3.1.4
       tinyrainbow: 2.0.0
+
+  '@weaverse/biome@1.3.0':
+    dependencies:
+      '@biomejs/biome': 2.1.1
 
   '@whatwg-node/disposablestack@0.0.6':
     dependencies:

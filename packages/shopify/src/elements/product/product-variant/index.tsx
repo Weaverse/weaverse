@@ -44,7 +44,7 @@ let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
 
       return (
         <div ref={ref} {...rest} style={style}>
-          <input type="hidden" name="id" value={selectedVariant?.id} />
+          <input name="id" type="hidden" value={selectedVariant?.id} />
           {product.options.map((option) => {
             let { name, position } = option
             let selectedValue = selectedOptions[position - 1]
@@ -53,8 +53,8 @@ let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
 
             return (
               <div
-                key={name + position}
                 className="wv-product-option"
+                key={name + position}
                 style={style}
               >
                 <div className="wv-option__label">
@@ -66,14 +66,14 @@ let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
                   </span>
                 </div>
                 <OptionValues
-                  product={product}
-                  option={option}
-                  type={optionDesign}
-                  selectedValue={selectedValue}
-                  selectedOptions={selectedOptions}
-                  onSelect={handleSelectOption}
-                  showTooltip={showTooltip}
                   hideUnavailableOptions={hideUnavailableOptions}
+                  onSelect={handleSelectOption}
+                  option={option}
+                  product={product}
+                  selectedOptions={selectedOptions}
+                  selectedValue={selectedValue}
+                  showTooltip={showTooltip}
+                  type={optionDesign}
                 />
               </div>
             )
@@ -82,11 +82,11 @@ let ProductVariant = forwardRef<HTMLDivElement, ProductVariantProps>(
       )
     }
     return (
-      <div ref={ref} data-has-only-default-variant {...rest}>
-        <input type="hidden" name="id" value={selectedVariant?.id} />
+      <div data-has-only-default-variant ref={ref} {...rest}>
+        <input name="id" type="hidden" value={selectedVariant?.id} />
       </div>
     )
-  },
+  }
 )
 
 ProductVariant.defaultProps = {

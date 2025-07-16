@@ -29,10 +29,10 @@ export let CustomHTML = forwardRef<HTMLDivElement, CustomHTMLProps>(
 
     return (
       <div ref={ref} {...rest} style={style}>
-        {isDesignMode ? content : <NoHydrate id={id} getHTML={() => content} />}
+        {isDesignMode ? content : <NoHydrate getHTML={() => content} id={id} />}
       </div>
     )
-  },
+  }
 )
 
 export let css: ElementCSS = {

@@ -25,21 +25,21 @@ let Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
     <div className="keen-slider__slide">
       <Background
         backgroundColor={backgroundColor}
-        backgroundImage={backgroundImage}
         backgroundFit={objectFit}
+        backgroundImage={backgroundImage}
         backgroundPosition={objectPosition}
         className="slide-background"
       />
       <Overlay
+        className="slide-overlay"
         enableOverlay={enableOverlay}
         overlayOpacity={overlayOpacity}
-        className="slide-overlay"
       />
       <div ref={ref} {...rest} style={slidePositionMap[contentPosition]}>
         {children?.length ? (
           children
         ) : (
-          <Placeholder element="Slide" className="wv-slide-placeholder">
+          <Placeholder className="wv-slide-placeholder" element="Slide">
             Drag and drop elements here
           </Placeholder>
         )}

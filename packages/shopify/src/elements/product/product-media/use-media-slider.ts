@@ -23,7 +23,7 @@ export function useMediaSlider(input: ProductImageHooksInput) {
       slideChanged: onSlideChanged,
       created: onSliderCreated,
     },
-    [ResizePlugin],
+    [ResizePlugin]
   )
   let [thumbnailRef, thumbnailInstanceRef] = useKeenSlider<HTMLDivElement>(
     {
@@ -35,7 +35,7 @@ export function useMediaSlider(input: ProductImageHooksInput) {
         },
       },
     },
-    [ThumbnailPlugin(instanceRef), ResizePlugin],
+    [ThumbnailPlugin(instanceRef), ResizePlugin]
   )
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>

@@ -11,7 +11,16 @@ export function Image(props: ProductImageProps) {
   return (
     <>
       <img
+        alt={image.alt || ''}
         className={_class}
+        height={image.height}
+        loading="lazy"
+        onClick={onClick}
+        onLoad={(e) => {
+          setLoaded(true)
+          onLoad?.(e)
+        }}
+        sizes="(min-width: 1200px) calc((1200px - 10rem) / 2), (min-width: 750px) calc((100vw - 11.5rem) / 2), calc(100vw - 4rem)"
         src={`${image.src}&crop=center&width=${width}`}
         srcSet={`
           ${image.src}&width=550 550w,
@@ -21,16 +30,7 @@ export function Image(props: ProductImageProps) {
           ${image.src}&width=2048 2048w,
           ${image.src} 2256w
         `}
-        sizes="(min-width: 1200px) calc((1200px - 10rem) / 2), (min-width: 750px) calc((100vw - 11.5rem) / 2), calc(100vw - 4rem)"
-        loading="lazy"
         width={image.width}
-        height={image.height}
-        alt={image.alt || ''}
-        onLoad={(e) => {
-          setLoaded(true)
-          onLoad?.(e)
-        }}
-        onClick={onClick}
       />
       <noscript
         dangerouslySetInnerHTML={{

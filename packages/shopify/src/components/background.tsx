@@ -19,22 +19,22 @@ export function Background(props: BackgroundProps) {
 
   if (backgroundImage || backgroundColor) {
     return (
-      <div style={style} className={className}>
+      <div className={className} style={style}>
         {backgroundImage && (
           <img
-            width="100%"
+            alt="Background"
             height="100%"
+            loading="lazy"
             src={
               typeof backgroundImage === 'object'
                 ? backgroundImage.url
                 : backgroundImage
             }
-            loading="lazy"
-            alt="Background"
             style={{
               objectFit: backgroundFit,
               objectPosition: backgroundPosition,
             }}
+            width="100%"
           />
         )}
       </div>

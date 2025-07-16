@@ -10,11 +10,11 @@ import {
 } from '@weaverse/react'
 
 export function getSelectedProductOptions(
-  request: Request,
+  request: Request
 ): SelectedOptionInput[] {
   let options = hydrogen_getSelectedProductOptions(request)
   return options.filter(
-    ({ name }) => name !== 'isDesignMode' && !name.startsWith('weaverse'),
+    ({ name }) => name !== 'isDesignMode' && !name.startsWith('weaverse')
   )
 }
 

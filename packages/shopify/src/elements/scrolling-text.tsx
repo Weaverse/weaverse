@@ -31,9 +31,9 @@ const ScrollingText = React.forwardRef<
       <div className="wv-scrolling-text__container" style={style} {...events}>
         {Array.from({ length: 30 }).map((_, i) => (
           <div
-            key={i}
             className="wv-text-content"
             dangerouslySetInnerHTML={{ __html: value }}
+            key={i}
           />
         ))}
       </div>

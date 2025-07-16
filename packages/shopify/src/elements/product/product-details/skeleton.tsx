@@ -15,7 +15,7 @@ export function ProductSkeleton() {
           {Array(6)
             .fill(0)
             .map((_, i) => (
-              <div key={i} className="wv-media-thumbnail-item">
+              <div className="wv-media-thumbnail-item" key={i}>
                 <Icon name="Image" />
               </div>
             ))}

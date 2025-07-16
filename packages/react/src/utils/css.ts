@@ -13,7 +13,7 @@ function formatCSS(css: ElementCSS) {
 let permanentClasses: Record<string, string> = {}
 export function generateItemClassName(
   instance: WeaverseItemStore,
-  stitchesInstance: Stitches,
+  stitchesInstance: Stitches
 ) {
   let { css, type, className: cls = '' } = instance.data
   let className = ''
@@ -23,7 +23,7 @@ export function generateItemClassName(
     if (type in permanentClasses) {
       permanentClass = permanentClasses[type]
     } else {
-      // @ts-ignore
+      // @ts-expect-error
       let { className: perCls } = stitchesInstance.css(perCss)()
       Object.assign(permanentClasses, { [type]: perCls })
       permanentClass = perCls

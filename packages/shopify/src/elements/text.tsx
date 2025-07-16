@@ -14,7 +14,7 @@ const Text = React.forwardRef<HTMLDivElement, TextElementProps>(
         />
       </div>
     )
-  },
+  }
 )
 
 export let css: ElementCSS = {

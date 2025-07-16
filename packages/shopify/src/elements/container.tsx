@@ -19,7 +19,7 @@ let Container = forwardRef<HTMLDivElement, ContainerElementProps>(
         )}
       </div>
     )
-  },
+  }
 )
 
 export let css: ElementCSS = {

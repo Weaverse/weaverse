@@ -16,8 +16,8 @@ export function Skeleton(props: ProductSkeletonProps) {
     <>
       {Array.from({ length: productCount }).map((_, index) => (
         <div
-          key={index}
           className="wv-pcard-skeleton animate-pulse"
+          key={index}
           style={style}
         >
           <div className="wv-pcard-skeleton__image">

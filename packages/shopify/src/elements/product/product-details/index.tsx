@@ -26,7 +26,7 @@ let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
 
     let shouldRenderSkeleton = Boolean(
       (isDesignMode && productId && !product) ||
-        (ssrMode && (productId || useDefaultProduct)),
+        (ssrMode && (productId || useDefaultProduct))
     )
     let shouldRenderProduct = Boolean((isDesignMode && productId) || product)
 
@@ -51,19 +51,19 @@ let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
             }}
           >
             <form
-              ref={formRef}
-              method="post"
-              action="/cart/add"
-              id={`wv-product-form-${product.id}`}
               acceptCharset="UTF-8"
-              encType="multipart/form-data"
-              noValidate
-              data-product-id={product.id}
-              data-product-handle={product.handle}
+              action="/cart/add"
               className="wv-product-form product-details-form"
+              data-product-handle={product.handle}
+              data-product-id={product.id}
+              encType="multipart/form-data"
+              id={`wv-product-form-${product.id}`}
+              method="post"
+              noValidate
+              ref={formRef}
             >
-              <input type="hidden" name="form_type" value="product" />
-              <input type="hidden" name="utf8" value="✓" />
+              <input name="form_type" type="hidden" value="product" />
+              <input name="utf8" type="hidden" value="✓" />
               {children}
             </form>
           </ProductContext.Provider>
@@ -78,7 +78,7 @@ let ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
         </Components.Placeholder>
       </div>
     )
-  },
+  }
 )
 
 ProductDetails.defaultProps = {

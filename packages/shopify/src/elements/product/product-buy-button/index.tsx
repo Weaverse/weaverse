@@ -26,7 +26,7 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
       e.preventDefault()
       setAdding(true)
       addProductToCart(formRef?.current as HTMLFormElement, () =>
-        setAdding(false),
+        setAdding(false)
       )
     }
 
@@ -44,10 +44,10 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
         <div className="wv-product-buy-buttons">
           {showQuantitySelector && <QuantitySelector />}
           <button
+            className="wv-product-atc-button"
             disabled={adding || !available || !selectedVariant}
             onClick={handleATC}
             type="submit"
-            className="wv-product-atc-button"
           >
             <span>{atcText}</span>
             {adding && <Components.Spinner />}
@@ -55,7 +55,7 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
         </div>
       </div>
     )
-  },
+  }
 )
 
 export let css: ElementCSS = {

@@ -22,7 +22,6 @@ export let AppBlock = forwardRef<HTMLDivElement, WeaverseElementProps>(
     return (
       <div ref={ref} {...props}>
         <NoHydrate
-          id={id}
           getHTML={() => `
           {%- unless app_block_index -%}
             {%- assign app_block_index = 0 -%}
@@ -36,10 +35,11 @@ export let AppBlock = forwardRef<HTMLDivElement, WeaverseElementProps>(
             {%- endcase -%}
           {%- endif -%}
         `}
+          id={id}
         />
       </div>
     )
-  },
+  }
 )
 
 export let css: ElementCSS = {

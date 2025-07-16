@@ -26,7 +26,7 @@ export function useProducts(input: UseProductHookInput) {
   }
   if (source === 'fixedProducts' && fixedProducts?.length) {
     let _products = fixedProducts.map(
-      ({ productId }) => weaverseShopifyProducts[productId],
+      ({ productId }) => weaverseShopifyProducts[productId]
     )
     let hasAllProducts = _products.every((p) => p)
     products = hasAllProducts ? _products : []

@@ -14,13 +14,15 @@ let ProductTitle = forwardRef<HTMLElement, ProductTitleProps>((props, ref) => {
   let isNotProductPage = shopData?.request?.page_type !== 'product'
 
   let handleClick = () => {
-    if (!isDesignMode) {
-      if (clickAction === 'goToProductPage' && isNotProductPage) {
-        let { root_url = '/' } =
-          window.weaverseShopifyConfigs?.shopData?.routes || {}
-        let url = `${root_url}products/${product.handle}`
-        window.location.href = url
-      }
+    if (
+      !isDesignMode &&
+      clickAction === 'goToProductPage' &&
+      isNotProductPage
+    ) {
+      let { root_url = '/' } =
+        window.weaverseShopifyConfigs?.shopData?.routes || {}
+      let url = `${root_url}products/${product.handle}`
+      window.location.href = url
     }
   }
 
@@ -33,7 +35,7 @@ let ProductTitle = forwardRef<HTMLElement, ProductTitleProps>((props, ref) => {
         clickAction === 'goToProductPage' && isNotProductPage,
       ...rest,
     },
-    product.title,
+    product.title
   )
 })
 

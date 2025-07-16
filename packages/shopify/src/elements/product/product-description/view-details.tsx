@@ -9,7 +9,7 @@ export function ViewDetails(props: ProductDescriptionViewDetailsProps) {
   return (
     <Modal>
       <ModalTrigger asChild>
-        <button type="button" className="wv-view-details-button">
+        <button className="wv-view-details-button" type="button">
           {viewDetailsText}
         </button>
       </ModalTrigger>

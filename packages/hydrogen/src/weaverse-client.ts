@@ -28,8 +28,8 @@ const API_PATH = 'api/public'
 const DEFAULT_CACHE_STRATEGY = {
   maxAge: 10,
   sMaxAge: 10,
-  staleWhileRevalidate: 82800,
-  staleIfError: 82800,
+  staleWhileRevalidate: 82_800,
+  staleIfError: 82_800,
 }
 
 export class WeaverseClient {
@@ -68,7 +68,11 @@ export class WeaverseClient {
     this.env = env
     this.cache = cache
     this.waitUntil = waitUntil
-    this.withCache = createWithCache({ cache, waitUntil, request })
+    this.withCache = createWithCache({
+      cache,
+      waitUntil: waitUntil || (() => Promise.resolve()),
+      request,
+    })
 
     // Initialize configs
     this.configs = getWeaverseConfigs(request, env as HydrogenEnv)
@@ -92,7 +96,7 @@ export class WeaverseClient {
   // Helper method for direct fetching in design mode
   private directFetch = async <T>(
     url: string,
-    options: RequestInit = {},
+    options: RequestInit = {}
   ): Promise<T> => {
     try {
       let res = await fetch(url, options)
@@ -108,7 +112,7 @@ export class WeaverseClient {
 
   public fetchWithCache = async <T extends object>(
     url: string,
-    options: RequestInit & { strategy?: AllCacheOptions } = {},
+    options: RequestInit & { strategy?: AllCacheOptions } = {}
   ): Promise<T> => {
     let {
       strategy = this.storefront.CacheCustom(DEFAULT_CACHE_STRATEGY),
@@ -134,7 +138,7 @@ export class WeaverseClient {
             ...reqInit.headers,
           },
         })
-      },
+      }
     ) as Promise<T>
   }
 
@@ -151,7 +155,7 @@ export class WeaverseClient {
       let body = JSON.stringify({ isDesignMode, projectId })
       if (isDesignMode) {
         res = await fetch(url, { method: 'POST', body }).then((res) =>
-          res.json(),
+          res.json()
         )
       } else {
         res = await this.fetchWithCache(url, {
@@ -220,7 +224,7 @@ export class WeaverseClient {
       locale?: string
       handle?: string
       strategy?: AllCacheOptions
-    } = {},
+    } = {}
   ): Promise<WeaverseLoaderData | null> => {
     try {
       let { request, storefront, basePageRequestBody, basePageConfigs } = this
@@ -233,7 +237,7 @@ export class WeaverseClient {
       } = this.configs
 
       if (isPreviewMode) {
-        return getPreviewData(sectionType, this.components, weaverseHost)
+        return getPreviewData(sectionType || '', this.components, weaverseHost)
       }
 
       if (!projectId) {
@@ -317,7 +321,7 @@ export class WeaverseClient {
     let { data = {}, type, id } = item
     let component = this.components?.find(({ schema }) => schema?.type === type)
     let loader = component?.loader
-    if (typeof loader === 'function') {
+    if (typeof loader === 'function' && component) {
       try {
         return {
           ...item,
@@ -325,7 +329,7 @@ export class WeaverseClient {
             loader({
               data: { ...generateDataFromSchema(component.schema), ...data },
               weaverse: this,
-            }),
+            })
           ),
         }
       } catch (e) {
