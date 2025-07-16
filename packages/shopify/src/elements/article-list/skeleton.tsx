@@ -16,8 +16,8 @@ export function Skeleton(props: ArticleSkeletonProps) {
     <>
       {Array.from({ length: articleCount }).map((_, index) => (
         <div
-          key={index}
           className="wv-article-card-skeleton animate-pulse"
+          key={index}
           style={style}
         >
           <div className="wv-article-card-skeleton__image">

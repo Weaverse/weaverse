@@ -56,7 +56,7 @@ const downloadAndExtractTemplate = async (template, outputPath, commitHash) => {
     if (!response.ok) {
       spinner.fail('Failed to download template')
       throw new Error(
-        `Failed to download template: ${response.statusText}. Make sure the commit hash is valid.`,
+        `Failed to download template: ${response.statusText}. Make sure the commit hash is valid.`
       )
     }
 
@@ -72,7 +72,7 @@ const downloadAndExtractTemplate = async (template, outputPath, commitHash) => {
     for (let file of files) {
       await fs.move(
         `${outputPath}/temp/${downloadFolder}/${file}`,
-        `${outputPath}/${file}`,
+        `${outputPath}/${file}`
       )
     }
     await fs.remove(`${outputPath}/temp`)
@@ -95,7 +95,7 @@ const createEnvFile = async (path, projectId) => {
     if (envExampleContent.includes('WEAVERSE_PROJECT_ID=')) {
       envContent = envExampleContent.replace(
         /WEAVERSE_PROJECT_ID=.*/,
-        `WEAVERSE_PROJECT_ID=${projectId}`,
+        `WEAVERSE_PROJECT_ID=${projectId}`
       )
     } else {
       envContent = `${envExampleContent}\nWEAVERSE_PROJECT_ID=${projectId}`
@@ -179,7 +179,18 @@ Options:
         await downloadAndExtractTemplate(template, outputPath, commitHash)
         await createEnvFile(outputPath, argv['project-id'])
 
-        if (!argv['no-install']) {
+        if (argv['no-install']) {
+          console.log(chalk.green('\n🎉 Project created successfully!'))
+          console.log(chalk.blue('\nNext steps:'))
+          console.log(chalk.gray(`1. cd ${toKebabCase(argv['project-name'])}`))
+          console.log(chalk.gray('2. Pull your Shopify environment variables:'))
+          console.log(chalk.gray('   npx shopify hydrogen env pull'))
+          console.log(chalk.gray('3. npm install'))
+          console.log(chalk.gray('4. npm run dev'))
+          console.log(
+            chalk.gray('5. Open http://localhost:3456 in your browser\n')
+          )
+        } else {
           const spinner = ora('Installing dependencies...').start()
 
           // remove the package-lock.json, it not necessary
@@ -204,15 +215,15 @@ Options:
             console.log(chalk.green('\n🎉 Project created successfully!'))
             console.log(chalk.blue('\nNext steps:'))
             console.log(
-              chalk.gray(`1. cd ${toKebabCase(argv['project-name'])}`),
+              chalk.gray(`1. cd ${toKebabCase(argv['project-name'])}`)
             )
             console.log(
-              chalk.gray('2. Pull your Shopify environment variables:'),
+              chalk.gray('2. Pull your Shopify environment variables:')
             )
             console.log(chalk.gray('   npx shopify hydrogen env pull'))
             console.log(chalk.gray('3. npm run dev'))
             console.log(
-              chalk.gray('4. Open http://localhost:3456 in your browser\n'),
+              chalk.gray('4. Open http://localhost:3456 in your browser\n')
             )
 
             // Then, run 'npm run dev' after 'npm install' completes
@@ -227,17 +238,6 @@ Options:
               }
             })
           })
-        } else {
-          console.log(chalk.green('\n🎉 Project created successfully!'))
-          console.log(chalk.blue('\nNext steps:'))
-          console.log(chalk.gray(`1. cd ${toKebabCase(argv['project-name'])}`))
-          console.log(chalk.gray('2. Pull your Shopify environment variables:'))
-          console.log(chalk.gray('   npx shopify hydrogen env pull'))
-          console.log(chalk.gray('3. npm install'))
-          console.log(chalk.gray('4. npm run dev'))
-          console.log(
-            chalk.gray('5. Open http://localhost:3456 in your browser\n'),
-          )
         }
       }
     }

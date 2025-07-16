@@ -5,7 +5,16 @@
   "linter": {
     "rules": {
       "style": {
-        "useConst": "off"
+        "useConst": "off",
+        "noExportedImports": "warn",
+        "useBlockStatements": "warn",
+        "noNestedTernary": "warn",
+        "useConsistentMemberAccessibility": "warn",
+        "noParameterAssign": "warn",
+        "useDefaultSwitchClause": "warn",
+        "useConsistentBuiltinInstantiation": "warn",
+        "useFilenamingConvention": "warn",
+        "useConsistentArrayType": "warn"
       },
       "a11y": {
         "noStaticElementInteractions": "off",
@@ -18,19 +27,46 @@
         "noLabelWithoutControl": "warn",
         "useKeyWithMouseEvents": "warn"
       },
+      "complexity": {
+        "useOptionalChain": "warn",
+        "useLiteralKeys": "warn",
+        "noForEach": "warn",
+        "noExcessiveCognitiveComplexity": "warn"
+      },
       "suspicious": {
         "noArrayIndexKey": "warn",
         "noAssignInExpressions": "warn",
-        "noImplicitAnyLet": "warn"
+        "noImplicitAnyLet": "warn",
+        "noConsole": "warn",
+        "noEvolvingTypes": "warn",
+        "noExplicitAny": "warn",
+        "useAwait": "warn",
+        "noTemplateCurlyInString": "warn"
       },
       "security": {
         "noDangerouslySetInnerHtml": "off"
       },
       "correctness": {
-        "useHookAtTopLevel": "warn"
+        "useHookAtTopLevel": "warn",
+        "useExhaustiveDependencies": "warn",
+        "noChildrenProp": "warn",
+        "noUnusedVariables": "warn"
       },
       "nursery": {
-        "useUniqueElementIds": "warn"
+        "useUniqueElementIds": "warn",
+        "noShadow": "warn",
+        "useJsonImportAttribute": "off",
+        "useParseIntRadix": "warn",
+        "noConstantBinaryExpression": "warn",
+        "noNoninteractiveElementInteractions": "warn",
+        "useIterableCallbackReturn": "warn",
+        "noAwaitInLoop": "warn"
+      },
+      "performance": {
+        "noNamespaceImport": "warn",
+        "useTopLevelRegex": "warn",
+        "noImgElement": "warn",
+        "noDynamicNamespaceImportAccess": "warn"
       }
     }
   },

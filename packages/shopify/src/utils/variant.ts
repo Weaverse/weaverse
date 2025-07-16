@@ -8,7 +8,7 @@ import type { ShopifyProduct, ShopifyProductVariant } from '~/types/shopify'
  */
 export function getVariantFromOptionArray(
   product: ShopifyProduct,
-  options: string[],
+  options: string[]
 ) {
   validateProductStructure(product)
   validateOptionsArray(options)
@@ -17,7 +17,7 @@ export function getVariantFromOptionArray(
     options.every((option, index) => {
       let variantOptions = getVariantOptions(variant)
       return variantOptions[index] === option
-    }),
+    })
   )
 
   return result[0] || null
@@ -28,7 +28,7 @@ export function getVariantOptions(variant: ShopifyProductVariant) {
     return Array.from(variant.options)
   }
   return [variant.option1, variant.option2, variant.option3].filter(
-    Boolean,
+    Boolean
   ) as string[]
 }
 

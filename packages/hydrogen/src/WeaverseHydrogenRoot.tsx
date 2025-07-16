@@ -74,7 +74,7 @@ export class WeaverseHydrogen extends Weaverse {
 }
 
 function createWeaverseInstance(
-  params: WeaverseHydrogenParams,
+  params: WeaverseHydrogenParams
 ): WeaverseHydrogen {
   if (isBrowser) {
     // Check if the weaverse instance already exists in the window object
@@ -147,7 +147,6 @@ export let WeaverseHydrogenRoot = memo(
     errorComponent?: React.FC<{ error: any }>
   }) => {
     let loaderData = useLoaderData()
-    // @ts-ignore
     let data = loaderData?.weaverseData as
       | WeaverseLoaderData
       | Promise<WeaverseLoaderData>
@@ -159,21 +158,21 @@ export let WeaverseHydrogenRoot = memo(
             <Suspense>
               <Await resolve={data}>
                 {(resolvedData) => (
-                  <RenderRoot data={resolvedData} components={components} />
+                  <RenderRoot components={components} data={resolvedData} />
                 )}
               </Await>
             </Suspense>
           </ErrorBoundary>
         )
       }
-      return <RenderRoot data={data} components={components} />
+      return <RenderRoot components={components} data={data} />
     }
     return (
       <ErrorComponent
         error={{ message: 'No Weaverse data return from route loader!' }}
       />
     )
-  },
+  }
 )
 
 let ThemeSettingsProvider = createContext<HydrogenThemeSettings | null>(null)
@@ -195,7 +194,7 @@ export function useThemeSettings<T = HydrogenThemeSettings>() {
   let settings = useSafeExternalStore(
     themeSettingsStore.subscribe,
     themeSettingsStore.getSnapshot,
-    themeSettingsStore.getServerSnapshot,
+    themeSettingsStore.getServerSnapshot
   )
   return settings as T
 }

@@ -41,61 +41,61 @@ export function ProductQuickView({ product }: { product: ShopifyProduct }) {
       <ModalTrigger className="wv-pcard__button quick-view">
         <Icon name="Eye" />
       </ModalTrigger>
-      <ModalContent size="auto" className={quickViewModalClass} portal>
+      <ModalContent className={quickViewModalClass} portal size="auto">
         <ProductDetails
-          productId={product.id}
-          productHandle={product.handle}
-          useDefaultProduct={false}
           className="wv-pcard__details"
+          productHandle={product.handle}
+          productId={product.id}
+          useDefaultProduct={false}
         >
           <ProductMedia
-            mediaSize="medium"
-            aspectRatio="auto"
-            fallbackImage={PRODUCT_IMAGE_PLACEHOLDER}
             allowFullscreen={false}
-            thumbnailSlidePerView={5}
+            aspectRatio="auto"
             className="wv-pcard__media"
+            fallbackImage={PRODUCT_IMAGE_PLACEHOLDER}
+            mediaSize="medium"
+            thumbnailSlidePerView={5}
           />
           <ProductInfo className="wv-pcard__info">
             <ProductVendor
-              showLabel={false}
-              labelText=""
-              clickAction="none"
-              openInNewTab={false}
               className="wv-pcard__vendor"
+              clickAction="none"
+              labelText=""
+              openInNewTab={false}
+              showLabel={false}
             />
             <ProductTitle
-              htmlTag="h4"
-              clickAction="goToProductPage"
               className="wv-pcard__title"
+              clickAction="goToProductPage"
+              htmlTag="h4"
             />
             <ProductPrice
+              className="wv-pcard__price"
               showCompareAt
               showComparePriceFirst={false}
               showSaleBadge
-              className="wv-pcard__price"
             />
             <ProductVariant
+              className="wv-pcard__variant"
+              hideUnavailableOptions={false}
               optionsStyle="custom"
               showTooltip
-              hideUnavailableOptions={false}
-              className="wv-pcard__variant"
             />
             <ProductBuyButton
-              showQuantitySelector={false}
-              quantityLabel=""
               buttonText="Add to cart"
+              className="wv-pcard__buy-button"
+              quantityLabel=""
+              showQuantitySelector={false}
               soldOutText="Sold out"
               unavailableText="Unavailable"
-              className="wv-pcard__buy-button"
             />
             <ProductDescription
+              className="wv-pcard__description"
+              isInsideProductQuickView
               lineClamp={3}
               showViewDetailsButton
-              isInsideProductQuickView
-              viewDetailsText="View full details"
               viewDetailsClickAction="goToProductPage"
-              className="wv-pcard__description"
+              viewDetailsText="View full details"
             />
           </ProductInfo>
         </ProductDetails>

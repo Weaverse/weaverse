@@ -8,12 +8,12 @@ let MapElement = forwardRef<HTMLDivElement, MapElementProps>((props, ref) => {
   return (
     <div ref={ref} {...rest}>
       <iframe
-        loading="lazy"
-        width="100%"
         height="100%"
-        title="map"
+        loading="lazy"
         src={`https://maps.google.com/maps?z=${zoom}&t=m&q=${place}&ie=UTF8&&output=embed`}
         style={{ pointerEvents: 'none' }}
+        title="map"
+        width="100%"
       />
     </div>
   )

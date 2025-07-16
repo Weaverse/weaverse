@@ -25,7 +25,7 @@ import { stitchesUtils } from './utils/stitches'
 
 export class WeaverseItemStore extends EventEmitter {
   weaverse: Weaverse
-  ref: RefObject<HTMLElement> = createRef<HTMLElement>()
+  ref: RefObject<HTMLElement | null> = createRef<HTMLElement | null>()
   _store: ElementData = { id: '', type: '' }
   stitchesClass = ''
 
@@ -38,7 +38,7 @@ export class WeaverseItemStore extends EventEmitter {
       Object.assign(this._store, initialData)
     } else {
       throw new Error(
-        `'id' and 'type' are required to create a new Weaverse item.`,
+        `'id' and 'type' are required to create a new Weaverse item.`
       )
     }
     this._store.css = this.getDefaultCss()

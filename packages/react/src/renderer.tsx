@@ -12,7 +12,7 @@ let reactVersion = Number(React.version?.split('.')[0]) || 0
 export const useSafeExternalStore = (
   subscribe: any,
   getSnapshot: any,
-  getServerSnapshot: any = getSnapshot,
+  getServerSnapshot: any = getSnapshot
 ) => {
   // In server environment or during SSR, just return the snapshot directly
   if (typeof window === 'undefined') {
@@ -33,7 +33,7 @@ export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
   let data = useSafeExternalStore(
     context.subscribe,
     context.getSnapShot,
-    context.getSnapShot,
+    context.getSnapShot
   )
   let rootRef = useRef<HTMLElement>(null)
 
@@ -49,9 +49,9 @@ export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
       <div
         className={`weaverse-content-root ${themeClass}`}
         {...eventHandlers}
-        ref={rootRef}
         data-weaverse-project-id={context.projectId}
         data-weaverse-template-id={data.id}
+        ref={rootRef}
       >
         <WeaverseContextProvider value={context}>
           <ItemInstance
@@ -71,7 +71,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
   let data = useSafeExternalStore(
     instance.subscribe,
     instance.getSnapShot,
-    instance.getSnapShot,
+    instance.getSnapShot
   )
   let {
     id,
@@ -120,22 +120,21 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
           ? childIds.map((cid: string) => ({ id: cid }))
           : []
     ).map((item: { id: string }, index: number) => (
-      <ItemInstance key={`${item.id}-${index}`} id={item.id} parentId={id} />
+      <ItemInstance id={item.id} key={`${item.id}-${index}`} parentId={id} />
     ))
 
     return (
       <Component
         {...rest}
-        key={id}
-        data-wv-type={type}
-        data-wv-id={id}
+        children={renderChildren.length ? renderChildren : undefined}
         className={clsx(
           platformType !== 'shopify-hydrogen' &&
             generateItemClassName(instance, stitchesInstance),
-          rest.data?.className,
+          rest.data?.className
         )}
-        // biome-ignore lint/correctness/noChildrenProp: <explanation>
-        children={renderChildren.length ? renderChildren : undefined}
+        data-wv-id={id}
+        data-wv-type={type}
+        key={id}
       />
     )
   }
@@ -153,9 +152,9 @@ let ItemInstance = memo(
     }
     return (
       <WeaverseItemContext.Provider value={{ parentId, id }}>
-        <ItemComponent key={id} instance={instance} />
+        <ItemComponent instance={instance} key={id} />
       </WeaverseItemContext.Provider>
     )
-  },
+  }
 )
 ItemInstance.displayName = 'WeaverseInstanceProvider'

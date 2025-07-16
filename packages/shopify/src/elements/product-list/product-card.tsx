@@ -38,7 +38,7 @@ export function ProductCard(props: ProductCardProps) {
   let secondImage = imageSource[1]
   let imagesClass = clsx(
     'wv-pcard__images',
-    showSecondImageOnHover && secondImage && 'show-second-image-on-hover',
+    showSecondImageOnHover && secondImage && 'show-second-image-on-hover'
   )
   let cardClass = clsx('wv-product-card', className)
 
@@ -62,20 +62,20 @@ export function ProductCard(props: ProductCardProps) {
               ) : null}
             </a>
             <ProductCardButtons
+              product={product}
+              showQuickViewButton={showQuickViewButton}
               showViewDetailsButton={showViewDetailsButton}
               viewDetailsButtonText={viewDetailsButtonText}
-              showQuickViewButton={showQuickViewButton}
-              product={product}
             />
             {showSaleBadge && compare_at_price && <ProductCardSaleBadge />}
           </>
         ) : null}
       </div>
       <ProductCardInfo
+        optionLimit={optionLimit}
+        optionName={optionName}
         product={product}
         showProductOption={showProductOption}
-        optionName={optionName}
-        optionLimit={optionLimit}
       />
     </div>
   )

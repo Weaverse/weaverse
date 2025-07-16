@@ -10,7 +10,7 @@ export let isIframe = isBrowser && window.top !== window.self
  */
 export function merge(
   target: Record<string, any>,
-  source: Record<string, any>,
+  source: Record<string, any>
 ) {
   let t = { ...(target || {}) }
   // Iterate through `source` properties and if an `Object` set property to merge of `target` and `source` properties

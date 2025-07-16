@@ -30,27 +30,27 @@ export function Slider(props: SliderProps) {
         setCurrentSlide(slider.track.details.rel)
       },
     },
-    [ResizePlugin],
+    [ResizePlugin]
   )
   let _className = clsx('keen-slider', className)
   let arrowsClass = clsx(className && `${className}-arrows`)
 
   return (
     <>
-      <div ref={ref} className={_className}>
+      <div className={_className} ref={ref}>
         <link
-          rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/keen-slider@latest/keen-slider.min.css"
+          rel="stylesheet"
         />
         {children}
       </div>
       {created && instanceRef?.current && (
         <Arrows
-          currentSlide={currentSlide}
-          instanceRef={instanceRef}
           className={arrowsClass}
-          offset={arrowOffset}
+          currentSlide={currentSlide}
           icon="arrow"
+          instanceRef={instanceRef}
+          offset={arrowOffset}
         />
       )}
     </>

@@ -260,7 +260,7 @@ export type HydrogenSchemaValidationResult =
  * Type guard to check if a schema is valid
  */
 export function isValidHydrogenSchema(
-  schema: unknown,
+  schema: unknown
 ): schema is HydrogenComponentSchema {
   // We can leverage the validation from the schema package
   return (

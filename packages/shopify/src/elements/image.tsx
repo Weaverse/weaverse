@@ -24,15 +24,15 @@ let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
       // add -/preview/-/quality/smart/-/format/auto/ if it ends with {uuid}/
       src = `${src}-/preview/-/quality/smart/-/format/auto/`
     }
-    let content = <img alt={alt} src={src} loading="lazy" />
+    let content = <img alt={alt} loading="lazy" src={src} />
     if (clickAction === 'openLink' && linkTo) {
       content = (
         <a
           href={linkTo}
-          target={openInNewTab ? '_blank' : '_self'}
           rel="noreferrer"
+          target={openInNewTab ? '_blank' : '_self'}
         >
-          <img alt={alt} src={src} loading="lazy" />
+          <img alt={alt} loading="lazy" src={src} />
         </a>
       )
     }
@@ -42,7 +42,7 @@ let Image = React.forwardRef<HTMLDivElement, ImageElementProps>(
         {content}
       </div>
     )
-  },
+  }
 )
 
 export let css: ElementCSS = {

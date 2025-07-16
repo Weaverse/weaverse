@@ -20,7 +20,7 @@ export function formatMoney(cents: string | number, format: string): string {
     number: any,
     precision = 2,
     thousands = ',',
-    decimal = '.',
+    decimal = '.'
   ): string | 0 {
     if (Number.isNaN(number) || number == null) {
       return 0
@@ -31,14 +31,14 @@ export function formatMoney(cents: string | number, format: string): string {
     let parts = number.split('.')
     let dollarsAmount = parts[0].replace(
       /(\d)(?=(\d\d\d)+(?!\d))/g,
-      `$1${thousands}`,
+      `$1${thousands}`
     )
     let centsAmount = parts[1] ? decimal + parts[1] : ''
 
     return dollarsAmount + centsAmount
   }
 
-  // @ts-ignore
+  // @ts-expect-error
   switch (formatString.match(placeholderRegex)[1]) {
     case 'amount':
       value = formatWithDelimiters(cents, 2)
@@ -54,6 +54,6 @@ export function formatMoney(cents: string | number, format: string): string {
       break
   }
 
-  // @ts-ignore
+  // @ts-expect-error
   return formatString.replace(placeholderRegex, value)
 }

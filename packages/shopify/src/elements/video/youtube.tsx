@@ -14,11 +14,11 @@ export function Youtube(props: YoutubeElementProps) {
   } clipboard-write; encrypted-media; gyroscope; picture-in-picture`
   return (
     <iframe
-      src={youtubeSrc}
-      width="100%"
-      height="100%"
       allow={allow}
+      height="100%"
+      src={youtubeSrc}
       title="Youtube embed video"
+      width="100%"
     />
   )
 }

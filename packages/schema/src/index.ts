@@ -34,7 +34,7 @@ export const SelectInputConfigsSchema = z.object({
       z.object({
         label: z.string(),
         value: z.string(),
-      }),
+      })
     )
     .optional(),
 })
@@ -46,7 +46,7 @@ export const ToggleGroupConfigsSchema = z.object({
         label: z.string(),
         value: z.string(),
         icon: z.string().optional(),
-      }),
+      })
     )
     .optional(),
 })
@@ -71,7 +71,7 @@ export const BasicInputSchema = z
       .string()
       .min(1, 'Name is required')
       .describe(
-        'The name of the prop(camelCase) which will be used in the component',
+        'The name of the prop(camelCase) which will be used in the component'
       ),
     label: z.string().optional().describe('The label of the prop'),
     placeholder: z.string().optional(),
@@ -81,7 +81,7 @@ export const BasicInputSchema = z
       .boolean()
       .optional()
       .describe(
-        'Whether to revalidate the prop when the value changes, use for product, product-list, collection, collection-list, blog, metaobject',
+        'Whether to revalidate the prop when the value changes, use for product, product-list, collection, collection-list, blog, metaobject'
       ),
     condition: z
       .unknown()
@@ -94,10 +94,10 @@ export const BasicInputSchema = z
         {
           message:
             'Condition must be a string (deprecated) or function: (data) => boolean',
-        },
+        }
       )
       .describe(
-        'Condition for conditional rendering. Use function-based conditions: (data) => boolean. String conditions are deprecated.',
+        'Condition for conditional rendering. Use function-based conditions: (data) => boolean. String conditions are deprecated.'
       ),
     defaultValue: z
       .union([
@@ -196,7 +196,7 @@ export const ElementSchema = z
       .string()
       .min(2)
       .describe(
-        'The title of the child element or the section element, should be short and concise, not include parent element title and any special characters',
+        'The title of the child element or the section element, should be short and concise, not include parent element title and any special characters'
       ),
     type: z
       .string()
@@ -207,7 +207,7 @@ export const ElementSchema = z
       .number()
       .optional()
       .describe(
-        "The limit of the element, it's the maximum number of the element, if not set, it's 1",
+        "The limit of the element, it's the maximum number of the element, if not set, it's 1"
       ),
     inspector: z
       .array(InspectorGroupSchema)
@@ -217,13 +217,13 @@ export const ElementSchema = z
       .array(InspectorGroupSchema)
       .optional()
       .describe(
-        'The props of the child element, the prop make the element can be customized',
+        'The props of the child element, the prop make the element can be customized'
       ),
     childTypes: z
       .array(z.string())
       .optional()
       .describe(
-        'Array of child types, that is allowed to be used in the element',
+        'Array of child types, that is allowed to be used in the element'
       ),
     enabledOn: z
       .object({
@@ -235,7 +235,7 @@ export const ElementSchema = z
               z.literal('header'),
               z.literal('footer'),
               z.literal('body'),
-            ]),
+            ])
           )
           .optional(),
       })
@@ -251,7 +251,7 @@ export const ElementSchema = z
       .catchall(z.any())
       .optional()
       .describe(
-        "The presets of the element, it's the initial state of the element, include the children and it's default props",
+        "The presets of the element, it's the initial state of the element, include the children and it's default props"
       ),
   })
   .describe('The schema of the element')
@@ -269,11 +269,11 @@ export const typeSchema = z
   .max(50, 'Type must be less than 50 characters')
   .regex(
     /^[a-z0-9-]+$/,
-    'Type must contain only lowercase letters, numbers, and hyphens',
+    'Type must contain only lowercase letters, numbers, and hyphens'
   )
   .refine(
-    (val) => !val.startsWith('-') && !val.endsWith('-'),
-    'Type cannot start or end with a hyphen',
+    (val) => !(val.startsWith('-') || val.endsWith('-')),
+    'Type cannot start or end with a hyphen'
   )
 
 // Type exports - inferred from Zod schemas
@@ -351,7 +351,7 @@ export type SchemaTypeStrict = {
  * Enhanced schema validation with detailed error reporting
  */
 export function validateSchema(
-  schema: unknown,
+  schema: unknown
 ): SchemaValidationResult<SchemaType> {
   const result = ElementSchema.safeParse(schema)
 
@@ -363,7 +363,7 @@ export function validateSchema(
         code: issue.code,
         expected: 'expected' in issue ? issue.expected : undefined,
         received: 'received' in issue ? issue.received : undefined,
-      }),
+      })
     )
 
     return {
@@ -395,7 +395,7 @@ export function createSchema(schema: SchemaType) {
       }
     })
     console.warn(
-      'Using original schema with potential issues. Consider fixing these validation errors.',
+      'Using original schema with potential issues. Consider fixing these validation errors.'
     )
     return schema as SchemaType
   }
@@ -429,7 +429,7 @@ export function createSchemaTypeSafe(schema: {
       console.warn(`  - ${issue.message}${pathStr}`)
     })
     console.warn(
-      'Using original schema with potential issues. Consider fixing these validation errors.',
+      'Using original schema with potential issues. Consider fixing these validation errors.'
     )
     return schema as SchemaType
   }
@@ -530,7 +530,7 @@ export class SchemaBuilder {
    * Build and validate the schema
    */
   build(): SchemaType {
-    if (!this.schema.title || !this.schema.type) {
+    if (!(this.schema.title && this.schema.type)) {
       throw new Error('Schema must have both title and type')
     }
     return createSchema(this.schema as SchemaType)
@@ -593,7 +593,7 @@ export const inputHelpers = {
   text: (
     name: string,
     label?: string,
-    options?: Partial<BasicInput>,
+    options?: Partial<BasicInput>
   ): BasicInput => ({
     type: 'text',
     name,
@@ -607,7 +607,7 @@ export const inputHelpers = {
   textarea: (
     name: string,
     label?: string,
-    options?: Partial<BasicInput>,
+    options?: Partial<BasicInput>
   ): BasicInput => ({
     type: 'textarea',
     name,
@@ -622,7 +622,7 @@ export const inputHelpers = {
     name: string,
     label?: string,
     defaultValue?: boolean,
-    options?: Partial<BasicInput>,
+    options?: Partial<BasicInput>
   ): BasicInput => ({
     type: 'switch',
     name,
@@ -638,7 +638,7 @@ export const inputHelpers = {
     name: string,
     label?: string,
     configs?: RangeInputConfigs,
-    options?: Partial<BasicInput>,
+    options?: Partial<BasicInput>
   ): BasicInput => ({
     type: 'range',
     name,
@@ -654,7 +654,7 @@ export const inputHelpers = {
     name: string,
     label: string,
     options: Array<{ label: string; value: string }>,
-    inputOptions?: Partial<BasicInput>,
+    inputOptions?: Partial<BasicInput>
   ): BasicInput => ({
     type: 'select',
     name,
@@ -669,7 +669,7 @@ export const inputHelpers = {
   image: (
     name: string,
     label?: string,
-    options?: Partial<BasicInput>,
+    options?: Partial<BasicInput>
   ): BasicInput => ({
     type: 'image',
     name,
@@ -682,7 +682,7 @@ export const inputHelpers = {
    */
   heading: (
     label: string,
-    options?: Omit<HeadingInput, 'type' | 'label'>,
+    options?: Omit<HeadingInput, 'type' | 'label'>
   ): HeadingInput => ({
     type: 'heading',
     label,
@@ -731,7 +731,7 @@ export const groupHelpers = {
    */
   custom: (
     groupName: string,
-    inputs: (BasicInput | HeadingInput)[],
+    inputs: (BasicInput | HeadingInput)[]
   ): InspectorGroup => ({
     group: groupName,
     inputs,
@@ -768,7 +768,7 @@ export class SchemaRegistry {
   register(
     name: string,
     schema: SchemaType,
-    migrations?: SchemaMigration[],
+    migrations?: SchemaMigration[]
   ): void {
     this.schemas.set(name, schema)
     if (migrations) {
@@ -960,7 +960,7 @@ export interface ComponentValidationOptions {
  */
 export function validateComponentSimple(
   component: any,
-  componentName?: string,
+  componentName?: string
 ): SimpleValidationResult {
   try {
     if (!component) {
@@ -1015,7 +1015,7 @@ export function validateComponentSimple(
  */
 export function validateComponentsSimple(
   components: Record<string, any>,
-  options: ComponentValidationOptions = {},
+  options: ComponentValidationOptions = {}
 ): {
   success: boolean
   valid: string[]
@@ -1065,7 +1065,7 @@ export function validateComponentsSimple(
  */
 export function createValidatedComponentArray<T extends Record<string, any>>(
   components: T,
-  options: ComponentValidationOptions = {},
+  options: ComponentValidationOptions = {}
 ): T[keyof T][] {
   const { validate = true, logErrors = true } = options
 
@@ -1076,10 +1076,10 @@ export function createValidatedComponentArray<T extends Record<string, any>>(
   const validation = validateComponentsSimple(components, { logErrors })
 
   if (!validation.success && logErrors) {
-    console.warn(`⚠️ Component validation issues found:`)
+    console.warn('⚠️ Component validation issues found:')
     console.warn(`   Valid: ${validation.valid.length}/${validation.total}`)
     if (validation.invalid.length > 0) {
-      console.warn(`   Invalid components:`)
+      console.warn('   Invalid components:')
       validation.invalid.forEach(({ name, error }) => {
         console.warn(`   - ${name}: ${error}`)
       })
@@ -1141,7 +1141,7 @@ export function analyzeComponentRegistry(components: Record<string, any>): {
 
       settingsCount = result.data.schema.settings?.reduce(
         (acc: number, group: any) => acc + (group.inputs?.length || 0),
-        0,
+        0
       )
       hasPresets = !!result.data.schema.presets
     }

@@ -21,10 +21,10 @@ export let Button = React.forwardRef<
   }
   return (
     <a
+      href={isDesignMode ? undefined : linkTo}
       ref={ref as React.MutableRefObject<HTMLAnchorElement>}
-      href={!isDesignMode ? linkTo : undefined}
-      target={openInNewTab ? '_blank' : '_self'}
       rel="noreferrer"
+      target={openInNewTab ? '_blank' : '_self'}
       {...rest}
     >
       {text}

@@ -69,7 +69,7 @@ let Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
     useEffect(() => {
       let intervalFlag: ReturnType<typeof setInterval> = setInterval(
         handleRemaining,
-        1000,
+        1000
       )
       return () => {
         clearInterval(intervalFlag)
@@ -97,7 +97,7 @@ let Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
         })}
       </div>
     )
-  },
+  }
 )
 
 export let css: ElementCSS = {
