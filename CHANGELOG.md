@@ -1,23 +1,72 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [2025.07.22] - 2025-07-22
 
-## [Unreleased]
+### 🎨 Weaverse Studio
 
-### Added
+#### 🎉 New Features
+- **Brand New Dashboard**: Complete redesign with modern UI for better user experience
+  - Beautiful animated welcome banner
+  - Real-time changelog to stay updated
+  - Improved project management with quick actions
+  - Enhanced navigation and project switching
+  - New billing and usage visualization
+- **AI Assistant (Beta)**: Free AI-powered coding assistant to help build Hydrogen stores faster
+  - Context-aware chat interface with real-time code generation
+  - Multi-mode support: general queries, code generation, and documentation search
+- **Account Management**: New settings page to manage API keys and personal access tokens
+- **Figma Integration**: Import designs directly from Figma with OAuth authentication
 
-### Changed
+#### ✨ Improvements
+- Significantly faster dashboard loading with optimized data fetching
+- Dark mode support across all new components
+- Better error messages and form validation
 
-### Deprecated
+#### 🐛 Bug Fixes
+- Fixed AI chat interface stability issues
+- Improved authentication and project access validation
 
-### Removed
+---
 
-### Fixed
+### 🔧 Weaverse SDKs
 
-### Security
+#### 🎉 New Features
+- **Biome v2.1.2**: New linting rules for code quality, performance, and sorted Tailwind classes
+- **Ultracite**: Added for improved code formatting
+
+#### ✨ Improvements
+- Enhanced GitHub workflows with Claude AI integration
+- Strict TypeScript with null checks enabled
+- Better build performance
+
+---
+
+### 🚀 Weaverse Pilot Theme
+
+#### 🎉 New Features
+- **Quick Shop Modal**: Browse and select product variants without leaving collection pages
+- **Product Bundles Support**: Full Shopify bundles integration with badges and special cart handling
+- **Newsletter Popup**: Smart email capture with customizable timing and Klaviyo integration
+- **Enhanced Product Display**: New zoom functionality, dynamic badges, and improved variant selector
+
+#### ✨ Improvements
+- Switched to Cabin Variable font for better readability
+- Enhanced cart experience with bundle support
+- Added CLAUDE.md coding guidelines
+- Implemented sorted Tailwind classes with Biome
+- Optimized image loading and pagination
+
+#### 🐛 Bug Fixes
+- Fixed quick shop variant selection
+- Corrected logo visibility with transparent headers
+- Fixed pagination links and cart form submissions
+- Improved media zoom responsiveness
+
+#### 🔧 Technical Updates
+- React Player downgraded to 2.16.0 for stability
+- Vite 6.3.5 for Shopify CLI compatibility
+- Added EditorConfig and enhanced Biome configuration
 
 ## [2025.07] - 2025-07-03
 

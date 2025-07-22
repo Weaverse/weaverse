@@ -50,6 +50,7 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@biomejs/biome",
+      "@tailwindcss/oxide",
       "esbuild",
       "lefthook",
       "workerd"
