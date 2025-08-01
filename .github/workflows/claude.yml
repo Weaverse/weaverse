@@ -38,14 +38,28 @@ jobs:
           
           # Direct prompt for automated review
           direct_prompt: |
-            Please review this pull request and provide feedback on:
-            - Code quality and best practices
-            - Potential bugs or issues
-            - Performance considerations
-            - Security concerns
-            - Test coverage
+            Please review this pull request for the Weaverse SDKs monorepo and provide feedback on:
             
-            Be constructive and helpful in your feedback.
+            **Monorepo Considerations:**
+            - Changes to package dependencies and version alignment
+            - Impact on other packages in the monorepo
+            - Breaking changes that require major version bumps
+            - Proper changeset inclusion for releases
+            
+            **Code Quality:**
+            - TypeScript type safety and proper typing
+            - Adherence to Biome linting/formatting rules
+            - React best practices (functional components, hooks)
+            - Framework-agnostic design in @weaverse/core
+            
+            **Specific Checks:**
+            - Turbo build configuration if modified
+            - Package.json scripts consistency
+            - Export statements in package entry points
+            - Backward compatibility for SDK users
+            - Documentation updates if API changes
+            
+            Be constructive and focus on the unique aspects of this SDK monorepo.
 
           # Use sticky comments to update the same comment
           use_sticky_comment: true
