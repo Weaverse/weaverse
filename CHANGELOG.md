@@ -1,5 +1,52 @@
 # Changelog
 
+## [2025.08.12] - 2025-08-12
+
+### 🎨 Weaverse Studio
+
+#### 🎉 New Features
+- **🎨 Complete Studio Interface Redesign**: Revolutionary new design system with modern, intuitive interface and streamlined workflows
+- **🤖 Advanced AI Chat System**: Persistent conversations, reliable tool integration, and enhanced development assistance
+- **💰 Enterprise Billing Transparency**: Real-time usage tracking with overage calculations and cost projections
+- **Professional Error Pages**: Beautiful 404 and error handling with clear navigation
+
+#### ✨ Improvements
+- **Enhanced Performance**: Faster loading times and better responsiveness across all Studio features
+- **Improved Mobile Preview**: Better styling and layout consistency for mobile theme previews
+- **Streamlined Navigation**: Simplified app structure with cleaner user flows
+
+#### 🐛 Bug Fixes
+- **AI Chat Reliability**: Fixed deadlock issues that could freeze the AI assistant
+- **Studio Interface**: Resolved UI rendering and interaction issues
+- **Mobile Preview**: Fixed component backgrounds and responsive layouts
+- **Billing Accuracy**: Corrected Growth and Scale plan overage calculations
+
+#### 🔧 Technical Updates
+- **Enhanced Database**: Added AI tool call persistence with proper validation
+- **Improved Testing**: Extensive test coverage for AI persistence and error handling
+- **Better Documentation**: Enhanced API docs and troubleshooting guides
+
+---
+
+### 🔧 Weaverse SDKs
+
+#### ✨ Improvements
+- **Enhanced Type Safety**: Improved TypeScript definitions across all packages
+- **Better Documentation**: Updated guides with latest patterns and best practices
+- **Dependency Updates**: Synchronized package versions for better compatibility
+
+---
+
+### 🚀 Weaverse Pilot Theme
+
+#### ✨ Improvements
+- **Updated Dependencies**: Synchronized with latest Weaverse SDK versions
+- **Enhanced Type Safety**: Improved TypeScript integration and error handling
+- **Better Performance**: Optimized build process and reduced bundle size
+
+#### 🐛 Bug Fixes
+- **Development Stability**: Fixed various development server and build issues
+- **Type Definitions**: Corrected TypeScript configuration for better IDE support
 
 ## [2025.07.22] - 2025-07-22
 
