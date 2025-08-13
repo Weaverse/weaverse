@@ -42,7 +42,8 @@ Before starting, make sure you have:
    - Review permissions and click **Install app**
    - The app will be added to your store
 
-> **📸 [Screenshot placeholder: Weaverse app in Shopify App Store]**
+
+![Weaverse app in Shopify App Store](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_on_shopify_app_store1.webp?v=1755078035)
 
 ---
 
@@ -56,7 +57,7 @@ Before starting, make sure you have:
    - Click **Get Started** or **Create New Project**
    - An onboarding modal will appear
 
-> **📸 [Screenshot placeholder: Weaverse dashboard with Get Started button highlighted]**
+![Weaverse dashboard with Get Started button highlighted](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_new_dashboard.webp?v=1755078172)
 
 ---
 
@@ -72,7 +73,7 @@ Before starting, make sure you have:
    - Each theme shows a preview and key features
    - Click on your preferred theme to select it
 
-> **📸 [Screenshot placeholder: Theme selection modal showing Pilot, Naturelle, and other themes]**
+![Theme selection modal showing Pilot, Naturelle, and other themes](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_choose_theme_modal.webp?v=1755078289)
 
 ---
 
@@ -96,7 +97,7 @@ npx @weaverse/cli@latest create --template=pilot --project-id=v3gf5xxth6j1u3qr2f
      - ✅ Update environment variables with your Project ID
      - ✅ Start the development server
 
-> **📸 [Screenshot placeholder: CLI command displayed in modal with copy button]**
+![CLI command displayed in modal with copy button](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_cli_command.webp?v=1755078433)
 
 **Example Terminal Output:**
 ```bash
@@ -123,7 +124,7 @@ npx @weaverse/cli@latest create --template=pilot --project-id=v3gf5xxth6j1u3qr2f
    - You'll see your theme loaded with `http://localhost:3456` in the preview
    - The content will initially come from demo data
 
-> **📸 [Screenshot placeholder: Weaverse Studio interface with localhost:3456 loaded in preview]**
+![Weaverse Studio interface with localhost:3456 loaded in preview](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_studio_loaded.webp?v=1755078572)
 
 ---
 
@@ -146,7 +147,7 @@ Now for the fun part! Start customizing your storefront:
    - Test on different device sizes
    - Use the mobile/tablet/desktop toggles
 
-> **📸 [Screenshot placeholder: Studio with section being dragged, text being edited, and device preview toggles]**
+![Studio with section being dragged, text being edited, and device preview toggles](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_studio_loaded_2.webp?v=1755078650)
 
 ---
 
@@ -180,9 +181,8 @@ Right now you're seeing demo content. Let's connect your actual store data:
    npm run dev
    ```
 
-> **📸 [Screenshot placeholder: Hydrogen app installation in Shopify App Store]**
-> 
-> **📸 [Screenshot placeholder: Terminal showing `shopify hydrogen env pull` command and store selection]**
+![Hydrogen app installation in Shopify App Store](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/hydrogen_on_shopify_app_store.webp?v=1755078732)
+
 
 ### Option B: For Development/Trial Stores
 
@@ -205,7 +205,7 @@ Right now you're seeing demo content. Let's connect your actual store data:
    npm run dev
    ```
 
-> **📸 [Screenshot placeholder: Creating Storefront API token in Shopify admin]**
+![Creating Storefront API token in Shopify admin](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/headless_app.webp?v=1755078941)
 
 ---
 
@@ -228,7 +228,8 @@ Right now you're seeing demo content. Let's connect your actual store data:
 3. **Mobile View**: Use browser dev tools to test mobile responsiveness
 4. **Studio Editing**: Make a change in Studio and verify it appears immediately
 
-> **📸 [Screenshot placeholder: Live storefront showing real products with Weaverse Studio editing panel]**
+
+![Live storefront showing real products with Weaverse Studio editing panel](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_real_store_preview.webp?v=1755079014)
 
 ---
 
