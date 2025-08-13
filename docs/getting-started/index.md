@@ -21,7 +21,6 @@ Weaverse bridges the gap between developer flexibility and merchant usability by
 
 - [📚 5-Minute Quickstart](/docs/getting-started/quickstart) - Get a demo site running locally
 - [⚡ Installation Guide](/docs/getting-started/installation) - Add Weaverse to your project
-- [🎯 Your First Project](/docs/getting-started/first-project) - Build your first Weaverse component
 
 ## New to Weaverse v5?
 
@@ -38,7 +37,6 @@ Weaverse bridges the gap between developer flexibility and merchant usability by
 
 - 💬 [Community Forum](/docs/community) - Connect with other developers
 - 📖 [FAQ](/docs/resources/faq) - Common questions and answers
-- 🔧 [Troubleshooting](/docs/resources/troubleshooting) - Solve common issues
-- 💡 [Support](/docs/community/support) - Get technical assistance
+- 📚 [Complete Tutorial](/docs/resources/tutorials/tutorial) - Step-by-step walkthrough
 
 Ready to build amazing Shopify storefronts? Let's get started! 🚀

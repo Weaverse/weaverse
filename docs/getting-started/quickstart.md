@@ -309,30 +309,25 @@ npm run dev -- --port 3457
    - Share with team members for feedback
 
 ### Short Term Goals (This Week)
-1. **[Master the Studio](/docs/studio-guide)** - Learn all the editing features
-2. **[Explore Themes](/docs/themes-templates)** - Browse marketplace for inspiration
-3. **[Core Concepts](/docs/core-concepts)** - Understand how Weaverse works
-4. **[SEO Setup](/docs/features)** - Configure meta tags and structured data
+1. **[Explore Themes](/docs/themes-templates)** - Browse available themes and components
+2. **[Core Concepts](/docs/core-concepts)** - Understand how Weaverse works
+3. **[Features](/docs/features)** - Configure meta tags and integrations
 
 ### Medium Term (Next Month)
 1. **[Custom Components](/docs/development-guide)** - Build sections unique to your brand
-2. **[Performance Optimization](/docs/deployment)** - Set up analytics and monitoring  
-3. **[Team Collaboration](/docs/studio-guide)** - Onboard your content team
-4. **[Advanced Features](/docs/features)** - Add integrations and automations
+2. **[API Reference](/docs/api)** - Learn advanced customization options
+3. **[Deployment](/docs/deployment)** - Set up production hosting
 
 ### Production Launch
 When you're ready to go live:
 - **[Deployment Guide](/docs/deployment)** - Choose your hosting platform
-- **[Domain Setup](/docs/deployment)** - Connect your custom domain
 - **[Security](/docs/features/content-security)** - Configure SSL and security headers
-- **[Analytics](/docs/features)** - Set up conversion tracking
 
 ## Need Help?
 
 - 🚀 **[Complete Tutorial](/docs/resources/tutorials/tutorial)** - Deep dive walkthrough
 - 💬 **[Community](/docs/community)** - Connect with other merchants and developers
 - 📚 **[FAQ](/docs/resources/faq)** - Common questions answered
-- 🆘 **[Support](/docs/community/support)** - Get help from our team
 
 ---
 
@@ -355,4 +350,4 @@ When you're ready to go live:
 
 **Time to live storefront**: Under 10 minutes ⚡
 
-Ready to customize and launch? Start with the [Studio Guide](/docs/studio-guide) or dive into [Core Concepts](/docs/core-concepts) to understand how everything works together!
+Ready to customize and launch? Dive into [Core Concepts](/docs/core-concepts) to understand how everything works together!
