@@ -84,7 +84,7 @@ Before starting, make sure you have:
 
 2. **Example Command:**
 ```bash
-npx @weaverse/cli@latest init pilot my-store --project-id=wv_proj_abc123xyz
+npx @weaverse/cli@latest create --template=pilot --project-id=v3gf5xxth6j1u3qr2fa4im1x --project-name=my-hydrogen-storefront
 ```
 
 3. **Run in Terminal**
@@ -164,7 +164,7 @@ Right now you're seeing demo content. Let's connect your actual store data:
 2. **Pull Store Environment**
    ```bash
    # Make sure you're in your theme folder
-   cd my-store
+   cd my-hydrogen-storefront
    
    # Pull your store's environment variables
    npx shopify hydrogen env pull
@@ -239,7 +239,7 @@ Right now you're seeing demo content. Let's connect your actual store data:
 **Solutions**:
 - Ensure Node.js 18+ is installed: `node --version`
 - Check internet connection for downloading packages
-- Try running with npm directly: `npm create @weaverse/cli@latest ...`
+- Try running with npm directly: `npm create @weaverse/cli@latest create --template=pilot ...`
 - Clear npm cache: `npm cache clean --force`
 
 ### Studio Preview Not Loading  
@@ -261,7 +261,7 @@ Right now you're seeing demo content. Let's connect your actual store data:
 ### "Module not found" Errors
 ```bash
 # If packages failed to install properly
-cd my-store
+cd my-hydrogen-storefront
 rm -rf node_modules package-lock.json  
 npm install
 npm run dev
