@@ -107,7 +107,7 @@ npx @weaverse/cli@latest init pilot my-store --project-id=wv_proj_abc123xyz
 
 ✅ Your Weaverse storefront is ready!
 🌐 Local:    http://localhost:3456
-📝 Studio:   http://localhost:3456/weaverse
+📝 Studio:   https://studio.weaverse.io/projects/your-project-id
 ```
 
 ---
@@ -119,8 +119,8 @@ npx @weaverse/cli@latest init pilot my-store --project-id=wv_proj_abc123xyz
    - The project will be created in your Weaverse dashboard
 
 2. **Studio Loads Automatically**
-   - Weaverse Studio will open with your localhost preview
-   - You'll see the theme loaded at `http://localhost:3456`
+   - Weaverse Studio will open at `https://studio.weaverse.io/projects/your-project-id`
+   - You'll see your theme loaded with `http://localhost:3456` in the preview
    - The content will initially come from demo data
 
 > **📸 [Screenshot placeholder: Weaverse Studio interface with localhost:3456 loaded in preview]**
@@ -219,7 +219,7 @@ Right now you're seeing demo content. Let's connect your actual store data:
 - [ ] Navigation menus show your store structure  
 - [ ] Search finds your actual products
 - [ ] Cart and checkout process work
-- [ ] Weaverse Studio loads at `http://localhost:3456/weaverse`
+- [ ] Weaverse Studio loads at `https://studio.weaverse.io/projects/your-project-id`
 - [ ] You can edit content and see changes instantly
 
 ### 🔍 Test Your Store
