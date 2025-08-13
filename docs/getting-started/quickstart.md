@@ -191,10 +191,7 @@ Right now you're seeing demo content. Let's connect your actual store data:
    - Click **Create an app** 
    - Name it "Weaverse Storefront"
    - Alternative: Use the **Headless** app (https://apps.shopify.com/headless) for easier setup
-   - Configure **Storefront API scopes** and enable:
-     - `unauthenticated_read_product_listings`
-     - `unauthenticated_read_collection_listings`  
-     - `unauthenticated_read_product_inventory`
+   - Configure **Storefront API scopes** and enable all permissions
 
 2. **Update Environment Variables**
    ```bash
