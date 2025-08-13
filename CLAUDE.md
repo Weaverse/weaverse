@@ -13,7 +13,16 @@ This is the **Weaverse SDKs monorepo** - a collection of SDKs for integrating mo
 npm run dev          # Start development for all packages (with turbo)
 npm run dev:pkg      # Development with LOCAL_DEV=true and remote changelog
 npm run build        # Build all packages in /packages/*
+npm run build:graph  # Build with dependency graph visualization
 npm run test         # Run tests across all packages
+```
+
+### Single Package Commands
+```bash
+# Run commands for specific packages using turbo filters
+turbo dev --filter=@weaverse/core          # Develop single package
+turbo build --filter=@weaverse/react       # Build single package
+turbo test --filter=@weaverse/hydrogen     # Test single package
 ```
 
 ### Code Quality (Always run before committing)
@@ -32,6 +41,13 @@ npm run clean            # Clean all build artifacts and dependencies
 npm run upgrade-packages # Upgrade package dependencies
 npm run update-deps      # Update dependencies
 npm run changeset        # Create a changeset for release
+```
+
+### Package Management (Note: Uses npm scripts but pnpm for installation)
+```bash
+pnpm install             # Install dependencies (enforced via packageManager)
+pnpm changeset version   # Version packages based on changesets
+pnpm changeset publish   # Publish to npm registry
 ```
 
 ## Architecture Overview
@@ -67,6 +83,13 @@ npm run changeset        # Create a changeset for release
    - Biome handles both linting and formatting
    - Configuration extends from `ultracite` and custom rules
    - Pre-commit hooks via Lefthook ensure code quality
+   - Excludes templates and build artifacts from linting
+
+5. **Type System Architecture**:
+   - Hierarchical dependencies: core → react → hydrogen/schema
+   - Schema package serves as source of truth for component types
+   - Zod schemas provide runtime validation with TypeScript inference
+   - See `/packages/TYPE_SYSTEM_ARCHITECTURE.md` for detailed information
 
 ### Package Development
 
@@ -124,28 +147,58 @@ The project uses Changesets for releases:
 
 ## Code Conventions
 
-- **TypeScript**: Strict mode enabled, avoid `any` type
-- **Formatting**: Handled by Biome with double quotes, semicolons, trailing commas
+### TypeScript Guidelines
+- **Type Safety**: Strict mode enabled, avoid `any` type
+- **Function Signatures**: Always define types for parameters and return values
+- **Data Structures**: Use interfaces for data structures and type definitions
+- **Immutability**: Prefer immutable data (`const`, `readonly`)
+- **Safe Access**: Use optional chaining (`?.`) and nullish coalescing (`??`)
+
+### Code Style (Enforced by Biome)
+- **Variables**: Use camelCase for variables and functions, PascalCase for components
+- **Constants**: Use ALL_CAPS for true constants, prefer `let` over `const` for variables
+- **Strings**: Double quotes, template literals for interpolation
+- **Indentation**: 2 spaces, trailing commas
+- **Functions**: Arrow functions for callbacks, async/await for asynchronous code
+- **Destructuring**: Use for objects and arrays where appropriate
+
+### Package Structure
 - **Imports**: Use relative imports within packages
-- **Exports**: Provide both ESM and CJS builds
+- **Exports**: Provide both ESM and CJS builds via tsup
 - **Documentation**: JSDoc comments for public APIs
+- **Entry Points**: Each package has `src/index.ts` as main entry
 
 ## Working with Templates
 
-The `/templates/pilot` directory contains a complete example implementation. When making SDK changes:
+The `/templates/pilot` directory contains a complete Shopify Hydrogen storefront implementation:
 
-1. Test changes against the Pilot template
-2. Ensure backward compatibility
-3. Update template if new features are added
-4. The template has its own CLAUDE.md with specific guidance
+### Pilot Template Development
+```bash
+cd templates/pilot
+npm install              # Install template dependencies
+npm run dev              # Start Hydrogen development server
+npm run build            # Build for production
+npm run typecheck        # TypeScript checking
+npm test                 # Run Playwright E2E tests
+```
+
+### Template Integration Testing
+1. Test SDK changes against the Pilot template before releasing
+2. Ensure backward compatibility with existing implementations
+3. Update template when new SDK features are added
+4. The template has its own CLAUDE.md with Hydrogen-specific guidance
+5. Use the template as a reference for component schema patterns
 
 ## Common Pitfalls to Avoid
 
 1. **Circular Dependencies**: Be careful with package dependencies
-2. **Build Order**: Turbo handles this, but be aware of the dependency graph
+2. **Build Order**: Turbo handles this, but be aware of the dependency graph  
 3. **Version Synchronization**: Keep package versions aligned when releasing
 4. **Breaking Changes**: Follow semver and document in changesets
 5. **Local Development**: Use `npm run dev:pkg` for proper local development setup
+6. **Package Manager Mixing**: Always use pnpm for installs (enforced), npm for scripts
+7. **Type Definitions**: Schema-related types belong in `@weaverse/schema`, not individual packages
+8. **Template Dependencies**: Don't include templates in package builds (excluded via Biome config)
 
 ## Troubleshooting
 
@@ -175,6 +228,9 @@ pnpm run typecheck
 ```bash
 # For local development with hot reload
 npm run dev:pkg
+
+# Force rebuild all packages if needed
+npm run clean && npm run build
 ```
 
 **Problem**: Biome formatting conflicts
