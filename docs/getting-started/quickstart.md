@@ -6,331 +6,351 @@ order: 1
 
 # 5-Minute Quickstart
 
-Get your first Weaverse Hydrogen storefront up and running locally in just 5 minutes. By the end of this guide, you'll have a fully functional e-commerce storefront with visual page building capabilities.
+Get your first Weaverse Hydrogen storefront up and running locally in just 5 minutes. No complex setup, no manual configuration – just install the app and start building.
 
 ## What You'll Build
 
 A complete Shopify Hydrogen storefront powered by Weaverse with:
 - **Visual Studio Editor** - Drag-and-drop page builder with live preview
-- **Pre-built Sections** - Hero, product grid, testimonials, and more
-- **Mobile-responsive Design** - Optimized for all devices
-- **Performance First** - SSR, streaming, and edge deployment ready
-- **Merchant-friendly** - Non-technical users can edit content
+- **Professional Theme** - Start with Pilot or choose from our theme library
+- **Real-time Editing** - See changes instantly as you customize
+- **Performance Optimized** - Modern React, SSR, and edge-ready architecture
+- **Merchant-friendly** - Anyone can edit content without code
 
 ## Prerequisites
 
 Before starting, make sure you have:
 
-- **Node.js 18+** - [Download here](https://nodejs.org/)
-- **Shopify CLI** - Install with `npm install -g @shopify/cli`
-- **A Shopify store** - [Create a development store](https://partners.shopify.com/) (free)
-- **Basic terminal/command line knowledge**
+- **Node.js 18+** - [Download here](https://nodejs.org/) and verify with `node --version`
+- **A Shopify store** - [Create a development store](https://partners.shopify.com/) (free for testing)
+- **Basic terminal knowledge** - Copy/paste commands (we'll guide you!)
 
-> **💡 Tip**: New to terminal? On macOS/Linux open Terminal, on Windows use Command Prompt or PowerShell.
+> **💡 New to terminal?** On macOS/Linux open Terminal, on Windows use Command Prompt or PowerShell. You'll only need to copy and paste a few commands!
 
-## Two Setup Options
+## Step 1: Install Weaverse App
 
-Choose the option that best fits your needs:
+1. **Go to Shopify App Store**
+   - Open your Shopify admin panel
+   - Navigate to **Apps** in the sidebar
+   - Search for "Weaverse Hydrogen" or visit the direct link
 
-### Option A: Start with Pilot Theme (Recommended for Beginners)
-Use our complete starter theme with Weaverse already integrated.
+2. **Install the App**
+   - Click **Add app** on the Weaverse Hydrogen listing
+   - Review permissions and click **Install app**
+   - The app will be added to your store
 
-### Option B: Create Fresh Hydrogen + Add Weaverse
-Start with Shopify's CLI and integrate Weaverse step-by-step.
+> **📸 [Screenshot placeholder: Weaverse app in Shopify App Store]**
 
 ---
 
-## Option A: Pilot Theme Setup (Fastest)
+## Step 2: Create Your First Project
 
-### A1. Install Weaverse Hydrogen App
+1. **Open Weaverse Dashboard**
+   - In your Shopify admin, go to **Apps > Weaverse Hydrogen**
+   - You'll see the Weaverse dashboard
 
-1. **Install the App in Shopify:**
-   - Go to your Shopify admin
-   - Install the **Weaverse Hydrogen** app from the App Store
-   - Create a new storefront within Weaverse
-   - **Copy your Weaverse Project ID** - you'll need this in A3
+2. **Start New Project**
+   - Click **Get Started** or **Create New Project**
+   - An onboarding modal will appear
 
-### A2. Clone the Pilot Theme
+> **📸 [Screenshot placeholder: Weaverse dashboard with Get Started button highlighted]**
 
+---
+
+## Step 3: Choose Your Theme
+
+1. **Select a Theme**
+   - In the onboarding modal, browse available themes
+   - **Pilot Theme** (recommended for beginners) - Complete e-commerce template
+   - **Naturelle Theme** - Beauty/lifestyle focused design  
+   - **Custom themes** - Explore marketplace options
+
+2. **Preview Theme Features**
+   - Each theme shows a preview and key features
+   - Click on your preferred theme to select it
+
+> **📸 [Screenshot placeholder: Theme selection modal showing Pilot, Naturelle, and other themes]**
+
+---
+
+## Step 4: Quick Setup with CLI
+
+1. **Copy the Generated Command**
+   - After selecting your theme, you'll see a custom CLI command
+   - This command is unique to your project and includes your Project ID
+
+2. **Example Command:**
 ```bash
-# Clone the latest Pilot theme
-git clone https://github.com/Weaverse/pilot.git my-weaverse-store
+npx @weaverse/cli@latest init pilot my-store --project-id=wv_proj_abc123xyz
+```
 
-# Navigate to the project directory
-cd my-weaverse-store
+3. **Run in Terminal**
+   - Open your terminal/command prompt
+   - Paste and run the command
+   - The setup process will automatically:
+     - ✅ Download the selected theme to your local machine
+     - ✅ Install all dependencies (React, Hydrogen, etc.)
+     - ✅ Update environment variables with your Project ID
+     - ✅ Start the development server
 
-# Install dependencies
+> **📸 [Screenshot placeholder: CLI command displayed in modal with copy button]**
+
+**Example Terminal Output:**
+```bash
+🚀 Downloading Pilot theme...
+📦 Installing dependencies...
+⚙️  Configuring environment...
+🔧 Starting development server...
+
+✅ Your Weaverse storefront is ready!
+🌐 Local:    http://localhost:3456
+📝 Studio:   http://localhost:3456/weaverse
+```
+
+---
+
+## Step 5: Create Project & Load Studio
+
+1. **Complete Project Creation**
+   - Back in the Weaverse modal, click **Create Project**
+   - The project will be created in your Weaverse dashboard
+
+2. **Studio Loads Automatically**
+   - Weaverse Studio will open with your localhost preview
+   - You'll see the theme loaded at `http://localhost:3456`
+   - The content will initially come from demo data
+
+> **📸 [Screenshot placeholder: Weaverse Studio interface with localhost:3456 loaded in preview]**
+
+---
+
+## Step 6: Customize Your Storefront
+
+Now for the fun part! Start customizing your storefront:
+
+1. **Drag & Drop Sections**
+   - Add new sections from the left panel
+   - Rearrange sections by dragging
+   - Remove sections you don't need
+
+2. **Edit Content**
+   - Click on any text to edit inline
+   - Upload your own images
+   - Adjust colors, fonts, and spacing
+
+3. **Preview Changes**
+   - See changes instantly in the preview
+   - Test on different device sizes
+   - Use the mobile/tablet/desktop toggles
+
+> **📸 [Screenshot placeholder: Studio with section being dragged, text being edited, and device preview toggles]**
+
+---
+
+## Step 7: Connect Your Real Store Data
+
+Right now you're seeing demo content. Let's connect your actual store data:
+
+### Option A: For Paid Shopify Stores (Recommended)
+
+1. **Install Hydrogen App**
+   - Go to Shopify App Store
+   - Install the **Hydrogen** app (by Shopify)
+   - This creates a Hydrogen sales channel
+
+2. **Pull Store Environment**
+   ```bash
+   # Make sure you're in your theme folder
+   cd my-store
+   
+   # Pull your store's environment variables
+   npx shopify hydrogen env pull
+   ```
+
+3. **Follow CLI Prompts**
+   - Select your Shopify store
+   - Choose your Hydrogen project
+   - The CLI will automatically update your `.env` file
+
+4. **Restart Development Server**
+   ```bash
+   npm run dev
+   ```
+
+> **📸 [Screenshot placeholder: Hydrogen app installation in Shopify App Store]**
+> 
+> **📸 [Screenshot placeholder: Terminal showing `shopify hydrogen env pull` command and store selection]**
+
+### Option B: For Development/Trial Stores
+
+1. **Create Storefront API Token**
+   - In Shopify Admin, go to **Apps > Develop apps**
+   - Click **Create an app** 
+   - Name it "Weaverse Storefront"
+   - Configure **Storefront API scopes** and enable:
+     - `unauthenticated_read_product_listings`
+     - `unauthenticated_read_collection_listings`  
+     - `unauthenticated_read_product_inventory`
+
+2. **Update Environment Variables**
+   ```bash
+   # Edit your .env file with:
+   PUBLIC_STORE_DOMAIN=your-store.myshopify.com
+   PUBLIC_STOREFRONT_API_TOKEN=your_generated_token
+   ```
+
+3. **Restart Development Server**
+   ```bash
+   npm run dev
+   ```
+
+> **📸 [Screenshot placeholder: Creating Storefront API token in Shopify admin]**
+
+---
+
+## Step 8: Verify Everything Works
+
+🎉 **Congratulations!** Let's make sure everything is working perfectly:
+
+### ✅ Checklist
+- [ ] Storefront loads at `http://localhost:3456`
+- [ ] Your real products and collections appear
+- [ ] Navigation menus show your store structure  
+- [ ] Search finds your actual products
+- [ ] Cart and checkout process work
+- [ ] Weaverse Studio loads at `http://localhost:3456/weaverse`
+- [ ] You can edit content and see changes instantly
+
+### 🔍 Test Your Store
+1. **Browse Products**: Check that your actual products load with correct images and prices
+2. **Add to Cart**: Test the shopping cart functionality
+3. **Mobile View**: Use browser dev tools to test mobile responsiveness
+4. **Studio Editing**: Make a change in Studio and verify it appears immediately
+
+> **📸 [Screenshot placeholder: Live storefront showing real products with Weaverse Studio editing panel]**
+
+---
+
+## Troubleshooting
+
+### CLI Command Not Working
+**Problem**: The generated CLI command fails to run
+**Solutions**:
+- Ensure Node.js 18+ is installed: `node --version`
+- Check internet connection for downloading packages
+- Try running with npm directly: `npm create @weaverse/cli@latest ...`
+- Clear npm cache: `npm cache clean --force`
+
+### Studio Preview Not Loading  
+**Problem**: Weaverse Studio shows a blank preview or connection error
+**Solutions**:
+- Verify development server is running on port 3456
+- Check that `http://localhost:3456` loads in your browser
+- Ensure no firewall is blocking port 3456
+- Try refreshing the Studio page
+
+### Demo Data Still Showing
+**Problem**: Still seeing demo products instead of your store data
+**Solutions**:
+- Make sure you completed Step 7 (Connect Real Store Data)  
+- Verify your `.env` file has correct store domain and API token
+- Restart the development server: `Ctrl+C` then `npm run dev`
+- Check Shopify store has products published to "Online Store" sales channel
+
+### "Module not found" Errors
+```bash
+# If packages failed to install properly
+cd my-store
+rm -rf node_modules package-lock.json  
 npm install
-```
-
-### A3. Configure Environment Variables
-
-1. **Create environment file:**
-```bash
-cp .env.example .env
-```
-
-2. **Edit `.env` with your details:**
-```bash
-# Your Shopify store domain (without https://)
-PUBLIC_STORE_DOMAIN=your-store.myshopify.com
-
-# Storefront API token (create in Shopify Admin > Apps > Develop apps)
-PUBLIC_STOREFRONT_API_TOKEN=your_storefront_access_token
-
-# Weaverse Project ID from Step A1
-WEAVERSE_PROJECT_ID=your-weaverse-project-id
-
-# Session secret for secure authentication
-SESSION_SECRET=your-random-session-secret
-```
-
-> **🔑 Getting API Token**: In Shopify Admin → Apps → Develop apps → Create app → Configure Storefront API → Enable product/collection access → Generate token
-
-### A4. Start Development Server
-
-```bash
-# Start the development server (note: uses port 3456 by default)
 npm run dev
 ```
 
-### A5. Configure Weaverse Preview
+### Port 3456 Already in Use
+```bash
+# Kill any process using port 3456
+npx kill-port 3456
 
-1. **In your Weaverse project settings:**
-   - Set Preview URL to: `http://localhost:3456`
-   - Save the settings
+# Or start on a different port
+npm run dev -- --port 3457
+```
+*Note: If you change the port, update the Preview URL in Weaverse Studio accordingly*
 
-2. **Test the connection:**
-   - Visit `http://localhost:3456` - your storefront
-   - Visit `http://localhost:3456/weaverse` - Weaverse Studio editor
+### Environment Variables Not Working
+**Problem**: Store data or Weaverse features not working
+**Solutions**:
+- Ensure `.env` file is in the project root (same level as `package.json`)
+- Check variable names are exactly correct (case-sensitive)
+- Restart development server after any `.env` changes
+- Verify no spaces around the `=` sign in environment variables
 
 ---
-
-## Option B: Fresh Hydrogen + Weaverse Integration
-
-### B1. Create Hydrogen Project
-
-```bash
-# Create new Hydrogen storefront using Shopify CLI
-npm create @shopify/hydrogen@latest my-weaverse-store
-
-# Navigate to project
-cd my-weaverse-store
-
-# Start development server
-npm run dev
-```
-
-### B2. Install Weaverse Integration
-
-1. **Install Weaverse Hydrogen App** (same as A1 above)
-2. **Install Weaverse SDK:**
-```bash
-npm install @weaverse/hydrogen
-```
-
-### B3. Configure Environment
-
-Create `.env` with the same variables as Option A:
-```bash
-SESSION_SECRET=your-random-session-secret
-PUBLIC_STORE_DOMAIN=your-store.myshopify.com
-WEAVERSE_PROJECT_ID=your-project-id
-PUBLIC_STOREFRONT_API_TOKEN=your-token
-```
-
-### B4. Integrate Weaverse Components
-
-Add Weaverse to your Hydrogen app:
-
-1. **Update `app/root.tsx`:**
-```typescript
-import {WeaverseRoot} from '@weaverse/hydrogen'
-// ... other imports
-
-export default function App() {
-  return (
-    <WeaverseRoot>
-      {/* Your existing app structure */}
-    </WeaverseRoot>
-  )
-}
-```
-
-2. **Create Weaverse configuration file `weaverse.config.ts`:**
-```typescript
-import {defineWeaverseConfig} from '@weaverse/hydrogen'
-
-export default defineWeaverseConfig({
-  // Your theme configuration
-})
-```
-
-### B5. Set Preview URL
-
-In Weaverse project settings, set Preview URL to: `http://localhost:3456`
-
----
-
-## Testing Your Setup
-
-Regardless of which option you chose, follow these steps to verify everything works:
-
-### 1. View Your Storefront
-- **Option A**: Visit `http://localhost:3456` (Pilot theme default)
-- **Option B**: Visit `http://localhost:3456` (or the port shown in your terminal)
-
-### 2. Test Basic Functionality
-- ✅ Products and collections load
-- ✅ Navigation menus work
-- ✅ Search functionality works
-- ✅ Mobile layout responsive
-- ✅ No console errors in browser dev tools
-
-### 3. Access Weaverse Studio
-- Visit `http://localhost:3456/weaverse` to open the visual page builder
-- Try editing page content with drag-and-drop
-- Make text changes and see live preview
-- Add/remove sections and components
-
-> **📝 Important**: The default Hydrogen port is `3456`, not `3000`. Make sure your Preview URL in Weaverse matches exactly.
-
-## Verification Checklist
-
-Make sure everything is working:
-
-- ✅ Storefront loads at `http://localhost:3000`
-- ✅ Products display correctly
-- ✅ Navigation menus work
-- ✅ Search functionality works
-- ✅ Mobile layout looks good
-- ✅ Weaverse Studio accessible at `/weaverse`
-- ✅ No console errors in browser dev tools
-
-## Common Issues & Solutions
-
-### Missing/Incorrect Weaverse Project ID
-**Problem**: Hydrogen can't connect to Weaverse CMS
-**Solution**: 
-- Double-check your `WEAVERSE_PROJECT_ID` in `.env`
-- Verify it matches the ID from your Weaverse app dashboard
-- Make sure there are no extra spaces or characters
-
-### Port/Preview URL Mismatch  
-**Problem**: Weaverse Studio can't preview your storefront
-**Solution**:
-- Ensure your Hydrogen dev server runs on port `3456` (default)
-- Set Preview URL in Weaverse to exactly `http://localhost:3456`
-- Check that no firewall is blocking the connection
-
-### Component Migration Errors (Option B users)
-**Problem**: Existing Hydrogen components not working with Weaverse
-**Solution**:
-- Gradually migrate components to use Weaverse's Section/Component architecture
-- Follow the [Component Development Guide](/docs/development-guide/weaverse-component)
-- Start with simple components before complex ones
-
-### "Module not found" errors
-```bash
-# Delete node_modules and reinstall
-rm -rf node_modules package-lock.json
-npm install
-```
-
-### Products not loading
-- Double-check your `PUBLIC_STORE_DOMAIN` in `.env`
-- Verify your `PUBLIC_STOREFRONT_API_TOKEN` is correct
-- Ensure your Shopify store has products published to the storefront
-- Check that Storefront API permissions are enabled
-
-### Environment Variables Not Loading
-**Problem**: Configuration not taking effect
-**Solution**:
-- Restart your development server after changing `.env`
-- Ensure `.env` file is in project root directory
-- Check that variable names match exactly (case-sensitive)
-
-## Project Structure Overview
-
-Here's what you just set up:
-
-```
-my-weaverse-store/
-├── app/
-│   ├── components/          # Reusable UI components
-│   ├── sections/            # Weaverse page sections
-│   ├── routes/              # React Router pages
-│   ├── lib/                 # Utilities and helpers
-│   └── weaverse/            # Weaverse configuration
-├── public/                  # Static assets (images, icons)
-├── .env                     # Environment configuration
-├── weaverse.config.ts       # Theme settings
-└── package.json             # Dependencies and scripts
-```
 
 ## What's Next?
 
-Now that you have a working Hydrogen + Weaverse setup, here are your recommended next steps:
+🎉 **You're ready to build!** Here's your roadmap to mastering Weaverse:
 
-### Immediate Actions (5-15 minutes)
-1. **Customize Sections**: Use Weaverse Studio to add, configure, and style page sections
-2. **Publish Changes**: Use one-click publish to push updates live
-3. **Upload Brand Assets**: Replace default logo and colors in theme settings
-4. **Test Mobile Experience**: Verify responsive design on different devices
+### Immediate Actions (Next 15 minutes)
+1. **Customize Your Brand**
+   - Replace the logo with your brand
+   - Update colors to match your brand palette
+   - Edit the hero section with your messaging
 
-### Short Term (1-2 hours)
-1. **[Explore the Marketplace](/docs/themes-templates)**: Browse pre-made components and themes for faster iteration
-2. **[Core Concepts](/docs/core-concepts)**: Understand the Weaverse architecture and component system
-3. **[Pilot Theme Customization](/docs/themes-templates/pilot-theme-customization)**: Learn advanced customization techniques
-4. **Performance Testing**: Take advantage of Hydrogen's SSR and streaming capabilities
+2. **Add Your Content**
+   - Upload product images
+   - Write compelling product descriptions
+   - Create your About Us page
 
-### Medium Term (1-2 days)
-1. **[Component Development](/docs/development-guide)**: Build custom sections and components
-2. **[Join the Community](/docs/community)**: Participate in Slack, forums, or GitHub discussions
-3. **[Advanced Features](/docs/features)**: Add analytics, SEO optimization, and third-party integrations
-4. **Content Migration**: Move existing content into the visual builder system
+3. **Test Everything**
+   - Browse on mobile and desktop
+   - Test the cart and checkout process
+   - Share with team members for feedback
 
-### Production Ready (1 week)
-1. **[Deployment](/docs/deployment)**: Launch with Oxygen Hosting, Vercel, or other platforms
-2. **SEO Optimization**: Leverage Hydrogen's SSR for search engine visibility
-3. **Performance Monitoring**: Set up analytics and performance tracking
-4. **Team Training**: Onboard content editors to use Weaverse Studio
+### Short Term Goals (This Week)
+1. **[Master the Studio](/docs/studio-guide)** - Learn all the editing features
+2. **[Explore Themes](/docs/themes-templates)** - Browse marketplace for inspiration
+3. **[Core Concepts](/docs/core-concepts)** - Understand how Weaverse works
+4. **[SEO Setup](/docs/features)** - Configure meta tags and structured data
 
-## Production Deployment
+### Medium Term (Next Month)
+1. **[Custom Components](/docs/development-guide)** - Build sections unique to your brand
+2. **[Performance Optimization](/docs/deployment)** - Set up analytics and monitoring  
+3. **[Team Collaboration](/docs/studio-guide)** - Onboard your content team
+4. **[Advanced Features](/docs/features)** - Add integrations and automations
 
-Ready to go live? Check out our deployment guides:
-
-- **[Shopify Oxygen](/docs/deployment/oxygen)** (Recommended for Shopify Plus)
-- **[Vercel](/docs/deployment)** (Great for fast global deployment)
-- **[Netlify](/docs/deployment)** (Simple and reliable)
-- **[Docker](/docs/deployment/docker)** (For custom hosting)
+### Production Launch
+When you're ready to go live:
+- **[Deployment Guide](/docs/deployment)** - Choose your hosting platform
+- **[Domain Setup](/docs/deployment)** - Connect your custom domain
+- **[Security](/docs/features/content-security)** - Configure SSL and security headers
+- **[Analytics](/docs/features)** - Set up conversion tracking
 
 ## Need Help?
 
-- 💬 **[Community Forum](/docs/community)** - Connect with other developers
-- 📖 **[FAQ](/docs/resources/faq)** - Common questions and answers
-- 🔧 **[Troubleshooting](/docs/resources/troubleshooting)** - Solve technical issues
-- 📧 **[Support](/docs/community/support)** - Get direct help from our team
-- 📚 **[Complete Tutorial](/docs/resources/tutorials/tutorial)** - In-depth walkthrough
+- 🚀 **[Complete Tutorial](/docs/resources/tutorials/tutorial)** - Deep dive walkthrough
+- 💬 **[Community](/docs/community)** - Connect with other merchants and developers
+- 📚 **[FAQ](/docs/resources/faq)** - Common questions answered
+- 🆘 **[Support](/docs/community/support)** - Get help from our team
+
+---
 
 ## Success! 🎉
 
-Congratulations! You now have:
-- ✅ **A fully functional Shopify Hydrogen storefront** with modern SSR and streaming
-- ✅ **Visual page building with Weaverse Studio** - drag-and-drop editing with live preview  
-- ✅ **Merchant-friendly content management** - non-technical users can edit pages
-- ✅ **Developer-friendly architecture** - full control over components and customization
-- ✅ **Performance optimized** - ready for edge deployment and excellent SEO
-- ✅ **Modern React ecosystem** - React Router v7, Vite, and TypeScript ready
+**Congratulations!** You've just created a modern, high-performance e-commerce storefront in under 10 minutes. Here's what makes your setup special:
 
-**Time to completion**: 5-15 minutes ⚡
+✅ **Lightning Fast** - Hydrogen's SSR and edge deployment
+✅ **Visual Editing** - Anyone on your team can update content
+✅ **Mobile Optimized** - Perfect on every device
+✅ **SEO Ready** - Built for search engine success
+✅ **Developer Friendly** - Full React component control when needed
 
-### What Makes This Special?
+### Your Storefront Features:
+- 🏪 **Professional Theme** - Pilot theme with proven conversion patterns
+- 🎨 **Visual Builder** - Drag-and-drop customization
+- 📱 **Mobile First** - Responsive design out of the box
+- ⚡ **Performance** - Sub-second load times
+- 🛒 **Complete E-commerce** - Cart, checkout, and payment ready
 
-You've just set up what many consider the **perfect headless commerce solution**:
-- **Hydrogen's performance** - Fast, SEO-friendly, edge-deployed
-- **Weaverse's usability** - Visual editing like traditional themes
-- **Developer flexibility** - Full React component control
-- **Merchant empowerment** - Content editing without developer dependency
+**Time to live storefront**: Under 10 minutes ⚡
 
-Ready to build something amazing? Start with the [Marketplace](/docs/themes-templates) to explore components, or jump into [Core Concepts](/docs/core-concepts) to understand the architecture!
+Ready to customize and launch? Start with the [Studio Guide](/docs/studio-guide) or dive into [Core Concepts](/docs/core-concepts) to understand how everything works together!
