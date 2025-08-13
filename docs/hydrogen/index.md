@@ -6,15 +6,15 @@ order: 0
 
 # Weaverse Hydrogen Documentation
 
-> **🚀 Weaverse v5 & React Router v7 Migration Guide**: Everything you need to know about v5 and upgrading is in our [Comprehensive Migration Guide](/docs/hydrogen/migration-to-v5).
+> **🚀 Weaverse v5 & React Router v7 Migration Guide**: Everything you need to know about v5 and upgrading is in our [Comprehensive Migration Guide](/docs/migration-advanced/v5-migration).
 
 ## Quick Start
 
 - [Getting Started](/docs/hydrogen/getting-started) - Set up your first Weaverse Hydrogen project
-- [Weaverse v5 & React Router v7 Migration Guide](/docs/hydrogen/migration-to-v5) - Key features, benefits, and upgrade instructions.
+- [Weaverse v5 & React Router v7 Migration Guide](/docs/migration-advanced/v5-migration) - Key features, benefits, and upgrade instructions.
 
 ## Documentation
 
 - [Overview](/docs/hydrogen/overview) - Learn about Weaverse Hydrogen
-- [Tutorial](/docs/hydrogen/tutorial) - Step-by-step tutorial
-- [FAQ](/docs/hydrogen/faq) - Frequently asked questions
+- [Tutorial](/docs/resources/tutorials/tutorial) - Step-by-step tutorial
+- [FAQ](/docs/resources/faq) - Frequently asked questions
