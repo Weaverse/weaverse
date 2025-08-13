@@ -1,6 +1,9 @@
 ---
 title: 5-Minute Quickstart
 description: Get a Weaverse Hydrogen storefront running locally in just 5 minutes.
+createdAt: August 13, 2025
+updatedAt: August 13, 2025
+published: true
 order: 1
 ---
 
@@ -32,7 +35,7 @@ Before starting, make sure you have:
 1. **Go to Shopify App Store**
    - Open your Shopify admin panel
    - Navigate to **Apps** in the sidebar
-   - Search for "Weaverse Hydrogen" or visit the direct link
+   - Search for "Weaverse Hydrogen" or visit https://apps.shopify.com/weaverse
 
 2. **Install the App**
    - Click **Add app** on the Weaverse Hydrogen listing
@@ -154,7 +157,7 @@ Right now you're seeing demo content. Let's connect your actual store data:
 ### Option A: For Paid Shopify Stores (Recommended)
 
 1. **Install Hydrogen App**
-   - Go to Shopify App Store
+   - Go to https://apps.shopify.com/hydrogen
    - Install the **Hydrogen** app (by Shopify)
    - This creates a Hydrogen sales channel
 
@@ -187,6 +190,7 @@ Right now you're seeing demo content. Let's connect your actual store data:
    - In Shopify Admin, go to **Apps > Develop apps**
    - Click **Create an app** 
    - Name it "Weaverse Storefront"
+   - Alternative: Use the **Headless** app (https://apps.shopify.com/headless) for easier setup
    - Configure **Storefront API scopes** and enable:
      - `unauthenticated_read_product_listings`
      - `unauthenticated_read_collection_listings`  
