@@ -66,5 +66,5 @@ Once you've mastered the basics:
 
 - Explore [Advanced Features](/docs/features)
 - Learn about [Theme Creation](/docs/themes-templates/creating-themes)
-- Study the [API Reference](/docs/api-reference)
+- Study the [API Reference](/docs/api)
 - Join the [Developer Community](/docs/community)

@@ -173,6 +173,6 @@ my-hydrogen-store/
 - 📚 [Complete Tutorial](/docs/resources/tutorials/tutorial) - Step-by-step walkthrough
 - ❓ [FAQ](/docs/resources/faq) - Common questions
 - 💬 [Community](/docs/community) - Connect with other developers
-- 🔧 [Troubleshooting](/docs/resources/troubleshooting) - Solve common issues
+- 🔧 [FAQ](/docs/resources/faq) - Common questions and solutions
 
 Ready to build? Let's start with our [5-minute quickstart](/docs/getting-started/quickstart)!

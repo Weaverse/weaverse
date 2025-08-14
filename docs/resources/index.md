@@ -17,10 +17,7 @@ Real-world code examples showing common patterns and best practices.
 Step-by-step tutorials for specific features and use cases.
 
 ### [FAQ](/docs/resources/faq)
-Frequently asked questions and their answers.
-
-### [Troubleshooting](/docs/resources/troubleshooting)
-Solutions to common issues and debugging strategies.
+Frequently asked questions, common issues, and debugging strategies.
 
 ### [Glossary](/docs/resources/glossary)
 Definitions of Weaverse and Shopify Hydrogen terminology.

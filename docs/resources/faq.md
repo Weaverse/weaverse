@@ -157,7 +157,7 @@ Common solutions:
 - Verify all dependencies are installed
 - Check that environment variables are set correctly
 - Ensure TypeScript types are properly defined
-- Review the [Troubleshooting Guide](/docs/resources/troubleshooting)
+- Check our [Community](/docs/community) for additional help
 
 ### The visual editor isn't loading
 
@@ -167,7 +167,7 @@ This could be due to:
 - Network connectivity problems
 - Browser security settings
 
-See [Troubleshooting Guide](/docs/resources/troubleshooting) for detailed solutions.
+Visit our [Community](/docs/community) for detailed solutions and support.
 
 ## Getting Help
 
@@ -203,7 +203,7 @@ If you can't find your answer here:
 
 - Browse our [Documentation](/docs)
 - Join our [Community Forum](/docs/community)
-- Check the [Troubleshooting Guide](/docs/resources/troubleshooting)
+- Visit our [Community](/docs/community) for support
 - Search [GitHub Issues](https://github.com/Weaverse/weaverse/issues)
 
 We're always here to help! 🚀

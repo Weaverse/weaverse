@@ -40,7 +40,7 @@ In your Shopify admin, open the Hydrogen app and click "Create storefront" to be
 - In "Storefront settings," go to "Environments and variables."
 - Add the `WEAVERSE_PROJECT_ID` (from Weaverse Studio's Project Settings or project URL).
   ![Weaverse Hydrogen env setup](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse_hydrogen_env_setup.png?v=1713673035)
-- Add any other required environment variables (see [Environment Variables](/docs/guides/environment-variables)).
+- Add any other required environment variables (see [Environment Variables](/docs/development-guide/environment-setup)).
 
 ### 6. Merge the Pull Request
 - Merge the PR created by the Hydrogen app to set up GitHub Actions for Oxygen deployment.
@@ -76,4 +76,4 @@ Deploying your Weaverse Hydrogen project to Shopify Oxygen gives you a secure, s
 ## Additional Resources
 - [Shopify Oxygen documentation](https://shopify.dev/docs/custom-storefronts/oxygen)
 - [Shopify Hydrogen deployment](https://shopify.dev/docs/custom-storefronts/hydrogen/deployment)
-- [Environment Variables](/docs/guides/environment-variables)
+- [Environment Variables](/docs/development-guide/environment-setup)

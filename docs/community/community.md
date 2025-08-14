@@ -73,7 +73,7 @@ Follow our coding standards:
 
 ### Documentation
 - [Getting Started Guide](/docs/getting-started)
-- [Component Development](/docs/guides/weaverse-component)
+- [Component Development](/docs/development-guide/weaverse-component)
 - [Example Components](/docs/guides/example-components)
 - [API Reference](/docs/api)
 

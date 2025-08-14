@@ -175,4 +175,4 @@ export let loader = async ({ weaverse }: ComponentLoaderArgs<{}, Env>) => {
 
 ## Next Steps
 
-Learn about creating and managing **[Weaverse Components](/docs/guides/weaverse-component)** – the foundational building blocks of your theme.
+Learn about creating and managing **[Weaverse Components](/docs/development-guide/weaverse-component)** – the foundational building blocks of your theme.

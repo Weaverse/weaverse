@@ -879,10 +879,10 @@ export let loader = async ({ weaverse }: ComponentLoaderArgs<ApiData>) => {
 
 To further enhance your understanding of Weaverse's data fetching capabilities and component development, explore these related guides:
 
-- [Component Schema](/docs/guides/component-schema) - Learn how to define component schemas, including the `shouldRevalidate` property
-- [Input Settings](/docs/guides/input-settings) - Comprehensive guide to all input types available in Weaverse
+- [Component Schema](/docs/development-guide/component-schema) - Learn how to define component schemas, including the `shouldRevalidate` property
+- [Input Settings](/docs/development-guide/input-settings) - Comprehensive guide to all input types available in Weaverse
 - [Rendering a Weaverse Page](/docs/guides/rendering-page) - Understanding how Weaverse pages are rendered
-- [Project Structure](/docs/guides/project-structure) - Learn how the project is organized
+- [Project Structure](/docs/core-concepts/project-structure) - Learn how the project is organized
 
 export let schema = createSchema({
   type: 'featured-collection',

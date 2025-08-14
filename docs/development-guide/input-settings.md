@@ -14,9 +14,9 @@ setting provides a specific control, from simple text inputs to complex selector
 
 Input settings are generally composed of standard attributes. We can classify them into two main categories:
 
-- [Basic Inputs](/docs/guides/input-settings#basic-inputs)
+- [Basic Inputs](/docs/development-guide/input-settings#basic-inputs)
 
-- [Resource Picker Inputs](/docs/guides/input-settings#resource-picker-inputs)
+- [Resource Picker Inputs](/docs/development-guide/input-settings#resource-picker-inputs)
 
 ### Overview
 

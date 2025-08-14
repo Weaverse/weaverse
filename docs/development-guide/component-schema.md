@@ -265,7 +265,7 @@ export let schema = createSchema({
 });
 ```
 
-For a complete reference on input types and configurations, refer to the [Input Settings guide](/docs/guides/input-settings).
+For a complete reference on input types and configurations, refer to the [Input Settings guide](/docs/development-guide/input-settings).
 
 ## Component Relationships
 
@@ -875,8 +875,8 @@ export let schema = createSchema({
 
 ## Related Resources
 
-- [Input Settings Guide](/docs/guides/input-settings): Detailed information on all available input types
-- [Weaverse Component Guide](/docs/guides/weaverse-component): Comprehensive guide to creating components
+- [Input Settings Guide](/docs/development-guide/input-settings): Detailed information on all available input types
+- [Weaverse Component Guide](/docs/development-guide/weaverse-component): Comprehensive guide to creating components
 - [Example Components](/docs/guides/example-components): Collection of sample components for reference
 
 ## Conclusion

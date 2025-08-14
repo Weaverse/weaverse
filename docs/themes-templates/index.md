@@ -20,12 +20,12 @@ Weaverse themes consist of:
 
 ## Available Themes
 
-### [Pilot Theme](/docs/themes-templates/pilot-theme)
+### Pilot Theme
 Our flagship starter theme showcasing Weaverse's capabilities:
 
-- **[Overview](/docs/themes-templates/pilot-theme/overview)** - Theme features and structure
-- **[Sections](/docs/themes-templates/pilot-theme/sections)** - Available page sections  
-- **[Customization](/docs/themes-templates/pilot-theme/customization)** - Fonts, colors, and styling
+- **[Overview](/docs/themes-templates/pilot-theme-overview)** - Theme features and structure
+- **[Sections](/docs/themes-templates/pilot-theme-sections)** - Available page sections  
+- **[Customization](/docs/themes-templates/pilot-theme-customization)** - Fonts, colors, and styling
 
 ## Creating Themes
 

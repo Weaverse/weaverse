@@ -1275,8 +1275,8 @@ For effective debugging:
 
 ## Next Steps
 
-- Learn about [Component Schema](/docs/guides/component-schema) for advanced schema configuration
-- Explore [Data Fetching](/docs/guides/fetching-and-caching) for more data integration patterns
+- Learn about [Component Schema](/docs/development-guide/component-schema) for advanced schema configuration
+- Explore [Data Fetching](/docs/development-guide/data-fetching) for more data integration patterns
 - See [Example Components](/docs/guides/example-components) for inspiration and reference implementations
 - Join our [Community](/docs/community) for support and sharing best practices
 

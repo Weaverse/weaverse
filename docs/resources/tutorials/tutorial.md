@@ -525,8 +525,8 @@ To preview your user profiles in Weaverse Studio:
 
 You've now mastered the basics of setting up a Weaverse Hydrogen project with the Pilot theme, creating custom sections, and implementing MetaObjects for advanced data management. To further enhance your skills, explore these resources:
 
-- [Weaverse Hydrogen Components](/docs/guides/weaverse-component)
-- [Component Schema](/docs/guides/component-schema)
-- [Input Settings](/docs/guides/input-settings)
-- [Data Fetching and Caching](/docs/guides/fetching-and-caching)
+- [Weaverse Hydrogen Components](/docs/development-guide/weaverse-component)
+- [Component Schema](/docs/development-guide/component-schema)
+- [Input Settings](/docs/development-guide/input-settings)
+- [Data Fetching and Caching](/docs/development-guide/data-fetching)
 - [Deploy to Shopify Oxygen](/docs/deployment/oxygen)

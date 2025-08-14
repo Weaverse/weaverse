@@ -595,7 +595,7 @@ Weaverse v5 maintains backward compatibility for the `inspector` property:
 
 If you encounter issues during migration:
 
-1. Check the [Component Schema Guide](/docs/guides/component-schema) for detailed information
+1. Check the [Component Schema Guide](/docs/development-guide/component-schema) for detailed information
 2. Review the [API Types documentation](/docs/api/types) for updated type definitions
 3. Join our [Discord community](https://discord.gg/weaverse) for support
 4. Open an issue on [GitHub](https://github.com/weaverse/weaverse) if you find bugs
