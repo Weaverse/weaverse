@@ -1,8 +1,8 @@
 ---
 title: Installation
 description: Install Weaverse for your Shopify Hydrogen project using our app-based workflow or manual methods.
-publishedAt: August 13, 2025
-updatedAt: August 13, 2025
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
 published: true
 order: 2
 ---
@@ -116,6 +116,55 @@ After installation:
 - Ensure `.env` file is in project root
 - Restart dev server after changes
 - Check variable names are exact (case-sensitive)
+
+## Component Development Basics
+
+After installation, you can start building custom sections. Here's a simple example:
+
+```typescript
+// app/sections/Hero.tsx
+import { forwardRef } from 'react';
+
+export type HeroProps = {
+  heading: string;
+  description: string;
+  className?: string;
+};
+
+export let schema = {
+  title: 'Hero Section',
+  type: 'hero',
+  settings: [
+    {
+      group: 'Content',
+      inputs: [
+        { type: 'text', name: 'heading', label: 'Heading', defaultValue: 'Welcome' },
+        { type: 'textarea', name: 'description', label: 'Description' }
+      ]
+    }
+  ]
+};
+
+export let Hero = forwardRef<HTMLElement, HeroProps>((props, ref) => {
+  let { heading, description, className = '' } = props;
+  
+  return (
+    <section ref={ref} className={`py-12 px-4 max-w-7xl mx-auto ${className}`}>
+      <div className="text-center">
+        <h1 className="text-4xl font-bold">{heading}</h1>
+        <p className="mt-6 text-lg text-gray-600">{description}</p>
+      </div>
+    </section>
+  );
+});
+```
+
+## Development Workflow
+
+1. **Create component** in `app/sections/` or `app/components/`
+2. **Define schema** with configurable properties
+3. **Register in** `weaverse.config.ts`
+4. **Test in Studio** at `https://studio.weaverse.io/projects/your-project-id`
 
 ## Next Steps
 

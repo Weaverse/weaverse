@@ -1,6 +1,9 @@
 ---
 title: Getting Started
 description: Welcome to Weaverse! Get up and running with the first-ever Theme Customizer & CMS for Shopify Hydrogen in minutes.
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
+published: true
 order: 0
 ---
 
@@ -10,17 +13,42 @@ Welcome to **Weaverse** - the revolutionary theme customizer and CMS for Shopify
 
 ## What is Weaverse?
 
-Weaverse bridges the gap between developer flexibility and merchant usability by providing:
+Weaverse bridges the gap between developer flexibility and merchant usability by combining Shopify Hydrogen with visual page building capabilities:
 
-- **Visual Page Builder**: Drag-and-drop interface for non-technical users
-- **Developer-Friendly**: Full control over components, styling, and functionality  
-- **Shopify Integration**: Native Hydrogen support with React Router v7
-- **Performance First**: Optimized builds with zero runtime overhead
+- **Visual Studio**: Drag-and-drop page builder for merchants
+- **Component Library**: Pre-built sections and reusable components
+- **Developer APIs**: Full control over components, data, and styling
+- **Performance First**: Zero runtime overhead with optimized builds
+- **Type Safety**: Full TypeScript support with React 19 Compiler
+- **React Router v7**: Modern routing with enhanced developer experience
 
 ## Quick Links
 
 - [📚 5-Minute Quickstart](/docs/getting-started/quickstart) - Get a demo site running locally
 - [⚡ Installation Guide](/docs/getting-started/installation) - Add Weaverse to your project
+
+## Architecture Overview
+
+Weaverse projects follow a modern Hydrogen structure optimized for visual editing:
+
+```
+my-hydrogen-store/
+├── app/
+│   ├── components/          # Reusable UI components
+│   ├── sections/            # Weaverse page sections  
+│   ├── routes/              # React Router v7 pages
+│   ├── lib/                 # Utilities and helpers
+│   └── weaverse/            # Weaverse configuration
+├── public/                  # Static assets
+├── weaverse.config.ts       # Theme configuration
+└── package.json
+```
+
+**Key Concepts:**
+- **Components**: Reusable UI elements with configurable properties
+- **Sections**: Page-level building blocks for layout structure  
+- **Pages**: Collections of sections forming complete experiences
+- **Studio**: External visual editor at studio.weaverse.io
 
 ## New to Weaverse v5?
 
