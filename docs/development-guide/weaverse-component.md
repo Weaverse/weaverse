@@ -1,8 +1,8 @@
 ---
 title: Weaverse Hydrogen Component
 description: Learn how to build powerful, customizable components for your Weaverse Hydrogen theme.
-publishedAt: November 20, 2023
-updatedAt: April 11, 2025
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
 order: 3
 published: true
 ---

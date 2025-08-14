@@ -1,8 +1,8 @@
 ---
 title: 5-Minute Quickstart
 description: Get a Weaverse Hydrogen storefront running locally in just 5 minutes.
-publishedAt: August 13, 2025
-updatedAt: August 13, 2025
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
 published: true
 order: 1
 ---

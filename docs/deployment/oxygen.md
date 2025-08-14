@@ -1,8 +1,8 @@
 ---
 title: Deploy to Shopify Oxygen
 description: Step-by-step guide to securely deploying your Weaverse Hydrogen Project on Shopify Oxygen, with best practices and troubleshooting.
-publishedAt: October 10, 2023
-updatedAt: April 24, 2025
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
 order: 1
 published: true
 ---

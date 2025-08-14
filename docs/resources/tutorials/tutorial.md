@@ -1,8 +1,8 @@
 ---
 title: Tutorial (20m)
 description: A comprehensive guide to Weaverse, the first-ever Theme Customizer & CMS for Shopify Hydrogen.
-publishedAt: March 28, 2024
-updatedAt: April 11, 2024
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
 order: 2
 published: true
 ---

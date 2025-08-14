@@ -1,8 +1,8 @@
 ---
 title: Content Security Policy
 description: How Content Security Policy is dynamically configured and enforced in Weaverse Hydrogen projects, with guidance for customization and best practices.
-publishedAt: November 20, 2023
-updatedAt: April 24, 2025
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
 order: 10
 published: true
 ---

@@ -1,8 +1,8 @@
 ---
 title: Custom Routing
 description: Learn how to create custom URL structures for your Hydrogen storefront with Weaverse, mapping them to specific content types.
-publishedAt: April 24, 2025
-updatedAt: April 24, 2025
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
 order: 2 # Assuming it comes after Custom Templates
 published: true
 ---

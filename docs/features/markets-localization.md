@@ -1,8 +1,8 @@
 ---
 title: Markets and Localization  
 description: Learn how Weaverse enables you to build and manage a multilingual storefront effortlessly.  
-publishedAt: January 5, 2025  
-updatedAt: May 22, 2025  
+publishedAt: August 14, 2025  
+updatedAt: August 14, 2025  
 order: 12  
 published: true  
 ---

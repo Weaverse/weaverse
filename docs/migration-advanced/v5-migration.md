@@ -1,8 +1,8 @@
 ---
 title: Weaverse v5 & React Router v7 Migration Guide
 description: 'Comprehensive guide to Weaverse v5, including the migration from Remix to React Router v7, new features, and upgrade instructions.'
-publishedAt: May 27, 2025
-updatedAt: May 27, 2025
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
 order: 1 # Make this a prominent guide
 published: true
 featured: true # Highlight this guide

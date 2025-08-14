@@ -1,8 +1,8 @@
 ---
 title: Navigation Configuration
 description: Learn how to configure and optimize navigation menus in your Weaverse Hydrogen storefront using Shopify's Content > Menus.
-publishedAt: July, 2024
-updatedAt: April 24, 2025
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
 order: 9
 published: true
 ---

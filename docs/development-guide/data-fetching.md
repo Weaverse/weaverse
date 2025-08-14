@@ -1,8 +1,8 @@
 ---
 title: Section Data Fetching
 description: Learn how to fetch and manage data efficiently in Weaverse section components using loaders.
-publishedAt: November 10, 2023
-updatedAt: April 21, 2025
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
 order: 7
 published: true
 ---

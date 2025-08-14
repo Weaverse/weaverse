@@ -1,8 +1,8 @@
 ---
 title: Example Weaverse Components
 description: Explore real-world examples of Weaverse components with detailed implementation guides.
-publishedAt: April 14, 2025
-updatedAt: April 14, 2025
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
 order: 4
 published: true
 ---

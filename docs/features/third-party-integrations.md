@@ -1,8 +1,8 @@
 ---
 title: Third-party Integration
 description: Extend the functionality of your Weaverse Hydrogen theme by integrating third-party applications and services.
-publishedAt: November 20, 2023
-updatedAt: June 30, 2024
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
 order: 11
 published: true
 ---

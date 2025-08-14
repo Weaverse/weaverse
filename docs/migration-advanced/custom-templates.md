@@ -1,8 +1,8 @@
 ---
 title: Custom Templates
 description: Create and assign unique templates for products, collections, pages, and blogs in your Hydrogen storefront using Weaverse.
-publishedAt: July 29, 2024
-updatedAt: April 24, 2025
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
 order: 1
 published: true
 ---

@@ -1,7 +1,7 @@
 ---
 title: Integrating Weaverse into an Existing Hydrogen Project
 description: Enhance your existing Hydrogen project by integrating the Weaverse SDK for visual page building and theme customization.
-publishedAt: November 20, 2023
+publishedAt: August 14, 2025
 updatedAt: August 14, 2025
 order: 4
 published: true

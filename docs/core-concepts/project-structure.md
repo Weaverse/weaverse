@@ -1,7 +1,7 @@
 ---
 title: Project Structure
 description: 'Essential guide to Weaverse Hydrogen theme structure'
-publishedAt: November 20, 2023
+publishedAt: August 14, 2025
 updatedAt: August 14, 2025
 order: 1
 published: true

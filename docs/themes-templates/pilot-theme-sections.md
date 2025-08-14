@@ -1,8 +1,8 @@
 ---
 title: Theme “Pilot” Sections
 description:
-publishedAt: December 06, 2024
-updatedAt: December 06, 2024
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
 order: 2
 published: true
 ---

@@ -1,8 +1,8 @@
 ---
 title: Navigating the Weaverse Studio Interface
 description: Understand the key elements and features of the Weaverse Studio editor to efficiently build pages and customize your Hydrogen storefront.
-publishedAt: November 20, 2023
-updatedAt: April 24, 2025
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
 order: 0
 published: true
 ---

@@ -1,8 +1,8 @@
 ---
 title: Weaverse SDKs
 description: Weaverse SDKs bundle essential packages, streamlining the development and management of Weaverse Hydrogen themes.
-publishedAt: November 20, 2023
-updatedAt: May 13, 2025
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
 order: 1
 published: true
 ---

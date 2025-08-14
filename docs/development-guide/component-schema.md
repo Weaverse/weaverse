@@ -1,8 +1,8 @@
 ---
 title: Component Schema
 description: The blueprint of a Weaverse component.
-publishedAt: November 20, 2023
-updatedAt: April 21, 2025
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
 order: 4
 published: true
 ---
