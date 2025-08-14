@@ -1,6 +1,9 @@
 ---
 title: Core Concepts
 description: Understand the fundamental concepts behind Weaverse's visual page builder and Shopify Hydrogen integration.
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
+published: true
 order: 1
 ---
 
@@ -25,12 +28,6 @@ Learn about the visual builder integration with Hydrogen and the development wor
 ### [Project Structure](/docs/core-concepts/project-structure)  
 Understand how Weaverse projects are organized and where different files live.
 
-### [Components vs Sections](/docs/core-concepts/components-sections)
-Learn the difference between components and sections, and when to use each.
-
-### [Theme Customization](/docs/core-concepts/theme-customization)
-Discover how themes work in Weaverse and how customization flows from code to UI.
-
 ## Development Workflow
 
 1. **Build Components**: Create React components with Weaverse schemas
@@ -42,5 +39,5 @@ Discover how themes work in Weaverse and how customization flows from code to UI
 ## Next Steps
 
 - **For Developers**: Continue to [Development Guide](/docs/development-guide)
-- **For Theme Users**: Learn about [Studio Interface](/docs/studio-guide)
-- **For Integration**: See [Existing Hydrogen Projects](/docs/migration-advanced/existing-hydrogen)
+- **For Integration**: See [v5 Migration Guide](/docs/migration-advanced/v5-migration)
+- **For Advanced Usage**: Explore [API Reference](/docs/api)

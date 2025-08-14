@@ -2,7 +2,7 @@
 title: Project Structure
 description: 'Essential guide to Weaverse Hydrogen theme structure'
 publishedAt: November 20, 2023
-updatedAt: April 03, 2025
+updatedAt: August 14, 2025
 order: 1
 published: true
 ---
@@ -144,9 +144,9 @@ export async function createAppLoadContext(request, env, executionContext) {
 ```
 
 ### `entry.server.tsx`
-Server-side rendering setup:
+Server-side rendering setup with React Router v7:
 ```tsx
-import { RemixServer } from "@remix-run/react";
+import { ServerRouter } from "react-router";
 import { createContentSecurityPolicy } from "@shopify/hydrogen";
 import type { AppLoadContext, EntryContext } from "@shopify/remix-oxygen";
 import { isbot } from "isbot";
@@ -157,7 +157,7 @@ export default async function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  remixContext: EntryContext,
+  routerContext: EntryContext,
   context: AppLoadContext,
 ) {
   const { nonce, header, NonceProvider } = createContentSecurityPolicy({
@@ -170,7 +170,7 @@ export default async function handleRequest(
 
   const body = await renderToReadableStream(
     <NonceProvider>
-      <RemixServer context={remixContext} url={request.url} nonce={nonce} />
+      <ServerRouter context={routerContext} url={request.url} nonce={nonce} />
     </NonceProvider>,
     {
       nonce,
@@ -248,10 +248,10 @@ npm run preview
 
 ## Next Steps
 
-- [Component Development](/docs/guides/weaverse-component)
-- [Theme Customization](/docs/guides/global-theme-settings)
-- [Environment Setup](/docs/guides/environment-variables)
+- [Development Guide](/docs/development-guide) - Build custom components and sections
+- [API Reference](/docs/api) - Learn about Weaverse APIs and utilities
+- [Deployment](/docs/deployment) - Deploy your theme to production
 
-Need help? Join our [Community Slack](https://wvse.cc/weaverse-slack).
+Need help? Check our [Community](/docs/community) or [FAQ](/docs/resources/faq).
 
 ---

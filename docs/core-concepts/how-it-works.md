@@ -1,6 +1,9 @@
 ---
 title: How Weaverse Works
 description: Understand the architecture and workflow of Weaverse's visual page builder integrated with Shopify Hydrogen.
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
+published: true
 order: 1
 ---
 
@@ -32,7 +35,7 @@ export function ProductCard({ title, price }) {
 export const schema = {
   type: 'product-card',
   title: 'Product Card',
-  inspector: [/* configuration */]
+  settings: [/* configuration */]
 }
 ```
 
@@ -91,7 +94,7 @@ Every Weaverse component includes a schema that defines:
 export const schema = {
   type: 'unique-component-name',
   title: 'Human-readable Title',
-  inspector: [
+  settings: [
     {
       group: 'Content',
       inputs: [
@@ -164,5 +167,5 @@ Weaverse leverages Hydrogen's architecture:
 ## Next Steps
 
 - Learn about [Project Structure](/docs/core-concepts/project-structure)
-- Understand [Components vs Sections](/docs/core-concepts/components-sections)
 - Start building with the [Development Guide](/docs/development-guide)
+- Explore the [API Reference](/docs/api) for advanced usage
