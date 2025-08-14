@@ -166,9 +166,8 @@ For third-party services that offer a REST or GraphQL API, Weaverse's loader pat
    ```tsx
    // app/sections/api-widget/index.tsx
    import type { ComponentLoaderArgs } from '@weaverse/hydrogen'
-
-import { createSchema } from '@weaverse/hydrogen'
-import { forwardRef } from 'react'
+   import { createSchema } from '@weaverse/hydrogen'
+   import { forwardRef } from 'react'
    import { Section, type SectionProps } from '~/components/section'
 
    type ApiWidgetData = {
