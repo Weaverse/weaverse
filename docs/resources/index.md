@@ -13,8 +13,8 @@ Find additional resources, examples, and support materials to help you succeed w
 ### [Code Examples](/docs/resources/examples)
 Real-world code examples showing common patterns and best practices.
 
-### [Tutorials](/docs/resources/tutorials)
-Step-by-step tutorials for specific features and use cases.
+### [Tutorial](/docs/resources/tutorials)
+Complete 45-minute guide to building your first Weaverse Hydrogen store with modern React Router v7 and React 19 patterns.
 
 ### [FAQ](/docs/resources/faq)
 Frequently asked questions, common issues, and debugging strategies.
@@ -49,9 +49,9 @@ Pre-launch verification steps for production deployments.
 - [Tailwind CSS Docs](https://tailwindcss.com/docs)
 
 ### Community
-- [Discord Server](https://discord.gg/weaverse)
-- [GitHub Discussions](https://github.com/Weaverse/weaverse/discussions)
-- [Twitter](https://twitter.com/weaverse)
+- [Slack Community](https://wvse.cc/weaverse-slack)
+- [GitHub Discussions](https://github.com/orgs/Weaverse/discussions)
+- [GitHub Repository](https://github.com/Weaverse/weaverse)
 
 ## Tools & Utilities
 
@@ -73,9 +73,9 @@ Pre-launch verification steps for production deployments.
 ## Support Options
 
 ### Community Support
-- Free community forum
+- [Slack community](https://wvse.cc/weaverse-slack) for real-time help
 - GitHub issues for bugs
-- Discord for real-time help
+- GitHub Discussions for feature requests
 
 ### Professional Support
 - Priority email support
@@ -95,4 +95,4 @@ Want to contribute to Weaverse? Check out:
 - [Code of Conduct](/docs/community/code-of-conduct)
 - [Feature Request Process](/docs/community/feature-requests)
 
-Find what you need or can't find something? Let us know in our [community forum](/docs/community)!
+Find what you need or can't find something? Let us know in our [Slack community](https://wvse.cc/weaverse-slack)!
