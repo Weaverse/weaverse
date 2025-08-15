@@ -2237,9 +2237,9 @@ If you can't find your answer in this comprehensive FAQ:
 - 🏢 Enterprise support with dedicated account management
 
 **Learning Resources**:
-- 📚 [Complete Tutorial](/docs/resources/tutorials/tutorial) (20-minute walkthrough)
+- 📚 [Complete Tutorial](/docs/resources/tutorial) (20-minute walkthrough)
 - 🎥 Video tutorials and walkthroughs
 - 📖 [Development Guide](/docs/development-guide) for advanced topics
-- 🧪 [Example Components](/docs/resources/examples/example-components) for inspiration
+- 🧪 [Example Components](/docs/resources/example-components) for inspiration
 
 We're always here to help you build amazing Shopify storefronts with Weaverse! 🚀

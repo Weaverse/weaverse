@@ -34,8 +34,6 @@ Implement server-side data loading for sections with Shopify API integration.
 ### [Styling & Theming](/docs/development-guide/styling-theming)
 Apply consistent styling with Tailwind CSS and global theme settings.
 
-### [Testing & Debugging](/docs/development-guide/testing-debugging)
-Strategies for testing components both in isolation and within Weaverse Studio.
 
 ## Quick Start Checklist
 

@@ -65,6 +65,6 @@ my-hydrogen-store/
 
 - 💬 [Community Forum](/docs/community) - Connect with other developers
 - 📖 [FAQ](/docs/resources/faq) - Common questions and answers
-- 📚 [Complete Tutorial](/docs/resources/tutorials/tutorial) - Step-by-step walkthrough
+- 📚 [Complete Tutorial](/docs/resources/tutorial) - Step-by-step walkthrough
 
 Ready to build amazing Shopify storefronts? Let's get started! 🚀

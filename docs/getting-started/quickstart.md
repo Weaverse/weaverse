@@ -325,7 +325,7 @@ When you're ready to go live:
 
 ## Need Help?
 
-- 🚀 **[Complete Tutorial](/docs/resources/tutorials/tutorial)** - Deep dive walkthrough
+- 🚀 **[Complete Tutorial](/docs/resources/tutorial)** - Deep dive walkthrough
 - 💬 **[Community](/docs/community)** - Connect with other merchants and developers
 - 📚 **[FAQ](/docs/resources/faq)** - Common questions answered
 
