@@ -2,14 +2,14 @@
 title: Example Weaverse Components
 description: Explore real-world examples of Weaverse components with detailed implementation guides.
 publishedAt: August 14, 2025
-updatedAt: August 14, 2025
+updatedAt: August 15, 2025
 order: 4
 published: true
 ---
 
 # Example Weaverse Components
 
-This guide provides real-world examples of Weaverse components, showcasing different patterns and best practices. Each example includes the complete implementation, schema definition, and explanations of key concepts.
+This guide provides real-world examples of Weaverse components using modern React 19 patterns, showcasing different implementation approaches and best practices. Each example includes the complete implementation, schema definition, and explanations of key concepts - all updated to work seamlessly with React Router v7 and React 19's improved capabilities.
 
 ## Table of Contents
 - [Hero Image](#hero-image)
@@ -33,7 +33,6 @@ import {
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import { forwardRef } from "react";
 import { backgroundInputs } from "~/components/background-image";
 import { overlayInputs } from "~/components/overlay";
 import type { SectionProps } from "~/components/section";
@@ -84,26 +83,23 @@ const variants = cva("flex flex-col [&_.paragraph]:mx-[unset]", {
 
 export interface HeroImageProps extends VariantProps<typeof variants> {}
 
-const HeroImage = forwardRef<HTMLElement, HeroImageProps & SectionProps>(
-  (props, ref) => {
-    const { children, height, contentPosition, ...rest } = props;
-    const { enableTransparentHeader } = useThemeSettings();
-    
-    return (
-      <Section
-        ref={ref}
-        {...rest}
-        containerClassName={variants({
-          contentPosition,
-          height,
-          enableTransparentHeader,
-        })}
-      >
-        {children}
-      </Section>
-    );
-  },
-);
+function HeroImage(props: HeroImageProps & SectionProps) {
+  const { children, height, contentPosition, ...rest } = props;
+  const { enableTransparentHeader } = useThemeSettings();
+  
+  return (
+    <Section
+      {...rest}
+      containerClassName={variants({
+        contentPosition,
+        height,
+        enableTransparentHeader,
+      })}
+    >
+      {children}
+    </Section>
+  );
+}
 
 export default HeroImage;
 
@@ -195,7 +191,7 @@ export let schema = createSchema({
    - Includes preset content
 
 3. **Component Structure**:
-   - Uses `forwardRef` for editor integration
+   - Modern React 19 function component pattern
    - Leverages theme settings
    - Maintains clean prop handling
    - Supports flexible content positioning
@@ -210,7 +206,6 @@ A component that displays a featured product with its details and purchase optio
 // app/sections/featured-product/index.tsx
 import type { ComponentLoaderArgs, HydrogenComponentProps } from '@weaverse/hydrogen';
 import { createSchema } from '@weaverse/hydrogen';
-import { forwardRef } from 'react';
 import { PRODUCT_QUERY } from '~/graphql/queries';
 
 interface FeaturedProductData {
@@ -236,7 +231,7 @@ export const loader = async (args: ComponentLoaderArgs<FeaturedProductData>) => 
 
 type FeaturedProductProps = HydrogenComponentProps<Awaited<ReturnType<typeof loader>>> & FeaturedProductData;
 
-const FeaturedProduct = forwardRef<HTMLElement, FeaturedProductProps>((props, ref) => {
+function FeaturedProduct(props: FeaturedProductProps) {
   const { loaderData, productHandle, ...rest } = props;
   const product = loaderData?.product;
   
@@ -245,13 +240,13 @@ const FeaturedProduct = forwardRef<HTMLElement, FeaturedProductProps>((props, re
   }
   
   return (
-    <section ref={ref} {...rest}>
+    <section {...rest}>
       <h2>{product.title}</h2>
       <p>{product.description}</p>
       {/* Product details */}
     </section>
   );
-});
+}
 
 export default FeaturedProduct;
 
@@ -286,8 +281,9 @@ export let schema = createSchema({
 
 3. **Component Structure**:
    - Proper error handling
-   - Clean prop destructuring
+   - Clean prop destructuring  
    - Type-safe props interface
+   - Modern React 19 function component pattern
 
 ## Team Members
 
@@ -298,7 +294,7 @@ A component that displays team members with their profiles and social links.
 ```tsx
 // app/sections/our-team/team-members.tsx
 import { GithubLogo, LinkedinLogo, XLogo } from "@phosphor-icons/react";
-import { Link } from "@remix-run/react";
+import { Link } from "react-router";
 import {
   type HydrogenComponentProps,
   type HydrogenComponentSchema,
@@ -319,19 +315,17 @@ type MemberType = {
   x_url: string;
 };
 
-const TeamMembers = forwardRef<HTMLDivElement, HydrogenComponentProps>(
-  (props, ref) => {
-    const parent = useParentInstance();
-    const { metaobjects }: OurTeamQuery = parent.data.loaderData || {};
-    
-    if (metaobjects?.nodes?.length) {
-      const members = metaobjects.nodes;
-      return (
-        <div
-          ref={ref}
-          {...props}
-          className="grid gap-8 mb-6 lg:mb-16 md:grid-cols-2 pt-4"
-        >
+function TeamMembers(props: HydrogenComponentProps) {
+  const parent = useParentInstance();
+  const { metaobjects }: OurTeamQuery = parent.data.loaderData || {};
+  
+  if (metaobjects?.nodes?.length) {
+    const members = metaobjects.nodes;
+    return (
+      <div
+        {...props}
+        className="grid gap-8 mb-6 lg:mb-16 md:grid-cols-2 pt-4"
+      >
           {members.map(({ id, fields }) => {
             const member: Partial<MemberType> = {};
             for (const { key, value, reference } of fields) {
@@ -400,9 +394,9 @@ const TeamMembers = forwardRef<HTMLDivElement, HydrogenComponentProps>(
         </div>
       );
     }
-    return <div ref={ref} {...props} />;
-  },
-);
+    return <div {...props} />;
+  }
+}
 
 export default TeamMembers;
 
@@ -447,6 +441,7 @@ export let schema = createSchema({
    - Semantic HTML structure
    - Proper link attributes
    - Clear visual hierarchy
+   - Modern React 19 function component pattern
 
 ## Review List
 
@@ -476,10 +471,7 @@ type AliReviewsProps = ReviewItemData & {
   showReviewWithMediaOnly: boolean;
 };
 
-const ReviewList = forwardRef<
-  HTMLDivElement,
-  AliReviewsProps & HydrogenComponentProps
->((props, ref) => {
+function ReviewList(props: AliReviewsProps & HydrogenComponentProps) {
   const {
     children,
     showAvgRating,
@@ -509,7 +501,6 @@ const ReviewList = forwardRef<
 
     return (
       <div
-        ref={ref}
         {...rest}
         className="md:flex md:gap-16 space-y-8 md:space-y-0"
       >
@@ -562,8 +553,8 @@ const ReviewList = forwardRef<
       </div>
     );
   }
-  return <div ref={ref} {...rest} />;
-});
+  return <div {...rest} />;
+}
 
 export default ReviewList;
 
@@ -626,6 +617,7 @@ export let schema = createSchema({
    - Flexible display options
    - Customizable review count
    - Media filtering
+   - Modern React 19 function component pattern
 
 ## Image with Text
 
@@ -636,7 +628,6 @@ A versatile component that combines images with text content in various layouts.
 ```tsx
 // app/sections/image-with-text/index.tsx
 import type { HydrogenComponentProps, HydrogenComponentSchema } from '@weaverse/hydrogen';
-import { forwardRef } from 'react';
 import { ImageWithTextContent } from './content';
 import { ImageWithTextImage } from './image';
 
@@ -645,24 +636,21 @@ interface ImageWithTextProps extends HydrogenComponentProps {
   imageWidth: 'small' | 'medium' | 'large';
 }
 
-const ImageWithText = forwardRef<HTMLElement, ImageWithTextProps>(
-  (props, ref) => {
-    const { children, imagePosition, imageWidth, ...rest } = props;
-    
-    return (
-      <section
-        ref={ref}
-        {...rest}
-        className={`flex flex-col md:flex-row gap-8 ${
-          imagePosition === 'right' ? 'md:flex-row-reverse' : ''
-        }`}
-      >
-        <ImageWithTextImage width={imageWidth} />
-        <ImageWithTextContent>{children}</ImageWithTextContent>
-      </section>
-    );
-  },
-);
+function ImageWithText(props: ImageWithTextProps) {
+  const { children, imagePosition, imageWidth, ...rest } = props;
+  
+  return (
+    <section
+      {...rest}
+      className={`flex flex-col md:flex-row gap-8 ${
+        imagePosition === 'right' ? 'md:flex-row-reverse' : ''
+      }`}
+    >
+      <ImageWithTextImage width={imageWidth} />
+      <ImageWithTextContent>{children}</ImageWithTextContent>
+    </section>
+  );
+}
 
 export default ImageWithText;
 
@@ -716,6 +704,7 @@ export let schema = createSchema({
    - Separated content and image components
    - Clean prop handling
    - Type-safe interfaces
+   - Modern React 19 function component pattern
 
 3. **Schema Design**:
    - Logical input grouping
@@ -724,12 +713,13 @@ export let schema = createSchema({
 
 ## Conclusion
 
-These examples demonstrate various patterns and best practices for building Weaverse components:
+These examples demonstrate various patterns and best practices for building Weaverse components with modern React 19:
 
 1. **Data Integration**: Different approaches to fetching and handling data
-2. **Component Structure**: Clean, maintainable component organization
+2. **Component Structure**: Clean, maintainable component organization using modern function components
 3. **Schema Design**: Intuitive and flexible configuration options
-4. **Styling**: Responsive and customizable layouts
+4. **Styling**: Responsive and customizable layouts with CVA variants
 5. **Accessibility**: Semantic HTML and proper ARIA attributes
+6. **Modern React Patterns**: No forwardRef needed, clean function components, optimal TypeScript integration
 
-Use these examples as inspiration for your own components, adapting the patterns to your specific needs while maintaining the core principles of clean, maintainable, and user-friendly component design. 
+Use these examples as inspiration for your own components, adapting the patterns to your specific needs while maintaining the core principles of clean, maintainable, and user-friendly component design with React 19's modern capabilities. 
