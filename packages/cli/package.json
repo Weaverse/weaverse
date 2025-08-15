@@ -1,6 +1,6 @@
 {
   "name": "@weaverse/cli",
-  "version": "1.3.7",
+  "version": "1.4.0",
   "description": "CLI for Weaverse projects",
   "type": "module",
   "main": "index.js",

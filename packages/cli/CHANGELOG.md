@@ -1,5 +1,16 @@
 # @weaverse/cli
 
+## 1.4.0
+
+### Minor Changes
+
+- Add Aspen template and enhance template display
+
+  - Add new Aspen template for home furniture and interior design stores
+  - Update Pilot and Naturelle template descriptions
+  - Add demo URLs for all templates
+  - Improve help display with capitalized names and formatted template information
+
 ## 1.3.0
 
 ### Minor Changes
