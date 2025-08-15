@@ -10,7 +10,7 @@
 import * as stitches from '@stitches/core'
 import type Stitches from '@stitches/core/types/stitches'
 import { createRef, type RefObject } from 'react'
-import pkg from '../package.json'
+import { version } from '../package.json'
 import type {
   BreakPoints,
   ElementCSS,
@@ -87,7 +87,7 @@ export class Weaverse extends EventEmitter {
   contentRootElement: HTMLElement | null = null
   static itemInstances = new Map()
   weaverseHost = 'https://studio.weaverse.io'
-  weaverseVersion = pkg.version
+  weaverseVersion = version
   projectId = ''
   isDesignMode = false
   isPreviewMode = false

@@ -1,6 +1,6 @@
 {
   "root": false,
-  "$schema": "https://biomejs.dev/schemas/2.1.1/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
   "extends": ["ultracite"],
   "linter": {
     "rules": {
@@ -22,7 +22,9 @@
         "useAtIndex": "warn",
         "useCollapsedIf": "warn",
         "useCollapsedElseIf": "warn",
-        "noParameterProperties": "warn"
+        "noParameterProperties": "warn",
+        "noMagicNumbers": "warn",
+        "useReadonlyClassProperties": "warn"
       },
       "a11y": {
         "noStaticElementInteractions": "off",
@@ -34,7 +36,8 @@
         "useFocusableInteractive": "warn",
         "noLabelWithoutControl": "warn",
         "useKeyWithMouseEvents": "warn",
-        "noRedundantAlt": "warn"
+        "noRedundantAlt": "warn",
+        "noNoninteractiveElementInteractions": "warn"
       },
       "complexity": {
         "useOptionalChain": "warn",
@@ -43,7 +46,9 @@
         "noExcessiveCognitiveComplexity": "warn",
         "noStaticOnlyClass": "off",
         "noUselessCatch": "warn",
-        "noVoid": "warn"
+        "noVoid": "warn",
+        "noExcessiveLinesPerFunction": "warn",
+        "noImplicitCoercions": "warn"
       },
       "suspicious": {
         "noArrayIndexKey": "warn",
@@ -55,7 +60,9 @@
         "useAwait": "warn",
         "noTemplateCurlyInString": "warn",
         "noEmptyBlockStatements": "warn",
-        "noDocumentCookie": "warn"
+        "noDocumentCookie": "warn",
+        "noConstantBinaryExpressions": "warn",
+        "useIterableCallbackReturn": "warn"
       },
       "security": {
         "noDangerouslySetInnerHtml": "off"
@@ -67,22 +74,15 @@
         "noUnusedVariables": "warn",
         "noUnusedImports": "warn",
         "noUnusedFunctionParameters": "warn",
-        "noInvalidUseBeforeDeclaration": "warn"
+        "noInvalidUseBeforeDeclaration": "warn",
+        "useParseIntRadix": "warn"
       },
       "nursery": {
-        "useUniqueElementIds": "warn",
         "noShadow": "warn",
-        "useJsonImportAttribute": "off",
-        "useParseIntRadix": "warn",
-        "noConstantBinaryExpression": "warn",
-        "noNoninteractiveElementInteractions": "warn",
-        "useIterableCallbackReturn": "warn",
-        "noAwaitInLoop": "warn",
         "useSortedClasses": "off",
-        "noBitwiseOperators": "warn",
-        "useSingleJsDocAsterisk": "warn",
-        "noUnknownAtRule": "warn",
-        "noImportantStyles": "warn"
+        "useConsistentTypeDefinitions": "warn",
+        "noUnnecessaryConditions": "warn",
+        "useImageSize": "warn"
       },
       "performance": {
         "noNamespaceImport": "warn",
@@ -106,25 +106,25 @@
     "ignoreUnknown": true,
     "includes": [
       "**",
-      "!**/node_modules/**",
-      "!**/dist/**",
-      "!**/build/**",
-      "!**/public/**",
-      "!**/.wrangler/**",
-      "!**/icons/**",
-      "!**/patches/**",
+      "!**/node_modules",
+      "!**/dist",
+      "!**/build",
+      "!**/public",
+      "!**/.wrangler",
+      "!**/icons",
+      "!**/patches",
       "!**/*.css",
       "!**/*.scss",
       "!**/storefront-api.generated.d.ts",
       "!**/customer-account-api.generated.d.ts",
-      "!**/.shopify/**",
-      "!**/.react-router/**",
+      "!**/.shopify",
+      "!**/.react-router",
       "!**/app/styles/app.css",
       "!**/app/utils/string-parser.ts",
       "!**/app/hooks/use-3rd-stuff.ts",
       "!**/pnpm-lock.yaml",
-      "!**/.vscode/**",
-      "!**/prisma/**",
+      "!**/.vscode",
+      "!**/prisma",
       "!**/vite.config.ts",
       "!**/app/styles/tailwind.css"
     ],

@@ -1,5 +1,11 @@
 # @weaverse/biome
 
+## 1.6.0
+
+### Minor Changes
+
+- Minor version release for @weaverse/biome package
+
 ## 1.5.1
 
 ### Patch Changes
