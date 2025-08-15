@@ -14,13 +14,25 @@ const TEMPLATES = [
     name: 'pilot',
     repoURL: 'https://github.com/Weaverse/pilot',
     defaultDownloadFolder: 'pilot-main',
-    description: 'A modern and clean template for your Weaverse store',
+    description:
+      'A fully-featured Shopify Hydrogen theme crafted to help you launch modern, high-performing headless storefronts in minutes.',
+    demoUrl: 'https://pilot.weaverse.dev',
   },
   {
     name: 'naturelle',
     repoURL: 'https://github.com/Weaverse/naturelle',
     defaultDownloadFolder: 'naturelle-main',
-    description: 'A beautiful and elegant template for your Weaverse store',
+    description:
+      'Naturelle is a state-of-the-art Shopify theme, crafted specifically for beauty brands.',
+    demoUrl: 'https://naturelle.weaverse.dev',
+  },
+  {
+    name: 'aspen',
+    repoURL: 'https://github.com/Weaverse/aspen',
+    defaultDownloadFolder: 'aspen-main',
+    description:
+      'A sophisticated Shopify Hydrogen theme designed for home furniture and interior design stores.',
+    demoUrl: 'https://weaverse-aspen-furniture.fly.dev',
   },
 ]
 
@@ -69,7 +81,7 @@ const downloadAndExtractTemplate = async (template, outputPath, commitHash) => {
     spinner.text = 'Setting up project files...'
     // Move contents from temp to the root of outputPath and then remove temp
     const files = await fs.readdir(`${outputPath}/temp/${downloadFolder}`)
-    for (let file of files) {
+    for (const file of files) {
       await fs.move(
         `${outputPath}/temp/${downloadFolder}/${file}`,
         `${outputPath}/${file}`
@@ -153,10 +165,18 @@ const argv = yargs(hideBin(process.argv))
   }).argv
 
 if (argv.help || !argv._.includes('create')) {
-  console.log(chalk.blue('\nWeaverse CLI - Create a new project\n'))
+  console.log(
+    chalk.blue(
+      '\nWeaverse CLI - Create a new Weaverse Shopify Hydrogen project\n'
+    )
+  )
   console.log(chalk.gray('Available templates:'))
   TEMPLATES.forEach((template) => {
-    console.log(chalk.gray(`- ${template.name}: ${template.description}`))
+    const capitalizedName =
+      template.name.charAt(0).toUpperCase() + template.name.slice(1)
+    console.log(chalk.gray(`\n• ${capitalizedName}`))
+    console.log(chalk.gray(`  ${template.description}`))
+    console.log(chalk.gray(`  Demo: ${template.demoUrl}`))
   })
   console.log(`
 Usage: npx @weaverse/cli create --template=<template-name> --project-id=<project-id> [--commit=<commit-hash>]
@@ -171,7 +191,7 @@ Options:
 ;(async () => {
   try {
     if (argv.template) {
-      let template = TEMPLATES.find((t) => t.name === argv.template)
+      const template = TEMPLATES.find((t) => t.name === argv.template)
       if (template) {
         const outputPath = `./${toKebabCase(argv['project-name'])}`
         const commitHash = argv.commit
