@@ -1,8 +1,8 @@
 ---
 title: WeaverseClient
 description: The WeaverseClient class provides server-side methods to interact with Weaverse content and services in a Hydrogen storefront.
-publishedAt: October 10, 2023
-updatedAt: April 24, 2025
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
 order: 2
 published: true
 ---
@@ -47,7 +47,7 @@ export async function createAppLoadContext(
 }
 ```
 
-Refer to the [Project Structure guide](/docs/guides/project-structure#base-files-explained) for a detailed setup walkthrough.
+Refer to the [Project Structure guide](/docs/core-concepts/project-structure#base-files-explained) for a detailed setup walkthrough.
 
 ## Type Definition
 
@@ -124,7 +124,7 @@ export async function loader({ data, weaverse }: ComponentLoaderArgs) {
 }
 ```
 
-Refer to the [Data Fetching and Caching guide](/docs/guides/fetching-and-caching#fetching-data-from-external-apis) for more details.
+Refer to the [Data Fetching and Caching guide](/docs/development-guide/data-fetching#fetching-data-from-external-apis) for more details.
 
 ### loadThemeSettings
 
@@ -238,4 +238,4 @@ generateFallbackPage(message: string): HydrogenPageData
 ## Related
 
 - [useWeaverse](/docs/api/use-weaverse) - Hook for accessing Weaverse instance client-side
-- [Data Fetching and Caching](/docs/guides/fetching-and-caching) - Advanced guide on data fetching
+- [Data Fetching and Caching](/docs/development-guide/data-fetching) - Advanced guide on data fetching
