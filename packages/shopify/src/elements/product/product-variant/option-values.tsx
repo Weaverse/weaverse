@@ -27,15 +27,15 @@ export function OptionValues(props: OptionValuesProps) {
     return (
       <select
         className="wv-option__dropdown"
-        value={selectedValue || values[0]}
         onChange={(e) => onSelect(position, e.target.value)}
+        value={selectedValue || values[0]}
       >
         {values.map((value, idx) => {
           let state = getSoldOutAndUnavailableState(
             value,
             position,
             product,
-            selectedOptions,
+            selectedOptions
           )
           if (hideUnavailableOptions && state.unavailable) {
             return null
@@ -43,10 +43,10 @@ export function OptionValues(props: OptionValuesProps) {
 
           let className = clsx(
             state.soldOut && 'sold-out',
-            state.unavailable && 'unavailable',
+            state.unavailable && 'unavailable'
           )
           return (
-            <option key={value + idx} value={value} className={className}>
+            <option className={className} key={value + idx} value={value}>
               {value}
             </option>
           )
@@ -63,7 +63,7 @@ export function OptionValues(props: OptionValuesProps) {
           value,
           position,
           product,
-          selectedOptions,
+          selectedOptions
         )
         let shouldShowTooltip =
           showTooltip &&
@@ -77,19 +77,19 @@ export function OptionValues(props: OptionValuesProps) {
           state.unavailable && [
             'unavailable',
             hideUnavailableOptions && 'hidden',
-          ],
+          ]
         )
         let wrapperClassName = clsx(
           'wv-option__value-container',
-          shouldShowTooltip && 'wv-tooltip-container',
+          shouldShowTooltip && 'wv-tooltip-container'
         )
 
         return (
-          <div key={value + idx} className={wrapperClassName}>
+          <div className={wrapperClassName} key={value + idx}>
             <div
               className={className}
-              style={style}
               onClick={() => onSelect(position, value)}
+              style={style}
             >
               <span>{value}</span>
             </div>

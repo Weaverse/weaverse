@@ -26,7 +26,7 @@ let ThirdParty = forwardRef<HTMLDivElement, ThirdPartyProps>((props, ref) => {
 
   return (
     <div ref={ref} {...rest}>
-      <NoHydrate id={id} getHTML={() => snippet_code} />
+      <NoHydrate getHTML={() => snippet_code} id={id} />
     </div>
   )
 })

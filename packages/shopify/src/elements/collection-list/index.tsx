@@ -67,12 +67,12 @@ let CollectionList = forwardRef<HTMLDivElement, CollectionListProps>(
 
     let collectionCards = collectionsInfo.map((collection) => (
       <CollectionCard
-        key={collection.id}
+        className={layout === 'slider' ? 'keen-slider__slide' : ''}
         collection={collection}
         imageAspectRatio={imageAspectRatio}
+        key={collection.id}
         showProductCount={showProductCount}
         zoomInOnHover={zoomInOnHover}
-        className={layout === 'slider' ? 'keen-slider__slide' : ''}
       />
     ))
 
@@ -80,9 +80,9 @@ let CollectionList = forwardRef<HTMLDivElement, CollectionListProps>(
       return (
         <div ref={ref} {...rest} style={style}>
           <Slider
+            arrowOffset={-80}
             className="wv-collection-list__slider"
             gap={gap}
-            arrowOffset={-80}
             slidesPerView={collectionsPerRow}
           >
             {collectionCards}
@@ -96,7 +96,7 @@ let CollectionList = forwardRef<HTMLDivElement, CollectionListProps>(
         {collectionCards}
       </div>
     )
-  },
+  }
 )
 
 export default CollectionList

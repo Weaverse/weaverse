@@ -10,7 +10,7 @@ export function Dots(props: SliderDotsProps) {
     className,
     absolute && 'dots--absolute',
     position && `dots--${position}`,
-    color && `dots--${color}`,
+    color && `dots--${color}`
   )
   return (
     <StyledDots className={_className}>
@@ -19,13 +19,13 @@ export function Dots(props: SliderDotsProps) {
           let className = clsx('dot', currentSlide === idx && 'dot--active')
           return (
             <button
-              key={idx}
-              type="button"
-              onClick={() => instanceRef.current?.moveToIdx(idx)}
               className={className}
+              key={idx}
+              onClick={() => instanceRef.current?.moveToIdx(idx)}
+              type="button"
             />
           )
-        },
+        }
       )}
     </StyledDots>
   )

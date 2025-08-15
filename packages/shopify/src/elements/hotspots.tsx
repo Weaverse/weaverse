@@ -29,20 +29,20 @@ export let Hotspots = forwardRef<HTMLDivElement, HotspotsProps>(
         <img
           alt="Hotspots"
           className="hotspots__image"
-          src={image}
           loading="lazy"
+          src={image}
         />
         <div className="hotspots">
           {hotspots.map((hotspot) => {
             let product = products.find(
-              (product) => product?.id === hotspot.productId,
+              (product) => product?.id === hotspot.productId
             )
             if (!product) return null
             let { images, url, price, title } = product
             return (
               <div
+                className="hotspots__button animate-ping"
                 key={hotspot.productId}
-                className="animate-ping hotspots__button"
                 style={
                   {
                     top: `${hotspot.offsetY}%`,
@@ -69,7 +69,7 @@ export let Hotspots = forwardRef<HTMLDivElement, HotspotsProps>(
                   </div>
                   <div className="hotspot__product-info">
                     <div>
-                      <a href={url} className="hotspot__product-title">
+                      <a className="hotspot__product-title" href={url}>
                         {title}
                       </a>
                       <p className="hotspot__product-price">
@@ -87,7 +87,7 @@ export let Hotspots = forwardRef<HTMLDivElement, HotspotsProps>(
         </div>
       </div>
     )
-  },
+  }
 )
 
 export let css: ElementCSS = {

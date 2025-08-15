@@ -16,8 +16,8 @@ export function Skeleton(props: CollectionSkeletonProps) {
     <>
       {Array.from({ length: collectionCount }).map((_, index) => (
         <div
-          key={index}
           className="wv-col-card-skeleton animate-pulse"
+          key={index}
           style={style}
         >
           <div className="wv-col-card-skeleton__image">

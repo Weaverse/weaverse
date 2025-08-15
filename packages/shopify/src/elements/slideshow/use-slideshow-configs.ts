@@ -42,7 +42,7 @@ export function useSlideshowConfigs(props: SlideshowProps) {
         if (isDesignMode) {
           // Save instance to window so we can access it inside the editor
           let slideshowElement = slider.container.closest(
-            '[data-wv-type="slideshow"]',
+            '[data-wv-type="slideshow"]'
           )
           let elementId = slideshowElement?.getAttribute('data-wv-id')
           if (elementId) {
@@ -57,12 +57,12 @@ export function useSlideshowConfigs(props: SlideshowProps) {
       },
       detailsChanged: (slider) => {
         let newOpacities = slider.track?.details?.slides?.map(
-          (slide) => slide.portion,
+          (slide) => slide.portion
         )
         setOpacities(newOpacities)
       },
     },
-    sliderPlugins,
+    sliderPlugins
   )
 
   useEffect(() => {

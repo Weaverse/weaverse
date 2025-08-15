@@ -82,7 +82,7 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
       return (
         <div ref={ref} {...rest} style={style}>
           <div className="wv-product-image__single">
-            <Image image={image} width={1000} onLoad={() => setReady(true)} />
+            <Image image={image} onLoad={() => setReady(true)} width={1000} />
           </div>
         </div>
       )
@@ -91,60 +91,60 @@ let ProductMedia = forwardRef<HTMLDivElement, ProductMediaProps>(
     return (
       <div ref={ref} {...rest} style={style}>
         <link
-          rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/keen-slider@latest/keen-slider.min.css"
           onLoad={() => setCssLoaded(true)}
+          rel="stylesheet"
         />
         <div className="wv-product-slider__wrapper">
-          <div ref={sliderRef} className="keen-slider wv-product-slider">
+          <div className="keen-slider wv-product-slider" ref={sliderRef}>
             {images.map((image) => (
               <Image
-                key={image.id}
-                image={image}
-                width={1000}
                 className="keen-slider__slide wv-product-slider__slide"
+                image={image}
+                key={image.id}
                 onClick={() => allowFullscreen && setZoomed(true)}
+                width={1000}
               />
             ))}
           </div>
           {created && instanceRef?.current && (
             <Arrows
+              className="wv-pmedia-slider__arrows"
               currentSlide={currentSlide}
+              icon="arrow"
               instanceRef={instanceRef}
               offset={10}
-              icon="arrow"
-              className="wv-pmedia-slider__arrows"
             />
           )}
           {created && instanceRef.current && (
             <Dots
+              className="wv-pmedia-slider__dots"
+              color="dark"
               currentSlide={currentSlide}
               instanceRef={instanceRef}
-              color="dark"
-              className="wv-pmedia-slider__dots"
             />
           )}
         </div>
-        <div ref={thumbnailRef} className="keen-slider wv-thumbnail-slider">
+        <div className="keen-slider wv-thumbnail-slider" ref={thumbnailRef}>
           {images.map((image) => (
             <Image
-              key={image.id}
-              image={image}
-              width={480}
               className="keen-slider__slide wv-thumbnail__slide"
+              image={image}
+              key={image.id}
+              width={480}
             />
           ))}
         </div>
         {allowFullscreen && (
           <MediaFullscreenSlider
-            open={zoomed}
-            onOpenChange={setZoomed}
             images={images}
+            onOpenChange={setZoomed}
+            open={zoomed}
           />
         )}
       </div>
     )
-  },
+  }
 )
 
 ProductMedia.defaultProps = {

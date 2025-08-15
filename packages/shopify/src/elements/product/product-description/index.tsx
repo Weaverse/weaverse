@@ -64,13 +64,13 @@ let ProductDescription = forwardRef<HTMLDivElement, ProductDescriptionProps>(
       <div ref={ref} {...rest}>
         <div
           className="wv-product-description"
-          style={style}
           dangerouslySetInnerHTML={{ __html: product.body_html }}
+          style={style}
         />
         {viewDetailsButton}
       </div>
     )
-  },
+  }
 )
 
 export let css: ElementCSS = {

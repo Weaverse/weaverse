@@ -14,5 +14,5 @@ export function NoHydrate({ id, getHTML, ...rest }: NoHydrateProps) {
     if (!el) return getHTML?.() ?? ''
     return el.innerHTML
   })
-  return <div {...rest} id={id} dangerouslySetInnerHTML={{ __html: html }} />
+  return <div {...rest} dangerouslySetInnerHTML={{ __html: html }} id={id} />
 }

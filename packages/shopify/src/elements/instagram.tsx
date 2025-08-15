@@ -34,9 +34,9 @@ let Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
       return (
         <div ref={ref} {...rest}>
           <Components.Placeholder element="Instagram">
-            {!token
-              ? 'Connect to Instagram to display photos on your site.'
-              : 'Invalid or expired token!'}
+            {token
+              ? 'Invalid or expired token!'
+              : 'Connect to Instagram to display photos on your site.'}
           </Components.Placeholder>
         </div>
       )
@@ -62,13 +62,13 @@ let Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
             if (media_type === 'VIDEO') {
               return (
                 // biome-ignore lint/a11y/useMediaCaption: <explanation>
-                <video key={id} controls poster={thumbnail_url}>
+                <video controls key={id} poster={thumbnail_url}>
                   <source src={media_url} type="video/mp4" />
                 </video>
               )
             }
             return (
-              <a key={id} href={permalink} target="_blank" rel="noreferrer">
+              <a href={permalink} key={id} rel="noreferrer" target="_blank">
                 <img alt={caption} src={media_url} />
               </a>
             )
@@ -76,7 +76,7 @@ let Instagram = forwardRef<HTMLDivElement, InstagramElementProps>(
         </div>
       </div>
     )
-  },
+  }
 )
 export let css = {
   // '@desktop': {

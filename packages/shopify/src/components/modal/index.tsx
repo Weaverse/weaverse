@@ -23,9 +23,9 @@ export let Modal = (props: DialogProps) => {
 
   return (
     <Root
-      open={open}
       defaultOpen={defaultOpen}
       onOpenChange={handleOpenChange}
+      open={open}
       {...rest}
     >
       {children}
@@ -44,7 +44,7 @@ export let ModalHeader = forwardRef<HTMLHeadingElement, DialogTitleProps>(
         {children}
       </StyledTitle>
     )
-  },
+  }
 )
 
 export let ModalContent = forwardRef<HTMLDivElement, ModalContentProps>(
@@ -55,9 +55,9 @@ export let ModalContent = forwardRef<HTMLDivElement, ModalContentProps>(
         <StyledOverlay />
         <StyledContent
           {...rest}
-          onCloseAutoFocus={(e: Event) => e.preventDefault()}
-          data-wv-modal
           data-size={size}
+          data-wv-modal
+          onCloseAutoFocus={(e: Event) => e.preventDefault()}
           ref={ref}
         >
           <ModalClose />
@@ -70,7 +70,7 @@ export let ModalContent = forwardRef<HTMLDivElement, ModalContentProps>(
       return <Portal>{modalContent}</Portal>
     }
     return modalContent
-  },
+  }
 )
 
 ModalContent.defaultProps = {
@@ -91,5 +91,5 @@ export let ModalClose = forwardRef<HTMLButtonElement, DialogCloseProps>(
         {asChild ? children : closeIcon}
       </Close>
     )
-  },
+  }
 )

@@ -14,7 +14,7 @@ export function ProductCardInfo(props: ProductCardInfoProps) {
 
   return (
     <div className="wv-pcard__info">
-      <a href={url} target="_self" className="wv-pcard__title">
+      <a className="wv-pcard__title" href={url} target="_self">
         {title}
       </a>
       <div className="wv-pcard__prices">
@@ -35,9 +35,9 @@ export function ProductCardInfo(props: ProductCardInfoProps) {
       </div>
       {showProductOption && (
         <ProductCardOptions
-          product={product}
-          optionName={optionName}
           optionLimit={optionLimit}
+          optionName={optionName}
+          product={product}
         />
       )}
     </div>

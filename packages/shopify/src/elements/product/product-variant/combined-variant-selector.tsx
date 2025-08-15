@@ -7,13 +7,12 @@ export function CombinedVariantSelector({ context }: CombinedVariantProps) {
 
   return (
     <>
-      <label htmlFor="id" className="wv-combined-variant__label">
+      <label className="wv-combined-variant__label" htmlFor="id">
         Select variant
       </label>
       <select
         className="wv-combined-variant__selector"
         name="id"
-        value={selectedVariant?.id}
         onChange={(e) => {
           let variantId = Number(e.target.value)
           let variant = product.variants.find(({ id }) => id === variantId)
@@ -21,6 +20,7 @@ export function CombinedVariantSelector({ context }: CombinedVariantProps) {
             setSelectedVariant(variant)
           }
         }}
+        value={selectedVariant?.id}
       >
         {product.variants.map((variant) => {
           return (

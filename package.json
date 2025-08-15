@@ -24,23 +24,24 @@
     "ci": "biome ci --changed"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.0.0",
-    "@changesets/cli": "^2.29.4",
-    "@types/node": "24.0.0",
-    "@types/react": "19.1.7",
-    "@types/react-dom": "19.1.6",
-    "cross-env": "7.0.3",
-    "lefthook": "^1.11.13",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
+    "@biomejs/biome": "^2.2.0",
+    "@changesets/cli": "^2.29.5",
+    "@types/node": "24.2.1",
+    "@types/react": "19.1.10",
+    "@types/react-dom": "19.1.7",
+    "cross-env": "10.0.0",
+    "lefthook": "^1.12.3",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
     "rimraf": "6.0.1",
     "tsup": "8.5.0",
-    "turbo": "2.5.4",
-    "typescript": "5.8.3"
+    "turbo": "2.5.5",
+    "typescript": "5.9.2",
+    "ultracite": "5.1.5"
   },
   "optionalDependencies": {
-    "@esbuild/darwin-x64": "^0.25.5",
-    "turbo-darwin-arm64": "^2.5.4"
+    "@esbuild/darwin-x64": "^0.25.9",
+    "turbo-darwin-arm64": "^2.5.5"
   },
   "engines": {
     "node": ">=22"
@@ -49,6 +50,7 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@biomejs/biome",
+      "@tailwindcss/oxide",
       "esbuild",
       "lefthook",
       "workerd"

@@ -1,25 +1,186 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+## [2025.08.12] - 2025-08-12
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+### 🎨 Weaverse Studio
 
-## [Unreleased]
+#### 🎉 New Features
+- **🎨 Complete Studio Interface Redesign**: Revolutionary new design system with modern, intuitive interface and streamlined workflows
+- **🤖 Advanced AI Chat System**: Persistent conversations, reliable tool integration, and enhanced development assistance
+- **💰 Enterprise Billing Transparency**: Real-time usage tracking with overage calculations and cost projections
+- **Professional Error Pages**: Beautiful 404 and error handling with clear navigation
 
-### Added
+#### ✨ Improvements
+- **Enhanced Performance**: Faster loading times and better responsiveness across all Studio features
+- **Improved Mobile Preview**: Better styling and layout consistency for mobile theme previews
+- **Streamlined Navigation**: Simplified app structure with cleaner user flows
 
-### Changed
+#### 🐛 Bug Fixes
+- **AI Chat Reliability**: Fixed deadlock issues that could freeze the AI assistant
+- **Studio Interface**: Resolved UI rendering and interaction issues
+- **Mobile Preview**: Fixed component backgrounds and responsive layouts
+- **Billing Accuracy**: Corrected Growth and Scale plan overage calculations
 
-### Deprecated
+#### 🔧 Technical Updates
+- **Enhanced Database**: Added AI tool call persistence with proper validation
+- **Improved Testing**: Extensive test coverage for AI persistence and error handling
+- **Better Documentation**: Enhanced API docs and troubleshooting guides
 
-### Removed
+---
 
-### Fixed
+### 🔧 Weaverse SDKs
 
-### Security
+#### ✨ Improvements
+- **Enhanced Type Safety**: Improved TypeScript definitions across all packages
+- **Better Documentation**: Updated guides with latest patterns and best practices
+- **Dependency Updates**: Synchronized package versions for better compatibility
 
-## [5.3.4] - 2025-01-27
+---
+
+### 🚀 Weaverse Pilot Theme
+
+#### ✨ Improvements
+- **Updated Dependencies**: Synchronized with latest Weaverse SDK versions
+- **Enhanced Type Safety**: Improved TypeScript integration and error handling
+- **Better Performance**: Optimized build process and reduced bundle size
+
+#### 🐛 Bug Fixes
+- **Development Stability**: Fixed various development server and build issues
+- **Type Definitions**: Corrected TypeScript configuration for better IDE support
+
+## [2025.07.22] - 2025-07-22
+
+### 🎨 Weaverse Studio
+
+#### 🎉 New Features
+- **Brand New Dashboard**: Complete redesign with modern UI for better user experience
+  - Beautiful animated welcome banner
+  - Real-time changelog to stay updated
+  - Improved project management with quick actions
+  - Enhanced navigation and project switching
+  - New billing and usage visualization
+- **AI Assistant (Beta)**: Free AI-powered coding assistant to help build Hydrogen stores faster
+  - Context-aware chat interface with real-time code generation
+  - Multi-mode support: general queries, code generation, and documentation search
+- **Account Management**: New settings page to manage API keys and personal access tokens
+- **Figma Integration**: Import designs directly from Figma with OAuth authentication
+
+#### ✨ Improvements
+- Significantly faster dashboard loading with optimized data fetching
+- Dark mode support across all new components
+- Better error messages and form validation
+
+#### 🐛 Bug Fixes
+- Fixed AI chat interface stability issues
+- Improved authentication and project access validation
+
+---
+
+### 🔧 Weaverse SDKs
+
+#### 🎉 New Features
+- **Biome v2.1.2**: New linting rules for code quality, performance, and sorted Tailwind classes
+- **Ultracite**: Added for improved code formatting
+
+#### ✨ Improvements
+- Enhanced GitHub workflows with Claude AI integration
+- Strict TypeScript with null checks enabled
+- Better build performance
+
+---
+
+### 🚀 Weaverse Pilot Theme
+
+#### 🎉 New Features
+- **Quick Shop Modal**: Browse and select product variants without leaving collection pages
+- **Product Bundles Support**: Full Shopify bundles integration with badges and special cart handling
+- **Newsletter Popup**: Smart email capture with customizable timing and Klaviyo integration
+- **Enhanced Product Display**: New zoom functionality, dynamic badges, and improved variant selector
+
+#### ✨ Improvements
+- Switched to Cabin Variable font for better readability
+- Enhanced cart experience with bundle support
+- Added CLAUDE.md coding guidelines
+- Implemented sorted Tailwind classes with Biome
+- Optimized image loading and pagination
+
+#### 🐛 Bug Fixes
+- Fixed quick shop variant selection
+- Corrected logo visibility with transparent headers
+- Fixed pagination links and cart form submissions
+- Improved media zoom responsiveness
+
+#### 🔧 Technical Updates
+- React Player downgraded to 2.16.0 for stability
+- Vite 6.3.5 for Shopify CLI compatibility
+- Added EditorConfig and enhanced Biome configuration
+
+## [2025.07] - 2025-07-03
+
+### 🎨 Weaverse Studio
+*For users customizing Hydrogen themes in the Weaverse visual editor*
+
+#### 🎉 New Features
+- **Better Documentation Experience**: Added a new feedback system so you can easily tell us what's helpful or confusing in our docs
+- **Faster Blog Loading**: Blog pages now load much faster with smarter pagination that handles large amounts of content efficiently
+- **Improved Content Management**: Enhanced blog integration makes it easier to manage and display your content
+
+#### ✨ Improvements
+- **Smoother Color Picker**: The color selection tool now works more smoothly and calculates colors more accurately
+- **Unified Blog Experience**: Streamlined how blog posts are displayed across different parts of your site
+- **More Content Per Page**: Blog listings now show 9 posts instead of 6, giving visitors more content to explore
+- **Better Code Organization**: New tools automatically organize your code for better readability and consistency
+- **Cleaner Project Structure**: Automatic cleanup tools keep your project files organized
+
+#### 🐛 Bug Fixes
+- **Fixed Database Issues**: Resolved problems with data storage and project configuration
+- **Better Communication**: Improved integration between studio interface and theme files
+
+---
+
+### 🔧 Weaverse SDKs
+*For developers building Hydrogen themes with Weaverse components*
+
+#### 🎉 New Features
+- **Modern Code Quality Tools**: Updated to Biome v2.0.0 for better code formatting and linting
+- **Enhanced Schema Validation**: Improved component schema validation with better error reporting
+- **Function-Based Conditions**: New powerful conditional logic system for component settings
+
+#### ✨ Improvements
+- **Updated Documentation**: All guides now use clearer, more consistent terminology (replaced 'inspector' with 'settings')
+- **Better Form Validation**: Enhanced validation system prevents configuration errors
+- **Improved Reliability**: Better automated testing and deployment processes mean fewer bugs
+- **Enhanced Developer Tools**: Updated to latest versions of essential development tools
+
+#### 🔧 Behind the Scenes
+- **Smarter Configuration**: New function-based settings that are more flexible and powerful than the old text-based ones
+- **Better Type Safety**: Improved TypeScript definitions and runtime validation
+
+#### 🐛 Bug Fixes
+- **Better Form Validation**: Fixed issues where some form settings weren't being saved properly (Zod v3 union type parsing)
+- **Improved Error Handling**: Better handling of complex form configurations
+- **Fixed Communication Issues**: Resolved problems where some features weren't working properly between different parts of the system
+
+#### 🔒 Security
+- **Enhanced Deployment Security**: Improved security configurations for safer website deployment
+
+---
+
+### 🚀 Weaverse Pilot Theme
+*The official Hydrogen starter theme with Weaverse integration*
+
+#### ✨ Improvements
+- **Modern Styling System**: Updated to the latest CSS framework versions for faster loading and better performance
+- **Better Code Quality**: Enhanced code formatting tools ensure your project stays clean and professional
+- **Improved Build Tools**: Updated build configuration for better development experience
+- **Enhanced Development Workflow**: Better tooling integration for smoother development
+
+#### 🐛 Bug Fixes
+- **Fixed Configuration Issues**: Resolved problems that could cause issues during development
+- **Better Runtime Stability**: Fixed issues that could cause crashes when using certain features
+- **Improved Build Process**: Fixed configuration issues that could cause problems during development
+
+## [5.3.4] - 2025-06-12
 
 ### Fixed
 - **Better Tests**: Migrated old test files to use proper Vitest instead of console.log statements 🧪
@@ -28,7 +189,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - **All Packages**: Updated core, hydrogen, react, and shopify packages to work together smoothly
 
-## [5.3.3] - 2025-01-26
+## [5.3.3] - 2025-06-11
 
 ### Fixed
 - **Schema Validation**: Fixed range input configs validation bug where min, max, step, and unit properties were being stripped during safeParse operations
@@ -39,7 +200,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Schema Package**: Upgraded `@weaverse/schema` to 0.7.2 with enhanced validation logic
 - **Dependencies**: Updated all dependent packages to maintain consistency across the SDK
 
-## [5.3.2] - 2025-01-26
+## [5.3.2] - 2025-06-10
 
 ### Fixed
 - **Function Serialization**: Fixed issue with condition functions not being properly serialized before sending to client

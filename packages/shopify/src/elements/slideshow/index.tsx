@@ -46,36 +46,36 @@ let Slideshow = forwardRef<HTMLDivElement, SlideshowProps>((props, ref) => {
 
   let _className = clsx(
     faderClass,
-    animation === 'slide' ? 'keen-slider' : 'keen-fader',
+    animation === 'slide' ? 'keen-slider' : 'keen-fader'
   )
   let arrowsClass = clsx(
     'wv-slideshow--arrows',
     showArrowsOnHover && 'show-on-hover',
-    `arrows--${arrowsColor}`,
+    `arrows--${arrowsColor}`
   )
 
   return (
     <div ref={ref} {...rest} style={style}>
-      <div ref={sliderRef} className={_className}>
+      <div className={_className} ref={sliderRef}>
         {children}
       </div>
       {showArrows && created && instanceRef?.current && (
         <Arrows
-          instanceRef={instanceRef}
-          currentSlide={currentSlide}
           className={arrowsClass}
+          currentSlide={currentSlide}
           icon={arrowIcon}
+          instanceRef={instanceRef}
           offset={20}
         />
       )}
       {showDots && created && instanceRef?.current && (
         <Dots
-          instanceRef={instanceRef}
-          currentSlide={currentSlide}
-          className="wv-slideshow--dots"
-          position={dotsPosition}
-          color={dotsColor}
           absolute
+          className="wv-slideshow--dots"
+          color={dotsColor}
+          currentSlide={currentSlide}
+          instanceRef={instanceRef}
+          position={dotsPosition}
         />
       )}
     </div>

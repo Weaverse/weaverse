@@ -1,8 +1,8 @@
 ---
 title: Community
 description: Join the Weaverse community for support, collaboration, and sharing best practices.
-publishedAt: April 14, 2025
-updatedAt: April 14, 2025
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
 order: 5
 published: true
 ---
@@ -73,7 +73,7 @@ Follow our coding standards:
 
 ### Documentation
 - [Getting Started Guide](/docs/getting-started)
-- [Component Development](/docs/guides/weaverse-component)
+- [Component Development](/docs/development-guide/weaverse-component)
 - [Example Components](/docs/guides/example-components)
 - [API Reference](/docs/api)
 

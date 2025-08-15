@@ -119,7 +119,7 @@ describe('Configs Validation Tests', () => {
       if (!result.success) {
         const hasConfigsError = result.error.issues.some(
           (issue) =>
-            issue.path.includes('configs') && issue.path.includes('min'),
+            issue.path.includes('configs') && issue.path.includes('min')
         )
         expect(hasConfigsError).toBe(true)
       }

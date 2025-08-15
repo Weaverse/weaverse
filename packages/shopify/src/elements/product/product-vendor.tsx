@@ -17,17 +17,17 @@ let ProductVendor = forwardRef<HTMLDivElement, ProductVendorProps>(
           <span className="wv-produt-vendor__text">{product.vendor}</span>
         ) : (
           <a
-            target={openInNewTab ? '_blank' : '_self'}
-            href={`/collections/vendors?q=${product.vendor}`}
             className="wv-produt-vendor__text"
+            href={`/collections/vendors?q=${product.vendor}`}
             rel="noreferrer"
+            target={openInNewTab ? '_blank' : '_self'}
           >
             {product.vendor}
           </a>
         )}
       </div>
     )
-  },
+  }
 )
 
 ProductVendor.defaultProps = {

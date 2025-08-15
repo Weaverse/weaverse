@@ -1,0 +1,96 @@
+name: Claude Code
+
+on:
+  # Automatic PR reviews
+  pull_request:
+    types: [opened, synchronize]
+  # Manual triggers via @claude mentions
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  issues:
+    types: [opened, assigned]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  # Automatic PR review job
+  claude-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Claude Code Review
+        id: claude-review
+        uses: anthropics/claude-code-action@beta
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          
+          # Direct prompt for automated review
+          direct_prompt: |
+            Please review this pull request for the Weaverse SDKs monorepo and provide feedback on:
+            
+            **Monorepo Considerations:**
+            - Changes to package dependencies and version alignment
+            - Impact on other packages in the monorepo
+            - Breaking changes that require major version bumps
+            - Proper changeset inclusion for releases
+            
+            **Code Quality:**
+            - TypeScript type safety and proper typing
+            - Adherence to Biome linting/formatting rules
+            - React best practices (functional components, hooks)
+            - Framework-agnostic design in @weaverse/core
+            
+            **Specific Checks:**
+            - Turbo build configuration if modified
+            - Package.json scripts consistency
+            - Export statements in package entry points
+            - Backward compatibility for SDK users
+            - Documentation updates if API changes
+            
+            Be constructive and focus on the unique aspects of this SDK monorepo.
+
+          # Use sticky comments to update the same comment
+          use_sticky_comment: true
+
+  # Manual trigger job for @claude mentions
+  claude-mention:
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
+      (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: read
+      id-token: write
+      actions: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Code
+        id: claude
+        uses: anthropics/claude-code-action@beta
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+
+          # This is an optional setting that allows Claude to read CI results on PRs
+          additional_permissions: |
+            actions: read
+

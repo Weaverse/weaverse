@@ -16,27 +16,27 @@ export function QuantitySelector() {
   return (
     <div className="wv-quantity-selector">
       <button
-        className="wv-quantity-button dec-button"
-        type="button"
         aria-label="Decrease quantity"
-        onClick={() => setQuantity(quantity - 1)}
+        className="wv-quantity-button dec-button"
         disabled={quantity <= 1}
+        onClick={() => setQuantity(quantity - 1)}
+        type="button"
       >
         <Icon name="Minus" />
       </button>
       <input
-        className="wv-quantity-input"
-        type="number"
-        name="quantity"
-        value={quantity}
-        onChange={onQuantityInputChange}
         aria-label="Product quantity input"
+        className="wv-quantity-input"
+        name="quantity"
+        onChange={onQuantityInputChange}
+        type="number"
+        value={quantity}
       />
       <button
-        type="button"
-        className="wv-quantity-button inc-button"
         aria-label="Increase quantity"
+        className="wv-quantity-button inc-button"
         onClick={() => setQuantity(quantity + 1)}
+        type="button"
       >
         <Icon name="Plus" />
       </button>

@@ -1,8 +1,8 @@
 ---
 title: Deploy with Docker
 description: Learn how to deploy your Weaverse theme using Docker, with a specific example for Fly.io deployment
-publishedAt: April 18, 2025
-updatedAt: April 21, 2025
+publishedAt: August 14, 2025
+updatedAt: August 14, 2025
 order: 3
 published: true
 ---

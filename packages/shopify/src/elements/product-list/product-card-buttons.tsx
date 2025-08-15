@@ -15,9 +15,9 @@ export function ProductCardButtons(props: ProductCardButtonsProps) {
       <div className="wv-pcard__buttons">
         {showViewDetailsButton && (
           <a
+            className="wv-pcard__button view-details"
             href={product.url}
             target="_self"
-            className="wv-pcard__button view-details"
           >
             {viewDetailsButtonText}
           </a>
@@ -25,8 +25,8 @@ export function ProductCardButtons(props: ProductCardButtonsProps) {
         {showQuickViewButton && (
           <>
             <link
-              rel="stylesheet"
               href="https://cdn.jsdelivr.net/npm/keen-slider@latest/keen-slider.min.css"
+              rel="stylesheet"
             />
             <ProductQuickView product={product} />
           </>

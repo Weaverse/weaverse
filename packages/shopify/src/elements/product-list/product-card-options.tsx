@@ -29,10 +29,10 @@ export function ProductCardOptions(props: ProductCardOptionsProps) {
           let className = clsx(
             'wv-option__value',
             `wv-option__${optionDesign}`,
-            shouldShowTooltip && 'wv-tooltip-container',
+            shouldShowTooltip && 'wv-tooltip-container'
           )
           let foundVariant = variants.find(
-            (v) => v.options[position - 1] === value,
+            (v) => v.options[position - 1] === value
           )
           let productURL = url
           if (foundVariant) {
@@ -41,11 +41,11 @@ export function ProductCardOptions(props: ProductCardOptionsProps) {
 
           return (
             <a
-              href={productURL}
-              target="_self"
-              key={value + idx}
               className={className}
+              href={productURL}
+              key={value + idx}
               style={style}
+              target="_self"
             >
               <span>{value}</span>
               {shouldShowTooltip && <Tooltip>{value}</Tooltip>}
@@ -54,9 +54,9 @@ export function ProductCardOptions(props: ProductCardOptionsProps) {
         })}
         {valuesLeft > 0 && (
           <a
+            className="wv-option__value wv-option__left wv-tooltip-container"
             href={url}
             target="_self"
-            className="wv-option__value wv-option__left wv-tooltip-container"
           >
             <span>+{valuesLeft}</span>
             <Tooltip>More options</Tooltip>
