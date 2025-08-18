@@ -5,6 +5,14 @@ import fetch from 'node-fetch'
 import ora from 'ora'
 import { getDownloadFolder, getDownloadURL } from '../constants/templates.js'
 
+/**
+ * Downloads and extracts a template from GitHub repository
+ * @param {Object} template - Template configuration object
+ * @param {string} outputPath - Destination directory for extracted files
+ * @param {string} [commitHash] - Specific commit hash to download (optional)
+ * @returns {Promise<void>} Promise that resolves when download and extraction complete
+ * @throws {Error} If download or extraction fails
+ */
 export let downloadAndExtractTemplate = async (
   template,
   outputPath,

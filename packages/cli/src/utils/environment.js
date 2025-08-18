@@ -1,6 +1,13 @@
 import fs from 'fs-extra'
 import ora from 'ora'
 
+/**
+ * Creates .env file from .env.example template with project-specific values
+ * @param {string} path - The project directory path
+ * @param {string} projectId - The project ID to inject into environment variables
+ * @returns {Promise<void>} Promise that resolves when .env file is created
+ * @throws {Error} If file operations fail
+ */
 export let createEnvFile = async (path, projectId) => {
   let spinner = ora('Setting up environment variables...').start()
   try {
@@ -28,6 +35,11 @@ export let createEnvFile = async (path, projectId) => {
   }
 }
 
+/**
+ * Converts a string to kebab-case format (lowercase with hyphens)
+ * @param {string} str - The string to convert
+ * @returns {string} The kebab-case formatted string
+ */
 export let toKebabCase = (str) => {
   return str
     .replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2')

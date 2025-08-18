@@ -1,3 +1,7 @@
+/**
+ * Available Weaverse templates with their configurations
+ * @type {Array<Object>} Array of template configuration objects
+ */
 export const TEMPLATES = [
   {
     name: 'pilot',
@@ -25,6 +29,12 @@ export const TEMPLATES = [
   },
 ]
 
+/**
+ * Generates the download URL for a template repository
+ * @param {Object} template - Template configuration object
+ * @param {string} [commitHash] - Specific commit hash (optional, defaults to main branch)
+ * @returns {string} The complete download URL for the template
+ */
 export const getDownloadURL = (template, commitHash) => {
   if (commitHash) {
     return `${template.repoURL}/archive/${commitHash}.zip`
@@ -32,6 +42,12 @@ export const getDownloadURL = (template, commitHash) => {
   return `${template.repoURL}/archive/refs/heads/main.zip`
 }
 
+/**
+ * Generates the expected folder name after template extraction
+ * @param {Object} template - Template configuration object
+ * @param {string} [commitHash] - Specific commit hash (optional)
+ * @returns {string} The folder name that will be created after extraction
+ */
 export const getDownloadFolder = (template, commitHash) => {
   if (commitHash) {
     return `${template.name}-${commitHash}`

@@ -2,6 +2,11 @@ import path from 'node:path'
 import fs from 'fs-extra'
 import validateNpmPackageName from 'validate-npm-package-name'
 
+/**
+ * Validates a project ID for proper format (kebab-case, length constraints)
+ * @param {string} input - The project ID to validate
+ * @returns {string|boolean} Error message string if invalid, true if valid
+ */
 export let validateProjectId = (input) => {
   if (!input || input.trim().length === 0) {
     return 'Project ID is required'
@@ -37,6 +42,11 @@ export let validateProjectId = (input) => {
   return true
 }
 
+/**
+ * Validates a project name for npm package compatibility and directory safety
+ * @param {string} input - The project name to validate
+ * @returns {string|boolean} Error message string if invalid, true if valid
+ */
 export let validateProjectName = (input) => {
   if (!input || input.trim().length === 0) {
     return 'Project name is required'
@@ -68,6 +78,11 @@ export let validateProjectName = (input) => {
   return true
 }
 
+/**
+ * Validates a Git commit hash format (7-40 hexadecimal characters)
+ * @param {string} input - The commit hash to validate (optional)
+ * @returns {string|boolean} Error message string if invalid, true if valid
+ */
 export let validateCommitHash = (input) => {
   if (!input) return true // Optional field
 
@@ -81,6 +96,11 @@ export let validateCommitHash = (input) => {
   return true
 }
 
+/**
+ * Checks if a directory exists and provides detailed status information
+ * @param {string} projectPath - The directory path to check
+ * @returns {Promise<Object>} Object with exists, isEmpty, message, and optional error properties
+ */
 export let checkDirectoryExists = async (projectPath) => {
   try {
     let exists = await fs.pathExists(projectPath)

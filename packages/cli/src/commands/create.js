@@ -14,6 +14,16 @@ import {
   validateCommitHash,
 } from '../utils/validation.js'
 
+/**
+ * Creates a new Weaverse project from a template with interactive prompts
+ * @param {Object} argv - Command line arguments object
+ * @param {string} [argv.template] - Template name to use (e.g., 'pilot', 'naturelle')
+ * @param {string} [argv['project-id']] - Project ID for the new project
+ * @param {string} [argv['project-name']] - Project folder name
+ * @param {string} [argv.commit] - Git commit hash to use (defaults to main branch)
+ * @param {boolean} [argv['no-install']] - Skip dependency installation and dev server
+ * @returns {Promise<void>} Promise that resolves when project creation is complete
+ */
 export let createProject = async (argv) => {
   try {
     // Get complete options with prompts for missing values
@@ -90,6 +100,10 @@ export let createProject = async (argv) => {
   }
 }
 
+/**
+ * Displays the list of available templates with descriptions and usage information
+ * @returns {void} Prints template information to console
+ */
 export let showTemplateList = () => {
   console.log(
     chalk.blue(

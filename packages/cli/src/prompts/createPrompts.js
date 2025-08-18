@@ -3,6 +3,11 @@ import inquirer from 'inquirer'
 import { TEMPLATES } from '../constants/templates.js'
 import { validateProjectId, validateProjectName } from '../utils/validation.js'
 
+/**
+ * Creates an array of inquirer prompt questions for missing CLI options
+ * @param {string[]} missingOptions - Array of option names that need to be prompted
+ * @returns {Object[]} Array of inquirer question objects
+ */
 export let createPromptQuestions = (missingOptions) => {
   let questions = []
 
@@ -48,6 +53,11 @@ export let createPromptQuestions = (missingOptions) => {
   return questions
 }
 
+/**
+ * Prompts user for any missing required options and returns complete configuration
+ * @param {Object} argv - Partial command line arguments
+ * @returns {Promise<Object>} Complete options object with all required fields
+ */
 export let promptForMissingOptions = async (argv) => {
   let missingOptions = []
 

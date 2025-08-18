@@ -3,6 +3,13 @@ import spawn from 'cross-spawn'
 import fs from 'fs-extra'
 import ora from 'ora'
 
+/**
+ * Installs dependencies for a newly created project and displays next steps
+ * @param {string} outputPath - The project directory path
+ * @param {string} projectName - The project name for display purposes
+ * @returns {Promise<boolean>} True if installation succeeds
+ * @throws {Error} If npm install fails
+ */
 export let installDependenciesAndRun = async (outputPath, projectName) => {
   let spinner = ora('Installing dependencies...').start()
 
@@ -48,6 +55,11 @@ export let installDependenciesAndRun = async (outputPath, projectName) => {
   }
 }
 
+/**
+ * Starts the development server for a newly created project
+ * @param {string} outputPath - The project directory path
+ * @returns {void} Starts the dev server process
+ */
 export let runDevServer = (outputPath) => {
   console.log(chalk.blue('Starting development server...\n'))
 
@@ -71,6 +83,11 @@ export let runDevServer = (outputPath) => {
   })
 }
 
+/**
+ * Displays manual setup instructions when automatic installation is skipped
+ * @param {string} projectName - The project name for display in instructions
+ * @returns {void} Prints setup instructions to console
+ */
 export let showManualInstructions = (projectName) => {
   console.log(chalk.green('\n🎉 Project created successfully!'))
   console.log(chalk.blue('\nNext steps:'))
