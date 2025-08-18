@@ -106,6 +106,7 @@ const createEnvFile = async (path, projectId) => {
     let envContent
     if (envExampleContent.includes('WEAVERSE_PROJECT_ID=')) {
       envContent = envExampleContent.replace(
+        // biome-ignore lint/performance/useTopLevelRegex: the func only run once
         /WEAVERSE_PROJECT_ID=.*/,
         `WEAVERSE_PROJECT_ID=${projectId}`
       )
@@ -171,13 +172,13 @@ if (argv.help || !argv._.includes('create')) {
     )
   )
   console.log(chalk.gray('Available templates:'))
-  TEMPLATES.forEach((template) => {
+  for (const template of TEMPLATES) {
     const capitalizedName =
       template.name.charAt(0).toUpperCase() + template.name.slice(1)
     console.log(chalk.gray(`\n• ${capitalizedName}`))
     console.log(chalk.gray(`  ${template.description}`))
     console.log(chalk.gray(`  Demo: ${template.demoUrl}`))
-  })
+  }
   console.log(`
 Usage: npx @weaverse/cli create --template=<template-name> --project-id=<project-id> [--commit=<commit-hash>]
 
@@ -224,10 +225,12 @@ Options:
             stdio: 'inherit',
           })
 
-          install.on('close', (code) => {
-            if (code !== 0) {
+          install.on('close', (installCode) => {
+            if (installCode !== 0) {
               spinner.fail('Failed to install dependencies')
-              console.error(chalk.red(`npm install exited with code ${code}`))
+              console.error(
+                chalk.red(`npm install exited with code ${installCode}`)
+              )
               return
             }
 
@@ -252,9 +255,11 @@ Options:
               stdio: 'inherit',
             })
 
-            runDev.on('close', (code) => {
-              if (code !== 0) {
-                console.error(chalk.red(`npm run dev exited with code ${code}`))
+            runDev.on('close', (runDevCode) => {
+              if (runDevCode !== 0) {
+                console.error(
+                  chalk.red(`npm run dev exited with code ${runDevCode}`)
+                )
               }
             })
           })
