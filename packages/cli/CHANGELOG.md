@@ -1,5 +1,35 @@
 # @weaverse/cli
 
+## 2.0.0
+
+### Major Changes
+
+- **Interactive CLI Experience**: Complete overhaul with interactive prompts for missing options
+  - Users no longer get errors when required options are missing - CLI prompts interactively instead
+  - Smart template selection with descriptions and demo URLs
+  - Validation and transformation of user inputs in real-time
+  - Confirmation prompts for overwriting existing directories
+
+- **Modular Architecture**: Refactored from single 274-line file to clean, maintainable modules
+  - `/src/commands/` - Command implementations
+  - `/src/prompts/` - Interactive prompt definitions  
+  - `/src/utils/` - Utility functions (validation, download, install, environment)
+  - `/src/constants/` - Template configurations and constants
+
+- **Enhanced User Experience**:
+  - Comprehensive input validation with helpful error messages
+  - Smart defaults (auto-generated project names, kebab-case conversion)
+  - Directory existence checking with overwrite confirmation
+  - Optional development server start after project creation
+  - Better progress indicators and colored output
+
+- **Better Error Handling**: Contextual help messages and graceful error recovery
+
+### New Dependencies
+
+- `inquirer@^9.2.15` - Interactive command line prompts
+- `validate-npm-package-name@^5.0.1` - Project name validation
+
 ## 1.4.0
 
 ### Minor Changes
