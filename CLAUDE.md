@@ -67,7 +67,7 @@ pnpm changeset publish   # Publish to npm registry
 1. **Package Dependencies**:
    - `@weaverse/react` depends on `@weaverse/core`
    - `@weaverse/hydrogen` depends on `@weaverse/react` and `@weaverse/schema`
-   - All packages use TypeScript and are built with tsup
+   - All packages use TypeScript and are built with tsup (except CLI which uses JavaScript)
 
 2. **Build System**:
    - Turbo orchestrates builds with dependency graph awareness
@@ -141,7 +141,7 @@ The project uses Changesets for releases:
 | @weaverse/hydrogen | 5.3.4 | >=18 | >=20 | @shopify/hydrogen@>=2025.5, react-router@7 |
 | @weaverse/schema | 0.7.3 | - | >=18 | - |
 | @weaverse/shopify | * | - | >=18 | @weaverse/core |
-| @weaverse/cli | * | - | >=18 | - |
+| @weaverse/cli | 3.0.0 | - | >=18 | inquirer@^9.2.15, validate-npm-package-name@^5.0.1 |
 
 **Note**: All @weaverse packages should be kept at the same major version for compatibility.
 
