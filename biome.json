@@ -23,8 +23,13 @@
   "linter": {
     "rules": {
       "style": {},
-      "suspicious": {},
+      "suspicious": {
+        "noConsole": "off"
+      },
       "correctness": {},
+      "complexity": {
+        "noExcessiveLinesPerFunction": "off"
+      },
       "nursery": {}
     }
   }
