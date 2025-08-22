@@ -1,5 +1,75 @@
 # Changelog
 
+## [2025.08.22] - 2025-08-22
+
+### 🎨 Weaverse Studio
+
+#### ✨ Improvements
+- **📊 Enhanced Billing Dashboard**: Improved billing transparency with real-time usage tracking, detailed overage calculations, and cost projections
+- **🎨 Better User Experience**: Continued improvements to Studio interface with faster loading times and better responsiveness
+- **📱 Mobile Preview**: Better mobile preview accuracy and styling consistency for theme development
+
+---
+
+### 🔧 Weaverse SDKs
+
+#### 🎉 New Features
+- **🚀 CLI v4.0.0**: Complete modernization with interactive prompts and better developer experience
+  - Interactive project setup with guided prompts for missing options
+  - Enhanced template descriptions to help choose the right starting point
+  - Improved error handling with actionable feedback
+  - Better project creation output with clear next steps
+
+#### ✨ Improvements
+- **📚 Comprehensive Documentation Overhaul**: Complete reorganization and modernization of all developer guides
+  - Updated API documentation with latest patterns and best practices
+  - Fixed broken internal links across the entire documentation site
+  - Enhanced troubleshooting guides and FAQ updates
+  - Improved navigation and content organization for better developer experience
+
+- **🔧 Enhanced Development Tools**: 
+  - **Biome v2.2.0**: Updated linting configuration with improved rules and performance
+  - **Better TypeScript Integration**: Stricter type safety and improved IDE support for developers
+
+#### 🐛 Bug Fixes
+- **CLI Stability**: Resolved various project creation and template selection issues
+- **Documentation**: Fixed broken cross-references and updated outdated examples
+- **Type Definitions**: Corrected TypeScript configurations for better developer experience
+
+#### 📦 Package Updates
+- **Core SDKs**: All packages synchronized at v5.3.4 for compatibility
+- **CLI**: Updated to v4.0.0 with breaking improvements
+- **Biome Config**: Released v1.6.0 with enhanced linting rules
+
+---
+
+### 🚀 Weaverse Pilot Theme
+
+#### 🎉 New Features
+- **🛍️ Enhanced E-commerce Features**: 
+  - Combined Listings support for intelligent product grouping
+  - Shopify Bundles integration with smart badge detection
+  - Newsletter popup with Klaviyo integration and customizable timing
+  - Enhanced product media zoom and variant selection
+
+#### ✨ Improvements
+- **📱 Better Mobile Experience**: Improved responsive layouts and touch interactions
+- **🎨 Enhanced Product Display**: Better product cards, badges, and cart recommendations
+- **⚡ Performance Optimizations**: Faster loading times and reduced bundle size
+- **🔧 Developer Experience**: Enhanced documentation and setup guides
+
+#### 🐛 Bug Fixes
+- **Build Stability**: Resolved development server and build configuration issues
+- **Type Safety**: Fixed TypeScript definitions and integration issues
+- **Component Reliability**: Improved component state management and error handling
+
+#### 📦 Version Updates
+- **Pilot Theme**: Updated to v5.5.0
+- **Dependencies**: Synchronized with latest Weaverse SDK versions
+- **Build Tools**: Enhanced build process with better error reporting
+
+---
+
 ## [2025.08.12] - 2025-08-12
 
 ### 🎨 Weaverse Studio
