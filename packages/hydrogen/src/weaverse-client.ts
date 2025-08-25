@@ -28,12 +28,11 @@ import {
 // Constants at the top
 const API_PATH = 'v1' as const
 
-const DEFAULT_CACHE_STRATEGY: Readonly<Required<AllCacheOptions>> = {
-  maxAge: 5, // 5 seconds for development/testing
-  sMaxAge: 5, // 5 seconds CDN cache
-  staleWhileRevalidate: 5, // 5 seconds
+const DEFAULT_CACHE_STRATEGY: AllCacheOptions = {
+  maxAge: 10,
+  sMaxAge: 10,
+  staleWhileRevalidate: 82_800, // 23 hours
   staleIfError: 82_800, // 23 hours
-  mode: 'public',
 } as const
 
 export class WeaverseClient {
@@ -128,6 +127,7 @@ export class WeaverseClient {
     const { weaverseHost, weaverseApiBase, projectId } = this.configs
 
     if (useProxy) {
+      console.log('useProxy', weaverseApiBase, endpoint, projectId)
       return `${weaverseApiBase}/v1/${endpoint}?projectId=${projectId}`
     }
 
@@ -277,14 +277,7 @@ export class WeaverseClient {
   ): Promise<WeaverseLoaderData | null> => {
     try {
       let { request, storefront, basePageRequestBody, basePageConfigs } = this
-      let {
-        projectId,
-        isDesignMode,
-        weaverseHost,
-        weaverseApiBase,
-        isPreviewMode,
-        sectionType,
-      } = this.configs
+      let { projectId, weaverseHost, isPreviewMode, sectionType } = this.configs
 
       if (isPreviewMode) {
         return getPreviewData(sectionType || '', this.components, weaverseHost)
