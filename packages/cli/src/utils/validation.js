@@ -84,7 +84,9 @@ export let validateProjectName = (input) => {
  * @returns {string|boolean} Error message string if invalid, true if valid
  */
 export let validateCommitHash = (input) => {
-  if (!input) return true // Optional field
+  if (!input) {
+    return true // Optional field
+  }
 
   let trimmed = input.trim()
 

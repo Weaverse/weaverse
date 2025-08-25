@@ -1,5 +1,24 @@
 # @weaverse/biome
 
+## 1.6.2-beta.0
+
+### Patch Changes
+
+- Beta release with build fixes and improved Biome configuration
+
+## 1.6.1
+
+### Patch Changes
+
+- Fix TypeScript build issues and improve Biome configuration
+
+  - Fixed duplicate Window identifier issues across packages by using interface merging
+  - Added missing PUBLIC_STORE_DOMAIN and PUBLIC_STOREFRONT_API_TOKEN to HydrogenEnv type
+  - Fixed AppLoadContext and HydrogenEnv duplicate declarations using proper module augmentation
+  - Updated Biome configuration to automatically remove unused variables and imports
+  - Disabled noBarrelFile rule for SDK packages
+  - All packages now build successfully with proper type definitions
+
 ## 1.6.0
 
 ### Minor Changes

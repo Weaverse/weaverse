@@ -11,7 +11,9 @@ export function NoHydrate({ id, getHTML, ...rest }: NoHydrateProps) {
       return getHTML?.() ?? ''
     }
     let el = document.getElementById(id)
-    if (!el) return getHTML?.() ?? ''
+    if (!el) {
+      return getHTML?.() ?? ''
+    }
     return el.innerHTML
   })
   return <div {...rest} dangerouslySetInnerHTML={{ __html: html }} id={id} />

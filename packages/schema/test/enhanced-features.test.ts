@@ -184,7 +184,7 @@ function testSchemaRegistry() {
   console.log('Testing schema registry...')
 
   // Clear registry first
-  schemaRegistry['schemas'].clear()
+  schemaRegistry.schemas.clear()
 
   const schema = createSchema({
     title: 'Test',

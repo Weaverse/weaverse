@@ -17,13 +17,17 @@ export function ThumbnailPlugin(
     function addClickEvents() {
       slider.slides.forEach((slide, idx) => {
         slide.addEventListener('click', () => {
-          if (mainRef.current) mainRef.current.moveToIdx(idx)
+          if (mainRef.current) {
+            mainRef.current.moveToIdx(idx)
+          }
         })
       })
     }
 
     slider.on('created', () => {
-      if (!mainRef.current) return
+      if (!mainRef.current) {
+        return
+      }
       addActive(slider.track.details.rel)
       addClickEvents()
       mainRef.current.on('animationStarted', (main) => {

@@ -61,8 +61,12 @@ export let createPromptQuestions = (missingOptions) => {
 export let promptForMissingOptions = async (argv) => {
   let missingOptions = []
 
-  if (!argv.template) missingOptions.push('template')
-  if (!argv['project-id']) missingOptions.push('project-id')
+  if (!argv.template) {
+    missingOptions.push('template')
+  }
+  if (!argv['project-id']) {
+    missingOptions.push('project-id')
+  }
   if (
     !argv['project-name'] ||
     argv['project-name'] === 'my-weaverse-hydrogen-project'

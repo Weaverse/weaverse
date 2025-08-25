@@ -26,8 +26,9 @@ let Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
     let periods = periodsProp * 60 * 1000 // convert into milliseconds
 
     const handleEnd = () => {
-      if (!isDesignMode && redirectWhenTimerStops && redirectUrl)
+      if (!isDesignMode && redirectWhenTimerStops && redirectUrl) {
         window.open(redirectUrl, openInNewTab ? '_blank' : '_self')
+      }
     }
 
     const getStartTime = (): number => {
@@ -35,7 +36,7 @@ let Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
       if (timerType === 'evergreen') {
         const start = localStorage.getItem(COUNTDOWN_KEY)
         if (start) {
-          startTime = Number.parseInt(start)
+          startTime = Number.parseInt(start, 10)
           if (startTime + periods < Date.now()) {
             // reset when end time
             startTime = Date.now()

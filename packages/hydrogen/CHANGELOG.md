@@ -1,5 +1,47 @@
 # @weaverse/hydrogen
 
+## 5.4.1-beta.0
+
+### Patch Changes
+
+- Beta release with build fixes and improved Biome configuration
+  - @weaverse/react@5.4.1-beta.0
+
+## 5.4.0
+
+### Minor Changes
+
+- Enable API proxy by default with smart design mode bypass
+
+  - **BREAKING**: API calls now use api.weaverse.io proxy by default for improved caching and performance
+  - Add WEAVERSE_API_BASE environment variable support to override the default API base
+  - Update WeaverseProjectConfigs to include weaverseApiBase property
+  - Update WeaverseClient to use weaverseApiBase for API calls (project, project_configs endpoints)
+  - Update analytics pixel tracking to use new /v1/px endpoint via API proxy
+  - **Smart caching**: Design mode bypasses proxy cache to ensure fresh data
+  - Studio integration (weaverseHost) continues to use studio.weaverse.io for UI scripts
+
+  **Default Behavior:**
+
+  - Production mode: api.weaverse.io/v1/\* → cached via Cloudflare Worker
+  - Design mode: studio.weaverse.io/api/public/\* → direct, uncached API calls
+  - Studio scripts: studio.weaverse.io (unchanged)
+
+  **Environment Override:**
+  Set `WEAVERSE_API_BASE=https://staging-api.weaverse.io` to use different API environments.
+
+### Patch Changes
+
+- Fix TypeScript build issues and improve Biome configuration
+
+  - Fixed duplicate Window identifier issues across packages by using interface merging
+  - Added missing PUBLIC_STORE_DOMAIN and PUBLIC_STOREFRONT_API_TOKEN to HydrogenEnv type
+  - Fixed AppLoadContext and HydrogenEnv duplicate declarations using proper module augmentation
+  - Updated Biome configuration to automatically remove unused variables and imports
+  - Disabled noBarrelFile rule for SDK packages
+  - All packages now build successfully with proper type definitions
+  - @weaverse/react@5.4.0
+
 ## 5.3.4
 
 ### Patch Changes

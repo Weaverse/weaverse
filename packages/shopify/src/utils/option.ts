@@ -37,7 +37,9 @@ export function getOptionItemStyle(
   position: number,
   product: ShopifyProduct
 ) {
-  if (/button|dropdown/.test(type)) return {}
+  if (/button|dropdown/.test(type)) {
+    return {}
+  }
 
   let colorSwatch = getSwatchValue('color', value)
   let imageSwatch = getSwatchValue('image', value)

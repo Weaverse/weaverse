@@ -23,7 +23,7 @@ export * from './configs'
 export * from './shopify'
 export * from './weaverse-shopify'
 
-export interface ProductContextType {
+export type ProductContextType = {
   product: ShopifyProduct
   productId?: string | number
   formRef: React.RefObject<HTMLFormElement>
@@ -35,11 +35,11 @@ export interface ProductContextType {
   ready: boolean
 }
 
-export interface ProductListContextProps {
+export type ProductListContextProps = {
   productId?: string | number
 }
 
-export interface ProductCardProps {
+export type ProductCardProps = {
   product: ShopifyProduct
   imageAspectRatio: AspectRatio
   showSecondImageOnHover: boolean
@@ -90,7 +90,7 @@ export interface ProductListProps
   gap: number
 }
 
-export interface CollectionCardProps {
+export type CollectionCardProps = {
   collection: ShopifyCollection
   imageAspectRatio: AspectRatio
   showProductCount: boolean
@@ -107,7 +107,7 @@ export interface CollectionListProps
   gap: number
 }
 
-export interface ArticleCardProps {
+export type ArticleCardProps = {
   article: ShopifyArticle
   imageAspectRatio: AspectRatio
   zoomInOnHover: boolean
@@ -137,16 +137,16 @@ export interface UseProductHookInput
   isDesignMode: boolean
 }
 
-export interface ProductSkeletonProps {
+export type ProductSkeletonProps = {
   productCount: number
   imageAspectRatio: AspectRatio
 }
 
-export interface CollectionSkeletonProps {
+export type CollectionSkeletonProps = {
   collectionCount: number
   imageAspectRatio: AspectRatio
 }
-export interface ArticleSkeletonProps {
+export type ArticleSkeletonProps = {
   articleCount: number
   imageAspectRatio: AspectRatio
 }
@@ -171,18 +171,18 @@ export interface ProductMediaProps extends WeaverseElementProps {
   allowFullscreen: boolean
   thumbnailSlidePerView: number
 }
-export interface ProductImageHooksInput {
+export type ProductImageHooksInput = {
   context: ProductContextType | null
   thumbnailSlidePerView: number
   onSlideChanged?: (slider: KeenSliderInstance) => void
   onSliderCreated?: (slider: KeenSliderInstance) => void
   ResizePlugin: KeenSliderPlugin
 }
-export interface ProductMediaArrowsProps {
+export type ProductMediaArrowsProps = {
   currentSlide: number
   instanceRef: React.MutableRefObject<KeenSliderInstance | null>
 }
-export interface ProductMediaDotsProps {
+export type ProductMediaDotsProps = {
   currentSlide: number
   instanceRef: React.MutableRefObject<KeenSliderInstance | null>
 }
@@ -193,7 +193,7 @@ export interface ProductImageProps
   className?: string
 }
 
-export interface MediaFullscreenSliderProps {
+export type MediaFullscreenSliderProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   images: ShopifyProductImage[]
@@ -212,7 +212,7 @@ export interface ProductDescriptionProps extends WeaverseElementProps {
   isInsideProductQuickView: boolean
 }
 
-export interface ProductDescriptionViewDetailsProps {
+export type ProductDescriptionViewDetailsProps = {
   viewDetailsText: string
   children: React.ReactNode
 }
@@ -252,7 +252,7 @@ export interface ProductVariantProps extends WeaverseElementProps {
   showTooltip: boolean
   hideUnavailableOptions: boolean
 }
-export interface CombinedVariantProps {
+export type CombinedVariantProps = {
   context: ProductContextType
 }
 export interface OptionValuesProps
@@ -276,7 +276,7 @@ export interface FormElementProps extends WeaverseElementProps {
 }
 
 export type FormFieldType = 'text' | 'email' | 'multiline'
-export interface FormField {
+export type FormField = {
   id: string
   type: FormFieldType
   placeholder: string
@@ -286,11 +286,11 @@ export interface FormField {
   required: boolean
 }
 
-export interface FieldProps {
+export type FieldProps = {
   field: FormField
   formId: string
 }
-export interface CollectionContextProps {
+export type CollectionContextProps = {
   [key: string]: any
 }
 export interface CustomHTMLProps extends WeaverseElementProps {

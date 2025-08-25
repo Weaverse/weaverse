@@ -27,8 +27,12 @@ function mergeInspectorSettings(
   inspector: any[],
   type: string
 ): any[] {
-  if (!inspector?.length) return settings
-  if (!settings?.length) return inspector
+  if (!inspector?.length) {
+    return settings
+  }
+  if (!settings?.length) {
+    return inspector
+  }
 
   // Log collision notice
   console.info(
@@ -60,6 +64,7 @@ export function getWeaverseConfigs(
     WEAVERSE_PROJECT_ID,
     WEAVERSE_API_KEY,
     WEAVERSE_HOST,
+    WEAVERSE_API_BASE,
     PUBLIC_STORE_DOMAIN,
     PUBLIC_STOREFRONT_API_TOKEN,
   } = env || {}
@@ -84,6 +89,10 @@ export function getWeaverseConfigs(
       WEAVERSE_HOST ||
       envFromProcess.WEAVERSE_HOST ||
       'https://studio.weaverse.io',
+    weaverseApiBase:
+      WEAVERSE_API_BASE ||
+      envFromProcess.WEAVERSE_API_BASE ||
+      'https://api.weaverse.io',
     weaverseApiKey:
       weaverseApiKey ||
       WEAVERSE_API_KEY ||

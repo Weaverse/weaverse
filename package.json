@@ -24,10 +24,10 @@
     "ci": "biome ci --changed"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.2.0",
-    "@changesets/cli": "^2.29.5",
-    "@types/node": "24.2.1",
-    "@types/react": "19.1.10",
+    "@biomejs/biome": "2.2.2",
+    "@changesets/cli": "^2.29.6",
+    "@types/node": "24.3.0",
+    "@types/react": "19.1.11",
     "@types/react-dom": "19.1.7",
     "cross-env": "10.0.0",
     "lefthook": "^1.12.3",
@@ -35,18 +35,18 @@
     "react-dom": "19.1.1",
     "rimraf": "6.0.1",
     "tsup": "8.5.0",
-    "turbo": "2.5.5",
+    "turbo": "2.5.6",
     "typescript": "5.9.2",
-    "ultracite": "5.1.5"
+    "ultracite": "5.2.5"
   },
   "optionalDependencies": {
     "@esbuild/darwin-x64": "^0.25.9",
-    "turbo-darwin-arm64": "^2.5.5"
+    "turbo-darwin-arm64": "^2.5.6"
   },
   "engines": {
     "node": ">=22"
   },
-  "packageManager": "pnpm@10.12.1",
+  "packageManager": "pnpm@10.15.0",
   "pnpm": {
     "onlyBuiltDependencies": [
       "@biomejs/biome",

@@ -12,13 +12,11 @@ export function ProductSkeleton() {
           <Icon name="Image" />
         </div>
         <div className="wv-media-thumbnails">
-          {Array(6)
-            .fill(0)
-            .map((_, i) => (
-              <div className="wv-media-thumbnail-item" key={i}>
-                <Icon name="Image" />
-              </div>
-            ))}
+          {new Array(6).fill(0).map((_, i) => (
+            <div className="wv-media-thumbnail-item" key={i}>
+              <Icon name="Image" />
+            </div>
+          ))}
         </div>
       </div>
       <div className="wv-info">

@@ -43,7 +43,7 @@ export interface ElementData extends CoreElementData {
 }
 
 export type CatalogGroup = 'essential' | 'composition' | 'shopify'
-export interface ElementCatalog {
+export type ElementCatalog = {
   name: string
   icon?: string
   group?: CatalogGroup
@@ -92,21 +92,21 @@ export type ElementFlags = Partial<Record<FlagType, boolean>>
 
 export type ChildElementSelector = string | string[]
 
-export interface ChildElement {
+export type ChildElement = {
   label: string
   selector: ChildElementSelector
 }
 
-export interface ElementInspector {
+export type ElementInspector = {
   settings?: (AdvancedGroup | BasicGroup)[]
   styles?: (AdvancedGroup | BasicGroup)[]
 }
 
-export interface AdvancedGroup {
+export type AdvancedGroup = {
   groupType: AdvancedGroupType
 }
 
-export interface BasicGroup {
+export type BasicGroup = {
   groupType: 'basic'
   groupHeader: string
   inputs: BasicInput[]
@@ -126,7 +126,7 @@ export type AdditionalInputConfigs =
   | ChildrenSortInputConfigs
   | DataSortInputConfigs
 
-export interface ChildrenSortInputConfigs {
+export type ChildrenSortInputConfigs = {
   actions: SortableItemAction[]
 }
 
@@ -137,7 +137,7 @@ export type SortableItemAction =
   | 'delete'
   | 'toggle-visibility'
 
-export interface DataSortInputConfigs {
+export type DataSortInputConfigs = {
   defaultData: object
   inspector: string
 }

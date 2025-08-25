@@ -1,6 +1,6 @@
 {
   "name": "@weaverse/biome",
-  "version": "1.6.0",
+  "version": "1.6.2-beta.0",
   "description": "Biome configuration for Weaverse",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,7 +23,7 @@
     "biome.json"
   ],
   "devDependencies": {
-    "@biomejs/biome": "^2.2.0",
-    "ultracite": "5.1.5"
+    "@biomejs/biome": "2.2.2",
+    "ultracite": "5.2.5"
   }
 }
