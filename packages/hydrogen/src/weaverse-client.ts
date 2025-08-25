@@ -1,6 +1,5 @@
 import {
   createWithCache,
-  generateCacheControlHeader,
   type HydrogenEnv,
   type I18nBase,
 } from '@shopify/hydrogen'
@@ -11,11 +10,14 @@ import type {
   HydrogenComponentData,
   HydrogenPageData,
   PageType,
+  ThemeSettingsResponse,
   WeaverseClientArgs,
   WeaverseLoaderData,
   WeaverseProjectConfigs,
   WeaverseStudioQueries,
+  WithCacheFetchResponse,
 } from './types'
+import { hasError } from './types'
 import {
   generateDataFromSchema,
   getPreviewData,
@@ -24,13 +26,15 @@ import {
 } from './utils'
 
 // Constants at the top
-const API_PATH = 'api/public'
-const DEFAULT_CACHE_STRATEGY = {
-  maxAge: 10,
-  sMaxAge: 10,
-  staleWhileRevalidate: 82_800,
-  staleIfError: 82_800,
-}
+const API_PATH = 'v1' as const
+
+const DEFAULT_CACHE_STRATEGY: Readonly<Required<AllCacheOptions>> = {
+  maxAge: 5, // 5 seconds for development/testing
+  sMaxAge: 5, // 5 seconds CDN cache
+  staleWhileRevalidate: 5, // 5 seconds
+  staleIfError: 82_800, // 23 hours
+  mode: 'public',
+} as const
 
 export class WeaverseClient {
   public API = API_PATH
@@ -81,6 +85,7 @@ export class WeaverseClient {
     this.basePageConfigs = {
       projectId: this.configs.projectId,
       weaverseHost: this.configs.weaverseHost,
+      weaverseApiBase: this.configs.weaverseApiBase,
       weaverseApiKey: this.configs.weaverseApiKey,
       weaverseVersion: this.configs.weaverseVersion,
       isDesignMode: this.configs.isDesignMode,
@@ -93,82 +98,126 @@ export class WeaverseClient {
     }
   }
 
-  // Helper method for direct fetching in design mode
-  private directFetch = async <T>(
+  // Helper method for direct fetching in design mode - returns same format as withCache.fetch
+  private readonly directFetch = async <T>(
     url: string,
     options: RequestInit = {}
-  ): Promise<T> => {
+  ): Promise<WithCacheFetchResponse<T>> => {
     try {
-      let res = await fetch(url, options)
-      if (!res.ok) {
-        let error = await res.text()
-        throw new Error(`${res.status} ${res.statusText} ${error}`)
+      let response = await fetch(url, options)
+      if (!response.ok) {
+        let error = await response.text()
+        throw new Error(`${response.status} ${response.statusText} ${error}`)
       }
-      return res.json()
+      let data = (await response.json()) as T
+      // Return same wrapped format as withCache.fetch
+      return {
+        data,
+        response,
+      }
     } catch (err) {
       throw new Error(`Failed to fetch data from ${url}`, { cause: err })
     }
   }
 
-  public fetchWithCache = async <T extends object>(
+  // Helper method for building API URLs consistently
+  private getApiUrl(
+    endpoint: string,
+    useProxy = !this.configs.isDesignMode
+  ): string {
+    const { weaverseHost, weaverseApiBase, projectId } = this.configs
+
+    if (useProxy) {
+      return `${weaverseApiBase}/v1/${endpoint}?projectId=${projectId}`
+    }
+
+    return `${weaverseHost}/api/public/${endpoint}`
+  }
+
+  public fetchWithCache = async <T = unknown>(
     url: string,
     options: RequestInit & { strategy?: AllCacheOptions } = {}
   ): Promise<T> => {
-    let {
-      strategy = this.storefront.CacheCustom(DEFAULT_CACHE_STRATEGY),
-      ...reqInit
-    } = options
-    let cacheKey = [url, options.body]
+    const strategy =
+      options.strategy || this.storefront.CacheCustom(DEFAULT_CACHE_STRATEGY)
+
+    // Improved cache key to include method and body content
+    const cacheKey = [url, options.method || 'GET', options.body]
+
+    let result: WithCacheFetchResponse<T>
 
     if (this.configs.isDesignMode) {
-      return this.directFetch<T>(url, reqInit)
-    }
-
-    return this.withCache.run(
-      {
+      result = await this.directFetch<T>(url, options)
+    } else {
+      // Use withCache.fetch for better integration with Hydrogen's caching system
+      result = (await this.withCache.fetch(url, options, {
         cacheKey,
         cacheStrategy: strategy,
-        shouldCacheResult: (result: any) => result?.data,
-      },
-      async () => {
-        return this.directFetch<T>(url, {
-          ...reqInit,
-          headers: {
-            'Cache-Control': generateCacheControlHeader(strategy),
-            ...reqInit.headers,
-          },
-        })
-      }
-    ) as Promise<T>
+        shouldCacheResponse: (response: any): boolean => {
+          // Cache any non-error response (for both Weaverse API and third-party APIs)
+          return (
+            !hasError(response) && response !== null && response !== undefined
+          )
+        },
+        displayName: 'Weaverse API',
+      })) as WithCacheFetchResponse<T>
+    }
+
+    return result.data
   }
 
-  loadThemeSettings = async (strategy?: AllCacheOptions) => {
+  loadThemeSettings = async (
+    strategy?: AllCacheOptions
+  ): Promise<ThemeSettingsResponse> => {
     let defaultThemeSettings = generateDataFromSchema(this.themeSchema)
     try {
-      let { API, configs } = this
-      let { weaverseHost, projectId, isDesignMode } = configs
+      let { configs } = this
+      let { weaverseApiBase, weaverseHost, projectId, isDesignMode } = configs
       if (!projectId) {
         throw new Error('Missing Weaverse projectId!')
       }
-      let url = `${weaverseHost}/${API}/project_configs`
-      let res: any
+
+      let url = this.getApiUrl('project_configs')
+
       let body = JSON.stringify({ isDesignMode, projectId })
-      if (isDesignMode) {
-        res = await fetch(url, { method: 'POST', body }).then((res) =>
-          res.json()
-        )
-      } else {
-        res = await this.fetchWithCache(url, {
+      let data: ThemeSettingsResponse =
+        await this.fetchWithCache<ThemeSettingsResponse>(url, {
           method: 'POST',
           strategy,
           body,
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'Accept-Encoding': 'gzip, deflate, br',
+          },
         })
+
+      // Validate that data is a proper object, not corrupted/compressed content
+      if (typeof data !== 'object' || data === null) {
+        console.warn(
+          'Invalid theme settings response format, using defaults:',
+          {
+            type: typeof data,
+            isString: typeof data === 'string',
+            length: typeof data === 'string' ? (data as string).length : 'N/A',
+            preview:
+              typeof data === 'string'
+                ? `${(data as string).substring(0, 50)}...`
+                : String(data),
+          }
+        )
+        data = { theme: defaultThemeSettings }
       }
-      let data: any = res || {}
+
       if (this.themeSchema?.settings || this.themeSchema?.inspector) {
-        data.theme = {
-          ...defaultThemeSettings,
-          ...data.theme,
+        // Ensure data.theme exists and is an object before merging
+        if (!data.theme || typeof data.theme !== 'object') {
+          data.theme = defaultThemeSettings
+        } else {
+          data.theme = {
+            ...defaultThemeSettings,
+            ...data.theme,
+          }
         }
       }
       if (this.configs.isDesignMode) {
@@ -191,14 +240,14 @@ export class WeaverseClient {
                     }),
                   })),
                 }
-              : null,
+              : undefined,
           publicEnv: this.configs.publicEnv,
         }
       }
       return data
     } catch (e) {
       console.info('Unable to load theme settings', e)
-      return defaultThemeSettings
+      return { theme: defaultThemeSettings }
     }
   }
 
@@ -232,6 +281,7 @@ export class WeaverseClient {
         projectId,
         isDesignMode,
         weaverseHost,
+        weaverseApiBase,
         isPreviewMode,
         sectionType,
       } = this.configs
@@ -264,32 +314,36 @@ export class WeaverseClient {
       let reqInit: RequestInit = {
         method: 'POST',
         body: JSON.stringify(body),
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          'Accept-Encoding': 'gzip, deflate, br',
+        },
       }
-      let url = `${weaverseHost}/${this.API}/project`
-      let payload: FetchProjectPayload
+      let url = this.getApiUrl('project')
 
-      if (isDesignMode) {
-        payload = await fetch(url, reqInit).then((res) => res.json())
-      } else {
-        payload = await this.fetchWithCache(url, {
+      let projectData: FetchProjectPayload =
+        await this.fetchWithCache<FetchProjectPayload>(url, {
           ...reqInit,
           strategy,
         })
+
+      if (hasError(projectData)) {
+        throw new Error(projectData.error)
       }
 
-      if (payload?.error) {
-        throw new Error(payload?.error)
-      }
-      let { page, project, pageAssignment } = payload
+      // Extract what we can from the response
+      let { page, project, pageAssignment } = projectData as any
+
       if (!project) {
-        console.error('Weaverse project not found. Id:', projectId)
+        console.warn('Weaverse project not found. Id:', projectId)
         project = {
           id: projectId,
           name: 'Weaverse project not found.',
           weaverseShopId: '',
         }
-        page = this.generateFallbackPage('Weaverse project not found.')
       }
+
       if (!page) {
         page = this.generateFallbackPage('Please add new section to start.')
       }
