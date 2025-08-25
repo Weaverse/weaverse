@@ -37,7 +37,9 @@ export let Hotspots = forwardRef<HTMLDivElement, HotspotsProps>(
             let product = products.find(
               (product) => product?.id === hotspot.productId
             )
-            if (!product) return null
+            if (!product) {
+              return null
+            }
             let { images, url, price, title } = product
             return (
               <div

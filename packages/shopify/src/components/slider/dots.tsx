@@ -14,19 +14,19 @@ export function Dots(props: SliderDotsProps) {
   )
   return (
     <StyledDots className={_className}>
-      {[...Array(instanceRef.current?.track.details.slides.length).keys()].map(
-        (idx) => {
-          let className = clsx('dot', currentSlide === idx && 'dot--active')
-          return (
-            <button
-              className={className}
-              key={idx}
-              onClick={() => instanceRef.current?.moveToIdx(idx)}
-              type="button"
-            />
-          )
-        }
-      )}
+      {[
+        ...new Array(instanceRef.current?.track.details.slides.length).keys(),
+      ].map((idx) => {
+        let className = clsx('dot', currentSlide === idx && 'dot--active')
+        return (
+          <button
+            className={className}
+            key={idx}
+            onClick={() => instanceRef.current?.moveToIdx(idx)}
+            type="button"
+          />
+        )
+      })}
     </StyledDots>
   )
 }

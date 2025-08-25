@@ -1,5 +1,34 @@
 # @weaverse/react
 
+## 0.0.0-beta-20250825103739
+
+### Patch Changes
+
+- feat: API cache proxy improvements and debug logging
+
+  - Updated cache strategy with improved timing configuration
+  - Added debug logging for API proxy usage tracking
+  - Enhanced cache control with optimized stale-while-revalidate settings
+  - Minor performance improvements in cache key generation
+
+- Updated dependencies
+- Updated dependencies [6642fc2]
+  - @weaverse/core@0.0.0-beta-20250825103739
+
+## 5.4.1-beta.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/core@5.4.1-beta.0
+
+## 5.4.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/core@5.4.0
+
 ## 5.3.4
 
 ### Patch Changes

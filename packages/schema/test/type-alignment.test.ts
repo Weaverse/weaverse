@@ -25,13 +25,13 @@ const headingInput: HeadingInput = {
   someExtraProperty: true,
 }
 
-const inspectorGroup: InspectorGroup = {
+const _inspectorGroup: InspectorGroup = {
   group: 'Layout',
   inputs: [basicInput, headingInput],
 }
 
-const pageType: PageType = 'PRODUCT'
-const inputType: InputType = 'toggle-group'
+const _pageType: PageType = 'PRODUCT'
+const _inputType: InputType = 'toggle-group'
 
 // Type assertions to ensure compatibility
 export type AssertBasicInput = BasicInput extends BasicInput ? true : false

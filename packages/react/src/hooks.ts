@@ -24,7 +24,9 @@ export let useParentInstance = () => {
 
 export let useChildInstances = (id?: string) => {
   let currentInstance = useItemInstance(id)
-  if (!currentInstance) return []
+  if (!currentInstance) {
+    return []
+  }
   let { itemInstances } = Weaverse
 
   let {

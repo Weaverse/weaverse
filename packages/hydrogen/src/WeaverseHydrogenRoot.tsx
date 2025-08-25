@@ -59,6 +59,14 @@ export class WeaverseHydrogen extends Weaverse {
   pageId: string
   internal: Partial<WeaverseInternal>
   requestInfo: WeaverseLoaderRequestInfo
+  projectId: string
+  weaverseHost: string
+  weaverseApiBase: string
+  weaverseApiKey: string
+  weaverseVersion: string
+  isDesignMode: boolean
+  isPreviewMode: boolean
+  sectionType: string
   declare ItemConstructor: typeof WeaverseHydrogenItem
   declare data: HydrogenPageData
   static itemInstances: Map<string, WeaverseHydrogenItem>
@@ -70,6 +78,15 @@ export class WeaverseHydrogen extends Weaverse {
     this.internal = internal
     this.pageId = pageId
     this.requestInfo = requestInfo
+    // Assign configuration properties
+    this.projectId = params.projectId
+    this.weaverseHost = params.weaverseHost
+    this.weaverseApiBase = params.weaverseApiBase
+    this.weaverseApiKey = params.weaverseApiKey
+    this.weaverseVersion = params.weaverseVersion || ''
+    this.isDesignMode = params.isDesignMode ?? false
+    this.isPreviewMode = params.isPreviewMode ?? false
+    this.sectionType = params.sectionType || ''
   }
 }
 

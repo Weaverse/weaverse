@@ -293,7 +293,7 @@ export type ComponentPresets = z.infer<typeof ComponentPresetsSchema>
 /**
  * Enhanced validation result types for better error reporting
  */
-export interface SchemaValidationIssue {
+export type SchemaValidationIssue = {
   /** The error message */
   readonly message: string
   /** The path where the error occurred */
@@ -306,15 +306,15 @@ export interface SchemaValidationIssue {
   readonly received?: unknown
 }
 
-export interface SchemaValidationSuccess<T> {
+export type SchemaValidationSuccess<T> = {
   readonly success: true
   readonly data: T
   readonly issues?: undefined
 }
 
-export interface SchemaValidationFailure {
+export type SchemaValidationFailure = {
   readonly success: false
-  readonly issues: ReadonlyArray<SchemaValidationIssue>
+  readonly issues: readonly SchemaValidationIssue[]
   readonly data?: undefined
 }
 
@@ -469,7 +469,7 @@ export function isValidSchema(schema: unknown): schema is SchemaType {
  * Schema composition utilities
  */
 export class SchemaBuilder {
-  private schema: Partial<SchemaType>
+  private readonly schema: Partial<SchemaType>
 
   constructor(initial?: Partial<SchemaType>) {
     this.schema = { ...initial }
@@ -752,15 +752,15 @@ export interface VersionedSchema extends SchemaType {
   }[]
 }
 
-export interface SchemaMigration {
+export type SchemaMigration = {
   from: string
   to: string
   migrate: (oldSchema: any) => SchemaType
 }
 
 export class SchemaRegistry {
-  private schemas = new Map<string, SchemaType>()
-  private migrations = new Map<string, SchemaMigration[]>()
+  private readonly schemas = new Map<string, SchemaType>()
+  private readonly migrations = new Map<string, SchemaMigration[]>()
 
   /**
    * Register a schema with optional migrations
@@ -872,8 +872,8 @@ export const devTools = {
         inputCount,
         groupCount,
         hasChildTypes: (schema.childTypes?.length || 0) > 0,
-        hasPresets: !!schema.presets,
-        hasLimits: !!schema.limit,
+        hasPresets: Boolean(schema.presets),
+        hasLimits: Boolean(schema.limit),
       },
     }
   },
@@ -942,14 +942,14 @@ export const devTools = {
  * with minimal dependencies and clean error reporting.
  */
 
-export interface SimpleValidationResult<T = any> {
+export type SimpleValidationResult<T = any> = {
   success: boolean
   data?: T
   error?: string
   details?: string[]
 }
 
-export interface ComponentValidationOptions {
+export type ComponentValidationOptions = {
   validate?: boolean
   skipMissing?: boolean
   logErrors?: boolean
@@ -1143,7 +1143,7 @@ export function analyzeComponentRegistry(components: Record<string, any>): {
         (acc: number, group: any) => acc + (group.inputs?.length || 0),
         0
       )
-      hasPresets = !!result.data.schema.presets
+      hasPresets = Boolean(result.data.schema.presets)
     }
 
     details.push({

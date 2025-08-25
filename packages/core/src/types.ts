@@ -84,18 +84,18 @@ export type AdditionalInputConfigs =
   | ToggleGroupConfigs
   | RangeInputConfigs
 
-export interface ElementCSS {
+export type ElementCSS = {
   '@desktop'?: WeaverseCSSProperties | ChildElementCSS
   '@mobile'?: WeaverseCSSProperties | ChildElementCSS
 }
 
-export interface ElementData {
+export type ElementData = {
   id: string
   type: string
   [key: string]: any
 }
 
-export interface WeaverseElement {
+export type WeaverseElement = {
   Component: ForwardRefExoticComponent<any>
   type: string
   'data-wv-id': string
@@ -104,23 +104,23 @@ export interface WeaverseElement {
 
 // ElementSchema is now defined in @weaverse/schema as SchemaType
 // This is kept for backward compatibility
-export interface ElementSchema {
+export type ElementSchema = {
   title: string
   type: string
 }
 
-export interface BreakPoints {
+export type BreakPoints = {
   mobile: string
   desktop: string
 }
 
-export interface WeaverseProjectDataType {
+export type WeaverseProjectDataType = {
   id?: string
   items: ElementData[]
   rootId: string
 }
 
-export interface WeaverseCoreParams {
+export type WeaverseCoreParams = {
   mediaBreakPoints?: BreakPoints
   weaverseHost?: string
   weaverseVersion?: string
@@ -144,7 +144,7 @@ export interface WeaverseCoreParams {
  * // Bind to `element.css["@desktop"].backgroundColor`
  * name: "backgroundColor"
  */
-export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
+export type BasicInput<ConfigsType = AdditionalInputConfigs> = {
   type: InputType
   name: string
   label?: string
@@ -162,15 +162,15 @@ export interface BasicInput<ConfigsType = AdditionalInputConfigs> {
 
 // Input config types are now defined in @weaverse/schema
 // These are kept for backward compatibility
-export interface SelectInputConfigs {
+export type SelectInputConfigs = {
   options?: { value: string; label: string }[]
 }
 
-export interface ToggleGroupConfigs {
+export type ToggleGroupConfigs = {
   options?: { value: string; label: string; icon?: IconName }[]
 }
 
-export interface RangeInputConfigs {
+export type RangeInputConfigs = {
   min?: number
   max?: number
   step?: number

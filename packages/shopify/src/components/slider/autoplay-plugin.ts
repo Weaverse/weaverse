@@ -9,7 +9,9 @@ export function AutoplayPlugin(changeSlidesEvery: number): KeenSliderPlugin {
     }
     function nextTimeout() {
       clearTimeout(timeout)
-      if (mouseOver) return
+      if (mouseOver) {
+        return
+      }
       timeout = setTimeout(() => {
         slider.next()
       }, changeSlidesEvery * 1000)

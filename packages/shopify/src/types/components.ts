@@ -21,11 +21,11 @@ export interface WeaverseIconProps extends HTMLAttributes<SVGElement> {
   name: WeaverseIcon
 }
 
-export interface TooltipProps {
+export type TooltipProps = {
   children: React.ReactNode
 }
 
-export interface SliderProps {
+export type SliderProps = {
   children: React.ReactNode
   className?: string
   gap?: number
@@ -33,7 +33,7 @@ export interface SliderProps {
   slidesPerView: number
 }
 
-export interface SliderArrowsProps {
+export type SliderArrowsProps = {
   currentSlide: number
   instanceRef: React.MutableRefObject<KeenSliderInstance | null>
   offset: number
@@ -41,7 +41,7 @@ export interface SliderArrowsProps {
   className?: string
 }
 
-export interface SliderDotsProps {
+export type SliderDotsProps = {
   currentSlide: number
   instanceRef: React.MutableRefObject<KeenSliderInstance | null>
   className?: string
@@ -50,13 +50,13 @@ export interface SliderDotsProps {
   color: 'light' | 'dark'
 }
 
-export interface OverlayProps {
+export type OverlayProps = {
   enableOverlay: boolean
   overlayOpacity: number
   className?: string
 }
 
-export interface BackgroundProps {
+export type BackgroundProps = {
   backgroundColor?: string
   backgroundImage?: string | WeaverseImage
   backgroundFit?: CSSProperties['objectFit']
@@ -66,7 +66,7 @@ export interface BackgroundProps {
 
 //////////// Element types
 // Placeholder
-export interface PlaceholderProps {
+export type PlaceholderProps = {
   element: string
   children: ReactElement | ReactElement[] | ReactNode | ReactNode[]
   style?: CSSProperties
@@ -106,7 +106,7 @@ export interface GridContentElementProps extends WeaverseElementProps {
   rowSize: number
 }
 
-interface BackgroundDataProps {
+type BackgroundDataProps = {
   backgroundColor?: string
   backgroundImage?: string
   objectFit?: CSSProperties['objectFit']
@@ -131,7 +131,7 @@ export interface LayoutElementProps
   overlayOpacity: number
 }
 
-export interface LayoutBackgroundProps {
+export type LayoutBackgroundProps = {
   imgUrl?: string
   bgColor?: string
   objectFit?: CSSProperties['objectFit']
@@ -156,7 +156,7 @@ export interface ScrollingTextElementProps extends WeaverseElementProps {
   pauseOnHover: boolean
 }
 
-export interface VideoCommonProps {
+export type VideoCommonProps = {
   src: string
   type?: string
   poster: string

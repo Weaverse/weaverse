@@ -7,5 +7,6 @@
     },
     "verbatimModuleSyntax": true,
     "types": ["@shopify/oxygen-workers-types", "node"]
-  }
+  },
+  "exclude": ["dist", "node_modules"]
 }

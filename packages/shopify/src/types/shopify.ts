@@ -7,7 +7,7 @@ import type {
   ToolbarAction,
 } from './weaverse-shopify'
 
-export interface ShopifyProductImage {
+export type ShopifyProductImage = {
   created_at: string
   id: number
   position: number
@@ -20,7 +20,7 @@ export interface ShopifyProductImage {
   alt: string | null
 }
 
-export interface ShopifyProductVariant {
+export type ShopifyProductVariant = {
   barcode: string
   compare_at_price: string | number | null
   created_at: string
@@ -54,12 +54,12 @@ export interface ShopifyProductVariant {
   featured_image: ShopifyProductImage
 }
 
-export interface ShopifyProductVariantPresentmentPriceSet {
+export type ShopifyProductVariantPresentmentPriceSet = {
   price: ShopifyMoney
   compare_at_price: ShopifyMoney
 }
 
-export interface ShopifyMoney {
+export type ShopifyMoney = {
   amount: number | string
   currency_code: string
 }
@@ -69,7 +69,7 @@ export type ProductVariantWeightUnit = 'g' | 'kg' | 'oz' | 'lb'
 
 export type OptionKey = 'option1' | 'option2' | 'option3'
 
-export interface ShopifyProductOption {
+export type ShopifyProductOption = {
   id: number
   name: string
   position: number
@@ -77,7 +77,7 @@ export interface ShopifyProductOption {
   values: string[]
 }
 
-export interface ShopifyProduct {
+export type ShopifyProduct = {
   body_html: string
   created_at: string
   handle: string
@@ -116,7 +116,7 @@ export interface ShopifyProduct {
 }
 
 // Collection
-export interface ShopifyCollectionImage {
+export type ShopifyCollectionImage = {
   created_at: string
   height: number
   src: string
@@ -125,7 +125,7 @@ export interface ShopifyCollectionImage {
   alt: string | null
 }
 
-export interface ShopifyCollection {
+export type ShopifyCollection = {
   admin_graphql_api_id: string
   body_html: string
   collection_type: string
@@ -144,7 +144,7 @@ export interface ShopifyCollection {
   featured_image: string | ShopifyCollectionImage | null
 }
 
-export interface ShopifyArticleImage {
+export type ShopifyArticleImage = {
   created_at: string
   height: number
   src: string
@@ -153,7 +153,7 @@ export interface ShopifyArticleImage {
   alt: string | null
 }
 
-export interface ShopifyObjectMetafield {
+export type ShopifyObjectMetafield = {
   key: string
   namespace: string
   value: string | number
@@ -161,7 +161,7 @@ export interface ShopifyObjectMetafield {
   description: string | null
 }
 
-export interface ShopifyArticle {
+export type ShopifyArticle = {
   author: string
   blog_id: number
   body_html: string
@@ -206,7 +206,7 @@ type CatalogThirdParty = {
   catalog?: ElementCatalog
 }
 
-export interface ThirdPartyIntegration {
+export type ThirdPartyIntegration = {
   appType?: string
   id?: string
   name?: string
