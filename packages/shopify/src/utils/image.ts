@@ -17,7 +17,7 @@ export function resizeImage(imageURL: string, size: string): string {
     let matches = imageURL.match(/(.*\/[\w\-_.]+)\.(\w{2,4})/)
     // @ts-expect-error
     return `${matches[1]}_${size}.${matches[2]}`
-  } catch (e) {
+  } catch (_e) {
     return imageURL
   }
 }

@@ -32,8 +32,12 @@ let ProductBuyButton = forwardRef<HTMLDivElement, ProductBuyButtonProps>(
 
     let atcText = buttonText
     if (ready) {
-      if (!available) atcText = soldOutText
-      if (!selectedVariant) atcText = unavailableText
+      if (!available) {
+        atcText = soldOutText
+      }
+      if (!selectedVariant) {
+        atcText = unavailableText
+      }
     }
 
     return (

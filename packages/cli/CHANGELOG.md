@@ -1,5 +1,56 @@
 # @weaverse/cli
 
+## 5.4.1
+
+### Patch Changes
+
+- 50275ae: feat: API cache proxy improvements and TypeScript fixes
+
+  #### API Cache Proxy Improvements
+
+  - **Migration to withCache.fetch**: Updated `WeaverseClient` to use Hydrogen's `withCache.fetch` instead of deprecated `withCache.run`
+  - **Response Structure Unification**: Standardized response formats between `directFetch` and `withCache.fetch` methods
+  - **Enhanced Cache Strategy**: Improved cache key generation and response validation
+  - **Better Error Handling**: Added comprehensive error handling for API responses
+
+  #### TypeScript Build Fixes
+
+  - **Interface Merging**: Fixed duplicate type declarations using proper interface merging for module augmentation
+  - **Window Type Declarations**: Converted type declarations to interfaces for proper global scope extension
+  - **Environment Variables**: Added missing environment variables to `HydrogenEnv` interface
+
+  #### Code Quality Improvements
+
+  - **Biome Configuration**: Updated to automatically remove unused variables and optimize imports
+  - **Removed Console Logs**: Cleaned up debug logging and unused code
+
+  This change maintains backward compatibility while improving performance and reliability of the API cache proxy system. The migration from `withCache.run` to `withCache.fetch` aligns with Shopify Hydrogen's latest recommendations.
+
+## 0.0.0-beta-20250825103739
+
+### Patch Changes
+
+- feat: API cache proxy improvements and debug logging
+
+  - Updated cache strategy with improved timing configuration
+  - Added debug logging for API proxy usage tracking
+  - Enhanced cache control with optimized stale-while-revalidate settings
+  - Minor performance improvements in cache key generation
+
+## 4.0.1
+
+### Patch Changes
+
+- 34d5e47: Fix PR review feedback - documentation and changeset compliance
+
+  Minor fixes to address PR review comments:
+
+  - Update CLAUDE.md version table with correct CLI version (3.0.0)
+  - Document CLI as JavaScript-only exception in TypeScript guidelines
+  - Add changeset to satisfy changeset-bot requirements
+
+  Note: The major CLI modernization was already released as version 3.0.0.
+
 ## 4.0.0
 
 ### Major Changes

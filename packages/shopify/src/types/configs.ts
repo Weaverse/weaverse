@@ -14,7 +14,7 @@ export interface OptionStyle extends CSSProperties {
   '--radius'?: string
 }
 
-export interface OptionData {
+export type OptionData = {
   id: string
   name: string
   displayName: string
@@ -23,7 +23,7 @@ export interface OptionData {
   shape: OptionShape
 }
 
-export interface ColorPresets {
+export type ColorPresets = {
   id: string
   name: string
   value: string
@@ -32,19 +32,19 @@ export type SwatchImagePresets = ColorPresets
 export type TypoPresetsValue = {
   [key: string]: string
 }
-export interface TypoPresets {
+export type TypoPresets = {
   id: string
   name: string
   value: TypoPresetsValue
 }
-export interface PresetsData {
+export type PresetsData = {
   colors?: ColorPresets[]
   typography?: TypoPresets[]
   colorSwatches?: ColorPresets[]
   imageSwatches?: SwatchImagePresets[]
 }
 
-export interface ShopifyGlobalConfigs {
+export type ShopifyGlobalConfigs = {
   shopData: {
     name: string
     currency: string
@@ -97,7 +97,7 @@ export interface ShopifyGlobalConfigs {
   presets: PresetsData
 }
 
-export interface WeaverseCartHelpers {
+export type WeaverseCartHelpers = {
   subscribe: (event: string, callback: (data: any) => void) => void
   unsubscribe: (event: string, callback: (data: any) => void) => void
   notify: (event: string, data: any) => void

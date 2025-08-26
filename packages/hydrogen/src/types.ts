@@ -29,8 +29,8 @@ import type {
 import type * as React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
 import type { NavigateFunction } from 'react-router'
-import type { WeaverseHydrogen } from './index'
 import type { ThemeSettingsStore } from './utils/use-theme-settings-store'
+import type { WeaverseHydrogen } from './WeaverseHydrogenRoot'
 import type { WeaverseClient } from './weaverse-client'
 
 // Re-export types from schema for backward compatibility and convenience
@@ -48,15 +48,21 @@ export type {
   SchemaValidationIssue,
 }
 
-export interface AllCacheOptions {
-  mode?: string
+export type AllCacheOptions = {
+  mode?:
+    | 'must-revalidate'
+    | 'no-cache'
+    | 'no-store'
+    | 'private'
+    | 'public'
+    | string
   maxAge?: number
   staleWhileRevalidate?: number
   sMaxAge?: number
   staleIfError?: number
 }
 
-export type ComponentLoaderArgs<T = any, E = any> = {
+export type ComponentLoaderArgs<T = any, _E = any> = {
   data: T
   weaverse: WeaverseClient
 }
@@ -118,7 +124,7 @@ export type WeaverseInternal = {
  */
 export type HydrogenComponentPresets = SchemaComponentPresets
 
-export interface HydrogenElement {
+export type HydrogenElement = {
   Component:
     | ForwardRefExoticComponent<HydrogenComponentProps>
     | ((props: HydrogenComponentProps) => React.JSX.Element)
@@ -134,9 +140,17 @@ export interface WeaverseHydrogenParams
   pageId: string
   internal: Partial<WeaverseInternal>
   requestInfo: WeaverseLoaderRequestInfo
+  projectId: string
+  weaverseHost: string
+  weaverseApiBase: string
+  weaverseApiKey: string
+  weaverseVersion?: string
+  isDesignMode?: boolean
+  isPreviewMode?: boolean
+  sectionType?: string
 }
 
-export interface HydrogenComponent<T extends HydrogenComponentProps = any> {
+export type HydrogenComponent<T extends HydrogenComponentProps = any> = {
   default: ForwardRefExoticComponent<T> | ((props: T) => React.JSX.Element)
   schema: HydrogenComponentSchema
   /** Optional data loader function for server-side data fetching */
@@ -161,6 +175,7 @@ export type PublicEnv = {
 export type WeaverseProjectConfigs = {
   projectId: string
   weaverseHost: string
+  weaverseApiBase: string
   weaverseApiKey: string
   weaverseVersion?: string
   isDesignMode?: boolean
@@ -176,7 +191,7 @@ export type HydrogenPageAssignment = {
   locale: string
 }
 
-export interface WeaverseLoaderData {
+export type WeaverseLoaderData = {
   configs: Omit<WeaverseProjectConfigs, 'publicEnv'> & {
     requestInfo: WeaverseLoaderRequestInfo
   }
@@ -199,7 +214,7 @@ export type WeaverseI18n = I18nBase & {
   [key: string]: any
 }
 
-export interface HydrogenThemeSchema {
+export type HydrogenThemeSchema = {
   info: {
     name: string
     version: string
@@ -231,10 +246,11 @@ export type FetchProjectRequestBody = {
 }
 
 export type FetchProjectPayload = {
-  page: HydrogenPageData
-  project: HydrogenProjectType
-  pageAssignment: HydrogenPageAssignment
+  page?: HydrogenPageData // Page might be missing for some routes
+  project?: HydrogenProjectType // Project might be missing in error cases
+  pageAssignment?: HydrogenPageAssignment // PageAssignment might be missing
   error?: string
+  [key: string]: any // Allow additional properties from API response
 }
 
 export type WeaverseClientArgs = HydrogenContext & {
@@ -249,6 +265,105 @@ export type WeaverseCollection = WeaverseResourcePickerData
 export type WeaverseBlog = WeaverseResourcePickerData
 export type WeaverseArticle = WeaverseResourcePickerData
 export type WeaverseMetaObject = WeaverseResourcePickerData
+
+/**
+ * Response types for improved type safety
+ */
+
+// Response wrapper from withCache.fetch
+export type WithCacheFetchResponse<T> = {
+  data: T
+  response: Response
+}
+
+// Theme settings response structure
+export type ThemeSettingsResponse = {
+  theme?: HydrogenThemeSettings
+  schema?: HydrogenThemeSchema
+  publicEnv?: PublicEnv
+}
+
+// Direct fetch response structure
+export type DirectFetchResponse<T = unknown> = {
+  data?: T
+  error?: string
+}
+
+// Cache response validation function type
+export type CacheResponseValidator<T = unknown> = (
+  response: WithCacheFetchResponse<T> | T
+) => boolean
+
+// Weaverse Error class for better error handling
+export class WeaverseError extends Error {
+  public readonly code: string
+  public readonly statusCode?: number
+  public readonly context?: Record<string, unknown>
+
+  constructor(
+    message: string,
+    code = 'WEAVERSE_ERROR',
+    statusCode?: number,
+    context?: Record<string, unknown>
+  ) {
+    super(message)
+    this.name = 'WeaverseError'
+    this.code = code
+    this.statusCode = statusCode
+    this.context = context
+
+    // Maintains proper stack trace for where our error was thrown
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, WeaverseError)
+    }
+  }
+}
+
+/**
+ * Type guards for response validation
+ */
+
+export function isWithCacheFetchResponse<T>(
+  response: unknown
+): response is WithCacheFetchResponse<T> {
+  return (
+    typeof response === 'object' &&
+    response !== null &&
+    'data' in response &&
+    'response' in response
+  )
+}
+
+export function isFetchProjectPayload(
+  payload: unknown
+): payload is FetchProjectPayload {
+  return (
+    typeof payload === 'object' &&
+    payload !== null &&
+    'page' in payload &&
+    'project' in payload &&
+    'pageAssignment' in payload
+  )
+}
+
+export function hasError(response: unknown): response is { error: string } {
+  return (
+    typeof response === 'object' &&
+    response !== null &&
+    'error' in response &&
+    typeof (response as Record<string, unknown>).error === 'string'
+  )
+}
+
+export function isThemeSettingsResponse(
+  data: unknown
+): data is ThemeSettingsResponse {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    (data as any).theme !== undefined
+  )
+}
 
 /**
  * Enhanced type utilities for better development experience
@@ -296,15 +411,10 @@ declare global {
     __weaverses: Record<string, WeaverseHydrogen>
     __weaverseThemeSettingsStore: ThemeSettingsStore
   }
-  interface Env {
-    WEAVERSE_PROJECT_ID: string
-    WEAVERSE_HOST: string
-    WEAVERSE_API_KEY: string
-  }
 }
 
 declare module '@shopify/remix-oxygen' {
-  export interface AppLoadContext {
+  interface AppLoadContext {
     weaverse: WeaverseClient
   }
 }
@@ -313,7 +423,10 @@ declare module '@shopify/hydrogen' {
   interface HydrogenEnv {
     WEAVERSE_PROJECT_ID: string
     WEAVERSE_HOST?: string
+    WEAVERSE_API_BASE?: string
     WEAVERSE_API_KEY: string
+    PUBLIC_STORE_DOMAIN: string
+    PUBLIC_STOREFRONT_API_TOKEN: string
     PUBLIC_GOOGLE_GTM_ID: string
     JUDGEME_PRIVATE_API_TOKEN: string
     CUSTOM_COLLECTION_BANNER_METAFIELD: string
