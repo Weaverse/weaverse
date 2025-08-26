@@ -1,6 +1,6 @@
 {
   "name": "@weaverse/biome",
-  "version": "5.4.1-beta.1",
+  "version": "5.4.1",
   "description": "Biome configuration for Weaverse",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -127,7 +127,6 @@ export class WeaverseClient {
     const { weaverseHost, weaverseApiBase, projectId } = this.configs
 
     if (useProxy) {
-      console.log('useProxy', weaverseApiBase, endpoint, projectId)
       return `${weaverseApiBase}/v1/${endpoint}?projectId=${projectId}`
     }
 
@@ -172,7 +171,7 @@ export class WeaverseClient {
     let defaultThemeSettings = generateDataFromSchema(this.themeSchema)
     try {
       let { configs } = this
-      let { weaverseApiBase, weaverseHost, projectId, isDesignMode } = configs
+      let { projectId, isDesignMode } = configs
       if (!projectId) {
         throw new Error('Missing Weaverse projectId!')
       }
