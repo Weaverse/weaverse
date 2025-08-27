@@ -129,19 +129,19 @@ The project uses Changesets for releases:
 ### Environment Requirements
 
 - Node.js >= 22
-- pnpm 10.12.1 (enforced via packageManager field)
+- pnpm 10.15.0 (enforced via packageManager field)
 - Git for version control integration
 
 ### Version Compatibility
 
 | Package | Version | React | Node.js | Key Dependencies |
 |---------|---------|-------|---------|-----------------|
-| @weaverse/core | 5.3.4 | - | >=18 | @stitches/core@1.2.8 |
-| @weaverse/react | 5.3.4 | >=18 | >=18 | @weaverse/core@5.3.4 |
-| @weaverse/hydrogen | 5.3.4 | >=18 | >=20 | @shopify/hydrogen@>=2025.5, react-router@7 |
-| @weaverse/schema | 0.7.3 | - | >=18 | - |
-| @weaverse/shopify | * | - | >=18 | @weaverse/core |
-| @weaverse/cli | 3.0.0 | - | >=18 | inquirer@^9.2.15, validate-npm-package-name@^5.0.1 |
+| @weaverse/core | 5.4.1 | - | >=22 | @stitches/core@1.2.8 |
+| @weaverse/react | 5.4.1 | >=18 | >=22 | @weaverse/core@5.4.1 |
+| @weaverse/hydrogen | 5.4.1 | >=18 | >=22 | @shopify/hydrogen@>=2025.5, react-router@7 |
+| @weaverse/schema | 0.7.3 | - | >=22 | - |
+| @weaverse/shopify | 5.4.1 | - | >=22 | @weaverse/core |
+| @weaverse/cli | 5.4.1 | - | >=22 | inquirer@^9.2.15, validate-npm-package-name@^5.0.1 |
 
 **Note**: All @weaverse packages should be kept at the same major version for compatibility.
 
