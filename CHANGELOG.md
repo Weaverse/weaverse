@@ -1,5 +1,71 @@
 # Changelog
 
+## [2025.09] - 2025-09-04
+
+### 🎨 Weaverse Studio
+
+#### 🎉 New Features
+- **📚 Hydrogen Deployment Guide**: Complete step-by-step guide to deploy your Hydrogen storefront to production
+  - Direct links to Shopify Admin settings for seamless configuration
+  - Integrated deployment workflow with clear instructions
+  - Performance optimization guidance for faster storefronts
+  - Self-service deployment reduces support wait times
+
+- **✨ Modernized Dashboard**: Refreshed dashboard experience with improved usability
+  - Cleaner project management interface with quick actions
+  - Real-time changelog to stay updated on new features
+  - Enhanced navigation and project switching
+  - Better visual hierarchy and modern design elements
+
+#### ✨ Improvements
+- **🚀 Enhanced Performance**: Significantly faster loading times across the Studio interface
+- **🎯 Better User Experience**: Streamlined project creation with improved error handling
+- **📱 Improved Mobile Preview**: More accurate mobile preview rendering and styling consistency
+- **🔧 Universal Theme Support**: Enhanced compatibility with all Hydrogen theme versions, including legacy themes
+
+#### 🐛 Bug Fixes
+- **Editor Stability**: Fixed crashes that could occur when working with complex page layouts and nested components
+- **Production Reliability**: Resolved issues that could affect live website performance and loading
+- **API Connection**: Fixed intermittent connection issues that could interrupt editing sessions
+- **Content Loading**: Resolved problems with content files not loading properly in production environments
+
+---
+
+### 🔧 Weaverse SDKs
+
+#### 🎉 New Features
+- **⚡ Modern Caching System**: Upgraded to the latest caching technology for faster website loading
+  - Improved cache strategies for better performance
+  - Enhanced response validation and error handling
+  - Optimized cache key generation for more efficient storage
+
+- **🌐 Flexible Configuration**: More options for configuring your Hydrogen storefront environment
+  - Multiple fallback options for easier setup
+  - Better environment variable handling
+  - Simplified configuration process for developers
+
+#### ✨ Improvements
+- **🚀 Better API Performance**: Enhanced API responses with reduced loading times
+- **🔧 Improved Developer Experience**: Better error messages and debugging capabilities  
+- **📦 Updated Dependencies**: Latest compatibility with Shopify Hydrogen and React Router v7
+- **🎯 Enhanced Build Quality**: Improved code quality tools for more reliable builds
+
+#### 📦 Package Updates
+- **Core SDKs**: All packages updated to v5.4.2 for better consistency and compatibility
+- **Build Tools**: Enhanced development experience with automatic code optimization
+- **Type Safety**: Improved TypeScript support for better development experience
+
+---
+
+### 🚀 Weaverse Pilot Theme
+
+#### ✨ Improvements
+- **📦 Latest SDK Integration**: Updated to v5.6.0 with all new SDK improvements and features
+- **⚡ Enhanced Performance**: Faster loading times from improved caching and optimization
+- **🔧 Better Compatibility**: Full integration with latest Weaverse Studio features
+
+---
+
 ## [2025.08.22] - 2025-08-22
 
 ### 🎨 Weaverse Studio
