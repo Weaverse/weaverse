@@ -1,5 +1,15 @@
 # @weaverse/hydrogen
 
+## 5.4.2
+
+### Patch Changes
+
+- feat(hydrogen): add WEAVERSE_HOST environment variable fallback for API configuration
+
+  Adds support for WEAVERSE_HOST as a fallback option for weaverseApiBase configuration. This allows users to configure the API endpoint using either WEAVERSE_API_BASE or WEAVERSE_HOST environment variables, providing more flexibility for different deployment scenarios.
+
+  - @weaverse/react@5.4.2
+
 ## 5.4.1
 
 ### Patch Changes
