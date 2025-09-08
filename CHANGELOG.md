@@ -1,5 +1,59 @@
 # Changelog
 
+## [2025.09.08] - 2025-09-08
+
+### 🎨 Weaverse Studio
+*For users customizing Hydrogen themes in the Weaverse visual editor*
+
+#### ✨ Improvements
+- **🔗 Enhanced Preview URL Management**: Improved preview URL handling system with better type safety and error handling
+  - Optimized preview URL system with server-side initialization for faster loading
+  - Better error handling when preview URLs are not available or malformed
+  - Improved reliability of preview functionality across different theme configurations
+  - Streamlined preview URL setup process with clearer instructions for developers
+
+---
+
+### 🚀 Weaverse Pilot Theme
+*The official Hydrogen starter theme with Weaverse integration*
+
+#### 🎉 New Features
+- **⭐ Enhanced Judge.me Reviews Integration**: Complete review system overhaul with improved reliability
+  - New `JudgemeReviewsBadge` component for better product review display
+  - Improved API data handling with enhanced error management
+  - Better review data fetching and display consistency across product pages
+
+#### ✨ Improvements
+- **🛍️ Modular Product Page Architecture**: Complete refactor of product components for better maintainability
+  - Refactored Main Product Section into focused, reusable components
+  - Enhanced `ProductTitle`, `ProductVendor`, and `ProductPrices` components with cleaner interfaces
+  - Improved component architecture with single-responsibility principle
+  - Streamlined schema configurations for better customization options
+
+- **📦 Enhanced Featured Products**: More flexible product collection options
+  - Added collection-based product selection alongside manual selection
+  - Improved product display flexibility and configuration options
+
+#### 🔧 Technical Improvements
+- **💪 Stronger Type Safety**: Enhanced TypeScript integration and GraphQL type definitions
+- **⚡ Performance Optimizations**: Optimized component rendering and data handling
+
+#### 📦 Version Updates
+- **Pilot Theme**: Updated to v5.7.0
+- **Dependencies**: Latest compatibility with Weaverse SDK and Shopify Hydrogen
+
+---
+
+### 🔧 Weaverse SDKs
+*For developers building Hydrogen themes with Weaverse components*
+
+#### ✨ Improvements
+- **📚 Enhanced Developer Documentation**: Improved setup guides and troubleshooting documentation for better developer onboarding experience
+- **🔧 Better Development Workflow**: Streamlined development commands and clearer project structure guidance for SDK integration
+- **🎯 Improved Code Quality Tools**: Enhanced linting and formatting configurations for more consistent code development
+
+---
+
 ## [2025.09] - 2025-09-04
 
 ### 🎨 Weaverse Studio
