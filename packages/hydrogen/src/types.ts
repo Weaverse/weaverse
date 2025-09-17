@@ -148,6 +148,7 @@ export interface WeaverseHydrogenParams
   isDesignMode?: boolean
   isPreviewMode?: boolean
   sectionType?: string
+  loaderData?: Record<string, any>
 }
 
 export type HydrogenComponent<T extends HydrogenComponentProps = any> = {

@@ -5,6 +5,7 @@ import { useItemInstance, useWeaverse } from '~/hooks'
 import { WeaverseContextProvider, WeaverseItemContext } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
 import { generateItemClassName } from './utils/css'
+import { replaceContentDataConnectors } from './utils/data-connector'
 
 let reactVersion = Number(React.version?.split('.')[0]) || 0
 
@@ -86,8 +87,13 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     __hidden,
     // Need to get rid of this `data` property
     data: _,
+    content,
     ...rest
   } = data
+  if (content && typeof content === 'string') {
+    content = replaceContentDataConnectors(content, context.loaderData)
+    rest.content = content
+  }
 
   useEffect(() => {
     if (!instance.ref.current) {

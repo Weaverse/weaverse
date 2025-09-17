@@ -123,8 +123,9 @@ let StudioBridge = memo(({ context }: { context: WeaverseHydrogen }) => {
 function RenderRoot(props: {
   data: WeaverseLoaderData
   components: HydrogenComponent[]
+  loaderData?: Record<string, any>
 }) {
-  let { data, components } = props
+  let { data, components, loaderData } = props
   for (let comp of [...components, ...defaultComponents]) {
     comp?.schema?.type &&
       registerComponent({
@@ -137,6 +138,7 @@ function RenderRoot(props: {
   let { page, configs, project, pageAssignment } = data || {}
   let weaverse = createWeaverseInstance({
     ...configs,
+    loaderData,
     data: page,
     pageId: page?.id,
     internal: { project, pageAssignment },
@@ -175,14 +177,24 @@ export let WeaverseHydrogenRoot = memo(
             <Suspense>
               <Await resolve={data}>
                 {(resolvedData) => (
-                  <RenderRoot components={components} data={resolvedData} />
+                  <RenderRoot
+                    components={components}
+                    data={resolvedData}
+                    loaderData={loaderData}
+                  />
                 )}
               </Await>
             </Suspense>
           </ErrorBoundary>
         )
       }
-      return <RenderRoot components={components} data={data} />
+      return (
+        <RenderRoot
+          components={components}
+          data={data}
+          loaderData={loaderData}
+        />
+      )
     }
     return (
       <ErrorComponent

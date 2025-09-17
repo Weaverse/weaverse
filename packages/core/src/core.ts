@@ -93,9 +93,9 @@ export class Weaverse extends EventEmitter {
   isPreviewMode = false
   static stitchesInstance: Stitches | any
   studioBridge?: any
-
   declare static ItemConstructor: typeof WeaverseItemStore
   declare data: WeaverseProjectDataType
+  declare loaderData: Record<string, any>
   declare platformType: PlatformTypeEnum
   static elementRegistry = new Map()
 
