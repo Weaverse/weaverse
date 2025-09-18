@@ -114,7 +114,7 @@ function JudgemeReview() {
   
   // Get the product handle from the parent component
   const handle = context?.data?.product?.handle;
-  const api = `/api/review/${handle}`;
+  const api = `/api/product/${handle}/reviews`;
   
   useEffect(() => {
     if (!handle) return;
