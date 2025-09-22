@@ -95,7 +95,7 @@ export class Weaverse extends EventEmitter {
   studioBridge?: any
   declare static ItemConstructor: typeof WeaverseItemStore
   declare data: WeaverseProjectDataType
-  declare loaderData: Record<string, any>
+  declare loaderData: Record<string, unknown> | null
   declare platformType: PlatformTypeEnum
   static elementRegistry = new Map()
 
