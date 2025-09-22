@@ -1,3 +1,7 @@
+// Import the enhanced data context types and utilities
+import type { WeaverseDataContext } from '../hooks/use-weaverse-data-context'
+import { isWeaverseDataContext } from '../hooks/use-weaverse-data-context'
+
 // Cached regex pattern for better performance
 const TEMPLATE_REGEX = /\{\{([^}]+)\}\}/g
 const ARRAY_INDEX_REGEX = /^(\w+)\[(\d+)\]$/
@@ -77,50 +81,95 @@ function sanitizeValue(value: unknown): string {
 }
 
 /**
- * Creates a safe cache key from content and loaderData
+ * Creates a safe cache key from content and data
  * Handles circular references by using a simplified approach
  */
 function createCacheKey(
   content: string,
-  loaderData: Record<string, unknown>
+  data: Record<string, unknown>
 ): string {
   try {
     // Try a simple JSON stringification with a limit
-    const dataStr = JSON.stringify(loaderData)
+    const dataStr = JSON.stringify(data)
     return `${content}:${dataStr.slice(0, 100)}`
   } catch {
     // If JSON.stringify fails (circular references), use a simpler approach
-    const keys = Object.keys(loaderData).sort().join(',')
+    const keys = Object.keys(data).sort().join(',')
     return `${content}:keys:${keys}`
   }
 }
 
 /**
- * Replaces data connector placeholders in content with actual values from loaderData
- * Supports {{path}} syntax with dot notation and array indexing
+ * Resolves data from either legacy loaderData or enhanced WeaverseDataContext
+ * Supports route-specific prefixes like {{root.path}}, {{layout.path}}, etc.
+ */
+function resolveDataFromContext(
+  path: string,
+  dataContext: WeaverseDataContext | Record<string, unknown>
+): unknown {
+  const trimmedPath = path.trim()
+
+  // Check if this is an enhanced context
+  if (isWeaverseDataContext(dataContext)) {
+    // Handle route-specific prefixes
+    if (trimmedPath.startsWith('root.')) {
+      return getNestedValue(dataContext.root, trimmedPath.slice(5))
+    }
+    if (trimmedPath.startsWith('layout.')) {
+      return getNestedValue(dataContext.layout, trimmedPath.slice(7))
+    }
+    if (trimmedPath.startsWith('parent.')) {
+      return getNestedValue(dataContext.parent, trimmedPath.slice(7))
+    }
+    if (trimmedPath.startsWith('current.')) {
+      return getNestedValue(dataContext.current, trimmedPath.slice(8))
+    }
+
+    // Default to combined data for backward compatibility
+    return getNestedValue(dataContext.combined, trimmedPath)
+  }
+
+  // Legacy behavior - use data directly
+  return getNestedValue(dataContext, trimmedPath)
+}
+
+/**
+ * Replaces data connector placeholders in content with actual values from data context
+ * Supports {{path}} syntax with dot notation, array indexing, and route prefixes
+ *
+ * Enhanced syntax:
+ * - {{root.siteSettings.title}} - Access root route data
+ * - {{layout.navigation.items}} - Access layout route data
+ * - {{parent.category.name}} - Access parent route data
+ * - {{current.product.title}} - Access current route data
+ * - {{user.name}} - Auto-resolved from combined data (backward compatible)
+ *
  * @param content - The content string containing {{}} placeholders
- * @param loaderData - The data object to resolve values from
+ * @param dataContext - The data context (legacy loaderData or enhanced WeaverseDataContext)
  * @returns The content with placeholders replaced by actual values
  */
 export function replaceContentDataConnectors(
   content: string,
-  loaderData: Record<string, unknown> | null | undefined
+  dataContext: WeaverseDataContext | Record<string, unknown> | null | undefined
 ): string {
-  if (!loaderData || typeof content !== 'string') {
+  if (!dataContext || typeof content !== 'string') {
     return content
   }
 
   try {
-    // Check cache first (with safe key generation)
-    const cacheKey = createCacheKey(content, loaderData)
+    // Use combined data for caching (handles both legacy and enhanced formats)
+    const cacheData = isWeaverseDataContext(dataContext)
+      ? dataContext.combined
+      : dataContext
+    const cacheKey = createCacheKey(content, cacheData)
+
     if (templateCache.has(cacheKey)) {
       return templateCache.get(cacheKey)!
     }
 
     const newContent = content.replace(TEMPLATE_REGEX, (match, path) => {
       try {
-        const trimmedPath = path.trim()
-        const value = getNestedValue(loaderData, trimmedPath)
+        const value = resolveDataFromContext(path, dataContext)
 
         if (value === undefined || value === null) {
           return match // Return original placeholder if value not found

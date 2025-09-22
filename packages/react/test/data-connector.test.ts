@@ -302,4 +302,115 @@ describe('replaceContentDataConnectors', () => {
       expect(result).toContain('Array: 1,2,3')
     })
   })
+
+  describe('Enhanced Data Context (useMatches integration)', () => {
+    const mockWeaverseDataContext = {
+      current: { product: { title: 'Current Product', price: 99 } },
+      matches: [
+        {
+          id: 'root',
+          pathname: '/',
+          data: { siteSettings: { title: 'My Store', logo: 'logo.png' } },
+          params: {},
+          handle: {},
+        },
+        {
+          id: 'layout',
+          pathname: '/products',
+          data: { navigation: { primaryMenu: ['Home', 'Products'] } },
+          params: {},
+          handle: {},
+        },
+      ],
+      root: { siteSettings: { title: 'My Store', logo: 'logo.png' } },
+      layout: { navigation: { primaryMenu: ['Home', 'Products'] } },
+      parent: { category: { name: 'Electronics', id: 'electronics' } },
+      combined: {
+        siteSettings: { title: 'My Store', logo: 'logo.png' },
+        navigation: { primaryMenu: ['Home', 'Products'] },
+        category: { name: 'Electronics', id: 'electronics' },
+        product: { title: 'Current Product', price: 99 },
+      },
+    }
+
+    test('should resolve route-specific paths with root prefix', () => {
+      const content = 'Welcome to {{root.siteSettings.title}}!'
+      const result = replaceContentDataConnectors(
+        content,
+        mockWeaverseDataContext
+      )
+      expect(result).toBe('Welcome to My Store!')
+    })
+
+    test('should resolve route-specific paths with layout prefix', () => {
+      const content = 'Menu: {{layout.navigation.primaryMenu[0]}}'
+      const result = replaceContentDataConnectors(
+        content,
+        mockWeaverseDataContext
+      )
+      expect(result).toBe('Menu: Home')
+    })
+
+    test('should resolve route-specific paths with parent prefix', () => {
+      const content = 'Category: {{parent.category.name}}'
+      const result = replaceContentDataConnectors(
+        content,
+        mockWeaverseDataContext
+      )
+      expect(result).toBe('Category: Electronics')
+    })
+
+    test('should resolve route-specific paths with current prefix', () => {
+      const content = '{{current.product.title}} - ${{current.product.price}}'
+      const result = replaceContentDataConnectors(
+        content,
+        mockWeaverseDataContext
+      )
+      expect(result).toBe('Current Product - $99')
+    })
+
+    test('should fallback to combined data for unprefixed paths (backward compatibility)', () => {
+      const content = '{{product.title}} from {{siteSettings.title}}'
+      const result = replaceContentDataConnectors(
+        content,
+        mockWeaverseDataContext
+      )
+      expect(result).toBe('Current Product from My Store')
+    })
+
+    test('should handle missing route data gracefully', () => {
+      const partialContext = {
+        current: { product: { title: 'Test Product' } },
+        matches: [],
+        root: null,
+        layout: null,
+        parent: null,
+        combined: { product: { title: 'Test Product' } },
+      }
+
+      const content = '{{root.missing.data}} {{product.title}}'
+      const result = replaceContentDataConnectors(content, partialContext)
+      expect(result).toBe('{{root.missing.data}} Test Product')
+    })
+
+    test('should work with complex nested paths across routes', () => {
+      const content =
+        '{{root.siteSettings.title}} > {{parent.category.name}} > {{current.product.title}}'
+      const result = replaceContentDataConnectors(
+        content,
+        mockWeaverseDataContext
+      )
+      expect(result).toBe('My Store > Electronics > Current Product')
+    })
+
+    test('should maintain backward compatibility with legacy loaderData format', () => {
+      const legacyData = {
+        user: { name: 'John' },
+        product: { title: 'Legacy Product' },
+      }
+      const content = 'Hello {{user.name}}, check out {{product.title}}'
+      const result = replaceContentDataConnectors(content, legacyData)
+      expect(result).toBe('Hello John, check out Legacy Product')
+    })
+  })
 })
