@@ -7,7 +7,7 @@
   About Weaverse: https://weaverse.io
 */
 
-import * as stitches from '@stitches/core'
+import { type CreateStitches, createStitches } from '@stitches/core'
 import type Stitches from '@stitches/core/types/stitches'
 import { createRef, type RefObject } from 'react'
 import { version } from '../package.json'
@@ -152,10 +152,10 @@ export class Weaverse extends EventEmitter {
     return new Weaverse.ItemConstructor(data, this)
   }
 
-  static initStitches = (externalConfig?: stitches.CreateStitches) => {
+  static initStitches = (externalConfig?: CreateStitches) => {
     Weaverse.stitchesInstance =
       Weaverse.stitchesInstance ||
-      stitches.createStitches({
+      createStitches({
         prefix: 'weaverse',
         media: Weaverse.mediaBreakPoints,
         utils: stitchesUtils,
