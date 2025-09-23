@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 5.5.0-beta.4
+
+### Patch Changes
+
+- bump beta version
+
 ## 5.5.1-beta.0
 
 ## 5.5.0

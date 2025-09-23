@@ -8,8 +8,7 @@
     "@weaverse/hydrogen": "5.5.0",
     "@weaverse/react": "5.5.0",
     "@weaverse/schema": "0.7.3",
-    "@weaverse/shopify": "5.5.0",
-    "@weaverse/pilot": "6.0.1"
+    "@weaverse/shopify": "5.5.0"
   },
-  "changesets": ["small-shoes-happen"]
+  "changesets": ["mean-beds-worry", "small-shoes-happen"]
 }
