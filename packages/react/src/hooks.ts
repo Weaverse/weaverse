@@ -2,11 +2,18 @@ import { Weaverse, type WeaverseItemStore } from '@weaverse/core'
 import { useContext } from 'react'
 import { WeaverseContext, WeaverseItemContext } from '~/context'
 
-// Re-export the data context hook
+// Re-export the data context hook and utilities
 export {
+  createWeaverseDataContext,
   useWeaverseDataContext,
   type WeaverseDataContext,
 } from './hooks/use-weaverse-data-context'
+
+// Re-export the data connector utilities
+export {
+  replaceContentDataConnectors,
+  replaceContentDataConnectorsDeep,
+} from './utils/data-connector'
 
 export function useWeaverse<T = Weaverse>() {
   let weaverse = useContext(WeaverseContext)

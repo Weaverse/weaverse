@@ -25,7 +25,7 @@
     "dev": "tsup --watch",
     "build": "tsup",
     "clean": "rimraf dist",
-    "test": "vitest",
+    "test": "vitest --run",
     "test:watch": "vitest --watch"
   },
   "tsup": {

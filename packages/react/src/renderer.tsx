@@ -5,7 +5,7 @@ import { useItemInstance, useWeaverse } from '~/hooks'
 import { WeaverseContextProvider, WeaverseItemContext } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
 import { generateItemClassName } from './utils/css'
-import { replaceContentDataConnectors } from './utils/data-connector'
+import { replaceContentDataConnectorsDeep } from './utils/data-connector'
 
 let reactVersion = Number(React.version?.split('.')[0]) || 0
 
@@ -90,8 +90,9 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     content,
     ...rest
   } = data
-  if (content && typeof content === 'string') {
-    content = replaceContentDataConnectors(content, context.loaderData)
+  // Replace data connectors in content (handles strings, objects, and arrays recursively)
+  if (content !== undefined && content !== null) {
+    content = replaceContentDataConnectorsDeep(content, context.dataContext)
     rest.content = content
   }
 

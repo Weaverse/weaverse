@@ -1,14 +1,27 @@
 // Import the enhanced data context types and utilities
 import type { WeaverseDataContext } from '../hooks/use-weaverse-data-context'
-import { isWeaverseDataContext } from '../hooks/use-weaverse-data-context'
 
 // Cached regex pattern for better performance
 const TEMPLATE_REGEX = /\{\{([^}]+)\}\}/g
 const ARRAY_INDEX_REGEX = /^(\w+)\[(\d+)\]$/
 
+/**
+ * Validates that a property name is safe to access (prevents prototype pollution)
+ */
+function isSafePropertyName(key: string): boolean {
+  return key !== '__proto__' && key !== 'constructor' && key !== 'prototype'
+}
+
 // Simple cache for parsed templates (max 100 entries)
 const templateCache = new Map<string, string>()
 const MAX_CACHE_SIZE = 100
+
+// Cache for fallback lookups to improve performance (moved to module level to prevent memory leaks)
+const fallbackCache = new Map<
+  string,
+  { routeKey: string; value: unknown; timestamp: number }
+>()
+const FALLBACK_CACHE_MAX_SIZE = 50
 
 /**
  * Safely gets a nested value from an object using dot notation path
@@ -51,7 +64,12 @@ function getNestedValue(
       return
     }
 
-    // Handle regular object property access
+    // Handle regular object property access with security validation
+    if (!isSafePropertyName(key)) {
+      console.warn(`Unsafe property access attempted: ${key}`)
+      return
+    }
+
     return current !== null && key in current
       ? (current as Record<string, unknown>)[key]
       : undefined
@@ -100,8 +118,8 @@ function createCacheKey(
 }
 
 /**
- * Resolves data from either legacy loaderData or enhanced WeaverseDataContext
- * Supports route-specific prefixes like {{root.path}}, {{layout.path}}, etc.
+ * Resolves data from the flat route-keyed data context
+ * Supports both route-specific ({{root.layout.shop.name}}) and fallback ({{shop.name}}) access
  */
 function resolveDataFromContext(
   path: string,
@@ -109,27 +127,74 @@ function resolveDataFromContext(
 ): unknown {
   const trimmedPath = path.trim()
 
-  // Check if this is an enhanced context
-  if (isWeaverseDataContext(dataContext)) {
-    // Handle route-specific prefixes
-    if (trimmedPath.startsWith('root.')) {
-      return getNestedValue(dataContext.root, trimmedPath.slice(5))
-    }
-    if (trimmedPath.startsWith('layout.')) {
-      return getNestedValue(dataContext.layout, trimmedPath.slice(7))
-    }
-    if (trimmedPath.startsWith('parent.')) {
-      return getNestedValue(dataContext.parent, trimmedPath.slice(7))
-    }
-    if (trimmedPath.startsWith('current.')) {
-      return getNestedValue(dataContext.current, trimmedPath.slice(8))
-    }
+  // Check if path starts with a route key (e.g., "root.layout.shop.name")
+  const pathParts = trimmedPath.split('.')
+  const potentialRouteKey = pathParts[0]
 
-    // Default to combined data for backward compatibility
-    return getNestedValue(dataContext.combined, trimmedPath)
+  // If we have route-keyed data and the first part matches a route
+  if (
+    dataContext[potentialRouteKey] &&
+    typeof dataContext[potentialRouteKey] === 'object' &&
+    dataContext[potentialRouteKey] !== null
+  ) {
+    // Remove route key and resolve rest of path from that route's data
+    const remainingPath = pathParts.slice(1).join('.')
+    if (remainingPath) {
+      return getNestedValue(dataContext[potentialRouteKey], remainingPath)
+    }
+    return dataContext[potentialRouteKey]
   }
 
-  // Legacy behavior - use data directly
+  // Fallback: search across all route data for backward compatibility
+  // This handles cases like {{shop.name}} without route prefix
+
+  // Check cache first
+  const cachedResult = fallbackCache.get(trimmedPath)
+  if (cachedResult && dataContext[cachedResult.routeKey]) {
+    const value = getNestedValue(
+      dataContext[cachedResult.routeKey],
+      trimmedPath
+    )
+    if (value !== undefined) {
+      // Update timestamp on cache hit
+      cachedResult.timestamp = Date.now()
+      return value
+    }
+  }
+
+  // Search with priority order (most common routes first)
+  const priorityRoutes = ['root', 'routes/product', 'routes/collection']
+  const allRoutes = [
+    ...priorityRoutes,
+    ...Object.keys(dataContext).filter((k) => !priorityRoutes.includes(k)),
+  ]
+
+  for (const routeKey of allRoutes) {
+    const routeData = dataContext[routeKey]
+    if (routeData && typeof routeData === 'object' && routeData !== null) {
+      const value = getNestedValue(routeData, trimmedPath)
+      if (value !== undefined) {
+        // Clean cache if it's getting too large
+        if (fallbackCache.size >= FALLBACK_CACHE_MAX_SIZE) {
+          const entries = Array.from(fallbackCache.entries())
+          entries.sort((a, b) => a[1].timestamp - b[1].timestamp)
+          // Remove oldest 25% of entries
+          const toRemove = Math.floor(entries.length * 0.25)
+          for (let i = 0; i < toRemove; i++) {
+            fallbackCache.delete(entries[i][0])
+          }
+        }
+        fallbackCache.set(trimmedPath, {
+          routeKey,
+          value,
+          timestamp: Date.now(),
+        })
+        return value
+      }
+    }
+  }
+
+  // Final fallback: try direct access (for non-route-keyed legacy data)
   return getNestedValue(dataContext, trimmedPath)
 }
 
@@ -145,7 +210,7 @@ function resolveDataFromContext(
  * - {{user.name}} - Auto-resolved from combined data (backward compatible)
  *
  * @param content - The content string containing {{}} placeholders
- * @param dataContext - The data context (legacy loaderData or enhanced WeaverseDataContext)
+ * @param dataContext - The enhanced WeaverseDataContext with route-keyed data
  * @returns The content with placeholders replaced by actual values
  */
 export function replaceContentDataConnectors(
@@ -157,11 +222,8 @@ export function replaceContentDataConnectors(
   }
 
   try {
-    // Use combined data for caching (handles both legacy and enhanced formats)
-    const cacheData = isWeaverseDataContext(dataContext)
-      ? dataContext.combined
-      : dataContext
-    const cacheKey = createCacheKey(content, cacheData)
+    // Simplified caching - dataContext is already the combined data
+    const cacheKey = createCacheKey(content, dataContext)
 
     if (templateCache.has(cacheKey)) {
       return templateCache.get(cacheKey)!
@@ -196,5 +258,68 @@ export function replaceContentDataConnectors(
   } catch (error) {
     console.warn('Error processing data connectors:', error, { content })
     return content
+  }
+}
+
+/**
+ * Recursively replaces data connector placeholders in any data structure
+ * Handles strings, objects, arrays, and nested combinations
+ *
+ * @param data - The data to process (string, object, array, or primitive)
+ * @param dataContext - The data context for replacements
+ * @param visited - Set to track visited objects for circular reference protection
+ * @returns The data with all string placeholders replaced
+ */
+export function replaceContentDataConnectorsDeep<T>(
+  data: T,
+  dataContext: WeaverseDataContext | Record<string, unknown> | null | undefined,
+  visited = new WeakSet()
+): T {
+  if (!dataContext) {
+    return data
+  }
+
+  // Handle primitive types
+  if (typeof data === 'string') {
+    return replaceContentDataConnectors(data, dataContext) as T
+  }
+
+  if (typeof data !== 'object' || data === null) {
+    return data
+  }
+
+  // Protect against circular references
+  if (visited.has(data as WeakKey)) {
+    console.warn(
+      'Circular reference detected in deep data connector replacement'
+    )
+    return data
+  }
+
+  // Add to circular reference tracking
+  visited.add(data as WeakKey)
+
+  try {
+    // Handle arrays
+    if (Array.isArray(data)) {
+      return data.map((item) =>
+        replaceContentDataConnectorsDeep(item, dataContext, visited)
+      ) as T
+    }
+
+    // Handle objects
+    const result = {} as T
+    for (const [key, value] of Object.entries(data)) {
+      ;(result as Record<string, unknown>)[key] =
+        replaceContentDataConnectorsDeep(value, dataContext, visited)
+    }
+
+    return result
+  } catch (error) {
+    console.warn('Error in deep data connector replacement:', error)
+    return data
+  } finally {
+    // Remove from tracking when done processing this object
+    visited.delete(data as WeakKey)
   }
 }

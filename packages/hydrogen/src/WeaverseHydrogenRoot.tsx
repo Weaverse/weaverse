@@ -1,6 +1,8 @@
 import {
+  createWeaverseDataContext,
   isBrowser,
   type PlatformTypeEnum,
+  replaceContentDataConnectorsDeep,
   useSafeExternalStore,
   Weaverse,
   WeaverseItemStore,
@@ -14,7 +16,7 @@ import {
   Suspense,
 } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-import { Await, useLoaderData } from 'react-router'
+import { Await, useMatches } from 'react-router'
 import { defaultComponents } from '~/components'
 import type {
   HydrogenComponentData,
@@ -38,12 +40,12 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
 
   constructor(initialData: HydrogenComponentData, weaverse: WeaverseHydrogen) {
     super(initialData, weaverse)
-    let { data, ...rest } = initialData
+    const { data, ...rest } = initialData
     if (!this.Element?.schema) {
       console.error('Element is missing schema or not found!')
       return
     }
-    let schemaData = generateDataFromSchema(this.Element.schema)
+    const schemaData = generateDataFromSchema(this.Element.schema)
     Object.assign(this._store, schemaData, data, rest)
   }
 
@@ -73,7 +75,7 @@ export class WeaverseHydrogen extends Weaverse {
   static elementRegistry: Map<string, HydrogenElement>
 
   constructor(params: WeaverseHydrogenParams) {
-    let { internal, pageId, requestInfo, ...coreParams } = params
+    const { internal, pageId, requestInfo, ...coreParams } = params
     super({ ...coreParams })
     this.internal = internal
     this.pageId = pageId
@@ -115,7 +117,7 @@ function createWeaverseInstance(
   return new WeaverseHydrogen(params)
 }
 
-let StudioBridge = memo(({ context }: { context: WeaverseHydrogen }) => {
+const StudioBridge = memo(({ context }: { context: WeaverseHydrogen }) => {
   useStudio(context)
   return null
 })
@@ -123,10 +125,10 @@ let StudioBridge = memo(({ context }: { context: WeaverseHydrogen }) => {
 function RenderRoot(props: {
   data: WeaverseLoaderData
   components: HydrogenComponent[]
-  loaderData?: Record<string, any>
+  dataContext?: Record<string, any>
 }) {
-  let { data, components, loaderData } = props
-  for (let comp of [...components, ...defaultComponents]) {
+  const { data, components, dataContext } = props
+  for (const comp of [...components, ...defaultComponents]) {
     comp?.schema?.type &&
       registerComponent({
         type: comp?.schema.type,
@@ -135,12 +137,20 @@ function RenderRoot(props: {
         loader: comp.loader,
       })
   }
-  let { page, configs, project, pageAssignment } = data || {}
-  let weaverse = createWeaverseInstance({
+  const { page, configs, project, pageAssignment } = data || {}
+
+  // Process page items with deep data connector replacement
+  // This ensures all nested strings in the page structure get replaced
+  let processedPage = page
+  if (page && dataContext) {
+    processedPage = replaceContentDataConnectorsDeep(page, dataContext)
+  }
+
+  const weaverse = createWeaverseInstance({
     ...configs,
-    loaderData,
-    data: page,
-    pageId: page?.id,
+    dataContext,
+    data: processedPage,
+    pageId: processedPage?.id,
     internal: { project, pageAssignment },
   })
   return (
@@ -155,7 +165,7 @@ export function registerComponent(element: HydrogenElement) {
   WeaverseHydrogen.registerElement(element)
 }
 
-export let WeaverseHydrogenRoot = memo(
+export const WeaverseHydrogenRoot = memo(
   ({
     components,
     errorComponent: ErrorComponent = ({ error }) => (
@@ -165,22 +175,42 @@ export let WeaverseHydrogenRoot = memo(
     components: HydrogenComponent[]
     errorComponent?: React.FC<{ error: any }>
   }) => {
-    let loaderData = useLoaderData()
-    let data = loaderData?.weaverseData as
-      | WeaverseLoaderData
-      | Promise<WeaverseLoaderData>
+    const matches = useMatches()
 
-    if (data) {
-      if (data instanceof Promise) {
+    // Create flat route-keyed data context from matches only
+    // No more useLoaderData dependency - everything comes from matches
+    const enhancedDataContext = createWeaverseDataContext(matches)
+
+    // Find weaverseData from matches instead of useLoaderData
+    // Look through matches to find the one containing weaverseData
+    let weaverseData: WeaverseLoaderData | Promise<WeaverseLoaderData> | null =
+      null
+
+    for (const match of matches) {
+      if (
+        match.data &&
+        typeof match.data === 'object' &&
+        match.data !== null &&
+        'weaverseData' in match.data
+      ) {
+        weaverseData = match.data.weaverseData as
+          | WeaverseLoaderData
+          | Promise<WeaverseLoaderData>
+        break
+      }
+    }
+
+    if (weaverseData) {
+      if (weaverseData instanceof Promise) {
         return (
           <ErrorBoundary fallbackRender={ErrorComponent as any}>
             <Suspense>
-              <Await resolve={data}>
+              <Await resolve={weaverseData}>
                 {(resolvedData) => (
                   <RenderRoot
                     components={components}
                     data={resolvedData}
-                    loaderData={loaderData}
+                    dataContext={enhancedDataContext}
                   />
                 )}
               </Await>
@@ -191,25 +221,25 @@ export let WeaverseHydrogenRoot = memo(
       return (
         <RenderRoot
           components={components}
-          data={data}
-          loaderData={loaderData}
+          data={weaverseData}
+          dataContext={enhancedDataContext}
         />
       )
     }
     return (
       <ErrorComponent
-        error={{ message: 'No Weaverse data return from route loader!' }}
+        error={{ message: 'No Weaverse data found in route matches!' }}
       />
     )
   }
 )
 
-let ThemeSettingsProvider = createContext<HydrogenThemeSettings | null>(null)
+const ThemeSettingsProvider = createContext<HydrogenThemeSettings | null>(null)
 ThemeSettingsProvider.displayName = 'WeaverseThemeSettingsProvider'
 
 export function withWeaverse(Component: ComponentType<any>) {
   return (props: JSX.IntrinsicAttributes) => {
-    let { settings } = useThemeSettingsStore()
+    const { settings } = useThemeSettingsStore()
     return (
       <ThemeSettingsProvider.Provider value={settings}>
         <Component {...props} />
@@ -219,8 +249,8 @@ export function withWeaverse(Component: ComponentType<any>) {
 }
 
 export function useThemeSettings<T = HydrogenThemeSettings>() {
-  let themeSettingsStore = useThemeSettingsStore()
-  let settings = useSafeExternalStore(
+  const themeSettingsStore = useThemeSettingsStore()
+  const settings = useSafeExternalStore(
     themeSettingsStore.subscribe,
     themeSettingsStore.getSnapshot,
     themeSettingsStore.getServerSnapshot

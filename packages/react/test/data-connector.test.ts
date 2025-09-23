@@ -1,5 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { replaceContentDataConnectors } from '../src/utils/data-connector'
+import {
+  replaceContentDataConnectors,
+  replaceContentDataConnectorsDeep,
+} from '../src/utils/data-connector'
 
 describe('replaceContentDataConnectors', () => {
   const mockLoaderData = {
@@ -303,107 +306,79 @@ describe('replaceContentDataConnectors', () => {
     })
   })
 
-  describe('Enhanced Data Context (useMatches integration)', () => {
-    const mockWeaverseDataContext = {
-      current: { product: { title: 'Current Product', price: 99 } },
-      matches: [
-        {
-          id: 'root',
-          pathname: '/',
-          data: { siteSettings: { title: 'My Store', logo: 'logo.png' } },
-          params: {},
-          handle: {},
+  describe('Flat Route-Keyed Data Context (Option 1)', () => {
+    // Flat route-keyed structure: {root: {...}, "routes/xxx": {...}}
+    const mockFlatDataContext = {
+      root: {
+        layout: {
+          shop: { name: 'My Store' },
+          headerMenu: { items: [{ title: 'Home' }, { title: 'Products' }] },
         },
-        {
-          id: 'layout',
-          pathname: '/products',
-          data: { navigation: { primaryMenu: ['Home', 'Products'] } },
-          params: {},
-          handle: {},
-        },
-      ],
-      root: { siteSettings: { title: 'My Store', logo: 'logo.png' } },
-      layout: { navigation: { primaryMenu: ['Home', 'Products'] } },
-      parent: { category: { name: 'Electronics', id: 'electronics' } },
-      combined: {
-        siteSettings: { title: 'My Store', logo: 'logo.png' },
-        navigation: { primaryMenu: ['Home', 'Products'] },
-        category: { name: 'Electronics', id: 'electronics' },
-        product: { title: 'Current Product', price: 99 },
+        seo: { title: 'Home Page' },
+        consent: { country: 'US' },
+      },
+      'routes/product': {
+        product: { title: 'Amazing Product', price: 99 },
+        variants: [
+          { id: 1, title: 'Red' },
+          { id: 2, title: 'Blue' },
+        ],
+      },
+      'routes/collection': {
+        collection: { name: 'Electronics', handle: 'electronics' },
+        products: [{ title: 'Product 1' }, { title: 'Product 2' }],
       },
     }
 
-    test('should resolve route-specific paths with root prefix', () => {
-      const content = 'Welcome to {{root.siteSettings.title}}!'
-      const result = replaceContentDataConnectors(
-        content,
-        mockWeaverseDataContext
-      )
+    it('should resolve route-specific paths with explicit route keys', () => {
+      const content = 'Welcome to {{root.layout.shop.name}}!'
+      const result = replaceContentDataConnectors(content, mockFlatDataContext)
       expect(result).toBe('Welcome to My Store!')
     })
 
-    test('should resolve route-specific paths with layout prefix', () => {
-      const content = 'Menu: {{layout.navigation.primaryMenu[0]}}'
-      const result = replaceContentDataConnectors(
-        content,
-        mockWeaverseDataContext
-      )
+    it('should resolve array elements from route-specific data', () => {
+      const content = 'Menu: {{root.layout.headerMenu.items[0].title}}'
+      const result = replaceContentDataConnectors(content, mockFlatDataContext)
       expect(result).toBe('Menu: Home')
     })
 
-    test('should resolve route-specific paths with parent prefix', () => {
-      const content = 'Category: {{parent.category.name}}'
-      const result = replaceContentDataConnectors(
-        content,
-        mockWeaverseDataContext
-      )
-      expect(result).toBe('Category: Electronics')
+    test('should resolve nested paths from specific routes', () => {
+      const content = 'Product: {{routes/product.product.title}}'
+      const result = replaceContentDataConnectors(content, mockFlatDataContext)
+      expect(result).toBe('Product: Amazing Product')
     })
 
-    test('should resolve route-specific paths with current prefix', () => {
-      const content = '{{current.product.title}} - ${{current.product.price}}'
-      const result = replaceContentDataConnectors(
-        content,
-        mockWeaverseDataContext
-      )
-      expect(result).toBe('Current Product - $99')
+    test('should resolve multiple properties from different routes', () => {
+      const content =
+        '{{routes/product.product.title}} - ${{routes/product.product.price}}'
+      const result = replaceContentDataConnectors(content, mockFlatDataContext)
+      expect(result).toBe('Amazing Product - $99')
     })
 
-    test('should fallback to combined data for unprefixed paths (backward compatibility)', () => {
-      const content = '{{product.title}} from {{siteSettings.title}}'
-      const result = replaceContentDataConnectors(
-        content,
-        mockWeaverseDataContext
-      )
-      expect(result).toBe('Current Product from My Store')
+    test('should handle missing data gracefully', () => {
+      const content = '{{missing.data}} {{routes/product.product.title}}'
+      const result = replaceContentDataConnectors(content, mockFlatDataContext)
+      expect(result).toBe('{{missing.data}} Amazing Product')
     })
 
-    test('should handle missing route data gracefully', () => {
+    test('should handle missing data gracefully', () => {
       const partialContext = {
-        current: { product: { title: 'Test Product' } },
-        matches: [],
-        root: null,
-        layout: null,
-        parent: null,
-        combined: { product: { title: 'Test Product' } },
+        root: { user: { name: 'Test User' } },
       }
 
-      const content = '{{root.missing.data}} {{product.title}}'
+      const content = '{{missing.data}} {{user.name}}'
       const result = replaceContentDataConnectors(content, partialContext)
-      expect(result).toBe('{{root.missing.data}} Test Product')
+      expect(result).toBe('{{missing.data}} Test User')
     })
 
-    test('should work with complex nested paths across routes', () => {
+    test('should work with complex nested paths across different routes', () => {
       const content =
-        '{{root.siteSettings.title}} > {{parent.category.name}} > {{current.product.title}}'
-      const result = replaceContentDataConnectors(
-        content,
-        mockWeaverseDataContext
-      )
-      expect(result).toBe('My Store > Electronics > Current Product')
+        '{{root.seo.title}} - {{routes/product.product.title}} in {{routes/collection.collection.name}}'
+      const result = replaceContentDataConnectors(content, mockFlatDataContext)
+      expect(result).toBe('Home Page - Amazing Product in Electronics')
     })
 
-    test('should maintain backward compatibility with legacy loaderData format', () => {
+    test('should maintain backward compatibility with legacy non-route-keyed data', () => {
       const legacyData = {
         user: { name: 'John' },
         product: { title: 'Legacy Product' },
@@ -411,6 +386,238 @@ describe('replaceContentDataConnectors', () => {
       const content = 'Hello {{user.name}}, check out {{product.title}}'
       const result = replaceContentDataConnectors(content, legacyData)
       expect(result).toBe('Hello John, check out Legacy Product')
+    })
+
+    test('should handle route keys with special characters', () => {
+      const content = 'Collection: {{routes/collection.collection.handle}}'
+      const result = replaceContentDataConnectors(content, mockFlatDataContext)
+      expect(result).toBe('Collection: electronics')
+    })
+  })
+
+  describe('Deep Object Replacement (replaceContentDataConnectorsDeep)', () => {
+    const mockDeepData = {
+      root: {
+        layout: {
+          shop: { name: 'Deep Store' },
+          user: { name: 'Alice' },
+        },
+      },
+      'routes/product': {
+        product: { title: 'Deep Product', price: 199.99 },
+      },
+    }
+
+    it('should handle string values (same as basic function)', () => {
+      const content = 'Hello {{root.layout.user.name}}'
+      const result = replaceContentDataConnectorsDeep(content, mockDeepData)
+      expect(result).toBe('Hello Alice')
+    })
+
+    it('should recursively replace strings in objects', () => {
+      const contentObj = {
+        title: 'Welcome to {{root.layout.shop.name}}',
+        greeting: 'Hello {{root.layout.user.name}}',
+        price: 'Product costs ${{routes/product.product.price}}',
+        metadata: {
+          description: 'Shop: {{root.layout.shop.name}}',
+          nested: {
+            info: 'User: {{root.layout.user.name}}',
+          },
+        },
+      }
+
+      const result = replaceContentDataConnectorsDeep(contentObj, mockDeepData)
+
+      expect(result).toEqual({
+        title: 'Welcome to Deep Store',
+        greeting: 'Hello Alice',
+        price: 'Product costs $199.99',
+        metadata: {
+          description: 'Shop: Deep Store',
+          nested: {
+            info: 'User: Alice',
+          },
+        },
+      })
+    })
+
+    it('should recursively replace strings in arrays', () => {
+      const contentArray = [
+        'Welcome to {{root.layout.shop.name}}',
+        'Hello {{root.layout.user.name}}',
+        {
+          title: 'Product: {{routes/product.product.title}}',
+          price: '${{routes/product.product.price}}',
+        },
+        [
+          'Nested: {{root.layout.user.name}}',
+          'Array: {{root.layout.shop.name}}',
+        ],
+      ]
+
+      const result = replaceContentDataConnectorsDeep(
+        contentArray,
+        mockDeepData
+      )
+
+      expect(result).toEqual([
+        'Welcome to Deep Store',
+        'Hello Alice',
+        {
+          title: 'Product: Deep Product',
+          price: '$199.99',
+        },
+        ['Nested: Alice', 'Array: Deep Store'],
+      ])
+    })
+
+    it('should handle mixed object and array structures', () => {
+      const complexContent = {
+        header: {
+          title: 'Welcome to {{root.layout.shop.name}}',
+          navigation: [
+            { label: 'Home', url: '/home?user={{root.layout.user.name}}' },
+            { label: 'Products', url: '/products' },
+          ],
+        },
+        products: [
+          {
+            name: '{{routes/product.product.title}}',
+            price: '${{routes/product.product.price}}',
+            description: 'Available at {{root.layout.shop.name}}',
+          },
+        ],
+        footer: {
+          copyright:
+            '© {{root.layout.shop.name}} - Contact: {{root.layout.user.name}}',
+        },
+      }
+
+      const result = replaceContentDataConnectorsDeep(
+        complexContent,
+        mockDeepData
+      )
+
+      expect(result).toEqual({
+        header: {
+          title: 'Welcome to Deep Store',
+          navigation: [
+            { label: 'Home', url: '/home?user=Alice' },
+            { label: 'Products', url: '/products' },
+          ],
+        },
+        products: [
+          {
+            name: 'Deep Product',
+            price: '$199.99',
+            description: 'Available at Deep Store',
+          },
+        ],
+        footer: {
+          copyright: '© Deep Store - Contact: Alice',
+        },
+      })
+    })
+
+    it('should preserve non-string primitive values', () => {
+      const content = {
+        title: 'Welcome to {{root.layout.shop.name}}',
+        count: 42,
+        isActive: true,
+        amount: null,
+        undefined,
+        price: 99.99,
+      }
+
+      const result = replaceContentDataConnectorsDeep(content, mockDeepData)
+
+      expect(result).toEqual({
+        title: 'Welcome to Deep Store',
+        count: 42,
+        isActive: true,
+        amount: null,
+        undefined,
+        price: 99.99,
+      })
+    })
+
+    it('should handle empty objects and arrays', () => {
+      const content = {
+        empty: {},
+        emptyArray: [],
+        title: 'Shop: {{root.layout.shop.name}}',
+      }
+
+      const result = replaceContentDataConnectorsDeep(content, mockDeepData)
+
+      expect(result).toEqual({
+        empty: {},
+        emptyArray: [],
+        title: 'Shop: Deep Store',
+      })
+    })
+
+    it('should return original data when dataContext is null/undefined', () => {
+      const content = {
+        title: 'Welcome to {{root.layout.shop.name}}',
+        nested: {
+          info: 'User: {{root.layout.user.name}}',
+        },
+      }
+
+      const resultNull = replaceContentDataConnectorsDeep(content, null)
+      const resultUndefined = replaceContentDataConnectorsDeep(
+        content,
+        undefined
+      )
+
+      expect(resultNull).toEqual(content)
+      expect(resultUndefined).toEqual(content)
+    })
+
+    it('should handle circular references gracefully', () => {
+      const circularContent: any = {
+        title: 'Welcome to {{root.layout.shop.name}}',
+        nested: {
+          info: 'User: {{root.layout.user.name}}',
+        },
+      }
+      circularContent.nested.circular = circularContent
+
+      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+      const result = replaceContentDataConnectorsDeep(
+        circularContent,
+        mockDeepData
+      )
+
+      // Should still process non-circular parts
+      expect(result.title).toBe('Welcome to Deep Store')
+      expect(result.nested.info).toBe('User: Alice')
+
+      consoleSpy.mockRestore()
+    })
+
+    it('should handle errors gracefully and return original data', () => {
+      const problematicContent = {
+        get errorProperty() {
+          throw new Error('Property access error')
+        },
+        title: 'Welcome to {{root.layout.shop.name}}',
+      }
+
+      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+      const result = replaceContentDataConnectorsDeep(
+        problematicContent,
+        mockDeepData
+      )
+
+      // Should return original object when error occurs
+      expect(result).toBe(problematicContent)
+
+      consoleSpy.mockRestore()
     })
   })
 })
