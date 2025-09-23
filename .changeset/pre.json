@@ -13,6 +13,7 @@
   },
   "changesets": [
     "enhanced-data-connector-beta",
+    "fix-missing-data-context-file-beta",
     "fix-react-router-dependency-beta"
   ]
 }

@@ -1,5 +1,7 @@
 # @weaverse/core
 
+## 5.5.0-beta.2
+
 ## 5.5.0-beta.1
 
 ## 5.5.0-beta.0
