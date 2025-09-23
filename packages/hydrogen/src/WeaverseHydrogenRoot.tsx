@@ -1,5 +1,4 @@
 import {
-  createWeaverseDataContext,
   isBrowser,
   type PlatformTypeEnum,
   replaceContentDataConnectorsDeep,
@@ -18,6 +17,7 @@ import {
 import { ErrorBoundary } from 'react-error-boundary'
 import { Await, useMatches } from 'react-router'
 import { defaultComponents } from '~/components'
+import { createWeaverseDataContext } from './hooks/use-weaverse-data-context'
 import type {
   HydrogenComponentData,
   HydrogenElement,

@@ -11,5 +11,8 @@
     "@weaverse/shopify": "5.4.2",
     "@weaverse/pilot": "6.0.0"
   },
-  "changesets": ["enhanced-data-connector-beta"]
+  "changesets": [
+    "enhanced-data-connector-beta",
+    "fix-react-router-dependency-beta"
+  ]
 }

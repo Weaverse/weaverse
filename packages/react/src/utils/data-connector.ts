@@ -1,5 +1,6 @@
-// Import the enhanced data context types and utilities
-import type { WeaverseDataContext } from '../hooks/use-weaverse-data-context'
+// Data connector utilities for replacing placeholders with real data
+// Generic data context type for flexible usage
+export type DataContext = Record<string, unknown>
 
 // Cached regex pattern for better performance
 const TEMPLATE_REGEX = /\{\{([^}]+)\}\}/g
@@ -123,8 +124,12 @@ function createCacheKey(
  */
 function resolveDataFromContext(
   path: string,
-  dataContext: WeaverseDataContext | Record<string, unknown>
+  dataContext: DataContext | null | undefined
 ): unknown {
+  if (!dataContext) {
+    return
+  }
+
   const trimmedPath = path.trim()
 
   // Check if path starts with a route key (e.g., "root.layout.shop.name")
@@ -215,7 +220,7 @@ function resolveDataFromContext(
  */
 export function replaceContentDataConnectors(
   content: string,
-  dataContext: WeaverseDataContext | Record<string, unknown> | null | undefined
+  dataContext: DataContext | null | undefined
 ): string {
   if (!dataContext || typeof content !== 'string') {
     return content
@@ -272,7 +277,7 @@ export function replaceContentDataConnectors(
  */
 export function replaceContentDataConnectorsDeep<T>(
   data: T,
-  dataContext: WeaverseDataContext | Record<string, unknown> | null | undefined,
+  dataContext: DataContext | null | undefined,
   visited = new WeakSet()
 ): T {
   if (!dataContext) {
