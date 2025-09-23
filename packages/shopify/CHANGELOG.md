@@ -1,5 +1,13 @@
 # @weaverse/shopify
 
+## 5.5.0
+
+### Patch Changes
+
+- Updated dependencies [21ba4ed]
+- Updated dependencies [2468404]
+  - @weaverse/react@5.5.0
+
 ## 5.5.0-beta.2
 
 ### Patch Changes
