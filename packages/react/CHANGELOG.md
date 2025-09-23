@@ -1,5 +1,11 @@
 # @weaverse/react
 
+## 5.5.1-beta.0
+
+### Patch Changes
+
+- @weaverse/core@5.5.1-beta.0
+
 ## 5.5.0
 
 ### Minor Changes

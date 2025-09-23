@@ -1,0 +1,15 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "@weaverse/biome": "5.4.1",
+    "@weaverse/cli": "5.4.1",
+    "@weaverse/core": "5.5.0",
+    "@weaverse/hydrogen": "5.5.0",
+    "@weaverse/react": "5.5.0",
+    "@weaverse/schema": "0.7.3",
+    "@weaverse/shopify": "5.5.0",
+    "@weaverse/pilot": "6.0.1"
+  },
+  "changesets": ["small-shoes-happen"]
+}
