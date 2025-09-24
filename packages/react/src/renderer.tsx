@@ -1,12 +1,12 @@
 import clsx from 'clsx'
-import * as React from 'react'
-import { memo, useEffect, useRef } from 'react'
+import React, { memo, useEffect, useRef } from 'react'
 import { useItemInstance, useWeaverse } from '~/hooks'
 import { WeaverseContextProvider, WeaverseItemContext } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
 import { generateItemClassName } from './utils/css'
 import { replaceContentDataConnectorsDeep } from './utils/data-connector'
 
+const REACT_VERSION_THRESHOLD = 18
 const reactVersion = Number(React.version?.split('.')[0]) || 0
 
 // Create a safe version of useSyncExternalStore that works in both client and server environments
@@ -79,7 +79,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     type,
     childIds = [],
     children = [],
-    parentId,
+
     createdAt,
     updatedAt,
     deletedAt,
@@ -117,19 +117,21 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     Component.displayName = type
     if (
       Component.$$typeof === Symbol.for('react.forward_ref') ||
-      reactVersion > 18
+      reactVersion > REACT_VERSION_THRESHOLD
     ) {
       processedRest.ref = instance.ref
     }
-    const renderChildren = (
-      children?.length
-        ? children
-        : childIds?.length
-          ? childIds.map((cid: string) => ({ id: cid }))
-          : []
-    ).map((item: { id: string }, index: number) => (
-      <ItemInstance id={item.id} key={`${item.id}-${index}`} parentId={id} />
-    ))
+    const childItems = children?.length
+      ? children
+      : childIds?.length
+        ? childIds.map((cid: string) => ({ id: cid }))
+        : []
+
+    const renderChildren = childItems.map(
+      (item: { id: string }, index: number) => (
+        <ItemInstance id={item.id} key={`${item.id}-${index}`} parentId={id} />
+      )
+    )
 
     return (
       <Component
