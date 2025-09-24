@@ -8,9 +8,103 @@ const ARRAY_INDEX_REGEX = /^(\w+)\[(\d+)\]$/
 
 /**
  * Validates that a property name is safe to access (prevents prototype pollution)
+ * Enhanced to handle route-specific patterns with special characters
  */
 function isSafePropertyName(key: string): boolean {
-  return key !== '__proto__' && key !== 'constructor' && key !== 'prototype'
+  // Block dangerous prototype pollution patterns
+  const dangerousPatterns = ['__proto__', 'constructor', 'prototype']
+  return !dangerousPatterns.includes(key)
+}
+
+/**
+ * Parses a template path into route key and property path components
+ * Handles complex routes like: routes/($locale).blogs.$blogHandle.$articleHandle
+ * Enhanced with caching for improved performance
+ *
+ * @param path - The full path from template (e.g., "routes/($locale)._index.weaverseData.page.name")
+ * @param dataContext - Available route data context
+ * @returns Object with routeKey and propertyPath
+ */
+function parseRouteAndProperty(
+  path: string,
+  dataContext: DataContext
+): {
+  routeKey: string | null
+  propertyPath: string
+} {
+  if (!dataContext || typeof path !== 'string') {
+    return { routeKey: null, propertyPath: path }
+  }
+
+  const trimmedPath = path.trim()
+
+  // Create a cache key that includes available routes for context awareness
+  const availableRouteKeys = Object.keys(dataContext).sort().join('|')
+  const cacheKey = `${trimmedPath}::${availableRouteKeys}`
+
+  // Check cache first
+  const cachedResult = routeParsingCache.get(cacheKey)
+  if (cachedResult) {
+    // Update timestamp on cache hit
+    cachedResult.timestamp = Date.now()
+    return {
+      routeKey: cachedResult.routeKey,
+      propertyPath: cachedResult.propertyPath,
+    }
+  }
+
+  // Get all available routes and sort by length (longest first for specificity)
+  const availableRoutes = Object.keys(dataContext).sort(
+    (a, b) => b.length - a.length
+  )
+
+  let result: { routeKey: string | null; propertyPath: string } = {
+    routeKey: null,
+    propertyPath: trimmedPath,
+  }
+
+  // Try to find the longest matching route key
+  let found = false
+  for (const routeKey of availableRoutes) {
+    // Exact match
+    if (trimmedPath === routeKey) {
+      result = { routeKey, propertyPath: '' }
+      found = true
+      break
+    }
+
+    // Route key with property path
+    if (trimmedPath.startsWith(routeKey + '.')) {
+      const propertyPath = trimmedPath.substring(routeKey.length + 1)
+      result = { routeKey, propertyPath }
+      found = true
+      break
+    }
+  }
+
+  if (!found) {
+    // No route key found, treat entire path as property path
+    result = { routeKey: null, propertyPath: trimmedPath }
+  }
+
+  // Cache the result
+  if (routeParsingCache.size >= ROUTE_PARSING_CACHE_MAX_SIZE) {
+    // Clean cache by removing oldest entries
+    const entries = Array.from(routeParsingCache.entries())
+    entries.sort((a, b) => a[1].timestamp - b[1].timestamp)
+    const toRemove = Math.floor(entries.length * 0.25)
+    for (let i = 0; i < toRemove; i++) {
+      routeParsingCache.delete(entries[i][0])
+    }
+  }
+
+  routeParsingCache.set(cacheKey, {
+    routeKey: result.routeKey,
+    propertyPath: result.propertyPath,
+    timestamp: Date.now(),
+  })
+
+  return result
 }
 
 // Simple cache for parsed templates (max 100 entries)
@@ -23,6 +117,13 @@ const fallbackCache = new Map<
   { routeKey: string; value: unknown; timestamp: number }
 >()
 const FALLBACK_CACHE_MAX_SIZE = 50
+
+// Route parsing cache for performance optimization
+const routeParsingCache = new Map<
+  string,
+  { routeKey: string | null; propertyPath: string; timestamp: number }
+>()
+const ROUTE_PARSING_CACHE_MAX_SIZE = 100
 
 /**
  * Safely gets a nested value from an object using dot notation path
@@ -120,7 +221,8 @@ function createCacheKey(
 
 /**
  * Resolves data from the flat route-keyed data context
- * Supports both route-specific ({{root.layout.shop.name}}) and fallback ({{shop.name}}) access
+ * Enhanced to support complex route patterns with special characters
+ * Supports: {{root.layout.shop.name}}, {{routes/($locale)._index.data}}, {{routes/($locale).blogs.$handle.$article.content}}
  */
 function resolveDataFromContext(
   path: string,
@@ -132,22 +234,21 @@ function resolveDataFromContext(
 
   const trimmedPath = path.trim()
 
-  // Check if path starts with a route key (e.g., "root.layout.shop.name")
-  const pathParts = trimmedPath.split('.')
-  const potentialRouteKey = pathParts[0]
+  // Use intelligent route parsing to separate route key from property path
+  const { routeKey, propertyPath } = parseRouteAndProperty(
+    trimmedPath,
+    dataContext
+  )
 
-  // If we have route-keyed data and the first part matches a route
-  if (
-    dataContext[potentialRouteKey] &&
-    typeof dataContext[potentialRouteKey] === 'object' &&
-    dataContext[potentialRouteKey] !== null
-  ) {
-    // Remove route key and resolve rest of path from that route's data
-    const remainingPath = pathParts.slice(1).join('.')
-    if (remainingPath) {
-      return getNestedValue(dataContext[potentialRouteKey], remainingPath)
+  // If we found a specific route key, resolve from that route's data
+  if (routeKey && dataContext[routeKey]) {
+    const routeData = dataContext[routeKey]
+    if (typeof routeData === 'object' && routeData !== null) {
+      if (propertyPath) {
+        return getNestedValue(routeData, propertyPath)
+      }
+      return routeData
     }
-    return dataContext[potentialRouteKey]
   }
 
   // Fallback: search across all route data for backward compatibility

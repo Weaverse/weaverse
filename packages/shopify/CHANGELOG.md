@@ -1,5 +1,13 @@
 # @weaverse/shopify
 
+## 5.5.0-beta.7
+
+### Patch Changes
+
+- update parse logic
+- Updated dependencies
+  - @weaverse/react@5.5.0-beta.7
+
 ## 5.5.0-beta.5
 
 ### Patch Changes

@@ -1,5 +1,32 @@
 # @weaverse/react
 
+## 5.5.0-beta.7
+
+### Patch Changes
+
+- update parse logic
+- Updated dependencies
+  - @weaverse/core@5.5.0-beta.7
+
+## 5.5.0-beta.6
+
+### Minor Changes
+
+- Enhanced route pattern support for complex Remix routes with special characters
+- Added intelligent route key detection supporting patterns like `routes/($locale)._index.weaverseData.page.name`
+- Implemented LRU caching for route parsing with context-aware cache keys
+- Fixed data immutability issues in template replacement
+- Added comprehensive test coverage for complex route patterns (75 total tests)
+- Improved performance with optimized caching strategies
+
+### Features
+
+- **Complex Route Support**: Full support for Remix route patterns including `/ ( ) $ .` characters
+- **Smart Route Detection**: Automatically detects the longest matching route key for specificity
+- **Performance Caching**: Context-aware LRU caching for route parsing and template resolution
+- **Data Integrity**: Guaranteed immutability through deep cloning and proper data handling
+- **Backward Compatibility**: All existing template patterns continue to work unchanged
+
 ## 5.5.0-beta.5
 
 ### Patch Changes

@@ -1,7 +1,6 @@
 import {
   isBrowser,
   type PlatformTypeEnum,
-  replaceContentDataConnectorsDeep,
   useSafeExternalStore,
   Weaverse,
   WeaverseItemStore,

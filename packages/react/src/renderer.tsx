@@ -87,21 +87,15 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     __hidden,
     // Need to get rid of this `data` property
     data: _,
-    content,
     ...rest
   } = data
 
-  // Replace data connectors in content (handles strings, objects, and arrays recursively)
-  // IMMUTABLE: Process the entire data object to avoid mutating original content
-  let processedRest = rest
-  if (content !== undefined && content !== null) {
-    const processedContent = replaceContentDataConnectorsDeep(
-      content,
-      context.dataContext
-    )
-    // Create new rest object instead of mutating original
-    processedRest = { ...rest, content: processedContent }
-  }
+  // Replace data connectors in all component data (handles strings, objects, and arrays recursively)
+  // IMMUTABLE: Process the entire rest object to avoid mutating original content
+  const processedRest = replaceContentDataConnectorsDeep(
+    rest,
+    context.dataContext
+  )
 
   useEffect(() => {
     if (!instance.ref.current) {
@@ -153,7 +147,6 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     )
   }
   instance._store.deleted = true
-  console.log(`❌ Unknown element: ${type}`)
   return null
 })
 ItemComponent.displayName = 'WeaverseComponent'
