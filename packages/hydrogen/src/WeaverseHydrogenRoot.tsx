@@ -139,18 +139,13 @@ function RenderRoot(props: {
   }
   const { page, configs, project, pageAssignment } = data || {}
 
-  // Process page items with deep data connector replacement
-  // This ensures all nested strings in the page structure get replaced
-  let processedPage = page
-  if (page && dataContext) {
-    processedPage = replaceContentDataConnectorsDeep(page, dataContext)
-  }
+  // Keep original page data - processing will happen at component level in renderer
 
   const weaverse = createWeaverseInstance({
     ...configs,
     dataContext,
-    data: processedPage,
-    pageId: processedPage?.id,
+    data: page,
+    pageId: page?.id,
     internal: { project, pageAssignment },
   })
   return (

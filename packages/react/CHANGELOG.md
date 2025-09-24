@@ -1,5 +1,13 @@
 # @weaverse/react
 
+## 5.5.0-beta.5
+
+### Patch Changes
+
+- update data parser
+- Updated dependencies
+  - @weaverse/core@5.5.0-beta.5
+
 ## 5.5.0-beta.4
 
 ### Patch Changes

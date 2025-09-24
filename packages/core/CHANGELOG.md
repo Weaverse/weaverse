@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 5.5.0-beta.5
+
+### Patch Changes
+
+- update data parser
+
 ## 5.5.0-beta.4
 
 ### Patch Changes

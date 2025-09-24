@@ -268,12 +268,13 @@ export function replaceContentDataConnectors(
 
 /**
  * Recursively replaces data connector placeholders in any data structure
+ * IMMUTABLE: Creates deep copies during processing to avoid mutating original data
  * Handles strings, objects, arrays, and nested combinations
  *
  * @param data - The data to process (string, object, array, or primitive)
  * @param dataContext - The data context for replacements
  * @param visited - Set to track visited objects for circular reference protection
- * @returns The data with all string placeholders replaced
+ * @returns IMMUTABLE copy of the data with all string placeholders replaced
  */
 export function replaceContentDataConnectorsDeep<T>(
   data: T,
@@ -284,7 +285,7 @@ export function replaceContentDataConnectorsDeep<T>(
     return data
   }
 
-  // Handle primitive types
+  // Handle primitive types - no cloning needed for primitives
   if (typeof data === 'string') {
     return replaceContentDataConnectors(data, dataContext) as T
   }
@@ -305,14 +306,20 @@ export function replaceContentDataConnectorsDeep<T>(
   visited.add(data as WeakKey)
 
   try {
-    // Handle arrays
-    if (Array.isArray(data)) {
-      return data.map((item) =>
-        replaceContentDataConnectorsDeep(item, dataContext, visited)
-      ) as T
+    // Handle special objects that should be cloned as-is
+    if (data instanceof Date) {
+      return new Date(data.getTime()) as T
     }
 
-    // Handle objects
+    // Handle arrays - create new array with processed items
+    if (Array.isArray(data)) {
+      const result = data.map((item) =>
+        replaceContentDataConnectorsDeep(item, dataContext, visited)
+      ) as T
+      return result
+    }
+
+    // Handle plain objects - create new object with processed values
     const result = {} as T
     for (const [key, value] of Object.entries(data)) {
       ;(result as Record<string, unknown>)[key] =

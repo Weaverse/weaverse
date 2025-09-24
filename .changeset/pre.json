@@ -10,5 +10,5 @@
     "@weaverse/schema": "0.7.3",
     "@weaverse/shopify": "5.5.0"
   },
-  "changesets": ["mean-beds-worry", "small-shoes-happen"]
+  "changesets": ["mean-beds-worry", "ripe-heads-fly", "small-shoes-happen"]
 }

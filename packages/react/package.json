@@ -2,7 +2,7 @@
   "name": "@weaverse/react",
   "author": "Weaverse Team",
   "description": "React bindings for Weaverse",
-  "version": "5.5.0-beta.4",
+  "version": "5.5.0-beta.5",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -42,7 +42,7 @@
     "outDir": "dist"
   },
   "dependencies": {
-    "@weaverse/core": "5.5.0-beta.4",
+    "@weaverse/core": "5.5.0-beta.5",
     "clsx": "^2.1.1",
     "react": ">=18",
     "react-dom": ">=18"
