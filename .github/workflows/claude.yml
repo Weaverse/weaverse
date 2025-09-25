@@ -38,28 +38,33 @@ jobs:
           
           # Direct prompt for automated review
           direct_prompt: |
-            Please review this pull request for the Weaverse SDKs monorepo and provide feedback on:
+            Review this PR for the Weaverse SDKs monorepo. Focus on high-impact issues and provide actionable feedback.
             
-            **Monorepo Considerations:**
-            - Changes to package dependencies and version alignment
-            - Impact on other packages in the monorepo
-            - Breaking changes that require major version bumps
-            - Proper changeset inclusion for releases
+            **Critical Checks:**
+            • Breaking changes requiring major version bumps
+            • Cross-package dependency conflicts or misaligned versions
+            • Missing changesets for user-facing changes
+            • Security vulnerabilities or exposed secrets
+            • Performance regressions in core SDK functionality
             
-            **Code Quality:**
-            - TypeScript type safety and proper typing
-            - Adherence to Biome linting/formatting rules
-            - React best practices (functional components, hooks)
-            - Framework-agnostic design in @weaverse/core
+            **Architecture & Quality:**
+            • TypeScript type safety - flag any `any` usage or unsafe patterns
+            • Framework-agnostic design in @weaverse/core (no React/framework deps)
+            • Proper error handling and edge cases
+            • Memory leaks or resource cleanup issues
+            • API design consistency across packages
             
-            **Specific Checks:**
-            - Turbo build configuration if modified
-            - Package.json scripts consistency
-            - Export statements in package entry points
-            - Backward compatibility for SDK users
-            - Documentation updates if API changes
+            **SDK-Specific:**
+            • Component schema validation and prop handling
+            • Data connector performance and immutability
+            • Hydrogen/React integration patterns
+            • Export statements and package entry points
+            • Template system changes affecting backward compatibility
             
-            Be constructive and focus on the unique aspects of this SDK monorepo.
+            **Skip routine items** (unless critical): formatting, minor naming, basic linting.
+            **Prioritize** issues that could break user implementations or degrade SDK performance.
+            
+            Provide specific line references and concrete suggestions for fixes.
 
           # Use sticky comments to update the same comment
           use_sticky_comment: true
