@@ -1,5 +1,13 @@
 # @weaverse/core
 
+## 5.5.0
+
+### Patch Changes
+
+- 3720e74: bump beta version
+- 469f291: update parse logic
+- 9ee3be2: update data parser
+
 ## 5.5.0-beta.7
 
 ### Patch Changes
