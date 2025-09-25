@@ -92,6 +92,12 @@ export {
 // Re-export all types and utilities from schema package
 export * from '@weaverse/schema'
 export * from './components'
+// Export Hydrogen-specific hooks
+export {
+  createWeaverseDataContext,
+  useWeaverseDataContext,
+  type WeaverseDataContext,
+} from './hooks/use-weaverse-data-context'
 // Export hydrogen-specific modules
 export * from './types'
 export * from './utils'
