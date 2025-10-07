@@ -31,7 +31,7 @@ export class WeaverseItemStore extends EventEmitter {
 
   constructor(initialData: ElementData, weaverse: Weaverse) {
     super()
-    let { type, id } = initialData || {}
+    const { type, id } = initialData || {}
     this.weaverse = weaverse
     if (id && type) {
       Weaverse.itemInstances.set(id, this)
@@ -57,8 +57,8 @@ export class WeaverseItemStore extends EventEmitter {
   }
 
   getDefaultCss = (): ElementCSS => {
-    let defaultCss = this.Element?.defaultCss || {}
-    let currentCss = this._store.css || {}
+    const defaultCss = this.Element?.defaultCss || {}
+    const currentCss = this._store.css || {}
     return merge(defaultCss, currentCss)
   }
 
@@ -88,6 +88,7 @@ export class Weaverse extends EventEmitter {
   static itemInstances = new Map()
   weaverseHost = 'https://studio.weaverse.io'
   weaverseVersion = version
+  sdkVersion = version
   projectId = ''
   isDesignMode = false
   isPreviewMode = false
@@ -109,7 +110,7 @@ export class Weaverse extends EventEmitter {
   constructor(params: WeaverseCoreParams) {
     super()
     for (const param of Object.entries(params)) {
-      let [key, value] = param
+      const [key, value] = param
       this[key] = value || this[key]
     }
     this.initProject()
@@ -123,8 +124,8 @@ export class Weaverse extends EventEmitter {
    * Create new `WeaverseItemStore` instance for each item in the project.
    */
   initProject = () => {
-    let { data } = this
-    let itemInstances = Weaverse.itemInstances
+    const { data } = this
+    const itemInstances = Weaverse.itemInstances
     if (data?.items) {
       // data.items.forEach((item) => {
       //   let itemInstance = itemInstances.get(item.id)
@@ -135,7 +136,7 @@ export class Weaverse extends EventEmitter {
       //   }
       // })
       for (const item of data.items) {
-        let itemInstance = itemInstances.get(item.id)
+        const itemInstance = itemInstances.get(item.id)
         if (itemInstance) {
           itemInstance.setData(item)
         } else {
