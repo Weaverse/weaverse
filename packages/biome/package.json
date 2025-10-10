@@ -23,7 +23,7 @@
     "biome.json"
   ],
   "devDependencies": {
-    "@biomejs/biome": "2.2.2",
-    "ultracite": "5.2.5"
+    "@biomejs/biome": "2.2.5",
+    "ultracite": "5.6.1"
   }
 }

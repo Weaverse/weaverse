@@ -117,9 +117,7 @@ export class Weaverse extends EventEmitter {
     Weaverse.initStitches()
   }
 
-  getSnapShot = () => {
-    return this.data
-  }
+  getSnapShot = () => this.data
   /**
    * Create new `WeaverseItemStore` instance for each item in the project.
    */
@@ -149,9 +147,8 @@ export class Weaverse extends EventEmitter {
   get itemInstances() {
     return Weaverse.itemInstances
   }
-  createItemInstance = (data: ElementData) => {
-    return new Weaverse.ItemConstructor(data, this)
-  }
+  createItemInstance = (data: ElementData) =>
+    new Weaverse.ItemConstructor(data, this)
 
   static initStitches = (externalConfig?: CreateStitches) => {
     Weaverse.stitchesInstance =

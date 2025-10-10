@@ -24,13 +24,11 @@ export function CombinedVariantSelector({ context }: CombinedVariantProps) {
         }}
         value={selectedVariant?.id}
       >
-        {product.variants.map((variant) => {
-          return (
-            <option key={variant.id} value={variant.id}>
-              {variant.title}
-            </option>
-          )
-        })}
+        {product.variants.map((variant) => (
+          <option key={variant.id} value={variant.id}>
+            {variant.title}
+          </option>
+        ))}
       </select>
     </>
   )

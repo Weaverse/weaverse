@@ -40,9 +40,8 @@ export let createEnvFile = async (path, projectId) => {
  * @param {string} str - The string to convert
  * @returns {string} The kebab-case formatted string
  */
-export let toKebabCase = (str) => {
-  return str
+export let toKebabCase = (str) =>
+  str
     .replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2')
     .replace(/[\s_]+/g, '-')
     .toLowerCase()
-}

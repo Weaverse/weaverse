@@ -36,13 +36,9 @@ export class ThemeSettingsStore extends EventEmitter {
     this.emit(this.settings)
   }
 
-  getSnapshot = () => {
-    return this.settings
-  }
+  getSnapshot = () => this.settings
 
-  getServerSnapshot = () => {
-    return this.settings
-  }
+  getServerSnapshot = () => this.settings
 }
 
 export function useThemeSettingsStore() {

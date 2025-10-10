@@ -1,6 +1,6 @@
 {
   "root": false,
-  "$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.5/schema.json",
   "extends": ["ultracite"],
   "linter": {
     "rules": {
@@ -47,8 +47,8 @@
         "noStaticOnlyClass": "off",
         "noUselessCatch": "warn",
         "noVoid": "warn",
-        "noExcessiveLinesPerFunction": "warn",
-        "noImplicitCoercions": "warn"
+        "noImplicitCoercions": "warn",
+        "noExcessiveLinesPerFunction": "off"
       },
       "suspicious": {
         "noArrayIndexKey": "warn",
@@ -82,7 +82,9 @@
         "useSortedClasses": "off",
         "useConsistentTypeDefinitions": "warn",
         "noUnnecessaryConditions": "warn",
-        "useImageSize": "warn"
+        "useImageSize": "warn",
+        "noUnusedExpressions": "warn",
+        "noReactForwardRef": "warn"
       },
       "performance": {
         "noNamespaceImport": "warn",

@@ -1,6 +1,6 @@
 {
   "root": true,
-  "$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.5/schema.json",
   "extends": ["ultracite", "./packages/biome/biome.json"],
   "vcs": {
     "enabled": true,
@@ -27,9 +27,7 @@
         "noConsole": "off"
       },
       "correctness": {},
-      "complexity": {
-        "noExcessiveLinesPerFunction": "off"
-      },
+      "complexity": {},
       "nursery": {}
     }
   }

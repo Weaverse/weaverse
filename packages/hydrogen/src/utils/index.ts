@@ -122,9 +122,7 @@ export function generateDataFromSchema(
   // Type guard to check if it's a component schema
   const isComponentSchema = (
     s: HydrogenComponentSchema | HydrogenThemeSchema
-  ): s is HydrogenComponentSchema => {
-    return 'type' in s && typeof s.type === 'string'
-  }
+  ): s is HydrogenComponentSchema => 'type' in s && typeof s.type === 'string'
 
   if (isComponentSchema(schema)) {
     // Handle HydrogenComponentSchema

@@ -81,21 +81,19 @@ let Countdown = forwardRef<HTMLDivElement, CountdownElementProps>(
     const timer = getTime(remaining)
     return (
       <div ref={ref} {...rest}>
-        {TIMES.map((time) => {
-          return (
-            <React.Fragment key={time}>
-              <TimerBlock
-                label={showLabel ? time : ''}
-                value={remaining === 0 ? '--' : timer[time]}
-              />
-              {time !== 'seconds' && (
-                <div className="wv-cd-separator">
-                  {showColon && <span>:</span>}
-                </div>
-              )}
-            </React.Fragment>
-          )
-        })}
+        {TIMES.map((time) => (
+          <React.Fragment key={time}>
+            <TimerBlock
+              label={showLabel ? time : ''}
+              value={remaining === 0 ? '--' : timer[time]}
+            />
+            {time !== 'seconds' && (
+              <div className="wv-cd-separator">
+                {showColon && <span>:</span>}
+              </div>
+            )}
+          </React.Fragment>
+        ))}
       </div>
     )
   }

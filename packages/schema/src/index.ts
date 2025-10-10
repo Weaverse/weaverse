@@ -850,9 +850,7 @@ export const devTools = {
   /**
    * Pretty print a schema for debugging
    */
-  prettyPrint: (schema: SchemaType): string => {
-    return JSON.stringify(schema, null, 2)
-  },
+  prettyPrint: (schema: SchemaType): string => JSON.stringify(schema, null, 2),
 
   /**
    * Validate and report schema statistics
