@@ -43,9 +43,12 @@ npm run update-deps      # Update dependencies
 npm run changeset        # Create a changeset for release
 ```
 
-### Package Management (Note: Uses npm scripts but pnpm for installation)
+### Package Management
+**Important**: This project uses pnpm 10.15.0 for dependency installation (enforced), but npm for running scripts.
+
 ```bash
-pnpm install             # Install dependencies (enforced via packageManager)
+pnpm install             # Install dependencies (enforced via packageManager field)
+npm run <script>         # Run package.json scripts (NOT pnpm run)
 pnpm changeset version   # Version packages based on changesets
 pnpm changeset publish   # Publish to npm registry
 ```
@@ -53,13 +56,15 @@ pnpm changeset publish   # Publish to npm registry
 ## Architecture Overview
 
 ### Monorepo Structure
-- **`/packages/core`** - Foundation package with framework-agnostic code
-- **`/packages/react`** - React components and utilities for CMS integration
-- **`/packages/hydrogen`** - Shopify Hydrogen integration (now powered by React Router v7)
-- **`/packages/shopify`** - Shopify-specific utilities
-- **`/packages/schema`** - Schema definitions for Weaverse components
-- **`/packages/cli`** - CLI tools for Weaverse development
-- **`/packages/biome`** - Shared Biome configuration
+- **`/packages/core`** - Foundation package with framework-agnostic code (TypeScript)
+- **`/packages/react`** - React components and utilities for CMS integration (TypeScript)
+- **`/packages/hydrogen`** - Shopify Hydrogen integration powered by React Router v7 (TypeScript)
+- **`/packages/shopify`** - Shopify-specific utilities (TypeScript)
+- **`/packages/schema`** - Schema definitions for Weaverse components (TypeScript)
+- **`/packages/cli`** - CLI tools for Weaverse development (JavaScript)
+- **`/packages/biome`** - Shared Biome configuration extending ultracite
+- **`/packages/next`** - Next.js integration (legacy/minimal)
+- **`/packages/remix`** - Remix integration (legacy/minimal)
 - **`/templates/pilot`** - Example Hydrogen theme with Weaverse integration
 
 ### Key Architectural Patterns
@@ -81,9 +86,10 @@ pnpm changeset publish   # Publish to npm registry
 
 4. **Code Quality**:
    - Biome handles both linting and formatting
-   - Configuration extends from `ultracite` and custom rules
-   - Pre-commit hooks via Lefthook ensure code quality
-   - Excludes templates and build artifacts from linting
+   - Configuration extends from `ultracite` and `@weaverse/biome`
+   - Pre-commit hooks via Lefthook automatically run `biome check --write` on staged files
+   - Fixed files are automatically staged during commit
+   - Excludes templates, dist, build, and .turbo from linting
 
 5. **Type System Architecture**:
    - Hierarchical dependencies: core → react → hydrogen/schema
@@ -128,9 +134,9 @@ The project uses Changesets for releases:
 
 ### Environment Requirements
 
-- Node.js >= 22
-- pnpm 10.15.0 (enforced via packageManager field)
-- Git for version control integration
+- **Node.js**: >= 22 (strictly required)
+- **pnpm**: 10.15.0 (enforced via packageManager field in package.json)
+- **Git**: Required for version control and pre-commit hooks
 
 ### Version Compatibility
 
