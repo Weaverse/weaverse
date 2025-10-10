@@ -1,5 +1,11 @@
 # @weaverse/biome
 
+## 5.5.0
+
+### Minor Changes
+
+- update biome to v2.2.5
+
 ## 5.4.1
 
 ### Patch Changes
