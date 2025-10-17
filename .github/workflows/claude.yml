@@ -32,39 +32,63 @@ jobs:
 
       - name: Run Claude Code Review
         id: claude-review
-        uses: anthropics/claude-code-action@beta
+        uses: anthropics/claude-code-action@v1
+        env:
+          ANTHROPIC_BASE_URL: ${{ secrets.ANTHROPIC_BASE_URL }}
         with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          anthropic_api_key: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}
           
-          # Direct prompt for automated review
-          direct_prompt: |
-            Review this PR for the Weaverse SDKs monorepo. Focus on high-impact issues and provide actionable feedback.
-            
-            **Critical Checks:**
-            • Breaking changes requiring major version bumps
-            • Cross-package dependency conflicts or misaligned versions
-            • Missing changesets for user-facing changes
-            • Security vulnerabilities or exposed secrets
-            • Performance regressions in core SDK functionality
-            
-            **Architecture & Quality:**
-            • TypeScript type safety - flag any `any` usage or unsafe patterns
-            • Framework-agnostic design in @weaverse/core (no React/framework deps)
-            • Proper error handling and edge cases
-            • Memory leaks or resource cleanup issues
-            • API design consistency across packages
-            
-            **SDK-Specific:**
-            • Component schema validation and prop handling
-            • Data connector performance and immutability
-            • Hydrogen/React integration patterns
-            • Export statements and package entry points
-            • Template system changes affecting backward compatibility
-            
-            **Skip routine items** (unless critical): formatting, minor naming, basic linting.
-            **Prioritize** issues that could break user implementations or degrade SDK performance.
-            
-            Provide specific line references and concrete suggestions for fixes.
+          # Prompt for automated review
+          prompt: |
+            Review this Weaverse SDKs monorepo PR for critical issues and architectural consistency. This is a foundational SDK package - changes impact all downstream implementations.
+
+            **🚨 Critical Breaking Changes**
+            • Major version bumps required: API signature changes, removed exports, breaking schema changes
+            • Cross-package dependency conflicts: version mismatches, circular dependencies, missing peer deps
+            • Changesets missing for user-facing changes: API modifications, new features, breaking changes
+            • Security vulnerabilities: exposed secrets, injection risks, unsafe eval(), prototype pollution
+            • Performance regressions: O(n²) algorithms, memory leaks, blocking operations, bundle size increases
+
+            **🏗️ Architecture & Code Quality**
+            • TypeScript type safety: eliminate `any` usage, enforce strict typing, fix type inference issues
+            • Framework-agnostic @weaverse/core: zero React/framework dependencies, pure functions only
+            • Error handling patterns: proper try/catch, error boundaries, meaningful error messages, graceful degradation
+            • Memory management: cleanup functions, event listener removal, weak references where appropriate
+            • API consistency: naming conventions, parameter patterns, return types across all packages
+
+            **📦 SDK-Specific Deep Dive**
+            • Component schema integrity: validation accuracy, prop type safety, default value handling, schema evolution
+            • Data connector patterns: immutability guarantees, caching strategies, subscription lifecycle, data transformation
+            • Framework integration (@weaverse/react, @weaverse/hydrogen): hooks patterns, provider setup, SSR compatibility
+            • Package entry points: clean exports, proper re-exports, tree-shaking friendly, side-effect free
+            • Template system: backward compatibility, migration path, performance optimizations, extensibility
+
+            **🔍 Package Structure Review**
+            • @weaverse/core: Framework-agnostic, minimal dependencies, robust type definitions
+            • @weaverse/react: React 18+ patterns, hooks optimization, concurrent rendering support
+            • @weaverse/hydrogen: Shopify Hydrogen integration, SSR/SSG compatibility, performance optimization
+            • @weaverse/shopify: Shopify API integration, webhooks handling, theme compatibility
+            • Cross-package consistency: shared utilities, unified patterns, version alignment
+
+            **⚡ Performance & Bundle Impact**
+            • Bundle size analysis: tree-shaking effectiveness, dead code elimination, import patterns
+            • Runtime performance: memoization strategies, rendering optimization, subscription efficiency
+            • Development experience: build times, hot reload, debugging capabilities, error reporting
+
+            **📋 Review Focus Areas**
+            **SKIP**: Minor formatting, naming conventions, basic linting (unless affecting API)
+            **PRIORITIZE**: Breaking changes, performance regressions, type safety issues, architectural inconsistencies
+            **HIGHLIGHT**: Security vulnerabilities, memory leaks, cross-package conflicts
+
+            **🎯 Output Requirements**
+            1. Line-specific references with exact file paths
+            2. Concrete code examples for fixes
+            3. Breaking change impact assessment
+            4. Performance implications with metrics where possible
+            5. Migration guidance for affected users
+            6. Test recommendations for edge cases
+
+            Focus on issues that would impact developers building on Weaverse SDKs. Provide actionable, implementable feedback with clear priority levels.
 
           # Use sticky comments to update the same comment
           use_sticky_comment: true
@@ -91,9 +115,11 @@ jobs:
 
       - name: Run Claude Code
         id: claude
-        uses: anthropics/claude-code-action@beta
+        uses: anthropics/claude-code-action@v1
+        env:
+          ANTHROPIC_BASE_URL: ${{ secrets.ANTHROPIC_BASE_URL }}
         with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          anthropic_api_key: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}
 
           # This is an optional setting that allows Claude to read CI results on PRs
           additional_permissions: |
