@@ -346,7 +346,7 @@ importers:
         specifier: 19.1.9
         version: 19.1.9(@types/react@19.1.13)
       '@weaverse/biome':
-        specifier: 5.4.1
+        specifier: 5.5.0
         version: link:../../packages/biome
       cross-env:
         specifier: 10.0.0
