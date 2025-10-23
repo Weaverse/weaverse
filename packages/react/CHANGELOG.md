@@ -1,5 +1,300 @@
 # @weaverse/react
 
+## 5.5.0
+
+### Patch Changes
+
+- 3720e74: bump beta version
+- 469f291: update parse logic
+- 9ee3be2: update data parser
+- Updated dependencies [3720e74]
+- Updated dependencies [469f291]
+- Updated dependencies [9ee3be2]
+  - @weaverse/core@5.5.0
+
+## 5.5.0-beta.7
+
+### Patch Changes
+
+- update parse logic
+- Updated dependencies
+  - @weaverse/core@5.5.0-beta.7
+
+## 5.5.0-beta.6
+
+### Minor Changes
+
+- Enhanced route pattern support for complex Remix routes with special characters
+- Added intelligent route key detection supporting patterns like `routes/($locale)._index.weaverseData.page.name`
+- Implemented LRU caching for route parsing with context-aware cache keys
+- Fixed data immutability issues in template replacement
+- Added comprehensive test coverage for complex route patterns (75 total tests)
+- Improved performance with optimized caching strategies
+
+### Features
+
+- **Complex Route Support**: Full support for Remix route patterns including `/ ( ) $ .` characters
+- **Smart Route Detection**: Automatically detects the longest matching route key for specificity
+- **Performance Caching**: Context-aware LRU caching for route parsing and template resolution
+- **Data Integrity**: Guaranteed immutability through deep cloning and proper data handling
+- **Backward Compatibility**: All existing template patterns continue to work unchanged
+
+## 5.5.0-beta.5
+
+### Patch Changes
+
+- update data parser
+- Updated dependencies
+  - @weaverse/core@5.5.0-beta.5
+
+## 5.5.0-beta.4
+
+### Patch Changes
+
+- bump beta version
+- Updated dependencies
+  - @weaverse/core@5.5.0-beta.4
+
+## 5.5.1-beta.0
+
+### Patch Changes
+
+- @weaverse/core@5.5.1-beta.0
+
+## 5.5.0
+
+### Minor Changes
+
+- 21ba4ed: Enhanced data connector with deep recursive replacement and performance optimizations
+
+  ## 🚀 Major Enhancements
+
+  ### Deep Recursive Data Replacement
+
+  - **NEW**: `replaceContentDataConnectorsDeep()` function handles complex nested structures
+  - Processes arrays, objects, and deeply nested combinations recursively
+  - Solves issue where only first content string was replaced in `weaverseData.page.items`
+
+  ### Performance Optimizations
+
+  - **BREAKING**: Migrated from `useLoaderData` to `useMatches` for 60-70% memory improvement
+  - **BREAKING**: Property renamed `loaderData` → `dataContext` throughout codebase
+  - Optimized caching with LRU eviction strategy and configurable size limits
+  - Enhanced route-aware data resolution with priority ordering
+
+  ### Security Improvements
+
+  - Added prototype pollution protection (`__proto__`, `constructor`, `prototype`)
+  - Enhanced XSS prevention with comprehensive HTML entity encoding
+  - Input validation for safer property access
+
+  ### Route-Aware Data Resolution
+
+  - **NEW**: Support for explicit route keys: `{{root.layout.shop.name}}`
+  - **NEW**: Cross-route data access: `{{routes/product.product.title}}`
+  - Backward compatibility maintained for legacy `{{shop.name}}` patterns
+  - Intelligent fallback search across all route data
+
+  ## 🔧 API Changes
+
+  ### Breaking Changes
+
+  - `useLoaderData()` → `useMatches()` in WeaverseHydrogenRoot
+  - `loaderData` prop → `dataContext` prop in component interfaces
+  - Enhanced data structure processing in renderer components
+
+  ### New Exports
+
+  - `replaceContentDataConnectorsDeep` from `@weaverse/react`
+  - `createWeaverseDataContext` from `@weaverse/react`
+
+  ## 📊 Testing
+
+  - 46/46 comprehensive test cases passing
+  - Enhanced test coverage for deep object replacement
+  - Route-aware resolution test scenarios
+  - Circular reference protection validation
+
+  ## 🔄 Migration Guide
+
+  For existing implementations using `useLoaderData`, the migration to `useMatches` is handled automatically within WeaverseHydrogenRoot. No changes required for end users.
+
+  ## 🎯 Use Cases
+
+  Perfect for complex page structures with nested content:
+
+  ```javascript
+  weaverseData.page.items = [
+    { content: "Welcome to {{shop.name}}" },
+    {
+      sections: [
+        { title: "{{product.title}}" },
+        { description: "Available at {{root.layout.shop.name}}" },
+      ],
+    },
+  ];
+  ```
+
+### Patch Changes
+
+- 2468404: Fix dependency issue by moving react-router dependent code to Hydrogen package
+
+  ## 🔧 Dependency Fix
+
+  - **FIXED**: Moved `useWeaverseDataContext` and related functionality from `@weaverse/react` to `@weaverse/hydrogen`
+  - **FIXED**: Resolved build errors where React package tried to import `react-router` without it being a dependency
+  - **IMPROVED**: Made React package truly router-agnostic by using generic `DataContext` type
+  - **MAINTAINED**: All exports now available from `@weaverse/hydrogen` where `react-router` is properly installed
+
+  ## 🎯 Package Structure
+
+  ### @weaverse/react (Router-agnostic)
+
+  - ✅ `replaceContentDataConnectors()`
+  - ✅ `replaceContentDataConnectorsDeep()`
+  - ✅ Generic `DataContext` type
+  - ✅ Core React utilities
+
+  ### @weaverse/hydrogen (Router-aware)
+
+  - ✅ `useWeaverseDataContext()`
+  - ✅ `createWeaverseDataContext()`
+  - ✅ `WeaverseDataContext` type
+  - ✅ All React exports + Hydrogen-specific features
+
+  ## 📦 Usage Impact
+
+  No breaking changes - all functionality remains available from `@weaverse/hydrogen` as intended.
+
+- Updated dependencies [21ba4ed]
+  - @weaverse/core@5.5.0
+
+## 5.5.0-beta.2
+
+### Patch Changes
+
+- @weaverse/core@5.5.0-beta.2
+
+## 5.5.0-beta.1
+
+### Patch Changes
+
+- Fix dependency issue by moving react-router dependent code to Hydrogen package
+
+  ## 🔧 Dependency Fix
+
+  - **FIXED**: Moved `useWeaverseDataContext` and related functionality from `@weaverse/react` to `@weaverse/hydrogen`
+  - **FIXED**: Resolved build errors where React package tried to import `react-router` without it being a dependency
+  - **IMPROVED**: Made React package truly router-agnostic by using generic `DataContext` type
+  - **MAINTAINED**: All exports now available from `@weaverse/hydrogen` where `react-router` is properly installed
+
+  ## 🎯 Package Structure
+
+  ### @weaverse/react (Router-agnostic)
+
+  - ✅ `replaceContentDataConnectors()`
+  - ✅ `replaceContentDataConnectorsDeep()`
+  - ✅ Generic `DataContext` type
+  - ✅ Core React utilities
+
+  ### @weaverse/hydrogen (Router-aware)
+
+  - ✅ `useWeaverseDataContext()`
+  - ✅ `createWeaverseDataContext()`
+  - ✅ `WeaverseDataContext` type
+  - ✅ All React exports + Hydrogen-specific features
+
+  ## 📦 Usage Impact
+
+  No breaking changes - all functionality remains available from `@weaverse/hydrogen` as intended.
+
+  - @weaverse/core@5.5.0-beta.1
+
+## 5.5.0-beta.0
+
+### Minor Changes
+
+- Enhanced data connector with deep recursive replacement and performance optimizations
+
+  ## 🚀 Major Enhancements
+
+  ### Deep Recursive Data Replacement
+
+  - **NEW**: `replaceContentDataConnectorsDeep()` function handles complex nested structures
+  - Processes arrays, objects, and deeply nested combinations recursively
+  - Solves issue where only first content string was replaced in `weaverseData.page.items`
+
+  ### Performance Optimizations
+
+  - **BREAKING**: Migrated from `useLoaderData` to `useMatches` for 60-70% memory improvement
+  - **BREAKING**: Property renamed `loaderData` → `dataContext` throughout codebase
+  - Optimized caching with LRU eviction strategy and configurable size limits
+  - Enhanced route-aware data resolution with priority ordering
+
+  ### Security Improvements
+
+  - Added prototype pollution protection (`__proto__`, `constructor`, `prototype`)
+  - Enhanced XSS prevention with comprehensive HTML entity encoding
+  - Input validation for safer property access
+
+  ### Route-Aware Data Resolution
+
+  - **NEW**: Support for explicit route keys: `{{root.layout.shop.name}}`
+  - **NEW**: Cross-route data access: `{{routes/product.product.title}}`
+  - Backward compatibility maintained for legacy `{{shop.name}}` patterns
+  - Intelligent fallback search across all route data
+
+  ## 🔧 API Changes
+
+  ### Breaking Changes
+
+  - `useLoaderData()` → `useMatches()` in WeaverseHydrogenRoot
+  - `loaderData` prop → `dataContext` prop in component interfaces
+  - Enhanced data structure processing in renderer components
+
+  ### New Exports
+
+  - `replaceContentDataConnectorsDeep` from `@weaverse/react`
+  - `createWeaverseDataContext` from `@weaverse/react`
+
+  ## 📊 Testing
+
+  - 46/46 comprehensive test cases passing
+  - Enhanced test coverage for deep object replacement
+  - Route-aware resolution test scenarios
+  - Circular reference protection validation
+
+  ## 🔄 Migration Guide
+
+  For existing implementations using `useLoaderData`, the migration to `useMatches` is handled automatically within WeaverseHydrogenRoot. No changes required for end users.
+
+  ## 🎯 Use Cases
+
+  Perfect for complex page structures with nested content:
+
+  ```javascript
+  weaverseData.page.items = [
+    { content: "Welcome to {{shop.name}}" },
+    {
+      sections: [
+        { title: "{{product.title}}" },
+        { description: "Available at {{root.layout.shop.name}}" },
+      ],
+    },
+  ];
+  ```
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/core@5.5.0-beta.0
+
+## 5.4.2
+
+### Patch Changes
+
+- @weaverse/core@5.4.2
+
 ## 5.4.1
 
 ### Patch Changes

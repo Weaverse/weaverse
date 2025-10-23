@@ -1,12 +1,13 @@
 import clsx from 'clsx'
-import * as React from 'react'
-import { memo, useEffect, useRef } from 'react'
+import React, { memo, useEffect, useRef } from 'react'
 import { useItemInstance, useWeaverse } from '~/hooks'
 import { WeaverseContextProvider, WeaverseItemContext } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
 import { generateItemClassName } from './utils/css'
+import { replaceContentDataConnectorsDeep } from './utils/data-connector'
 
-let reactVersion = Number(React.version?.split('.')[0]) || 0
+const REACT_VERSION_THRESHOLD = 18
+const reactVersion = Number(React.version?.split('.')[0]) || 0
 
 // Create a safe version of useSyncExternalStore that works in both client and server environments
 export const useSafeExternalStore = (
@@ -29,20 +30,20 @@ export const useSafeExternalStore = (
   return getSnapshot()
 }
 
-export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
-  let data = useSafeExternalStore(
+export const WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
+  const data = useSafeExternalStore(
     context.subscribe,
     context.getSnapShot,
     context.getSnapShot
   )
-  let rootRef = useRef<HTMLElement>(null)
+  const rootRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     context.contentRootElement = rootRef.current
   }, [context])
 
-  let eventHandlers = context?.studioBridge?.eventHandlers || {}
-  let themeClass = context.stitchesInstance.theme.className
+  const eventHandlers = context?.studioBridge?.eventHandlers || {}
+  const themeClass = context.stitchesInstance.theme.className
 
   if (context.projectId) {
     return (
@@ -66,19 +67,19 @@ export let WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
 })
 WeaverseRoot.displayName = 'WeaverseRoot'
 const ItemComponent = memo(({ instance }: ItemComponentProps) => {
-  let context = useWeaverse()
-  let { stitchesInstance, elementRegistry, platformType } = context
-  let data = useSafeExternalStore(
+  const context = useWeaverse()
+  const { stitchesInstance, elementRegistry, platformType } = context
+  const data = useSafeExternalStore(
     instance.subscribe,
     instance.getSnapShot,
     instance.getSnapShot
   )
-  let {
+  const {
     id,
     type,
     childIds = [],
     children = [],
-    parentId,
+
     createdAt,
     updatedAt,
     deletedAt,
@@ -88,6 +89,13 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     data: _,
     ...rest
   } = data
+
+  // Replace data connectors in all component data (handles strings, objects, and arrays recursively)
+  // IMMUTABLE: Process the entire rest object to avoid mutating original content
+  const processedRest = replaceContentDataConnectorsDeep(
+    rest,
+    context.dataContext
+  )
 
   useEffect(() => {
     if (!instance.ref.current) {
@@ -102,35 +110,37 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     return null
   }
 
-  let Element = elementRegistry.get(type)
+  const Element = elementRegistry.get(type)
 
   if (Element?.Component) {
-    let Component = Element.Component
+    const Component = Element.Component
     Component.displayName = type
     if (
       Component.$$typeof === Symbol.for('react.forward_ref') ||
-      reactVersion > 18
+      reactVersion > REACT_VERSION_THRESHOLD
     ) {
-      rest.ref = instance.ref
+      processedRest.ref = instance.ref
     }
-    let renderChildren = (
-      children?.length
-        ? children
-        : childIds?.length
-          ? childIds.map((cid: string) => ({ id: cid }))
-          : []
-    ).map((item: { id: string }, index: number) => (
-      <ItemInstance id={item.id} key={`${item.id}-${index}`} parentId={id} />
-    ))
+    const childItems = children?.length
+      ? children
+      : childIds?.length
+        ? childIds.map((cid: string) => ({ id: cid }))
+        : []
+
+    const renderChildren = childItems.map(
+      (item: { id: string }, index: number) => (
+        <ItemInstance id={item.id} key={`${item.id}-${index}`} parentId={id} />
+      )
+    )
 
     return (
       <Component
-        {...rest}
+        {...processedRest}
         children={renderChildren.length ? renderChildren : undefined}
         className={clsx(
           platformType !== 'shopify-hydrogen' &&
             generateItemClassName(instance, stitchesInstance),
-          rest.data?.className
+          processedRest.data?.className
         )}
         data-wv-id={id}
         data-wv-type={type}
@@ -139,14 +149,13 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
     )
   }
   instance._store.deleted = true
-  console.log(`❌ Unknown element: ${type}`)
   return null
 })
 ItemComponent.displayName = 'WeaverseComponent'
 
-let ItemInstance = memo(
+const ItemInstance = memo(
   ({ id, parentId }: { id: string; parentId: string }) => {
-    let instance = useItemInstance(id)
+    const instance = useItemInstance(id)
     if (!instance) {
       return <div style={{ display: 'none' }}>Item instance {id} not found</div>
     }

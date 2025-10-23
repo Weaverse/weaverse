@@ -92,6 +92,8 @@ export function getWeaverseConfigs(
     weaverseApiBase:
       WEAVERSE_API_BASE ||
       envFromProcess.WEAVERSE_API_BASE ||
+      WEAVERSE_HOST ||
+      envFromProcess.WEAVERSE_HOST ||
       'https://api.weaverse.io',
     weaverseApiKey:
       weaverseApiKey ||
@@ -120,9 +122,7 @@ export function generateDataFromSchema(
   // Type guard to check if it's a component schema
   const isComponentSchema = (
     s: HydrogenComponentSchema | HydrogenThemeSchema
-  ): s is HydrogenComponentSchema => {
-    return 'type' in s && typeof s.type === 'string'
-  }
+  ): s is HydrogenComponentSchema => 'type' in s && typeof s.type === 'string'
 
   if (isComponentSchema(schema)) {
     // Handle HydrogenComponentSchema

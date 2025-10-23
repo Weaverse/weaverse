@@ -7,7 +7,7 @@
   About Weaverse: https://weaverse.io
 */
 
-import * as stitches from '@stitches/core'
+import { type CreateStitches, createStitches } from '@stitches/core'
 import type Stitches from '@stitches/core/types/stitches'
 import { createRef, type RefObject } from 'react'
 import { version } from '../package.json'
@@ -31,7 +31,7 @@ export class WeaverseItemStore extends EventEmitter {
 
   constructor(initialData: ElementData, weaverse: Weaverse) {
     super()
-    let { type, id } = initialData || {}
+    const { type, id } = initialData || {}
     this.weaverse = weaverse
     if (id && type) {
       Weaverse.itemInstances.set(id, this)
@@ -57,8 +57,8 @@ export class WeaverseItemStore extends EventEmitter {
   }
 
   getDefaultCss = (): ElementCSS => {
-    let defaultCss = this.Element?.defaultCss || {}
-    let currentCss = this._store.css || {}
+    const defaultCss = this.Element?.defaultCss || {}
+    const currentCss = this._store.css || {}
     return merge(defaultCss, currentCss)
   }
 
@@ -88,14 +88,15 @@ export class Weaverse extends EventEmitter {
   static itemInstances = new Map()
   weaverseHost = 'https://studio.weaverse.io'
   weaverseVersion = version
+  sdkVersion = version
   projectId = ''
   isDesignMode = false
   isPreviewMode = false
   static stitchesInstance: Stitches | any
   studioBridge?: any
-
   declare static ItemConstructor: typeof WeaverseItemStore
   declare data: WeaverseProjectDataType
+  declare dataContext: Record<string, unknown> | null
   declare platformType: PlatformTypeEnum
   static elementRegistry = new Map()
 
@@ -109,22 +110,20 @@ export class Weaverse extends EventEmitter {
   constructor(params: WeaverseCoreParams) {
     super()
     for (const param of Object.entries(params)) {
-      let [key, value] = param
+      const [key, value] = param
       this[key] = value || this[key]
     }
     this.initProject()
     Weaverse.initStitches()
   }
 
-  getSnapShot = () => {
-    return this.data
-  }
+  getSnapShot = () => this.data
   /**
    * Create new `WeaverseItemStore` instance for each item in the project.
    */
   initProject = () => {
-    let { data } = this
-    let itemInstances = Weaverse.itemInstances
+    const { data } = this
+    const itemInstances = Weaverse.itemInstances
     if (data?.items) {
       // data.items.forEach((item) => {
       //   let itemInstance = itemInstances.get(item.id)
@@ -135,7 +134,7 @@ export class Weaverse extends EventEmitter {
       //   }
       // })
       for (const item of data.items) {
-        let itemInstance = itemInstances.get(item.id)
+        const itemInstance = itemInstances.get(item.id)
         if (itemInstance) {
           itemInstance.setData(item)
         } else {
@@ -148,14 +147,13 @@ export class Weaverse extends EventEmitter {
   get itemInstances() {
     return Weaverse.itemInstances
   }
-  createItemInstance = (data: ElementData) => {
-    return new Weaverse.ItemConstructor(data, this)
-  }
+  createItemInstance = (data: ElementData) =>
+    new Weaverse.ItemConstructor(data, this)
 
-  static initStitches = (externalConfig?: stitches.CreateStitches) => {
+  static initStitches = (externalConfig?: CreateStitches) => {
     Weaverse.stitchesInstance =
       Weaverse.stitchesInstance ||
-      stitches.createStitches({
+      createStitches({
         prefix: 'weaverse',
         media: Weaverse.mediaBreakPoints,
         utils: stitchesUtils,

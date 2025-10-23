@@ -83,12 +83,11 @@ export function getSoldOutAndUnavailableState(
       options[maxOptions - 1] = value
       matchVariants.push(getVariantFromOptionArray(product, options))
     } else {
-      matchVariants = product.variants.filter((v) => {
-        return (
+      matchVariants = product.variants.filter(
+        (v) =>
           v.options[position - 1] === value &&
           v.options[position - 2] === selectedOptions[position - 2]
-        )
-      })
+      )
     }
     matchVariants = matchVariants.filter(Boolean)
     if (matchVariants.length) {

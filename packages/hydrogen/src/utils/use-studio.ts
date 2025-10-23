@@ -17,7 +17,7 @@ export function useStudio(weaverse: WeaverseHydrogen) {
   let themeSettingsStore = useThemeSettingsStore()
   let { isDesignMode, weaverseHost, weaverseVersion, isPreviewMode } = weaverse
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: only revalidate on pathname/search changes
   useEffect(() => {
     if (navigation.state === 'idle') {
       if (isPreviewMode) {
@@ -43,13 +43,14 @@ export function useStudio(weaverse: WeaverseHydrogen) {
 }
 
 export function usePixel(context: WeaverseHydrogen) {
-  let { projectId, pageId, weaverseHost, isDesignMode } = context
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  let { projectId, pageId, isDesignMode } = context
+  // biome-ignore lint/correctness/useExhaustiveDependencies: only track once on mount
   useEffect(() => {
-    if (!(projectId && pageId && weaverseHost) || isDesignMode) {
+    if (!(projectId && pageId) || isDesignMode) {
       return
     }
-    let url = `${weaverseHost}/api/public/px`
+    let url =
+      'https://edge-usage-tracking-worker.weaverse.workers.dev/api/public/px'
     let img = new Image()
     img.onload = () => img.remove()
     img.src = `${url}?projectId=${projectId}&pageId=${pageId}`

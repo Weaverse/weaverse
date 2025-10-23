@@ -1,5 +1,83 @@
 # @weaverse/shopify
 
+## 5.5.0
+
+### Patch Changes
+
+- 3720e74: bump beta version
+- 469f291: update parse logic
+- 9ee3be2: update data parser
+- 268ae6c: Fix package.json type field consistency - standardize "typings" to "types" for TypeScript declarations
+- Updated dependencies [3720e74]
+- Updated dependencies [469f291]
+- Updated dependencies [9ee3be2]
+  - @weaverse/react@5.5.0
+
+## 5.5.0-beta.7
+
+### Patch Changes
+
+- update parse logic
+- Updated dependencies
+  - @weaverse/react@5.5.0-beta.7
+
+## 5.5.0-beta.5
+
+### Patch Changes
+
+- update data parser
+- Updated dependencies
+  - @weaverse/react@5.5.0-beta.5
+
+## 5.5.0-beta.4
+
+### Patch Changes
+
+- bump beta version
+- Updated dependencies
+  - @weaverse/react@5.5.0-beta.4
+
+## 5.5.1-beta.0
+
+### Patch Changes
+
+- Fix package.json type field consistency - standardize "typings" to "types" for TypeScript declarations
+  - @weaverse/react@5.5.1-beta.0
+
+## 5.5.0
+
+### Patch Changes
+
+- Updated dependencies [21ba4ed]
+- Updated dependencies [2468404]
+  - @weaverse/react@5.5.0
+
+## 5.5.0-beta.2
+
+### Patch Changes
+
+- @weaverse/react@5.5.0-beta.2
+
+## 5.5.0-beta.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/react@5.5.0-beta.1
+
+## 5.5.0-beta.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/react@5.5.0-beta.0
+
+## 5.4.2
+
+### Patch Changes
+
+- @weaverse/react@5.4.2
+
 ## 5.4.1
 
 ### Patch Changes

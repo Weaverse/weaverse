@@ -19,29 +19,30 @@
     "typecheck": "turbo typecheck --parallel",
     "biome": "biome check --diagnostic-level=error",
     "biome:fix": "biome check --write --diagnostic-level=error",
+    "biome:fix:unsafe": "biome check --write --diagnostic-level=error --unsafe",
     "format": "biome format --write",
     "format:check": "biome format",
     "ci": "biome ci --changed"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.2",
-    "@changesets/cli": "^2.29.6",
-    "@types/node": "24.3.0",
-    "@types/react": "19.1.11",
-    "@types/react-dom": "19.1.7",
-    "cross-env": "10.0.0",
-    "lefthook": "^1.12.3",
-    "react": "19.1.1",
-    "react-dom": "19.1.1",
+    "@biomejs/biome": "2.2.5",
+    "@changesets/cli": "^2.29.7",
+    "@types/node": "24.7.1",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.1",
+    "cross-env": "10.1.0",
+    "lefthook": "^1.13.6",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
     "rimraf": "6.0.1",
     "tsup": "8.5.0",
-    "turbo": "2.5.6",
-    "typescript": "5.9.2",
-    "ultracite": "5.2.5"
+    "turbo": "2.5.8",
+    "typescript": "5.9.3",
+    "ultracite": "5.6.1"
   },
   "optionalDependencies": {
-    "@esbuild/darwin-x64": "^0.25.9",
-    "turbo-darwin-arm64": "^2.5.6"
+    "@esbuild/darwin-x64": "^0.25.10",
+    "turbo-darwin-arm64": "^2.5.8"
   },
   "engines": {
     "node": ">=22"
