@@ -1,5 +1,13 @@
 # @weaverse/core
 
+## 5.6.0
+
+### Minor Changes
+
+- Bump v5.6.0
+
+## 5.5.1
+
 ## 5.5.0
 
 ### Patch Changes
