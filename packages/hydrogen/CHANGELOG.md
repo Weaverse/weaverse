@@ -1,5 +1,23 @@
 # @weaverse/hydrogen
 
+## 5.6.0
+
+### Minor Changes
+
+- Bump v5.6.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/react@5.6.0
+
+## 5.5.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/react@5.5.1
+
 ## 5.5.0
 
 ### Patch Changes
