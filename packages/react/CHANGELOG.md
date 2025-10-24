@@ -1,5 +1,23 @@
 # @weaverse/react
 
+## 5.6.0
+
+### Minor Changes
+
+- Bump v5.6.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/core@5.6.0
+
+## 5.5.1
+
+### Patch Changes
+
+- Fix performance issue of Data Connector feature
+  - @weaverse/core@5.5.1
+
 ## 5.5.0
 
 ### Patch Changes
