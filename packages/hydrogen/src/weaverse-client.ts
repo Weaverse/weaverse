@@ -119,10 +119,20 @@ export class WeaverseClient {
     }
   }
 
+  // Helper method to detect if request is from localhost
+  private isLocalhost(): boolean {
+    try {
+      let url = new URL(this.request.url)
+      return url.hostname === 'localhost' || url.hostname === '127.0.0.1'
+    } catch {
+      return false
+    }
+  }
+
   // Helper method for building API URLs consistently
   private getApiUrl(
     endpoint: string,
-    useProxy = !this.configs.isDesignMode
+    useProxy = !(this.configs.isDesignMode || this.isLocalhost())
   ): string {
     const { weaverseHost, weaverseApiBase, projectId } = this.configs
 
