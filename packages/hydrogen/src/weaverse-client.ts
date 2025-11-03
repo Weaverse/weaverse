@@ -238,20 +238,20 @@ export class WeaverseClient {
           schema:
             this.themeSchema && typeof this.themeSchema === 'object'
               ? {
-                ...this.themeSchema,
-                settings: this.themeSchema?.settings?.map((group) => ({
-                  ...group,
-                  inputs: group?.inputs?.map((input) => {
-                    if (typeof input?.condition === 'function') {
-                      return {
-                        ...input,
-                        condition: input.condition.toString(),
+                  ...this.themeSchema,
+                  settings: this.themeSchema?.settings?.map((group) => ({
+                    ...group,
+                    inputs: group?.inputs?.map((input) => {
+                      if (typeof input?.condition === 'function') {
+                        return {
+                          ...input,
+                          condition: input.condition.toString(),
+                        }
                       }
-                    }
-                    return input
-                  }),
-                })),
-              }
+                      return input
+                    }),
+                  })),
+                }
               : undefined,
           publicEnv: this.configs.publicEnv,
         }
