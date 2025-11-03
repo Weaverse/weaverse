@@ -2,7 +2,7 @@
   "name": "@weaverse/core",
   "author": "Weaverse Team",
   "description": "Weaverse Core",
-  "version": "5.6.0",
+  "version": "5.7.0",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

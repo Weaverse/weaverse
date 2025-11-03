@@ -1,5 +1,16 @@
 # @weaverse/react
 
+## 5.7.0
+
+### Minor Changes
+
+- Initialize customerAccount in WeaverseClient constructor
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/core@5.7.0
+
 ## 5.6.0
 
 ### Minor Changes
