@@ -44,6 +44,7 @@ export class WeaverseClient {
 
   // Required dependencies
   public request: WeaverseClientArgs['request']
+  public customerAccount: WeaverseClientArgs['customerAccount']
   public storefront: WeaverseClientArgs['storefront']
   public components: WeaverseClientArgs['components']
   public themeSchema: WeaverseClientArgs['themeSchema']
@@ -54,6 +55,7 @@ export class WeaverseClient {
   constructor(args: WeaverseClientArgs) {
     // Destructure and initialize all dependencies
     const {
+      customerAccount,
       env,
       storefront,
       components,
@@ -66,6 +68,7 @@ export class WeaverseClient {
     // Initialize required properties
     this.request = request
     this.storefront = storefront
+    this.customerAccount = customerAccount
     this.components = components
     this.themeSchema = themeSchema
     this.env = env
@@ -225,20 +228,20 @@ export class WeaverseClient {
           schema:
             this.themeSchema && typeof this.themeSchema === 'object'
               ? {
-                  ...this.themeSchema,
-                  settings: this.themeSchema?.settings?.map((group) => ({
-                    ...group,
-                    inputs: group?.inputs?.map((input) => {
-                      if (typeof input?.condition === 'function') {
-                        return {
-                          ...input,
-                          condition: input.condition.toString(),
-                        }
+                ...this.themeSchema,
+                settings: this.themeSchema?.settings?.map((group) => ({
+                  ...group,
+                  inputs: group?.inputs?.map((input) => {
+                    if (typeof input?.condition === 'function') {
+                      return {
+                        ...input,
+                        condition: input.condition.toString(),
                       }
-                      return input
-                    }),
-                  })),
-                }
+                    }
+                    return input
+                  }),
+                })),
+              }
               : undefined,
           publicEnv: this.configs.publicEnv,
         }
