@@ -1,5 +1,12 @@
 # @weaverse/hydrogen
 
+## 5.7.1
+
+### Patch Changes
+
+- bump version
+  - @weaverse/react@5.7.1
+
 ## 5.7.0
 
 ### Minor Changes

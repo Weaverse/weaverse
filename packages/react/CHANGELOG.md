@@ -1,5 +1,11 @@
 # @weaverse/react
 
+## 5.7.1
+
+### Patch Changes
+
+- @weaverse/core@5.7.1
+
 ## 5.7.0
 
 ### Minor Changes
