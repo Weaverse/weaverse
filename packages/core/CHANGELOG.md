@@ -1,5 +1,11 @@
 # @weaverse/core
 
+## 5.7.0
+
+### Minor Changes
+
+- Initialize customerAccount in WeaverseClient constructor
+
 ## 5.6.0
 
 ### Minor Changes
