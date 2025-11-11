@@ -86,7 +86,7 @@ describe('WeaverseClient Multi-Project Architecture', () => {
       expect(weaverse.configs.projectId).toBe('domain-project-456')
     })
 
-    it('should handle function returning empty string', () => {
+    it('should fall back to environment when function returns empty string', () => {
       let emptyFn = () => ''
 
       let weaverse = new WeaverseClient({
@@ -96,9 +96,8 @@ describe('WeaverseClient Multi-Project Architecture', () => {
         projectId: emptyFn,
       })
 
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        expect.stringContaining('CRITICAL')
-      )
+      // Should fall back to WEAVERSE_PROJECT_ID from env
+      expect(weaverse.configs.projectId).toBe('env-project-default')
     })
 
     it('should validate format of function-returned projectId', () => {
@@ -212,9 +211,14 @@ describe('WeaverseClient Multi-Project Architecture', () => {
         projectId: errorFn,
       })
 
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Failed to evaluate projectId function')
+      expect(consoleErrorSpy).toHaveBeenCalled()
+      let calls = consoleErrorSpy.mock.calls
+      let errorCall = calls.some((call: any[]) =>
+        call.some((arg: any) =>
+          String(arg).includes('Failed to evaluate projectId function')
+        )
       )
+      expect(errorCall).toBe(true)
     })
 
     it('should log stack trace for unexpected errors', () => {
@@ -229,9 +233,12 @@ describe('WeaverseClient Multi-Project Architecture', () => {
         projectId: errorFn,
       })
 
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Stack trace')
+      expect(consoleErrorSpy).toHaveBeenCalled()
+      let calls = consoleErrorSpy.mock.calls
+      let stackTraceCall = calls.some((call: any[]) =>
+        call.some((arg: any) => String(arg).includes('Stack trace'))
       )
+      expect(stackTraceCall).toBe(true)
     })
   })
 
@@ -257,9 +264,19 @@ describe('WeaverseClient Multi-Project Architecture', () => {
         projectId: 'client-project',
       })
 
-      await expect(
-        weaverse.loadPage({ projectId: 123 as any })
-      ).rejects.toThrow('must be a string')
+      let consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {})
+      let result = await weaverse.loadPage({ projectId: 123 as any })
+
+      expect(result).toBeNull()
+      expect(consoleErrorSpy).toHaveBeenCalled()
+      let calls = consoleErrorSpy.mock.calls
+      let errorCall = calls.some((call: any[]) =>
+        call.some((arg: any) => String(arg).includes('must be a string'))
+      )
+      expect(errorCall).toBe(true)
+      consoleErrorSpy.mockRestore()
     })
 
     it('should reject empty string for route-level projectId', async () => {
@@ -270,9 +287,19 @@ describe('WeaverseClient Multi-Project Architecture', () => {
         projectId: 'client-project',
       })
 
-      await expect(weaverse.loadPage({ projectId: '   ' })).rejects.toThrow(
-        'cannot be empty'
+      let consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {})
+      let result = await weaverse.loadPage({ projectId: '   ' })
+
+      expect(result).toBeNull()
+      expect(consoleErrorSpy).toHaveBeenCalled()
+      let calls = consoleErrorSpy.mock.calls
+      let errorCall = calls.some((call: any[]) =>
+        call.some((arg: any) => String(arg).includes('cannot be empty'))
       )
+      expect(errorCall).toBe(true)
+      consoleErrorSpy.mockRestore()
     })
 
     it('should validate route-level projectId format', async () => {
@@ -283,9 +310,21 @@ describe('WeaverseClient Multi-Project Architecture', () => {
         projectId: 'client-project',
       })
 
-      await expect(
-        weaverse.loadPage({ projectId: 'invalid project!' })
-      ).rejects.toThrow('Invalid route-level projectId format')
+      let consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {})
+      let result = await weaverse.loadPage({ projectId: 'invalid project!' })
+
+      expect(result).toBeNull()
+      expect(consoleErrorSpy).toHaveBeenCalled()
+      let calls = consoleErrorSpy.mock.calls
+      let errorCall = calls.some((call: any[]) =>
+        call.some((arg: any) =>
+          String(arg).includes('Invalid route-level projectId format')
+        )
+      )
+      expect(errorCall).toBe(true)
+      consoleErrorSpy.mockRestore()
     })
   })
 })
