@@ -2,6 +2,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { HydrogenComponent, HydrogenThemeSchema } from '../src/types'
 import { WeaverseClient } from '../src/weaverse-client'
 
+// Test error message patterns
+const INVALID_FORMAT_ERROR = /Invalid format/
+const MISSING_PROJECT_ID_ERROR = /No valid projectId found/
+const FAILED_TO_EVALUATE_ERROR = /Failed to evaluate projectId function/
+const UNEXPECTED_ERROR = /Unexpected error/
+const ASYNC_FUNCTION_ERROR = /must be awaited/
+const PROJECT_ID_VALIDATION_FAILED = /projectId validation failed/
+
 describe('WeaverseClient Multi-Project Architecture', () => {
   let mockComponents: HydrogenComponent[]
   let mockThemeSchema: HydrogenThemeSchema
@@ -59,16 +67,14 @@ describe('WeaverseClient Multi-Project Architecture', () => {
     })
 
     it('should reject invalid characters in static projectId', () => {
-      let weaverse = new WeaverseClient({
-        ...mockContext,
-        components: mockComponents,
-        themeSchema: mockThemeSchema,
-        projectId: 'invalid project!',
-      })
-
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Invalid projectId format')
-      )
+      expect(() => {
+        new WeaverseClient({
+          ...mockContext,
+          components: mockComponents,
+          themeSchema: mockThemeSchema,
+          projectId: 'invalid project!',
+        })
+      }).toThrow(INVALID_FORMAT_ERROR)
     })
   })
 
@@ -103,16 +109,14 @@ describe('WeaverseClient Multi-Project Architecture', () => {
     it('should validate format of function-returned projectId', () => {
       let invalidFn = () => 'invalid project!'
 
-      let weaverse = new WeaverseClient({
-        ...mockContext,
-        components: mockComponents,
-        themeSchema: mockThemeSchema,
-        projectId: invalidFn,
-      })
-
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Invalid projectId format')
-      )
+      expect(() => {
+        new WeaverseClient({
+          ...mockContext,
+          components: mockComponents,
+          themeSchema: mockThemeSchema,
+          projectId: invalidFn,
+        })
+      }).toThrow(INVALID_FORMAT_ERROR)
     })
   })
 
@@ -127,7 +131,7 @@ describe('WeaverseClient Multi-Project Architecture', () => {
           themeSchema: mockThemeSchema,
           projectId: asyncFn,
         })
-      }).toThrow('must be awaited')
+      }).toThrow(ASYNC_FUNCTION_ERROR)
     })
 
     it('should provide helpful error message for async functions', () => {
@@ -199,46 +203,62 @@ describe('WeaverseClient Multi-Project Architecture', () => {
   })
 
   describe('T030: Error Handling', () => {
-    it('should handle function throwing error gracefully', () => {
+    it('should throw when projectId function throws error', () => {
       let errorFn = () => {
         throw new Error('Test error')
       }
 
-      let weaverse = new WeaverseClient({
-        ...mockContext,
-        components: mockComponents,
-        themeSchema: mockThemeSchema,
-        projectId: errorFn,
-      })
-
-      expect(consoleErrorSpy).toHaveBeenCalled()
-      let calls = consoleErrorSpy.mock.calls
-      let errorCall = calls.some((call: any[]) =>
-        call.some((arg: any) =>
-          String(arg).includes('Failed to evaluate projectId function')
-        )
-      )
-      expect(errorCall).toBe(true)
+      expect(() => {
+        new WeaverseClient({
+          ...mockContext,
+          components: mockComponents,
+          themeSchema: mockThemeSchema,
+          projectId: errorFn,
+        })
+      }).toThrow(FAILED_TO_EVALUATE_ERROR)
     })
 
-    it('should log stack trace for unexpected errors', () => {
+    it('should throw with context when function throws unexpected error', () => {
       let errorFn = () => {
         throw new Error('Unexpected error')
       }
 
-      new WeaverseClient({
+      expect(() => {
+        new WeaverseClient({
+          ...mockContext,
+          components: mockComponents,
+          themeSchema: mockThemeSchema,
+          projectId: errorFn,
+        })
+      }).toThrow(UNEXPECTED_ERROR)
+    })
+  })
+
+  describe('T030b: Fail-Fast Validation', () => {
+    it('should throw immediately when no valid projectId can be resolved', () => {
+      let mockCtxNoEnv = createMockContext()
+      mockCtxNoEnv.env = {} // Remove WEAVERSE_PROJECT_ID
+
+      expect(() => {
+        new WeaverseClient({
+          ...mockCtxNoEnv,
+          components: mockComponents,
+          themeSchema: mockThemeSchema,
+          // No projectId provided, no env variable
+        })
+      }).toThrow(MISSING_PROJECT_ID_ERROR)
+    })
+
+    it('should fall back to environment when projectId is empty string', () => {
+      let weaverse = new WeaverseClient({
         ...mockContext,
         components: mockComponents,
         themeSchema: mockThemeSchema,
-        projectId: errorFn,
+        projectId: '   ', // Empty/whitespace string - falls back to env
       })
 
-      expect(consoleErrorSpy).toHaveBeenCalled()
-      let calls = consoleErrorSpy.mock.calls
-      let stackTraceCall = calls.some((call: any[]) =>
-        call.some((arg: any) => String(arg).includes('Stack trace'))
-      )
-      expect(stackTraceCall).toBe(true)
+      // Should fall back to WEAVERSE_PROJECT_ID from env
+      expect(weaverse.configs.projectId).toBe('env-project-default')
     })
   })
 
@@ -319,9 +339,7 @@ describe('WeaverseClient Multi-Project Architecture', () => {
       expect(consoleErrorSpy).toHaveBeenCalled()
       let calls = consoleErrorSpy.mock.calls
       let errorCall = calls.some((call: any[]) =>
-        call.some((arg: any) =>
-          String(arg).includes('Invalid route-level projectId format')
-        )
+        call.some((arg: any) => PROJECT_ID_VALIDATION_FAILED.test(String(arg)))
       )
       expect(errorCall).toBe(true)
       consoleErrorSpy.mockRestore()

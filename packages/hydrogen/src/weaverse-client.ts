@@ -7,10 +7,12 @@ import type {
   AllCacheOptions,
   FetchProjectPayload,
   FetchProjectRequestBody,
+  HydrogenComponent,
   HydrogenComponentData,
   HydrogenPageData,
   LoadPageParams,
   PageType,
+  ProjectIdValidationResult,
   ThemeSettingsResponse,
   WeaverseClientArgs,
   WeaverseLoaderData,
@@ -18,7 +20,12 @@ import type {
   WeaverseStudioQueries,
   WithCacheFetchResponse,
 } from './types'
-import { hasError, isProjectIdFunction } from './types'
+import {
+  hasError,
+  isFetchProjectPayload,
+  isProjectIdFunction,
+  WeaverseError,
+} from './types'
 import {
   generateDataFromSchema,
   getPreviewData,
@@ -36,62 +43,95 @@ const DEFAULT_CACHE_STRATEGY: AllCacheOptions = {
   staleIfError: 82_800, // 23 hours
 } as const
 
+const DEFAULT_FETCH_TIMEOUT_MS = 10_000 // 10 seconds
+
 export class WeaverseClient {
-  public API = API_PATH
-  public basePageConfigs: Omit<WeaverseProjectConfigs, 'requestInfo'>
-  public basePageRequestBody: Omit<FetchProjectRequestBody, 'url'>
-  public configs: WeaverseProjectConfigs
-  public withCache: ReturnType<typeof createWithCache>
+  API = API_PATH
+  basePageConfigs: Omit<WeaverseProjectConfigs, 'requestInfo'>
+  basePageRequestBody: Omit<FetchProjectRequestBody, 'url'>
+  configs: WeaverseProjectConfigs
+  withCache: ReturnType<typeof createWithCache>
 
   // Required dependencies
-  public request: WeaverseClientArgs['request']
-  public customerAccount: WeaverseClientArgs['customerAccount']
-  public storefront: WeaverseClientArgs['storefront']
-  public components: WeaverseClientArgs['components']
-  public themeSchema: WeaverseClientArgs['themeSchema']
-  public env: WeaverseClientArgs['env']
-  public cache: WeaverseClientArgs['cache']
-  public waitUntil: WeaverseClientArgs['waitUntil']
+  request: WeaverseClientArgs['request']
+  customerAccount: WeaverseClientArgs['customerAccount']
+  storefront: WeaverseClientArgs['storefront']
+  components: WeaverseClientArgs['components']
+  themeSchema: WeaverseClientArgs['themeSchema']
+  env: WeaverseClientArgs['env']
+  cache: WeaverseClientArgs['cache']
+  waitUntil: WeaverseClientArgs['waitUntil']
+
+  // Performance optimizations
+  private readonly parsedUrl: URL
+  private readonly componentsByType: Map<string, HydrogenComponent>
 
   constructor(args: WeaverseClientArgs) {
-    // Destructure and initialize all dependencies
-    const {
-      customerAccount,
-      env,
-      storefront,
-      components,
-      cache,
-      waitUntil,
-      themeSchema,
-      request,
-      projectId,
-    } = args
+    // Assign required dependencies
+    this.request = args.request
+    this.storefront = args.storefront
+    this.customerAccount = args.customerAccount
+    this.components = args.components
+    this.themeSchema = args.themeSchema
+    this.env = args.env
+    this.cache = args.cache
+    this.waitUntil = args.waitUntil
 
-    // Initialize required properties
-    this.request = request
-    this.storefront = storefront
-    this.customerAccount = customerAccount
-    this.components = components
-    this.themeSchema = themeSchema
-    this.env = env
-    this.cache = cache
-    this.waitUntil = waitUntil
+    // Performance optimizations
+    this.parsedUrl = new URL(args.request.url)
+    this.componentsByType = this.buildComponentLookupMap(args.components)
+
+    // Initialize cache and configs
+    this.initializeCache(args)
+    this.initializeConfigs(args)
+  }
+
+  /**
+   * Initialize Hydrogen cache with proper configuration.
+   * Logs warning if waitUntil is missing.
+   */
+  private initializeCache(args: WeaverseClientArgs): void {
+    if (!args.waitUntil) {
+      console.warn(
+        '⚠️ WeaverseClient: waitUntil not provided, background operations may not complete'
+      )
+    }
+
     this.withCache = createWithCache({
-      cache,
-      waitUntil: waitUntil || (() => Promise.resolve()),
-      request,
+      cache: args.cache,
+      waitUntil: args.waitUntil || (() => Promise.resolve()),
+      request: args.request,
     })
+  }
 
-    // NEW: Resolve projectId with multi-project support
+  /**
+   * Initialize configs with projectId resolution and fail-fast validation.
+   * Throws WeaverseError if projectId cannot be resolved.
+   */
+  private initializeConfigs(args: WeaverseClientArgs): void {
+    // Get base configs once to avoid duplicate calls
+    let baseConfigs = getWeaverseConfigs(args.request, args.env as HydrogenEnv)
+
+    // Resolve projectId with multi-project support
     let resolvedProjectId = this.resolveProjectIdSync(
-      projectId,
-      request,
-      env as HydrogenEnv
+      args.projectId,
+      args.request,
+      args.env as HydrogenEnv,
+      baseConfigs
     )
+
+    // Fail-fast validation: throw if projectId is empty
+    if (!resolvedProjectId || resolvedProjectId.trim() === '') {
+      throw new WeaverseError(
+        'Failed to initialize WeaverseClient: No valid projectId found. ' +
+          'Set WEAVERSE_PROJECT_ID environment variable or provide projectId parameter.',
+        'MISSING_PROJECT_ID'
+      )
+    }
 
     // Initialize configs with resolved projectId
     this.configs = {
-      ...getWeaverseConfigs(request, env as HydrogenEnv),
+      ...baseConfigs,
       projectId: resolvedProjectId,
     }
 
@@ -107,158 +147,274 @@ export class WeaverseClient {
 
     this.basePageRequestBody = {
       isDesignMode: this.configs.isDesignMode,
-      i18n: storefront.i18n,
+      i18n: args.storefront.i18n,
       projectId: this.configs.projectId,
     }
+
+    // Freeze configs to prevent accidental mutations
+    Object.freeze(this.configs)
+    Object.freeze(this.basePageConfigs)
+    Object.freeze(this.basePageRequestBody)
+  }
+
+  /**
+   * Build component lookup map for O(1) access by type.
+   * Significantly improves performance for large component lists.
+   */
+  private buildComponentLookupMap(
+    components: HydrogenComponent[]
+  ): Map<string, HydrogenComponent> {
+    return new Map(components.map((comp) => [comp.schema?.type, comp]))
+  }
+
+  /**
+   * Extract error message from unknown error type.
+   * Handles WeaverseError, Error, and other types.
+   */
+  private extractErrorMessage(error: unknown): string {
+    if (error instanceof WeaverseError) {
+      return error.message
+    }
+    if (error instanceof Error) {
+      return error.message
+    }
+    return String(error)
   }
 
   /**
    * Validates projectId format (alphanumeric, hyphens, underscores only).
+   * Returns detailed validation result with error message.
    *
    * @param projectId - Project identifier to validate
-   * @returns True if valid format, false otherwise
+   * @returns Validation result with error message if invalid
    */
-  private validateProjectId(projectId: string): boolean {
+  private validateProjectId(projectId: string): ProjectIdValidationResult {
+    if (!projectId || projectId.trim() === '') {
+      return {
+        valid: false,
+        error: 'Project ID cannot be empty',
+      }
+    }
+
     // Only allow alphanumeric characters, hyphens, and underscores
     let validPattern = /^[a-zA-Z0-9_-]+$/
-    return validPattern.test(projectId)
+    if (!validPattern.test(projectId)) {
+      return {
+        valid: false,
+        error: `Invalid format: "${projectId}". Only alphanumeric characters, hyphens, and underscores are allowed.`,
+      }
+    }
+
+    return { valid: true }
   }
 
   /**
    * Resolves projectId with multi-project architecture support.
-   *
-   * Priority chain (highest to lowest):
-   * 1. URL query parameter: ?weaverseProjectId=... (design mode override)
-   * 2. Function result (if function provided)
-   * 3. Explicit string value (if string provided)
-   * 4. Environment variable: WEAVERSE_PROJECT_ID (Hydrogen env or process.env)
-   * 5. Empty string (triggers validation error in methods)
+   * Uses priority chain to determine the correct project ID.
    *
    * @param projectId - Project identifier (string, function, or undefined)
    * @param request - HTTP request for context access
    * @param env - Hydrogen environment with variables
-   * @returns Resolved project ID string
+   * @param baseConfigs - Pre-fetched base configs to avoid duplicate calls
+   * @returns Resolved project ID string (empty string if none found)
    */
   private resolveProjectIdSync(
     projectId: string | (() => string) | (() => Promise<string>) | undefined,
     request: Request,
-    env: HydrogenEnv
+    env: HydrogenEnv,
+    baseConfigs?: WeaverseProjectConfigs
   ): string {
-    // Priority 1: URL query params (design mode, preview mode)
+    return (
+      this.resolveFromQueryParams(request) ||
+      this.resolveFromFunction(projectId) ||
+      this.resolveFromString(projectId) ||
+      this.resolveFromEnvironment(baseConfigs, request, env) ||
+      ''
+    )
+  }
+
+  /**
+   * Priority 1: Resolve projectId from URL query parameters.
+   * Used for design mode and preview mode overrides.
+   */
+  private resolveFromQueryParams(request: Request): string | null {
     let queries = getRequestQueries<WeaverseStudioQueries>(request)
-    if (queries.weaverseProjectId) {
-      return queries.weaverseProjectId
+    return queries.weaverseProjectId || null
+  }
+
+  /**
+   * Priority 2: Resolve projectId from function parameter.
+   * Detects and rejects async functions with helpful error.
+   */
+  private resolveFromFunction(
+    projectId: string | (() => string) | (() => Promise<string>) | undefined
+  ): string | null {
+    if (!isProjectIdFunction(projectId)) {
+      return null
     }
 
-    // Priority 2: Function parameter (new capability)
-    if (isProjectIdFunction(projectId)) {
-      // Check if it's an async function BEFORE calling
-      if (projectId.constructor.name === 'AsyncFunction') {
-        throw new Error(
-          'Async projectId functions must be awaited before passing to WeaverseClient. ' +
-            'Use: projectId: await getProjectAsync() instead of: projectId: getProjectAsync'
-        )
-      }
-
-      try {
-        let result = projectId()
-
-        // Keep instanceof Promise check as safety net
-        if (result instanceof Promise) {
-          throw new Error(
-            'Async projectId functions must be awaited before passing to WeaverseClient. ' +
-              'Use: projectId: await getProjectAsync() instead of: projectId: getProjectAsync'
-          )
-        }
-
-        if (result && result.trim() !== '') {
-          let trimmedResult = result.trim()
-
-          // Validate format
-          if (this.validateProjectId(trimmedResult)) {
-            return trimmedResult
-          }
-          console.error(
-            `❌ Invalid projectId format: "${trimmedResult}". ` +
-              'Only alphanumeric characters, hyphens, and underscores are allowed.'
-          )
-        }
-      } catch (err) {
-        // Check if it's our own error about async functions
-        if (err instanceof Error && err.message.includes('must be awaited')) {
-          // Re-throw our intentional error
-          throw err
-        }
-
-        // Log unexpected errors with full context
-        console.error('❌ Failed to evaluate projectId function:', err)
-        if (err instanceof Error && err.stack) {
-          console.error('Stack trace:', err.stack)
-        }
-
-        // Fall through to environment fallback
-      }
-    }
-
-    // Priority 3: Explicit string parameter
-    if (typeof projectId === 'string' && projectId.trim() !== '') {
-      let trimmedProjectId = projectId.trim()
-
-      // Validate format
-      if (this.validateProjectId(trimmedProjectId)) {
-        return trimmedProjectId
-      }
-      console.error(
-        `❌ Invalid projectId format: "${trimmedProjectId}". ` +
-          'Only alphanumeric characters, hyphens, and underscores are allowed.'
+    // Check if it's an async function BEFORE calling
+    if (projectId.constructor.name === 'AsyncFunction') {
+      throw new WeaverseError(
+        'Async projectId functions must be awaited before passing to WeaverseClient. ' +
+          'Use: projectId: await getProjectAsync() instead of: projectId: getProjectAsync',
+        'ASYNC_PROJECT_ID'
       )
     }
 
-    // Priority 4 & 5: Environment variables (Hydrogen env → process.env)
-    let configs = getWeaverseConfigs(request, env as HydrogenEnv)
+    try {
+      let result = projectId()
+
+      // Safety net: check if result is a Promise
+      if (result instanceof Promise) {
+        throw new WeaverseError(
+          'Async projectId functions must be awaited before passing to WeaverseClient. ' +
+            'Use: projectId: await getProjectAsync() instead of: projectId: getProjectAsync',
+          'ASYNC_PROJECT_ID'
+        )
+      }
+
+      if (result && result.trim() !== '') {
+        let trimmed = result.trim()
+        let validation = this.validateProjectId(trimmed)
+
+        if (validation.valid) {
+          return trimmed
+        }
+
+        // Throw on validation failure - fail-fast for explicit projectId
+        throw new WeaverseError(
+          validation.error || 'Invalid projectId format',
+          'INVALID_PROJECT_ID'
+        )
+      }
+    } catch (err) {
+      // Re-throw WeaverseError (async function errors, validation errors)
+      if (err instanceof WeaverseError) {
+        throw err
+      }
+
+      // Wrap unexpected errors
+      throw new WeaverseError(
+        `Failed to evaluate projectId function: ${err instanceof Error ? err.message : String(err)}`,
+        'PROJECT_ID_FUNCTION_ERROR',
+        undefined,
+        { cause: err instanceof Error ? err.stack : String(err) }
+      )
+    }
+
+    return null
+  }
+
+  /**
+   * Priority 3: Resolve projectId from explicit string parameter.
+   */
+  private resolveFromString(
+    projectId: string | (() => string) | (() => Promise<string>) | undefined
+  ): string | null {
+    if (typeof projectId !== 'string') {
+      return null
+    }
+
+    let trimmed = projectId.trim()
+    if (trimmed === '') {
+      return null
+    }
+
+    let validation = this.validateProjectId(trimmed)
+    if (validation.valid) {
+      return trimmed
+    }
+
+    // Throw on validation failure - fail-fast for explicit projectId
+    throw new WeaverseError(
+      validation.error || 'Invalid projectId format',
+      'INVALID_PROJECT_ID'
+    )
+  }
+
+  /**
+   * Priority 4: Resolve projectId from environment variables.
+   */
+  private resolveFromEnvironment(
+    baseConfigs: WeaverseProjectConfigs | undefined,
+    request: Request,
+    env: HydrogenEnv
+  ): string | null {
+    let configs = baseConfigs || getWeaverseConfigs(request, env)
+
     if (configs.projectId && configs.projectId.trim() !== '') {
       return configs.projectId.trim()
     }
 
-    // Priority 6: Empty string with critical error (methods will throw error)
-    console.error(
-      '❌ CRITICAL: No valid Weaverse projectId found! ' +
-        'Application will fail when loading pages. ' +
-        'Set WEAVERSE_PROJECT_ID environment variable or provide projectId parameter.'
-    )
-    return ''
+    return null
   }
 
-  // Helper method for direct fetching in design mode - returns same format as withCache.fetch
+  /**
+   * Helper method for direct fetching in design mode.
+   * Returns same format as withCache.fetch for consistency.
+   * Includes 10-second timeout to prevent hanging requests.
+   */
   private readonly directFetch = async <T>(
     url: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
+    timeoutMs = DEFAULT_FETCH_TIMEOUT_MS
   ): Promise<WithCacheFetchResponse<T>> => {
+    let controller = new AbortController()
+    let timeoutId: ReturnType<typeof setTimeout> | undefined = setTimeout(
+      () => controller.abort(),
+      timeoutMs
+    )
+
     try {
-      let response = await fetch(url, options)
+      let response = await fetch(url, {
+        ...options,
+        signal: controller.signal,
+      })
+
       if (!response.ok) {
-        let error = await response.text()
-        throw new Error(`${response.status} ${response.statusText} ${error}`)
+        let errorText = await response.text()
+        throw new WeaverseError(
+          `HTTP ${response.status}: ${response.statusText}`,
+          'FETCH_ERROR',
+          response.status,
+          { url, errorText }
+        )
       }
+
       let data = (await response.json()) as T
-      // Return same wrapped format as withCache.fetch
-      return {
-        data,
-        response,
-      }
+      return { data, response }
     } catch (err) {
-      throw new Error(`Failed to fetch data from ${url}`, { cause: err })
+      if (err instanceof WeaverseError) {
+        throw err
+      }
+
+      if (err.name === 'AbortError') {
+        throw new WeaverseError(
+          `Request timeout after ${timeoutMs}ms`,
+          'TIMEOUT_ERROR',
+          undefined,
+          { url, timeoutMs }
+        )
+      }
+
+      throw new WeaverseError(
+        'Network error during fetch',
+        'NETWORK_ERROR',
+        undefined,
+        { url, cause: err instanceof Error ? err.message : String(err) }
+      )
+    } finally {
+      if (timeoutId !== undefined) {
+        clearTimeout(timeoutId)
+      }
     }
   }
 
   // Helper method to detect if request is from localhost
   private isLocalhost(): boolean {
-    try {
-      let url = new URL(this.request.url)
-      return url.hostname === 'localhost' || url.hostname === '127.0.0.1'
-    } catch {
-      return false
-    }
+    let hostname = this.parsedUrl.hostname
+    return hostname === 'localhost' || hostname === '127.0.0.1'
   }
 
   // Helper method for building API URLs consistently
@@ -393,9 +549,17 @@ export class WeaverseClient {
         }
       }
       return data
-    } catch (e) {
-      console.info('Unable to load theme settings', e)
-      return { theme: defaultThemeSettings }
+    } catch (error) {
+      let errorMessage = 'Unable to load theme settings'
+      let errorDetails = this.extractErrorMessage(error)
+
+      console.error(errorMessage, errorDetails)
+
+      return {
+        theme: defaultThemeSettings,
+        _error: errorDetails,
+        _loadFailed: true,
+      }
     }
   }
 
@@ -430,21 +594,19 @@ export class WeaverseClient {
       // Validate route-level projectId if provided
       if (params.projectId !== undefined) {
         if (typeof params.projectId !== 'string') {
-          throw new Error(
-            'Route-level projectId must be a string. ' +
+          console.error(
+            'Route-level projectId validation failed: must be a string. ' +
               `Received: ${typeof params.projectId}`
           )
+          return null
         }
 
-        if (params.projectId.trim() === '') {
-          throw new Error('Route-level projectId cannot be empty')
-        }
-
-        if (!this.validateProjectId(params.projectId)) {
-          throw new Error(
-            `Invalid route-level projectId format: "${params.projectId}". ` +
-              'Only alphanumeric characters, hyphens, and underscores are allowed.'
+        let validation = this.validateProjectId(params.projectId)
+        if (!validation.valid) {
+          console.error(
+            `Route-level projectId validation failed: ${validation.error}`
           )
+          return null
         }
       }
 
@@ -498,8 +660,17 @@ export class WeaverseClient {
         throw new Error(projectData.error)
       }
 
-      // Extract what we can from the response
-      let { page, project, pageAssignment } = projectData as any
+      // Extract what we can from the response using type guard
+      if (!isFetchProjectPayload(projectData)) {
+        throw new WeaverseError(
+          'Invalid project data structure received from API',
+          'INVALID_RESPONSE',
+          undefined,
+          { projectId: effectiveProjectId }
+        )
+      }
+
+      let { page, project, pageAssignment } = projectData
 
       if (!project) {
         console.warn('Weaverse project not found. Id:', effectiveProjectId)
@@ -526,20 +697,45 @@ export class WeaverseClient {
           requestInfo: {
             i18n: storefront.i18n,
             queries: getRequestQueries<WeaverseStudioQueries>(request),
-            pathname: new URL(request.url).pathname,
-            search: new URL(request.url).search,
+            pathname: this.parsedUrl.pathname,
+            search: this.parsedUrl.search,
           },
         },
       }
-    } catch (e) {
-      console.error('❌ Page load failed.', e)
+    } catch (error) {
+      let errorMessage = '❌ Page load failed'
+      let errorContext: Record<string, unknown> = {
+        url: this.request.url,
+        projectId: params.projectId || this.configs.projectId,
+      }
+
+      if (error instanceof WeaverseError) {
+        console.error(errorMessage, {
+          code: error.code,
+          message: error.message,
+          ...errorContext,
+          ...error.context,
+        })
+      } else if (error instanceof Error) {
+        console.error(errorMessage, {
+          message: error.message,
+          stack: error.stack,
+          ...errorContext,
+        })
+      } else {
+        console.error(errorMessage, {
+          error: String(error),
+          ...errorContext,
+        })
+      }
+
       return null
     }
   }
 
   execComponentLoader = async (item: HydrogenComponentData) => {
     let { data = {}, type, id } = item
-    let component = this.components?.find(({ schema }) => schema?.type === type)
+    let component = this.componentsByType.get(type)
     let loader = component?.loader
     if (typeof loader === 'function' && component) {
       try {
@@ -552,8 +748,8 @@ export class WeaverseClient {
             })
           ),
         }
-      } catch (e) {
-        console.warn('❌ Item loader run failed.', type, id, e)
+      } catch (error) {
+        console.warn('❌ Item loader run failed.', type, id, error)
         return item
       }
     }

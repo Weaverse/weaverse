@@ -198,7 +198,7 @@ export type WeaverseLoaderData = {
   }
   page: HydrogenPageData
   project: HydrogenProjectType
-  pageAssignment: HydrogenPageAssignment
+  pageAssignment?: HydrogenPageAssignment
 }
 
 export interface HydrogenPageData extends WeaverseProjectDataType {
@@ -397,6 +397,8 @@ export type ThemeSettingsResponse = {
   theme?: HydrogenThemeSettings
   schema?: HydrogenThemeSchema
   publicEnv?: PublicEnv
+  _error?: string
+  _loadFailed?: boolean
 }
 
 // Direct fetch response structure
@@ -433,6 +435,15 @@ export class WeaverseError extends Error {
       Error.captureStackTrace(this, WeaverseError)
     }
   }
+}
+
+/**
+ * Validation result type for project ID validation.
+ * Returns validation status with optional error message.
+ */
+export type ProjectIdValidationResult = {
+  valid: boolean
+  error?: string
 }
 
 /**
