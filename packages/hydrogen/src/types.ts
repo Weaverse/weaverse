@@ -254,11 +254,126 @@ export type FetchProjectPayload = {
   [key: string]: any // Allow additional properties from API response
 }
 
+/**
+ * Project identifier value - can be static string or dynamic function.
+ *
+ * **Static String**: Direct project ID reference
+ * ```ts
+ * 'project-abc-123'
+ * ```
+ *
+ * **Synchronous Function**: Returns project ID based on request context
+ * ```ts
+ * () => {
+ *   const host = new URL(request.url).hostname
+ *   return PROJECT_MAP[host] || 'default-project'
+ * }
+ * ```
+ *
+ * **Asynchronous Function**: Async project resolution (must be awaited before passing)
+ * ```ts
+ * async () => {
+ *   return await database.getProjectId(userId)
+ * }
+ * ```
+ */
+export type ProjectIdValue = string | (() => string) | (() => Promise<string>)
+
+/**
+ * Type guard for detecting function-based projectId.
+ *
+ * Used internally by WeaverseClient constructor to determine
+ * if projectId needs evaluation or can be used directly.
+ */
+export function isProjectIdFunction(
+  projectId: ProjectIdValue | undefined
+): projectId is (() => string) | (() => Promise<string>) {
+  return typeof projectId === 'function'
+}
+
+/**
+ * Extended WeaverseClient constructor arguments supporting multi-project architecture.
+ *
+ * @example Static project (existing pattern - backward compatible)
+ * ```ts
+ * const weaverse = new WeaverseClient({
+ *   ...hydrogenContext,
+ *   projectId: 'project-default-123'
+ * })
+ * ```
+ *
+ * @example Dynamic project selection (new capability)
+ * ```ts
+ * const weaverse = new WeaverseClient({
+ *   ...hydrogenContext,
+ *   projectId: () => {
+ *     const origin = new URL(request.url).origin
+ *     if (origin === 'https://mystore.se') return process.env.WEAVERSE_PROJECT_SWEDEN!
+ *     if (origin === 'https://mystore.fr') return process.env.WEAVERSE_PROJECT_FRANCE!
+ *     return process.env.WEAVERSE_PROJECT_ID!
+ *   }
+ * })
+ * ```
+ *
+ * **Priority Chain** (highest to lowest):
+ * 1. URL query parameter: `?weaverseProjectId=...` (design mode, preview mode)
+ * 2. Function result (if function provided)
+ * 3. Explicit string value (if string provided)
+ * 4. Environment variable: `WEAVERSE_PROJECT_ID` (Hydrogen env or process.env)
+ * 5. Empty string (triggers validation error in methods)
+ *
+ * **Function Requirements**:
+ * - Must return non-empty string
+ * - Can access request via closure for routing decisions
+ * - Evaluated once per WeaverseClient instance (request-scoped)
+ * - Async functions must be awaited before passing to constructor
+ * - Should handle edge cases (missing headers, invalid domains, etc.)
+ *
+ * **Request Context Access**:
+ * Functions access request via closure from constructor arguments.
+ */
 export type WeaverseClientArgs = HydrogenContext & {
+  /**
+   * React components registered with Weaverse CMS.
+   * Each component must have a schema defining its properties and settings.
+   */
   components: HydrogenComponent[]
+
+  /**
+   * Theme schema defining global theme settings (colors, fonts, layouts).
+   * Used to generate default theme configuration and validate theme data.
+   */
   themeSchema: HydrogenThemeSchema
+
+  /**
+   * Incoming HTTP request object from React Router loader.
+   * Provides access to URL, headers, cookies for dynamic routing decisions.
+   */
   request: Request
+
+  /**
+   * Hydrogen cache instance for content caching.
+   *Supports multi-tenant caching with project-specific cache keys.
+   */
   cache: Cache
+
+  /**
+   * Project identifier for loading content from Weaverse CMS.
+   *
+   * **Value Types**:
+   * - Static string: 'project-123' (existing usage)
+   * - Synchronous function: () => determineProject(request)
+   * - Asynchronous function: async () => await getProject(request) (must be awaited)
+   *
+   * **Backward Compatibility**:
+   * - Optional parameter (defaults to environment variable)
+   * - Existing code without projectId continues to work unchanged
+   *
+   * **Cache Isolation**:
+   * ProjectId is included in cache keys to prevent cross-project content pollution.
+   * Each project's content is cached separately, ensuring multi-tenant isolation.
+   */
+  projectId?: ProjectIdValue
 }
 
 export type WeaverseProduct = WeaverseResourcePickerData
@@ -437,4 +552,104 @@ declare module '@shopify/hydrogen' {
     KLAVIYO_PRIVATE_API_TOKEN: string
     PUBLIC_SHOPIFY_INBOX_SHOP_ID: string
   }
+}
+
+/**
+ * Parameters for loadPage method supporting route-level project override.
+ *
+ * @example Basic usage (uses client-level project)
+ * ```ts
+ * const weaverseData = await weaverse.loadPage({
+ *   type: 'PRODUCT',
+ *   handle: params.productHandle
+ * })
+ * ```
+ *
+ * @example Route-level project override
+ * ```ts
+ * export async function loader({ params, context }: LoaderFunctionArgs) {
+ *   const { weaverse } = context
+ *
+ *   // Use special campaign project for this route only
+ *   const weaverseData = await weaverse.loadPage({
+ *     type: 'PRODUCT',
+ *     handle: params.productHandle,
+ *     projectId: process.env.WEAVERSE_PROJECT_CAMPAIGN  // Override
+ *   })
+ *
+ *   return { weaverseData }
+ * }
+ * ```
+ */
+export type LoadPageParams = {
+  /**
+   * Page type to load from Weaverse CMS.
+   *
+   * Determines which template to use for rendering the page.
+   * Falls back to 'INDEX' if not specified or if page type doesn't exist.
+   *
+   * @default 'INDEX'
+   */
+  type?: PageType
+
+  /**
+   * Locale for internationalization.
+   *
+   * Format: IETF BCP 47 language tag (e.g., 'en-US', 'fr-FR', 'de-DE')
+   * Used to load locale-specific content and translations.
+   */
+  locale?: string
+
+  /**
+   * Page handle for dynamic pages.
+   *
+   * Identifies specific resource within page type:
+   * - Product handle: 'red-sneakers'
+   * - Collection handle: 'summer-sale'
+   * - Page handle: 'about-us'
+   * - Article handle: 'how-to-style-sneakers'
+   */
+  handle?: string
+
+  /**
+   * Cache strategy override for this specific page load.
+   *
+   * Overrides default cache strategy for special use cases:
+   * - Fresh content for checkout pages (no cache)
+   * - Long-lived cache for static pages (1 hour+)
+   * - Short-lived cache for frequently updated content (5 minutes)
+   */
+  strategy?: AllCacheOptions
+
+  /**
+   * Optional project override for this specific page load.
+   *
+   * **Precedence**: Route-level projectId takes precedence over client-level projectId.
+   *
+   * **Use Cases**:
+   * - Campaign landing pages with custom content
+   * - VIP customer experiences with dedicated projects
+   * - A/B testing specific pages without changing global config
+   * - Seasonal promotions with limited-time content
+   *
+   * **Validation**:
+   * - Must be non-empty string
+   * - Validated before API call
+   * - Falls back to client-level projectId if undefined
+   * - Does NOT support function (string only)
+   *
+   * **Cache Isolation**:
+   * Override projectId is included in cache key, ensuring separate caches
+   * for different projects even on the same route.
+   *
+   * @example Campaign page override
+   * ```ts
+   * const campaignData = await weaverse.loadPage({
+   *   type: 'PAGE',
+   *   handle: 'summer-sale',
+   *   projectId: process.env.WEAVERSE_PROJECT_CAMPAIGN
+   * })
+   * ```
+   */
+  projectId?: string
 }

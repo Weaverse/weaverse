@@ -115,6 +115,7 @@ When working on SDK packages:
    - Shopify Hydrogen specific integrations
    - Requires React Router v7
    - Includes error boundary support
+   - **Multi-Project Architecture** (v5.7.2+): Supports dynamic project selection via function-based `projectId` parameter, enabling domain-based routing, A/B testing, and multi-brand implementations without code duplication
 
 ### Weaverse Component Schema Pattern
 
@@ -255,6 +256,18 @@ npm test                 # Run Playwright E2E tests
 7. **Type Definitions**: Schema-related types belong in `@weaverse/schema`, not individual packages
 8. **Template Dependencies**: Don't include templates in package builds (excluded via Biome config)
 9. **Schema Property Name**: Always use `settings` not `inspector` in component schemas
+10. **Multi-Project Functions**: When using function-based `projectId`, functions must be synchronous or awaited before passing
+
+```typescript
+// ✅ Correct - sync function
+projectId: () => getProjectSync()
+
+// ✅ Correct - awaited async function
+projectId: await getProjectAsync()
+
+// ❌ Wrong - async function not awaited
+projectId: getProjectAsync()  // Throws: "Async projectId functions must be awaited..."
+```
 
 ## Troubleshooting
 

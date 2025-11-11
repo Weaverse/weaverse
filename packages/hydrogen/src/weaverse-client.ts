@@ -9,6 +9,7 @@ import type {
   FetchProjectRequestBody,
   HydrogenComponentData,
   HydrogenPageData,
+  LoadPageParams,
   PageType,
   ThemeSettingsResponse,
   WeaverseClientArgs,
@@ -17,7 +18,7 @@ import type {
   WeaverseStudioQueries,
   WithCacheFetchResponse,
 } from './types'
-import { hasError } from './types'
+import { hasError, isProjectIdFunction } from './types'
 import {
   generateDataFromSchema,
   getPreviewData,
@@ -63,6 +64,7 @@ export class WeaverseClient {
       waitUntil,
       themeSchema,
       request,
+      projectId,
     } = args
 
     // Initialize required properties
@@ -80,8 +82,18 @@ export class WeaverseClient {
       request,
     })
 
-    // Initialize configs
-    this.configs = getWeaverseConfigs(request, env as HydrogenEnv)
+    // NEW: Resolve projectId with multi-project support
+    let resolvedProjectId = this.resolveProjectIdSync(
+      projectId,
+      request,
+      env as HydrogenEnv
+    )
+
+    // Initialize configs with resolved projectId
+    this.configs = {
+      ...getWeaverseConfigs(request, env as HydrogenEnv),
+      projectId: resolvedProjectId,
+    }
 
     // Initialize base configurations
     this.basePageConfigs = {
@@ -98,6 +110,123 @@ export class WeaverseClient {
       i18n: storefront.i18n,
       projectId: this.configs.projectId,
     }
+  }
+
+  /**
+   * Validates projectId format (alphanumeric, hyphens, underscores only).
+   *
+   * @param projectId - Project identifier to validate
+   * @returns True if valid format, false otherwise
+   */
+  private validateProjectId(projectId: string): boolean {
+    // Only allow alphanumeric characters, hyphens, and underscores
+    let validPattern = /^[a-zA-Z0-9_-]+$/
+    return validPattern.test(projectId)
+  }
+
+  /**
+   * Resolves projectId with multi-project architecture support.
+   *
+   * Priority chain (highest to lowest):
+   * 1. URL query parameter: ?weaverseProjectId=... (design mode override)
+   * 2. Function result (if function provided)
+   * 3. Explicit string value (if string provided)
+   * 4. Environment variable: WEAVERSE_PROJECT_ID (Hydrogen env or process.env)
+   * 5. Empty string (triggers validation error in methods)
+   *
+   * @param projectId - Project identifier (string, function, or undefined)
+   * @param request - HTTP request for context access
+   * @param env - Hydrogen environment with variables
+   * @returns Resolved project ID string
+   */
+  private resolveProjectIdSync(
+    projectId: string | (() => string) | (() => Promise<string>) | undefined,
+    request: Request,
+    env: HydrogenEnv
+  ): string {
+    // Priority 1: URL query params (design mode, preview mode)
+    let queries = getRequestQueries<WeaverseStudioQueries>(request)
+    if (queries.weaverseProjectId) {
+      return queries.weaverseProjectId
+    }
+
+    // Priority 2: Function parameter (new capability)
+    if (isProjectIdFunction(projectId)) {
+      // Check if it's an async function BEFORE calling
+      if (projectId.constructor.name === 'AsyncFunction') {
+        throw new Error(
+          'Async projectId functions must be awaited before passing to WeaverseClient. ' +
+            'Use: projectId: await getProjectAsync() instead of: projectId: getProjectAsync'
+        )
+      }
+
+      try {
+        let result = projectId()
+
+        // Keep instanceof Promise check as safety net
+        if (result instanceof Promise) {
+          throw new Error(
+            'Async projectId functions must be awaited before passing to WeaverseClient. ' +
+              'Use: projectId: await getProjectAsync() instead of: projectId: getProjectAsync'
+          )
+        }
+
+        if (result && result.trim() !== '') {
+          let trimmedResult = result.trim()
+
+          // Validate format
+          if (this.validateProjectId(trimmedResult)) {
+            return trimmedResult
+          }
+          console.error(
+            `❌ Invalid projectId format: "${trimmedResult}". ` +
+              'Only alphanumeric characters, hyphens, and underscores are allowed.'
+          )
+        }
+      } catch (err) {
+        // Check if it's our own error about async functions
+        if (err instanceof Error && err.message.includes('must be awaited')) {
+          // Re-throw our intentional error
+          throw err
+        }
+
+        // Log unexpected errors with full context
+        console.error('❌ Failed to evaluate projectId function:', err)
+        if (err instanceof Error && err.stack) {
+          console.error('Stack trace:', err.stack)
+        }
+
+        // Fall through to environment fallback
+      }
+    }
+
+    // Priority 3: Explicit string parameter
+    if (typeof projectId === 'string' && projectId.trim() !== '') {
+      let trimmedProjectId = projectId.trim()
+
+      // Validate format
+      if (this.validateProjectId(trimmedProjectId)) {
+        return trimmedProjectId
+      }
+      console.error(
+        `❌ Invalid projectId format: "${trimmedProjectId}". ` +
+          'Only alphanumeric characters, hyphens, and underscores are allowed.'
+      )
+    }
+
+    // Priority 4 & 5: Environment variables (Hydrogen env → process.env)
+    let configs = getWeaverseConfigs(request, env as HydrogenEnv)
+    if (configs.projectId && configs.projectId.trim() !== '') {
+      return configs.projectId.trim()
+    }
+
+    // Priority 6: Empty string with critical error (methods will throw error)
+    console.error(
+      '❌ CRITICAL: No valid Weaverse projectId found! ' +
+        'Application will fail when loading pages. ' +
+        'Set WEAVERSE_PROJECT_ID environment variable or provide projectId parameter.'
+    )
+    return ''
   }
 
   // Helper method for direct fetching in design mode - returns same format as withCache.fetch
@@ -153,8 +282,15 @@ export class WeaverseClient {
     const strategy =
       options.strategy || this.storefront.CacheCustom(DEFAULT_CACHE_STRATEGY)
 
-    // Improved cache key to include method and body content
-    const cacheKey = [url, options.method || 'GET', options.body]
+    // Update cache key to include method, body content, and projectId for multi-project isolation
+    // Prefix for easier debugging in cache systems
+    const cacheKey = [
+      'weaverse-fetch',
+      url,
+      options.method || 'GET',
+      options.body,
+      this.configs.projectId,
+    ]
 
     let result: WithCacheFetchResponse<T>
 
@@ -280,22 +416,46 @@ export class WeaverseClient {
   }
 
   loadPage = async (
-    params: {
-      type?: PageType
-      locale?: string
-      handle?: string
-      strategy?: AllCacheOptions
-    } = {}
+    params: LoadPageParams = {}
   ): Promise<WeaverseLoaderData | null> => {
     try {
       let { request, storefront, basePageRequestBody, basePageConfigs } = this
-      let { projectId, weaverseHost, isPreviewMode, sectionType } = this.configs
+      let {
+        projectId: clientProjectId,
+        weaverseHost,
+        isPreviewMode,
+        sectionType,
+      } = this.configs
+
+      // Validate route-level projectId if provided
+      if (params.projectId !== undefined) {
+        if (typeof params.projectId !== 'string') {
+          throw new Error(
+            'Route-level projectId must be a string. ' +
+              `Received: ${typeof params.projectId}`
+          )
+        }
+
+        if (params.projectId.trim() === '') {
+          throw new Error('Route-level projectId cannot be empty')
+        }
+
+        if (!this.validateProjectId(params.projectId)) {
+          throw new Error(
+            `Invalid route-level projectId format: "${params.projectId}". ` +
+              'Only alphanumeric characters, hyphens, and underscores are allowed.'
+          )
+        }
+      }
+
+      // Override client-level projectId with route-level projectId if provided
+      let effectiveProjectId = params.projectId || clientProjectId
 
       if (isPreviewMode) {
         return getPreviewData(sectionType || '', this.components, weaverseHost)
       }
 
-      if (!projectId) {
+      if (!effectiveProjectId) {
         throw new Error('Missing Weaverse projectId!')
       }
 
@@ -312,6 +472,7 @@ export class WeaverseClient {
         isDesignMode?: boolean
       } = {
         ...basePageRequestBody,
+        projectId: effectiveProjectId, // Use effective (potentially overridden) projectId
         params: pageLoadParams,
         url: request.url,
       }
@@ -341,9 +502,9 @@ export class WeaverseClient {
       let { page, project, pageAssignment } = projectData as any
 
       if (!project) {
-        console.warn('Weaverse project not found. Id:', projectId)
+        console.warn('Weaverse project not found. Id:', effectiveProjectId)
         project = {
-          id: projectId,
+          id: effectiveProjectId,
           name: 'Weaverse project not found.',
           weaverseShopId: '',
         }
