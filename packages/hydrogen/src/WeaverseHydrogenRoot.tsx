@@ -12,6 +12,7 @@ import {
   type JSX,
   memo,
   Suspense,
+  useMemo,
 } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Await, useMatches } from 'react-router'
@@ -175,24 +176,23 @@ export const WeaverseHydrogenRoot = memo(
     // No more useLoaderData dependency - everything comes from matches
     const enhancedDataContext = createWeaverseDataContext(matches)
 
-    // Find weaverseData from matches instead of useLoaderData
-    // Look through matches to find the one containing weaverseData
-    let weaverseData: WeaverseLoaderData | Promise<WeaverseLoaderData> | null =
-      null
-
-    for (const match of matches) {
-      if (
-        match.data &&
-        typeof match.data === 'object' &&
-        match.data !== null &&
-        'weaverseData' in match.data
-      ) {
-        weaverseData = match.data.weaverseData as
-          | WeaverseLoaderData
-          | Promise<WeaverseLoaderData>
-        break
+    // Find weaverseData from matches - optimized with useMemo and reverse iteration
+    // Most recent route match (deepest in hierarchy) is most likely to have weaverseData
+    const weaverseData = useMemo(() => {
+      // Iterate backwards for better performance (most recent match first)
+      for (let i = matches.length - 1; i >= 0; i--) {
+        const match = matches[i]
+        const loaderData = match.loaderData as
+          | Record<string, unknown>
+          | undefined
+        if (loaderData && 'weaverseData' in loaderData) {
+          return loaderData.weaverseData as
+            | WeaverseLoaderData
+            | Promise<WeaverseLoaderData>
+        }
       }
-    }
+      return null
+    }, [matches])
 
     if (weaverseData) {
       if (weaverseData instanceof Promise) {
