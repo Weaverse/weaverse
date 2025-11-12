@@ -728,16 +728,27 @@ export class WeaverseClient {
       }
 
       // Extract what we can from the response using type guard
-      if (!isFetchProjectPayload(projectData)) {
-        throw new WeaverseError(
-          'Invalid project data structure received from API',
-          'INVALID_RESPONSE',
-          undefined,
+      // If validation fails, use fallback data instead of throwing
+      let page: HydrogenPageData | undefined
+      let project: WeaverseLoaderData['project'] | undefined
+      let pageAssignment: WeaverseLoaderData['pageAssignment'] | undefined
+
+      if (isFetchProjectPayload(projectData)) {
+        // Valid response - extract normally
+        page = projectData.page
+        project = projectData.project
+        pageAssignment = projectData.pageAssignment
+      } else {
+        console.warn(
+          'Invalid project data structure received from API, using fallback data',
           { projectId: effectiveProjectId }
         )
+        // Try to extract what we can from the malformed response
+        let responseData = projectData as any
+        page = responseData?.page
+        project = responseData?.project
+        pageAssignment = responseData?.pageAssignment
       }
-
-      let { page, project, pageAssignment } = projectData
 
       if (!project) {
         console.warn('Weaverse project not found. Id:', effectiveProjectId)
