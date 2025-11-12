@@ -50,6 +50,7 @@
     "react": ">=18",
     "react-dom": ">=18",
     "react-error-boundary": "^6",
-    "react-router": "^7"
+    "react-router": "^7",
+    "zod": "^3.25.76"
   }
 }

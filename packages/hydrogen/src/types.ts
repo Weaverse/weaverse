@@ -25,10 +25,10 @@ import type {
   SchemaValidationIssue,
   SchemaValidationResult,
 } from '@weaverse/schema'
-
 import type * as React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
 import type { NavigateFunction } from 'react-router'
+import { z } from 'zod'
 import type { ThemeSettingsStore } from './utils/use-theme-settings-store'
 import type { WeaverseHydrogen } from './WeaverseHydrogenRoot'
 import type { WeaverseClient } from './weaverse-client'
@@ -374,6 +374,22 @@ export type WeaverseClientArgs = HydrogenContext & {
    * Each project's content is cached separately, ensuring multi-tenant isolation.
    */
   projectId?: ProjectIdValue
+
+  /**
+   * Fetch timeout in milliseconds for API requests.
+   * Defaults to 10000ms (10 seconds) if not specified.
+   * Useful for adjusting based on network conditions or deployment environment.
+   *
+   * @default 10000
+   * @example
+   * ```typescript
+   * new WeaverseClient({
+   *   // ... other args
+   *   fetchTimeoutMs: 5000 // 5 second timeout
+   * })
+   * ```
+   */
+  fetchTimeoutMs?: number
 }
 
 export type WeaverseProduct = WeaverseResourcePickerData
@@ -485,10 +501,15 @@ export function hasError(response: unknown): response is { error: string } {
 export function isThemeSettingsResponse(
   data: unknown
 ): data is ThemeSettingsResponse {
+  if (typeof data !== 'object' || data === null) {
+    return false
+  }
+
+  const record = data as Record<string, unknown>
   return (
-    typeof data === 'object' &&
-    data !== null &&
-    (data as any).theme !== undefined
+    'theme' in record &&
+    typeof record.theme === 'object' &&
+    record.theme !== null
   )
 }
 
@@ -499,18 +520,52 @@ export type HydrogenSchemaValidationResult =
   SchemaValidationResult<HydrogenComponentSchema>
 
 /**
- * Type guard to check if a schema is valid
+ * Zod schema for validating Hydrogen component schemas.
+ * Provides runtime validation with detailed error messages.
+ */
+const hydrogenComponentSchemaValidator = z.object({
+  type: z.string().min(1, 'Schema type must be a non-empty string'),
+  title: z.string().min(1, 'Schema title must be a non-empty string'),
+  limit: z.number().optional(),
+  settings: z.array(z.any()).optional(),
+  inspector: z.array(z.any()).optional(),
+  childTypes: z.array(z.string()).optional(),
+  enabledOn: z
+    .object({
+      pages: z.array(z.string()).optional(),
+      groups: z.array(z.string()).optional(),
+    })
+    .optional(),
+  presets: z
+    .object({
+      label: z.string().optional(),
+      category: z.string().optional(),
+      data: z.record(z.unknown()).optional(),
+      children: z.array(z.unknown()).optional(),
+    })
+    .optional(),
+})
+
+/**
+ * Type guard to check if a schema is valid.
+ * Uses Zod for comprehensive runtime validation.
+ *
+ * @param schema - Unknown value to validate
+ * @returns True if schema is a valid HydrogenComponentSchema
+ *
+ * @example
+ * ```typescript
+ * if (isValidHydrogenSchema(userInput)) {
+ *   // userInput is now typed as HydrogenComponentSchema
+ *   console.log(userInput.type)
+ * }
+ * ```
  */
 export function isValidHydrogenSchema(
   schema: unknown
 ): schema is HydrogenComponentSchema {
-  // We can leverage the validation from the schema package
-  return (
-    typeof schema === 'object' &&
-    schema !== null &&
-    'type' in schema &&
-    'title' in schema
-  )
+  const result = hydrogenComponentSchemaValidator.safeParse(schema)
+  return result.success
 }
 
 /**

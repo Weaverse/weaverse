@@ -33,17 +33,38 @@ import {
   getWeaverseConfigs,
 } from './utils'
 
-// Constants at the top
-const API_PATH = 'v1' as const
-
-const DEFAULT_CACHE_STRATEGY: AllCacheOptions = {
-  maxAge: 10,
-  sMaxAge: 10,
-  staleWhileRevalidate: 82_800, // 23 hours
-  staleIfError: 82_800, // 23 hours
+/**
+ * Cache duration constants (in seconds).
+ * These values optimize CDN hit rates while maintaining fresh content.
+ */
+const CACHE_DURATIONS = {
+  /** Short cache for frequently changing content (10 seconds) */
+  SHORT: 10,
+  /** Long cache duration - 23 hours to maximize CDN hits before daily refresh */
+  LONG: 82_800,
 } as const
 
-const DEFAULT_FETCH_TIMEOUT_MS = 10_000 // 10 seconds
+/**
+ * Network timeout for fetch requests (in milliseconds).
+ * Default is 10 seconds to balance reliability and user experience.
+ */
+const DEFAULT_FETCH_TIMEOUT_MS = 10_000
+
+/**
+ * Weaverse API version path
+ */
+const API_PATH = 'v1' as const
+
+/**
+ * Default cache strategy for Weaverse API requests.
+ * Optimized for CDN performance with 23-hour stale content tolerance.
+ */
+const DEFAULT_CACHE_STRATEGY: AllCacheOptions = {
+  maxAge: CACHE_DURATIONS.SHORT,
+  sMaxAge: CACHE_DURATIONS.SHORT,
+  staleWhileRevalidate: CACHE_DURATIONS.LONG,
+  staleIfError: CACHE_DURATIONS.LONG,
+} as const
 
 export class WeaverseClient {
   API = API_PATH
@@ -66,6 +87,9 @@ export class WeaverseClient {
   private readonly parsedUrl: URL
   private readonly componentsByType: Map<string, HydrogenComponent>
 
+  // Configuration
+  private readonly fetchTimeoutMs: number
+
   constructor(args: WeaverseClientArgs) {
     // Assign required dependencies
     this.request = args.request
@@ -80,6 +104,9 @@ export class WeaverseClient {
     // Performance optimizations
     this.parsedUrl = new URL(args.request.url)
     this.componentsByType = this.buildComponentLookupMap(args.components)
+
+    // Configuration
+    this.fetchTimeoutMs = args.fetchTimeoutMs || DEFAULT_FETCH_TIMEOUT_MS
 
     // Initialize cache and configs
     this.initializeCache(args)
@@ -168,17 +195,57 @@ export class WeaverseClient {
   }
 
   /**
-   * Extract error message from unknown error type.
-   * Handles WeaverseError, Error, and other types.
+   * Extract comprehensive error information from unknown error type.
+   * Preserves error context, codes, and stack traces for debugging.
+   *
+   * @param error - Unknown error to extract information from
+   * @returns Structured error information with message, code, stack, and context
+   *
+   * @example
+   * ```typescript
+   * try {
+   *   // ... operation
+   * } catch (error) {
+   *   const errorInfo = this.extractErrorInfo(error)
+   *   console.error('Operation failed:', errorInfo.message, errorInfo.context)
+   * }
+   * ```
+   */
+  private extractErrorInfo(error: unknown): {
+    message: string
+    code?: string
+    stack?: string
+    context?: Record<string, unknown>
+  } {
+    if (error instanceof WeaverseError) {
+      return {
+        message: error.message,
+        code: error.code,
+        context: error.context,
+        stack: error.stack,
+      }
+    }
+
+    if (error instanceof Error) {
+      return {
+        message: error.message,
+        stack: error.stack,
+      }
+    }
+
+    return {
+      message: String(error),
+    }
+  }
+
+  /**
+   * Extract error message only (for backward compatibility).
+   * Use extractErrorInfo() for more detailed error information.
+   *
+   * @deprecated Use extractErrorInfo() instead to preserve error context
    */
   private extractErrorMessage(error: unknown): string {
-    if (error instanceof WeaverseError) {
-      return error.message
-    }
-    if (error instanceof Error) {
-      return error.message
-    }
-    return String(error)
+    return this.extractErrorInfo(error).message
   }
 
   /**
@@ -358,7 +425,7 @@ export class WeaverseClient {
   private readonly directFetch = async <T>(
     url: string,
     options: RequestInit = {},
-    timeoutMs = DEFAULT_FETCH_TIMEOUT_MS
+    timeoutMs = this.fetchTimeoutMs
   ): Promise<WithCacheFetchResponse<T>> => {
     let controller = new AbortController()
     let timeoutId: ReturnType<typeof setTimeout> | undefined = setTimeout(
