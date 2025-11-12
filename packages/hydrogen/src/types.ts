@@ -25,10 +25,10 @@ import type {
   SchemaValidationIssue,
   SchemaValidationResult,
 } from '@weaverse/schema'
+import { isValidSchema } from '@weaverse/schema'
 import type * as React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
 import type { NavigateFunction } from 'react-router'
-import { z } from 'zod'
 import type { ThemeSettingsStore } from './utils/use-theme-settings-store'
 import type { WeaverseHydrogen } from './WeaverseHydrogenRoot'
 import type { WeaverseClient } from './weaverse-client'
@@ -520,35 +520,9 @@ export type HydrogenSchemaValidationResult =
   SchemaValidationResult<HydrogenComponentSchema>
 
 /**
- * Zod schema for validating Hydrogen component schemas.
- * Provides runtime validation with detailed error messages.
- */
-const hydrogenComponentSchemaValidator = z.object({
-  type: z.string().min(1, 'Schema type must be a non-empty string'),
-  title: z.string().min(1, 'Schema title must be a non-empty string'),
-  limit: z.number().optional(),
-  settings: z.array(z.any()).optional(),
-  inspector: z.array(z.any()).optional(),
-  childTypes: z.array(z.string()).optional(),
-  enabledOn: z
-    .object({
-      pages: z.array(z.string()).optional(),
-      groups: z.array(z.string()).optional(),
-    })
-    .optional(),
-  presets: z
-    .object({
-      label: z.string().optional(),
-      category: z.string().optional(),
-      data: z.record(z.unknown()).optional(),
-      children: z.array(z.unknown()).optional(),
-    })
-    .optional(),
-})
-
-/**
  * Type guard to check if a schema is valid.
- * Uses Zod for comprehensive runtime validation.
+ * Leverages validation from @weaverse/schema package which provides
+ * comprehensive Zod-based validation with the ElementSchema.
  *
  * @param schema - Unknown value to validate
  * @returns True if schema is a valid HydrogenComponentSchema
@@ -564,8 +538,8 @@ const hydrogenComponentSchemaValidator = z.object({
 export function isValidHydrogenSchema(
   schema: unknown
 ): schema is HydrogenComponentSchema {
-  const result = hydrogenComponentSchemaValidator.safeParse(schema)
-  return result.success
+  // Use the comprehensive validation from @weaverse/schema package
+  return isValidSchema(schema)
 }
 
 /**
