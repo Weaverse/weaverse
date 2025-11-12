@@ -1,10 +1,11 @@
 import {
+  CacheCustom,
   createWithCache,
   type HydrogenEnv,
   type I18nBase,
 } from '@shopify/hydrogen'
 import type {
-  AllCacheOptions,
+  CachingStrategy,
   FetchProjectPayload,
   FetchProjectRequestBody,
   HydrogenComponent,
@@ -59,7 +60,7 @@ const API_PATH = 'v1' as const
  * Default cache strategy for Weaverse API requests.
  * Optimized for CDN performance with 23-hour stale content tolerance.
  */
-const DEFAULT_CACHE_STRATEGY: AllCacheOptions = {
+const DEFAULT_CACHE_STRATEGY: CachingStrategy = {
   maxAge: CACHE_DURATIONS.SHORT,
   sMaxAge: CACHE_DURATIONS.SHORT,
   staleWhileRevalidate: CACHE_DURATIONS.LONG,
@@ -500,10 +501,9 @@ export class WeaverseClient {
 
   public fetchWithCache = async <T = unknown>(
     url: string,
-    options: RequestInit & { strategy?: AllCacheOptions } = {}
+    options: RequestInit & { strategy?: CachingStrategy } = {}
   ): Promise<T> => {
-    const strategy =
-      options.strategy || this.storefront.CacheCustom(DEFAULT_CACHE_STRATEGY)
+    const strategy = options.strategy || CacheCustom(DEFAULT_CACHE_STRATEGY)
 
     // Update cache key to include method, body content, and projectId for multi-project isolation
     // Prefix for easier debugging in cache systems
@@ -538,7 +538,7 @@ export class WeaverseClient {
   }
 
   loadThemeSettings = async (
-    strategy?: AllCacheOptions
+    strategy?: CachingStrategy
   ): Promise<ThemeSettingsResponse> => {
     let defaultThemeSettings = generateDataFromSchema(this.themeSchema)
     try {

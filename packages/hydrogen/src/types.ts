@@ -1,4 +1,8 @@
-import type { HydrogenContext, I18nBase } from '@shopify/hydrogen'
+import type {
+  CachingStrategy,
+  HydrogenContext,
+  I18nBase,
+} from '@shopify/hydrogen'
 import type {
   AppLoadContext,
   LoaderFunctionArgs as RemixOxygenLoaderArgs,
@@ -48,19 +52,8 @@ export type {
   SchemaValidationIssue,
 }
 
-export type AllCacheOptions = {
-  mode?:
-    | 'must-revalidate'
-    | 'no-cache'
-    | 'no-store'
-    | 'private'
-    | 'public'
-    | string
-  maxAge?: number
-  staleWhileRevalidate?: number
-  sMaxAge?: number
-  staleIfError?: number
-}
+// Re-export CachingStrategy from Hydrogen for convenience
+export type { CachingStrategy } from '@shopify/hydrogen'
 
 export type ComponentLoaderArgs<T = any, _E = any> = {
   data: T
@@ -659,7 +652,7 @@ export type LoadPageParams = {
    * - Long-lived cache for static pages (1 hour+)
    * - Short-lived cache for frequently updated content (5 minutes)
    */
-  strategy?: AllCacheOptions
+  strategy?: CachingStrategy
 
   /**
    * Optional project override for this specific page load.
