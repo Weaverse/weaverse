@@ -183,6 +183,11 @@ export type HydrogenPageAssignment = {
   type: PageType
   handle: string
   locale: string
+  meta?: {
+    inherited: boolean
+    sourceProjectId: string
+    depth: number
+  }
 }
 
 export type WeaverseLoaderData = {
