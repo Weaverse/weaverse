@@ -43,16 +43,14 @@ export function useStudio(weaverse: WeaverseHydrogen) {
 }
 
 export function usePixel(context: WeaverseHydrogen) {
-  let { projectId, pageId, isDesignMode } = context
+  let { projectId, pageId, isDesignMode, weaverseHost } = context
   // biome-ignore lint/correctness/useExhaustiveDependencies: only track once on mount
   useEffect(() => {
     if (!(projectId && pageId) || isDesignMode) {
       return
     }
-    let url =
-      'https://edge-usage-tracking-worker.weaverse.workers.dev/api/public/px'
     let img = new Image()
     img.onload = () => img.remove()
-    img.src = `${url}?projectId=${projectId}&pageId=${pageId}`
+    img.src = `${weaverseHost}/api/public/px?projectId=${projectId}&pageId=${pageId}`
   }, [])
 }

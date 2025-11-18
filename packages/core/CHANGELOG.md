@@ -1,5 +1,13 @@
 # @weaverse/core
 
+## 5.8.2
+
+### Patch Changes
+
+- chore: refactor
+
+## 5.8.1
+
 ## 5.8.0
 
 ## 5.7.1

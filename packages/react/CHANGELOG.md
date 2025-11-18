@@ -1,5 +1,19 @@
 # @weaverse/react
 
+## 5.8.2
+
+### Patch Changes
+
+- chore: refactor
+- Updated dependencies
+  - @weaverse/core@5.8.2
+
+## 5.8.1
+
+### Patch Changes
+
+- @weaverse/core@5.8.1
+
 ## 5.8.0
 
 ### Patch Changes

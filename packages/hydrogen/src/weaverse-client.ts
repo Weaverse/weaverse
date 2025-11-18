@@ -138,10 +138,13 @@ export class WeaverseClient {
    */
   private initializeConfigs(args: WeaverseClientArgs): void {
     // Get base configs once to avoid duplicate calls
-    let baseConfigs = getWeaverseConfigs(args.request, args.env as HydrogenEnv)
+    const baseConfigs = getWeaverseConfigs(
+      args.request,
+      args.env as HydrogenEnv
+    )
 
     // Resolve projectId with multi-project support
-    let resolvedProjectId = this.resolveProjectIdSync(
+    const resolvedProjectId = this.resolveProjectIdSync(
       args.projectId,
       args.request,
       args.env as HydrogenEnv,
@@ -265,7 +268,7 @@ export class WeaverseClient {
     }
 
     // Only allow alphanumeric characters, hyphens, and underscores
-    let validPattern = /^[a-zA-Z0-9_-]+$/
+    const validPattern = /^[a-zA-Z0-9_-]+$/
     if (!validPattern.test(projectId)) {
       return {
         valid: false,
@@ -306,7 +309,7 @@ export class WeaverseClient {
    * Used for design mode and preview mode overrides.
    */
   private resolveFromQueryParams(request: Request): string | null {
-    let queries = getRequestQueries<WeaverseStudioQueries>(request)
+    const queries = getRequestQueries<WeaverseStudioQueries>(request)
     return queries.weaverseProjectId || null
   }
 
@@ -331,7 +334,7 @@ export class WeaverseClient {
     }
 
     try {
-      let result = projectId()
+      const result = projectId()
 
       // Safety net: check if result is a Promise
       if (result instanceof Promise) {
@@ -343,8 +346,8 @@ export class WeaverseClient {
       }
 
       if (result && result.trim() !== '') {
-        let trimmed = result.trim()
-        let validation = this.validateProjectId(trimmed)
+        const trimmed = result.trim()
+        const validation = this.validateProjectId(trimmed)
 
         if (validation.valid) {
           return trimmed
@@ -384,12 +387,12 @@ export class WeaverseClient {
       return null
     }
 
-    let trimmed = projectId.trim()
+    const trimmed = projectId.trim()
     if (trimmed === '') {
       return null
     }
 
-    let validation = this.validateProjectId(trimmed)
+    const validation = this.validateProjectId(trimmed)
     if (validation.valid) {
       return trimmed
     }
@@ -409,7 +412,7 @@ export class WeaverseClient {
     request: Request,
     env: HydrogenEnv
   ): string | null {
-    let configs = baseConfigs || getWeaverseConfigs(request, env)
+    const configs = baseConfigs || getWeaverseConfigs(request, env)
 
     if (configs.projectId && configs.projectId.trim() !== '') {
       return configs.projectId.trim()
@@ -428,20 +431,20 @@ export class WeaverseClient {
     options: RequestInit = {},
     timeoutMs = this.fetchTimeoutMs
   ): Promise<WithCacheFetchResponse<T>> => {
-    let controller = new AbortController()
-    let timeoutId: ReturnType<typeof setTimeout> | undefined = setTimeout(
+    const controller = new AbortController()
+    const timeoutId: ReturnType<typeof setTimeout> | undefined = setTimeout(
       () => controller.abort(),
       timeoutMs
     )
 
     try {
-      let response = await fetch(url, {
+      const response = await fetch(url, {
         ...options,
         signal: controller.signal,
       })
 
       if (!response.ok) {
-        let errorText = await response.text()
+        const errorText = await response.text()
         throw new WeaverseError(
           `HTTP ${response.status}: ${response.statusText}`,
           'FETCH_ERROR',
@@ -450,7 +453,7 @@ export class WeaverseClient {
         )
       }
 
-      let data = (await response.json()) as T
+      const data = (await response.json()) as T
       return { data, response }
     } catch (err) {
       if (err instanceof WeaverseError) {
@@ -481,7 +484,7 @@ export class WeaverseClient {
 
   // Helper method to detect if request is from localhost
   private isLocalhost(): boolean {
-    let hostname = this.parsedUrl.hostname
+    const hostname = this.parsedUrl.hostname
     return hostname === 'localhost' || hostname === '127.0.0.1'
   }
 
@@ -540,17 +543,17 @@ export class WeaverseClient {
   loadThemeSettings = async (
     strategy?: CachingStrategy
   ): Promise<ThemeSettingsResponse> => {
-    let defaultThemeSettings = generateDataFromSchema(this.themeSchema)
+    const defaultThemeSettings = generateDataFromSchema(this.themeSchema)
     try {
-      let { configs } = this
-      let { projectId, isDesignMode } = configs
+      const { configs } = this
+      const { projectId, isDesignMode } = configs
       if (!projectId) {
         throw new Error('Missing Weaverse projectId!')
       }
 
-      let url = this.getApiUrl('project_configs')
+      const url = this.getApiUrl('project_configs')
 
-      let body = JSON.stringify({ isDesignMode, projectId })
+      const body = JSON.stringify({ isDesignMode, projectId })
       let data: ThemeSettingsResponse =
         await this.fetchWithCache<ThemeSettingsResponse>(url, {
           method: 'POST',
@@ -617,8 +620,8 @@ export class WeaverseClient {
       }
       return data
     } catch (error) {
-      let errorMessage = 'Unable to load theme settings'
-      let errorDetails = this.extractErrorMessage(error)
+      const errorMessage = 'Unable to load theme settings'
+      const errorDetails = this.extractErrorMessage(error)
 
       console.error(errorMessage, errorDetails)
 
@@ -631,7 +634,7 @@ export class WeaverseClient {
   }
 
   generateFallbackPage = (message: string): HydrogenPageData => {
-    let rootId = crypto.randomUUID()
+    const rootId = crypto.randomUUID()
     return {
       id: `fallback_page_${Date.now()}`,
       rootId,
@@ -650,8 +653,8 @@ export class WeaverseClient {
     params: LoadPageParams = {}
   ): Promise<WeaverseLoaderData | null> => {
     try {
-      let { request, storefront, basePageRequestBody, basePageConfigs } = this
-      let {
+      const { request, storefront, basePageRequestBody, basePageConfigs } = this
+      const {
         projectId: clientProjectId,
         weaverseHost,
         isPreviewMode,
@@ -668,7 +671,7 @@ export class WeaverseClient {
           return null
         }
 
-        let validation = this.validateProjectId(params.projectId)
+        const validation = this.validateProjectId(params.projectId)
         if (!validation.valid) {
           console.error(
             `Route-level projectId validation failed: ${validation.error}`
@@ -678,7 +681,7 @@ export class WeaverseClient {
       }
 
       // Override client-level projectId with route-level projectId if provided
-      let effectiveProjectId = params.projectId || clientProjectId
+      const effectiveProjectId = params.projectId || clientProjectId
 
       if (isPreviewMode) {
         return getPreviewData(sectionType || '', this.components, weaverseHost)
@@ -688,8 +691,8 @@ export class WeaverseClient {
         throw new Error('Missing Weaverse projectId!')
       }
 
-      let { strategy, ...pageLoadParams } = params
-      let body: {
+      const { strategy, ...pageLoadParams } = params
+      const body: {
         projectId: string
         url: string
         i18n?: I18nBase
@@ -706,7 +709,7 @@ export class WeaverseClient {
         url: request.url,
       }
 
-      let reqInit: RequestInit = {
+      const reqInit: RequestInit = {
         method: 'POST',
         body: JSON.stringify(body),
         headers: {
@@ -715,9 +718,9 @@ export class WeaverseClient {
           'Accept-Encoding': 'gzip, deflate, br',
         },
       }
-      let url = this.getApiUrl('project')
+      const url = this.getApiUrl('project')
 
-      let projectData: FetchProjectPayload =
+      const projectData: FetchProjectPayload =
         await this.fetchWithCache<FetchProjectPayload>(url, {
           ...reqInit,
           strategy,
@@ -726,6 +729,7 @@ export class WeaverseClient {
       if (hasError(projectData)) {
         throw new Error(projectData.error)
       }
+      console.log('projectData', projectData)
 
       // Extract what we can from the response using type guard
       // If validation fails, use fallback data instead of throwing
@@ -744,7 +748,7 @@ export class WeaverseClient {
           { projectId: effectiveProjectId }
         )
         // Try to extract what we can from the malformed response
-        let responseData = projectData as any
+        const responseData = projectData as any
         page = responseData?.page
         project = responseData?.project
         pageAssignment = responseData?.pageAssignment
@@ -763,7 +767,7 @@ export class WeaverseClient {
         page = this.generateFallbackPage('Please add new section to start.')
       }
       if (page?.items) {
-        let items = page.items
+        const items = page.items
         page.items = await Promise.all(items.map(this.execComponentLoader))
       }
       return {
@@ -781,8 +785,8 @@ export class WeaverseClient {
         },
       }
     } catch (error) {
-      let errorMessage = '❌ Page load failed'
-      let errorContext: Record<string, unknown> = {
+      const errorMessage = '❌ Page load failed'
+      const errorContext: Record<string, unknown> = {
         url: this.request.url,
         projectId: params.projectId || this.configs.projectId,
       }
@@ -812,9 +816,9 @@ export class WeaverseClient {
   }
 
   execComponentLoader = async (item: HydrogenComponentData) => {
-    let { data = {}, type, id } = item
-    let component = this.componentsByType.get(type)
-    let loader = component?.loader
+    const { data = {}, type, id } = item
+    const component = this.componentsByType.get(type)
+    const loader = component?.loader
     if (typeof loader === 'function' && component) {
       try {
         return {
