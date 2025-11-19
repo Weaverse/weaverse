@@ -1,5 +1,12 @@
 # @weaverse/hydrogen
 
+## 5.8.3
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/react@5.8.3
+
 ## 5.8.2
 
 ### Patch Changes

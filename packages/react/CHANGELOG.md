@@ -1,5 +1,12 @@
 # @weaverse/react
 
+## 5.8.3
+
+### Patch Changes
+
+- update getRootId
+  - @weaverse/core@5.8.3
+
 ## 5.8.2
 
 ### Patch Changes
