@@ -729,7 +729,6 @@ export class WeaverseClient {
       if (hasError(projectData)) {
         throw new Error(projectData.error)
       }
-      console.log('projectData', projectData)
 
       // Extract what we can from the response using type guard
       // If validation fails, use fallback data instead of throwing

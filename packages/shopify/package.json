@@ -2,7 +2,7 @@
   "name": "@weaverse/shopify",
   "author": "Weaverse Team",
   "description": "Weaverse Components for Shopify Online Store 2.0 Section builder",
-  "version": "5.8.3",
+  "version": "5.8.4",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -46,7 +46,7 @@
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.1",
     "@stitches/react": "^1.2.8",
-    "@weaverse/react": "5.8.3",
+    "@weaverse/react": "5.8.4",
     "keen-slider": "^6.8.6"
   }
 }
