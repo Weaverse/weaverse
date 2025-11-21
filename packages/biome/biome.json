@@ -1,7 +1,5 @@
 {
-  "root": false,
-  "$schema": "https://biomejs.dev/schemas/2.2.5/schema.json",
-  "extends": ["ultracite"],
+  "extends": ["ultracite/core", "ultracite/react", "ultracite/remix"],
   "linter": {
     "rules": {
       "style": {
@@ -24,7 +22,8 @@
         "useCollapsedElseIf": "warn",
         "noParameterProperties": "warn",
         "noMagicNumbers": "warn",
-        "useReadonlyClassProperties": "warn"
+        "useReadonlyClassProperties": "warn",
+        "useConsistentTypeDefinitions": "warn"
       },
       "a11y": {
         "noStaticElementInteractions": "off",
@@ -75,16 +74,18 @@
         "noUnusedImports": "warn",
         "noUnusedFunctionParameters": "warn",
         "noInvalidUseBeforeDeclaration": "warn",
-        "useParseIntRadix": "warn"
+        "useParseIntRadix": "warn",
+        "noUnusedPrivateClassMembers": "warn",
+        "useImageSize": "warn"
       },
       "nursery": {
         "noShadow": "warn",
         "useSortedClasses": "off",
-        "useConsistentTypeDefinitions": "warn",
         "noUnnecessaryConditions": "warn",
-        "useImageSize": "warn",
         "noUnusedExpressions": "warn",
-        "noReactForwardRef": "warn"
+        "noReactForwardRef": "warn",
+        "noIncrementDecrement": "warn",
+        "noEmptySource": "warn"
       },
       "performance": {
         "noNamespaceImport": "warn",
@@ -99,7 +100,8 @@
   "javascript": {
     "formatter": {
       "semicolons": "asNeeded",
-      "quoteStyle": "single"
+      "quoteStyle": "single",
+      "trailingCommas": "es5"
     }
   },
   "formatter": {

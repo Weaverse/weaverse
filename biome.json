@@ -1,7 +1,12 @@
 {
   "root": true,
-  "$schema": "https://biomejs.dev/schemas/2.2.5/schema.json",
-  "extends": ["ultracite", "./packages/biome/biome.json"],
+  "$schema": "https://biomejs.dev/schemas/2.3.6/schema.json",
+  "extends": [
+    "ultracite/core",
+    "ultracite/react",
+    "ultracite/remix",
+    "./packages/biome/biome.json"
+  ],
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -17,7 +22,8 @@
       "!**/.turbo",
       "!**/templates",
       "!**/package-lock.json",
-      "!**/app/styles/app.css"
+      "!**/app/styles/app.css",
+      "!**/packages/biome"
     ]
   },
   "linter": {
