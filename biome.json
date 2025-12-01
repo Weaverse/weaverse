@@ -21,6 +21,7 @@
       "!**/build",
       "!**/.turbo",
       "!**/templates",
+      "!**/archived",
       "!**/package-lock.json",
       "!**/app/styles/app.css",
       "!**/packages/biome"

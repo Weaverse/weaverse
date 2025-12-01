@@ -8,5 +8,6 @@
     "verbatimModuleSyntax": true,
     "types": ["@shopify/oxygen-workers-types", "node"]
   },
+  "include": ["src/**/*"],
   "exclude": ["dist", "node_modules"]
 }

@@ -1,10 +1,7 @@
-import type * as Stitches from '@stitches/core'
-import type { ForwardRefExoticComponent } from 'react'
+import type { CSSProperties, ForwardRefExoticComponent } from 'react'
 import type { IconName } from './icon-name'
-import type { stitchesUtils } from './utils/stitches'
 
 // Simple types
-export type PlatformTypeEnum = 'shopify-section' | 'shopify-hydrogen' | 'nextjs'
 export type ToolbarAction =
   | 'general-settings'
   | 'settings-level-2'
@@ -57,8 +54,7 @@ export type InputType =
   | 'url'
 
 // Complex types
-export type WeaverseCSSProperties = Stitches.CSS &
-  Partial<Record<keyof typeof stitchesUtils, string | number>>
+export type WeaverseCSSProperties = CSSProperties
 export type ChildElementCSS = Partial<{
   [selector: string]: WeaverseCSSProperties & ChildElementCSS
 }>
@@ -127,7 +123,6 @@ export type WeaverseCoreParams = {
   projectId: string
   data: WeaverseProjectDataType
   isDesignMode?: boolean
-  platformType?: PlatformTypeEnum
 }
 
 /**

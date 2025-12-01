@@ -59,12 +59,12 @@ pnpm changeset publish   # Publish to npm registry
 - **`/packages/core`** - Foundation package with framework-agnostic code (TypeScript)
 - **`/packages/react`** - React components and utilities for CMS integration (TypeScript)
 - **`/packages/hydrogen`** - Shopify Hydrogen integration powered by React Router v7 (TypeScript)
-- **`/packages/shopify`** - Shopify-specific utilities (TypeScript)
 - **`/packages/schema`** - Schema definitions for Weaverse components (TypeScript)
 - **`/packages/cli`** - CLI tools for Weaverse development (JavaScript)
 - **`/packages/biome`** - Shared Biome configuration extending ultracite
 - **`/packages/next`** - Next.js integration (legacy/minimal)
 - **`/packages/remix`** - Remix integration (legacy/minimal)
+- **`/archived/shopify`** - ARCHIVED: Shopify-specific utilities (no longer maintained)
 - **`/templates/pilot`** - Example Hydrogen theme with Weaverse integration
 
 ### Key Architectural Patterns
@@ -103,7 +103,7 @@ When working on SDK packages:
 
 1. **Core Package** (`/packages/core`):
    - Framework-agnostic logic
-   - Uses `@stitches/core` for styling
+   - Uses inline styles for dynamic styling
    - Entry point: `src/index.ts`
 
 2. **React Package** (`/packages/react`):
@@ -157,9 +157,10 @@ The project uses Changesets for releases with version synchronization:
 - `@weaverse/core`
 - `@weaverse/react`
 - `@weaverse/hydrogen`
-- `@weaverse/shopify`
 
 The `@weaverse/schema` package is versioned independently.
+
+**Note**: `@weaverse/shopify` has been archived and is no longer maintained.
 
 ### Testing Strategy
 
@@ -178,14 +179,13 @@ The `@weaverse/schema` package is versioned independently.
 
 | Package | Version | React | Node.js | Key Dependencies |
 |---------|---------|-------|---------|-----------------|
-| @weaverse/core | 5.5.0 | - | >=18 | @stitches/core@^1.2.8 |
+| @weaverse/core | 5.5.0 | - | >=18 | - |
 | @weaverse/react | 5.5.0 | >=18 | >=18 | @weaverse/core@5.5.0 |
 | @weaverse/hydrogen | 5.5.0 | >=18 | >=20 | @shopify/hydrogen@>=2025.5, react-router@^7 |
 | @weaverse/schema | 0.7.3 | - | >=18 | - |
-| @weaverse/shopify | 5.5.0 | - | >=18 | @weaverse/core@5.5.0 |
 | @weaverse/cli | 5.5.0 | - | >=18 | inquirer@^9.2.15, validate-npm-package-name@^5.0.1 |
 
-**Note**: The fixed group packages (core, react, hydrogen, shopify) are always kept at the same version.
+**Note**: The fixed group packages (core, react, hydrogen) are always kept at the same version.
 
 ## Code Conventions
 
@@ -318,7 +318,7 @@ pnpm changeset publish
 ```
 
 **Problem**: Version mismatch in fixed group packages
-**Solution**: The changeset configuration ensures synchronized versions for core, react, hydrogen, and shopify packages. Check `.changeset/config.json` if issues persist.
+**Solution**: The changeset configuration ensures synchronized versions for core, react, and hydrogen packages. Check `.changeset/config.json` if issues persist.
 
 ### Common Errors
 

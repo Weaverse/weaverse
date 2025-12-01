@@ -1,6 +1,5 @@
 import {
   isBrowser,
-  type PlatformTypeEnum,
   useSafeExternalStore,
   Weaverse,
   WeaverseItemStore,
@@ -57,7 +56,6 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
 Weaverse.ItemConstructor = WeaverseHydrogenItem
 
 export class WeaverseHydrogen extends Weaverse {
-  platformType: PlatformTypeEnum = 'shopify-hydrogen'
   pageId: string
   internal: Partial<WeaverseInternal>
   requestInfo: WeaverseLoaderRequestInfo

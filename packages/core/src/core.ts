@@ -7,27 +7,22 @@
   About Weaverse: https://weaverse.io
 */
 
-import { type CreateStitches, createStitches } from '@stitches/core'
-import type Stitches from '@stitches/core/types/stitches'
 import { createRef, type RefObject } from 'react'
 import { version } from '../package.json'
 import type {
   BreakPoints,
   ElementCSS,
   ElementData,
-  PlatformTypeEnum,
   WeaverseCoreParams,
   WeaverseProjectDataType,
 } from './types'
 import { merge } from './utils'
 import { EventEmitter } from './utils/event-emitter'
-import { stitchesUtils } from './utils/stitches'
 
 export class WeaverseItemStore extends EventEmitter {
   weaverse: Weaverse
   ref: RefObject<HTMLElement | null> = createRef<HTMLElement | null>()
   _store: ElementData = { id: '', type: '' }
-  stitchesClass = ''
 
   constructor(initialData: ElementData, weaverse: Weaverse) {
     super()
@@ -92,12 +87,10 @@ export class Weaverse extends EventEmitter {
   projectId = ''
   isDesignMode = false
   isPreviewMode = false
-  static stitchesInstance: Stitches | any
   studioBridge?: any
   declare static ItemConstructor: typeof WeaverseItemStore
   declare data: WeaverseProjectDataType
   declare dataContext: Record<string, unknown> | null
-  declare platformType: PlatformTypeEnum
   static elementRegistry = new Map()
 
   static mediaBreakPoints: BreakPoints = {
@@ -114,7 +107,6 @@ export class Weaverse extends EventEmitter {
       this[key] = value || this[key]
     }
     this.initProject()
-    Weaverse.initStitches()
   }
 
   getSnapShot = () => this.data
@@ -149,21 +141,6 @@ export class Weaverse extends EventEmitter {
   }
   createItemInstance = (data: ElementData) =>
     new Weaverse.ItemConstructor(data, this)
-
-  static initStitches = (externalConfig?: CreateStitches) => {
-    Weaverse.stitchesInstance =
-      Weaverse.stitchesInstance ||
-      createStitches({
-        prefix: 'weaverse',
-        media: Weaverse.mediaBreakPoints,
-        utils: stitchesUtils,
-        ...externalConfig,
-      })
-  }
-
-  get stitchesInstance() {
-    return Weaverse.stitchesInstance
-  }
 
   /**
    * Register the custom React Component to Weaverse, store it into Weaverse.elementRegistry

@@ -24,7 +24,8 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "typecheck": "tsc --noEmit"
   },
   "tsup": {
     "entry": [
@@ -38,8 +39,5 @@
     "sourcemap": true,
     "clean": true,
     "outDir": "dist"
-  },
-  "dependencies": {
-    "@stitches/core": "^1.2.8"
   }
 }

@@ -26,7 +26,8 @@
     "build": "tsup",
     "clean": "rimraf dist",
     "test": "vitest --run",
-    "test:watch": "vitest --watch"
+    "test:watch": "vitest --watch",
+    "typecheck": "tsc --noEmit"
   },
   "tsup": {
     "entry": [
