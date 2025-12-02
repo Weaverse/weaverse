@@ -4,7 +4,6 @@ import React, { memo, useEffect, useRef } from 'react'
 import { useItemInstance, useWeaverse } from '~/hooks'
 import { WeaverseContextProvider, WeaverseItemContext } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
-import { generateItemClassName } from './utils/css'
 import { replaceContentDataConnectorsDeep } from './utils/data-connector'
 
 const REACT_VERSION_THRESHOLD = 18
@@ -66,12 +65,11 @@ export const WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
   }, [context])
 
   const eventHandlers = context?.studioBridge?.eventHandlers || {}
-  const themeClass = context.stitchesInstance.theme.className
 
   if (context.projectId) {
     return (
       <div
-        className={`weaverse-content-root ${themeClass}`}
+        className="weaverse-content-root"
         {...eventHandlers}
         data-weaverse-project-id={context.projectId}
         data-weaverse-template-id={data.id}
@@ -88,7 +86,7 @@ export const WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
 WeaverseRoot.displayName = 'WeaverseRoot'
 const ItemComponent = memo(({ instance }: ItemComponentProps) => {
   const context = useWeaverse()
-  const { stitchesInstance, elementRegistry, platformType } = context
+  const { elementRegistry } = context
   const data = useSafeExternalStore(
     instance.subscribe,
     instance.getSnapShot,
@@ -157,11 +155,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
       <Component
         {...processedRest}
         children={renderChildren.length ? renderChildren : undefined}
-        className={clsx(
-          platformType !== 'shopify-hydrogen' &&
-            generateItemClassName(instance, stitchesInstance),
-          processedRest.data?.className
-        )}
+        className={clsx(processedRest.data?.className)}
         data-wv-id={id}
         data-wv-type={type}
         key={id}

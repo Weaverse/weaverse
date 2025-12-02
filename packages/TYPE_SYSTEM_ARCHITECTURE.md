@@ -19,9 +19,8 @@ The Weaverse packages follow a hierarchical type system with clear dependencies 
 
 ### @weaverse/core
 - Core types: `ElementData`, `WeaverseElement`, `WeaverseCoreParams`
-- CSS types: `ElementCSS`, `WeaverseCSSProperties`
+- CSS types: `ElementCSS`, `WeaverseCSSProperties` (maps to React.CSSProperties)
 - Media types: `WeaverseImage`, `WeaverseVideo`
-- Platform types: `PlatformTypeEnum`
 - Input configuration types (base)
 
 ### @weaverse/react

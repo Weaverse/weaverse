@@ -13,5 +13,17 @@
     "noEmit": true,
     "declaration": true,
     "strictNullChecks": true
-  }
+  },
+  "include": ["packages/*/src/**/*"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    ".turbo",
+    "templates",
+    "scripts",
+    "packages/*/dist",
+    "packages/*/build",
+    "packages/*/.turbo"
+  ]
 }
