@@ -1,6 +1,12 @@
 /*
   @weaverse/core is the core package of Weaverse SDKs, it contains the core logic of Weaverse.
   It is a singleton class that can be used to register item, store project data, trigger update on item or project data, etc.
+
+  v5.8.4 Architectural Changes:
+  - Removed Stitches CSS-in-JS library for simplified styling approach
+  - Removed platformType property for unified component rendering
+  - Uses className-based styling instead of dynamic CSS generation
+
   ---
   Licensed under MIT License.
   Source: https://github.com/weaverse/weaverse
@@ -102,6 +108,8 @@ export class Weaverse extends EventEmitter {
 
   constructor(params: WeaverseCoreParams) {
     super()
+    // Note: platformType parameter was removed in v5.8.4
+    // Components now use unified rendering approach without platform-specific logic
     for (const param of Object.entries(params)) {
       const [key, value] = param
       this[key] = value || this[key]

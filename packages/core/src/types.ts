@@ -54,6 +54,8 @@ export type InputType =
   | 'url'
 
 // Complex types
+// WeaverseCSSProperties now maps directly to React.CSSProperties
+// Previously used Stitches CSS-in-JS system (removed in v5.8.4)
 export type WeaverseCSSProperties = CSSProperties
 export type ChildElementCSS = Partial<{
   [selector: string]: WeaverseCSSProperties & ChildElementCSS
