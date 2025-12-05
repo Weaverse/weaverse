@@ -1,0 +1,10 @@
+# Bun configuration for Weaverse SDK monorepo
+
+[install]
+registry = "https://registry.npmjs.org/"
+
+[install.scopes]
+"@weaverse" = "https://registry.npmjs.com"
+
+[workspace]
+packages = ["packages/*", "templates/*"]
