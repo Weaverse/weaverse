@@ -67,4 +67,4 @@ jobs:
         run: bun install
 
       - name: 🔎 Type check
-        run: bun run typecheck --if-present
+        run: bun run typecheck
