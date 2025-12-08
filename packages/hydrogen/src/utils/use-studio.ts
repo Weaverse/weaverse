@@ -7,6 +7,7 @@ import {
   useRevalidator,
 } from 'react-router'
 import type { WeaverseHydrogen } from '~/index'
+import { hasWeaverseStudio } from '~/types'
 import { useThemeSettingsStore } from './use-theme-settings-store'
 
 export function useStudio(weaverse: WeaverseHydrogen) {
@@ -33,7 +34,9 @@ export function useStudio(weaverse: WeaverseHydrogen) {
         let studioSrc = `${weaverseHost}/static/studio/hydrogen/index.js?v=${weaverseVersion}`
         loadScript(studioSrc)
           .then(() => {
-            window.weaverseStudio?.init(weaverse)
+            if (hasWeaverseStudio(window)) {
+              window.weaverseStudio.init(weaverse)
+            }
           })
           .catch(console.error)
       }

@@ -30,6 +30,7 @@ import type {
   WeaverseHydrogenParams,
   WeaverseLoaderData,
 } from './types'
+import { hasWeaverseStudio } from './types'
 import { generateDataFromSchema } from './utils'
 import { useStudio } from './utils/use-studio'
 import { useThemeSettingsStore } from './utils/use-theme-settings-store'
@@ -38,18 +39,48 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
   declare weaverse: WeaverseHydrogen
 
   constructor(initialData: HydrogenComponentData, weaverse: WeaverseHydrogen) {
-    super(initialData, weaverse)
-    const { data, ...rest } = initialData
-    if (!this.Element?.schema) {
-      console.error('Element is missing schema or not found!')
-      return
-    }
-    const schemaData = generateDataFromSchema(this.Element.schema)
-    Object.assign(this._store, schemaData, data, rest)
+    // Prepare enhanced initial data before calling super constructor
+    const enhancedData = WeaverseHydrogenItem.prepareInitialData(
+      initialData,
+      weaverse
+    )
+    super(enhancedData, weaverse)
   }
 
   get Element(): HydrogenElement {
     return super.Element
+  }
+
+  // Static helper method to prepare initial data with schema defaults
+  private static prepareInitialData(
+    initialData: HydrogenComponentData,
+    weaverse: WeaverseHydrogen
+  ): HydrogenComponentData {
+    // Get the element type from the registry to access schema
+    const elementType = initialData.type
+    if (!elementType) {
+      console.warn('WeaverseHydrogenItem: No type provided in initialData')
+      return initialData
+    }
+
+    // Look up the element in the registry to get schema
+    const element = weaverse?.elementRegistry?.get(elementType)
+    if (!element?.schema) {
+      console.warn(
+        `WeaverseHydrogenItem: No schema found for type '${elementType}'`
+      )
+      return initialData
+    }
+
+    // Generate default data from schema
+    const schemaData = generateDataFromSchema(element.schema)
+
+    // Merge schema defaults with provided data
+    const { data, ...rest } = initialData
+    return {
+      ...rest,
+      data: { ...schemaData, ...data },
+    }
   }
 }
 
@@ -108,7 +139,9 @@ function createWeaverseInstance(
     }
     if (weaverse?.isDesignMode) {
       weaverse.requestInfo = params.requestInfo
-      window.weaverseStudio?.refreshStudio(params)
+      if (hasWeaverseStudio(window)) {
+        window.weaverseStudio.refreshStudio(params)
+      }
     }
     return weaverse
   }
@@ -155,18 +188,22 @@ function RenderRoot(props: {
 }
 
 export function registerComponent(element: HydrogenElement) {
-  WeaverseHydrogen.registerElement(element)
+  Weaverse.registerElement(element)
 }
 
 export const WeaverseHydrogenRoot = memo(
   ({
     components,
     errorComponent: ErrorComponent = ({ error }) => (
-      <div>{error?.message || 'An unexpected error occurred'}</div>
+      <div>
+        {error instanceof Error
+          ? error.message
+          : 'An unexpected error occurred'}
+      </div>
     ),
   }: {
     components: HydrogenComponent[]
-    errorComponent?: React.FC<{ error: any }>
+    errorComponent?: React.FC<{ error: Error | unknown }>
   }) => {
     const matches = useMatches()
 

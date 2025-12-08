@@ -66,8 +66,13 @@ export interface RouteLoaderArgs extends RemixOxygenLoaderArgs {
   }
 }
 
+// Define a more specific type for component data
+export type ComponentDataValue = string | number | boolean | undefined | null
+
 export interface HydrogenComponentData extends ElementData {
-  data?: { [key: string]: any }
+  id: string
+  type: string
+  data?: Record<string, ComponentDataValue | Record<string, unknown>>
   children?: { id: string }[]
   createdAt?: string
   updatedAt?: string
@@ -559,12 +564,26 @@ export type CreateHydrogenSchemaOptions = {
   }
 }
 
+// Extended window interface for hydrogen-specific globals
 declare global {
   interface Window {
-    __weaverse: WeaverseHydrogen
-    __weaverses: Record<string, WeaverseHydrogen>
-    __weaverseThemeSettingsStore: ThemeSettingsStore
+    __weaverse?: WeaverseHydrogen
+    __weaverses?: Record<string, WeaverseHydrogen>
+    __weaverseThemeSettingsStore?: ThemeSettingsStore
   }
+}
+
+// Separate interface for weaverseStudio to avoid conflicts with core package
+interface WeaverseStudio {
+  init: (weaverse: WeaverseHydrogen) => void
+  refreshStudio: (params: WeaverseHydrogenParams) => void
+}
+
+// Type guard to safely access weaverseStudio
+export function hasWeaverseStudio(
+  window: Window
+): window is Window & { weaverseStudio: WeaverseStudio } {
+  return 'weaverseStudio' in window && typeof window.weaverseStudio === 'object'
 }
 
 declare module '@shopify/remix-oxygen' {
