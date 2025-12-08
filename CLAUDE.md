@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is the **Weaverse SDKs monorepo** - a collection of SDKs for integrating modern React/JamStack frameworks (Shopify Hydrogen, React Router, Next.js) with the Weaverse Headless CMS. The project uses pnpm for package management, Turbo for build orchestration, and Biome for code quality.
+This is the **Weaverse SDKs monorepo** - a collection of SDKs for integrating modern React/JamStack frameworks (Shopify Hydrogen, React Router, Next.js) with the Weaverse Headless CMS. The project uses bun for package management, Turbo for build orchestration, and Biome for code quality.
 
 ## Essential Commands
 
@@ -44,13 +44,13 @@ npm run changeset        # Create a changeset for release
 ```
 
 ### Package Management
-**Important**: This project uses pnpm 10.15.0 for dependency installation (enforced), but npm for running scripts.
+**Important**: This project uses bun 1.3.3 for dependency installation (enforced), but npm for running scripts.
 
 ```bash
-pnpm install             # Install dependencies (enforced via packageManager field)
-npm run <script>         # Run package.json scripts (NOT pnpm run)
-pnpm changeset version   # Version packages based on changesets
-pnpm changeset publish   # Publish to npm registry
+bun install              # Install dependencies (enforced via packageManager field)
+npm run <script>         # Run package.json scripts (NOT bun run)
+bun changeset version    # Version packages based on changesets
+bun changeset publish    # Publish to npm registry
 ```
 
 ## Architecture Overview
@@ -148,8 +148,8 @@ export let schema = createSchema({
 The project uses Changesets for releases with version synchronization:
 
 1. Create changeset: `npm run changeset`
-2. Version packages: `pnpm changeset version`
-3. Publish to npm: `pnpm changeset publish`
+2. Version packages: `bun changeset version`
+3. Publish to npm: `bun changeset publish`
 4. Commit and push to main branch
 5. Create GitHub release
 
@@ -171,8 +171,8 @@ The `@weaverse/schema` package is versioned independently.
 
 ### Environment Requirements
 
-- **Node.js**: >= 18 (core), >= 20 (hydrogen), >= 22 (monorepo scripts)
-- **pnpm**: 10.15.0 (enforced via packageManager field in package.json)
+- **Node.js**: >= 18 (core), >= 20 (hydrogen), >= 18 (monorepo scripts)
+- **bun**: 1.3.3 (enforced via packageManager field in package.json)
 - **Git**: Required for version control and pre-commit hooks
 
 ### Version Compatibility
@@ -252,7 +252,7 @@ npm test                 # Run Playwright E2E tests
 3. **Version Synchronization**: Fixed group packages must be versioned together
 4. **Breaking Changes**: Follow semver and document in changesets
 5. **Local Development**: Use `npm run dev:pkg` for proper local development setup
-6. **Package Manager Mixing**: Always use pnpm for installs (enforced), npm for scripts
+6. **Package Manager Mixing**: Always use bun for installs (enforced), npm for scripts
 7. **Type Definitions**: Schema-related types belong in `@weaverse/schema`, not individual packages
 8. **Template Dependencies**: Don't include templates in package builds (excluded via Biome config)
 9. **Schema Property Name**: Always use `settings` not `inspector` in component schemas
@@ -280,7 +280,7 @@ Error: Cannot find module '@weaverse/core'
 **Solution**: Ensure all packages are built in the correct order
 ```bash
 npm run clean
-pnpm install
+bun install
 npm run build
 ```
 
@@ -314,7 +314,7 @@ npm run biome:fix
 **Solution**: Ensure you have npm publish permissions and are logged in
 ```bash
 npm login
-pnpm changeset publish
+bun changeset publish
 ```
 
 **Problem**: Version mismatch in fixed group packages
@@ -322,6 +322,6 @@ pnpm changeset publish
 
 ### Common Errors
 
-- **ENOENT errors**: Usually indicate missing dependencies - run `pnpm install`
+- **ENOENT errors**: Usually indicate missing dependencies - run `bun install`
 - **Permission errors**: May need to clear npm cache: `npm cache clean --force`
 - **Version mismatch**: Check `package.json` for correct peer dependency versions

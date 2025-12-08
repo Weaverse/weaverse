@@ -1,4 +1,9 @@
 import type { HydrogenComponent } from '~/types'
-import * as Main from './main'
+import MainComponent, { schema as mainSchema } from './main'
 
-export let defaultComponents: HydrogenComponent[] = [Main]
+export let defaultComponents: HydrogenComponent[] = [
+  {
+    default: MainComponent,
+    schema: mainSchema,
+  },
+]
