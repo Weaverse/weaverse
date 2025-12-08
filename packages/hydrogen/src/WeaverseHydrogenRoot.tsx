@@ -39,48 +39,18 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
   declare weaverse: WeaverseHydrogen
 
   constructor(initialData: HydrogenComponentData, weaverse: WeaverseHydrogen) {
-    // Prepare enhanced initial data before calling super constructor
-    const enhancedData = WeaverseHydrogenItem.prepareInitialData(
-      initialData,
-      weaverse
-    )
-    super(enhancedData, weaverse)
+    super(initialData, weaverse)
+    const { data, ...rest } = initialData
+    if (!this.Element?.schema) {
+      console.error('Element is missing schema or not found!')
+      return
+    }
+    const schemaData = generateDataFromSchema(this.Element.schema)
+    Object.assign(this._store, schemaData, data, rest)
   }
 
   get Element(): HydrogenElement {
     return super.Element
-  }
-
-  // Static helper method to prepare initial data with schema defaults
-  private static prepareInitialData(
-    initialData: HydrogenComponentData,
-    weaverse: WeaverseHydrogen
-  ): HydrogenComponentData {
-    // Get the element type from the registry to access schema
-    const elementType = initialData.type
-    if (!elementType) {
-      console.warn('WeaverseHydrogenItem: No type provided in initialData')
-      return initialData
-    }
-
-    // Look up the element in the registry to get schema
-    const element = weaverse?.elementRegistry?.get(elementType)
-    if (!element?.schema) {
-      console.warn(
-        `WeaverseHydrogenItem: No schema found for type '${elementType}'`
-      )
-      return initialData
-    }
-
-    // Generate default data from schema
-    const schemaData = generateDataFromSchema(element.schema)
-
-    // Merge schema defaults with provided data
-    const { data, ...rest } = initialData
-    return {
-      ...rest,
-      data: { ...schemaData, ...data },
-    }
   }
 }
 
@@ -188,7 +158,7 @@ function RenderRoot(props: {
 }
 
 export function registerComponent(element: HydrogenElement) {
-  Weaverse.registerElement(element)
+  WeaverseHydrogen.registerElement(element)
 }
 
 export const WeaverseHydrogenRoot = memo(
