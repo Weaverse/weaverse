@@ -35,6 +35,23 @@ import { generateDataFromSchema } from './utils'
 import { useStudio } from './utils/use-studio'
 import { useThemeSettingsStore } from './utils/use-theme-settings-store'
 
+/*
+=== IMPORTANT DESIGN PRINCIPLE ===
+CONSTRUCTOR TIMING AND DEFERRED PROCESSING
+
+When working with React component systems and registries:
+- Keep constructors SIMPLE - don't do heavy work in them
+- Defer processing until RENDER TIME, not initialization
+- Avoid registry lookups during object construction (components may not be registered yet)
+- Simple code is more reliable than complex upfront optimization
+- Respect the initialization sequence: registration → instance creation → rendering
+
+History: Attempting to do schema processing in the constructor (commit 495e1220) broke
+the pilot template because it tried to access the component registry before components were registered.
+The fix was to defer that work until the component is actually rendered.
+====================================
+*/
+
 export class WeaverseHydrogenItem extends WeaverseItemStore {
   declare weaverse: WeaverseHydrogen
 
