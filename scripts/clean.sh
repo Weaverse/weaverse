@@ -6,7 +6,6 @@ directories=(
   "packages/core"
   "packages/hydrogen"
   "packages/react"
-  "packages/shopify"
   "templates/pilot"
 )
 
