@@ -16,6 +16,9 @@ call_lefthook()
   elif lefthook -h >/dev/null 2>&1
   then
     lefthook "$@"
+  elif /Users/paul/Workspace/weaverse-project/weaverse/node_modules/lefthook-darwin-arm64/bin/lefthook -h >/dev/null 2>&1
+  then
+    /Users/paul/Workspace/weaverse-project/weaverse/node_modules/lefthook-darwin-arm64/bin/lefthook "$@"
   else
     dir="$(git rev-parse --show-toplevel)"
     osArch=$(uname | tr '[:upper:]' '[:lower:]')
