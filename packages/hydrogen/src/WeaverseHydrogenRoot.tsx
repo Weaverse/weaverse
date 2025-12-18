@@ -84,6 +84,7 @@ export class WeaverseHydrogen extends Weaverse {
   weaverseVersion: string
   isDesignMode: boolean
   isPreviewMode: boolean
+  isRevisionPreview: boolean
   sectionType: string
   declare ItemConstructor: typeof WeaverseHydrogenItem
   declare data: HydrogenPageData
@@ -104,6 +105,7 @@ export class WeaverseHydrogen extends Weaverse {
     this.weaverseVersion = params.weaverseVersion || ''
     this.isDesignMode = params.isDesignMode ?? false
     this.isPreviewMode = params.isPreviewMode ?? false
+    this.isRevisionPreview = params.isRevisionPreview ?? false
     this.sectionType = params.sectionType || ''
   }
 }

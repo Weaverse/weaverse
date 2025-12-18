@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(rm:*)",
+      "Bash(git checkout:*)",
+      "Bash(pnpm run:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(npm run changeset:*)",
+      "Bash(pnpm changeset:*)",
+      "Bash(git tag:*)",
+      "Bash(npm view:*)",
+      "Bash(npx biome:*)",
+      "Bash(find:*)",
+      "Bash(cat:*)",
+      "Bash(git rm:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run typecheck:*)",
+      "Bash(npm run biome:fix:*)",
+      "Bash(npm run biome:*)"
+    ],
+    "deny": [],
+    "defaultMode": "bypassPermissions"
+  },
+  "outputStyle": "Clean Code"
+}

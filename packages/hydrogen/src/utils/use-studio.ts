@@ -16,12 +16,18 @@ export function useStudio(weaverse: WeaverseHydrogen) {
   let { pathname, search } = useLocation()
   let navigate = useNavigate()
   let themeSettingsStore = useThemeSettingsStore()
-  let { isDesignMode, weaverseHost, weaverseVersion, isPreviewMode } = weaverse
+  let {
+    isDesignMode,
+    weaverseHost,
+    weaverseVersion,
+    isPreviewMode,
+    isRevisionPreview,
+  } = weaverse
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: only revalidate on pathname/search changes
   useEffect(() => {
     if (navigation.state === 'idle') {
-      if (isPreviewMode) {
+      if (isRevisionPreview || isPreviewMode) {
         let previewSrc = `${weaverseHost}/static/studio/hydrogen/preview.js?v=${weaverseVersion}`
         loadScript(previewSrc).catch(console.error)
       } else if (isDesignMode) {

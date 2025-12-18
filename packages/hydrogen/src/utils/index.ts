@@ -111,6 +111,10 @@ export function getWeaverseConfigs(
     weaverseVersion,
     weaverseApiKey,
   } = queries
+
+  let url = new URL(request.url)
+  let isRevisionPreview = url.searchParams.has('__revisionId')
+
   return {
     projectId:
       weaverseProjectId ||
@@ -136,6 +140,7 @@ export function getWeaverseConfigs(
     weaverseVersion: weaverseVersion || '',
     isDesignMode,
     isPreviewMode,
+    isRevisionPreview,
     sectionType: sectionType || '',
     publicEnv: {
       PUBLIC_STORE_DOMAIN: PUBLIC_STORE_DOMAIN || '',

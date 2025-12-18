@@ -145,6 +145,7 @@ export interface WeaverseHydrogenParams
   weaverseVersion?: string
   isDesignMode?: boolean
   isPreviewMode?: boolean
+  isRevisionPreview?: boolean
   sectionType?: string
   dataContext?: Record<string, unknown> | null
 }
@@ -179,6 +180,7 @@ export type WeaverseProjectConfigs = {
   weaverseVersion?: string
   isDesignMode?: boolean
   isPreviewMode?: boolean
+  isRevisionPreview?: boolean
   sectionType?: string
   publicEnv?: PublicEnv
 }
