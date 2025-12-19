@@ -1,5 +1,12 @@
 # @weaverse/hydrogen
 
+## 5.8.6
+
+### Patch Changes
+
+- update support for revision preview
+  - @weaverse/react@5.8.6
+
 ## 5.8.5
 
 ### Patch Changes

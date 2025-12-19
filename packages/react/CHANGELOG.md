@@ -1,5 +1,11 @@
 # @weaverse/react
 
+## 5.8.6
+
+### Patch Changes
+
+- @weaverse/core@5.8.6
+
 ## 5.8.5
 
 ### Patch Changes
