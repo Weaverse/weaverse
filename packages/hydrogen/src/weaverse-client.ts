@@ -174,6 +174,8 @@ export class WeaverseClient {
       weaverseApiKey: this.configs.weaverseApiKey,
       weaverseVersion: this.configs.weaverseVersion,
       isDesignMode: this.configs.isDesignMode,
+      isPreviewMode: this.configs.isPreviewMode,
+      isRevisionPreview: this.configs.isRevisionPreview,
     }
 
     this.basePageRequestBody = {
