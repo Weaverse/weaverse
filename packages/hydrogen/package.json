@@ -2,7 +2,7 @@
   "name": "@weaverse/hydrogen",
   "author": "Weaverse Team",
   "description": "Components, hooks, and utilities for building Shopify Hydrogen websites with Weaverse",
-  "version": "5.8.6",
+  "version": "5.8.7",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -46,7 +46,7 @@
   "dependencies": {
     "@shopify/hydrogen": ">=2025.5",
     "@shopify/remix-oxygen": "3",
-    "@weaverse/react": "5.8.6",
+    "@weaverse/react": "5.8.7",
     "@weaverse/schema": "0.7.3",
     "react": ">=18",
     "react-dom": ">=18",

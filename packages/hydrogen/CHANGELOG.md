@@ -1,5 +1,12 @@
 # @weaverse/hydrogen
 
+## 5.8.7
+
+### Patch Changes
+
+- fix for fallback page with empty items
+  - @weaverse/react@5.8.7
+
 ## 5.8.6
 
 ### Patch Changes

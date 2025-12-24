@@ -498,6 +498,23 @@ export class WeaverseClient {
     return `${weaverseHost}/api/public/${endpoint}`
   }
 
+  /**
+   * Fetch data with caching support for both design mode and production.
+   * Uses direct fetch in design mode, Hydrogen's withCache in production.
+   * Automatically includes projectId in cache key for multi-project isolation.
+   *
+   * @param url - The URL to fetch from
+   * @param options - Fetch options including optional cache strategy
+   * @returns Promise resolving to the fetched data
+   *
+   * @example
+   * ```typescript
+   * const data = await weaverse.fetchWithCache<MyData>(
+   *   'https://api.example.com/data',
+   *   { method: 'POST', body: JSON.stringify({ key: 'value' }) }
+   * )
+   * ```
+   */
   public fetchWithCache = async <T = unknown>(
     url: string,
     options: RequestInit & { strategy?: CachingStrategy } = {}
@@ -536,6 +553,19 @@ export class WeaverseClient {
     return result.data
   }
 
+  /**
+   * Load theme settings from Weaverse API with fallback to schema defaults.
+   * Merges remote settings with local theme schema and handles design mode serialization.
+   *
+   * @param strategy - Optional cache strategy override
+   * @returns Promise resolving to theme settings response
+   *
+   * @example
+   * ```typescript
+   * const settings = await weaverse.loadThemeSettings()
+   * const primaryColor = settings.theme.colors?.primary
+   * ```
+   */
   loadThemeSettings = async (
     strategy?: CachingStrategy
   ): Promise<ThemeSettingsResponse> => {
@@ -629,6 +659,13 @@ export class WeaverseClient {
     }
   }
 
+  /**
+   * Generate fallback page with default structure when page data is unavailable.
+   * Used internally when API returns no page or when page needs default content.
+   *
+   * @param message - Custom message to display in the fallback page
+   * @returns HydrogenPageData with single main component containing the message
+   */
   generateFallbackPage = (message: string): HydrogenPageData => {
     const rootId = crypto.randomUUID()
     return {
@@ -645,6 +682,34 @@ export class WeaverseClient {
     }
   }
 
+  /**
+   * Load page data from Weaverse API with optional route-level project override.
+   * Fetches page content, executes component loaders, and handles empty items fallback.
+   *
+   * @param params - Optional page loading parameters
+   * @param params.type - Page type (HOME, PAGE, PRODUCT, COLLECTION, etc.)
+   * @param params.handle - Page handle for dynamic routes
+   * @param params.locale - Locale override
+   * @param params.projectId - Route-level project ID override (for multi-project)
+   * @param params.strategy - Custom cache strategy override
+   * @returns Promise resolving to page data or null on error
+   *
+   * @example
+   * ```typescript
+   * // Basic usage
+   * const data = await weaverse.loadPage()
+   *
+   * // With page type
+   * const data = await weaverse.loadPage({ type: 'HOME' })
+   *
+   * // Route-level project override
+   * const data = await weaverse.loadPage({
+   *   type: 'PAGE',
+   *   handle: 'about',
+   *   projectId: 'campaign-project-123'
+   * })
+   * ```
+   */
   loadPage = async (
     params: LoadPageParams = {}
   ): Promise<WeaverseLoaderData | null> => {
@@ -761,6 +826,15 @@ export class WeaverseClient {
       if (!page) {
         page = this.generateFallbackPage('Please add new section to start.')
       }
+
+      if (page?.items?.length === 0) {
+        page.items.push({
+          type: 'main',
+          id: page.rootId || crypto.randomUUID(),
+          data: {},
+        })
+      }
+
       if (page?.items) {
         const items = page.items
         page.items = await Promise.all(items.map(this.execComponentLoader))

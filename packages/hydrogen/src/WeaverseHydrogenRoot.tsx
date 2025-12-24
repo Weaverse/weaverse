@@ -176,6 +176,27 @@ function RenderRoot(props: {
   )
 }
 
+/**
+ * Register a Weaverse component with the global element registry.
+ * Must be called before rendering components in WeaverseHydrogenRoot.
+ *
+ * @param element - Component configuration with schema, Component, and optional loader
+ *
+ * @example
+ * ```typescript
+ * import Hero from './sections/Hero'
+ * import { schema } from './sections/Hero'
+ *
+ * registerComponent({
+ *   type: 'hero',
+ *   Component: Hero,
+ *   schema,
+ *   loader: async ({ data, weaverse }) => {
+ *     return { someData: 'value' }
+ *   }
+ * })
+ * ```
+ */
 export function registerComponent(element: HydrogenElement) {
   WeaverseHydrogen.registerElement(element)
 }
@@ -255,6 +276,24 @@ export const WeaverseHydrogenRoot = memo(
 const ThemeSettingsProvider = createContext<HydrogenThemeSettings | null>(null)
 ThemeSettingsProvider.displayName = 'WeaverseThemeSettingsProvider'
 
+/**
+ * Higher-order component that wraps your app with Weaverse theme settings context.
+ * Provides theme settings to all child components via React context.
+ *
+ * @param Component - The root component to wrap
+ * @returns Wrapped component with theme settings provider
+ *
+ * @example
+ * ```typescript
+ * import { withWeaverse } from '@weaverse/hydrogen'
+ *
+ * function App() {
+ *   return <div>My App</div>
+ * }
+ *
+ * export default withWeaverse(App)
+ * ```
+ */
 export function withWeaverse(Component: ComponentType<any>) {
   return (props: JSX.IntrinsicAttributes) => {
     const { settings } = useThemeSettingsStore()
@@ -266,6 +305,22 @@ export function withWeaverse(Component: ComponentType<any>) {
   }
 }
 
+/**
+ * React hook to access Weaverse theme settings from anywhere in your component tree.
+ * Must be used within a component wrapped by `withWeaverse` or inside `WeaverseHydrogenRoot`.
+ *
+ * @returns Current theme settings object
+ *
+ * @example
+ * ```typescript
+ * function MyComponent() {
+ *   const theme = useThemeSettings()
+ *   const primaryColor = theme.colors?.primary
+ *
+ *   return <div style={{ color: primaryColor }}>Styled content</div>
+ * }
+ * ```
+ */
 export function useThemeSettings<T = HydrogenThemeSettings>() {
   const themeSettingsStore = useThemeSettingsStore()
   const settings = useSafeExternalStore(

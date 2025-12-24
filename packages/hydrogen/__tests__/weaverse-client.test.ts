@@ -345,6 +345,39 @@ describe('WeaverseClient Multi-Project Architecture', () => {
       consoleErrorSpy.mockRestore()
     })
   })
+
+  describe('T033: Handle Empty Items', () => {
+    it('should add default main component when items array is empty', async () => {
+      let weaverse = new WeaverseClient({
+        ...mockContext,
+        components: mockComponents,
+        themeSchema: mockThemeSchema,
+        projectId: 'test-project',
+      })
+
+      // Mock fetchWithCache to return data with empty items
+      vi.spyOn(weaverse, 'fetchWithCache').mockResolvedValue({
+        page: {
+          id: 'test-page',
+          rootId: 'root-id',
+          name: 'Test Page',
+          items: [],
+        },
+        project: {
+          id: 'test-project',
+          name: 'Test Project',
+        },
+        pageAssignment: {},
+      } as any)
+
+      const result = await weaverse.loadPage()
+
+      expect(result).not.toBeNull()
+      expect(result?.page?.items).toBeDefined()
+      expect(result?.page?.items.length).toBe(1)
+      expect(result?.page?.items[0].type).toBe('main')
+    })
+  })
 })
 
 function createMockContext(overrides: any = {}): any {

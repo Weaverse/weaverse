@@ -1,28 +1,21 @@
 # AGENTS.md - Weaverse SDKs Development Guide
 
-## Build/Test Commands
-- `npm run build` - Build all packages
-- `npm run dev` - Start development with hot reload 
-- `npm run typecheck` - TypeScript type checking
-- `npm run biome` - Check linting/formatting errors
-- `npm run biome:fix` - Fix linting/formatting errors
-- `npm run test` - Run all tests (uses Vitest for schema package)
-- `turbo test --filter=@weaverse/schema` - Run single package tests
-- `vitest --watch` - Run tests in watch mode (in schema package)
+## Build & Test (Use Bun)
+- **Install**: `bun install`
+- **Build**: `bun run build` (all packages)
+- **Dev**: `bun run dev` (hot reload)
+- **Lint/Format**: `bun run biome` (check) or `bun run biome:fix` (fix)
+- **Test All**: `bun run test` (Turbo + Vitest)
+- **Test Single**: `bun x vitest run path/to/file.test.ts`
+- **Typecheck**: `bun run typecheck`
 
-## Code Style (Biome + Ultracite)
-- **Variables**: camelCase for variables/functions, PascalCase for components, ALL_CAPS for constants
-- **Strings**: Double quotes, template literals for interpolation  
-- **Indentation**: 2 spaces, trailing commas
-- **Functions**: Arrow functions for callbacks, async/await for async code
-- **Destructuring**: Use for objects/arrays where appropriate
-
-## TypeScript Guidelines  
-- Always define types for parameters/return values, avoid `any`
-- Use interfaces for data structures, prefer immutable data (`const`, `readonly`)
-- Use optional chaining (`?.`) and nullish coalescing (`??`) for safe access
-- Follow functional programming principles where possible
+## Code Style (Biome + TypeScript)
+- **Naming**: `camelCase` (vars/funcs), `PascalCase` (components/interfaces), `ALL_CAPS` (constants), `_private` (class members).
+- **React**: Functional components + hooks. No conditional hooks. CSS Modules.
+- **Syntax**: 2 spaces, double quotes, arrow funcs (callbacks), async/await, destructuring.
+- **Types**: No `any`. Use interfaces. Functional principles. Immutable data (`const`, `readonly`).
+- **Safety**: Optional chaining `?.`, nullish coalescing `??`.
 
 ## Error Handling
-- Use try/catch for async operations, implement React error boundaries
-- Always log errors with contextual information
+- `try/catch` for async. React Error Boundaries.
+- Log errors with context.
