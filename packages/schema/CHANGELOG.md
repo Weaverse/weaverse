@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.4
+
+### Patch Changes
+
+- Remove 'swatches' input
+- Remove unused `swatches` input type
+
 ## 0.7.1
 
 ### Patch Changes
