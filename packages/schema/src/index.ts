@@ -15,7 +15,6 @@ export const inputTypeSchema = z.union([
   z.literal('range'),
   z.literal('select'),
   z.literal('position'),
-  z.literal('swatches'),
   z.literal('product'),
   z.literal('product-list'),
   z.literal('collection'),
