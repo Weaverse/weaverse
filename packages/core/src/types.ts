@@ -49,7 +49,6 @@ export type InputType =
   | 'text'
   | 'textarea'
   | 'toggle-group'
-  | 'swatches'
   | 'metaobject'
   | 'url'
 

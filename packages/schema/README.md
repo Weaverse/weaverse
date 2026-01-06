@@ -22,7 +22,6 @@ The package supports the following input types:
 - `switch` - Boolean toggles
 - `range` - Numeric ranges with min/max/step
 - `select`, `toggle-group` - Choice inputs
-- `swatches` - Color/variant swatches
 - `product`, `product-list`, `collection`, `collection-list`, `blog`, `metaobject` - Shopify resources
 - `color`, `datepicker`, `map-autocomplete`, `position` - Specialized inputs
 
