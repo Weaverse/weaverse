@@ -2,7 +2,7 @@
   "name": "@weaverse/core",
   "author": "Weaverse Team",
   "description": "Weaverse Core",
-  "version": "5.5.0",
+  "version": "5.8.7",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -24,7 +24,8 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "typecheck": "tsc --noEmit"
   },
   "tsup": {
     "entry": [
@@ -38,8 +39,5 @@
     "sourcemap": true,
     "clean": true,
     "outDir": "dist"
-  },
-  "dependencies": {
-    "@stitches/core": "^1.2.8"
   }
 }

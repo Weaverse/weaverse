@@ -1,9 +1,9 @@
+import type { Weaverse } from '@weaverse/core'
 import clsx from 'clsx'
 import React, { memo, useEffect, useRef } from 'react'
 import { useItemInstance, useWeaverse } from '~/hooks'
 import { WeaverseContextProvider, WeaverseItemContext } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
-import { generateItemClassName } from './utils/css'
 import { replaceContentDataConnectorsDeep } from './utils/data-connector'
 
 const REACT_VERSION_THRESHOLD = 18
@@ -30,6 +30,28 @@ export const useSafeExternalStore = (
   return getSnapshot()
 }
 
+/**
+ * Determines the root element ID for the Weaverse component tree.
+ * Falls back through multiple strategies to ensure a valid root is always found:
+ * 1. Use explicit rootId from context.data if available
+ * 2. Find the first element with type 'main' in items array
+ * 3. Use projectId as final fallback
+ */
+const getRootId = (context: Weaverse): string => {
+  // Strategy 1: Explicit rootId
+  if (context.data.rootId) {
+    return context.data.rootId
+  }
+
+  // Strategy 2: Find main element
+  let mainItem = context.data?.items?.find((item) => item.type === 'main')
+  if (mainItem?.id) {
+    return mainItem.id
+  }
+
+  // Strategy 3: Fallback to projectId
+  return context.projectId
+}
 export const WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
   const data = useSafeExternalStore(
     context.subscribe,
@@ -43,22 +65,18 @@ export const WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
   }, [context])
 
   const eventHandlers = context?.studioBridge?.eventHandlers || {}
-  const themeClass = context.stitchesInstance.theme.className
 
   if (context.projectId) {
     return (
       <div
-        className={`weaverse-content-root ${themeClass}`}
+        className="weaverse-content-root"
         {...eventHandlers}
         data-weaverse-project-id={context.projectId}
         data-weaverse-template-id={data.id}
         ref={rootRef}
       >
         <WeaverseContextProvider value={context}>
-          <ItemInstance
-            id={context.data.rootId || context.projectId}
-            parentId={''}
-          />
+          <ItemInstance id={getRootId(context)} parentId={''} />
         </WeaverseContextProvider>
       </div>
     )
@@ -68,7 +86,7 @@ export const WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
 WeaverseRoot.displayName = 'WeaverseRoot'
 const ItemComponent = memo(({ instance }: ItemComponentProps) => {
   const context = useWeaverse()
-  const { stitchesInstance, elementRegistry, platformType } = context
+  const { elementRegistry } = context
   const data = useSafeExternalStore(
     instance.subscribe,
     instance.getSnapShot,
@@ -137,11 +155,7 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
       <Component
         {...processedRest}
         children={renderChildren.length ? renderChildren : undefined}
-        className={clsx(
-          platformType !== 'shopify-hydrogen' &&
-            generateItemClassName(instance, stitchesInstance),
-          processedRest.data?.className
-        )}
+        className={clsx(processedRest.data?.className)}
         data-wv-id={id}
         data-wv-type={type}
         key={id}

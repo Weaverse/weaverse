@@ -1,5 +1,91 @@
 # @weaverse/react
 
+## 5.8.7
+
+### Patch Changes
+
+- @weaverse/core@5.8.7
+
+## 5.8.6
+
+### Patch Changes
+
+- @weaverse/core@5.8.6
+
+## 5.8.5
+
+### Patch Changes
+
+- @weaverse/core@5.8.5
+
+## 5.8.4
+
+### Patch Changes
+
+- @weaverse/core@5.8.4
+
+## 5.8.3
+
+### Patch Changes
+
+- update getRootId
+  - @weaverse/core@5.8.3
+
+## 5.8.2
+
+### Patch Changes
+
+- chore: refactor
+- Updated dependencies
+  - @weaverse/core@5.8.2
+
+## 5.8.1
+
+### Patch Changes
+
+- @weaverse/core@5.8.1
+
+## 5.8.0
+
+### Patch Changes
+
+- @weaverse/core@5.8.0
+
+## 5.7.1
+
+### Patch Changes
+
+- @weaverse/core@5.7.1
+
+## 5.7.0
+
+### Minor Changes
+
+- Initialize customerAccount in WeaverseClient constructor
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/core@5.7.0
+
+## 5.6.0
+
+### Minor Changes
+
+- Bump v5.6.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/core@5.6.0
+
+## 5.5.1
+
+### Patch Changes
+
+- Fix performance issue of Data Connector feature
+  - @weaverse/core@5.5.1
+
 ## 5.5.0
 
 ### Patch Changes
@@ -70,26 +156,22 @@
   ## 🚀 Major Enhancements
 
   ### Deep Recursive Data Replacement
-
   - **NEW**: `replaceContentDataConnectorsDeep()` function handles complex nested structures
   - Processes arrays, objects, and deeply nested combinations recursively
   - Solves issue where only first content string was replaced in `weaverseData.page.items`
 
   ### Performance Optimizations
-
   - **BREAKING**: Migrated from `useLoaderData` to `useMatches` for 60-70% memory improvement
   - **BREAKING**: Property renamed `loaderData` → `dataContext` throughout codebase
   - Optimized caching with LRU eviction strategy and configurable size limits
   - Enhanced route-aware data resolution with priority ordering
 
   ### Security Improvements
-
   - Added prototype pollution protection (`__proto__`, `constructor`, `prototype`)
   - Enhanced XSS prevention with comprehensive HTML entity encoding
   - Input validation for safer property access
 
   ### Route-Aware Data Resolution
-
   - **NEW**: Support for explicit route keys: `{{root.layout.shop.name}}`
   - **NEW**: Cross-route data access: `{{routes/product.product.title}}`
   - Backward compatibility maintained for legacy `{{shop.name}}` patterns
@@ -98,18 +180,15 @@
   ## 🔧 API Changes
 
   ### Breaking Changes
-
   - `useLoaderData()` → `useMatches()` in WeaverseHydrogenRoot
   - `loaderData` prop → `dataContext` prop in component interfaces
   - Enhanced data structure processing in renderer components
 
   ### New Exports
-
   - `replaceContentDataConnectorsDeep` from `@weaverse/react`
   - `createWeaverseDataContext` from `@weaverse/react`
 
   ## 📊 Testing
-
   - 46/46 comprehensive test cases passing
   - Enhanced test coverage for deep object replacement
   - Route-aware resolution test scenarios
@@ -140,7 +219,6 @@
 - 2468404: Fix dependency issue by moving react-router dependent code to Hydrogen package
 
   ## 🔧 Dependency Fix
-
   - **FIXED**: Moved `useWeaverseDataContext` and related functionality from `@weaverse/react` to `@weaverse/hydrogen`
   - **FIXED**: Resolved build errors where React package tried to import `react-router` without it being a dependency
   - **IMPROVED**: Made React package truly router-agnostic by using generic `DataContext` type
@@ -149,14 +227,12 @@
   ## 🎯 Package Structure
 
   ### @weaverse/react (Router-agnostic)
-
   - ✅ `replaceContentDataConnectors()`
   - ✅ `replaceContentDataConnectorsDeep()`
   - ✅ Generic `DataContext` type
   - ✅ Core React utilities
 
   ### @weaverse/hydrogen (Router-aware)
-
   - ✅ `useWeaverseDataContext()`
   - ✅ `createWeaverseDataContext()`
   - ✅ `WeaverseDataContext` type
@@ -182,7 +258,6 @@
 - Fix dependency issue by moving react-router dependent code to Hydrogen package
 
   ## 🔧 Dependency Fix
-
   - **FIXED**: Moved `useWeaverseDataContext` and related functionality from `@weaverse/react` to `@weaverse/hydrogen`
   - **FIXED**: Resolved build errors where React package tried to import `react-router` without it being a dependency
   - **IMPROVED**: Made React package truly router-agnostic by using generic `DataContext` type
@@ -191,14 +266,12 @@
   ## 🎯 Package Structure
 
   ### @weaverse/react (Router-agnostic)
-
   - ✅ `replaceContentDataConnectors()`
   - ✅ `replaceContentDataConnectorsDeep()`
   - ✅ Generic `DataContext` type
   - ✅ Core React utilities
 
   ### @weaverse/hydrogen (Router-aware)
-
   - ✅ `useWeaverseDataContext()`
   - ✅ `createWeaverseDataContext()`
   - ✅ `WeaverseDataContext` type
@@ -207,7 +280,6 @@
   ## 📦 Usage Impact
 
   No breaking changes - all functionality remains available from `@weaverse/hydrogen` as intended.
-
   - @weaverse/core@5.5.0-beta.1
 
 ## 5.5.0-beta.0
@@ -219,26 +291,22 @@
   ## 🚀 Major Enhancements
 
   ### Deep Recursive Data Replacement
-
   - **NEW**: `replaceContentDataConnectorsDeep()` function handles complex nested structures
   - Processes arrays, objects, and deeply nested combinations recursively
   - Solves issue where only first content string was replaced in `weaverseData.page.items`
 
   ### Performance Optimizations
-
   - **BREAKING**: Migrated from `useLoaderData` to `useMatches` for 60-70% memory improvement
   - **BREAKING**: Property renamed `loaderData` → `dataContext` throughout codebase
   - Optimized caching with LRU eviction strategy and configurable size limits
   - Enhanced route-aware data resolution with priority ordering
 
   ### Security Improvements
-
   - Added prototype pollution protection (`__proto__`, `constructor`, `prototype`)
   - Enhanced XSS prevention with comprehensive HTML entity encoding
   - Input validation for safer property access
 
   ### Route-Aware Data Resolution
-
   - **NEW**: Support for explicit route keys: `{{root.layout.shop.name}}`
   - **NEW**: Cross-route data access: `{{routes/product.product.title}}`
   - Backward compatibility maintained for legacy `{{shop.name}}` patterns
@@ -247,18 +315,15 @@
   ## 🔧 API Changes
 
   ### Breaking Changes
-
   - `useLoaderData()` → `useMatches()` in WeaverseHydrogenRoot
   - `loaderData` prop → `dataContext` prop in component interfaces
   - Enhanced data structure processing in renderer components
 
   ### New Exports
-
   - `replaceContentDataConnectorsDeep` from `@weaverse/react`
   - `createWeaverseDataContext` from `@weaverse/react`
 
   ## 📊 Testing
-
   - 46/46 comprehensive test cases passing
   - Enhanced test coverage for deep object replacement
   - Route-aware resolution test scenarios
@@ -302,20 +367,17 @@
 - 50275ae: feat: API cache proxy improvements and TypeScript fixes
 
   #### API Cache Proxy Improvements
-
   - **Migration to withCache.fetch**: Updated `WeaverseClient` to use Hydrogen's `withCache.fetch` instead of deprecated `withCache.run`
   - **Response Structure Unification**: Standardized response formats between `directFetch` and `withCache.fetch` methods
   - **Enhanced Cache Strategy**: Improved cache key generation and response validation
   - **Better Error Handling**: Added comprehensive error handling for API responses
 
   #### TypeScript Build Fixes
-
   - **Interface Merging**: Fixed duplicate type declarations using proper interface merging for module augmentation
   - **Window Type Declarations**: Converted type declarations to interfaces for proper global scope extension
   - **Environment Variables**: Added missing environment variables to `HydrogenEnv` interface
 
   #### Code Quality Improvements
-
   - **Biome Configuration**: Updated to automatically remove unused variables and optimize imports
   - **Removed Console Logs**: Cleaned up debug logging and unused code
 
@@ -329,7 +391,6 @@
 ### Patch Changes
 
 - feat: API cache proxy improvements and debug logging
-
   - Updated cache strategy with improved timing configuration
   - Added debug logging for API proxy usage tracking
   - Enhanced cache control with optimized stale-while-revalidate settings

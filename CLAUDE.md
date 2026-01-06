@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is the **Weaverse SDKs monorepo** - a collection of SDKs for integrating modern React/JamStack frameworks (Shopify Hydrogen, React Router, Next.js) with the Weaverse Headless CMS. The project uses pnpm for package management, Turbo for build orchestration, and Biome for code quality.
+This is the **Weaverse SDKs monorepo** - a collection of SDKs for integrating modern React/JamStack frameworks (Shopify Hydrogen, React Router, Next.js) with the Weaverse Headless CMS. The project uses bun for package management, Turbo for build orchestration, and Biome for code quality.
 
 ## Essential Commands
 
@@ -44,13 +44,13 @@ npm run changeset        # Create a changeset for release
 ```
 
 ### Package Management
-**Important**: This project uses pnpm 10.15.0 for dependency installation (enforced), but npm for running scripts.
+**Important**: This project uses bun 1.3.3 for dependency installation (enforced), but npm for running scripts.
 
 ```bash
-pnpm install             # Install dependencies (enforced via packageManager field)
-npm run <script>         # Run package.json scripts (NOT pnpm run)
-pnpm changeset version   # Version packages based on changesets
-pnpm changeset publish   # Publish to npm registry
+bun install              # Install dependencies (enforced via packageManager field)
+npm run <script>         # Run package.json scripts (NOT bun run)
+bun changeset version    # Version packages based on changesets
+bun changeset publish    # Publish to npm registry
 ```
 
 ## Architecture Overview
@@ -59,12 +59,12 @@ pnpm changeset publish   # Publish to npm registry
 - **`/packages/core`** - Foundation package with framework-agnostic code (TypeScript)
 - **`/packages/react`** - React components and utilities for CMS integration (TypeScript)
 - **`/packages/hydrogen`** - Shopify Hydrogen integration powered by React Router v7 (TypeScript)
-- **`/packages/shopify`** - Shopify-specific utilities (TypeScript)
 - **`/packages/schema`** - Schema definitions for Weaverse components (TypeScript)
 - **`/packages/cli`** - CLI tools for Weaverse development (JavaScript)
 - **`/packages/biome`** - Shared Biome configuration extending ultracite
 - **`/packages/next`** - Next.js integration (legacy/minimal)
 - **`/packages/remix`** - Remix integration (legacy/minimal)
+- **`/archived/shopify`** - ARCHIVED: Shopify-specific utilities (no longer maintained)
 - **`/templates/pilot`** - Example Hydrogen theme with Weaverse integration
 
 ### Key Architectural Patterns
@@ -103,7 +103,7 @@ When working on SDK packages:
 
 1. **Core Package** (`/packages/core`):
    - Framework-agnostic logic
-   - Uses `@stitches/core` for styling
+   - Uses inline styles for dynamic styling
    - Entry point: `src/index.ts`
 
 2. **React Package** (`/packages/react`):
@@ -115,41 +115,77 @@ When working on SDK packages:
    - Shopify Hydrogen specific integrations
    - Requires React Router v7
    - Includes error boundary support
+   - **Multi-Project Architecture** (v5.7.2+): Supports dynamic project selection via function-based `projectId` parameter, enabling domain-based routing, A/B testing, and multi-brand implementations without code duplication
+
+### Weaverse Component Schema Pattern
+
+When creating Weaverse components, always use the `createSchema` function with the `settings` property (NOT `inspector`):
+
+```typescript
+import { createSchema, type HydrogenComponentProps } from '@weaverse/hydrogen';
+
+export let schema = createSchema({
+  type: "component-name",
+  title: "Component Title",
+  settings: [  // ALWAYS 'settings', not 'inspector'
+    {
+      group: "Content",
+      inputs: [
+        {
+          type: "text",
+          name: "heading",
+          label: "Heading",
+          defaultValue: "Default"
+        }
+      ]
+    }
+  ]
+});
+```
 
 ### Release Process
 
-The project uses Changesets for releases:
+The project uses Changesets for releases with version synchronization:
 
 1. Create changeset: `npm run changeset`
-2. Version packages: `pnpm changeset version`
-3. Publish to npm: `pnpm changeset publish`
+2. Version packages: `bun changeset version`
+3. Publish to npm: `bun changeset publish`
 4. Commit and push to main branch
 5. Create GitHub release
+
+**Important**: The following packages are configured as a "fixed" group and will always have synchronized versions:
+- `@weaverse/core`
+- `@weaverse/react`
+- `@weaverse/hydrogen`
+
+The `@weaverse/schema` package is versioned independently.
+
+**Note**: `@weaverse/shopify` has been archived and is no longer maintained.
 
 ### Testing Strategy
 
 - Tests run via `turbo run test`
 - Individual packages may have their own test suites
 - The Pilot template includes E2E tests with Playwright
+- Schema package uses Vitest for unit tests
 
 ### Environment Requirements
 
-- **Node.js**: >= 22 (strictly required)
-- **pnpm**: 10.15.0 (enforced via packageManager field in package.json)
+- **Node.js**: >= 18 (core), >= 20 (hydrogen), >= 18 (monorepo scripts)
+- **bun**: 1.3.3 (enforced via packageManager field in package.json)
 - **Git**: Required for version control and pre-commit hooks
 
 ### Version Compatibility
 
 | Package | Version | React | Node.js | Key Dependencies |
 |---------|---------|-------|---------|-----------------|
-| @weaverse/core | 5.4.1 | - | >=22 | @stitches/core@1.2.8 |
-| @weaverse/react | 5.4.1 | >=18 | >=22 | @weaverse/core@5.4.1 |
-| @weaverse/hydrogen | 5.4.1 | >=18 | >=22 | @shopify/hydrogen@>=2025.5, react-router@7 |
-| @weaverse/schema | 0.7.3 | - | >=22 | - |
-| @weaverse/shopify | 5.4.1 | - | >=22 | @weaverse/core |
-| @weaverse/cli | 5.4.1 | - | >=22 | inquirer@^9.2.15, validate-npm-package-name@^5.0.1 |
+| @weaverse/core | 5.5.0 | - | >=18 | - |
+| @weaverse/react | 5.5.0 | >=18 | >=18 | @weaverse/core@5.5.0 |
+| @weaverse/hydrogen | 5.5.0 | >=18 | >=20 | @shopify/hydrogen@>=2025.5, react-router@^7 |
+| @weaverse/schema | 0.7.3 | - | >=18 | - |
+| @weaverse/cli | 5.5.0 | - | >=18 | inquirer@^9.2.15, validate-npm-package-name@^5.0.1 |
 
-**Note**: All @weaverse packages should be kept at the same major version for compatibility.
+**Note**: The fixed group packages (core, react, hydrogen) are always kept at the same version.
 
 ## Code Conventions
 
@@ -159,6 +195,7 @@ The project uses Changesets for releases:
 - **Data Structures**: Use interfaces for data structures and type definitions
 - **Immutability**: Prefer immutable data (`const`, `readonly`)
 - **Safe Access**: Use optional chaining (`?.`) and nullish coalescing (`??`)
+- **Functional Programming**: Follow functional programming principles where possible
 
 ### Code Style (Enforced by Biome)
 - **Variables**: Use camelCase for variables and functions, PascalCase for components
@@ -167,12 +204,25 @@ The project uses Changesets for releases:
 - **Indentation**: 2 spaces, trailing commas
 - **Functions**: Arrow functions for callbacks, async/await for asynchronous code
 - **Destructuring**: Use for objects and arrays where appropriate
+- **Private Members**: Prefix private class members with underscore (_)
 
 ### Package Structure
 - **Imports**: Use relative imports within packages
 - **Exports**: Provide both ESM and CJS builds via tsup
 - **Documentation**: JSDoc comments for public APIs
 - **Entry Points**: Each package has `src/index.ts` as main entry
+
+### React Guidelines
+- Use functional components with hooks
+- Follow the React hooks rules (no conditional hooks)
+- Use React.FC type for components with children
+- Keep components small and focused
+- Use CSS modules for component styling
+
+### Error Handling
+- Use try/catch blocks for async operations
+- Implement proper error boundaries in React components
+- Always log errors with contextual information
 
 ## Working with Templates
 
@@ -198,13 +248,26 @@ npm test                 # Run Playwright E2E tests
 ## Common Pitfalls to Avoid
 
 1. **Circular Dependencies**: Be careful with package dependencies
-2. **Build Order**: Turbo handles this, but be aware of the dependency graph  
-3. **Version Synchronization**: Keep package versions aligned when releasing
+2. **Build Order**: Turbo handles this, but be aware of the dependency graph
+3. **Version Synchronization**: Fixed group packages must be versioned together
 4. **Breaking Changes**: Follow semver and document in changesets
 5. **Local Development**: Use `npm run dev:pkg` for proper local development setup
-6. **Package Manager Mixing**: Always use pnpm for installs (enforced), npm for scripts
+6. **Package Manager Mixing**: Always use bun for installs (enforced), npm for scripts
 7. **Type Definitions**: Schema-related types belong in `@weaverse/schema`, not individual packages
 8. **Template Dependencies**: Don't include templates in package builds (excluded via Biome config)
+9. **Schema Property Name**: Always use `settings` not `inspector` in component schemas
+10. **Multi-Project Functions**: When using function-based `projectId`, functions must be synchronous or awaited before passing
+
+```typescript
+// ✅ Correct - sync function
+projectId: () => getProjectSync()
+
+// ✅ Correct - awaited async function
+projectId: await getProjectAsync()
+
+// ❌ Wrong - async function not awaited
+projectId: getProjectAsync()  // Throws: "Async projectId functions must be awaited..."
+```
 
 ## Troubleshooting
 
@@ -216,15 +279,15 @@ Error: Cannot find module '@weaverse/core'
 ```
 **Solution**: Ensure all packages are built in the correct order
 ```bash
-pnpm run clean
-pnpm install
-pnpm run build
+npm run clean
+bun install
+npm run build
 ```
 
 **Problem**: TypeScript errors in development
 **Solution**: Run typecheck to identify issues
 ```bash
-pnpm run typecheck
+npm run typecheck
 ```
 
 ### Development Environment
@@ -242,7 +305,7 @@ npm run clean && npm run build
 **Problem**: Biome formatting conflicts
 **Solution**: Run the auto-fix command
 ```bash
-pnpm run biome:fix
+npm run biome:fix
 ```
 
 ### Release Process
@@ -251,11 +314,14 @@ pnpm run biome:fix
 **Solution**: Ensure you have npm publish permissions and are logged in
 ```bash
 npm login
-pnpm changeset publish
+bun changeset publish
 ```
+
+**Problem**: Version mismatch in fixed group packages
+**Solution**: The changeset configuration ensures synchronized versions for core, react, and hydrogen packages. Check `.changeset/config.json` if issues persist.
 
 ### Common Errors
 
-- **ENOENT errors**: Usually indicate missing dependencies - run `pnpm install`
+- **ENOENT errors**: Usually indicate missing dependencies - run `bun install`
 - **Permission errors**: May need to clear npm cache: `npm cache clean --force`
 - **Version mismatch**: Check `package.json` for correct peer dependency versions

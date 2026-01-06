@@ -1,5 +1,73 @@
 # @weaverse/shopify
 
+## 5.8.4
+
+### Patch Changes
+
+- @weaverse/react@5.8.4
+
+## 5.8.3
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/react@5.8.3
+
+## 5.8.2
+
+### Patch Changes
+
+- chore: refactor
+- Updated dependencies
+  - @weaverse/react@5.8.2
+
+## 5.8.1
+
+### Patch Changes
+
+- @weaverse/react@5.8.1
+
+## 5.8.0
+
+### Patch Changes
+
+- @weaverse/react@5.8.0
+
+## 5.7.1
+
+### Patch Changes
+
+- @weaverse/react@5.7.1
+
+## 5.7.0
+
+### Minor Changes
+
+- Initialize customerAccount in WeaverseClient constructor
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/react@5.7.0
+
+## 5.6.0
+
+### Minor Changes
+
+- Bump v5.6.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/react@5.6.0
+
+## 5.5.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/react@5.5.1
+
 ## 5.5.0
 
 ### Patch Changes

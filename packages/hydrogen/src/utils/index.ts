@@ -42,17 +42,50 @@ function mergeInspectorSettings(
   return deepMergeArrays(settings, inspector)
 }
 
+/**
+ * Extract and parse query parameters from a request URL.
+ * Supports optional allowlist for security-sensitive applications.
+ *
+ * @param request - The incoming request
+ * @param options - Optional configuration
+ * @param options.allowedKeys - If provided, only these keys will be extracted
+ * @returns Parsed query parameters with type coercion for booleans
+ *
+ * @example
+ * ```typescript
+ * // Extract all params
+ * const queries = getRequestQueries(request)
+ *
+ * // Extract only allowed params (security-sensitive)
+ * const queries = getRequestQueries(request, {
+ *   allowedKeys: ['weaverseProjectId', 'weaverseHost']
+ * })
+ * ```
+ */
 export function getRequestQueries<T = Record<string, string | boolean>>(
-  request: Request
-) {
+  request: Request,
+  options?: { allowedKeys?: string[] }
+): T {
   let url = new URL(request.url)
-  return Array.from(url.searchParams.entries()).reduce(
-    (q: Record<string, unknown>, [k, v]) => {
-      q[k] = v === 'true' ? true : v === 'false' ? false : v
-      return q
-    },
-    {}
-  ) as T
+  let queries: Record<string, unknown> = {}
+
+  for (let [key, value] of url.searchParams.entries()) {
+    // If allowlist provided, skip non-allowed keys
+    if (options?.allowedKeys && !options.allowedKeys.includes(key)) {
+      continue
+    }
+
+    // Type-safe conversion for known boolean patterns
+    if (value === 'true') {
+      queries[key] = true
+    } else if (value === 'false') {
+      queries[key] = false
+    } else {
+      queries[key] = value
+    }
+  }
+
+  return queries as T
 }
 
 export function getWeaverseConfigs(
@@ -78,6 +111,10 @@ export function getWeaverseConfigs(
     weaverseVersion,
     weaverseApiKey,
   } = queries
+
+  let url = new URL(request.url)
+  let isRevisionPreview = url.searchParams.has('__revisionId')
+
   return {
     projectId:
       weaverseProjectId ||
@@ -103,6 +140,7 @@ export function getWeaverseConfigs(
     weaverseVersion: weaverseVersion || '',
     isDesignMode,
     isPreviewMode,
+    isRevisionPreview,
     sectionType: sectionType || '',
     publicEnv: {
       PUBLIC_STORE_DOMAIN: PUBLIC_STORE_DOMAIN || '',
@@ -111,9 +149,31 @@ export function getWeaverseConfigs(
   }
 }
 
+/**
+ * Cache for generateDataFromSchema results using WeakMap.
+ * WeakMap allows garbage collection when schema objects are no longer referenced.
+ */
+const schemaDefaultsCache = new WeakMap<
+  HydrogenComponentSchema | HydrogenThemeSchema,
+  Record<string, any>
+>()
+
+/**
+ * Generate default data from component or theme schema.
+ * Results are memoized using WeakMap for performance.
+ *
+ * @param schema - Component or theme schema
+ * @returns Default data object extracted from schema inputs
+ */
 export function generateDataFromSchema(
   schema: HydrogenComponentSchema | HydrogenThemeSchema
 ) {
+  // Check cache first for performance
+  const cached = schemaDefaultsCache.get(schema)
+  if (cached) {
+    return cached
+  }
+
   let data: Record<string, any> = {}
 
   // Handle migration from inspector to settings
@@ -184,6 +244,10 @@ export function generateDataFromSchema(
       }
     }
   }
+
+  // Cache the result before returning
+  schemaDefaultsCache.set(schema, data)
+
   return data
 }
 

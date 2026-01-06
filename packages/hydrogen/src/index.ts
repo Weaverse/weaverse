@@ -9,6 +9,21 @@ import {
   useWeaverse,
 } from '@weaverse/react'
 
+/**
+ * Filter out Weaverse-specific query parameters from product options.
+ * Removes `isDesignMode` and any parameters starting with `weaverse` prefix.
+ *
+ * @param request - The incoming HTTP request
+ * @returns Filtered product options for Shopify Hydrogen
+ *
+ * @example
+ * ```typescript
+ * export async function loader({ request }: LoaderFunctionArgs) {
+ *   const selectedOptions = getSelectedProductOptions(request)
+ *   // Use selectedOptions for product queries without Weaverse params
+ * }
+ * ```
+ */
 export function getSelectedProductOptions(
   request: Request
 ): SelectedOptionInput[] {

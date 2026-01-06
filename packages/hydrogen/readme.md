@@ -169,6 +169,96 @@ Customize input settings for merchant-adjustable component configurations in Wea
 
 ```
 
+### Multi-Project Architecture (v5.7.2+)
+
+Dynamically route different requests to different Weaverse projects based on domain, subdomain, cookies, headers, or any custom logic.
+
+#### Environment Variables Setup
+
+```bash
+WEAVERSE_PROJECT_ID=default-project-abc123           # Fallback project
+WEAVERSE_PROJECT_SWEDEN=sweden-project-def456
+WEAVERSE_PROJECT_FRANCE=france-project-ghi789
+```
+
+#### Use Case 1: Domain-Based Routing (Multi-Market)
+
+Serve different content per country domain without changing any route files:
+
+```typescript
+// app/weaverse/create-weaverse.server.ts
+import { WeaverseClient } from '@weaverse/hydrogen'
+
+const PROJECT_MAP = {
+  'mystore.se': process.env.WEAVERSE_PROJECT_SWEDEN!,
+  'mystore.fr': process.env.WEAVERSE_PROJECT_FRANCE!,
+  'mystore.de': process.env.WEAVERSE_PROJECT_GERMANY!,
+}
+
+export function createWeaverseClient(args) {
+  return new WeaverseClient({
+    ...args,
+    components,
+    themeSchema,
+    projectId: () => {
+      const host = new URL(args.request.url).hostname
+      return PROJECT_MAP[host] || process.env.WEAVERSE_PROJECT_ID!
+    }
+  })
+}
+
+// Works automatically in all routes:
+export async function loader({ context }: LoaderFunctionArgs) {
+  const { weaverse } = context
+  // Automatically loads from correct project based on domain
+  const weaverseData = await weaverse.loadPage({ type: 'HOME' })
+  return json({ weaverseData })
+}
+```
+
+#### Use Case 2: Route-Level Overrides
+
+Override the project for specific routes (e.g., campaign landing pages):
+
+```typescript
+// app/routes/campaigns.summer-sale.tsx
+export async function loader({ context }: LoaderFunctionArgs) {
+  const { weaverse } = context
+
+  // Use special campaign project for this route only
+  const weaverseData = await weaverse.loadPage({
+    type: 'PAGE',
+    handle: 'summer-sale',
+    projectId: process.env.WEAVERSE_PROJECT_CAMPAIGN!
+  })
+
+  return json({ weaverseData })
+}
+```
+
+#### Use Case 3: Cookie-Based A/B Testing
+
+Dynamically select project based on user cookies:
+
+```typescript
+// app/weaverse/create-weaverse.server.ts
+export function createWeaverseClient(args) {
+  return new WeaverseClient({
+    ...args,
+    components,
+    themeSchema,
+    projectId: () => {
+      const cookies = args.request.headers.get('Cookie')
+      const experimentVariant = cookies?.includes('experiment=variant-b')
+
+      return experimentVariant
+        ? process.env.WEAVERSE_PROJECT_VARIANT_B!
+        : process.env.WEAVERSE_PROJECT_ID!
+    }
+  })
+}
+```
+
 ## Contributing
 
 Contributions to the `@weaverse/hydrogen` package are highly appreciated. Please refer to our contributing guidelines

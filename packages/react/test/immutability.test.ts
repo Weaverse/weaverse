@@ -201,7 +201,9 @@ describe('Data Connector Immutability Tests', () => {
         mockDataContext
       )
 
-      // Date should be cloned, not the same reference
+      // When placeholders exist, object should be cloned
+      // Date should be cloned to maintain immutability
+      expect(result).not.toBe(originalData)
       expect(result.createdAt).toEqual(testDate)
       expect(result.createdAt).not.toBe(testDate)
       expect(result.title).toBe('Created on Test Shop')

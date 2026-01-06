@@ -1,6 +1,5 @@
 import {
   isBrowser,
-  type PlatformTypeEnum,
   useSafeExternalStore,
   Weaverse,
   WeaverseItemStore,
@@ -12,6 +11,7 @@ import {
   type JSX,
   memo,
   Suspense,
+  useMemo,
 } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Await, useMatches } from 'react-router'
@@ -30,9 +30,27 @@ import type {
   WeaverseHydrogenParams,
   WeaverseLoaderData,
 } from './types'
+import { hasWeaverseStudio } from './types'
 import { generateDataFromSchema } from './utils'
 import { useStudio } from './utils/use-studio'
 import { useThemeSettingsStore } from './utils/use-theme-settings-store'
+
+/*
+=== IMPORTANT DESIGN PRINCIPLE ===
+CONSTRUCTOR TIMING AND DEFERRED PROCESSING
+
+When working with React component systems and registries:
+- Keep constructors SIMPLE - don't do heavy work in them
+- Defer processing until RENDER TIME, not initialization
+- Avoid registry lookups during object construction (components may not be registered yet)
+- Simple code is more reliable than complex upfront optimization
+- Respect the initialization sequence: registration → instance creation → rendering
+
+History: Attempting to do schema processing in the constructor (commit 495e1220) broke
+the pilot template because it tried to access the component registry before components were registered.
+The fix was to defer that work until the component is actually rendered.
+====================================
+*/
 
 export class WeaverseHydrogenItem extends WeaverseItemStore {
   declare weaverse: WeaverseHydrogen
@@ -56,7 +74,6 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
 Weaverse.ItemConstructor = WeaverseHydrogenItem
 
 export class WeaverseHydrogen extends Weaverse {
-  platformType: PlatformTypeEnum = 'shopify-hydrogen'
   pageId: string
   internal: Partial<WeaverseInternal>
   requestInfo: WeaverseLoaderRequestInfo
@@ -67,6 +84,7 @@ export class WeaverseHydrogen extends Weaverse {
   weaverseVersion: string
   isDesignMode: boolean
   isPreviewMode: boolean
+  isRevisionPreview: boolean
   sectionType: string
   declare ItemConstructor: typeof WeaverseHydrogenItem
   declare data: HydrogenPageData
@@ -87,6 +105,7 @@ export class WeaverseHydrogen extends Weaverse {
     this.weaverseVersion = params.weaverseVersion || ''
     this.isDesignMode = params.isDesignMode ?? false
     this.isPreviewMode = params.isPreviewMode ?? false
+    this.isRevisionPreview = params.isRevisionPreview ?? false
     this.sectionType = params.sectionType || ''
   }
 }
@@ -109,7 +128,9 @@ function createWeaverseInstance(
     }
     if (weaverse?.isDesignMode) {
       weaverse.requestInfo = params.requestInfo
-      window.weaverseStudio?.refreshStudio(params)
+      if (hasWeaverseStudio(window)) {
+        window.weaverseStudio.refreshStudio(params)
+      }
     }
     return weaverse
   }
@@ -155,6 +176,27 @@ function RenderRoot(props: {
   )
 }
 
+/**
+ * Register a Weaverse component with the global element registry.
+ * Must be called before rendering components in WeaverseHydrogenRoot.
+ *
+ * @param element - Component configuration with schema, Component, and optional loader
+ *
+ * @example
+ * ```typescript
+ * import Hero from './sections/Hero'
+ * import { schema } from './sections/Hero'
+ *
+ * registerComponent({
+ *   type: 'hero',
+ *   Component: Hero,
+ *   schema,
+ *   loader: async ({ data, weaverse }) => {
+ *     return { someData: 'value' }
+ *   }
+ * })
+ * ```
+ */
 export function registerComponent(element: HydrogenElement) {
   WeaverseHydrogen.registerElement(element)
 }
@@ -163,11 +205,15 @@ export const WeaverseHydrogenRoot = memo(
   ({
     components,
     errorComponent: ErrorComponent = ({ error }) => (
-      <div>{error?.message || 'An unexpected error occurred'}</div>
+      <div>
+        {error instanceof Error
+          ? error.message
+          : 'An unexpected error occurred'}
+      </div>
     ),
   }: {
     components: HydrogenComponent[]
-    errorComponent?: React.FC<{ error: any }>
+    errorComponent?: React.FC<{ error: Error | unknown }>
   }) => {
     const matches = useMatches()
 
@@ -175,24 +221,23 @@ export const WeaverseHydrogenRoot = memo(
     // No more useLoaderData dependency - everything comes from matches
     const enhancedDataContext = createWeaverseDataContext(matches)
 
-    // Find weaverseData from matches instead of useLoaderData
-    // Look through matches to find the one containing weaverseData
-    let weaverseData: WeaverseLoaderData | Promise<WeaverseLoaderData> | null =
-      null
-
-    for (const match of matches) {
-      if (
-        match.data &&
-        typeof match.data === 'object' &&
-        match.data !== null &&
-        'weaverseData' in match.data
-      ) {
-        weaverseData = match.data.weaverseData as
-          | WeaverseLoaderData
-          | Promise<WeaverseLoaderData>
-        break
+    // Find weaverseData from matches - optimized with useMemo and reverse iteration
+    // Most recent route match (deepest in hierarchy) is most likely to have weaverseData
+    const weaverseData = useMemo(() => {
+      // Iterate backwards for better performance (most recent match first)
+      for (let i = matches.length - 1; i >= 0; i--) {
+        const match = matches[i]
+        const loaderData = match.loaderData as
+          | Record<string, unknown>
+          | undefined
+        if (loaderData && 'weaverseData' in loaderData) {
+          return loaderData.weaverseData as
+            | WeaverseLoaderData
+            | Promise<WeaverseLoaderData>
+        }
       }
-    }
+      return null
+    }, [matches])
 
     if (weaverseData) {
       if (weaverseData instanceof Promise) {
@@ -231,6 +276,24 @@ export const WeaverseHydrogenRoot = memo(
 const ThemeSettingsProvider = createContext<HydrogenThemeSettings | null>(null)
 ThemeSettingsProvider.displayName = 'WeaverseThemeSettingsProvider'
 
+/**
+ * Higher-order component that wraps your app with Weaverse theme settings context.
+ * Provides theme settings to all child components via React context.
+ *
+ * @param Component - The root component to wrap
+ * @returns Wrapped component with theme settings provider
+ *
+ * @example
+ * ```typescript
+ * import { withWeaverse } from '@weaverse/hydrogen'
+ *
+ * function App() {
+ *   return <div>My App</div>
+ * }
+ *
+ * export default withWeaverse(App)
+ * ```
+ */
 export function withWeaverse(Component: ComponentType<any>) {
   return (props: JSX.IntrinsicAttributes) => {
     const { settings } = useThemeSettingsStore()
@@ -242,6 +305,22 @@ export function withWeaverse(Component: ComponentType<any>) {
   }
 }
 
+/**
+ * React hook to access Weaverse theme settings from anywhere in your component tree.
+ * Must be used within a component wrapped by `withWeaverse` or inside `WeaverseHydrogenRoot`.
+ *
+ * @returns Current theme settings object
+ *
+ * @example
+ * ```typescript
+ * function MyComponent() {
+ *   const theme = useThemeSettings()
+ *   const primaryColor = theme.colors?.primary
+ *
+ *   return <div style={{ color: primaryColor }}>Styled content</div>
+ * }
+ * ```
+ */
 export function useThemeSettings<T = HydrogenThemeSettings>() {
   const themeSettingsStore = useThemeSettingsStore()
   const settings = useSafeExternalStore(

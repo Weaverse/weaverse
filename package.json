@@ -4,6 +4,10 @@
   "version": "5.0.0",
   "license": "MIT",
   "private": true,
+  "workspaces": [
+    "packages/*",
+    "templates/*"
+  ],
   "scripts": {
     "dev": "npm run dev:pkg",
     "dev:pkg": "cross-env LOCAL_DEV=true FORCE_CHANGELOG_SOURCE=remote turbo dev --no-daemon --filter=./packages/*",
@@ -16,7 +20,7 @@
     "prepare": "npm run build",
     "postinstall": "lefthook install",
     "changeset": "changeset",
-    "typecheck": "turbo typecheck --parallel",
+    "typecheck": "turbo run typecheck --filter=./packages/*",
     "biome": "biome check --diagnostic-level=error",
     "biome:fix": "biome check --write --diagnostic-level=error",
     "biome:fix:unsafe": "biome check --write --diagnostic-level=error --unsafe",
@@ -25,36 +29,28 @@
     "ci": "biome ci --changed"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.5",
+    "@biomejs/biome": "2.3.6",
     "@changesets/cli": "^2.29.7",
-    "@types/node": "24.7.1",
-    "@types/react": "19.2.2",
-    "@types/react-dom": "19.2.1",
+    "@types/node": "24.10.1",
+    "@types/react": "19.2.6",
+    "@types/react-dom": "19.2.3",
+    "@typescript/native-preview": "7.0.0-dev.20251201.1",
     "cross-env": "10.1.0",
-    "lefthook": "^1.13.6",
+    "lefthook": "^2.0.4",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "rimraf": "6.0.1",
-    "tsup": "8.5.0",
-    "turbo": "2.5.8",
+    "rimraf": "6.1.2",
+    "tsup": "8.5.1",
+    "turbo": "2.6.1",
     "typescript": "5.9.3",
-    "ultracite": "5.6.1"
+    "ultracite": "6.3.4"
   },
   "optionalDependencies": {
-    "@esbuild/darwin-x64": "^0.25.10",
-    "turbo-darwin-arm64": "^2.5.8"
+    "@esbuild/darwin-x64": "^0.27.0",
+    "turbo-darwin-arm64": "^2.6.1"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=18"
   },
-  "packageManager": "pnpm@10.15.0",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@biomejs/biome",
-      "@tailwindcss/oxide",
-      "esbuild",
-      "lefthook",
-      "workerd"
-    ]
-  }
+  "packageManager": "bun@1.3.3"
 }

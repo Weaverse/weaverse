@@ -1,5 +1,23 @@
 # @weaverse/biome
 
+## 5.6.2
+
+### Patch Changes
+
+- bump biome config
+
+## 5.6.1
+
+### Patch Changes
+
+- bump
+
+## 5.6.0
+
+### Minor Changes
+
+- update biome to latest version
+
 ## 5.5.0
 
 ### Minor Changes
