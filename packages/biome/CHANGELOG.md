@@ -1,5 +1,23 @@
 # @weaverse/biome
 
+## 5.7.1
+
+### Patch Changes
+
+- patch version
+
+## 5.7.0
+
+### Minor Changes
+
+- bump version
+
+## 5.6.3
+
+### Patch Changes
+
+- bump new version
+
 ## 5.6.2
 
 ### Patch Changes
@@ -31,20 +49,17 @@
 - 50275ae: feat: API cache proxy improvements and TypeScript fixes
 
   #### API Cache Proxy Improvements
-
   - **Migration to withCache.fetch**: Updated `WeaverseClient` to use Hydrogen's `withCache.fetch` instead of deprecated `withCache.run`
   - **Response Structure Unification**: Standardized response formats between `directFetch` and `withCache.fetch` methods
   - **Enhanced Cache Strategy**: Improved cache key generation and response validation
   - **Better Error Handling**: Added comprehensive error handling for API responses
 
   #### TypeScript Build Fixes
-
   - **Interface Merging**: Fixed duplicate type declarations using proper interface merging for module augmentation
   - **Window Type Declarations**: Converted type declarations to interfaces for proper global scope extension
   - **Environment Variables**: Added missing environment variables to `HydrogenEnv` interface
 
   #### Code Quality Improvements
-
   - **Biome Configuration**: Updated to automatically remove unused variables and optimize imports
   - **Removed Console Logs**: Cleaned up debug logging and unused code
 
@@ -55,7 +70,6 @@
 ### Patch Changes
 
 - feat: API cache proxy improvements and debug logging
-
   - Updated cache strategy with improved timing configuration
   - Added debug logging for API proxy usage tracking
   - Enhanced cache control with optimized stale-while-revalidate settings
@@ -74,7 +88,6 @@
 ### Patch Changes
 
 - Fix TypeScript build issues and improve Biome configuration
-
   - Fixed duplicate Window identifier issues across packages by using interface merging
   - Added missing PUBLIC_STORE_DOMAIN and PUBLIC_STOREFRONT_API_TOKEN to HydrogenEnv type
   - Fixed AppLoadContext and HydrogenEnv duplicate declarations using proper module augmentation
@@ -93,7 +106,6 @@
 ### Patch Changes
 
 - Consolidated biome rules from pilot and builder projects into the shared package configuration.
-
   - Added new rules from builder project (style, suspicious, nursery, correctness, a11y, complexity, performance)
   - Added comprehensive file exclusion patterns from both pilot and builder projects
   - Maintained original package rule priorities while allowing project-specific overrides

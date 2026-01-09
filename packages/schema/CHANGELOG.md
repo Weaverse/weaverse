@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.8.1
+
+### Patch Changes
+
+- patch version
+
+## 0.8.0
+
+### Minor Changes
+
+- bump version
+
+## 0.7.5
+
+### Patch Changes
+
+- bump new version
+
 ## 0.7.4
 
 ### Patch Changes

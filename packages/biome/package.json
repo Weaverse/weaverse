@@ -1,6 +1,6 @@
 {
   "name": "@weaverse/biome",
-  "version": "5.6.2",
+  "version": "5.7.1",
   "description": "Biome configuration for Weaverse",
   "main": "biome.json",
   "scripts": {
