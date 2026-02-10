@@ -1,6 +1,6 @@
 {
   "name": "@weaverse/i18n",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "i18n utilities for Weaverse Hydrogen themes with waterfall fallback",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
