@@ -21,6 +21,18 @@ describe('WeaverseI18nServer', () => {
       expect(server.getLocale(request)).toBe('en')
     })
 
+    it('should match base language from URL path prefix (e.g. vi-us → vi)', () => {
+      let server = new WeaverseI18nServer(defaultConfig)
+      let request = new Request('https://example.com/vi-us/cart')
+      expect(server.getLocale(request)).toBe('vi')
+    })
+
+    it('should match base language from URL path prefix (e.g. fr-ca → fr)', () => {
+      let server = new WeaverseI18nServer(defaultConfig)
+      let request = new Request('https://example.com/fr-ca/products')
+      expect(server.getLocale(request)).toBe('fr')
+    })
+
     it('should extract locale from cookie', () => {
       let server = new WeaverseI18nServer(defaultConfig)
       let request = new Request('https://example.com/products', {

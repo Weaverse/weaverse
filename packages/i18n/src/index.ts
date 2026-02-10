@@ -6,3 +6,6 @@ export {
   WeaverseI18nProvider,
   type WeaverseI18nProviderProps,
 } from './provider'
+
+// Shared types
+export type { WeaverseI18nData } from './types'

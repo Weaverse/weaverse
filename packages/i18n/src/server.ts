@@ -2,24 +2,9 @@ import i18next, { type i18n, type TFunction } from 'i18next'
 import ChainedBackend from 'i18next-chained-backend'
 import HttpBackend from 'i18next-http-backend'
 import resourcesToBackend from 'i18next-resources-to-backend'
+import type { WeaverseI18nConfig, WeaverseI18nData } from './types'
 
-/**
- * Configuration for the WeaverseI18nServer.
- */
-export type WeaverseI18nConfig = {
-  /** Supported language codes, e.g. ["en", "vi", "fr"] */
-  supportedLngs: string[]
-  /** Fallback language when detection fails */
-  fallbackLng: string
-  /** Default namespace(s) for translations */
-  defaultNS: string | string[]
-  /** Remote CMS translations endpoint (Weaverse API) — highest priority */
-  apiUrl?: string
-  /** Local/CDN translations endpoint (bundled with theme) — second priority */
-  localUrl?: string
-  /** Optional inline resources to use as final fallback */
-  bundledResources?: Record<string, Record<string, Record<string, string>>>
-}
+export type { WeaverseI18nConfig, WeaverseI18nData }
 
 /**
  * Server-side i18n manager for Weaverse Hydrogen themes.
@@ -40,11 +25,10 @@ export type WeaverseI18nConfig = {
  *   localUrl: "/locales/{{lng}}/{{ns}}.json",
  * })
  *
- * // In a loader
+ * // In a loader — return serializable data, NOT the instance
  * export async function loader({ request }: LoaderFunctionArgs) {
- *   const locale = weaverseI18n.getLocale(request)
- *   const t = await weaverseI18n.getFixedT(request)
- *   return { title: t("page.title"), locale }
+ *   const i18nData = await weaverseI18n.getI18nData(request)
+ *   return { i18nData }
  * }
  * ```
  */
@@ -64,9 +48,17 @@ export class WeaverseI18nServer {
     let pathSegments = url.pathname.split('/').filter(Boolean)
     let { supportedLngs, fallbackLng } = this._config
 
-    // 1. URL path prefix: /vi/products → "vi"
-    if (pathSegments.length > 0 && supportedLngs.includes(pathSegments[0])) {
-      return pathSegments[0]
+    // 1. URL path prefix: /vi/products → "vi", /vi-us/products → "vi"
+    if (pathSegments.length > 0) {
+      let segment = pathSegments[0]
+      if (supportedLngs.includes(segment)) {
+        return segment
+      }
+      // Try base language (e.g., "vi-us" → "vi")
+      let baseLang = segment.split('-')[0]
+      if (supportedLngs.includes(baseLang)) {
+        return baseLang
+      }
     }
 
     // 2. Cookie: lng=vi
@@ -99,6 +91,9 @@ export class WeaverseI18nServer {
   /**
    * Create a per-request i18next instance with the chained backend.
    * Returns a fully initialized i18n instance ready for translations.
+   *
+   * ⚠️ The returned instance is NOT serializable. Use `getI18nData()` to get
+   * serializable data that can be passed from server loaders to client components.
    */
   async createInstance(
     request: Request,
@@ -150,6 +145,32 @@ export class WeaverseI18nServer {
     })
 
     return instance
+  }
+
+  /**
+   * Get serializable i18n data for client hydration.
+   *
+   * Creates an i18next instance, loads all translations, then extracts the
+   * locale and loaded resources into a plain JSON-safe object. This is the
+   * recommended way to pass i18n state from server loaders to the client.
+   *
+   * @example
+   * ```typescript
+   * export async function loader({ request }: LoaderFunctionArgs) {
+   *   const i18nData = await weaverseI18n.getI18nData(request)
+   *   return { i18nData }
+   * }
+   * ```
+   */
+  async getI18nData(
+    request: Request,
+    options?: { lng?: string; ns?: string | string[] }
+  ): Promise<WeaverseI18nData> {
+    let instance = await this.createInstance(request, options)
+    return {
+      locale: instance.language,
+      resources: instance.services.resourceStore.data,
+    }
   }
 
   /**
