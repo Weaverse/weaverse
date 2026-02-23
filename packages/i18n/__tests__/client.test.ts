@@ -74,7 +74,9 @@ describe('usePrefixPath logic', () => {
     let defaultLocale = 'en'
 
     let prefixPath = (path: string): string => {
-      if (locale === defaultLocale) return path
+      if (locale === defaultLocale) {
+        return path
+      }
       let normalizedPath = path.startsWith('/') ? path : `/${path}`
       return `/${locale}${normalizedPath}`
     }
@@ -89,7 +91,9 @@ describe('usePrefixPath logic', () => {
     let defaultLocale = 'en'
 
     let prefixPath = (path: string): string => {
-      if (locale === defaultLocale) return path
+      if (locale === defaultLocale) {
+        return path
+      }
       return `/${locale}${path.startsWith('/') ? path : `/${path}`}`
     }
 

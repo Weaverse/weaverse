@@ -2,9 +2,9 @@ import type { ElementCSS, Weaverse, WeaverseItemStore } from '@weaverse/core'
 import type { ReactElement, ReactNode } from 'react'
 
 export interface WeaverseElementProps extends Partial<ReactElement> {
-  css?: ElementCSS
   children?: ReactElement | ReactElement[] | ReactNode | ReactNode[]
   className?: string
+  css?: ElementCSS
   'data-wv-id'?: string
 }
 

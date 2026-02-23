@@ -2,7 +2,7 @@
   "name": "@weaverse/react",
   "author": "Weaverse Team",
   "description": "React bindings for Weaverse",
-  "version": "5.9.1",
+  "version": "5.9.2",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -43,15 +43,15 @@
     "outDir": "dist"
   },
   "dependencies": {
-    "@weaverse/core": "5.9.1",
+    "@weaverse/core": "5.9.2",
     "clsx": "^2.1.1",
-    "react": ">=18",
-    "react-dom": ">=18"
+    "react": ">=19",
+    "react-dom": ">=19"
   },
   "peerDependencies": {
     "react-router": ">=6"
   },
   "devDependencies": {
-    "vitest": "^2.0.0"
+    "vitest": "^4.0.18"
   }
 }

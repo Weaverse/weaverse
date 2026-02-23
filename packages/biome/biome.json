@@ -23,7 +23,8 @@
         "noParameterProperties": "warn",
         "noMagicNumbers": "warn",
         "useReadonlyClassProperties": "warn",
-        "useConsistentTypeDefinitions": "warn"
+        "useConsistentTypeDefinitions": "warn",
+        "useConsistentArrowReturn": "warn"
       },
       "a11y": {
         "noStaticElementInteractions": "off",
@@ -47,7 +48,8 @@
         "noUselessCatch": "warn",
         "noVoid": "warn",
         "noImplicitCoercions": "warn",
-        "noExcessiveLinesPerFunction": "off"
+        "noExcessiveLinesPerFunction": "off",
+        "useMaxParams": "warn"
       },
       "suspicious": {
         "noArrayIndexKey": "warn",
@@ -61,7 +63,11 @@
         "noEmptyBlockStatements": "warn",
         "noDocumentCookie": "warn",
         "noConstantBinaryExpressions": "warn",
-        "useIterableCallbackReturn": "warn"
+        "useIterableCallbackReturn": "warn",
+        "noDeprecatedImports": "warn",
+        "noEmptySource": "warn",
+        "noReactForwardRef": "warn",
+        "noUnusedExpressions": "warn"
       },
       "security": {
         "noDangerouslySetInnerHtml": "off"
@@ -82,10 +88,7 @@
         "noShadow": "warn",
         "useSortedClasses": "off",
         "noUnnecessaryConditions": "warn",
-        "noUnusedExpressions": "warn",
-        "noReactForwardRef": "warn",
-        "noIncrementDecrement": "warn",
-        "noEmptySource": "warn"
+        "noIncrementDecrement": "warn"
       },
       "performance": {
         "noNamespaceImport": "warn",

@@ -69,7 +69,9 @@ export class ThemeSettingsStore {
   }
 
   private emit = () => {
-    if (this.isDestroyed) return
+    if (this.isDestroyed) {
+      return
+    }
 
     // Create a copy of listeners to avoid issues if listeners are modified during iteration
     const currentListeners = Array.from(this.listeners)
@@ -85,7 +87,9 @@ export class ThemeSettingsStore {
 
   // Method to properly clean up the store
   destroy = () => {
-    if (this.isDestroyed) return
+    if (this.isDestroyed) {
+      return
+    }
 
     this.listeners.clear()
     this.isDestroyed = true

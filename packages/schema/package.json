@@ -1,6 +1,6 @@
 {
   "name": "@weaverse/schema",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "Schema definitions for Weaverse",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -38,9 +38,9 @@
     "@weaverse:registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "zod": "^3.25.61"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
-    "vitest": "^2.0.0"
+    "vitest": "^4.0.18"
   }
 }

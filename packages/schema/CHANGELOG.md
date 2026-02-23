@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.2
+
+### Patch Changes
+
+- update biome format config
+
 ## 0.8.1
 
 ### Patch Changes

@@ -741,14 +741,14 @@ export const groupHelpers = {
  * Schema versioning and migration support
  */
 export interface VersionedSchema extends SchemaType {
-  /** Schema version for future migrations */
-  readonly version?: string
   /** Migration metadata */
   readonly migrations?: {
     from: string
     to: string
     migrate: (oldSchema: any) => SchemaType
   }[]
+  /** Schema version for future migrations */
+  readonly version?: string
 }
 
 export type SchemaMigration = {

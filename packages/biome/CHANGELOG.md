@@ -1,5 +1,11 @@
 # @weaverse/biome
 
+## 5.7.3
+
+### Patch Changes
+
+- update biome format config
+
 ## 5.7.1
 
 ### Patch Changes

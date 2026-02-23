@@ -70,13 +70,13 @@ export interface RouteLoaderArgs extends RemixOxygenLoaderArgs {
 export type ComponentDataValue = string | number | boolean | undefined | null
 
 export interface HydrogenComponentData extends ElementData {
-  id: string
-  type: string
-  data?: Record<string, ComponentDataValue | Record<string, unknown>>
   children?: { id: string }[]
   createdAt?: string
-  updatedAt?: string
+  data?: Record<string, ComponentDataValue | Record<string, unknown>>
   deletedAt?: string
+  id: string
+  type: string
+  updatedAt?: string
 }
 
 /**
@@ -86,9 +86,9 @@ export interface HydrogenComponentData extends ElementData {
 export type HydrogenComponentSchema = SchemaType
 
 export interface HydrogenComponentProps<L = any> extends WeaverseElement {
+  children?: React.JSX.Element[]
   className?: string
   loaderData?: L
-  children?: React.JSX.Element[]
 }
 
 export type WeaverseLoaderRequestInfo = {
@@ -135,19 +135,19 @@ export type HydrogenElement = {
 export interface WeaverseHydrogenParams
   extends Omit<WeaverseCoreParams, 'ItemConstructor'> {
   data: HydrogenPageData
-  pageId: string
+  dataContext?: Record<string, unknown> | null
   internal: Partial<WeaverseInternal>
-  requestInfo: WeaverseLoaderRequestInfo
-  projectId: string
-  weaverseHost: string
-  weaverseApiBase: string
-  weaverseApiKey: string
-  weaverseVersion?: string
   isDesignMode?: boolean
   isPreviewMode?: boolean
   isRevisionPreview?: boolean
+  pageId: string
+  projectId: string
+  requestInfo: WeaverseLoaderRequestInfo
   sectionType?: string
-  dataContext?: Record<string, unknown> | null
+  weaverseApiBase: string
+  weaverseApiKey: string
+  weaverseHost: string
+  weaverseVersion?: string
 }
 
 export type HydrogenComponent<T extends HydrogenComponentProps = any> = {
@@ -207,10 +207,10 @@ export type WeaverseLoaderData = {
 }
 
 export interface HydrogenPageData extends WeaverseProjectDataType {
-  id: string
-  name: string
-  items: HydrogenComponentData[]
   __cacheId?: string
+  id: string
+  items: HydrogenComponentData[]
+  name: string
   [key: string]: any
 }
 
@@ -596,20 +596,20 @@ declare module '@shopify/remix-oxygen' {
 
 declare module '@shopify/hydrogen' {
   interface HydrogenEnv {
-    WEAVERSE_PROJECT_ID: string
-    WEAVERSE_HOST?: string
-    WEAVERSE_API_BASE?: string
-    WEAVERSE_API_KEY: string
-    PUBLIC_STORE_DOMAIN: string
-    PUBLIC_STOREFRONT_API_TOKEN: string
-    PUBLIC_GOOGLE_GTM_ID: string
-    JUDGEME_PRIVATE_API_TOKEN: string
     CUSTOM_COLLECTION_BANNER_METAFIELD: string
-    METAOBJECT_COLORS_TYPE: string
+    JUDGEME_PRIVATE_API_TOKEN: string
+    KLAVIYO_PRIVATE_API_TOKEN: string
     METAOBJECT_COLOR_NAME_KEY: string
     METAOBJECT_COLOR_VALUE_KEY: string
-    KLAVIYO_PRIVATE_API_TOKEN: string
+    METAOBJECT_COLORS_TYPE: string
+    PUBLIC_GOOGLE_GTM_ID: string
     PUBLIC_SHOPIFY_INBOX_SHOP_ID: string
+    PUBLIC_STORE_DOMAIN: string
+    PUBLIC_STOREFRONT_API_TOKEN: string
+    WEAVERSE_API_BASE?: string
+    WEAVERSE_API_KEY: string
+    WEAVERSE_HOST?: string
+    WEAVERSE_PROJECT_ID: string
   }
 }
 

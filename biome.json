@@ -1,6 +1,6 @@
 {
   "root": true,
-  "$schema": "https://biomejs.dev/schemas/2.3.6/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.4.0/schema.json",
   "extends": [
     "ultracite/core",
     "ultracite/react",
@@ -16,7 +16,6 @@
   },
   "files": {
     "includes": [
-      "**",
       "!**/dist",
       "!**/build",
       "!**/.turbo",

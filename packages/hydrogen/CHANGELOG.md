@@ -1,5 +1,14 @@
 # @weaverse/hydrogen
 
+## 5.9.2
+
+### Patch Changes
+
+- update biome format config
+- Updated dependencies
+  - @weaverse/schema@0.8.2
+  - @weaverse/react@5.9.2
+
 ## 5.9.1
 
 ### Patch Changes
