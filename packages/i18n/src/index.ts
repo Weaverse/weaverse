@@ -1,5 +1,5 @@
 // Client-side hooks
-export { useLegacyT, usePrefixPath, useWeaverseT } from './client'
+export { usePrefixPath, useWeaverseT } from './client'
 
 // Provider component
 export {

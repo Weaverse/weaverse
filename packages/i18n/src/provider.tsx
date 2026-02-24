@@ -45,6 +45,8 @@ export function WeaverseI18nProvider({
     i18n.use(initReactI18next).init({
       lng: data.locale,
       resources: data.resources,
+      supportedLngs: data.supportedLngs,
+      fallbackLng: data.fallbackLng,
       interpolation: { escapeValue: false },
     })
     return i18n

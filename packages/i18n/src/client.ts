@@ -1,9 +1,11 @@
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 /**
  * Simple wrapper around `useTranslation` from react-i18next.
  * Provides a consistent API surface for Weaverse themes.
  *
+ * @deprecated Use `useTranslation` from `react-i18next` directly.
  * @param ns - Optional namespace to scope translations
  * @returns The result of `useTranslation(ns)`
  *
@@ -46,49 +48,15 @@ export function usePrefixPath() {
     defaultLocale = fallbackLng[0]
   }
 
-  return (path: string): string => {
-    // Don't prefix for the default locale
-    if (locale === defaultLocale) {
-      return path
-    }
-    let normalizedPath = path.startsWith('/') ? path : `/${path}`
-    return `/${locale}${normalizedPath}`
-  }
-}
-
-/**
- * Hook for backward compatibility with existing Weaverse theme settings.
- *
- * Returns `{ t, i18n, tOrSetting }` where `tOrSetting` prioritizes
- * legacy hardcoded setting values over i18n translations.
- * This allows theme authors to gradually adopt i18n without breaking
- * existing strings configured in Weaverse theme settings.
- *
- * @param ns - Optional namespace
- *
- * @example
- * ```tsx
- * function HeroSection({ heading }: { heading?: string }) {
- *   const { tOrSetting } = useLegacyT("hero")
- *   return <h1>{tOrSetting("heading", heading)}</h1>
- *   // If heading prop is "Welcome!" → returns "Welcome!"
- *   // If heading prop is empty → returns t("heading") from i18n
- * }
- * ```
- */
-export function useLegacyT(ns?: string) {
-  let { t, i18n } = useTranslation(ns)
-
-  /**
-   * Returns the legacy setting value if present and non-empty,
-   * otherwise falls back to the i18n translation for the key.
-   */
-  function tOrSetting(key: string, settingValue?: string | null): string {
-    if (settingValue != null && settingValue.trim() !== '') {
-      return settingValue
-    }
-    return t(key)
-  }
-
-  return { t, i18n, tOrSetting }
+  return useCallback(
+    (path: string): string => {
+      // Don't prefix for the default locale
+      if (locale === defaultLocale) {
+        return path
+      }
+      let normalizedPath = path.startsWith('/') ? path : `/${path}`
+      return `/${locale}${normalizedPath}`
+    },
+    [locale, defaultLocale]
+  )
 }

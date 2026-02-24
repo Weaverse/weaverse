@@ -4,18 +4,25 @@ import type { Resource } from 'i18next'
  * Configuration for the WeaverseI18nServer.
  */
 export type WeaverseI18nConfig = {
+  /** Hostname of the Weaverse API (default: https://weaverse.io) */
+  host?: string
+  /** Project id */
+  projectId: string
   /** Supported language codes, e.g. ["en", "vi", "fr"] */
   supportedLngs: string[]
   /** Fallback language when detection fails */
   fallbackLng: string
   /** Default namespace(s) for translations */
   defaultNS: string | string[]
+
   /** Remote CMS translations endpoint (Weaverse API) — highest priority */
   apiUrl?: string
   /** Local/CDN translations endpoint (bundled with theme) — second priority */
   localUrl?: string
   /** Optional inline resources to use as final fallback */
   bundledResources?: Record<string, Record<string, Record<string, string>>>
+  /** Cache TTL in milliseconds for API responses (default: 5 minutes). Set to 0 to disable. */
+  cacheTTL?: number
 }
 
 /**
@@ -30,4 +37,8 @@ export type WeaverseI18nData = {
   locale: string
   /** Loaded translation resources keyed by language → namespace → key → value */
   resources: Resource
+  /** Supported language codes, forwarded to client for path prefixing */
+  supportedLngs: string[]
+  /** Fallback language, forwarded to client for path prefixing */
+  fallbackLng: string
 }

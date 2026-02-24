@@ -1,6 +1,6 @@
 # @weaverse/i18n
 
-Essential i18n utilities for Weaverse Hydrogen themes, featuring waterfall fallback support (Remote API → Local File → Bundled Resources) and legacy theme settings compatibility.
+Essential i18n utilities for Weaverse Hydrogen themes, featuring waterfall fallback support (Remote API → Local File → Bundled Resources) with built-in server-side caching.
 
 ## Installation
 
@@ -21,17 +21,21 @@ Initialize the `WeaverseI18nServer` in your server entry point (e.g., `app/lib/i
 import { WeaverseI18nServer } from '@weaverse/i18n/server'
 
 export const i18nServer = new WeaverseI18nServer({
+  projectId: '...',
   supportedLngs: ['en', 'vi', 'fr'],
   fallbackLng: 'en',
   defaultNS: 'common',
 
-  // 1. Remote Weaverse API (Highest Priority)
-  apiUrl: 'https://weaverse.io/api/public/locales/{{lng}}/{{ns}}.json?projectId=...',
+  // Optional: Cache TTL in ms (default: 5 minutes). Set to 0 to disable.
+  cacheTTL: 5 * 60 * 1000,
 
-  // 2. Local/CDN Fallback (Second Priority)
+  // Optional: Custom API URL (default: Weaverse API)
+  apiUrl: 'https://weaverse.io/api/translation/static?projectId=...&lng={{lng}}&ns={{ns}}',
+
+  // Optional: Local/CDN fallback
   localUrl: 'https://cdn.shopify.com/s/files/.../locales/{{lng}}/{{ns}}.json',
 
-  // 3. Bundled Fallback (Lowest Priority)
+  // Optional: Bundled fallback (lowest priority)
   bundledResources: {
     en: {
       common: {
@@ -53,7 +57,7 @@ In your root loader, use `getI18nData()` to return **serializable** i18n state.
 import { i18nServer } from '~/lib/i18n.server'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  // Returns { locale, resources } — fully serializable
+  // Returns { locale, resources, supportedLngs, fallbackLng } — fully serializable
   const i18nData = await i18nServer.getI18nData(request)
 
   return {
@@ -65,7 +69,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 ### 3. Provider Setup
 
-Wrap your app with `WeaverseI18nProvider`, passing the serialized `data` from the loader. The provider automatically creates a client-side i18next instance.
+Wrap your app with `WeaverseI18nProvider`, passing the serialized `data` from the loader. The provider automatically creates a client-side i18next instance with the correct `supportedLngs` and `fallbackLng`.
 
 ```tsx
 // app/root.tsx
@@ -96,27 +100,11 @@ export default function App() {
 #### Basic Translation
 
 ```tsx
-import { useWeaverseT } from '@weaverse/i18n'
+import { useTranslation } from 'react-i18next'
 
 export function Header() {
-  const { t } = useWeaverseT('common')
+  const { t } = useTranslation('common')
   return <header>{t('nav.home')}</header>
-}
-```
-
-#### Legacy Theme Settings Support
-
-Use `useLegacyT` to migrate themes with hardcoded text in settings. It prioritizes the setting value if non-empty, falling back to i18n.
-
-```tsx
-import { useLegacyT } from '@weaverse/i18n'
-
-export function Hero({ heading }: { heading?: string }) {
-  const { tOrSetting } = useLegacyT('hero')
-
-  // "Summer Sale" → renders "Summer Sale"
-  // empty/undefined → renders t("heading") from i18n
-  return <h1>{tOrSetting('heading', heading)}</h1>
 }
 ```
 
@@ -141,7 +129,7 @@ export function Navigation() {
 | Method | Returns | Description |
 | --- | --- | --- |
 | `getLocale(request)` | `string` | Detect locale from URL → Cookie → Accept-Language → fallback |
-| `getI18nData(request)` | `Promise<WeaverseI18nData>` | Serializable `{ locale, resources }` for client hydration |
+| `getI18nData(request)` | `Promise<WeaverseI18nData>` | Serializable `{ locale, resources, supportedLngs, fallbackLng }` for client hydration (cached per locale/namespace) |
 | `createInstance(request)` | `Promise<i18n>` | Full i18next instance (server-only, not serializable) |
 | `getFixedT(request, ns?)` | `Promise<TFunction>` | Translation function for server-side rendering |
 
@@ -149,10 +137,9 @@ export function Navigation() {
 
 | Export | Purpose |
 | --- | --- |
-| `WeaverseI18nProvider` | Provider accepting `data` (serializable) or `i18n` (instance) |
-| `useWeaverseT(ns?)` | Wrapper for `useTranslation` |
-| `useLegacyT(ns?)` | Returns `{ tOrSetting }` for backward compatibility |
-| `usePrefixPath()` | Returns function to prefix paths with current locale |
+| `WeaverseI18nProvider` | Provider accepting serializable `data` from the server loader |
+| `useWeaverseT(ns?)` | *(Deprecated)* Wrapper for `useTranslation` — use `useTranslation` from `react-i18next` directly |
+| `usePrefixPath()` | Returns memoized function to prefix paths with current locale (skips default locale) |
 
 ## License
 

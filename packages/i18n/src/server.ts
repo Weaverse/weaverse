@@ -34,9 +34,11 @@ export type { WeaverseI18nConfig, WeaverseI18nData }
  */
 export class WeaverseI18nServer {
   private _config: WeaverseI18nConfig
+  private _cache: Map<string, { data: WeaverseI18nData; expiresAt: number }>
 
   constructor(config: WeaverseI18nConfig) {
     this._config = config
+    this._cache = new Map()
   }
 
   /**
@@ -101,20 +103,34 @@ export class WeaverseI18nServer {
   ): Promise<i18n> {
     let lng = options?.lng || this.getLocale(request)
     let ns = options?.ns || this._config.defaultNS
+    let projectId = this._config.projectId
+    let host = this._config.host || 'https://weaverse.io'
+    let apiUrl =
+      this._config.apiUrl ||
+      `${host}/api/translation/static?projectId=${projectId}&lng={{lng}}&ns={{ns}}`
 
     let backends: unknown[] = []
     let backendOptions: Record<string, unknown>[] = []
 
     // Priority 1: Remote CMS translations
-    if (this._config.apiUrl) {
+    if (apiUrl) {
       backends.push(HttpBackend)
-      backendOptions.push({ loadPath: this._config.apiUrl })
+      backendOptions.push({
+        loadPath: apiUrl,
+        // Override default requestOptions which includes browser-only options
+        // (mode: 'cors', credentials: 'same-origin') that cause fetch() to
+        // throw on the server side, silently falling through to bundled resources.
+        requestOptions: {},
+      })
     }
 
     // Priority 2: Local/CDN fallback files
     if (this._config.localUrl) {
       backends.push(HttpBackend)
-      backendOptions.push({ loadPath: this._config.localUrl })
+      backendOptions.push({
+        loadPath: this._config.localUrl,
+        requestOptions: {},
+      })
     }
 
     // Priority 3: Bundled inline resources
@@ -166,11 +182,46 @@ export class WeaverseI18nServer {
     request: Request,
     options?: { lng?: string; ns?: string | string[] }
   ): Promise<WeaverseI18nData> {
-    let instance = await this.createInstance(request, options)
-    return {
-      locale: instance.language,
-      resources: instance.services.resourceStore.data,
+    let lng = options?.lng || this.getLocale(request)
+    let ns = options?.ns || this._config.defaultNS
+    let cacheKey = `${lng}|${Array.isArray(ns) ? ns.join(',') : ns}`
+    let ttl = this._config.cacheTTL ?? 5 * 60 * 1000
+
+    // Check cache first
+    if (ttl > 0) {
+      let cached = this._cache.get(cacheKey)
+      if (cached && cached.expiresAt > Date.now()) {
+        return cached.data
+      }
     }
+
+    let instance = await this.createInstance(request, { lng, ns })
+    let resources = instance.services.resourceStore.data
+
+    // Warn if no resources were loaded (likely an API failure)
+    let nsKey = Array.isArray(ns) ? ns[0] : ns
+    if (
+      !resources[lng]?.[nsKey] ||
+      Object.keys(resources[lng][nsKey]).length === 0
+    ) {
+      console.warn(
+        `[WeaverseI18n] No resources loaded for "${lng}/${nsKey}". Check API connectivity.`
+      )
+    }
+
+    let data: WeaverseI18nData = {
+      locale: instance.language,
+      resources,
+      supportedLngs: this._config.supportedLngs,
+      fallbackLng: this._config.fallbackLng,
+    }
+
+    // Store in cache
+    if (ttl > 0) {
+      this._cache.set(cacheKey, { data, expiresAt: Date.now() + ttl })
+    }
+
+    return data
   }
 
   /**

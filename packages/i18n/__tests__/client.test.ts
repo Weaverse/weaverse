@@ -11,63 +11,6 @@ vi.mock('react-i18next', () => ({
   }),
 }))
 
-describe('useLegacyT', () => {
-  it('should return settingValue when it is non-empty', async () => {
-    let { useLegacyT } = await import('../src/client')
-    // We can't call hooks outside React, so test the tOrSetting logic directly
-    // by extracting the same logic pattern
-    function tOrSetting(
-      t: (key: string) => string,
-      key: string,
-      settingValue?: string | null
-    ): string {
-      if (settingValue != null && settingValue.trim() !== '') {
-        return settingValue
-      }
-      return t(key)
-    }
-
-    let mockT = (key: string) => `translated:${key}`
-    expect(tOrSetting(mockT, 'heading', 'Welcome!')).toBe('Welcome!')
-    expect(tOrSetting(mockT, 'heading', '  Hello  ')).toBe('  Hello  ')
-  })
-
-  it('should fallback to t() when settingValue is empty', () => {
-    function tOrSetting(
-      t: (key: string) => string,
-      key: string,
-      settingValue?: string | null
-    ): string {
-      if (settingValue != null && settingValue.trim() !== '') {
-        return settingValue
-      }
-      return t(key)
-    }
-
-    let mockT = (key: string) => `translated:${key}`
-    expect(tOrSetting(mockT, 'heading', '')).toBe('translated:heading')
-    expect(tOrSetting(mockT, 'heading', '   ')).toBe('translated:heading')
-  })
-
-  it('should fallback to t() when settingValue is null or undefined', () => {
-    function tOrSetting(
-      t: (key: string) => string,
-      key: string,
-      settingValue?: string | null
-    ): string {
-      if (settingValue != null && settingValue.trim() !== '') {
-        return settingValue
-      }
-      return t(key)
-    }
-
-    let mockT = (key: string) => `translated:${key}`
-    expect(tOrSetting(mockT, 'heading', null)).toBe('translated:heading')
-    expect(tOrSetting(mockT, 'heading', undefined)).toBe('translated:heading')
-    expect(tOrSetting(mockT, 'heading')).toBe('translated:heading')
-  })
-})
-
 describe('usePrefixPath logic', () => {
   it('should prefix path with locale for non-default locale', () => {
     let locale = 'vi'
