@@ -23,6 +23,11 @@ export type WeaverseI18nConfig = {
   bundledResources?: Record<string, Record<string, Record<string, string>>>
   /** Cache TTL in milliseconds for API responses (default: 5 minutes). Set to 0 to disable. */
   cacheTTL?: number
+  /**
+   * Called when no resources are loaded for a language/namespace.
+   * Defaults to `console.warn`. Throw in dev mode to catch issues early.
+   */
+  onMissingResources?: (lng: string, ns: string) => void
 }
 
 /**

@@ -2,12 +2,42 @@ import { describe, expect, it } from 'vitest'
 import { WeaverseI18nServer } from '../src/server'
 
 let defaultConfig = {
+  projectId: 'test-project',
   supportedLngs: ['en', 'vi', 'fr'],
   fallbackLng: 'en',
   defaultNS: 'common',
 }
 
 describe('WeaverseI18nServer', () => {
+  describe('constructor', () => {
+    it('should throw when no projectId and no custom apiUrl', () => {
+      expect(
+        () =>
+          new WeaverseI18nServer({
+            supportedLngs: ['en'],
+            fallbackLng: 'en',
+            defaultNS: 'common',
+          } as any)
+      ).toThrow('`projectId` is required')
+    })
+
+    it('should not throw when projectId is provided', () => {
+      expect(() => new WeaverseI18nServer(defaultConfig)).not.toThrow()
+    })
+
+    it('should not throw when custom apiUrl is provided without projectId', () => {
+      expect(
+        () =>
+          new WeaverseI18nServer({
+            supportedLngs: ['en'],
+            fallbackLng: 'en',
+            defaultNS: 'common',
+            apiUrl: 'https://custom.api/{{lng}}/{{ns}}.json',
+          } as any)
+      ).not.toThrow()
+    })
+  })
+
   describe('getLocale', () => {
     it('should extract locale from URL path prefix', () => {
       let server = new WeaverseI18nServer(defaultConfig)
@@ -63,6 +93,15 @@ describe('WeaverseI18nServer', () => {
         headers: { 'Accept-Language': 'vi-VN,vi;q=0.9' },
       })
       expect(server.getLocale(request)).toBe('vi')
+    })
+
+    it('should handle Accept-Language with malformed quality values', () => {
+      let server = new WeaverseI18nServer(defaultConfig)
+      let request = new Request('https://example.com/products', {
+        headers: { 'Accept-Language': 'vi;q=abc,en;q=0.9' },
+      })
+      // vi gets q=0 (NaN → 0), en gets q=0.9, so en wins
+      expect(server.getLocale(request)).toBe('en')
     })
 
     it('should return fallback when no locale is detected', () => {

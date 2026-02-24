@@ -34,9 +34,18 @@ export type { WeaverseI18nConfig, WeaverseI18nData }
  */
 export class WeaverseI18nServer {
   private _config: WeaverseI18nConfig
-  private _cache: Map<string, { data: WeaverseI18nData; expiresAt: number }>
+  private _cache: Map<
+    string,
+    { promise: Promise<WeaverseI18nData>; expiresAt: number }
+  >
 
   constructor(config: WeaverseI18nConfig) {
+    // Validate projectId when using default API URL
+    if (!(config.apiUrl || config.projectId)) {
+      throw new Error(
+        '[WeaverseI18n] `projectId` is required when no custom `apiUrl` is provided.'
+      )
+    }
     this._config = config
     this._cache = new Map()
   }
@@ -178,7 +187,7 @@ export class WeaverseI18nServer {
    * }
    * ```
    */
-  async getI18nData(
+  getI18nData(
     request: Request,
     options?: { lng?: string; ns?: string | string[] }
   ): Promise<WeaverseI18nData> {
@@ -187,14 +196,31 @@ export class WeaverseI18nServer {
     let cacheKey = `${lng}|${Array.isArray(ns) ? ns.join(',') : ns}`
     let ttl = this._config.cacheTTL ?? 5 * 60 * 1000
 
-    // Check cache first
+    // Check cache — uses a Promise to deduplicate concurrent requests
     if (ttl > 0) {
       let cached = this._cache.get(cacheKey)
       if (cached && cached.expiresAt > Date.now()) {
-        return cached.data
+        return cached.promise
       }
     }
 
+    let promise = this._loadI18nData(request, lng, ns)
+
+    // Store promise immediately to deduplicate concurrent requests
+    if (ttl > 0) {
+      this._cache.set(cacheKey, { promise, expiresAt: Date.now() + ttl })
+      // Clean up cache entry if the load fails
+      promise.catch(() => this._cache.delete(cacheKey))
+    }
+
+    return promise
+  }
+
+  private async _loadI18nData(
+    request: Request,
+    lng: string,
+    ns: string | string[]
+  ): Promise<WeaverseI18nData> {
     let instance = await this.createInstance(request, { lng, ns })
     let resources = instance.services.resourceStore.data
 
@@ -204,24 +230,22 @@ export class WeaverseI18nServer {
       !resources[lng]?.[nsKey] ||
       Object.keys(resources[lng][nsKey]).length === 0
     ) {
-      console.warn(
-        `[WeaverseI18n] No resources loaded for "${lng}/${nsKey}". Check API connectivity.`
-      )
+      let onMissing = this._config.onMissingResources
+      if (onMissing) {
+        onMissing(lng, nsKey)
+      } else {
+        console.warn(
+          `[WeaverseI18n] No resources loaded for "${lng}/${nsKey}". Check API connectivity.`
+        )
+      }
     }
 
-    let data: WeaverseI18nData = {
+    return {
       locale: instance.language,
       resources,
       supportedLngs: this._config.supportedLngs,
       fallbackLng: this._config.fallbackLng,
     }
-
-    // Store in cache
-    if (ttl > 0) {
-      this._cache.set(cacheKey, { data, expiresAt: Date.now() + ttl })
-    }
-
-    return data
   }
 
   /**
@@ -245,9 +269,10 @@ export class WeaverseI18nServer {
       .split(',')
       .map((part) => {
         let [lang, quality] = part.trim().split(';q=')
+        let q = quality ? Number.parseFloat(quality) : 1
         return {
           lang: lang.trim(),
-          q: quality ? Number.parseFloat(quality) : 1,
+          q: Number.isNaN(q) ? 0 : q,
         }
       })
       .sort((a, b) => b.q - a.q)
