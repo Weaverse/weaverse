@@ -27,7 +27,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
 
@@ -35,27 +35,106 @@ jobs:
         id: claude-review
         uses: anthropics/claude-code-action@v1
         env:
-          ANTHROPIC_BASE_URL: ${{ secrets.ANTHROPIC_BASE_URL }}
+          ANTHROPIC_BASE_URL: https://claudible.io
+          ANTHROPIC_AUTH_TOKEN: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}
+          ANTHROPIC_DEFAULT_OPUS_MODEL: claude-opus-4.6
+          ANTHROPIC_DEFAULT_SONNET_MODEL: claude-sonnet-4.6
+          ANTHROPIC_DEFAULT_HAIKU_MODEL: claude-haiku-4.5
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}
         # with:
         #   claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        # Use sticky comments to update the same comment
+          use_sticky_comment: true
           prompt: |
             REPO: ${{ github.repository }}
             PR NUMBER: ${{ github.event.pull_request.number }}
 
-            Please review this pull request and provide feedback on:
-            - Code quality and best practices
-            - Potential bugs or issues
-            - Performance considerations
-            - Security concerns
-            - Test coverage
+            You are reviewing a pull request for the **Weaverse SDK monorepo** — a collection of npm packages (core, react, hydrogen, schema, cli, biome) that power Shopify theme customization.
 
-            Use the repository's CLAUDE.md for guidance on style and conventions. Be constructive and helpful in your feedback.
+            ## Review Process
 
-            Use `gh pr comment` with your Bash tool to leave your review as a comment on the PR.
+            1. Read the full diff with `gh pr diff`
+            2. Check `CLAUDE.md` and `AGENTS.md` at the repo root for project conventions
+            3. For each changed file, evaluate against the criteria below
+            4. Post a single review comment organized by severity
 
-          # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
-          # or https://docs.claude.com/en/docs/claude-code/cli-reference for available options
+            ## Review Criteria (by priority)
+
+            ### 🔴 Blocking — must fix before merge
+            - Bugs: logic errors, race conditions, null/undefined access without guards
+            - Security: exposed secrets, XSS vectors, unsafe data handling
+            - Breaking changes: public API modifications without corresponding version bump
+            - Cross-package breakage: changes in core/react/hydrogen that break dependents (these packages share a fixed version group)
+            - Schema misuse: using `inspector` instead of `settings` in `createSchema`
+
+            ### 🟡 Should fix — not blocking but important
+            - TypeScript: use of `any`, missing return types on public functions, unsafe type assertions
+            - Missing null/error handling on async operations
+            - Violations of established patterns (see AGENTS.md for conventions)
+            - Package boundary violations: importing internal modules across package boundaries
+
+            ### 💬 Suggestions — take it or leave it
+            - Opportunities to simplify (YAGNI/KISS principle)
+            - Over-engineering: abstractions with only one consumer, premature generalization, config systems for rarely-changed values
+            - Readability improvements that are clearly better, not just different
+
+            ## DO NOT flag
+            - Style issues (Biome handles linting/formatting automatically)
+            - Theoretical performance concerns without evidence
+            - Missing tests (unless the PR explicitly claims test coverage)
+            - Scope creep suggestions (features not in this PR's intent)
+            - Naming nitpicks unless the name is actively misleading
+            - "Best practices" that add complexity without concrete benefit
+
+            ## Monorepo Awareness
+            - `bun` for installs, `npm` for scripts — never suggest the opposite
+            - Turbo orchestrates builds; tsup compiles packages to ESM + CJS
+            - Fixed version group: core, react, hydrogen must stay version-synchronized
+            - Biome config extends from `@weaverse/biome` — don't suggest ESLint/Prettier
+
+            ## Output Format
+
+            Structure your review as:
+            ```
+            ## Code Review Summary
+
+            **Overall**: [1-2 sentence assessment — is this PR ready to merge?]
+
+            ### Issues
+            🔴 **[file:line]** — [description]
+            🟡 **[file:line]** — [description]
+
+            ### Suggestions
+            💬 **[file:line]** — [description]
+
+            ### What's Good
+            [Brief mention of well-done aspects, if any]
+
+            ---
+
+            ### Agent Fix Prompts
+
+            > Copy any prompt below and send it to your coding agent to fix the issue.
+
+            **🔴 [short label]**
+            ```
+            In [file] at line [N]: [precise description of what's wrong and what the fix should be. Include enough context so the agent doesn't need to re-analyze the problem. Reference specific variable names, function names, and the expected behavior.]
+            ```
+
+            **🟡 [short label]**
+            ```
+            In [file] at line [N]: [same format as above]
+            ```
+            ```
+
+            Rules for agent fix prompts:
+            - Write ONE prompt per issue (🔴 and 🟡 only — skip 💬 suggestions)
+            - Each prompt must be self-contained — the agent should be able to fix the issue without reading the rest of the review
+            - Include the file path, line number, what's wrong, and what the correct fix looks like
+            - Be specific: name the variables, functions, types, and imports involved
+            - If multiple related issues can be fixed together, combine them into one prompt
+
+            If the PR is clean with no issues, say so briefly — don't manufacture feedback.
           claude_args: '--allowed-tools "Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*)"'
 
