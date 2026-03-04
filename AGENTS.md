@@ -12,7 +12,7 @@ Monorepo of SDKs for integrating React/JamStack frameworks (Shopify Hydrogen, Re
 | Build all packages | `bun run build` |
 | Dev with hot reload | `bun run dev` |
 | Run all tests | `bun run test` |
-| Run single test file | `bun x vitest run path/to/file.test.ts` |
+| Run single test file | `bun test path/to/file.test.ts` |
 | Typecheck all packages | `bun run typecheck` |
 | Lint/format check | `bun run biome` |
 | Lint/format fix | `bun run biome:fix` |
@@ -34,7 +34,7 @@ turbo test --filter=@weaverse/hydrogen
 - **Script runner**: npm (`bun run <script>` delegates to npm scripts)
 - **Build orchestrator**: Turbo (`turbo.json` defines task pipeline)
 - **Linting/Formatting**: Biome 2.4.4 (configured in `packages/biome/biome.json`)
-- **Testing**: Vitest with workspace config (vitest.workspace.ts)
+- **Testing**: Bun's native test runner
 - **Pre-commit hooks**: Lefthook runs `biome check --write` on staged files
 - **CI**: GitHub Actions — `biome ci .` + `bun run typecheck`
 - **Releases**: Changesets with fixed version group (core, react, hydrogen stay in sync)

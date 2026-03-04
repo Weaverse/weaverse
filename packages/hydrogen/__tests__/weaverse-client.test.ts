@@ -1,4 +1,12 @@
-import { afterEach, beforeEach, describe, expect, it, spyOn } from 'bun:test'
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  mock,
+  spyOn,
+} from 'bun:test'
 import type { HydrogenComponent, HydrogenThemeSchema } from '../src/types'
 import { WeaverseClient } from '../src/weaverse-client'
 
@@ -387,8 +395,8 @@ function createMockContext(overrides: any = {}): any {
       CacheCustom: (strategy: any) => strategy,
     },
     cache: {
-      put: () => {},
-      match: () => {},
+      put: mock.fn(),
+      match: mock.fn(),
     },
     waitUntil: () => {},
     request,
