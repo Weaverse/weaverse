@@ -12,8 +12,7 @@
     "dev": "tsup --watch",
     "build": "tsup",
     "clean": "rimraf dist",
-    "test": "vitest",
-    "test:watch": "vitest --watch"
+    "test": "bun test"
   },
   "tsup": {
     "entry": [
@@ -39,8 +38,5 @@
   },
   "dependencies": {
     "zod": "^4.3.6"
-  },
-  "devDependencies": {
-    "vitest": "^4.0.18"
   }
 }
