@@ -1,4 +1,12 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  mock,
+  spyOn,
+} from 'bun:test'
 import type { HydrogenComponent, HydrogenThemeSchema } from '../src/types'
 import { WeaverseClient } from '../src/weaverse-client'
 
@@ -33,12 +41,11 @@ describe('WeaverseClient Multi-Project Architecture', () => {
 
     mockContext = createMockContext()
 
-    consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    consoleWarnSpy = spyOn(console, 'warn').mockImplementation(() => {})
+    consoleErrorSpy = spyOn(console, 'error').mockImplementation(() => {})
   })
 
   afterEach(() => {
-    vi.restoreAllMocks()
     consoleWarnSpy.mockRestore()
     consoleErrorSpy.mockRestore()
   })
@@ -284,9 +291,7 @@ describe('WeaverseClient Multi-Project Architecture', () => {
         projectId: 'client-project',
       })
 
-      let consoleErrorSpy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {})
+      let consoleErrorSpy = spyOn(console, 'error').mockImplementation(() => {})
       let result = await weaverse.loadPage({ projectId: 123 as any })
 
       expect(result).toBeNull()
@@ -307,9 +312,7 @@ describe('WeaverseClient Multi-Project Architecture', () => {
         projectId: 'client-project',
       })
 
-      let consoleErrorSpy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {})
+      let consoleErrorSpy = spyOn(console, 'error').mockImplementation(() => {})
       let result = await weaverse.loadPage({ projectId: '   ' })
 
       expect(result).toBeNull()
@@ -330,9 +333,7 @@ describe('WeaverseClient Multi-Project Architecture', () => {
         projectId: 'client-project',
       })
 
-      let consoleErrorSpy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {})
+      let consoleErrorSpy = spyOn(console, 'error').mockImplementation(() => {})
       let result = await weaverse.loadPage({ projectId: 'invalid project!' })
 
       expect(result).toBeNull()
@@ -356,7 +357,7 @@ describe('WeaverseClient Multi-Project Architecture', () => {
       })
 
       // Mock fetchWithCache to return data with empty items
-      vi.spyOn(weaverse, 'fetchWithCache').mockResolvedValue({
+      spyOn(weaverse, 'fetchWithCache').mockResolvedValue({
         page: {
           id: 'test-page',
           rootId: 'root-id',
@@ -394,10 +395,10 @@ function createMockContext(overrides: any = {}): any {
       CacheCustom: (strategy: any) => strategy,
     },
     cache: {
-      put: vi.fn(),
-      match: vi.fn(),
+      put: mock.fn(),
+      match: mock.fn(),
     },
-    waitUntil: vi.fn(),
+    waitUntil: () => {},
     request,
     ...overrides,
   }

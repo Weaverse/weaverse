@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, mock, spyOn, test } from 'bun:test'
 import {
   replaceContentDataConnectors,
   replaceContentDataConnectorsDeep,
@@ -30,7 +30,7 @@ describe('replaceContentDataConnectors', () => {
 
   beforeEach(() => {
     // Clear any console warnings
-    vi.clearAllMocks()
+    mock.restore()
   })
 
   describe('Basic functionality', () => {
@@ -202,7 +202,7 @@ describe('replaceContentDataConnectors', () => {
       circularData.user.self = circularData.user // Create circular reference
 
       // Mock console.warn to check if warning is logged
-      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      const consoleSpy = spyOn(console, 'warn').mockImplementation(() => {})
 
       const content = 'Name: {{user.name}}'
       const result = replaceContentDataConnectors(content, circularData)
@@ -223,7 +223,7 @@ describe('replaceContentDataConnectors', () => {
       }
       deepCircularData.level1.level2.circular = deepCircularData.level1
 
-      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      const consoleSpy = spyOn(console, 'warn').mockImplementation(() => {})
 
       const content = 'Value: {{level1.level2.name}}'
       const result = replaceContentDataConnectors(content, deepCircularData)
@@ -243,7 +243,7 @@ describe('replaceContentDataConnectors', () => {
         },
       }
 
-      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      const consoleSpy = spyOn(console, 'warn').mockImplementation(() => {})
 
       const content = 'Value: {{errorProperty}}'
       const result = replaceContentDataConnectors(content, problematicData)
@@ -264,7 +264,7 @@ describe('replaceContentDataConnectors', () => {
         },
       }
 
-      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      const consoleSpy = spyOn(console, 'warn').mockImplementation(() => {})
 
       const content = 'Value: {{errorProperty.nested}}'
       replaceContentDataConnectors(content, problematicData)
@@ -585,7 +585,7 @@ describe('replaceContentDataConnectors', () => {
       }
       circularContent.nested.circular = circularContent
 
-      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      const consoleSpy = spyOn(console, 'warn').mockImplementation(() => {})
 
       const result = replaceContentDataConnectorsDeep(
         circularContent,
@@ -616,7 +616,7 @@ describe('replaceContentDataConnectors', () => {
         enumerable: true,
       })
 
-      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      const consoleSpy = spyOn(console, 'warn').mockImplementation(() => {})
 
       // The function should handle the error and continue processing other properties
       const result = replaceContentDataConnectorsDeep(

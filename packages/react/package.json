@@ -25,8 +25,7 @@
     "dev": "tsup --watch",
     "build": "tsup",
     "clean": "rimraf dist",
-    "test": "vitest --run",
-    "test:watch": "vitest --watch",
+    "test": "bun test",
     "typecheck": "tsc --noEmit"
   },
   "tsup": {
@@ -50,8 +49,5 @@
   },
   "peerDependencies": {
     "react-router": ">=6"
-  },
-  "devDependencies": {
-    "vitest": "^4.0.18"
   }
 }
