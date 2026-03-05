@@ -17,7 +17,7 @@ export class ThemeSettingsStore {
   schema?: HydrogenThemeSchema
   publicEnv?: PublicEnv
   private listeners: Set<() => void> = new Set()
-  private readonly MAX_LISTENERS = 100
+  private hasWarnedListenerCount = false
   private isDestroyed = false
 
   constructor(data: WeaverseThemeData) {
@@ -54,15 +54,16 @@ export class ThemeSettingsStore {
       return () => {}
     }
 
-    if (this.listeners.size >= this.MAX_LISTENERS) {
+    this.listeners.add(callback)
+
+    if (!this.hasWarnedListenerCount && this.listeners.size > 500) {
+      this.hasWarnedListenerCount = true
       console.warn(
-        `ThemeSettingsStore: Maximum listeners (${this.MAX_LISTENERS}) exceeded. ` +
-          'Possible memory leak detected.'
+        `ThemeSettingsStore: ${this.listeners.size} listeners detected. ` +
+          'This may indicate a performance issue. Consider using fewer useThemeSettings() calls.'
       )
-      return () => {}
     }
 
-    this.listeners.add(callback)
     return () => {
       this.listeners.delete(callback)
     }
