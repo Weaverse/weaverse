@@ -1,5 +1,12 @@
 # @weaverse/hydrogen
 
+## 5.9.3
+
+### Patch Changes
+
+- fix: remove ThemeSettingsStore listener cap
+  - @weaverse/react@5.9.3
+
 ## 5.9.2
 
 ### Patch Changes
