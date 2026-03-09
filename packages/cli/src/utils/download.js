@@ -6,6 +6,29 @@ import ora from 'ora'
 import { getDownloadFolder, getDownloadURL } from '../constants/templates.js'
 
 /**
+ * Removes the .weaverse folder from the output path if it exists
+ * @param {string} outputPath - The project output directory
+ * @returns {Promise<boolean>} True if folder was removed or didn't exist, false on error
+ */
+export async function removeWeaverseFolder(outputPath) {
+  let weaversePath = `${outputPath}/.weaverse`
+  try {
+    let exists = await fs.pathExists(weaversePath)
+    if (exists) {
+      await fs.remove(weaversePath)
+    }
+    return true
+  } catch (error) {
+    console.warn(
+      chalk.yellow(
+        `Warning: Could not remove .weaverse folder: ${error.message}`
+      )
+    )
+    return false
+  }
+}
+
+/**
  * Downloads and extracts a template from GitHub repository
  * @param {Object} template - Template configuration object
  * @param {string} outputPath - Destination directory for extracted files
@@ -13,11 +36,11 @@ import { getDownloadFolder, getDownloadURL } from '../constants/templates.js'
  * @returns {Promise<void>} Promise that resolves when download and extraction complete
  * @throws {Error} If download or extraction fails
  */
-export let downloadAndExtractTemplate = async (
+export async function downloadAndExtractTemplate(
   template,
   outputPath,
   commitHash
-) => {
+) {
   let downloadURL = getDownloadURL(template, commitHash)
   let downloadFolder = getDownloadFolder(template, commitHash)
 
@@ -55,6 +78,8 @@ export let downloadAndExtractTemplate = async (
       )
     }
     await fs.remove(`${outputPath}/temp`)
+
+    await removeWeaverseFolder(outputPath)
 
     spinner.succeed('Template downloaded and extracted successfully')
     return true
