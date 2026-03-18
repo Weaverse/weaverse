@@ -403,3 +403,80 @@ function createMockContext(overrides: any = {}): any {
     ...overrides,
   }
 }
+
+describe('loadPage X-Visitor-UA header forwarding', () => {
+  let capturedHeaders: Headers | undefined
+  let fetchSpy: ReturnType<typeof spyOn>
+  let mockComponents: any[]
+  let mockThemeSchema: any
+
+  beforeEach(() => {
+    capturedHeaders = undefined
+    mockComponents = []
+    mockThemeSchema = {
+      info: {
+        name: 'Test Theme',
+        author: 'Test',
+        version: '1.0.0',
+        authorProfilePhoto: '',
+        documentationUrl: '',
+        supportUrl: '',
+      },
+      settings: [],
+    }
+    fetchSpy = spyOn(globalThis, 'fetch').mockImplementation(
+      async (_input: RequestInfo | URL, init?: RequestInit) => {
+        capturedHeaders = new Headers(init?.headers as HeadersInit)
+        return new Response(
+          JSON.stringify({
+            project: { id: 'p1', name: 'Test' },
+            page: null,
+            pageAssignment: null,
+          }),
+          { status: 200, headers: { 'Content-Type': 'application/json' } }
+        )
+      }
+    )
+  })
+
+  afterEach(() => {
+    fetchSpy.mockRestore()
+  })
+
+  it('forwards visitor user-agent as X-Visitor-UA header', async () => {
+    let incomingRequest = new Request('https://mystore.com/products/foo', {
+      headers: {
+        'user-agent':
+          'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+      },
+    })
+
+    let weaverse = new WeaverseClient({
+      ...createMockContext({ request: incomingRequest }),
+      components: mockComponents,
+      themeSchema: mockThemeSchema,
+      projectId: 'test-project-123',
+    })
+
+    await weaverse.loadPage().catch(() => {})
+
+    expect(capturedHeaders?.get('x-visitor-ua')).toBe(
+      'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
+    )
+  })
+
+  it('sends empty string X-Visitor-UA when request has no user-agent', async () => {
+    let incomingRequest = new Request('https://mystore.com/products/foo')
+
+    let weaverse = new WeaverseClient({
+      ...createMockContext({ request: incomingRequest }),
+      components: mockComponents,
+      themeSchema: mockThemeSchema,
+      projectId: 'test-project-123',
+    })
+
+    await weaverse.loadPage().catch(() => {})
+
+    expect(capturedHeaders?.get('x-visitor-ua')).toBe('')
+  })
+})
