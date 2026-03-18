@@ -37,15 +37,15 @@ turbo test --filter=@weaverse/hydrogen
 - **Testing**: Bun's native test runner
 - **Pre-commit hooks**: Lefthook runs `biome check --write` on staged files
 - **CI**: GitHub Actions — `biome ci .` + `bun run typecheck`
-- **Releases**: Changesets with fixed version group (core, react, hydrogen stay in sync)
+- **Releases**: Git tag + `bun publish` workflow via `.claude/skills/releasing-weaverse-sdks/` skill (core, react, hydrogen stay in sync)
 
 ### Package Dependency Graph
 
 ```
-@weaverse/hydrogen (v5.9.2) → @weaverse/react → @weaverse/core
-                             → @weaverse/schema
-@weaverse/react (v5.9.2)    → @weaverse/core
-@weaverse/core (v5.9.2)     ← foundation, no internal deps
+@weaverse/hydrogen → @weaverse/react → @weaverse/core
+                   → @weaverse/schema
+@weaverse/react    → @weaverse/core
+@weaverse/core     ← foundation, no internal deps
 @weaverse/schema (v0.8.2)   ← independent versioning (Zod-based)
 @weaverse/cli               ← CLI tools (JavaScript)
 @weaverse/i18n              ← internationalization
@@ -333,10 +333,12 @@ Runs automatically on `git commit`:
 
 ### Releasing
 
-Uses Changesets for version management:
-1. `bun changeset` — create a changeset describing your changes
-2. Core, React, and Hydrogen versions stay in sync (fixed group)
-3. Schema (`@weaverse/schema`) is versioned independently
+Uses a Claude Code skill (`.claude/skills/releasing-weaverse-sdks/SKILL.md`) for releases:
+1. Tell Claude which packages to release and the bump type (e.g., "release the fixed group as minor")
+2. The skill runs: verify → bump → build → publish to npm → tag → GitHub Release → sync dev
+3. Core, React, and Hydrogen versions stay in sync (fixed group)
+4. Schema, CLI, Biome, and i18n are versioned independently
+5. See the skill file for the full 13-step ritual
 
 ## Common Pitfalls
 
