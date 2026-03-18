@@ -2,7 +2,7 @@
   "name": "@weaverse/hydrogen",
   "author": "Weaverse Team",
   "description": "Components, hooks, and utilities for building Shopify Hydrogen websites with Weaverse",
-  "version": "5.9.4",
+  "version": "5.9.5",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
