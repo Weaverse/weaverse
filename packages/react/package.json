@@ -42,7 +42,7 @@
     "outDir": "dist"
   },
   "dependencies": {
-    "@weaverse/core": "5.9.4",
+    "@weaverse/core": "5.9.5",
     "clsx": "^2.1.1",
     "react": ">=19",
     "react-dom": ">=19"
