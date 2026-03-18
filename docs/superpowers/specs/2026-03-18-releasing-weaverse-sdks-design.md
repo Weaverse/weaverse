@@ -127,19 +127,7 @@ git commit -m "release: v5.10.0 (core, react, hydrogen)"
 # or for independent: "release: @weaverse/schema@0.8.3"
 ```
 
-Note: Lefthook pre-commit hooks will run biome on staged files. This is expected and should pass since we already verified in Step 4.
-
-### Step 9: Publish to npm
-
-In dependency order, for each target package:
-
-```bash
-cd packages/core && bun publish --access public
-cd packages/react && bun publish --access public
-cd packages/hydrogen && bun publish --access public
-```
-
-Verify each publish succeeds before continuing to the next. If one fails, stop and report what succeeded.
+Note: Lefthook pre-commit hooks will run biome on staged files. This is expected and should pass since we already verified in Step 4. Only stage package.json files and lockfile — never use `git add -A`.
 
 ### Step 9: Publish to npm
 
