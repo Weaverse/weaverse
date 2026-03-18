@@ -17,26 +17,38 @@ A Claude Code skill for releasing `@weaverse/*` npm packages from the SDKs monor
 
 ## Package Inventory
 
-| Package | Current Version | Group | Status |
-|---------|----------------|-------|--------|
-| @weaverse/core | 5.9.3 | fixed | Active |
-| @weaverse/react | 5.9.3 | fixed | Active |
-| @weaverse/hydrogen | 5.9.3 | fixed | Active |
-| @weaverse/schema | 0.8.2 | independent | Active |
-| @weaverse/cli | 5.5.2 | independent | Active |
-| @weaverse/biome | 5.7.3 | independent | Active |
-| @weaverse/i18n | 1.1.2 | independent | Active |
-| @weaverse/shopify | 5.8.4 | — | Archived (never release) |
+| Package | Group | Status |
+|---------|-------|--------|
+| @weaverse/core | fixed | Active |
+| @weaverse/react | fixed | Active |
+| @weaverse/hydrogen | fixed | Active |
+| @weaverse/schema | independent | Active |
+| @weaverse/cli | independent | Active |
+| @weaverse/biome | independent | Active |
+| @weaverse/i18n | independent | Active |
+| @weaverse/next | — | Placeholder (never release) |
+| @weaverse/remix | — | Placeholder (never release) |
+| @weaverse/shopify | — | Archived in `archived/` (never release) |
+
+Current versions are always read from each package's `package.json` at runtime. Never hardcode them.
 
 ### Dependency Order (Fixed Group)
 
 ```
 core (no internal deps)
-  → react (depends on core)
-    → hydrogen (depends on react + schema)
+  → react (depends on core — exact pin)
+    → hydrogen (depends on react — exact pin, + schema — exact pin)
 ```
 
+All internal dependencies use **exact version pins** (e.g., `"@weaverse/core": "5.9.3"`, not `"^5.9.3"`).
+
 Publishing and building must follow this order.
+
+### Cross-Group Dependency: schema → hydrogen
+
+Hydrogen depends on `@weaverse/schema` (independent group). When releasing schema independently, hydrogen's dependency on schema becomes stale. The skill should warn about this but NOT auto-bump hydrogen — the user decides whether to also release the fixed group to pick up the new schema version.
+
+The root `package.json` version (`"5.0.0"`, private) is never bumped during releases.
 
 ## The Release Ritual
 
@@ -47,6 +59,8 @@ From the user's request, determine:
 - **Bump type:** `patch`, `minor`, or `major`
 
 Example triggers: "release the fixed group as minor", "release schema as patch", "bump cli to 5.6.0"
+
+Only one scope per ritual — either the fixed group OR one/more independent packages. Do not mix fixed + independent in the same release. Run separate rituals if needed.
 
 ### Step 1: Ensure on `main` with latest
 
@@ -73,7 +87,7 @@ Read current version from each target package's `package.json`. Apply semver bum
 
 For the fixed group, all three packages get the same new version.
 
-Print the version plan for confirmation before proceeding.
+Print the version plan and ask the user to confirm before proceeding. Wait for explicit approval.
 
 ### Step 4: Run Verification
 
@@ -81,31 +95,41 @@ Print the version plan for confirmation before proceeding.
 bun run biome && bun run typecheck && bun run test
 ```
 
-All three must pass. Do not proceed if any fail.
+Always runs across ALL packages regardless of release scope. All three must pass. Do not proceed if any fail.
 
-### Step 5: Build All Packages
+### Step 5: Bump Versions in package.json Files
+
+For each target package:
+1. Update `"version"` field to new version
+2. Update internal dependency references using exact pins (e.g., hydrogen's dep on `@weaverse/react` gets bumped to the new fixed group version)
+
+### Step 6: Update Lockfile
+
+```bash
+bun install
+```
+
+This regenerates the lockfile to reflect the new version strings.
+
+### Step 7: Build All Packages
 
 ```bash
 bun run build
 ```
 
-Turbo builds in dependency order. Must succeed.
+Turbo builds in dependency order. Must succeed. Building after version bump ensures any packages that embed version strings at build time get the correct version.
 
-### Step 6: Bump Versions in package.json Files
-
-For each target package:
-1. Update `"version"` field to new version
-2. Update internal dependency references (e.g., hydrogen's dep on `@weaverse/react` gets bumped to the new fixed group version)
-
-### Step 7: Commit the Release
+### Step 8: Commit the Release
 
 ```bash
-git add packages/*/package.json
+git add packages/*/package.json bun.lock
 git commit -m "release: v5.10.0 (core, react, hydrogen)"
 # or for independent: "release: @weaverse/schema@0.8.3"
 ```
 
-### Step 8: Publish to npm
+Note: Lefthook pre-commit hooks will run biome on staged files. This is expected and should pass since we already verified in Step 4.
+
+### Step 9: Publish to npm
 
 In dependency order, for each target package:
 
@@ -117,9 +141,26 @@ cd packages/hydrogen && bun publish --access public
 
 Verify each publish succeeds before continuing to the next. If one fails, stop and report what succeeded.
 
-### Step 9: Tag and Push
+### Step 9: Publish to npm
+
+In dependency order, for each target package:
 
 ```bash
+cd packages/core && bun publish --access public
+cd packages/react && bun publish --access public
+cd packages/hydrogen && bun publish --access public
+```
+
+Verify each publish succeeds before continuing to the next. If one fails, stop and report what succeeded.
+
+**npm auth requirement:** The npm account must use an automation token (not OTP-based 2FA for publishes) to keep the workflow non-interactive. If `bun publish` prompts for OTP, the user needs to configure a publish-level automation token.
+
+### Step 10: Tag and Push
+
+```bash
+# Check tag doesn't already exist
+git tag -l "v5.10.0" | grep -q . && echo "Tag already exists!" && exit 1
+
 # Fixed group
 git tag "v5.10.0"
 
@@ -129,7 +170,7 @@ git tag "@weaverse/schema@0.8.3"
 git push origin main --follow-tags
 ```
 
-### Step 10: Create GitHub Release
+### Step 11: Create GitHub Release
 
 ```bash
 # Fixed group
@@ -144,7 +185,9 @@ gh release create "@weaverse/schema@0.8.3" \
   --generate-notes
 ```
 
-### Step 11: Sync Dev Branch
+For first-time independent package tags (no prior tag for that package), `--generate-notes` generates notes from all commits. This is expected for the first release.
+
+### Step 12: Sync Dev Branch
 
 ```bash
 git checkout dev && git pull origin dev
@@ -153,7 +196,9 @@ git push origin dev
 git checkout main
 ```
 
-### Step 12: Post-Release Verification
+Prerequisite: `dev` branch must exist on the remote. If it doesn't, skip this step and note the absence.
+
+### Step 13: Post-Release Verification
 
 Check npm registry for each published package:
 
@@ -176,12 +221,26 @@ Print summary table:
 | Scenario | Handling |
 |----------|----------|
 | npm auth missing | `npm whoami` check at Step 2, fail early |
-| Build fails | Stop immediately at Step 5, don't publish |
-| One package publish fails | Stop, report which succeeded and which failed |
-| Internal dep version mismatch | Step 6 updates all internal references |
-| Tag already exists | Check before creating, fail if tag exists |
+| Build fails | Stop immediately at Step 7, don't publish |
+| One package publish fails | Stop, report which succeeded and failed. See Rollback section |
+| Internal dep version mismatch | Step 5 updates all internal references with exact pins |
+| Tag already exists | Check before creating in Step 10, fail if exists |
 | Working tree dirty | Step 1 checks for clean working tree |
 | Dev branch has conflicts | Report conflict, let user resolve manually |
+| Dev branch doesn't exist | Skip Step 12, note the absence |
+| Schema bump leaves hydrogen stale | Warn user, suggest follow-up fixed group release |
+| npm 2FA OTP prompt | Requires automation token — see Step 9 note |
+| npm registry propagation delay | `npm view` may take a few seconds; retry once after 5s if stale |
+
+## Rollback Guidance
+
+If publish partially succeeds (e.g., core publishes but react fails):
+
+1. **Do NOT revert the version commit** — the published package already references the new version
+2. **Do NOT delete the already-published package** — npm unpublish has restrictions and breaks consumers
+3. **Fix the failure cause** (usually auth or network), then re-run `bun publish` only for the remaining unpublished packages
+4. **Continue the ritual** from Step 10 (tag, push, release) once all packages are published
+5. If the failure is unrecoverable, document the partial state and manually create the tag/release noting which packages were published
 
 ## Common Mistakes
 
@@ -202,6 +261,7 @@ As part of implementing this skill, remove all changeset infrastructure:
 2. Remove `@changesets/cli` from root devDependencies
 3. Remove `"changeset": "changeset"` from root package.json scripts
 4. Update AGENTS.md — replace changeset release docs with new workflow reference
+5. Fix stale version numbers in AGENTS.md (or remove hardcoded versions entirely — they go stale every release)
 
 ## Skill File Structure
 
@@ -215,6 +275,6 @@ weaverse/.claude/
 ## Quick Reference
 
 ```
-parse intent → main + latest → npm auth → calc versions → verify (biome+types+tests) →
-build → bump versions → commit → publish to npm → tag → push → gh release → sync dev → verify npm
+parse intent → main + latest → npm auth → calc versions (confirm) → verify (biome+types+tests) →
+bump versions → bun install → build → commit → publish to npm → tag → push → gh release → sync dev → verify npm
 ```
