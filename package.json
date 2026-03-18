@@ -19,7 +19,7 @@
     "build:graph": "turbo run build --graph=repo-graph.svg",
     "prepare": "npm run build",
     "postinstall": "lefthook install",
-    "changeset": "changeset",
+
     "typecheck": "turbo run typecheck --filter=./packages/*",
     "biome": "biome check --diagnostic-level=error",
     "biome:fix": "biome check --write --diagnostic-level=error",
@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.4",
-    "@changesets/cli": "^2.29.8",
+
     "@types/node": "25.3.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
