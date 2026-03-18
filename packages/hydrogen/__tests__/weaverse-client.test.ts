@@ -395,8 +395,8 @@ function createMockContext(overrides: any = {}): any {
       CacheCustom: (strategy: any) => strategy,
     },
     cache: {
-      put: mock.fn(),
-      match: mock.fn(),
+      put: mock(() => {}),
+      match: mock(() => {}),
     },
     waitUntil: () => {},
     request,
