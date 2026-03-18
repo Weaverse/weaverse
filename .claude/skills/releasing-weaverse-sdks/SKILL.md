@@ -56,6 +56,8 @@ git status --porcelain
 
 Working tree must be clean. If dirty, stop and ask the user to resolve.
 
+**Exception:** `templates/pilot` (git submodule) may show as modified — this is a separate repo and irrelevant to npm releases. Ignore it.
+
 ### Step 2: Check npm auth
 
 ```bash
