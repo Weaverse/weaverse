@@ -4,7 +4,7 @@ applyTo: "**"
 
 # Copilot Instructions
 This project is a monorepo for Weaverse SDK packages, including Weaverse Hydrogen, Weaverse CLI, Weaverse Schema, and other related packages. 
-The codebase is written in TypeScript and follows modern JavaScript standards, using turborepo for package management and changeset for versioning.
+The codebase is written in TypeScript and follows modern JavaScript standards, using turborepo for package management and git tags for versioning.
 
 ## Coding Standards
 - Use camelCase for variable and function names.
