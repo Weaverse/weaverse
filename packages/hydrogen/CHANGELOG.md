@@ -1,5 +1,18 @@
 # @weaverse/hydrogen
 
+## 5.9.5
+
+### Patch Changes
+
+- cfb3476: Forward X-Visitor-UA header from visitor request in loadPage() to enable bot traffic filtering on the Weaverse Builder
+
+## 5.9.3
+
+### Patch Changes
+
+- fix: remove ThemeSettingsStore listener cap
+  - @weaverse/react@5.9.3
+
 ## 5.9.2
 
 ### Patch Changes

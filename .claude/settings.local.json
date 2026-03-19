@@ -8,8 +8,6 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(npm run changeset:*)",
-      "Bash(pnpm changeset:*)",
       "Bash(git tag:*)",
       "Bash(npm view:*)",
       "Bash(npx biome:*)",
