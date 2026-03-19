@@ -12,8 +12,8 @@ Release ritual for the `@weaverse/*` npm packages monorepo. Covers version bump,
 ## Context
 
 - **Public npm packages** under `@weaverse/*` scope
-- **Package manager:** `bun` only (never `npm install`)
-- **Publish command:** `bun publish --access public`
+- **Package manager:** `bun` only for development (never `npm install`)
+- **Publish command:** `npm publish` (from individual package directories)
 - **Fixed version group:** core, react, hydrogen (always same version)
 - **Independent packages:** schema, cli, biome, i18n (each has own version)
 - **Never release:** next, remix (placeholders), shopify (archived)
@@ -58,13 +58,18 @@ Working tree must be clean. If dirty, stop and ask the user to resolve.
 
 **Exception:** `templates/pilot` (git submodule) may show as modified — this is a separate repo and irrelevant to npm releases. Ignore it.
 
-### Step 2: Check npm auth
+### Step 2: Configure npm auth (one-time setup)
 
+```bash
+npm config set //registry.npmjs.org/:_authToken YOUR_TOKEN
+```
+
+Replace `YOUR_TOKEN` with your npm access token. This is a one-time setup; if already configured, skip to Step 3.
+
+To verify auth is configured:
 ```bash
 npm whoami
 ```
-
-Must be authenticated. If not, stop — user needs to run `npm login` or configure an automation token.
 
 ### Step 3: Calculate New Versions
 
@@ -145,19 +150,19 @@ Only stage `package.json` files and lockfile. Never use `git add -A`. Lefthook p
 In dependency order, for each target package:
 
 ```bash
-cd packages/core && bun publish --access public && cd ../..
-cd packages/react && bun publish --access public && cd ../..
-cd packages/hydrogen && bun publish --access public && cd ../..
+cd packages/core && npm publish && cd ../..
+cd packages/react && npm publish && cd ../..
+cd packages/hydrogen && npm publish && cd ../..
 ```
 
 For independent packages:
 ```bash
-cd packages/$PKG && bun publish --access public && cd ../..
+cd packages/$PKG && npm publish && cd ../..
 ```
 
 Verify each publish succeeds before continuing to the next. If one fails, stop and report which packages published successfully and which failed.
 
-**npm auth note:** The npm account must use an automation token (not OTP-based 2FA) to keep the workflow non-interactive. If `bun publish` prompts for OTP, the user needs to configure a publish-level automation token.
+**Note:** The `--access public` flag is not needed as `publishConfig.access` is already set to `public` in each package's package.json.
 
 ### Step 10: Tag and Push
 
@@ -227,16 +232,16 @@ If publish partially succeeds (e.g., core publishes but react fails):
 
 1. **Do NOT revert the version commit** — the published package references the new version
 2. **Do NOT npm unpublish** — it has restrictions and breaks consumers
-3. **Fix the failure cause** (usually auth or network), then re-run `bun publish` only for remaining packages
+3. **Fix the failure cause** (usually auth or network), then re-run `npm publish` only for remaining packages
 4. **Continue the ritual** from Step 10 once all packages are published
 5. If unrecoverable, document the partial state and manually create tag/release noting which packages were published
 
 ## Quick Reference
 
 ```
-parse intent → main + latest → npm auth → calc versions (confirm) →
+parse intent → main + latest → npm auth (if not set) → calc versions (confirm) →
 verify (biome+types+tests) → bump versions → bun install → build →
-commit → publish to npm → tag → push → gh release → sync dev → verify npm
+commit → publish to npm (per-package) → tag → push → gh release → sync dev → verify npm
 ```
 
 ## Common Mistakes
@@ -244,6 +249,7 @@ commit → publish to npm → tag → push → gh release → sync dev → verif
 | Mistake | Fix |
 |---------|-----|
 | Running `npm install` instead of `bun install` | This project uses bun only |
+| Publishing without npm auth configured | Run `npm config set //registry.npmjs.org/:_authToken YOUR_TOKEN` once |
 | Publishing without building first | Build must succeed before publish |
 | Forgetting internal dep updates | Fixed group packages reference each other — update the exact pins |
 | Publishing in wrong order | Must be core → react → hydrogen (dependency order) |
