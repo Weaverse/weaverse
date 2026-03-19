@@ -9,6 +9,10 @@
       "dependsOn": ["^build"],
       "cache": false
     },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
     "typecheck": {
       "outputs": [],
       "inputs": ["packages/**/*.ts", "packages/**/*.tsx"]

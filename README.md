@@ -115,8 +115,7 @@ submit pull requests with your improvements.
 2. Create a feature branch
 3. Make your changes
 4. Run `pnpm run biome:fix` and `pnpm run typecheck`
-5. Create a changeset with `pnpm run changeset`
-6. Submit a pull request
+5. Submit a pull request
 
 ## Documentation
 

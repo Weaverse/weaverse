@@ -847,6 +847,7 @@ export class WeaverseClient {
           'Content-Type': 'application/json',
           Accept: 'application/json',
           'Accept-Encoding': 'gzip, deflate, br',
+          'X-Visitor-UA': request.headers.get('user-agent') || '',
         },
       }
       const url = this.getApiUrl('project')
