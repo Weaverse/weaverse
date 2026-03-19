@@ -14,8 +14,12 @@ import {
   useMemo,
 } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-import { Await, useMatches } from 'react-router'
+import { Await, useMatches, useRouteLoaderData } from 'react-router'
 import { defaultComponents } from '~/components'
+import {
+  ThemeTextProvider,
+  type TranslateFunction,
+} from './hooks/theme-text-context'
 import { createWeaverseDataContext } from './hooks/use-weaverse-data-context'
 import type {
   HydrogenComponentData,
@@ -277,31 +281,75 @@ const ThemeSettingsProvider = createContext<HydrogenThemeSettings | null>(null)
 ThemeSettingsProvider.displayName = 'WeaverseThemeSettingsProvider'
 
 /**
- * Higher-order component that wraps your app with Weaverse theme settings context.
- * Provides theme settings to all child components via React context.
+ * Options for the `withWeaverse` HOC.
+ */
+export type WithWeaverseOptions = {
+  /**
+   * Optional external translation function (e.g. from Shopify i18n).
+   * When provided it becomes the **highest-priority** source
+   * in the `t()` resolution chain exposed by `useThemeText()`.
+   */
+  t?: TranslateFunction
+}
+
+/**
+ * Higher-order component that wraps your app with Weaverse theme settings
+ * and translation context.
  *
  * @param Component - The root component to wrap
- * @returns Wrapped component with theme settings provider
+ * @param options   - Optional configuration (e.g. an external `t` function)
+ * @returns Wrapped component with theme settings + translation providers
  *
  * @example
  * ```typescript
  * import { withWeaverse } from '@weaverse/hydrogen'
  *
- * function App() {
- *   return <div>My App</div>
- * }
- *
+ * // Basic usage
  * export default withWeaverse(App)
+ *
+ * // With external translation function
+ * export default withWeaverse(App, { t: myI18nFunction })
  * ```
  */
-export function withWeaverse(Component: ComponentType<any>) {
+export function withWeaverse(
+  Component: ComponentType<any>,
+  options?: WithWeaverseOptions
+) {
   return (props: JSX.IntrinsicAttributes) => {
-    const { settings } = useThemeSettingsStore()
+    const themeSettingsStore = useThemeSettingsStore()
+    const { settings } = themeSettingsStore
+    const themeTextData = useThemeTextData()
     return (
       <ThemeSettingsProvider.Provider value={settings}>
-        <Component {...props} />
+        <ThemeTextProvider
+          merchantOverrides={themeTextData.merchantOverrides}
+          staticContent={themeTextData.staticContent}
+          t={options?.t}
+        >
+          <Component {...props} />
+        </ThemeTextProvider>
       </ThemeSettingsProvider.Provider>
     )
+  }
+}
+
+/**
+ * Internal hook to read staticContent and merchantOverrides from root loader data.
+ * Similar pattern to useThemeSettingsStore – reads from the 'root' route loader.
+ */
+function useThemeTextData(): {
+  staticContent: Record<string, unknown>
+  merchantOverrides?: Record<string, unknown>
+} {
+  const data = useRouteLoaderData('root') as {
+    weaverseTheme?: {
+      staticContent?: Record<string, unknown>
+      merchantOverrides?: Record<string, unknown>
+    }
+  }
+  return {
+    staticContent: data?.weaverseTheme?.staticContent ?? {},
+    merchantOverrides: data?.weaverseTheme?.merchantOverrides,
   }
 }
 

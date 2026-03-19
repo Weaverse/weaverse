@@ -221,6 +221,9 @@ export type WeaverseI18n = I18nBase & {
 }
 
 export type HydrogenThemeSchema = {
+  betaFlags?: {
+    contentManager?: boolean
+  }
   info: {
     name: string
     version: string
@@ -236,6 +239,7 @@ export type HydrogenThemeSchema = {
     urlStructure: 'url-path' | 'subdomain' | 'top-level-domain'
     defaultLocale: WeaverseI18n
     shopLocales: WeaverseI18n[]
+    staticContent: Record<string, unknown>
   }
 }
 
@@ -418,6 +422,10 @@ export type ThemeSettingsResponse = {
   theme?: HydrogenThemeSettings
   schema?: HydrogenThemeSchema
   publicEnv?: PublicEnv
+  /** Theme's default locale JSON from themeSchema.i18n.staticContent */
+  staticContent?: Record<string, unknown>
+  /** Locale-specific merchant overrides from the API */
+  merchantOverrides?: Record<string, unknown>
   _error?: string
   _loadFailed?: boolean
 }

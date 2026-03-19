@@ -107,6 +107,15 @@ export {
 // Re-export all types and utilities from schema package
 export * from '@weaverse/schema'
 export * from './components'
+export {
+  getNestedKey,
+  interpolate,
+  ThemeTextProvider,
+  type ThemeTextProviderProps,
+  type ThemeTextValue,
+  type TranslateFunction,
+  useThemeText,
+} from './hooks/theme-text-context'
 // Export Hydrogen-specific hooks
 export {
   createWeaverseDataContext,

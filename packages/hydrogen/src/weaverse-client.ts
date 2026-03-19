@@ -580,8 +580,10 @@ export class WeaverseClient {
       const url = this.getApiUrl('project_configs')
 
       const body = JSON.stringify({ isDesignMode, projectId })
-      let data: ThemeSettingsResponse =
-        await this.fetchWithCache<ThemeSettingsResponse>(url, {
+
+      // Fetch theme settings and merchant overrides in parallel
+      const [data, merchantOverrides] = await Promise.all([
+        this.fetchWithCache<ThemeSettingsResponse>(url, {
           method: 'POST',
           strategy,
           body,
@@ -590,39 +592,56 @@ export class WeaverseClient {
             Accept: 'application/json',
             'Accept-Encoding': 'gzip, deflate, br',
           },
-        })
+        }),
+        this.fetchMerchantOverrides(strategy),
+      ])
+
+      let result = data
 
       // Validate that data is a proper object, not corrupted/compressed content
-      if (typeof data !== 'object' || data === null) {
+      if (typeof result !== 'object' || result === null) {
         console.warn(
           'Invalid theme settings response format, using defaults:',
           {
-            type: typeof data,
-            isString: typeof data === 'string',
-            length: typeof data === 'string' ? (data as string).length : 'N/A',
+            type: typeof result,
+            isString: typeof result === 'string',
+            length:
+              typeof result === 'string' ? (result as string).length : 'N/A',
             preview:
-              typeof data === 'string'
-                ? `${(data as string).substring(0, 50)}...`
-                : String(data),
+              typeof result === 'string'
+                ? `${(result as string).substring(0, 50)}...`
+                : String(result),
           }
         )
-        data = { theme: defaultThemeSettings }
+        result = { theme: defaultThemeSettings }
       }
 
       if (this.themeSchema?.settings || this.themeSchema?.inspector) {
-        // Ensure data.theme exists and is an object before merging
-        if (!data.theme || typeof data.theme !== 'object') {
-          data.theme = defaultThemeSettings
+        // Ensure result.theme exists and is an object before merging
+        if (!result.theme || typeof result.theme !== 'object') {
+          result.theme = defaultThemeSettings
         } else {
-          data.theme = {
+          result.theme = {
             ...defaultThemeSettings,
-            ...data.theme,
+            ...result.theme,
           }
         }
       }
+
+      // Always include staticContent from themeSchema.i18n
+      const staticContent = this.themeSchema?.i18n?.staticContent
+      if (staticContent) {
+        result.staticContent = staticContent
+      }
+
+      // Include merchant overrides (locale-specific translations from DB)
+      if (merchantOverrides) {
+        result.merchantOverrides = merchantOverrides
+      }
+
       if (this.configs.isDesignMode) {
-        data = {
-          ...data,
+        result = {
+          ...result,
           schema:
             this.themeSchema && typeof this.themeSchema === 'object'
               ? {
@@ -644,7 +663,7 @@ export class WeaverseClient {
           publicEnv: this.configs.publicEnv,
         }
       }
-      return data
+      return result
     } catch (error) {
       const errorMessage = 'Unable to load theme settings'
       const errorDetails = this.extractErrorMessage(error)
@@ -653,9 +672,60 @@ export class WeaverseClient {
 
       return {
         theme: defaultThemeSettings,
+        staticContent: this.themeSchema?.i18n?.staticContent,
         _error: errorDetails,
         _loadFailed: true,
       }
+    }
+  }
+
+  /**
+   * Fetch locale-specific merchant overrides from the translation API.
+   * Returns a nested JSON object with translated values.
+   * Falls back to empty object on error to avoid blocking theme rendering.
+   */
+  private fetchMerchantOverrides = async (
+    strategy?: CachingStrategy
+  ): Promise<Record<string, unknown> | undefined> => {
+    try {
+      const { projectId, weaverseHost } = this.configs
+      const i18n = this.storefront.i18n
+
+      if (!(projectId && weaverseHost)) {
+        return undefined
+      }
+
+      // Build locale code from storefront i18n (e.g. "en-us")
+      const language = (i18n?.language || 'en').toLowerCase()
+      const country = (i18n?.country || 'us').toLowerCase()
+      const locale = `${language}-${country}`
+
+      const url = `${weaverseHost}/api/translation/static?projectId=${projectId}&locale=${locale}`
+
+      const overrides = await this.fetchWithCache<Record<string, unknown>>(
+        url,
+        {
+          method: 'GET',
+          strategy,
+          headers: {
+            Accept: 'application/json',
+          },
+        }
+      )
+
+      // Validate it's a proper object
+      if (typeof overrides === 'object' && overrides !== null) {
+        return overrides
+      }
+
+      return undefined
+    } catch (error) {
+      // Don't let merchant overrides failure block theme rendering
+      console.warn(
+        'Unable to load merchant overrides, using theme defaults:',
+        this.extractErrorMessage(error)
+      )
+      return undefined
     }
   }
 
