@@ -10,6 +10,5 @@ dist/**
 .vscode/
 .DS_Store
 /.eslintcache
-hooks/
 package-lock.json
 .user/

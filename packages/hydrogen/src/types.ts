@@ -239,7 +239,7 @@ export type HydrogenThemeSchema = {
     urlStructure: 'url-path' | 'subdomain' | 'top-level-domain'
     defaultLocale: WeaverseI18n
     shopLocales: WeaverseI18n[]
-    staticContent: Record<string, unknown>
+    staticContent?: Record<string, unknown>
   }
 }
 
