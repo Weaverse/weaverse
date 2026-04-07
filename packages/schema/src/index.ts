@@ -920,7 +920,7 @@ export const devTools = {
               typeStr = 'unknown'
           }
 
-          const optional = basicInput.defaultValue !== undefined ? '?' : ''
+          const optional = basicInput.defaultValue === undefined ? '' : '?'
           interfaceStr += `  ${basicInput.name}${optional}: ${typeStr}\n`
         }
       })
