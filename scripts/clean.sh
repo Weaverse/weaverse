@@ -17,6 +17,7 @@ targets=(
   ".cache"
   "build"
   "public/build"
+  "bun.lock"
 )
 
 echo "🧹 Cleaning up projects..."
