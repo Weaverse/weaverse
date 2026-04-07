@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
     "target": "esnext",
+    "ignoreDeprecations": "6.0",
     "lib": ["dom", "esnext"],
     "importHelpers": true,
     "strict": false,
     "resolveJsonModule": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "jsx": "react-jsx",
     "esModuleInterop": true,
     "skipLibCheck": true,

@@ -609,7 +609,7 @@ export class WeaverseClient {
               typeof result === 'string' ? (result as string).length : 'N/A',
             preview:
               typeof result === 'string'
-                ? `${(result as string).substring(0, 50)}...`
+                ? `${(result as string).slice(0, 50)}...`
                 : String(result),
           }
         )

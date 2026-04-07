@@ -37,23 +37,22 @@ import type { ThemeSettingsStore } from './utils/use-theme-settings-store'
 import type { WeaverseHydrogen } from './WeaverseHydrogenRoot'
 import type { WeaverseClient } from './weaverse-client'
 
+// Re-export CachingStrategy from Hydrogen for convenience
+export type { CachingStrategy } from '@shopify/hydrogen'
 // Re-export types from schema for backward compatibility and convenience
 export type {
-  PositionInputValue,
-  WeaverseImage,
-  WeaverseVideo,
-  PageType,
-  InspectorGroup,
   // Enhanced type exports
   BasicInput,
   HeadingInput,
   InputType,
-  SchemaValidationResult,
+  InspectorGroup,
+  PageType,
+  PositionInputValue,
   SchemaValidationIssue,
+  SchemaValidationResult,
+  WeaverseImage,
+  WeaverseVideo,
 }
-
-// Re-export CachingStrategy from Hydrogen for convenience
-export type { CachingStrategy } from '@shopify/hydrogen'
 
 export type ComponentLoaderArgs<T = any, _E = any> = {
   data: T

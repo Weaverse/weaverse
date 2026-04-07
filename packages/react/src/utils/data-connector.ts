@@ -78,7 +78,7 @@ function parseRouteAndProperty(
 
     // Route key with property path
     if (trimmedPath.startsWith(`${routeKey}.`)) {
-      const propertyPath = trimmedPath.substring(routeKey.length + 1)
+      const propertyPath = trimmedPath.slice(routeKey.length + 1)
       result = { routeKey, propertyPath }
       found = true
       break
