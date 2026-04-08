@@ -221,9 +221,6 @@ export type WeaverseI18n = I18nBase & {
 }
 
 export type HydrogenThemeSchema = {
-  betaFlags?: {
-    contentManager?: boolean
-  }
   info: {
     name: string
     version: string
@@ -240,6 +237,8 @@ export type HydrogenThemeSchema = {
     defaultLocale: WeaverseI18n
     shopLocales: WeaverseI18n[]
     staticContent?: Record<string, unknown>
+    /** Enable the translation UI in the builder. */
+    translation?: boolean
   }
 }
 
