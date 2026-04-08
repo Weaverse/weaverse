@@ -25,10 +25,10 @@ export let installDependenciesAndRun = async (outputPath, projectName) => {
       })
 
       install.on('close', (installCode) => {
-        if (installCode !== 0) {
-          reject(new Error(`npm install exited with code ${installCode}`))
-        } else {
+        if (installCode === 0) {
           resolve()
+        } else {
+          reject(new Error(`npm install exited with code ${installCode}`))
         }
       })
 

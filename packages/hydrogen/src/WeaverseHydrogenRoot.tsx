@@ -6,14 +6,7 @@ import {
   WeaverseItemStore,
   WeaverseRoot,
 } from '@weaverse/react'
-import {
-  type ComponentType,
-  createContext,
-  type JSX,
-  memo,
-  Suspense,
-  useMemo,
-} from 'react'
+import { type ComponentType, type JSX, memo, Suspense, useMemo } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Await, useMatches, useRouteLoaderData } from 'react-router'
 import { defaultComponents } from '~/components'
@@ -42,7 +35,11 @@ import type {
 import { hasWeaverseStudio } from './types'
 import { generateDataFromSchema } from './utils'
 import { useStudio } from './utils/use-studio'
-import { useThemeSettingsStore } from './utils/use-theme-settings-store'
+import {
+  ThemeSettingsStoreContext,
+  useCreateThemeSettingsStore,
+  useThemeSettingsStore,
+} from './utils/use-theme-settings-store'
 
 /*
 === IMPORTANT DESIGN PRINCIPLE ===
@@ -435,9 +432,6 @@ export const WeaverseHydrogenRoot = memo(
   }
 )
 
-const ThemeSettingsProvider = createContext<HydrogenThemeSettings | null>(null)
-ThemeSettingsProvider.displayName = 'WeaverseThemeSettingsProvider'
-
 /**
  * Options for the `withWeaverse` HOC.
  */
@@ -474,11 +468,10 @@ export function withWeaverse(
   options?: WithWeaverseOptions
 ) {
   return (props: JSX.IntrinsicAttributes) => {
-    const themeSettingsStore = useThemeSettingsStore()
-    const { settings } = themeSettingsStore
+    const themeSettingsStore = useCreateThemeSettingsStore()
     const themeTextData = useThemeTextData()
     return (
-      <ThemeSettingsProvider.Provider value={settings}>
+      <ThemeSettingsStoreContext.Provider value={themeSettingsStore}>
         <ThemeTextProvider
           merchantOverrides={themeTextData.merchantOverrides}
           staticContent={themeTextData.staticContent}
@@ -486,7 +479,7 @@ export function withWeaverse(
         >
           <Component {...props} />
         </ThemeTextProvider>
-      </ThemeSettingsProvider.Provider>
+      </ThemeSettingsStoreContext.Provider>
     )
   }
 }

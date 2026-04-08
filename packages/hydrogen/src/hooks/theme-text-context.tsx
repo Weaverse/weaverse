@@ -40,13 +40,13 @@ export function interpolate(
   template: string,
   variables?: Record<string, string | number>
 ): string {
-  if (!variables || Object.keys(variables).length === 0) {
+  if (!variables) {
     return template
   }
 
   return template.replace(/\{\{(\w+)\}\}/g, (match, key: string) => {
     const value = variables[key]
-    return value !== undefined ? String(value) : match
+    return value === undefined ? match : String(value)
   })
 }
 

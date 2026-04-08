@@ -1,13 +1,9 @@
 #!/bin/bash
 
-directories=(
-  "."
-  "packages/cli"
-  "packages/core"
-  "packages/hydrogen"
-  "packages/react"
-  "templates/pilot"
-)
+directories=("." "templates/pilot")
+for pkg in packages/*/; do
+  directories+=("${pkg%/}")
+done
 
 targets=(
   "node_modules"
@@ -17,17 +13,16 @@ targets=(
   ".cache"
   "build"
   "public/build"
+  "bun.lock"
 )
 
 echo "🧹 Cleaning up projects..."
 
 for dir in "${directories[@]}"; do
-  cd "$dir" >/dev/null || exit
   for target in "${targets[@]}"; do
-    rm -rf "$target"
+    rm -rf "$dir/$target"
   done
   echo "  ✅ $dir"
-  cd - >/dev/null || exit
 done
 
 echo "✨ SDKs cleaned up successfully!"

@@ -170,31 +170,95 @@ describe('ThemeSettingsStore', () => {
     })
   })
 
-  describe('destroy', () => {
-    it('should_clear_listeners_and_prevent_further_updates', () => {
-      // Arrange
-      let callCount = 0
-      store.subscribe(() => callCount++)
+  describe('updateThemeSettings sync behavior', () => {
+    it('should_merge_new_settings_without_losing_existing_keys', () => {
+      store.updateThemeSettings({ colorText: '#111' })
 
-      // Act
-      store.destroy()
-      store.updateThemeSettings({ colorText: '#777' })
-
-      // Assert - listener not called after destroy
-      expect(callCount).toBe(0)
-      expect(consoleWarnSpy).toHaveBeenCalledTimes(1)
-      expect(consoleWarnSpy.mock.calls[0][0]).toContain(
-        'Cannot update destroyed store'
-      )
+      expect(store.getSnapshot()).toEqual({
+        colorText: '#111',
+        colorTextInverse: '#fff',
+      })
     })
 
-    it('should_be_idempotent_calling_destroy_twice_does_not_throw', () => {
-      // Arrange
+    it('should_not_notify_listeners_when_store_is_destroyed', () => {
+      let callCount = 0
+      store.subscribe(() => callCount++)
       store.destroy()
+      store.updateThemeSettings({ colorText: '#111' })
 
-      // Act & Assert - second destroy should not throw
-      expect(() => store.destroy()).not.toThrow()
-      expect(() => store.destroy()).not.toThrow()
+      expect(callCount).toBe(0)
+    })
+
+    it('should_produce_new_settings_reference_on_each_update', () => {
+      let snapshots: object[] = []
+      store.subscribe(() => {
+        snapshots.push(store.getSnapshot())
+      })
+
+      store.updateThemeSettings({ colorText: '#111' })
+      store.updateThemeSettings({ colorText: '#222' })
+
+      expect(snapshots).toHaveLength(2)
+      expect(snapshots[0]).not.toBe(snapshots[1])
+      expect(snapshots[1]).toEqual({
+        colorText: '#222',
+        colorTextInverse: '#fff',
+      })
+    })
+
+    it('should_handle_empty_update_by_preserving_all_settings', () => {
+      store.updateThemeSettings({})
+
+      expect(store.getSnapshot()).toEqual({
+        colorText: '#000',
+        colorTextInverse: '#fff',
+      })
+    })
+
+    it('should_allow_adding_new_keys_via_update', () => {
+      store.updateThemeSettings({ headerHeight: '80px' } as any)
+
+      expect(store.getSnapshot()).toEqual({
+        colorText: '#000',
+        colorTextInverse: '#fff',
+        headerHeight: '80px',
+      })
+    })
+  })
+
+  describe('constructor', () => {
+    it('should_handle_undefined_data_gracefully', () => {
+      let emptyStore = new ThemeSettingsStore(undefined as any)
+
+      expect(emptyStore.getSnapshot()).toEqual({})
+      expect(emptyStore.schema).toBeUndefined()
+      expect(emptyStore.publicEnv).toBeUndefined()
+      emptyStore.destroy()
+    })
+
+    it('should_store_schema_and_publicEnv', () => {
+      let schema = { settings: [] } as any
+      let publicEnv = { PUBLIC_STORE_DOMAIN: 'test.myshopify.com' } as any
+      let fullStore = new ThemeSettingsStore({
+        theme: { colorText: '#000' },
+        schema,
+        publicEnv,
+      })
+
+      expect(fullStore.schema).toBe(schema)
+      expect(fullStore.publicEnv).toBe(publicEnv)
+      fullStore.destroy()
+    })
+
+    it('should_shallow_copy_theme_so_mutations_do_not_affect_original', () => {
+      let original = { colorText: '#000' }
+      let s = new ThemeSettingsStore({ theme: original })
+
+      s.updateThemeSettings({ colorText: '#111' })
+
+      expect(original.colorText).toBe('#000')
+      expect(s.getSnapshot().colorText).toBe('#111')
+      s.destroy()
     })
   })
 })

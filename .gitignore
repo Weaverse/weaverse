@@ -12,3 +12,4 @@ dist/**
 /.eslintcache
 package-lock.json
 .user/
+.claude/settings.local.json

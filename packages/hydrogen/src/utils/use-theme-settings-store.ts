@@ -1,4 +1,5 @@
 import { isBrowser } from '@weaverse/react'
+import { createContext, useContext, useEffect, useRef } from 'react'
 import { useRouteLoaderData } from 'react-router'
 import type {
   HydrogenThemeSchema,
@@ -40,7 +41,6 @@ export class ThemeSettingsStore {
       ...this.settings,
       ...newSettings,
     }
-    // Notify all listeners
     this.emit()
   }
 
@@ -74,7 +74,6 @@ export class ThemeSettingsStore {
       return
     }
 
-    // Create a copy of listeners to avoid issues if listeners are modified during iteration
     const currentListeners = Array.from(this.listeners)
 
     for (const listener of currentListeners) {
@@ -86,7 +85,6 @@ export class ThemeSettingsStore {
     }
   }
 
-  // Method to properly clean up the store
   destroy = () => {
     if (this.isDestroyed) {
       return
@@ -101,12 +99,48 @@ export class ThemeSettingsStore {
   }
 }
 
-export function useThemeSettingsStore() {
+export const ThemeSettingsStoreContext =
+  createContext<ThemeSettingsStore | null>(null)
+ThemeSettingsStoreContext.displayName = 'ThemeSettingsStoreContext'
+
+export function useCreateThemeSettingsStore(): ThemeSettingsStore {
   const data = useRouteLoaderData('root') as {
     weaverseTheme: WeaverseThemeData
   }
-  if (isBrowser && window.__weaverseThemeSettingsStore) {
-    return window.__weaverseThemeSettingsStore
+  const storeRef = useRef<ThemeSettingsStore | null>(null)
+
+  if (!storeRef.current) {
+    storeRef.current = new ThemeSettingsStore(data?.weaverseTheme)
   }
-  return new ThemeSettingsStore(data?.weaverseTheme)
+
+  const theme = data?.weaverseTheme?.theme
+  useEffect(() => {
+    if (storeRef.current && theme) {
+      storeRef.current.updateThemeSettings(theme)
+    }
+  }, [theme])
+
+  return storeRef.current
+}
+
+export function useThemeSettingsStore(): ThemeSettingsStore {
+  const fromContext = useContext(ThemeSettingsStoreContext)
+  const data = useRouteLoaderData('root') as {
+    weaverseTheme: WeaverseThemeData
+  }
+  const fallbackRef = useRef<ThemeSettingsStore | null>(null)
+
+  if (!(fallbackRef.current || fromContext)) {
+    fallbackRef.current = new ThemeSettingsStore(data?.weaverseTheme)
+  }
+
+  const store = fromContext ?? fallbackRef.current!
+  const theme = data?.weaverseTheme?.theme
+  useEffect(() => {
+    if (!fromContext && theme) {
+      store.updateThemeSettings(theme)
+    }
+  }, [fromContext, store, theme])
+
+  return store
 }
