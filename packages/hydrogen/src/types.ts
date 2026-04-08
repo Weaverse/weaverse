@@ -720,3 +720,39 @@ export type LoadPageParams = {
    */
   projectId?: string
 }
+
+// ─── Translation sidecar types (design mode) ─────────────────────────
+
+/** A single translated field for one item */
+export interface TranslationMapEntry {
+  originalValue: string
+  translatedValue: string
+}
+
+/** Per-item translation fields, keyed by field name */
+export type TranslationItemEntry = {
+  [key: string]: TranslationMapEntry
+}
+
+/**
+ * Translation map sent from the builder alongside page data in design mode.
+ * Keyed by item ID, each value maps field names to translation entries.
+ */
+export type TranslationMap = {
+  [itemId: string]: TranslationItemEntry
+}
+
+/** A single translation entry for save payloads */
+export interface TranslationEntry {
+  deleted?: boolean
+  itemId: string
+  key: string
+  originalValue: string
+  translatedValue: string
+}
+
+/** Result of collecting translation changes for the save flow */
+export type TranslationChanges = {
+  languageId: string
+  entries: TranslationEntry[]
+}

@@ -1,3 +1,4 @@
+import type { ElementData } from '@weaverse/react'
 import {
   isBrowser,
   useSafeExternalStore,
@@ -26,6 +27,10 @@ import type {
   HydrogenElement,
   HydrogenPageData,
   HydrogenThemeSettings,
+  TranslationChanges,
+  TranslationEntry,
+  TranslationItemEntry,
+  TranslationMap,
   WeaverseInternal,
   WeaverseLoaderRequestInfo,
 } from './index'
@@ -59,6 +64,14 @@ The fix was to defer that work until the component is actually rendered.
 export class WeaverseHydrogenItem extends WeaverseItemStore {
   declare weaverse: WeaverseHydrogen
 
+  /**
+   * Cached merged snapshot (base + translations).
+   * Reset to `null` whenever `_store` or the item's translation entry changes.
+   */
+  private _cachedSnapshot: ElementData | null = null
+  private _snapshotStoreRef: ElementData | null = null
+  private _snapshotTranslationRef: TranslationItemEntry | null = null
+
   constructor(initialData: HydrogenComponentData, weaverse: WeaverseHydrogen) {
     super(initialData, weaverse)
     const { data, ...rest } = initialData
@@ -72,6 +85,44 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
 
   get Element(): HydrogenElement {
     return super.Element
+  }
+
+  /**
+   * Override getSnapShot to merge translation data when in translation mode.
+   * Memoizes the result: returns the same object reference as long as
+   * both `_store` and the translation entry haven't changed.
+   * This is critical for `useSyncExternalStore` stability.
+   */
+  getSnapShot = (): ElementData => {
+    const base = this._store
+    const translations = this.weaverse.translationMap?.[this._id]
+
+    // No translations → return base directly (fast path)
+    if (!translations) {
+      return base
+    }
+
+    // Check if cache is still valid (same _store ref + same translation entry ref)
+    if (
+      this._cachedSnapshot &&
+      this._snapshotStoreRef === base &&
+      this._snapshotTranslationRef === translations
+    ) {
+      return this._cachedSnapshot
+    }
+
+    // Build merged snapshot
+    const merged = { ...base }
+    for (const [key, entry] of Object.entries(translations)) {
+      if (entry.translatedValue !== undefined) {
+        merged[key] = entry.translatedValue
+      }
+    }
+
+    this._cachedSnapshot = merged
+    this._snapshotStoreRef = base
+    this._snapshotTranslationRef = translations
+    return merged
   }
 }
 
@@ -92,8 +143,19 @@ export class WeaverseHydrogen extends Weaverse {
   sectionType: string
   declare ItemConstructor: typeof WeaverseHydrogenItem
   declare data: HydrogenPageData
-  static itemInstances: Map<string, WeaverseHydrogenItem>
-  static elementRegistry: Map<string, HydrogenElement>
+  declare static itemInstances: Map<string, WeaverseHydrogenItem>
+  declare static elementRegistry: Map<string, HydrogenElement>
+
+  // ─── Translation sidecar (design mode only) ────────────────────────
+  /**
+   * Translation map received from the builder in design mode.
+   * Keyed by item ID, each entry maps field names to translated values.
+   * `WeaverseHydrogenItem.getSnapShot()` merges these into the data
+   * returned to components, so translations render without monkey-patching.
+   */
+  translationMap: TranslationMap = {}
+  translationLocale = ''
+  translationLanguageId = ''
 
   constructor(params: WeaverseHydrogenParams) {
     const { internal, pageId, requestInfo, ...coreParams } = params
@@ -111,6 +173,102 @@ export class WeaverseHydrogen extends Weaverse {
     this.isPreviewMode = params.isPreviewMode ?? false
     this.isRevisionPreview = params.isRevisionPreview ?? false
     this.sectionType = params.sectionType || ''
+
+    // Extract translation sidecar from page data if present (design mode)
+    this.extractTranslationSidecar()
+  }
+
+  /**
+   * Extract translation sidecar data from `this.data` (the page data).
+   * The builder attaches `translationMap`, `translationLocale`, and
+   * `translationLanguageId` to the page data in design mode.
+   */
+  extractTranslationSidecar = () => {
+    const pageData = this.data as Record<string, any>
+    if (pageData?.translationMap) {
+      this.translationMap = pageData.translationMap
+      this.translationLocale = pageData.translationLocale || ''
+      this.translationLanguageId = pageData.translationLanguageId || ''
+    }
+  }
+
+  /**
+   * Set the translation sidecar data.
+   * Called by the studio bridge when translation data arrives or changes.
+   * Triggers a re-render of all items so translated snapshots are recalculated.
+   */
+  setTranslationSidecar = (
+    translationMap: TranslationMap,
+    locale: string,
+    languageId: string
+  ) => {
+    this.translationMap = translationMap
+    this.translationLocale = locale
+    this.translationLanguageId = languageId
+    // Invalidate all item snapshot caches and trigger re-render
+    this.refreshAllItems()
+  }
+
+  /**
+   * Update a single translation entry for a specific item field.
+   * Used by the studio bridge when the user edits a translatable field.
+   */
+  updateTranslation = (
+    itemId: string,
+    key: string,
+    originalValue: string,
+    translatedValue: string
+  ) => {
+    if (!this.translationMap[itemId]) {
+      this.translationMap[itemId] = {}
+    }
+    // Create a new entry reference so getSnapShot detects the change
+    this.translationMap[itemId] = {
+      ...this.translationMap[itemId],
+      [key]: { originalValue, translatedValue },
+    }
+    // Trigger re-render for this specific item
+    const instance = this.itemInstances.get(itemId)
+    if (instance) {
+      instance.triggerUpdate()
+    }
+  }
+
+  /**
+   * Collect all translation changes across all weaverse instances.
+   * Used by the save flow to persist translation edits.
+   */
+  getTranslationChanges = (): TranslationChanges | undefined => {
+    const entries: TranslationEntry[] = []
+    const languageId = this.translationLanguageId
+    if (!(this.translationLocale && languageId)) {
+      return undefined
+    }
+
+    for (const [itemId, fields] of Object.entries(this.translationMap)) {
+      for (const [key, entry] of Object.entries(fields)) {
+        entries.push({
+          itemId,
+          key: `data.${key}`,
+          originalValue: entry.originalValue,
+          translatedValue: entry.translatedValue,
+        })
+      }
+    }
+
+    if (entries.length === 0) {
+      return undefined
+    }
+    return { languageId, entries }
+  }
+
+  /**
+   * Override setProjectData to re-extract translation sidecar from new page data.
+   */
+  setProjectData = (data: HydrogenPageData) => {
+    this.data = data
+    this.extractTranslationSidecar()
+    this.initProject()
   }
 }
 
