@@ -6,7 +6,14 @@ import {
   WeaverseItemStore,
   WeaverseRoot,
 } from '@weaverse/react'
-import { type ComponentType, type JSX, memo, Suspense, useMemo } from 'react'
+import {
+  type ComponentType,
+  type JSX,
+  memo,
+  Suspense,
+  useMemo,
+  useRef,
+} from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Await, useMatches, useRouteLoaderData } from 'react-router'
 import { defaultComponents } from '~/components'
@@ -34,6 +41,7 @@ import type {
 } from './types'
 import { hasWeaverseStudio } from './types'
 import { generateDataFromSchema } from './utils'
+import { ThemeTextStore } from './utils/theme-text-store'
 import { useStudio } from './utils/use-studio'
 import {
   ThemeSettingsStoreContext,
@@ -470,12 +478,17 @@ export function withWeaverse(
   return (props: JSX.IntrinsicAttributes) => {
     const themeSettingsStore = useCreateThemeSettingsStore()
     const themeTextData = useThemeTextData()
+    const themeTextStoreRef = useRef<ThemeTextStore | null>(null)
+    if (!themeTextStoreRef.current) {
+      themeTextStoreRef.current = new ThemeTextStore()
+    }
     return (
       <ThemeSettingsStoreContext.Provider value={themeSettingsStore}>
         <ThemeTextProvider
           merchantOverrides={themeTextData.merchantOverrides}
           staticContent={themeTextData.staticContent}
           t={options?.t}
+          themeTextStore={themeTextStoreRef.current}
         >
           <Component {...props} />
         </ThemeTextProvider>

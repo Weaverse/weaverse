@@ -1,4 +1,6 @@
+import { useSafeExternalStore } from '@weaverse/react'
 import { createContext, type ReactNode, useContext, useMemo } from 'react'
+import type { ThemeTextStore } from '../utils/theme-text-store'
 
 /**
  * Traverse a nested object by dot-path.
@@ -68,7 +70,7 @@ export type ThemeTextValue = {
    *
    * Priority chain (highest wins):
    * 1. External `t`        (passed into `withWeaverse` / `ThemeTextProvider`)
-   * 2. `merchantOverrides` (DB overrides for the current locale)
+   * 2. `merchantOverrides` (DB overrides for the current locale + design overrides)
    * 3. `staticContent`     (theme default JSON)
    * 4. The key itself      (fallback)
    *
@@ -77,6 +79,8 @@ export type ThemeTextValue = {
    * t('badge.sale', { percentage: 15 })       // => "-15% Off"
    */
   t: TranslateFunction
+  /** Exposed for useStudio to attach to weaverse.internal. Null in production. */
+  themeTextStore: ThemeTextStore | null
 }
 
 const ThemeTextContext = createContext<ThemeTextValue | null>(null)
@@ -92,21 +96,71 @@ export type ThemeTextProviderProps = {
    * that value is used; otherwise the internal resolution chain continues.
    */
   t?: TranslateFunction
+  /** Optional store for live design-mode text overrides from the builder. */
+  themeTextStore?: ThemeTextStore | null
   children: ReactNode
 }
+
+/**
+ * Convert flat dot-notation keys to a nested object structure.
+ *
+ * @example
+ * unflattenKeys({ "cart.title": "Cart", "cart.empty": "Empty" })
+ * // => { cart: { title: "Cart", empty: "Empty" } }
+ */
+function unflattenKeys(flat: Record<string, string>): Record<string, unknown> {
+  const result: Record<string, unknown> = {}
+  for (const [dotPath, value] of Object.entries(flat)) {
+    const keys = dotPath.split('.')
+    let current: Record<string, unknown> = result
+    for (let i = 0; i < keys.length - 1; i++) {
+      const k = keys[i]
+      if (!(k in current) || typeof current[k] !== 'object') {
+        current[k] = {}
+      }
+      current = current[k] as Record<string, unknown>
+    }
+    current[keys[keys.length - 1]] = value
+  }
+  return result
+}
+
+// No-op fallback for useSafeExternalStore when store is null (production).
+// Module-level constants — stable references, zero allocation per render.
+const EMPTY: Record<string, string> = {}
+const NOOP_SUBSCRIBE = () => () => {}
+const NOOP_SNAPSHOT = () => EMPTY
 
 /**
  * Provider that wraps the app to expose the `t()` function.
  *
  * - `staticContent`      – the theme's default locale JSON (from themeSchema.i18n)
  * - `merchantOverrides`  – locale-specific overrides fetched from the API
+ * - `themeTextStore`     – optional store for live design-mode text overrides
  */
 export function ThemeTextProvider({
   staticContent,
   merchantOverrides,
   t: externalT,
+  themeTextStore,
   children,
 }: ThemeTextProviderProps) {
+  // Subscribe to design-mode overrides. No-op when store is null (production).
+  const designOverrides = useSafeExternalStore(
+    themeTextStore?.subscribe ?? NOOP_SUBSCRIBE,
+    themeTextStore?.getSnapshot ?? NOOP_SNAPSHOT,
+    themeTextStore?.getServerSnapshot ?? NOOP_SNAPSHOT
+  )
+
+  // Merge design overrides into merchantOverrides when present.
+  // Design overrides are flat ("cart.title": "value") but merchantOverrides
+  // are nested ({cart: {title: "value"}}), so unflatten before merging.
+  // Guard preserves original ref when empty → useMemo deps unchanged.
+  const mergedOverrides =
+    designOverrides !== EMPTY && Object.keys(designOverrides).length > 0
+      ? { ...merchantOverrides, ...unflattenKeys(designOverrides) }
+      : merchantOverrides
+
   const value = useMemo<ThemeTextValue>(() => {
     const t: TranslateFunction = (key, variables) => {
       // Priority 1: external t (e.g. Shopify i18n, third-party library)
@@ -118,9 +172,9 @@ export function ThemeTextProvider({
         }
       }
 
-      // Priority 2: merchant overrides (locale-specific from DB)
-      const override = merchantOverrides
-        ? getNestedKey(merchantOverrides, key)
+      // Priority 2: merchant overrides (+ design overrides merged in)
+      const override = mergedOverrides
+        ? getNestedKey(mergedOverrides, key)
         : undefined
 
       // Priority 3: static content (theme default JSON)
@@ -132,8 +186,8 @@ export function ThemeTextProvider({
       return interpolate(raw, variables)
     }
 
-    return { t }
-  }, [staticContent, merchantOverrides, externalT])
+    return { t, themeTextStore: themeTextStore ?? null }
+  }, [staticContent, mergedOverrides, externalT, themeTextStore])
 
   return (
     <ThemeTextContext.Provider value={value}>

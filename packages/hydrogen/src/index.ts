@@ -115,6 +115,7 @@ export {
 // Export hydrogen-specific modules
 export * from './types'
 export * from './utils'
+export { ThemeTextStore } from './utils/theme-text-store'
 export * from './WeaverseHydrogenRoot'
 export * from './weaverse-client'
 // Re-export utilities from @weaverse/react

@@ -8,6 +8,7 @@ import {
 } from 'react-router'
 import type { WeaverseHydrogen } from '~/index'
 import { hasWeaverseStudio } from '~/types'
+import { useThemeText } from '../hooks/theme-text-context'
 import { useThemeSettingsStore } from './use-theme-settings-store'
 
 export function useStudio(weaverse: WeaverseHydrogen) {
@@ -16,6 +17,7 @@ export function useStudio(weaverse: WeaverseHydrogen) {
   let { pathname, search } = useLocation()
   let navigate = useNavigate()
   let themeSettingsStore = useThemeSettingsStore()
+  let { themeTextStore } = useThemeText()
   let {
     isDesignMode,
     weaverseHost,
@@ -36,6 +38,7 @@ export function useStudio(weaverse: WeaverseHydrogen) {
           navigate,
           revalidate,
           themeSettingsStore,
+          themeTextStore,
         }
         let studioSrc = `${weaverseHost}/static/studio/hydrogen/index.js?v=${weaverseVersion}`
         loadScript(studioSrc)
