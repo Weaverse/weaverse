@@ -12,10 +12,12 @@ export class ThemeTextStore {
   overrides: Record<string, string> = {}
   private listeners: Set<() => void> = new Set()
 
-  updateOverrides = (newOverrides: Record<string, string>) => {
-    console.log('🚀 ~ ThemeTextStore ~ listeners:', this.listeners)
+  setOverrides = (overrides: Record<string, string>) => {
+    this.overrides = { ...overrides }
+    this.emit()
+  }
 
-    console.log('🚀 ~ ThemeTextStore ~ newOverrides:', newOverrides)
+  updateOverrides = (newOverrides: Record<string, string>) => {
     this.overrides = { ...this.overrides, ...newOverrides }
     this.emit()
   }

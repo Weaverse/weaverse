@@ -116,6 +116,7 @@ export type WeaverseInternal = {
   revalidate: () => void
   themeSettingsStore: ThemeSettingsStore
   themeTextStore?: ThemeTextStore | null
+  merchantOverrides?: Record<string, unknown> | null
 }
 
 /**

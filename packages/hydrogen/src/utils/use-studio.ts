@@ -17,7 +17,7 @@ export function useStudio(weaverse: WeaverseHydrogen) {
   let { pathname, search } = useLocation()
   let navigate = useNavigate()
   let themeSettingsStore = useThemeSettingsStore()
-  let { themeTextStore } = useThemeText()
+  let { themeTextStore, merchantOverrides } = useThemeText()
   let {
     isDesignMode,
     weaverseHost,
@@ -37,6 +37,7 @@ export function useStudio(weaverse: WeaverseHydrogen) {
           ...weaverse.internal,
           navigate,
           revalidate,
+          merchantOverrides,
           themeSettingsStore,
           themeTextStore,
         }

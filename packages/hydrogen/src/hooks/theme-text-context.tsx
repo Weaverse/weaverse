@@ -81,6 +81,8 @@ export type ThemeTextValue = {
   t: TranslateFunction
   /** Exposed for useStudio to attach to weaverse.internal. Null in production. */
   themeTextStore: ThemeTextStore | null
+  /** Active-locale translated keys loaded from the storefront API. */
+  merchantOverrides: Record<string, unknown> | null
 }
 
 const ThemeTextContext = createContext<ThemeTextValue | null>(null)
@@ -186,8 +188,18 @@ export function ThemeTextProvider({
       return interpolate(raw, variables)
     }
 
-    return { t, themeTextStore: themeTextStore ?? null }
-  }, [staticContent, mergedOverrides, externalT, themeTextStore])
+    return {
+      t,
+      themeTextStore: themeTextStore ?? null,
+      merchantOverrides: merchantOverrides ?? null,
+    }
+  }, [
+    staticContent,
+    merchantOverrides,
+    mergedOverrides,
+    externalT,
+    themeTextStore,
+  ])
 
   return (
     <ThemeTextContext.Provider value={value}>
