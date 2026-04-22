@@ -42,18 +42,14 @@ const ENTRY: CustomPageEntry = {
 describe('fetchCustomPages', () => {
   it('returns parsed entries on success', async () => {
     const client = makeClient(() =>
-      Promise.resolve(
-        Response.json({ data: [ENTRY], nextCursor: null })
-      )
+      Promise.resolve(Response.json({ data: [ENTRY], nextCursor: null }))
     )
     expect(await fetchPages(client)).toEqual([ENTRY])
   })
 
   it('returns [] for empty data', async () => {
     const client = makeClient(() =>
-      Promise.resolve(
-        Response.json({ data: [], nextCursor: null })
-      )
+      Promise.resolve(Response.json({ data: [], nextCursor: null }))
     )
     expect(await fetchPages(client)).toEqual([])
   })
@@ -82,9 +78,7 @@ describe('fetchCustomPages', () => {
     let capturedUrl = ''
     const client = makeClient((url) => {
       capturedUrl = url
-      return Promise.resolve(
-        Response.json({ data: [], nextCursor: null })
-      )
+      return Promise.resolve(Response.json({ data: [], nextCursor: null }))
     })
     await fetchPages(client, { locale: 'fr' })
     expect(capturedUrl).toContain('locale=fr')

@@ -130,11 +130,13 @@ describe('Zod v4 Upgrade Tests', () => {
   })
 
   describe('Schema Builder with Zod v4', () => {
+    const LIMIT_DEFAULT = 5
+
     it('should build schemas using the enhanced builder', () => {
       const schema = new SchemaBuilder()
         .title('Builder Test')
         .type('builder-test')
-        .limit(5)
+        .limit(LIMIT_DEFAULT)
         .settings([
           {
             group: 'General',
@@ -151,7 +153,7 @@ describe('Zod v4 Upgrade Tests', () => {
 
       expect(schema.title).toBe('Builder Test')
       expect(schema.type).toBe('builder-test')
-      expect(schema.limit).toBe(5)
+      expect(schema.limit).toBe(LIMIT_DEFAULT)
       expect(schema.settings).toHaveLength(1)
     })
 
@@ -327,8 +329,11 @@ describe('Zod v4 Upgrade Tests', () => {
     it('should parse schemas efficiently', () => {
       const start = performance.now()
 
+      const SCHEMA_COUNT = 100
+      const MAX_DURATION_MS = 1000
+
       // Parse multiple schemas to test performance
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < SCHEMA_COUNT; i += 1) {
         const schema = {
           title: `Performance Test ${i}`,
           type: `performance-test-${i}`,
@@ -353,8 +358,7 @@ describe('Zod v4 Upgrade Tests', () => {
       const duration = performance.now() - start
       console.log(`Parsed 100 schemas in ${duration.toFixed(2)}ms`)
 
-      // Should complete in reasonable time (under 1 second)
-      expect(duration).toBeLessThan(1000)
+      expect(duration).toBeLessThan(MAX_DURATION_MS)
     })
   })
 
