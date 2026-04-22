@@ -6,6 +6,7 @@ import {
 } from '@shopify/hydrogen'
 import type {
   CachingStrategy,
+  CustomPageEntry,
   FetchProjectPayload,
   FetchProjectRequestBody,
   HydrogenComponent,
@@ -750,6 +751,56 @@ export class WeaverseClient {
         },
       ],
     }
+  }
+
+  /**
+   * Fetch all published custom pages for sitemap generation.
+   * Paginates automatically, never throws, returns accumulated results on partial failure.
+   */
+  async fetchCustomPages(opts?: {
+    locale?: string
+    limit?: number
+  }): Promise<CustomPageEntry[]> {
+    const { weaverseHost, projectId } = this.configs
+    const entries: CustomPageEntry[] = []
+    const MAX_PAGES = 100
+
+    let cursor: string | null = null
+
+    for (let i = 0; i < MAX_PAGES; i++) {
+      const params = new URLSearchParams()
+      if (opts?.locale) params.set('locale', opts.locale)
+      if (opts?.limit) params.set('limit', String(opts.limit))
+      if (cursor) params.set('cursor', cursor)
+
+      const qs = params.toString()
+      const url = `${weaverseHost}/api/public/v1/projects/${projectId}/custom-pages${qs ? `?${qs}` : ''}`
+
+      try {
+        const result = await this.fetchWithCache<{
+          data: CustomPageEntry[]
+          nextCursor: string | null
+        }>(url)
+        entries.push(...(result.data || []))
+
+        if (!result.nextCursor) return entries
+        cursor = result.nextCursor
+      } catch (err: any) {
+        const status = err?.status
+        const msg = err?.message || String(err)
+        console.warn(
+          entries.length === 0
+            ? `[Weaverse] Failed to fetch custom pages: ${msg}${status ? ` (HTTP ${status})` : ''}`
+            : `[Weaverse] Custom pages pagination interrupted: ${msg}`
+        )
+        return entries
+      }
+    }
+
+    console.warn(
+      '[Weaverse] Custom pages pagination cap reached (100 iterations)'
+    )
+    return entries
   }
 
   /**
