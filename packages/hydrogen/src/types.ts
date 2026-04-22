@@ -473,6 +473,15 @@ export type ProjectIdValidationResult = {
   error?: string
 }
 
+export interface CustomPageEntry {
+  changeFrequency?: 'daily' | 'weekly' | 'monthly'
+  handle: string
+  lastModified: string
+  locale: string | null
+  path: string
+  priority?: number
+}
+
 /**
  * Type guards for response validation
  */
