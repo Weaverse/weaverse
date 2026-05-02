@@ -27,6 +27,14 @@ export const TEMPLATES = [
       'A sophisticated Shopify Hydrogen theme designed for home furniture and interior design stores.',
     demoUrl: 'https://weaverse-aspen-furniture.fly.dev',
   },
+  {
+    name: 'maison',
+    repoURL: 'https://github.com/Weaverse/maison',
+    defaultDownloadFolder: 'maison-main',
+    description:
+      'A modern and elegant Shopify Hydrogen B2B theme crafted for furniture wholesalers, distributors, and interior design brands.',
+    demoUrl: 'https://maison.weaverse.dev',
+  },
 ]
 
 /**

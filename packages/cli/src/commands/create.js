@@ -17,7 +17,7 @@ import {
 /**
  * Creates a new Weaverse project from a template with interactive prompts
  * @param {Object} argv - Command line arguments object
- * @param {string} [argv.template] - Template name to use (e.g., 'pilot', 'naturelle')
+ * @param {string} [argv.template] - Template name to use (e.g., 'pilot', 'naturelle', 'aspen', 'maison')
  * @param {string} [argv['project-id']] - Project ID for the new project
  * @param {string} [argv['project-name']] - Project folder name
  * @param {string} [argv.commit] - Git commit hash to use (defaults to main branch)
