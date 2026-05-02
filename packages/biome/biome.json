@@ -1,5 +1,5 @@
 {
-  "extends": ["ultracite/core", "ultracite/react", "ultracite/remix"],
+  "extends": ["ultracite/biome/core", "ultracite/biome/react", "ultracite/biome/remix"],
   "linter": {
     "rules": {
       "style": {

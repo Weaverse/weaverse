@@ -1,6 +1,6 @@
 {
   "name": "@weaverse/biome",
-  "version": "5.7.3",
+  "version": "5.7.4",
   "description": "Biome configuration for Weaverse",
   "main": "biome.json",
   "scripts": {
@@ -24,7 +24,7 @@
     "biome.json"
   ],
   "devDependencies": {
-    "@biomejs/biome": "^2",
-    "ultracite": "^7"
+    "@biomejs/biome": "^2.4.14",
+    "ultracite": "^7.6.2"
   }
 }

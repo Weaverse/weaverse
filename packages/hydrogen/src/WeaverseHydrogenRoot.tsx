@@ -247,7 +247,7 @@ export class WeaverseHydrogen extends Weaverse {
     const entries: TranslationEntry[] = []
     const languageId = this.translationLanguageId
     if (!(this.translationLocale && languageId)) {
-      return undefined
+      return
     }
 
     for (const [itemId, fields] of Object.entries(this.translationMap)) {
@@ -262,7 +262,7 @@ export class WeaverseHydrogen extends Weaverse {
     }
 
     if (entries.length === 0) {
-      return undefined
+      return
     }
     return { languageId, entries }
   }

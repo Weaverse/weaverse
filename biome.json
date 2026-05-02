@@ -2,9 +2,9 @@
   "root": true,
   "$schema": "https://biomejs.dev/schemas/2.4.0/schema.json",
   "extends": [
-    "ultracite/core",
-    "ultracite/react",
-    "ultracite/remix",
+    "ultracite/biome/core",
+    "ultracite/biome/react",
+    "ultracite/biome/remix",
     "./packages/biome/biome.json"
   ],
   "vcs": {

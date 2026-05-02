@@ -693,7 +693,7 @@ export class WeaverseClient {
       const i18n = this.storefront.i18n
 
       if (!(projectId && weaverseHost)) {
-        return undefined
+        return
       }
 
       // Build locale code from storefront i18n (e.g. "en-us")
@@ -719,14 +719,14 @@ export class WeaverseClient {
         return overrides
       }
 
-      return undefined
+      return
     } catch (error) {
       // Don't let merchant overrides failure block theme rendering
       console.warn(
         'Unable to load merchant overrides, using theme defaults:',
         this.extractErrorMessage(error)
       )
-      return undefined
+      return
     }
   }
 
@@ -769,9 +769,15 @@ export class WeaverseClient {
 
     for (let i = 0; i < MAX_PAGES; i++) {
       const params = new URLSearchParams()
-      if (opts?.locale) params.set('locale', opts.locale)
-      if (opts?.limit) params.set('limit', String(opts.limit))
-      if (cursor) params.set('cursor', cursor)
+      if (opts?.locale) {
+        params.set('locale', opts.locale)
+      }
+      if (opts?.limit) {
+        params.set('limit', String(opts.limit))
+      }
+      if (cursor) {
+        params.set('cursor', cursor)
+      }
 
       const qs = params.toString()
       const url = `${weaverseHost}/api/public/v1/projects/${projectId}/custom-pages${qs ? `?${qs}` : ''}`
@@ -783,7 +789,9 @@ export class WeaverseClient {
         }>(url)
         entries.push(...(result.data || []))
 
-        if (!result.nextCursor) return entries
+        if (!result.nextCursor) {
+          return entries
+        }
         cursor = result.nextCursor
       } catch (err: any) {
         const status = err?.status

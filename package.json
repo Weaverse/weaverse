@@ -28,7 +28,7 @@
     "ci": "biome ci --changed"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.10",
+    "@biomejs/biome": "2.4.14",
     "@types/node": "25.5.2",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
@@ -41,7 +41,7 @@
     "tsup": "8.5.1",
     "turbo": "^2.9.4",
     "typescript": "6.0.2",
-    "ultracite": "7.4.3"
+    "ultracite": "7.6.2"
   },
   "optionalDependencies": {
     "@esbuild/darwin-x64": "^0.28.0",
