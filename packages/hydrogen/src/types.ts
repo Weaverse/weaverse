@@ -23,6 +23,7 @@ import type {
   HeadingInput,
   InputType,
   InspectorGroup,
+  PageSEOData,
   PageType,
   ComponentPresets as SchemaComponentPresets,
   SchemaType,
@@ -213,6 +214,13 @@ export interface HydrogenPageData extends WeaverseProjectDataType {
   id: string
   items: HydrogenComponentData[]
   name: string
+  /**
+   * Page-level SEO metadata published by Weaverse Builder. `null` when
+   * the page has no `PageSeo` row; absent on revision snapshots that
+   * predate the SEO feature. Themes should treat both as "no Weaverse
+   * override".
+   */
+  seo?: PageSEOData | null
   [key: string]: any
 }
 
