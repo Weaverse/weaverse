@@ -8,15 +8,15 @@ Monorepo of SDKs for integrating React/JamStack frameworks (Shopify Hydrogen, Re
 
 | Task | Command |
 |------|---------|
-| Install dependencies | `bun install` |
-| Build all packages | `bun run build` |
-| Dev with hot reload | `bun run dev` |
-| Run all tests | `bun run test` |
-| Run single test file | `bun test path/to/file.test.ts` |
-| Typecheck all packages | `bun run typecheck` |
-| Lint/format check | `bun run biome` |
-| Lint/format fix | `bun run biome:fix` |
-| Format only | `bun run format` |
+| Install dependencies | `pnpm install` |
+| Build all packages | `pnpm run build` |
+| Dev with hot reload | `pnpm run dev` |
+| Run all tests | `pnpm run test` |
+| Run single test file | `pnpm exec vp test --run path/to/file.test.ts` |
+| Typecheck all packages | `pnpm run typecheck` |
+| Lint/format check | `pnpm run biome` |
+| Lint/format fix | `pnpm run biome:fix` |
+| Format only | `pnpm run format` |
 
 ### Single Package Commands
 
@@ -30,14 +30,15 @@ turbo test --filter=@weaverse/hydrogen
 
 ### Package Manager & Tooling
 
-- **Package manager**: bun 1.3.3 (use `bun install`, NOT npm install)
-- **Script runner**: npm (`bun run <script>` delegates to npm scripts)
+- **Package manager**: pnpm 11.1.2 (use `pnpm install`, NOT npm/bun install)
+- **Script runner**: pnpm (`pnpm run <script>` from any workspace package)
+- **Test runner**: Vite+ (`vp test`, exposed via the `vite-plus` catalog dep) — Vitest under the hood
 - **Build orchestrator**: Turbo (`turbo.json` defines task pipeline)
 - **Linting/Formatting**: Biome 2.4.4 (configured in `packages/biome/biome.json`)
 - **Testing**: Bun's native test runner
 - **Pre-commit hooks**: Lefthook runs `biome check --write` on staged files
-- **CI**: GitHub Actions — `biome ci .` + `bun run typecheck`
-- **Releases**: Git tag + `bun publish` workflow via `.claude/skills/releasing-weaverse-sdks/` skill (core, react, hydrogen stay in sync)
+- **CI**: GitHub Actions — `biome ci .` + `pnpm run typecheck` + `pnpm run test`
+- **Releases**: Git tag + `pnpm publish` workflow via `.claude/skills/releasing-weaverse-sdks/` skill (core, react, hydrogen stay in sync)
 
 ### Package Dependency Graph
 
@@ -174,7 +175,7 @@ Write tests exclusively to verify complex logic, secure critical paths, and prev
 Always structure tests with clear **Arrange → Act → Assert** sections:
 
 ```typescript
-import { describe, it, expect } from 'bun:test'
+import { describe, it, expect } from 'vitest'
 
 describe('WeaverseClient', () => {
   it('should_resolve_projectId_from_URL_query_param', () => {
@@ -204,26 +205,25 @@ Tests must be:
 ### Test Patterns
 
 ```typescript
-import { describe, it, expect, mock, beforeEach, afterEach } from 'bun:test'
-import { spyOn } from 'bun:test'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 // Mock factories for consistent test setup
 function createMockContext(overrides = {}) {
   return {
     storefront: { i18n: { language: 'EN', country: 'US' } },
     env: { WEAVERSE_PROJECT_ID: 'default-project' },
-    cache: { put: mock.fn(), match: mock.fn() },
+    cache: { put: vi.fn(), match: vi.fn() },
     ...overrides,
   }
 }
 
 // Suppress console noise in expected error tests
 beforeEach(() => {
-  spyOn(console, 'warn').mockImplementation(() => {})
+  vi.spyOn(console, 'warn').mockImplementation(() => {})
 })
 
 afterEach(() => {
-  mock.restore()
+  vi.restoreAllMocks()
 })
 
 // Error regex constants at top for reusability
@@ -237,19 +237,19 @@ Note: Use `let` for variable declarations in tests (consistent with biome config
 
 ```sh
 # All tests
-bun run test
+pnpm run test
 
 # Single package
 turbo test --filter=@weaverse/hydrogen
 
 # Single file
-bun test packages/hydrogen/__tests__/weaverse-client.test.ts
+pnpm exec vp test --run packages/hydrogen/__tests__/weaverse-client.test.ts
 
 # Watch mode
-bun test --watch packages/hydrogen/__tests__/weaverse-client.test.ts
+pnpm exec vp test packages/hydrogen/__tests__/weaverse-client.test.ts
 
 # Coverage
-bun test --coverage
+pnpm exec vp test --run --coverage
 ```
 
 ## Component Schema Pattern
@@ -329,7 +329,7 @@ Runs automatically on `git commit`:
 ### CI Pipeline (GitHub Actions)
 
 1. `biome ci .` — lint/format check (strict, no auto-fix)
-2. `bun run typecheck` — TypeScript type checking
+2. `pnpm run typecheck` — TypeScript type checking
 
 ### Releasing
 
@@ -342,7 +342,7 @@ Uses a Claude Code skill (`.claude/skills/releasing-weaverse-sdks/SKILL.md`) for
 
 ## Common Pitfalls
 
-- **Don't use `npm install`** — use `bun install` for dependency management
+- **Don't use `npm install` / `bun install`** — use `pnpm install` for dependency management
 - **Don't use `const` by default** — this project prefers `let` (biome useConst is OFF)
 - **Don't use double quotes** — biome enforces single quotes
 - **Don't use `inspector` in schemas** — use `settings` (inspector is deprecated)

@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'bun:test'
+import { describe, expect, it } from 'vitest'
 import { replaceContentDataConnectorsDeep } from '../src/utils/data-connector'
 
 describe('Data Connector Performance Optimizations', () => {

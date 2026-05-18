@@ -1,7 +1,7 @@
-import { describe, expect, it, mock } from 'bun:test'
+import { describe, expect, it, vi } from 'vitest'
 
-// Mock react-i18next using Bun's mock.module
-mock.module('react-i18next', () => ({
+// Mock react-i18next using vi.mock (hoisted by vitest)
+vi.mock('react-i18next', () => ({
   useTranslation: (ns?: string) => ({
     t: (key: string) => `${ns ? `${ns}:` : ''}${key}`,
     i18n: {
@@ -14,7 +14,7 @@ mock.module('react-i18next', () => ({
 }))
 
 // Mock react hooks for non-React test environment
-mock.module('react', () => ({
+vi.mock('react', () => ({
   useCallback: (fn: (...args: never[]) => unknown, _deps: unknown[]) => fn,
   useMemo: (fn: () => unknown, _deps: unknown[]) => fn(),
 }))

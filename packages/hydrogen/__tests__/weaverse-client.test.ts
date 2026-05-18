@@ -1,12 +1,8 @@
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  mock,
-  spyOn,
-} from 'bun:test'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+const spyOn = vi.spyOn
+const mock = vi.fn
+
 import type { HydrogenComponent, HydrogenThemeSchema } from '../src/types'
 import { WeaverseClient } from '../src/weaverse-client'
 

@@ -10,13 +10,13 @@ This file exists for backward compatibility. All documentation has been consolid
 
 | Task | Command |
 |------|---------|
-| Install dependencies | `bun install` |
-| Build all packages | `bun run build` |
-| Run all tests | `bun run test` |
-| Run single test file | `bun test path/to/file.test.ts` |
-| Typecheck all packages | `bun run typecheck` |
-| Lint/format check | `bun run biome` |
-| Lint/format fix | `bun run biome:fix` |
+| Install dependencies | `pnpm install` |
+| Build all packages | `pnpm run build` |
+| Run all tests | `pnpm run test` |
+| Run single test file | `pnpm exec vp test --run path/to/file.test.ts` |
+| Typecheck all packages | `pnpm run typecheck` |
+| Lint/format check | `pnpm run biome` |
+| Lint/format fix | `pnpm run biome:fix` |
 
 For comprehensive documentation including:
 - Architecture overview

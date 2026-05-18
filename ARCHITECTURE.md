@@ -154,7 +154,7 @@ Task Dependencies (turbo.json):
 - typecheck: inputs=["packages/**/*.ts"]  → checks all TS files
 
 Command Flow:
-$ bun run build (orchestrated by Turbo)
+$ pnpm run build (orchestrated by Turbo)
      │
      ├─→ @weaverse/core (no deps, builds first)
      ├─→ @weaverse/schema (no deps)
@@ -182,7 +182,7 @@ src/index.ts → [dist/index.js (CJS), dist/index.mjs (ESM)]
 
 2. GitHub Actions CI:
    - biome ci . (strict, no auto-fix)
-   - bun run typecheck (TypeScript validation)
+   - pnpm run typecheck (TypeScript validation)
 
 3. Quality Rules (Biome 2.4.4):
    ✓ Single quotes only
@@ -202,8 +202,8 @@ Trigger: "release [packages] as [major|minor|patch]"
 Steps:
 1. Verify version bumps
 2. Bump package.json versions
-3. bun run build (rebuild with new versions)
-4. bun publish (publish to npm registry)
+3. pnpm run build (rebuild with new versions)
+4. pnpm publish (publish to npm registry)
 5. Create git tag (v5.10.0, etc.)
 6. Create GitHub Release
 7. Sync development branch
