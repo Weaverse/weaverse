@@ -1,4 +1,7 @@
-import { afterEach, beforeEach, describe, expect, it, spyOn } from 'bun:test'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+const spyOn = vi.spyOn
+
 import { ThemeSettingsStore } from '../src/utils/use-theme-settings-store'
 
 describe('ThemeSettingsStore', () => {

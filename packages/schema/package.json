@@ -12,7 +12,7 @@
     "dev": "tsup --watch",
     "build": "tsup",
     "clean": "rimraf dist",
-    "test": "bun test"
+    "test": "vp test --run"
   },
   "tsup": {
     "entry": [
