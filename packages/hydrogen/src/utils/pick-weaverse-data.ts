@@ -70,9 +70,16 @@ export function pickWeaverseData(
 function hasWeaverseData(
   value: unknown
 ): value is Record<string, unknown> & { weaverseData: unknown } {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    'weaverseData' in (value as Record<string, unknown>)
-  )
+  // The `in` check alone returns true for `{ weaverseData: undefined }`,
+  // which would let Tier 2 short-circuit and return `undefined` — bypassing
+  // the Tier 3 ancestor walk that would otherwise resolve the missing data.
+  // Require the value to be present (not `undefined`).
+  if (
+    typeof value !== 'object' ||
+    value === null ||
+    !('weaverseData' in (value as Record<string, unknown>))
+  ) {
+    return false
+  }
+  return (value as Record<string, unknown>).weaverseData !== undefined
 }

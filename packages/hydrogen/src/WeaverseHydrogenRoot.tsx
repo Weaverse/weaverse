@@ -419,6 +419,14 @@ export const WeaverseHydrogenRoot = memo(
       [dataProp, ownLoaderData, matches]
     )
 
+    // Explicit `data={null}` is the documented signal for "suppress rendering"
+    // (e.g. a route conditionally disables Weaverse without unmounting the
+    // component). This is distinct from auto-resolution returning `null`,
+    // which means "data was expected but not found" — the error path below.
+    if (dataProp === null) {
+      return null
+    }
+
     if (weaverseData) {
       if (weaverseData instanceof Promise) {
         return (

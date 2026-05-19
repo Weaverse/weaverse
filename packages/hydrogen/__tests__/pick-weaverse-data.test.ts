@@ -77,6 +77,25 @@ describe('pickWeaverseData', () => {
       )
     })
 
+    it('falls through to Tier 3 when own loader data has weaverseData: undefined', () => {
+      // Regression: `in` operator returns true for `{ weaverseData: undefined }`,
+      // which would let Tier 2 short-circuit and return undefined, bypassing
+      // the ancestor walk. The helper must treat `undefined` as absent.
+      const matches: Match[] = [{ loaderData: { weaverseData: layoutData } }]
+      const ownLoaderData = { weaverseData: undefined }
+
+      expect(pickWeaverseData(undefined, ownLoaderData, matches)).toBe(
+        layoutData
+      )
+    })
+
+    it('returns null when own loader has weaverseData: undefined and no ancestor has data', () => {
+      const matches: Match[] = [{ loaderData: { weaverseData: undefined } }]
+      const ownLoaderData = { weaverseData: undefined }
+
+      expect(pickWeaverseData(undefined, ownLoaderData, matches)).toBeNull()
+    })
+
     it('ignores non-object own loader data', () => {
       const matches: Match[] = [{ loaderData: { weaverseData: layoutData } }]
 
@@ -105,6 +124,16 @@ describe('pickWeaverseData', () => {
         { loaderData: { weaverseData: layoutData } },
         { loaderData: { shop: { name: 'Acme' } } }, // no weaverseData
         { loaderData: null },
+      ]
+
+      expect(pickWeaverseData(undefined, undefined, matches)).toBe(layoutData)
+    })
+
+    it('skips matches with weaverseData: undefined', () => {
+      // Same regression as Tier 2: `in` check alone would falsely match.
+      const matches: Match[] = [
+        { loaderData: { weaverseData: layoutData } },
+        { loaderData: { weaverseData: undefined } }, // present-but-undefined
       ]
 
       expect(pickWeaverseData(undefined, undefined, matches)).toBe(layoutData)
