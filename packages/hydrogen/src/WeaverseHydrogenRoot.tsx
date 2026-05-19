@@ -15,7 +15,12 @@ import {
   useRef,
 } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-import { Await, useMatches, useRouteLoaderData } from 'react-router'
+import {
+  Await,
+  useLoaderData,
+  useMatches,
+  useRouteLoaderData,
+} from 'react-router'
 import { defaultComponents } from '~/components'
 import {
   ThemeTextProvider,
@@ -41,6 +46,10 @@ import type {
 } from './types'
 import { hasWeaverseStudio } from './types'
 import { generateDataFromSchema } from './utils'
+import {
+  pickWeaverseData,
+  type WeaverseDataValue,
+} from './utils/pick-weaverse-data'
 import { ThemeTextStore } from './utils/theme-text-store'
 import { useStudio } from './utils/use-studio'
 import {
@@ -371,6 +380,7 @@ export function registerComponent(element: HydrogenElement) {
 export const WeaverseHydrogenRoot = memo(
   ({
     components,
+    data: dataProp,
     errorComponent: ErrorComponent = ({ error }) => (
       <div>
         {error instanceof Error
@@ -380,31 +390,34 @@ export const WeaverseHydrogenRoot = memo(
     ),
   }: {
     components: HydrogenComponent[]
+    /**
+     * Optional explicit `weaverseData` payload. When provided, bypasses the
+     * automatic route-scoped resolution. Accepts a resolved value, a
+     * `Promise` (handled via `<Await>`), or `null` to suppress rendering.
+     *
+     * Recommended for nested layout + child route compositions where two
+     * `<WeaverseHydrogenRoot>` instances need to render different Weaverse
+     * pages on the same URL. See issue #451.
+     */
+    data?: WeaverseDataValue
     errorComponent?: React.FC<{ error: Error | unknown }>
   }) => {
     const matches = useMatches()
 
-    // Create flat route-keyed data context from matches only
-    // No more useLoaderData dependency - everything comes from matches
+    // Flat route-keyed data context for data-connector template resolution
+    // (e.g. {{root.layout.shop.name}}). Legitimately needs all matches.
     const enhancedDataContext = createWeaverseDataContext(matches)
 
-    // Find weaverseData from matches - optimized with useMemo and reverse iteration
-    // Most recent route match (deepest in hierarchy) is most likely to have weaverseData
-    const weaverseData = useMemo(() => {
-      // Iterate backwards for better performance (most recent match first)
-      for (let i = matches.length - 1; i >= 0; i--) {
-        const match = matches[i]
-        const loaderData = match.loaderData as
-          | Record<string, unknown>
-          | undefined
-        if (loaderData && 'weaverseData' in loaderData) {
-          return loaderData.weaverseData as
-            | WeaverseLoaderData
-            | Promise<WeaverseLoaderData>
-        }
-      }
-      return null
-    }, [matches])
+    // Route-scoped weaverseData lookup. `useLoaderData()` returns the
+    // closest route's loader data, which is what makes nested layout +
+    // child routes work — each <WeaverseHydrogenRoot> instance resolves
+    // to its own route's weaverseData. See pickWeaverseData() for the
+    // three-tier fallback policy.
+    const ownLoaderData = useLoaderData() as unknown
+    const weaverseData = useMemo(
+      () => pickWeaverseData(dataProp, ownLoaderData, matches),
+      [dataProp, ownLoaderData, matches]
+    )
 
     if (weaverseData) {
       if (weaverseData instanceof Promise) {
