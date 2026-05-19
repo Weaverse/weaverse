@@ -12,7 +12,7 @@ Release ritual for the `@weaverse/*` npm packages monorepo. Covers version bump,
 ## Context
 
 - **Public npm packages** under `@weaverse/*` scope
-- **Package manager:** `bun` only for development (never `npm install`)
+- **Package manager:** `pnpm` only for development (never `npm install` or `bun install`)
 - **Publish command:** `npm publish` (from individual package directories)
 - **Fixed version group:** core, react, hydrogen (always same version)
 - **Independent packages:** schema, cli, biome, i18n (each has own version)
@@ -100,7 +100,7 @@ Apply the semver bump:
 ### Step 4: Run Verification
 
 ```bash
-bun run biome && bun run typecheck && bun run test
+pnpm run biome && pnpm run typecheck && pnpm run test
 ```
 
 Always runs across ALL packages regardless of release scope. All three MUST pass. Do not proceed if any fail.
@@ -118,15 +118,15 @@ For each target package, edit `package.json`:
 ### Step 6: Update Lockfile
 
 ```bash
-bun install
+pnpm install
 ```
 
-This regenerates the lockfile to reflect the new version strings.
+This regenerates `pnpm-lock.yaml` to reflect the new version strings.
 
 ### Step 7: Build All Packages
 
 ```bash
-bun run build
+pnpm run build
 ```
 
 Turbo builds in dependency order (core → react → hydrogen). Must succeed. Building after the version bump ensures any embedded version strings are correct.
@@ -135,15 +135,15 @@ Turbo builds in dependency order (core → react → hydrogen). Must succeed. Bu
 
 ```bash
 # Fixed group
-git add packages/*/package.json bun.lock
+git add packages/*/package.json pnpm-lock.yaml
 git commit -m "release: v$NEW_VERSION (core, react, hydrogen)"
 
 # Independent package
-git add packages/$PKG/package.json bun.lock
+git add packages/$PKG/package.json pnpm-lock.yaml
 git commit -m "release: @weaverse/$PKG@$NEW_VERSION"
 ```
 
-Only stage `package.json` files and lockfile. Never use `git add -A`. Lefthook pre-commit hooks will run biome on staged files — this is expected and should pass.
+Only stage `package.json` files and `pnpm-lock.yaml`. Never use `git add -A`. Lefthook pre-commit hooks will run biome on staged files — this is expected and should pass.
 
 ### Step 9: Publish to npm
 
@@ -240,7 +240,7 @@ If publish partially succeeds (e.g., core publishes but react fails):
 
 ```
 parse intent → main + latest → npm auth (if not set) → calc versions (confirm) →
-verify (biome+types+tests) → bump versions → bun install → build →
+verify (biome+types+tests) → bump versions → pnpm install → build →
 commit → publish to npm (per-package) → tag → push → gh release → sync dev → verify npm
 ```
 
@@ -248,7 +248,7 @@ commit → publish to npm (per-package) → tag → push → gh release → sync
 
 | Mistake | Fix |
 |---------|-----|
-| Running `npm install` instead of `bun install` | This project uses bun only |
+| Running `npm install` or `bun install` instead of `pnpm install` | This project uses pnpm only (see `pnpm-lock.yaml` + `pnpm-workspace.yaml`) |
 | Publishing without npm auth configured | Run `npm config set //registry.npmjs.org/:_authToken YOUR_TOKEN` once |
 | Publishing without building first | Build must succeed before publish |
 | Forgetting internal dep updates | Fixed group packages reference each other — update the exact pins |
@@ -256,4 +256,4 @@ commit → publish to npm (per-package) → tag → push → gh release → sync
 | Not verifying npm registry after publish | Always check `npm view` to confirm |
 | Hardcoding version numbers | Always read from package.json and compute |
 | Mixing fixed + independent in one release | Run separate rituals for each scope |
-| Using `git add -A` for release commit | Only stage package.json files and bun.lock |
+| Using `git add -A` for release commit | Only stage `package.json` files and `pnpm-lock.yaml` |
