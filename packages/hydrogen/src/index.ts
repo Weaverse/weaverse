@@ -113,6 +113,7 @@ export {
   type WeaverseDataContext,
 } from './hooks/use-weaverse-data-context'
 // Export hydrogen-specific modules
+export * from './seo'
 export * from './types'
 export * from './utils'
 export { ThemeTextStore } from './utils/theme-text-store'

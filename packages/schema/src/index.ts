@@ -1,5 +1,10 @@
 import { z } from 'zod/v4'
 
+export type {
+  OpenGraphType,
+  PageSEOData,
+  TwitterCardType,
+} from './page-seo'
 // Re-export Zod for backward compatibility and convenience
 export { z }
 
