@@ -954,7 +954,9 @@ export class WeaverseClient {
       }
 
       if (!page) {
-        page = this.generateFallbackPage('Please add new section to start.')
+        page = this.generateFallbackPage(
+          '<div style="text-align: center;">Please add new section to start.</div>'
+        )
       }
 
       if (page?.items?.length === 0) {

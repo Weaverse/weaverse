@@ -8,7 +8,7 @@
     "@weaverse/cli": "./index.js"
   },
   "scripts": {
-    "test": "echo 'No tests'",
+    "test": "vp test --run",
     "start": "node index.js"
   },
   "repository": {

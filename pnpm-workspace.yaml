@@ -1,0 +1,40 @@
+# Flat node_modules layout (matches what bun previously produced) so
+# transitive deps keep resolving for code that imports them without
+# declaring them as direct dependencies. Tightening to pnpm's strict
+# `isolated` default is its own audit.
+nodeLinker: hoisted
+
+packages:
+  - 'packages/*'
+  - 'templates/*'
+
+# Whitelist postinstall scripts. pnpm 11's default is to block them as
+# a supply-chain hardening measure.
+allowBuilds:
+  esbuild: true
+  lefthook: true
+  '@biomejs/biome': true
+  workerd: true
+  '@parcel/watcher': true
+
+# Vite+ unified toolchain. `vite` and `vitest` are aliased to the
+# `@voidzero-dev/vite-plus-*` distributions; `vite-plus` is the CLI
+# (`vp`) used by package `test` scripts.
+catalog:
+  vite: npm:@voidzero-dev/vite-plus-core@latest
+  vitest: npm:@voidzero-dev/vite-plus-test@latest
+  vite-plus: latest
+
+verifyDepsBeforeRun: false
+
+overrides:
+  vite: 'catalog:'
+  vitest: 'catalog:'
+
+peerDependencyRules:
+  allowAny:
+    - vite
+    - vitest
+  allowedVersions:
+    vite: '*'
+    vitest: '*'

@@ -1,4 +1,8 @@
-import { beforeEach, describe, expect, it, mock, spyOn, test } from 'bun:test'
+import { beforeEach, describe, expect, it, test, vi } from 'vitest'
+
+const spyOn = vi.spyOn
+const mock = { restore: () => vi.restoreAllMocks() }
+
 import {
   replaceContentDataConnectors,
   replaceContentDataConnectorsDeep,

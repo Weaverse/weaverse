@@ -1,6 +1,6 @@
-import { afterEach, beforeEach, describe, expect, it } from 'bun:test'
 import path from 'node:path'
 import fs from 'fs-extra'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { removeWeaverseFolder } from '../src/utils/download.js'
 
 describe('removeWeaverseFolder', () => {

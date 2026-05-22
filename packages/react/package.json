@@ -2,7 +2,7 @@
   "name": "@weaverse/react",
   "author": "Weaverse Team",
   "description": "React bindings for Weaverse",
-  "version": "5.13.0",
+  "version": "5.13.1",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -25,7 +25,7 @@
     "dev": "tsup --watch",
     "build": "tsup",
     "clean": "rimraf dist",
-    "test": "bun test",
+    "test": "vp test --run",
     "typecheck": "tsc --noEmit"
   },
   "tsup": {
@@ -42,7 +42,7 @@
     "outDir": "dist"
   },
   "dependencies": {
-    "@weaverse/core": "5.13.0",
+    "@weaverse/core": "5.13.1",
     "clsx": "^2.1.1",
     "react": ">=19",
     "react-dom": ">=19"

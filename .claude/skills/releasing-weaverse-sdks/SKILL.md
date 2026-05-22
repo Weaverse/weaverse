@@ -12,7 +12,7 @@ Release ritual for the `@weaverse/*` npm packages monorepo. Covers version bump,
 ## Context
 
 - **Public npm packages** under `@weaverse/*` scope
-- **Package manager:** `bun` only for development (never `npm install`)
+- **Package manager:** `pnpm` only for development (never `npm install` or `bun install`)
 - **Publish command:** `npm publish` (from individual package directories)
 - **Fixed version group:** core, react, hydrogen (always same version)
 - **Independent packages:** schema, cli, biome, i18n (each has own version)
@@ -20,6 +20,19 @@ Release ritual for the `@weaverse/*` npm packages monorepo. Covers version bump,
 - **Tag format:** `v{VERSION}` for fixed group, `@weaverse/{pkg}@{VERSION}` for independents
 - **Internal deps use exact version pins** (e.g., `"@weaverse/core": "5.9.3"`)
 - **Root `package.json` version is never bumped** (private monorepo root)
+
+### Critical: workspace packages do NOT link locally
+
+`link-workspace-packages` was **deliberately removed** from `.npmrc` in commit
+`73b71ba7` (Dec 5 2025). Internal `@weaverse/*` deps with exact pins resolve
+through the public npm registry, not as workspace links. This has a release
+flow consequence: you **cannot run `pnpm install` after bumping versions but
+before publishing** — the new versions don't exist on npm yet, so install
+fails with `ERR_PNPM_NO_MATCHING_VERSION`.
+
+The correct order is **bootstrap publish**: bump all → build (no install
+needed) → publish in dep order → install (now finds new versions on npm)
+→ commit (with refreshed lockfile). Steps 5-8 below implement this.
 
 ### Dependency Order
 
@@ -100,7 +113,7 @@ Apply the semver bump:
 ### Step 4: Run Verification
 
 ```bash
-bun run biome && bun run typecheck && bun run test
+pnpm run biome && pnpm run typecheck && pnpm run test
 ```
 
 Always runs across ALL packages regardless of release scope. All three MUST pass. Do not proceed if any fail.
@@ -115,39 +128,28 @@ For each target package, edit `package.json`:
      - `packages/hydrogen/package.json` → `"@weaverse/react": "NEW_VERSION"`
    - When bumping schema independently, do NOT auto-update hydrogen's dep on schema
 
-### Step 6: Update Lockfile
+**Do not run `pnpm install` yet.** The new versions don't exist on npm; install
+would fail (see the "Critical: workspace packages do NOT link locally" note
+above). The lockfile is regenerated in Step 8 after publish.
+
+### Step 6: Build All Packages
 
 ```bash
-bun install
+pnpm run build
 ```
 
-This regenerates the lockfile to reflect the new version strings.
+Turbo builds in dependency order (core → react → hydrogen). `tsup` transpiles
+local source — no install needed for the build itself. Must succeed.
 
-### Step 7: Build All Packages
-
+Quick sanity check after build (optional but recommended):
 ```bash
-bun run build
+for pkg in core react hydrogen; do
+  printf "%-25s built v%s\n" "$pkg" \
+    "$(node -e "console.log(require('./packages/$pkg/package.json').version)")"
+done
 ```
 
-Turbo builds in dependency order (core → react → hydrogen). Must succeed. Building after the version bump ensures any embedded version strings are correct.
-
-### Step 8: Commit the Release
-
-```bash
-# Fixed group
-git add packages/*/package.json bun.lock
-git commit -m "release: v$NEW_VERSION (core, react, hydrogen)"
-
-# Independent package
-git add packages/$PKG/package.json bun.lock
-git commit -m "release: @weaverse/$PKG@$NEW_VERSION"
-```
-
-Only stage `package.json` files and lockfile. Never use `git add -A`. Lefthook pre-commit hooks will run biome on staged files — this is expected and should pass.
-
-### Step 9: Publish to npm
-
-In dependency order, for each target package:
+### Step 7: Publish to npm (dependency order)
 
 ```bash
 cd packages/core && npm publish && cd ../..
@@ -160,9 +162,48 @@ For independent packages:
 cd packages/$PKG && npm publish && cd ../..
 ```
 
-Verify each publish succeeds before continuing to the next. If one fails, stop and report which packages published successfully and which failed.
+Verify each publish succeeds before continuing to the next. If one fails,
+stop and follow the **Rollback Guidance** section below.
 
-**Note:** The `--access public` flag is not needed as `publishConfig.access` is already set to `public` in each package's package.json.
+**Note:** The `--access public` flag is not needed as `publishConfig.access`
+is already set to `public` in each package's `package.json`.
+
+### Step 8: Refresh Lockfile (now that new versions exist on npm)
+
+```bash
+pnpm install
+```
+
+Now that all bumped packages are published, `pnpm install` succeeds and
+updates `pnpm-lock.yaml` to point at the new versions. Verify the diff is
+limited to internal `@weaverse/*` specifier/version bumps plus any
+transitive churn from `pnpm install`:
+
+```bash
+git diff --stat pnpm-lock.yaml
+awk '/packages\/hydrogen:/{p=1} p; /packages\/i18n:/{p=0}' pnpm-lock.yaml \
+  | grep -B1 -A1 "@weaverse"
+```
+
+Internal deps should still show `specifier: <NEW_VERSION>` resolved from
+the registry (NOT `link:../<pkg>`). If they show as `link:`, something
+added `link-workspace-packages=true` somewhere — abort and investigate.
+
+### Step 9: Commit the Release
+
+```bash
+# Fixed group
+git add packages/*/package.json pnpm-lock.yaml
+git commit -m "release: v$NEW_VERSION (core, react, hydrogen)"
+
+# Independent package
+git add packages/$PKG/package.json pnpm-lock.yaml
+git commit -m "release: @weaverse/$PKG@$NEW_VERSION"
+```
+
+Only stage `package.json` files and `pnpm-lock.yaml`. Never use `git add -A`.
+Lefthook pre-commit hooks will run biome on staged files — this is expected
+and should pass.
 
 ### Step 10: Tag and Push
 
@@ -198,10 +239,9 @@ For first-time independent package tags, `--generate-notes` generates notes from
 ### Step 12: Sync Dev Branch
 
 ```bash
-git checkout dev && git pull origin dev
-git merge main --no-edit
-git push origin dev
-git checkout main
+git checkout dev 2>/dev/null && git pull origin dev && \
+  git merge main --no-edit && git push origin dev && \
+  git checkout main
 ```
 
 If the `dev` branch doesn't exist on remote, skip this step and note it.
@@ -230,30 +270,37 @@ Print summary table:
 
 If publish partially succeeds (e.g., core publishes but react fails):
 
-1. **Do NOT revert the version commit** — the published package references the new version
-2. **Do NOT npm unpublish** — it has restrictions and breaks consumers
-3. **Fix the failure cause** (usually auth or network), then re-run `npm publish` only for remaining packages
-4. **Continue the ritual** from Step 10 once all packages are published
-5. If unrecoverable, document the partial state and manually create tag/release noting which packages were published
+1. **Do NOT revert the version bumps yet** — the already-published package(s) reference the new version, and you need the bumps to retry the failed publish.
+2. **Do NOT `npm unpublish`** — it has restrictions and breaks consumers.
+3. **Fix the failure cause** (usually auth, network, or a forgotten internal dep pin), then re-run `npm publish` only for the remaining packages from Step 7.
+4. **Continue from Step 8** (lockfile refresh) once all packages are published.
+5. If unrecoverable, you can revert local `package.json` and lockfile changes (no commit has landed yet at Step 7) and document the partial state — the failed-mid-publish slot can be filled by the next release (e.g., bump straight to 5.13.2).
+
+Key property of the bootstrap order: **no commit/tag/push happens until all
+publishes succeed**, so a mid-publish failure leaves git untouched.
 
 ## Quick Reference
 
 ```
 parse intent → main + latest → npm auth (if not set) → calc versions (confirm) →
-verify (biome+types+tests) → bump versions → bun install → build →
-commit → publish to npm (per-package) → tag → push → gh release → sync dev → verify npm
+verify (biome+types+tests) → bump versions → build (no install) →
+publish core → react → hydrogen → pnpm install (refresh lockfile) →
+commit → tag → push → gh release → sync dev → verify npm
 ```
 
 ## Common Mistakes
 
 | Mistake | Fix |
 |---------|-----|
-| Running `npm install` instead of `bun install` | This project uses bun only |
+| Running `pnpm install` *before* publish (between Step 5 and Step 7) | Skip it. `link-workspace-packages` is intentionally off; install would fail with `ERR_PNPM_NO_MATCHING_VERSION` because the new versions aren't on npm yet. `pnpm install` happens **after** publish in Step 8. |
+| "Fixing" install failures by adding `link-workspace-packages=true` to `.npmrc` | Don't — that flag was deliberately removed in commit `73b71ba7`. The bootstrap publish order is the supported flow. |
+| Running `npm install` or `bun install` instead of `pnpm install` | This project uses pnpm only (see `pnpm-lock.yaml` + `pnpm-workspace.yaml`) |
 | Publishing without npm auth configured | Run `npm config set //registry.npmjs.org/:_authToken YOUR_TOKEN` once |
 | Publishing without building first | Build must succeed before publish |
 | Forgetting internal dep updates | Fixed group packages reference each other — update the exact pins |
 | Publishing in wrong order | Must be core → react → hydrogen (dependency order) |
 | Not verifying npm registry after publish | Always check `npm view` to confirm |
-| Hardcoding version numbers | Always read from package.json and compute |
+| Hardcoding version numbers | Always read from `package.json` and compute |
 | Mixing fixed + independent in one release | Run separate rituals for each scope |
-| Using `git add -A` for release commit | Only stage package.json files and bun.lock |
+| Using `git add -A` for release commit | Only stage `package.json` files and `pnpm-lock.yaml` |
+| Committing version bumps before publishes succeed | Commit happens **after** publish (Step 9). Keeps git clean if mid-publish fails. |

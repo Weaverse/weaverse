@@ -1,4 +1,7 @@
-import { describe, expect, it, spyOn } from 'bun:test'
+import { describe, expect, it, vi } from 'vitest'
+
+const spyOn = vi.spyOn
+
 import type { CustomPageEntry } from '../src/types'
 
 type ApiResponse = { data: CustomPageEntry[]; nextCursor: string | null }
