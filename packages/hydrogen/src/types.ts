@@ -632,7 +632,6 @@ declare module '@shopify/hydrogen' {
     PUBLIC_SHOPIFY_INBOX_SHOP_ID: string
     PUBLIC_STORE_DOMAIN: string
     PUBLIC_STOREFRONT_API_TOKEN: string
-    WEAVERSE_API_BASE?: string
     WEAVERSE_API_KEY: string
     WEAVERSE_HOST?: string
     WEAVERSE_PROJECT_ID: string

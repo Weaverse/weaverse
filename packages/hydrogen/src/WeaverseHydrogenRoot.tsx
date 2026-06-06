@@ -50,6 +50,7 @@ import {
   pickWeaverseData,
   type WeaverseDataValue,
 } from './utils/pick-weaverse-data'
+import { normalizeDesignModeRequestInfo } from './utils/studio-request-info'
 import { ThemeTextStore } from './utils/theme-text-store'
 import { useStudio } from './utils/use-studio'
 import {
@@ -289,28 +290,30 @@ export class WeaverseHydrogen extends Weaverse {
 function createWeaverseInstance(
   params: WeaverseHydrogenParams
 ): WeaverseHydrogen {
+  const normalizedParams = normalizeDesignModeRequestInfo(params)
   if (isBrowser) {
     // Check if the weaverse instance already exists in the window object
     window.__weaverses = window.__weaverses || {}
-    let weaverse = window.__weaverses[params.pageId]
+    let weaverse = window.__weaverses[normalizedParams.pageId]
     // If the weaverse instance does not exist, or the pathname or search has changed, create a new instance
     if (
       !weaverse ||
-      weaverse?.requestInfo?.pathname !== params.requestInfo.pathname ||
-      weaverse?.requestInfo?.search !== params.requestInfo.search
+      weaverse?.requestInfo?.pathname !==
+        normalizedParams.requestInfo.pathname ||
+      weaverse?.requestInfo?.search !== normalizedParams.requestInfo.search
     ) {
-      weaverse = new WeaverseHydrogen(params)
-      window.__weaverses[params.pageId] = weaverse
+      weaverse = new WeaverseHydrogen(normalizedParams)
+      window.__weaverses[normalizedParams.pageId] = weaverse
     }
     if (weaverse?.isDesignMode) {
-      weaverse.requestInfo = params.requestInfo
+      weaverse.requestInfo = normalizedParams.requestInfo
       if (hasWeaverseStudio(window)) {
-        window.weaverseStudio.refreshStudio(params)
+        window.weaverseStudio.refreshStudio(normalizedParams)
       }
     }
     return weaverse
   }
-  return new WeaverseHydrogen(params)
+  return new WeaverseHydrogen(normalizedParams)
 }
 
 const StudioBridge = memo(({ context }: { context: WeaverseHydrogen }) => {

@@ -486,16 +486,8 @@ export class WeaverseClient {
   }
 
   // Helper method for building API URLs consistently
-  private getApiUrl(
-    endpoint: string,
-    useProxy = !this.configs.isDesignMode
-  ): string {
-    const { weaverseHost, weaverseApiBase, projectId } = this.configs
-
-    if (useProxy) {
-      return `${weaverseApiBase}/v1/${endpoint}?projectId=${projectId}`
-    }
-
+  private getApiUrl(endpoint: string): string {
+    const { weaverseHost } = this.configs
     return `${weaverseHost}/api/public/${endpoint}`
   }
 
