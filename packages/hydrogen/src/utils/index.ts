@@ -97,7 +97,6 @@ export function getWeaverseConfigs(
     WEAVERSE_PROJECT_ID,
     WEAVERSE_API_KEY,
     WEAVERSE_HOST,
-    WEAVERSE_API_BASE,
     PUBLIC_STORE_DOMAIN,
     PUBLIC_STOREFRONT_API_TOKEN,
   } = env || {}
@@ -114,6 +113,11 @@ export function getWeaverseConfigs(
 
   let url = new URL(request.url)
   let isRevisionPreview = url.searchParams.has('__revisionId')
+  let resolvedWeaverseHost =
+    weaverseHost ||
+    WEAVERSE_HOST ||
+    envFromProcess.WEAVERSE_HOST ||
+    'https://studio.weaverse.io'
 
   return {
     projectId:
@@ -121,17 +125,8 @@ export function getWeaverseConfigs(
       WEAVERSE_PROJECT_ID ||
       envFromProcess.WEAVERSE_PROJECT_ID ||
       '',
-    weaverseHost:
-      weaverseHost ||
-      WEAVERSE_HOST ||
-      envFromProcess.WEAVERSE_HOST ||
-      'https://studio.weaverse.io',
-    weaverseApiBase:
-      WEAVERSE_API_BASE ||
-      envFromProcess.WEAVERSE_API_BASE ||
-      WEAVERSE_HOST ||
-      envFromProcess.WEAVERSE_HOST ||
-      'https://api.weaverse.io',
+    weaverseHost: resolvedWeaverseHost,
+    weaverseApiBase: resolvedWeaverseHost,
     weaverseApiKey:
       weaverseApiKey ||
       WEAVERSE_API_KEY ||
