@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { WeaverseI18nServer } from '../src/server'
 
 let defaultConfig = {
@@ -122,6 +122,47 @@ describe('WeaverseI18nServer', () => {
       let server = new WeaverseI18nServer(defaultConfig)
       let request = new Request('https://example.com/')
       expect(server.getLocale(request)).toBe('en')
+    })
+  })
+
+  describe('getI18nData cache', () => {
+    it('should include Builder source and project in the cache key', () => {
+      let server = new WeaverseI18nServer({
+        ...defaultConfig,
+        host: 'https://studio.weaverse.io',
+        localUrl: '/locales/{{lng}}/{{ns}}.json',
+      })
+
+      let cacheKey = (server as any)._getCacheKey({
+        lng: 'en',
+        ns: ['common', 'product'],
+      })
+
+      expect(cacheKey).toBe(
+        'test-project|https://studio.weaverse.io|/locales/{{lng}}/{{ns}}.json|en|common,product'
+      )
+    })
+
+    it('should reuse cached loads only for the same project/source/locale/namespace tuple', async () => {
+      let server = new WeaverseI18nServer({
+        ...defaultConfig,
+        bundledResources: {
+          en: { common: { greeting: 'Hello' } },
+        },
+      })
+      let loadSpy = vi.spyOn(server as any, '_loadI18nData')
+
+      await server.getI18nData(new Request('https://example.com/'), {
+        lng: 'en',
+        ns: 'common',
+      })
+      await server.getI18nData(new Request('https://example.com/'), {
+        lng: 'en',
+        ns: 'common',
+      })
+
+      expect(loadSpy).toHaveBeenCalledTimes(1)
+      loadSpy.mockRestore()
     })
   })
 })

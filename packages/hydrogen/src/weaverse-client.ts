@@ -40,10 +40,14 @@ import {
  * These values optimize CDN hit rates while maintaining fresh content.
  */
 const CACHE_DURATIONS = {
-  /** Short cache for frequently changing content (10 seconds) */
-  SHORT: 10,
-  /** Long cache duration - 23 hours to maximize CDN hits before daily refresh */
-  LONG: 82_800,
+  /** Short browser freshness for content that can change in Builder */
+  SHORT: 60,
+  /** Shared cache freshness for anonymous storefront traffic */
+  SHARED_SHORT: 300,
+  /** Long stale window so slow Builder responses do not block storefront rendering */
+  LONG: 86_400,
+  /** Extra freshness for sitemap-like index data */
+  STATIC: 3600,
 } as const
 
 /**
@@ -63,9 +67,27 @@ const API_PATH = 'v1' as const
  */
 const DEFAULT_CACHE_STRATEGY: CachingStrategy = {
   maxAge: CACHE_DURATIONS.SHORT,
-  sMaxAge: CACHE_DURATIONS.SHORT,
+  sMaxAge: CACHE_DURATIONS.SHARED_SHORT,
   staleWhileRevalidate: CACHE_DURATIONS.LONG,
   staleIfError: CACHE_DURATIONS.LONG,
+} as const
+
+type BuilderApiCacheTarget =
+  | 'custom-pages'
+  | 'merchant-overrides'
+  | 'project'
+  | 'theme-settings'
+
+const SMART_CACHE_STRATEGIES: Record<BuilderApiCacheTarget, CachingStrategy> = {
+  project: DEFAULT_CACHE_STRATEGY,
+  'theme-settings': DEFAULT_CACHE_STRATEGY,
+  'merchant-overrides': DEFAULT_CACHE_STRATEGY,
+  'custom-pages': {
+    maxAge: CACHE_DURATIONS.SHORT,
+    sMaxAge: CACHE_DURATIONS.STATIC,
+    staleWhileRevalidate: CACHE_DURATIONS.LONG,
+    staleIfError: CACHE_DURATIONS.LONG,
+  },
 } as const
 
 export class WeaverseClient {
@@ -510,9 +532,19 @@ export class WeaverseClient {
    */
   public fetchWithCache = async <T = unknown>(
     url: string,
-    options: RequestInit & { strategy?: CachingStrategy } = {}
+    options: RequestInit & {
+      cacheTarget?: BuilderApiCacheTarget
+      strategy?: CachingStrategy
+    } = {}
   ): Promise<T> => {
-    const strategy = options.strategy || CacheCustom(DEFAULT_CACHE_STRATEGY)
+    const { cacheTarget, strategy: strategyOverride, ...fetchOptions } = options
+    const strategy =
+      strategyOverride ||
+      CacheCustom(
+        cacheTarget
+          ? SMART_CACHE_STRATEGIES[cacheTarget]
+          : DEFAULT_CACHE_STRATEGY
+      )
 
     // Update cache key to include method, body content, and projectId for multi-project isolation
     // Prefix for easier debugging in cache systems
@@ -520,17 +552,18 @@ export class WeaverseClient {
       'weaverse-fetch',
       url,
       options.method || 'GET',
-      options.body,
+      fetchOptions.body,
       this.configs.projectId,
+      cacheTarget || 'default',
     ]
 
     let result: WithCacheFetchResponse<T>
 
     if (this.configs.isDesignMode) {
-      result = await this.directFetch<T>(url, options)
+      result = await this.directFetch<T>(url, fetchOptions)
     } else {
       // Use withCache.fetch for better integration with Hydrogen's caching system
-      result = (await this.withCache.fetch(url, options, {
+      result = (await this.withCache.fetch(url, fetchOptions, {
         cacheKey,
         cacheStrategy: strategy,
         shouldCacheResponse: (response: any): boolean => {
@@ -578,6 +611,7 @@ export class WeaverseClient {
       const [data, merchantOverrides] = await Promise.all([
         this.fetchWithCache<ThemeSettingsResponse>(url, {
           method: 'POST',
+          cacheTarget: 'theme-settings',
           strategy,
           body,
           headers: {
@@ -699,6 +733,7 @@ export class WeaverseClient {
         url,
         {
           method: 'GET',
+          cacheTarget: 'merchant-overrides',
           strategy,
           headers: {
             Accept: 'application/json',
@@ -778,7 +813,7 @@ export class WeaverseClient {
         const result = await this.fetchWithCache<{
           data: CustomPageEntry[]
           nextCursor: string | null
-        }>(url)
+        }>(url, { cacheTarget: 'custom-pages' })
         entries.push(...(result.data || []))
 
         if (!result.nextCursor) {
@@ -906,6 +941,7 @@ export class WeaverseClient {
       const projectData: FetchProjectPayload =
         await this.fetchWithCache<FetchProjectPayload>(url, {
           ...reqInit,
+          cacheTarget: 'project',
           strategy,
         })
 
