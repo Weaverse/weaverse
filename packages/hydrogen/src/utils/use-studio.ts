@@ -9,6 +9,7 @@ import {
 import type { WeaverseHydrogen } from '~/index'
 import { hasWeaverseStudio } from '~/types'
 import { useThemeText } from '../hooks/theme-text-context'
+import { shouldFirePixel } from './pixel'
 import { useThemeSettingsStore } from './use-theme-settings-store'
 
 const STUDIO_READY_POLL_MS = 50
@@ -80,9 +81,13 @@ export function useStudio(weaverse: WeaverseHydrogen) {
 
 export function usePixel(context: WeaverseHydrogen) {
   let { projectId, pageId, isDesignMode, weaverseHost } = context
+  let { key: navigationKey } = useLocation()
   // biome-ignore lint/correctness/useExhaustiveDependencies: only track once on mount
   useEffect(() => {
     if (!(projectId && pageId) || isDesignMode) {
+      return
+    }
+    if (!shouldFirePixel(navigationKey, pageId)) {
       return
     }
     let img = new Image()
