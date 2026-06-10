@@ -9,6 +9,7 @@ import {
 import type { WeaverseHydrogen } from '~/index'
 import { hasWeaverseStudio } from '~/types'
 import { useThemeText } from '../hooks/theme-text-context'
+import { registerPixelInstance, shouldFirePixel } from './pixel'
 import { useThemeSettingsStore } from './use-theme-settings-store'
 
 const STUDIO_READY_POLL_MS = 50
@@ -80,13 +81,20 @@ export function useStudio(weaverse: WeaverseHydrogen) {
 
 export function usePixel(context: WeaverseHydrogen) {
   let { projectId, pageId, isDesignMode, weaverseHost } = context
+  let { key: navigationKey } = useLocation()
   // biome-ignore lint/correctness/useExhaustiveDependencies: only track once on mount
   useEffect(() => {
     if (!(projectId && pageId) || isDesignMode) {
       return
     }
-    let img = new Image()
-    img.onload = () => img.remove()
-    img.src = `${weaverseHost}/api/public/px?projectId=${projectId}&pageId=${pageId}`
+    // Register BEFORE deciding to fire: the navigation state must live
+    // exactly as long as some Weaverse instance is mounted (see pixel.ts).
+    let unregister = registerPixelInstance()
+    if (shouldFirePixel(navigationKey, pageId)) {
+      let img = new Image()
+      img.onload = () => img.remove()
+      img.src = `${weaverseHost}/api/public/px?projectId=${projectId}&pageId=${pageId}`
+    }
+    return unregister
   }, [])
 }
