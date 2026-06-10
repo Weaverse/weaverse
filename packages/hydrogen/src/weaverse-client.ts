@@ -34,6 +34,7 @@ import {
   getRequestQueries,
   getWeaverseConfigs,
 } from './utils'
+import { normalizePageUrl } from './utils/normalize-page-url'
 
 /**
  * Cache duration constants (in seconds).
@@ -926,7 +927,9 @@ export class WeaverseClient {
         ...basePageRequestBody,
         projectId: effectiveProjectId, // Use effective (potentially overridden) projectId
         params: pageLoadParams,
-        url: request.url,
+        // Stripped to pathname + Weaverse params — tracking params would
+        // fragment the subrequest cache key (see normalizePageUrl).
+        url: normalizePageUrl(request.url),
       }
 
       const reqInit: RequestInit = {
