@@ -338,6 +338,37 @@ describe('WeaverseClient Multi-Project Architecture', () => {
         explicitStrategy
       )
     })
+
+    it('should bypass shared cache for revision previews', async () => {
+      let request = new Request(
+        'https://test-store.myshopify.com/?__revisionId=rev-123'
+      )
+      let weaverse = new WeaverseClient({
+        ...createMockContext({ request }),
+        components: mockComponents,
+        themeSchema: mockThemeSchema,
+        projectId: 'project-abc',
+      })
+      let fetchWithCache = mock(async () => ({
+        data: { ok: true },
+        response: new Response('{}'),
+      }))
+      let directFetch = mock(async () => ({
+        data: { ok: true },
+        response: new Response('{}'),
+      }))
+      weaverse.withCache.fetch = fetchWithCache
+      ;(weaverse as any).directFetch = directFetch
+
+      await weaverse.fetchWithCache(
+        'https://studio.weaverse.io/api/public/project',
+        { cacheTarget: 'project' as any }
+      )
+
+      expect(weaverse.configs.isRevisionPreview).toBe(true)
+      expect(directFetch).toHaveBeenCalledTimes(1)
+      expect(fetchWithCache).not.toHaveBeenCalled()
+    })
   })
 
   describe('T032: Route-Level Override', () => {

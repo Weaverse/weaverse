@@ -559,7 +559,10 @@ export class WeaverseClient {
 
     let result: WithCacheFetchResponse<T>
 
-    if (this.configs.isDesignMode) {
+    // Bypass the shared cache for design mode and revision previews:
+    // both must always reflect the latest Builder state, and caching
+    // one-off revision responses would only pollute the cache.
+    if (this.configs.isDesignMode || this.configs.isRevisionPreview) {
       result = await this.directFetch<T>(url, fetchOptions)
     } else {
       // Use withCache.fetch for better integration with Hydrogen's caching system
