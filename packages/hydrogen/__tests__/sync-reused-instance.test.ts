@@ -8,6 +8,7 @@ interface InstanceStub {
   data: { id: string; rootId: string; items: { id: string }[] }
   dataContext: Record<string, unknown> | null
   internal: Record<string, unknown>
+  itemInstances: Map<string, { setData: Mock }>
   requestInfo: { pathname: string; search: string }
   setProjectData: Mock
   triggerUpdate: Mock
@@ -18,6 +19,7 @@ function makeInstance(): InstanceStub {
     data: { id: 'page-1', rootId: 'root', items: [{ id: 'item-1' }] },
     dataContext: { cartCount: 0 },
     internal: { project: { id: 'old' } },
+    itemInstances: new Map([['item-1', { setData: vi.fn() }]]),
     requestInfo: { pathname: '/products/shirt', search: '' },
     setProjectData: vi.fn(),
     triggerUpdate: vi.fn(),
@@ -62,7 +64,25 @@ describe('syncReusedInstance', () => {
     expect(instance.internal).toBe(params.internal)
   })
 
-  it('should_apply_fresh_data_context_without_rebuilding_page_data', () => {
+  it('should_assign_fresh_context_before_rebuilding_page_data', () => {
+    let instance = makeInstance()
+    let contextAtRebuild: unknown = 'never-called'
+    instance.setProjectData.mockImplementation(() => {
+      contextAtRebuild = instance.dataContext
+    })
+    let params = makeParams({
+      data: { id: 'page-1', rootId: 'root', items: [{ id: 'item-2' }] },
+      dataContext: { cartCount: 5 },
+    })
+
+    sync(instance, params)
+
+    // Item re-renders triggered by setProjectData must already resolve
+    // data connectors against the fresh context.
+    expect(contextAtRebuild).toEqual({ cartCount: 5 })
+  })
+
+  it('should_notify_item_stores_when_only_data_context_changed', () => {
     let instance = makeInstance()
     let params = makeParams({ dataContext: { cartCount: 3 } })
 
@@ -70,6 +90,11 @@ describe('syncReusedInstance', () => {
 
     expect(instance.setProjectData).not.toHaveBeenCalled()
     expect(instance.dataContext).toEqual({ cartCount: 3 })
+    // Memoized item components only re-render when their store snapshot
+    // identity changes — setData({}) swaps the reference per item.
+    expect(instance.itemInstances.get('item-1')?.setData).toHaveBeenCalledWith(
+      {}
+    )
     expect(instance.triggerUpdate).toHaveBeenCalledTimes(1)
   })
 
@@ -79,6 +104,7 @@ describe('syncReusedInstance', () => {
     sync(instance, makeParams({}))
 
     expect(instance.setProjectData).not.toHaveBeenCalled()
+    expect(instance.itemInstances.get('item-1')?.setData).not.toHaveBeenCalled()
     expect(instance.triggerUpdate).not.toHaveBeenCalled()
   })
 })

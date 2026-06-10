@@ -31,13 +31,25 @@ export function syncReusedInstance(
     JSON.stringify(weaverse.dataContext ?? null) !==
     JSON.stringify(params.dataContext ?? null)
 
+  if (contextChanged) {
+    // Assign before notifying any item store: components resolve data
+    // connectors against `weaverse.dataContext` at render time, so the
+    // fresh context must be in place when re-renders flush.
+    weaverse.dataContext = params.dataContext ?? null
+  }
   if (dataChanged) {
     // State-preserving: existing item stores receive `setData` (and emit),
     // missing ones are created — no full instance teardown.
     weaverse.setProjectData(params.data)
-  }
-  if (contextChanged) {
-    weaverse.dataContext = params.dataContext ?? null
+  } else if (contextChanged) {
+    // Context-only change: memoized item components subscribe to their item
+    // store snapshot, and snapshot identity follows the `_store` reference —
+    // a bare `triggerUpdate()` would notify with an identical snapshot and
+    // `useSyncExternalStore` would skip the re-render. `setData({})` swaps
+    // the store reference so connectors re-resolve against the new context.
+    for (const { id } of params.data?.items || []) {
+      weaverse.itemInstances.get(id)?.setData({})
+    }
   }
   if (dataChanged || contextChanged) {
     weaverse.triggerUpdate()
