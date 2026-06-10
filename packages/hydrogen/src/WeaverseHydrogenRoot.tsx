@@ -51,6 +51,7 @@ import {
   type WeaverseDataValue,
 } from './utils/pick-weaverse-data'
 import { normalizeRequestInfo } from './utils/studio-request-info'
+import { syncReusedInstance } from './utils/sync-reused-instance'
 import { ThemeTextStore } from './utils/theme-text-store'
 import { useStudio } from './utils/use-studio'
 import {
@@ -292,24 +293,27 @@ function createWeaverseInstance(
 ): WeaverseHydrogen {
   const normalizedParams = normalizeRequestInfo(params)
   if (isBrowser) {
-    // Check if the weaverse instance already exists in the window object
     window.__weaverses = window.__weaverses || {}
-    let weaverse = window.__weaverses[normalizedParams.pageId]
-    // If the weaverse instance does not exist, or the pathname or search has changed, create a new instance
-    if (
-      !weaverse ||
-      weaverse?.requestInfo?.pathname !==
-        normalizedParams.requestInfo.pathname ||
-      weaverse?.requestInfo?.search !== normalizedParams.requestInfo.search
-    ) {
-      weaverse = new WeaverseHydrogen(normalizedParams)
-      window.__weaverses[normalizedParams.pageId] = weaverse
-    }
-    if (weaverse?.isDesignMode) {
+    const existing = window.__weaverses[normalizedParams.pageId]
+    // Reuse the instance only while the browser stays on the same URL —
+    // navigation to a different pathname/search builds a fresh instance.
+    const isReused =
+      existing?.requestInfo?.pathname ===
+        normalizedParams.requestInfo.pathname &&
+      existing?.requestInfo?.search === normalizedParams.requestInfo.search
+    const weaverse = isReused
+      ? existing
+      : new WeaverseHydrogen(normalizedParams)
+    window.__weaverses[normalizedParams.pageId] = weaverse
+    if (weaverse.isDesignMode) {
       weaverse.requestInfo = normalizedParams.requestInfo
       if (hasWeaverseStudio(window)) {
         window.weaverseStudio.refreshStudio(normalizedParams)
       }
+    } else if (isReused) {
+      // Same-URL revalidation in live/preview mode: the reused instance
+      // must adopt the fresh loader payload (see syncReusedInstance).
+      syncReusedInstance(weaverse, normalizedParams)
     }
     return weaverse
   }
