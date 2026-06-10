@@ -193,7 +193,7 @@ export class WeaverseI18nServer {
   ): Promise<WeaverseI18nData> {
     let lng = options?.lng || this.getLocale(request)
     let ns = options?.ns || this._config.defaultNS
-    let cacheKey = `${lng}|${Array.isArray(ns) ? ns.join(',') : ns}`
+    let cacheKey = this._getCacheKey({ lng, ns })
     let ttl = this._config.cacheTTL ?? 5 * 60 * 1000
 
     // Check cache — uses a Promise to deduplicate concurrent requests
@@ -258,6 +258,27 @@ export class WeaverseI18nServer {
   ): Promise<TFunction> {
     let instance = await this.createInstance(request, { ns })
     return instance.t.bind(instance)
+  }
+
+  private _getCacheKey({
+    lng,
+    ns,
+  }: {
+    lng: string
+    ns: string | string[]
+  }): string {
+    let namespaceKey = Array.isArray(ns) ? ns.join(',') : ns
+    let host = this._config.host || 'https://weaverse.io'
+    let apiSource = this._config.apiUrl || host
+    let localSource = this._config.localUrl || ''
+
+    return [
+      this._config.projectId,
+      apiSource,
+      localSource,
+      lng,
+      namespaceKey,
+    ].join('|')
   }
 
   /**

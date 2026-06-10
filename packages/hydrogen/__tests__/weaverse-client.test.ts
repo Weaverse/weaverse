@@ -276,6 +276,99 @@ describe('WeaverseClient Multi-Project Architecture', () => {
 
       expect(weaverse.configs.projectId).toBe('project-abc')
     })
+
+    it('should use smart shared cache strategy for Builder API requests', async () => {
+      let weaverse = new WeaverseClient({
+        ...mockContext,
+        components: mockComponents,
+        themeSchema: mockThemeSchema,
+        projectId: 'project-abc',
+      })
+      let fetchWithCache = mock(async () => ({
+        data: { ok: true },
+        response: new Response('{}'),
+      }))
+      weaverse.withCache.fetch = fetchWithCache
+
+      await weaverse.fetchWithCache(
+        'https://studio.weaverse.io/api/public/project',
+        {
+          method: 'POST',
+          body: JSON.stringify({ projectId: 'project-abc' }),
+          cacheTarget: 'project' as any,
+        }
+      )
+
+      expect(fetchWithCache.mock.calls[0][2].cacheStrategy).toMatchObject({
+        maxAge: 60,
+        sMaxAge: 300,
+        staleWhileRevalidate: 86_400,
+        staleIfError: 86_400,
+      })
+    })
+
+    it('should let explicit strategy override smart cache defaults', async () => {
+      let weaverse = new WeaverseClient({
+        ...mockContext,
+        components: mockComponents,
+        themeSchema: mockThemeSchema,
+        projectId: 'project-abc',
+      })
+      let explicitStrategy = {
+        maxAge: 1,
+        sMaxAge: 2,
+        staleWhileRevalidate: 3,
+        staleIfError: 4,
+      }
+      let fetchWithCache = mock(async () => ({
+        data: { ok: true },
+        response: new Response('{}'),
+      }))
+      weaverse.withCache.fetch = fetchWithCache
+
+      await weaverse.fetchWithCache(
+        'https://studio.weaverse.io/api/public/project',
+        {
+          cacheTarget: 'project' as any,
+          strategy: explicitStrategy,
+        }
+      )
+
+      expect(fetchWithCache.mock.calls[0][2].cacheStrategy).toBe(
+        explicitStrategy
+      )
+    })
+
+    it('should bypass shared cache for revision previews', async () => {
+      let request = new Request(
+        'https://test-store.myshopify.com/?__revisionId=rev-123'
+      )
+      let weaverse = new WeaverseClient({
+        ...createMockContext({ request }),
+        components: mockComponents,
+        themeSchema: mockThemeSchema,
+        projectId: 'project-abc',
+      })
+      let fetchWithCache = mock(async () => ({
+        data: { ok: true },
+        response: new Response('{}'),
+      }))
+      let directFetch = mock(async () => ({
+        data: { ok: true },
+        response: new Response('{}'),
+      }))
+      weaverse.withCache.fetch = fetchWithCache
+      ;(weaverse as any).directFetch = directFetch
+
+      await weaverse.fetchWithCache(
+        'https://studio.weaverse.io/api/public/project',
+        { cacheTarget: 'project' as any }
+      )
+
+      expect(weaverse.configs.isRevisionPreview).toBe(true)
+      expect(directFetch).toHaveBeenCalledTimes(1)
+      expect(fetchWithCache).not.toHaveBeenCalled()
+    })
   })
 
   describe('T032: Route-Level Override', () => {
