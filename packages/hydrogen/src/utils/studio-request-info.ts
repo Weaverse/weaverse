@@ -30,17 +30,19 @@ function getQueriesFromSearch(
 }
 
 /**
- * React Router v7 single-fetch revalidation can render client data returned from
- * a `/_root.data` request while the browser is still on the merchant-facing
- * preview URL. In design mode, Studio instance identity must follow the browser
- * URL, not the transient data endpoint, otherwise the SDK creates a fresh
- * Weaverse instance without the existing Studio bridge/interactions attached.
+ * React Router v7 single-fetch revalidation can render client data returned
+ * from a `*.data` request while the browser is still on the canonical URL.
+ * Instance identity must follow the browser URL, not the transient data
+ * endpoint, otherwise the SDK creates a fresh Weaverse instance mid-session:
+ * in design mode that drops the existing Studio bridge/interactions, and in
+ * the live theme it resets every section's runtime state after any
+ * revalidation (cart mutations, locale switches, `revalidate()`). See #451.
  */
-export function normalizeDesignModeRequestInfo(
+export function normalizeRequestInfo(
   params: WeaverseHydrogenParams,
   browserLocation: BrowserLocationLike | undefined = getBrowserLocation()
 ): WeaverseHydrogenParams {
-  if (!(params.isDesignMode && browserLocation)) {
+  if (!browserLocation) {
     return params
   }
 
