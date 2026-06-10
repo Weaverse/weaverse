@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { normalizeDesignModeRequestInfo } from '../src/utils/studio-request-info'
+import type { WeaverseHydrogenParams } from '../src/types'
+import { normalizeRequestInfo } from '../src/utils/studio-request-info'
 
+// Test fixture only exercises the requestInfo branch — the remaining
+// WeaverseHydrogenParams fields are irrelevant here, so an unchecked cast
+// keeps the fixture small without disabling checks at the call sites.
 const baseParams = {
   data: { id: 'page-1', name: 'Product', rootId: 'root', items: [] },
   dataContext: {},
@@ -18,11 +22,11 @@ const baseParams = {
   weaverseApiKey: 'key',
   weaverseHost: 'https://studio.weaverse.io',
   weaverseVersion: '5.14.0',
-} as any
+} as unknown as WeaverseHydrogenParams
 
-describe('normalizeDesignModeRequestInfo', () => {
+describe('normalizeRequestInfo', () => {
   it('should_use_browser_location_for_design_mode_data_revalidation_requests', () => {
-    let normalized = normalizeDesignModeRequestInfo(baseParams, {
+    let normalized = normalizeRequestInfo(baseParams, {
       pathname: '/products/blue-shirt',
       search: '?Color=Blue',
     })
@@ -33,7 +37,7 @@ describe('normalizeDesignModeRequestInfo', () => {
   })
 
   it('should_replace_data_request_queries_with_browser_location_queries', () => {
-    let normalized = normalizeDesignModeRequestInfo(baseParams, {
+    let normalized = normalizeRequestInfo(baseParams, {
       pathname: '/products/blue-shirt',
       search: '?available=true&Color=Blue',
     })
@@ -44,14 +48,40 @@ describe('normalizeDesignModeRequestInfo', () => {
     })
   })
 
-  it('should_preserve_server_request_info_outside_design_mode', () => {
-    let normalized = normalizeDesignModeRequestInfo(
+  it('should_normalize_live_theme_revalidation_requests_to_browser_location', () => {
+    let normalized = normalizeRequestInfo(
       { ...baseParams, isDesignMode: false },
       {
         pathname: '/products/blue-shirt',
         search: '?Color=Blue',
       }
     )
+
+    expect(normalized.requestInfo.pathname).toBe('/products/blue-shirt')
+    expect(normalized.requestInfo.search).toBe('?Color=Blue')
+    expect(normalized.requestInfo.queries).toEqual({ Color: 'Blue' })
+  })
+
+  it('should_return_params_unchanged_when_already_matching_browser_location', () => {
+    let params = {
+      ...baseParams,
+      requestInfo: {
+        ...baseParams.requestInfo,
+        pathname: '/products/blue-shirt',
+        search: '?Color=Blue',
+      },
+    }
+
+    let normalized = normalizeRequestInfo(params, {
+      pathname: '/products/blue-shirt',
+      search: '?Color=Blue',
+    })
+
+    expect(normalized).toBe(params)
+  })
+
+  it('should_preserve_server_request_info_without_browser_location', () => {
+    let normalized = normalizeRequestInfo(baseParams, undefined)
 
     expect(normalized.requestInfo.pathname).toBe('/_root.data')
     expect(normalized.requestInfo.search).toBe('?_routes=routes/product')

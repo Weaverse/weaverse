@@ -50,7 +50,7 @@ import {
   pickWeaverseData,
   type WeaverseDataValue,
 } from './utils/pick-weaverse-data'
-import { normalizeDesignModeRequestInfo } from './utils/studio-request-info'
+import { normalizeRequestInfo } from './utils/studio-request-info'
 import { ThemeTextStore } from './utils/theme-text-store'
 import { useStudio } from './utils/use-studio'
 import {
@@ -290,7 +290,7 @@ export class WeaverseHydrogen extends Weaverse {
 function createWeaverseInstance(
   params: WeaverseHydrogenParams
 ): WeaverseHydrogen {
-  const normalizedParams = normalizeDesignModeRequestInfo(params)
+  const normalizedParams = normalizeRequestInfo(params)
   if (isBrowser) {
     // Check if the weaverse instance already exists in the window object
     window.__weaverses = window.__weaverses || {}

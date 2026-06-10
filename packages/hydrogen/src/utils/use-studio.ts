@@ -11,6 +11,32 @@ import { hasWeaverseStudio } from '~/types'
 import { useThemeText } from '../hooks/theme-text-context'
 import { useThemeSettingsStore } from './use-theme-settings-store'
 
+const STUDIO_READY_POLL_MS = 50
+const STUDIO_READY_TIMEOUT_MS = 5000
+
+/**
+ * Resolve once `window.weaverseStudio` is available, or `null` on timeout.
+ * The studio script sets the global when it *executes*; `loadScript` can
+ * resolve earlier for tags it did not create (e.g. SSR-injected markup),
+ * so never assume readiness right after the script promise settles.
+ */
+function waitForStudio(): Promise<Window['weaverseStudio'] | null> {
+  return new Promise((resolve) => {
+    let startedAt = Date.now()
+    function check() {
+      if (hasWeaverseStudio(window)) {
+        return resolve(window.weaverseStudio)
+      }
+      if (Date.now() - startedAt >= STUDIO_READY_TIMEOUT_MS) {
+        console.warn('[Weaverse] Studio script did not initialize in time')
+        return resolve(null)
+      }
+      setTimeout(check, STUDIO_READY_POLL_MS)
+    }
+    check()
+  })
+}
+
 export function useStudio(weaverse: WeaverseHydrogen) {
   let { revalidate } = useRevalidator()
   let navigation = useNavigation()
@@ -43,11 +69,8 @@ export function useStudio(weaverse: WeaverseHydrogen) {
         }
         let studioSrc = `${weaverseHost}/static/studio/hydrogen/index.js?v=${weaverseVersion}`
         loadScript(studioSrc)
-          .then(() => {
-            if (hasWeaverseStudio(window)) {
-              window.weaverseStudio.init(weaverse)
-            }
-          })
+          .then(waitForStudio)
+          .then((studio) => studio?.init(weaverse))
           .catch(console.error)
       }
     }
