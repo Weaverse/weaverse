@@ -1,6 +1,6 @@
 import type { Weaverse } from '@weaverse/core'
 import clsx from 'clsx'
-import React, { memo, useEffect, useRef } from 'react'
+import React, { memo, useEffect, useMemo, useRef } from 'react'
 import { useItemInstance, useWeaverse } from '~/hooks'
 import { WeaverseContextProvider, WeaverseItemContext } from './context'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
@@ -110,9 +110,15 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
 
   // Replace data connectors in all component data (handles strings, objects, and arrays recursively)
   // IMMUTABLE: Process the entire rest object to avoid mutating original content
-  const processedRest = replaceContentDataConnectorsDeep(
-    rest,
-    context.dataContext
+  // Memoized per snapshot: `data` identity changes exactly when the item's
+  // store or translation entry changes (see WeaverseHydrogenItem.getSnapShot),
+  // and context-only updates swap the store reference via `setData({})` in
+  // syncReusedInstance — so re-renders with an unchanged snapshot skip the
+  // deep placeholder scan + clone entirely.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `rest` is a pure projection of `data`
+  const processedRest = useMemo(
+    () => replaceContentDataConnectorsDeep(rest, context.dataContext),
+    [data, context.dataContext]
   )
 
   useEffect(() => {
@@ -132,7 +138,10 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
 
   if (Element?.Component) {
     const Component = Element.Component
-    Component.displayName = type
+    if (Component.displayName !== type) {
+      // Devtools nicety — assign once, not on every render.
+      Component.displayName = type
+    }
     if (
       Component.$$typeof === Symbol.for('react.forward_ref') ||
       reactVersion > REACT_VERSION_THRESHOLD

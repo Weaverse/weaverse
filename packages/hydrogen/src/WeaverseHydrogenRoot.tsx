@@ -325,20 +325,32 @@ const StudioBridge = memo(({ context }: { context: WeaverseHydrogen }) => {
   return null
 })
 
+/**
+ * Component lists already pushed into the element registry. Registration is
+ * idempotent (the registry checks `has(type)`), but walking the full list
+ * allocates and loops on every render — theme component arrays are
+ * module-level constants, so register each list identity once.
+ */
+const registeredComponentLists = new WeakSet<HydrogenComponent[]>()
+
 function RenderRoot(props: {
   data: WeaverseLoaderData
   components: HydrogenComponent[]
   dataContext?: Record<string, any>
 }) {
   const { data, components, dataContext } = props
-  for (const comp of [...components, ...defaultComponents]) {
-    comp?.schema?.type &&
-      registerComponent({
-        type: comp?.schema.type,
-        Component: comp.default,
-        schema: comp.schema,
-        loader: comp.loader,
-      })
+  if (!registeredComponentLists.has(components)) {
+    for (const comp of [...components, ...defaultComponents]) {
+      if (comp?.schema?.type) {
+        registerComponent({
+          type: comp.schema.type,
+          Component: comp.default,
+          schema: comp.schema,
+          loader: comp.loader,
+        })
+      }
+    }
+    registeredComponentLists.add(components)
   }
   const { page, configs, project, pageAssignment } = data || {}
 
@@ -412,8 +424,12 @@ export const WeaverseHydrogenRoot = memo(
     const matches = useMatches()
 
     // Flat route-keyed data context for data-connector template resolution
-    // (e.g. {{root.layout.shop.name}}). Legitimately needs all matches.
-    const enhancedDataContext = createWeaverseDataContext(matches)
+    // (e.g. {{root.layout.shop.name}}). Legitimately needs all matches;
+    // memoized so same-matches re-renders don't allocate a fresh context.
+    const enhancedDataContext = useMemo(
+      () => createWeaverseDataContext(matches),
+      [matches]
+    )
 
     // Route-scoped weaverseData lookup. `useLoaderData()` returns the
     // closest route's loader data, which is what makes nested layout +
