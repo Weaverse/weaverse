@@ -341,13 +341,14 @@ function RenderRoot(props: {
   const { data, components, dataContext } = props
   if (!registeredComponentLists.has(components)) {
     for (const comp of [...components, ...defaultComponents]) {
-      comp?.schema?.type &&
+      if (comp?.schema?.type) {
         registerComponent({
-          type: comp?.schema.type,
+          type: comp.schema.type,
           Component: comp.default,
           schema: comp.schema,
           loader: comp.loader,
         })
+      }
     }
     registeredComponentLists.add(components)
   }
