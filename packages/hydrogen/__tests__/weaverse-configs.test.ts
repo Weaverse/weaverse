@@ -34,21 +34,35 @@ describe('getWeaverseConfigs', () => {
 
     expect(configs.weaverseApiBase).toBe('https://studio.weaverse.io')
   })
+
+  it('should_use_public_api_base_when_configured', () => {
+    let configs = getWeaverseConfigs(
+      new Request('https://example.com/products/blue-shirt'),
+      {
+        WEAVERSE_HOST: 'https://studio.weaverse.io',
+        WEAVERSE_PUBLIC_API_BASE: 'https://api.weaverse.io',
+        WEAVERSE_PROJECT_ID: 'project-1',
+      } as unknown as HydrogenEnv
+    )
+
+    expect(configs.weaverseHost).toBe('https://studio.weaverse.io')
+    expect(configs.weaverseApiBase).toBe('https://api.weaverse.io')
+  })
 })
 
 describe('WeaverseClient API URLs', () => {
-  it('should_build_api_urls_from_studio_host', () => {
+  it('should_build_api_urls_from_public_api_base', () => {
     let client = Object.create(
       WeaverseClient.prototype
     ) as ClientWithPrivateApiUrl
     client.configs = {
       projectId: 'project-1',
-      weaverseApiBase: 'https://legacy-api.example.com',
+      weaverseApiBase: 'https://api.weaverse.io',
       weaverseHost: 'https://studio.weaverse.io',
     }
 
     let url = client.getApiUrl('project_configs')
 
-    expect(url).toBe('https://studio.weaverse.io/api/public/project_configs')
+    expect(url).toBe('https://api.weaverse.io/api/public/project_configs')
   })
 })

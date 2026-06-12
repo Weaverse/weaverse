@@ -369,6 +369,40 @@ describe('WeaverseClient Multi-Project Architecture', () => {
       expect(directFetch).toHaveBeenCalledTimes(1)
       expect(fetchWithCache).not.toHaveBeenCalled()
     })
+
+    it('should bypass shared cache for external public API proxy', async () => {
+      let weaverse = new WeaverseClient({
+        ...createMockContext({
+          env: {
+            WEAVERSE_PROJECT_ID: 'project-abc',
+            WEAVERSE_HOST: 'https://studio.weaverse.io',
+            WEAVERSE_PUBLIC_API_BASE: 'https://api.weaverse.io',
+          },
+        }),
+        components: mockComponents,
+        themeSchema: mockThemeSchema,
+      })
+      let fetchWithCache = mock(async () => ({
+        data: { ok: true },
+        response: new Response('{}'),
+      }))
+      let directFetch = mock(async () => ({
+        data: { ok: true },
+        response: new Response('{}'),
+      }))
+      weaverse.withCache.fetch = fetchWithCache
+      ;(weaverse as any).directFetch = directFetch
+
+      await weaverse.fetchWithCache(
+        'https://api.weaverse.io/api/public/project',
+        { cacheTarget: 'project' as any }
+      )
+
+      expect(weaverse.configs.weaverseHost).toBe('https://studio.weaverse.io')
+      expect(weaverse.configs.weaverseApiBase).toBe('https://api.weaverse.io')
+      expect(directFetch).toHaveBeenCalledTimes(1)
+      expect(fetchWithCache).not.toHaveBeenCalled()
+    })
   })
 
   describe('T032: Route-Level Override', () => {
