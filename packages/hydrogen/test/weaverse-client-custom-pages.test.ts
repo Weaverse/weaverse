@@ -9,6 +9,7 @@ type ApiResponse = { data: CustomPageEntry[]; nextCursor: string | null }
 function makeClient(fetchImpl: (url: string) => Promise<Response>) {
   return {
     configs: {
+      weaverseApiBase: 'https://cdn.weaverse.io',
       weaverseHost: 'https://builder.weaverse.io',
       projectId: 'test-project-id',
     },
@@ -85,6 +86,19 @@ describe('fetchCustomPages', () => {
     })
     await fetchPages(client, { locale: 'fr' })
     expect(capturedUrl).toContain('locale=fr')
+  })
+
+  it('uses public api base instead of studio host when configured', async () => {
+    let capturedUrl = ''
+    const client = makeClient((url) => {
+      capturedUrl = url
+      return Promise.resolve(Response.json({ data: [], nextCursor: null }))
+    })
+    await fetchPages(client)
+    expect(capturedUrl.startsWith('https://cdn.weaverse.io/api/public/')).toBe(
+      true
+    )
+    expect(capturedUrl.includes('https://builder.weaverse.io')).toBe(false)
   })
 
   it('returns accumulated entries when later page fails', async () => {

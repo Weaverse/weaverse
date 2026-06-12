@@ -806,7 +806,7 @@ export class WeaverseClient {
     locale?: string
     limit?: number
   }): Promise<CustomPageEntry[]> {
-    const { weaverseHost, projectId } = this.configs
+    const { weaverseApiBase, projectId } = this.configs
     const entries: CustomPageEntry[] = []
     const MAX_PAGES = 100
 
@@ -825,7 +825,7 @@ export class WeaverseClient {
       }
 
       const qs = params.toString()
-      const url = `${weaverseHost}/api/public/v1/projects/${projectId}/custom-pages${qs ? `?${qs}` : ''}`
+      const url = `${weaverseApiBase}/api/public/v1/projects/${projectId}/custom-pages${qs ? `?${qs}` : ''}`
 
       try {
         const result = await this.fetchWithCache<{
