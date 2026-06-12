@@ -95,10 +95,9 @@ describe('fetchCustomPages', () => {
       return Promise.resolve(Response.json({ data: [], nextCursor: null }))
     })
     await fetchPages(client)
-    expect(capturedUrl.startsWith('https://cdn.weaverse.io/api/public/')).toBe(
-      true
-    )
-    expect(capturedUrl.includes('https://builder.weaverse.io')).toBe(false)
+    const parsed = new URL(capturedUrl)
+    expect(parsed.origin).toBe('https://cdn.weaverse.io')
+    expect(parsed.pathname.startsWith('/api/public/')).toBe(true)
   })
 
   it('returns accumulated entries when later page fails', async () => {
