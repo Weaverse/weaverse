@@ -123,7 +123,7 @@ export function getWeaverseConfigs(
     ? weaverseHost
     : WEAVERSE_PUBLIC_API_BASE ||
       envFromProcess.WEAVERSE_PUBLIC_API_BASE ||
-      resolvedWeaverseHost
+      'https://api.weaverse.io'
 
   return {
     projectId:

@@ -13,13 +13,14 @@ interface ClientWithPrivateApiUrl {
 }
 
 describe('getWeaverseConfigs', () => {
-  it('should_default_api_base_to_studio_host', () => {
+  it('should_default_api_base_to_edge_proxy', () => {
     let configs = getWeaverseConfigs(
       new Request('https://example.com/products/blue-shirt'),
       { WEAVERSE_PROJECT_ID: 'project-1' } as unknown as HydrogenEnv
     )
 
-    expect(configs.weaverseApiBase).toBe('https://studio.weaverse.io')
+    expect(configs.weaverseHost).toBe('https://studio.weaverse.io')
+    expect(configs.weaverseApiBase).toBe('https://api.weaverse.io')
   })
 
   it('should_ignore_legacy_api_base_when_studio_host_is_configured', () => {
@@ -32,7 +33,8 @@ describe('getWeaverseConfigs', () => {
       } as unknown as HydrogenEnv
     )
 
-    expect(configs.weaverseApiBase).toBe('https://studio.weaverse.io')
+    expect(configs.weaverseHost).toBe('https://studio.weaverse.io')
+    expect(configs.weaverseApiBase).toBe('https://api.weaverse.io')
   })
 
   it('should_use_public_api_base_when_configured', () => {
