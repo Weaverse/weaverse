@@ -119,10 +119,11 @@ export function getWeaverseConfigs(
     WEAVERSE_HOST ||
     envFromProcess.WEAVERSE_HOST ||
     'https://studio.weaverse.io'
-  let resolvedWeaverseApiBase =
-    WEAVERSE_PUBLIC_API_BASE ||
-    envFromProcess.WEAVERSE_PUBLIC_API_BASE ||
-    resolvedWeaverseHost
+  let resolvedWeaverseApiBase = weaverseHost
+    ? weaverseHost
+    : WEAVERSE_PUBLIC_API_BASE ||
+      envFromProcess.WEAVERSE_PUBLIC_API_BASE ||
+      resolvedWeaverseHost
 
   return {
     projectId:
