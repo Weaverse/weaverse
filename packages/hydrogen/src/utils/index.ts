@@ -114,16 +114,20 @@ export function getWeaverseConfigs(
 
   let url = new URL(request.url)
   let isRevisionPreview = url.searchParams.has('__revisionId')
+  let configuredWeaverseHost = WEAVERSE_HOST || envFromProcess.WEAVERSE_HOST
   let resolvedWeaverseHost =
-    weaverseHost ||
-    WEAVERSE_HOST ||
-    envFromProcess.WEAVERSE_HOST ||
-    'https://studio.weaverse.io'
+    weaverseHost || configuredWeaverseHost || 'https://studio.weaverse.io'
+  // Public data reads default to the edge proxy, but an explicit custom
+  // WEAVERSE_HOST (staging/self-hosted Weaverse) must stay the API base so
+  // those deployments don't fetch page/config data from the production proxy.
   let resolvedWeaverseApiBase = weaverseHost
     ? weaverseHost
     : WEAVERSE_PUBLIC_API_BASE ||
       envFromProcess.WEAVERSE_PUBLIC_API_BASE ||
-      'https://api.weaverse.io'
+      (configuredWeaverseHost &&
+      configuredWeaverseHost !== 'https://studio.weaverse.io'
+        ? configuredWeaverseHost
+        : 'https://api.weaverse.io')
 
   return {
     projectId:

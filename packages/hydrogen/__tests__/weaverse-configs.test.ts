@@ -51,6 +51,21 @@ describe('getWeaverseConfigs', () => {
     expect(configs.weaverseApiBase).toBe('https://api.weaverse.io')
   })
 
+  it('should_fall_back_to_custom_weaverse_host_when_no_public_api_base', () => {
+    let configs = getWeaverseConfigs(
+      new Request('https://example.com/products/blue-shirt'),
+      {
+        WEAVERSE_HOST: 'https://staging.self-hosted.example.com',
+        WEAVERSE_PROJECT_ID: 'project-1',
+      } as unknown as HydrogenEnv
+    )
+
+    expect(configs.weaverseHost).toBe('https://staging.self-hosted.example.com')
+    expect(configs.weaverseApiBase).toBe(
+      'https://staging.self-hosted.example.com'
+    )
+  })
+
   it('should_keep_editor_host_overrides_ahead_of_public_api_base', () => {
     let request = new Request(
       'https://example.com/products/blue-shirt?weaverseHost=https://preview.weaverse.io'
