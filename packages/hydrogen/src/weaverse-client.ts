@@ -510,8 +510,16 @@ export class WeaverseClient {
 
   // Helper method for building API URLs consistently
   private getApiUrl(endpoint: string): string {
-    const { weaverseHost } = this.configs
-    return `${weaverseHost}/api/public/${endpoint}`
+    const { weaverseApiBase } = this.configs
+    return `${weaverseApiBase}/api/public/${endpoint}`
+  }
+
+  private isExternalPublicApiUrl(url: string): boolean {
+    const { weaverseApiBase, weaverseHost } = this.configs
+    return (
+      weaverseApiBase !== weaverseHost &&
+      url.startsWith(`${weaverseApiBase}/api/public/`)
+    )
   }
 
   /**
@@ -560,10 +568,16 @@ export class WeaverseClient {
 
     let result: WithCacheFetchResponse<T>
 
-    // Bypass the shared cache for design mode and revision previews:
-    // both must always reflect the latest Builder state, and caching
-    // one-off revision responses would only pollute the cache.
-    if (this.configs.isDesignMode || this.configs.isRevisionPreview) {
+    // Bypass the shared Hydrogen subrequest cache for design/revision modes
+    // and for the Cloudflare public API proxy. The proxy owns freshness with
+    // versioned cache keys; keeping Hydrogen's URL/body cache in front would
+    // keep serving a stale response even after Builder bumps api.weaverse.io's
+    // project version.
+    if (
+      this.configs.isDesignMode ||
+      this.configs.isRevisionPreview ||
+      this.isExternalPublicApiUrl(url)
+    ) {
       result = await this.directFetch<T>(url, fetchOptions)
     } else {
       // Use withCache.fetch for better integration with Hydrogen's caching system
@@ -792,7 +806,7 @@ export class WeaverseClient {
     locale?: string
     limit?: number
   }): Promise<CustomPageEntry[]> {
-    const { weaverseHost, projectId } = this.configs
+    const { weaverseApiBase, projectId } = this.configs
     const entries: CustomPageEntry[] = []
     const MAX_PAGES = 100
 
@@ -811,7 +825,7 @@ export class WeaverseClient {
       }
 
       const qs = params.toString()
-      const url = `${weaverseHost}/api/public/v1/projects/${projectId}/custom-pages${qs ? `?${qs}` : ''}`
+      const url = `${weaverseApiBase}/api/public/v1/projects/${projectId}/custom-pages${qs ? `?${qs}` : ''}`
 
       try {
         const result = await this.fetchWithCache<{

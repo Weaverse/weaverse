@@ -150,6 +150,12 @@ export interface WeaverseHydrogenParams
   weaverseApiBase: string
   weaverseApiKey: string
   weaverseHost: string
+  /**
+   * Public data API origin. Keep `weaverseHost` for Studio scripts/editor
+   * assets; point this at the Cloudflare proxy (`https://api.weaverse.io`)
+   * when edge caching is enabled.
+   */
+  weaversePublicApiBase?: string
   weaverseVersion?: string
 }
 
@@ -179,6 +185,7 @@ export type WeaverseProjectConfigs = {
   projectId: string
   weaverseHost: string
   weaverseApiBase: string
+  weaversePublicApiBase?: string
   weaverseApiKey: string
   weaverseVersion?: string
   isDesignMode?: boolean
@@ -635,6 +642,7 @@ declare module '@shopify/hydrogen' {
     WEAVERSE_API_KEY: string
     WEAVERSE_HOST?: string
     WEAVERSE_PROJECT_ID: string
+    WEAVERSE_PUBLIC_API_BASE?: string
   }
 }
 

@@ -13,13 +13,14 @@ interface ClientWithPrivateApiUrl {
 }
 
 describe('getWeaverseConfigs', () => {
-  it('should_default_api_base_to_studio_host', () => {
+  it('should_default_api_base_to_edge_proxy', () => {
     let configs = getWeaverseConfigs(
       new Request('https://example.com/products/blue-shirt'),
       { WEAVERSE_PROJECT_ID: 'project-1' } as unknown as HydrogenEnv
     )
 
-    expect(configs.weaverseApiBase).toBe('https://studio.weaverse.io')
+    expect(configs.weaverseHost).toBe('https://studio.weaverse.io')
+    expect(configs.weaverseApiBase).toBe('https://api.weaverse.io')
   })
 
   it('should_ignore_legacy_api_base_when_studio_host_is_configured', () => {
@@ -32,23 +33,67 @@ describe('getWeaverseConfigs', () => {
       } as unknown as HydrogenEnv
     )
 
-    expect(configs.weaverseApiBase).toBe('https://studio.weaverse.io')
+    expect(configs.weaverseHost).toBe('https://studio.weaverse.io')
+    expect(configs.weaverseApiBase).toBe('https://api.weaverse.io')
+  })
+
+  it('should_use_public_api_base_when_configured', () => {
+    let configs = getWeaverseConfigs(
+      new Request('https://example.com/products/blue-shirt'),
+      {
+        WEAVERSE_HOST: 'https://studio.weaverse.io',
+        WEAVERSE_PUBLIC_API_BASE: 'https://api.weaverse.io',
+        WEAVERSE_PROJECT_ID: 'project-1',
+      } as unknown as HydrogenEnv
+    )
+
+    expect(configs.weaverseHost).toBe('https://studio.weaverse.io')
+    expect(configs.weaverseApiBase).toBe('https://api.weaverse.io')
+  })
+
+  it('should_fall_back_to_custom_weaverse_host_when_no_public_api_base', () => {
+    let configs = getWeaverseConfigs(
+      new Request('https://example.com/products/blue-shirt'),
+      {
+        WEAVERSE_HOST: 'https://staging.self-hosted.example.com',
+        WEAVERSE_PROJECT_ID: 'project-1',
+      } as unknown as HydrogenEnv
+    )
+
+    expect(configs.weaverseHost).toBe('https://staging.self-hosted.example.com')
+    expect(configs.weaverseApiBase).toBe(
+      'https://staging.self-hosted.example.com'
+    )
+  })
+
+  it('should_keep_editor_host_overrides_ahead_of_public_api_base', () => {
+    let request = new Request(
+      'https://example.com/products/blue-shirt?weaverseHost=https://preview.weaverse.io'
+    )
+    let configs = getWeaverseConfigs(request, {
+      WEAVERSE_HOST: 'https://studio.weaverse.io',
+      WEAVERSE_PUBLIC_API_BASE: 'https://api.weaverse.io',
+      WEAVERSE_PROJECT_ID: 'project-1',
+    } as unknown as HydrogenEnv)
+
+    expect(configs.weaverseHost).toBe('https://preview.weaverse.io')
+    expect(configs.weaverseApiBase).toBe('https://preview.weaverse.io')
   })
 })
 
 describe('WeaverseClient API URLs', () => {
-  it('should_build_api_urls_from_studio_host', () => {
+  it('should_build_api_urls_from_public_api_base', () => {
     let client = Object.create(
       WeaverseClient.prototype
     ) as ClientWithPrivateApiUrl
     client.configs = {
       projectId: 'project-1',
-      weaverseApiBase: 'https://legacy-api.example.com',
+      weaverseApiBase: 'https://api.weaverse.io',
       weaverseHost: 'https://studio.weaverse.io',
     }
 
     let url = client.getApiUrl('project_configs')
 
-    expect(url).toBe('https://studio.weaverse.io/api/public/project_configs')
+    expect(url).toBe('https://api.weaverse.io/api/public/project_configs')
   })
 })
