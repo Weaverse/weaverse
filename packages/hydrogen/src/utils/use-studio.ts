@@ -53,10 +53,11 @@ function waitForStudio(): Promise<Window['weaverseStudio'] | null> {
  *
  * Reads mode + host/version from the URL query params Studio attaches when it
  * drives the iframe, so it needs no loader data and works on error pages.
- * Mounted at the theme root via `withWeaverse`, so it survives error
- * boundaries. Outside Studio (no design/preview params) it is a no-op, and
- * `loadScript` is idempotent, so it coexists with the page-scoped
- * {@link useStudio}.
+ * Mounted via {@link withWeaverse}, which must be the root route's `Layout`
+ * export so the bridge renders even when a route's `ErrorBoundary` replaces the
+ * page (404s, loader/render errors). Outside Studio (no design/preview params)
+ * it is a no-op, and `loadScript` is idempotent, so it coexists with the
+ * page-scoped {@link useStudio}.
  */
 export function useStudioConnect() {
   let { search } = useLocation()

@@ -9,6 +9,44 @@ export interface StudioMode {
 const DEFAULT_WEAVERSE_HOST = 'https://studio.weaverse.io'
 
 /**
+ * Weaverse-controlled apex domains the Studio bridge may be served from
+ * (matched on the host itself and any subdomain).
+ */
+const TRUSTED_STUDIO_DOMAINS = ['weaverse.io', 'weaverse.dev']
+
+/**
+ * Whether `host` is an origin we trust to serve the Studio bridge script.
+ *
+ * The bridge executes inside the storefront document, so a host taken from an
+ * attacker-controllable source — e.g. a crafted `?weaverseHost=` query — is an
+ * XSS vector. Callers MUST reject untrusted hosts before handing them to
+ * `loadScript`. Trusts `weaverse.io`/`weaverse.dev` and their subdomains, plus
+ * localhost for previewing a storefront against a locally-running builder.
+ */
+export function isTrustedStudioHost(host: string): boolean {
+  let parsed: URL
+  try {
+    parsed = new URL(host)
+  } catch {
+    return false
+  }
+  let { hostname, protocol } = parsed
+  if (protocol !== 'https:' && protocol !== 'http:') {
+    return false
+  }
+  if (
+    hostname === 'localhost' ||
+    hostname === '127.0.0.1' ||
+    hostname.endsWith('.localhost')
+  ) {
+    return true
+  }
+  return TRUSTED_STUDIO_DOMAINS.some(
+    (domain) => hostname === domain || hostname.endsWith(`.${domain}`)
+  )
+}
+
+/**
  * Build the Studio bridge script URL for the current mode, or `null` when the
  * storefront is not being previewed inside Weaverse Studio.
  *
@@ -46,16 +84,23 @@ export function getStudioScriptSrc(mode: StudioMode): string | null {
  * `isPreviewMode`, `__revisionId`, `weaverseHost`, `weaverseVersion`) — or
  * `null` outside Studio.
  *
+ * The `weaverseHost` query is attacker-controllable, so it is only honored when
+ * it is a {@link isTrustedStudioHost trusted Weaverse origin}; otherwise the
+ * default Studio host is used, so a crafted URL can never load a script from an
+ * arbitrary origin into the storefront document.
+ *
  * Pure (no DOM) so the root-level connect's production gate stays unit-testable
  * and needs no loader data.
  */
 export function resolveStudioScriptSrc(search: string): string | null {
   let params = new URLSearchParams(search)
+  let host = params.get('weaverseHost')
   return getStudioScriptSrc({
     isDesignMode: params.get('isDesignMode') === 'true',
     isPreviewMode: params.get('isPreviewMode') === 'true',
     isRevisionPreview: params.has('__revisionId'),
-    weaverseHost: params.get('weaverseHost') || DEFAULT_WEAVERSE_HOST,
+    weaverseHost:
+      host && isTrustedStudioHost(host) ? host : DEFAULT_WEAVERSE_HOST,
     weaverseVersion: params.get('weaverseVersion') || '',
   })
 }

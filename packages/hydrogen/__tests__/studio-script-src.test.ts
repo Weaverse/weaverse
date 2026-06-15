@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   getStudioScriptSrc,
+  isTrustedStudioHost,
   resolveStudioScriptSrc,
 } from '../src/utils/studio-script-src'
 
@@ -106,5 +107,55 @@ describe('resolveStudioScriptSrc (URL gate)', () => {
     expect(resolveStudioScriptSrc('?isDesignMode=true&weaverseVersion=9')).toBe(
       `${HOST}/static/studio/hydrogen/index.js?v=9`
     )
+  })
+
+  it('ignores a crafted weaverseHost and falls back to the default host', () => {
+    // The bridge executes in the storefront document; a URL-supplied host must
+    // never be able to point it at an attacker origin.
+    let search =
+      '?isDesignMode=true&weaverseHost=https%3A%2F%2Fattacker.example&weaverseVersion=9'
+    expect(resolveStudioScriptSrc(search)).toBe(
+      `${HOST}/static/studio/hydrogen/index.js?v=9`
+    )
+  })
+
+  it('rejects a look-alike host that only suffixes a trusted domain', () => {
+    let search =
+      '?isDesignMode=true&weaverseHost=https%3A%2F%2Fweaverse.io.attacker.com&weaverseVersion=9'
+    expect(resolveStudioScriptSrc(search)).toBe(
+      `${HOST}/static/studio/hydrogen/index.js?v=9`
+    )
+  })
+})
+
+describe('isTrustedStudioHost', () => {
+  it('trusts weaverse.io / weaverse.dev and their subdomains', () => {
+    expect(isTrustedStudioHost('https://studio.weaverse.io')).toBe(true)
+    expect(isTrustedStudioHost('https://preview.weaverse.io')).toBe(true)
+    expect(isTrustedStudioHost('https://weaverse.io')).toBe(true)
+    expect(isTrustedStudioHost('https://foo.weaverse.dev')).toBe(true)
+  })
+
+  it('trusts localhost for previewing against a local builder', () => {
+    expect(isTrustedStudioHost('http://localhost:3456')).toBe(true)
+    expect(isTrustedStudioHost('http://127.0.0.1:3456')).toBe(true)
+  })
+
+  it('rejects untrusted, look-alike, and embedded-trusted hosts', () => {
+    expect(isTrustedStudioHost('https://attacker.example')).toBe(false)
+    // suffix collision without a dot boundary
+    expect(isTrustedStudioHost('https://notweaverse.io')).toBe(false)
+    // trusted token only as a left-hand label
+    expect(isTrustedStudioHost('https://weaverse.io.attacker.com')).toBe(false)
+    // trusted token in path/userinfo, not the host
+    expect(isTrustedStudioHost('https://attacker.com/weaverse.io')).toBe(false)
+    expect(isTrustedStudioHost('https://weaverse.io@attacker.com')).toBe(false)
+  })
+
+  it('rejects non-http(s) schemes and unparseable input', () => {
+    expect(isTrustedStudioHost('javascript:alert(1)//weaverse.io')).toBe(false)
+    expect(isTrustedStudioHost('//studio.weaverse.io')).toBe(false)
+    expect(isTrustedStudioHost('not a url')).toBe(false)
+    expect(isTrustedStudioHost('')).toBe(false)
   })
 })
