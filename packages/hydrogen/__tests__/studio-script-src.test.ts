@@ -130,6 +130,20 @@ describe('resolveStudioScriptSrc (URL gate)', () => {
       'http://localhost:3456/static/studio/hydrogen/index.js?v=9'
     )
   })
+
+  it('uses the last weaverseHost when duplicated, matching the loader', () => {
+    // The server's getRequestQueries keeps the last value; an earlier stale or
+    // untrusted host must not make the root bridge disagree with the loader.
+    let trustedLast =
+      '?isDesignMode=true&weaverseHost=https%3A%2F%2Fstale.example&weaverseHost=https%3A%2F%2Fstudio.weaverse.io&weaverseVersion=9'
+    expect(resolveStudioScriptSrc(trustedLast)).toBe(
+      `${HOST}/static/studio/hydrogen/index.js?v=9`
+    )
+    // Last value untrusted → null (consistent with the server rejecting it).
+    let untrustedLast =
+      '?isDesignMode=true&weaverseHost=https%3A%2F%2Fstudio.weaverse.io&weaverseHost=https%3A%2F%2Fattacker.example&weaverseVersion=9'
+    expect(resolveStudioScriptSrc(untrustedLast)).toBeNull()
+  })
 })
 
 describe('isTrustedStudioHost', () => {

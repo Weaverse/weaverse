@@ -134,7 +134,12 @@ export function resolveStudioScriptSrc(
   storefrontHostname = ''
 ): string | null {
   let params = new URLSearchParams(search)
-  let host = params.get('weaverseHost')
+  // Match the server's getRequestQueries(), which keeps the LAST value of a
+  // duplicated key. Studio appends its own control params, so a pre-existing
+  // (stale/untrusted) `weaverseHost` earlier in the URL must not win here, or
+  // the root bridge would be skipped while the loader uses the later host.
+  let last = (key: string) => params.getAll(key).at(-1)
+  let host = last('weaverseHost')
   if (host) {
     let allowLoopback = isLoopbackHostname(storefrontHostname)
     if (!isTrustedStudioHost(host, { allowLoopback })) {
@@ -142,10 +147,10 @@ export function resolveStudioScriptSrc(
     }
   }
   return getStudioScriptSrc({
-    isDesignMode: params.get('isDesignMode') === 'true',
-    isPreviewMode: params.get('isPreviewMode') === 'true',
+    isDesignMode: last('isDesignMode') === 'true',
+    isPreviewMode: last('isPreviewMode') === 'true',
     isRevisionPreview: params.has('__revisionId'),
     weaverseHost: host || DEFAULT_WEAVERSE_HOST,
-    weaverseVersion: params.get('weaverseVersion') || '',
+    weaverseVersion: last('weaverseVersion') || '',
   })
 }
