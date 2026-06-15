@@ -53,7 +53,7 @@ import {
 import { normalizeRequestInfo } from './utils/studio-request-info'
 import { syncReusedInstance } from './utils/sync-reused-instance'
 import { ThemeTextStore } from './utils/theme-text-store'
-import { useStudio } from './utils/use-studio'
+import { useStudio, useStudioConnect } from './utils/use-studio'
 import {
   ThemeSettingsStoreContext,
   useCreateThemeSettingsStore,
@@ -325,6 +325,11 @@ const StudioBridge = memo(({ context }: { context: WeaverseHydrogen }) => {
   return null
 })
 
+const StudioConnect = memo(() => {
+  useStudioConnect()
+  return null
+})
+
 /**
  * Component lists already pushed into the element registry. Registration is
  * idempotent (the registry checks `has(type)`), but walking the full list
@@ -534,6 +539,7 @@ export function withWeaverse(
           t={options?.t}
           themeTextStore={themeTextStoreRef.current}
         >
+          <StudioConnect />
           <Component {...props} />
         </ThemeTextProvider>
       </ThemeSettingsStoreContext.Provider>
