@@ -109,6 +109,19 @@ describe('getWeaverseConfigs', () => {
     expect(configs.weaverseHost).toBe('https://studio.weaverse.io')
     expect(configs.weaverseApiBase).toBe('https://api.weaverse.io')
   })
+
+  it('should_ignore_a_cleartext_url_weaverse_host', () => {
+    // A trusted domain over http must not downgrade server-side fetches.
+    let request = new Request(
+      'https://example.com/products/blue-shirt?weaverseHost=http://preview.weaverse.io'
+    )
+    let configs = getWeaverseConfigs(request, {
+      WEAVERSE_PROJECT_ID: 'project-1',
+    } as unknown as HydrogenEnv)
+
+    expect(configs.weaverseHost).toBe('https://studio.weaverse.io')
+    expect(configs.weaverseApiBase).toBe('https://api.weaverse.io')
+  })
 })
 
 describe('WeaverseClient API URLs', () => {

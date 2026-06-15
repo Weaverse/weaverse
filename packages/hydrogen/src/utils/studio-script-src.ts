@@ -36,8 +36,8 @@ export interface TrustedStudioHostOptions {
  * server-side fetches, so a host taken from an attacker-controllable source —
  * e.g. a crafted `?weaverseHost=` query — is both an XSS and an SSRF vector.
  * Callers MUST reject untrusted hosts before acting on them. Trusts
- * `weaverse.io`/`weaverse.dev` and their subdomains; loopback is opt-in (see
- * {@link TrustedStudioHostOptions.allowLoopback}).
+ * `weaverse.io`/`weaverse.dev` and their subdomains over https; loopback is
+ * opt-in (see {@link TrustedStudioHostOptions.allowLoopback}).
  */
 export function isTrustedStudioHost(
   host: string,
@@ -50,16 +50,20 @@ export function isTrustedStudioHost(
     return false
   }
   let { hostname, protocol } = parsed
-  if (protocol !== 'https:' && protocol !== 'http:') {
-    return false
-  }
+  // Loopback (opt-in) is the only place http is allowed — a local builder
+  // serves the bridge over http and there is no cleartext-downgrade risk to a
+  // private address. Every other trusted host must be https so server-side
+  // page/theme fetches are never downgraded to cleartext.
   if (
     options?.allowLoopback &&
     (hostname === 'localhost' ||
       hostname === '127.0.0.1' ||
       hostname.endsWith('.localhost'))
   ) {
-    return true
+    return protocol === 'http:' || protocol === 'https:'
+  }
+  if (protocol !== 'https:') {
+    return false
   }
   return TRUSTED_STUDIO_DOMAINS.some(
     (domain) => hostname === domain || hostname.endsWith(`.${domain}`)

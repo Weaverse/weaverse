@@ -144,6 +144,14 @@ describe('isTrustedStudioHost', () => {
     expect(isTrustedStudioHost('https://foo.weaverse.dev')).toBe(true)
   })
 
+  it('requires https for trusted Weaverse domains (no cleartext downgrade)', () => {
+    expect(isTrustedStudioHost('http://studio.weaverse.io')).toBe(false)
+    expect(isTrustedStudioHost('http://preview.weaverse.io')).toBe(false)
+    expect(
+      isTrustedStudioHost('http://preview.weaverse.io', { allowLoopback: true })
+    ).toBe(false)
+  })
+
   it('trusts loopback hosts only when loopback is opted in', () => {
     // Server-safe default rejects loopback so a public ?weaverseHost= can't
     // turn into an SSRF target; the browser script resolver opts in.
