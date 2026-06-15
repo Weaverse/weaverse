@@ -291,5 +291,16 @@ describe('pickWeaverseData', () => {
         ])
       ).toBe(true)
     })
+
+    it('reads the older match.data alias when loaderData is absent', () => {
+      // react-router ^7 spans versions before UIMatch.loaderData existed, where
+      // useMatches() only populates `data`.
+      expect(
+        matchesHaveWeaverseData([{ data: { weaverseData: childData } }])
+      ).toBe(true)
+      expect(matchesHaveWeaverseData([{ data: { weaverseData: null } }])).toBe(
+        false
+      )
+    })
   })
 })

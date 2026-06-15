@@ -99,16 +99,21 @@ function hasWeaverseData(
  * data settles, so the root must not load the script early and answer
  * `checkWeaversePage()` as an unbound/no-page bridge while a deferred page is
  * still streaming.
+ *
+ * Reads loader results from `match.loaderData` *and* the older `match.data`
+ * alias: the `react-router: ^7` peer range spans versions before `loaderData`
+ * existed (and `createWeaverseDataContext` reads `match.data`), so checking only
+ * one field would silently miss page data on those versions.
  */
 export function matchesHaveWeaverseData(
-  matches: ReadonlyArray<Pick<UIMatch, 'loaderData'>>
+  matches: ReadonlyArray<Partial<Pick<UIMatch, 'data' | 'loaderData'>>>
 ): boolean {
   return matches.some((match) => {
-    let loaderData = match.loaderData
+    let routeData = match.loaderData ?? match.data
     return (
-      typeof loaderData === 'object' &&
-      loaderData !== null &&
-      Boolean((loaderData as { weaverseData?: unknown }).weaverseData)
+      typeof routeData === 'object' &&
+      routeData !== null &&
+      Boolean((routeData as { weaverseData?: unknown }).weaverseData)
     )
   })
 }
