@@ -263,9 +263,14 @@ describe('pickWeaverseData', () => {
           { loaderData: undefined },
         ])
       ).toBe(false)
-      // `weaverseData: undefined` does not count as present.
+      // Neither `undefined` nor an explicit `null` counts: `WeaverseHydrogenRoot`
+      // only mounts when weaverseData is truthy, so a null page (loadPage found
+      // nothing / caught an error) must still get the root fallback bridge.
       expect(
         matchesHaveWeaverseData([{ loaderData: { weaverseData: undefined } }])
+      ).toBe(false)
+      expect(
+        matchesHaveWeaverseData([{ loaderData: { weaverseData: null } }])
       ).toBe(false)
     })
 
