@@ -603,3 +603,80 @@ describe('loadPage X-Visitor-UA header forwarding', () => {
     expect(capturedHeaders?.get('x-visitor-ua')).toBe('')
   })
 })
+
+describe('directFetch transient retry', () => {
+  let themeSchema: HydrogenThemeSchema
+
+  beforeEach(() => {
+    themeSchema = {
+      info: {
+        name: 'Test Theme',
+        author: 'Test',
+        version: '1.0.0',
+        authorProfilePhoto: '',
+        documentationUrl: '',
+        supportUrl: '',
+      },
+      settings: [],
+    }
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  function makeClient() {
+    return new WeaverseClient({
+      ...createMockContext({
+        env: {
+          WEAVERSE_PROJECT_ID: 'project-abc',
+          WEAVERSE_HOST: 'https://studio.weaverse.io',
+          WEAVERSE_PUBLIC_API_BASE: 'https://api.weaverse.io',
+        },
+      }),
+      components: [],
+      themeSchema,
+    })
+  }
+
+  const call = (weaverse: WeaverseClient) =>
+    (weaverse as any).directFetch(
+      'https://api.weaverse.io/api/public/project',
+      {},
+      1000
+    )
+
+  it('retries a 5xx then resolves with the retry payload', async () => {
+    let fetchSpy = spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce(new Response('upstream', { status: 503 }))
+      .mockResolvedValueOnce(new Response('{"ok":true}', { status: 200 }))
+    let result = await call(makeClient())
+    expect(result.data).toEqual({ ok: true })
+    expect(fetchSpy).toHaveBeenCalledTimes(2)
+  })
+
+  it('retries a network error then resolves', async () => {
+    let fetchSpy = spyOn(globalThis, 'fetch')
+      .mockRejectedValueOnce(new TypeError('connection reset'))
+      .mockResolvedValueOnce(new Response('{"ok":true}', { status: 200 }))
+    let result = await call(makeClient())
+    expect(result.data).toEqual({ ok: true })
+    expect(fetchSpy).toHaveBeenCalledTimes(2)
+  })
+
+  it('gives up after the attempt cap on a persistent 5xx', async () => {
+    let fetchSpy = spyOn(globalThis, 'fetch').mockResolvedValue(
+      new Response('upstream', { status: 500 })
+    )
+    await expect(call(makeClient())).rejects.toThrow()
+    expect(fetchSpy).toHaveBeenCalledTimes(2)
+  })
+
+  it('does not retry a deterministic 4xx', async () => {
+    let fetchSpy = spyOn(globalThis, 'fetch').mockResolvedValue(
+      new Response('missing', { status: 404 })
+    )
+    await expect(call(makeClient())).rejects.toThrow()
+    expect(fetchSpy).toHaveBeenCalledTimes(1)
+  })
+})

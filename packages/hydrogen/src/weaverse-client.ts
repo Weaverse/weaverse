@@ -58,6 +58,31 @@ const CACHE_DURATIONS = {
 const DEFAULT_FETCH_TIMEOUT_MS = 10_000
 
 /**
+ * Bounded retry for the public API fetch. A single slow/cold origin response,
+ * a transient 5xx, or a network blip would otherwise make loadPage return null
+ * — rendering the "Please add new section" placeholder or throwing a 404 in
+ * the route. Two attempts (one retry) is enough: by the time the first attempt
+ * times out, the edge proxy's single-flight leader has usually populated its
+ * versioned cache, so the retry lands on a warm HIT.
+ */
+const MAX_FETCH_ATTEMPTS = 2
+const FETCH_RETRY_BACKOFF_MS = 300
+
+/**
+ * Retry only transient failures: request timeouts, network errors, and origin
+ * 5xx. A 4xx is deterministic (e.g. a genuine 404) — retrying just wastes time.
+ */
+function isRetryableFetchError(error: unknown): boolean {
+  if (!(error instanceof WeaverseError)) {
+    return false
+  }
+  if (error.code === 'TIMEOUT_ERROR' || error.code === 'NETWORK_ERROR') {
+    return true
+  }
+  return error.code === 'FETCH_ERROR' && (error.statusCode ?? 0) >= 500
+}
+
+/**
  * Weaverse API version path
  */
 const API_PATH = 'v1' as const
@@ -452,10 +477,10 @@ export class WeaverseClient {
    * Returns same format as withCache.fetch for consistency.
    * Includes 10-second timeout to prevent hanging requests.
    */
-  private readonly directFetch = async <T>(
+  private readonly fetchOnce = async <T>(
     url: string,
-    options: RequestInit = {},
-    timeoutMs = this.fetchTimeoutMs
+    options: RequestInit,
+    timeoutMs: number
   ): Promise<WithCacheFetchResponse<T>> => {
     const controller = new AbortController()
     const timeoutId: ReturnType<typeof setTimeout> | undefined = setTimeout(
@@ -506,6 +531,28 @@ export class WeaverseClient {
         clearTimeout(timeoutId)
       }
     }
+  }
+
+  private readonly directFetch = async <T>(
+    url: string,
+    options: RequestInit = {},
+    timeoutMs = this.fetchTimeoutMs
+  ): Promise<WithCacheFetchResponse<T>> => {
+    let lastError: unknown
+    for (let attempt = 1; attempt <= MAX_FETCH_ATTEMPTS; attempt++) {
+      try {
+        return await this.fetchOnce<T>(url, options, timeoutMs)
+      } catch (err) {
+        lastError = err
+        if (attempt >= MAX_FETCH_ATTEMPTS || !isRetryableFetchError(err)) {
+          throw err
+        }
+        await new Promise((resolve) =>
+          setTimeout(resolve, FETCH_RETRY_BACKOFF_MS * attempt)
+        )
+      }
+    }
+    throw lastError
   }
 
   // Helper method for building API URLs consistently
