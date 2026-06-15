@@ -109,28 +109,24 @@ describe('resolveStudioScriptSrc (URL gate)', () => {
     )
   })
 
-  it('ignores a crafted weaverseHost and falls back to the default host', () => {
-    // The bridge executes in the storefront document; a URL-supplied host must
-    // never be able to point it at an attacker origin.
-    let search =
+  it('returns null for an untrusted host instead of substituting prod', () => {
+    // An attacker host must never load; nor should it be silently replaced with
+    // production Studio (that would inject the wrong bridge for self-hosted).
+    let attacker =
       '?isDesignMode=true&weaverseHost=https%3A%2F%2Fattacker.example&weaverseVersion=9'
-    expect(resolveStudioScriptSrc(search)).toBe(
-      `${HOST}/static/studio/hydrogen/index.js?v=9`
-    )
-  })
-
-  it('rejects a look-alike host that only suffixes a trusted domain', () => {
-    let search =
+    expect(resolveStudioScriptSrc(attacker)).toBeNull()
+    let lookalike =
       '?isDesignMode=true&weaverseHost=https%3A%2F%2Fweaverse.io.attacker.com&weaverseVersion=9'
-    expect(resolveStudioScriptSrc(search)).toBe(
-      `${HOST}/static/studio/hydrogen/index.js?v=9`
-    )
+    expect(resolveStudioScriptSrc(lookalike)).toBeNull()
   })
 
-  it('honors a loopback host for local-builder previews (client opt-in)', () => {
+  it('honors a loopback host only when the storefront is also loopback', () => {
     let search =
       '?isDesignMode=true&weaverseHost=http%3A%2F%2Flocalhost%3A3456&weaverseVersion=9'
-    expect(resolveStudioScriptSrc(search)).toBe(
+    // Production storefront: a query-supplied loopback host is ignored.
+    expect(resolveStudioScriptSrc(search, 'shop.example.com')).toBeNull()
+    // Local-builder dev: storefront is loopback too, so it's honored.
+    expect(resolveStudioScriptSrc(search, 'localhost')).toBe(
       'http://localhost:3456/static/studio/hydrogen/index.js?v=9'
     )
   })

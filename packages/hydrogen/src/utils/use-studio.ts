@@ -23,22 +23,20 @@ const STUDIO_READY_TIMEOUT_MS = 5000
  * so never assume readiness right after the script promise settles.
  */
 function waitForStudio(): Promise<Window['weaverseStudio'] | null> {
-  let { promise, resolve } = Promise.withResolvers<
-    Window['weaverseStudio'] | null
-  >()
-  let startedAt = Date.now()
-  function check() {
-    if (hasWeaverseStudio(window)) {
-      return resolve(window.weaverseStudio)
+  return new Promise((resolve) => {
+    let startedAt = Date.now()
+    function check() {
+      if (hasWeaverseStudio(window)) {
+        return resolve(window.weaverseStudio)
+      }
+      if (Date.now() - startedAt >= STUDIO_READY_TIMEOUT_MS) {
+        console.warn('[Weaverse] Studio script did not initialize in time')
+        return resolve(null)
+      }
+      setTimeout(check, STUDIO_READY_POLL_MS)
     }
-    if (Date.now() - startedAt >= STUDIO_READY_TIMEOUT_MS) {
-      console.warn('[Weaverse] Studio script did not initialize in time')
-      return resolve(null)
-    }
-    setTimeout(check, STUDIO_READY_POLL_MS)
-  }
-  check()
-  return promise
+    check()
+  })
 }
 
 /**
@@ -62,7 +60,10 @@ function waitForStudio(): Promise<Window['weaverseStudio'] | null> {
 export function useStudioConnect() {
   let { search } = useLocation()
   useEffect(() => {
-    let src = resolveStudioScriptSrc(search)
+    // Loopback Studio hosts are only honored when the storefront itself is
+    // loopback (see resolveStudioScriptSrc), so pass the document's hostname.
+    let hostname = typeof window === 'undefined' ? '' : window.location.hostname
+    let src = resolveStudioScriptSrc(search, hostname)
     if (src) {
       loadScript(src).catch(console.error)
     }

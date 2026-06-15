@@ -14,16 +14,26 @@ const DEFAULT_WEAVERSE_HOST = 'https://studio.weaverse.io'
  */
 const TRUSTED_STUDIO_DOMAINS = ['weaverse.io', 'weaverse.dev']
 
+function isLoopbackHostname(hostname: string): boolean {
+  return (
+    hostname === 'localhost' ||
+    hostname === '127.0.0.1' ||
+    hostname.endsWith('.localhost')
+  )
+}
+
 export interface TrustedStudioHostOptions {
   /**
-   * Also trust loopback hosts (`localhost` / `127.0.0.1` / `*.localhost`).
+   * Also trust loopback hosts (`localhost` / `127.0.0.1` / `*.localhost`) over
+   * http or https.
    *
-   * Safe for the **browser** script resolver — a production https storefront
-   * blocks an `http://localhost` script as mixed content, and loopback there is
-   * the visitor's own machine. It MUST stay off on the **server**, where an
-   * attacker-supplied `?weaverseHost=http://127.0.0.1` would otherwise become an
-   * SSRF target for page/theme fetches. Local-builder server runs configure the
-   * host through `WEAVERSE_HOST`/`WEAVERSE_PUBLIC_API_BASE` env vars instead.
+   * Only safe when the **storefront itself** is loopback (genuine local-builder
+   * dev). A production https page can still load a loopback script — loopback is
+   * a "potentially trustworthy" origin and is not blocked as mixed content — so
+   * honoring a query-supplied loopback host on a public storefront would let a
+   * crafted link run whatever a visitor's local service serves inside the
+   * storefront origin. MUST stay off on the server, where it is an SSRF vector
+   * for page/theme fetches.
    */
   allowLoopback?: boolean
 }
@@ -54,12 +64,7 @@ export function isTrustedStudioHost(
   // serves the bridge over http and there is no cleartext-downgrade risk to a
   // private address. Every other trusted host must be https so server-side
   // page/theme fetches are never downgraded to cleartext.
-  if (
-    options?.allowLoopback &&
-    (hostname === 'localhost' ||
-      hostname === '127.0.0.1' ||
-      hostname.endsWith('.localhost'))
-  ) {
+  if (options?.allowLoopback && isLoopbackHostname(hostname)) {
     return protocol === 'http:' || protocol === 'https:'
   }
   if (protocol !== 'https:') {
@@ -108,31 +113,39 @@ export function getStudioScriptSrc(mode: StudioMode): string | null {
  * `isPreviewMode`, `__revisionId`, `weaverseHost`, `weaverseVersion`) — or
  * `null` outside Studio.
  *
- * The `weaverseHost` query is attacker-controllable, so it is only honored when
- * it is a {@link isTrustedStudioHost trusted Weaverse origin} (loopback allowed
- * for local-builder previews); otherwise the default Studio host is used, so a
- * crafted URL can never load a script from an arbitrary origin into the
- * storefront document.
+ * `storefrontHostname` is the document's own hostname: a loopback Studio host
+ * is only honored when the storefront itself is loopback (genuine local-builder
+ * dev), so a crafted public link can't load a script from a visitor's loopback
+ * service into the storefront origin.
  *
- * Note: this root resolver only sees the URL, not the loader's server config,
- * so a self-hosted/staging Studio served from a non-`weaverse.io` domain is not
- * loaded here on content-less routes (the page-scoped {@link getStudioScriptSrc}
- * via `useStudio` still uses the configured host on content routes).
+ * The `weaverseHost` query is attacker-controllable, so a host that is not a
+ * {@link isTrustedStudioHost trusted origin} resolves to `null` (no bridge) —
+ * it is never silently replaced with production Studio, which would otherwise
+ * inject the wrong bridge for self-hosted/staging deployments. Such deployments
+ * (a non-`weaverse.io` `WEAVERSE_HOST`) therefore don't load the root bridge on
+ * content-less routes; the page-scoped {@link getStudioScriptSrc} via
+ * `useStudio` still uses the configured host on content routes.
  *
  * Pure (no DOM) so the root-level connect's production gate stays unit-testable
  * and needs no loader data.
  */
-export function resolveStudioScriptSrc(search: string): string | null {
+export function resolveStudioScriptSrc(
+  search: string,
+  storefrontHostname = ''
+): string | null {
   let params = new URLSearchParams(search)
   let host = params.get('weaverseHost')
+  if (host) {
+    let allowLoopback = isLoopbackHostname(storefrontHostname)
+    if (!isTrustedStudioHost(host, { allowLoopback })) {
+      return null
+    }
+  }
   return getStudioScriptSrc({
     isDesignMode: params.get('isDesignMode') === 'true',
     isPreviewMode: params.get('isPreviewMode') === 'true',
     isRevisionPreview: params.has('__revisionId'),
-    weaverseHost:
-      host && isTrustedStudioHost(host, { allowLoopback: true })
-        ? host
-        : DEFAULT_WEAVERSE_HOST,
+    weaverseHost: host || DEFAULT_WEAVERSE_HOST,
     weaverseVersion: params.get('weaverseVersion') || '',
   })
 }
