@@ -83,3 +83,19 @@ function hasWeaverseData(
   }
   return (value as Record<string, unknown>).weaverseData !== undefined
 }
+
+/**
+ * Whether any route match already carries a `weaverseData` payload — resolved
+ * or a still-pending deferred Promise.
+ *
+ * The root-level Studio connect uses this to stay a *fallback*: when a route
+ * has Weaverse data its page-scoped `useStudio` loads and *binds* the bridge
+ * once the data settles, so the root must not load the script early and answer
+ * `checkWeaversePage()` as an unbound/no-page bridge while a deferred page is
+ * still streaming.
+ */
+export function matchesHaveWeaverseData(
+  matches: ReadonlyArray<Pick<UIMatch, 'loaderData'>>
+): boolean {
+  return matches.some((match) => hasWeaverseData(match.loaderData))
+}
