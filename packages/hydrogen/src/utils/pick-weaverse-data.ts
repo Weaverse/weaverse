@@ -83,37 +83,3 @@ function hasWeaverseData(
   }
   return (value as Record<string, unknown>).weaverseData !== undefined
 }
-
-/**
- * Whether any route match will render a Weaverse page — i.e. carries a *truthy*
- * `weaverseData` (a resolved payload or a still-pending deferred Promise).
- *
- * Mirrors `WeaverseHydrogenRoot`'s `if (weaverseData)` mount condition, so a
- * route returning `{ weaverseData: null }` (loadPage found no page or caught an
- * error) counts as page-less and still gets the root fallback bridge — unlike
- * {@link hasWeaverseData}, which treats an explicit `null` as "present,
- * suppress" for pickWeaverseData's resolution.
- *
- * The root-level Studio connect uses this to stay a fallback: when a route has
- * Weaverse data its page-scoped `useStudio` loads and binds the bridge once the
- * data settles, so the root must not load the script early and answer
- * `checkWeaversePage()` as an unbound/no-page bridge while a deferred page is
- * still streaming.
- *
- * Reads loader results from `match.loaderData` *and* the older `match.data`
- * alias: the `react-router: ^7` peer range spans versions before `loaderData`
- * existed (and `createWeaverseDataContext` reads `match.data`), so checking only
- * one field would silently miss page data on those versions.
- */
-export function matchesHaveWeaverseData(
-  matches: ReadonlyArray<Partial<Pick<UIMatch, 'data' | 'loaderData'>>>
-): boolean {
-  return matches.some((match) => {
-    let routeData = match.loaderData ?? match.data
-    return (
-      typeof routeData === 'object' &&
-      routeData !== null &&
-      Boolean((routeData as { weaverseData?: unknown }).weaverseData)
-    )
-  })
-}

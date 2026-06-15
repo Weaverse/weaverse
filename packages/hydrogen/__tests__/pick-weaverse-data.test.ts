@@ -1,8 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import {
-  matchesHaveWeaverseData,
-  pickWeaverseData,
-} from '../src/utils/pick-weaverse-data'
+import { pickWeaverseData } from '../src/utils/pick-weaverse-data'
 
 // Minimal shape compatible with UIMatch['loaderData']; the helper only reads it.
 type Match = { loaderData: unknown }
@@ -250,57 +247,6 @@ describe('pickWeaverseData', () => {
       expect(layoutInstance).toBe(layoutData)
       expect(childInstance).toBe(childData)
       expect(layoutInstance).not.toBe(childInstance)
-    })
-  })
-
-  describe('matchesHaveWeaverseData (root connect fallback gate)', () => {
-    it('is false when no match carries weaverseData', () => {
-      // 404 / error / non-Weaverse route: the root bridge should load.
-      expect(matchesHaveWeaverseData([])).toBe(false)
-      expect(
-        matchesHaveWeaverseData([
-          { loaderData: { shop: { name: 'Acme' } } },
-          { loaderData: undefined },
-        ])
-      ).toBe(false)
-      // Neither `undefined` nor an explicit `null` counts: `WeaverseHydrogenRoot`
-      // only mounts when weaverseData is truthy, so a null page (loadPage found
-      // nothing / caught an error) must still get the root fallback bridge.
-      expect(
-        matchesHaveWeaverseData([{ loaderData: { weaverseData: undefined } }])
-      ).toBe(false)
-      expect(
-        matchesHaveWeaverseData([{ loaderData: { weaverseData: null } }])
-      ).toBe(false)
-    })
-
-    it('is true for resolved data so the page-scoped bridge owns it', () => {
-      expect(
-        matchesHaveWeaverseData([{ loaderData: { weaverseData: childData } }])
-      ).toBe(true)
-    })
-
-    it('is true for a still-pending deferred weaverseData Promise', () => {
-      // The regression guard: a deferred content route must keep the root
-      // bridge out so it can't answer checkWeaversePage() before content renders.
-      let pending = Promise.resolve(childData)
-      expect(
-        matchesHaveWeaverseData([
-          { loaderData: { shop: { name: 'Acme' } } },
-          { loaderData: { weaverseData: pending } },
-        ])
-      ).toBe(true)
-    })
-
-    it('reads the older match.data alias when loaderData is absent', () => {
-      // react-router ^7 spans versions before UIMatch.loaderData existed, where
-      // useMatches() only populates `data`.
-      expect(
-        matchesHaveWeaverseData([{ data: { weaverseData: childData } }])
-      ).toBe(true)
-      expect(matchesHaveWeaverseData([{ data: { weaverseData: null } }])).toBe(
-        false
-      )
     })
   })
 })

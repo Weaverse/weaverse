@@ -2,7 +2,6 @@ import { loadScript } from '@weaverse/react'
 import { useEffect } from 'react'
 import {
   useLocation,
-  useMatches,
   useNavigate,
   useNavigation,
   useRevalidator,
@@ -10,7 +9,6 @@ import {
 import type { WeaverseHydrogen } from '~/index'
 import { hasWeaverseStudio } from '~/types'
 import { useThemeText } from '../hooks/theme-text-context'
-import { matchesHaveWeaverseData } from './pick-weaverse-data'
 import { registerPixelInstance, shouldFirePixel } from './pixel'
 import { getStudioScriptSrc, resolveStudioScriptSrc } from './studio-script-src'
 import { useThemeSettingsStore } from './use-theme-settings-store'
@@ -42,37 +40,36 @@ function waitForStudio(): Promise<Window['weaverseStudio'] | null> {
 }
 
 /**
- * Load the Studio bridge script on design/preview renders of routes that
- * render no Weaverse page — 404s, error boundaries, and non-Weaverse routes —
- * so Studio's `checkWeaversePage()` handshake is answered instead of timing out.
+ * Load the Studio bridge script on every design/preview render so Studio's
+ * `checkWeaversePage()` handshake is answered instead of timing out — crucially
+ * on routes where the page-scoped {@link useStudio} never mounts: 404s, error
+ * boundaries, and non-Weaverse routes. The bridge registers its RPC endpoint
+ * and `window.weaverseStudio` the moment the script executes, independent of any
+ * page binding. Without this, a content-less route never loads the script and
+ * Studio reports a false "Connection lost" instead of "this page has no Weaverse
+ * content set up".
  *
- * The bridge registers its RPC endpoint and `window.weaverseStudio` the moment
- * the script executes — independent of any page binding. Without this, a
- * content-less route never loads the script and Studio reports a false
- * "Connection lost" instead of "this page has no Weaverse content set up".
+ * `loadScript` is idempotent, so on content routes this coexists with the
+ * page-scoped {@link useStudio} (same src) — that hook still binds the page via
+ * `init`. Gating this on whether a route "has Weaverse data" is deliberately
+ * avoided: route matches can't tell whether the page-scoped bridge actually
+ * mounts (an `ErrorBoundary` replacing a data route, or data passed via the
+ * `data` prop), and suppressing the script there would reintroduce the timeout
+ * this fixes. Loading the script is harmless; it only registers the responder.
  *
- * This is a *fallback*: when a route does carry `weaverseData` (including a
- * still-pending deferred Promise) its page-scoped {@link useStudio} loads and
- * binds the bridge once the data settles, so the root connect stays out —
- * otherwise it could answer `checkWeaversePage()` as an unbound/no-page bridge
- * while a deferred page is still streaming and mis-report a real content route.
+ * Known limitation: on a route whose `weaverseData` is a deferred Promise, the
+ * script can load before the page streams in, so `checkWeaversePage()` may
+ * briefly observe `NOT_WEAVERSE_PAGE`. The complete fix is a "loading" state in
+ * `checkWeaversePage` so the handshake retries rather than latching — that lives
+ * in the Studio script, not here.
  *
- * Reads mode + host/version from the URL query params Studio attaches when it
- * drives the iframe, so it needs no loader data and works on error pages.
  * Mounted via {@link withWeaverse}, which must be the root route's `Layout`
  * export so the bridge renders even when a route's `ErrorBoundary` replaces the
- * page (404s, loader/render errors). Outside Studio (no design/preview params)
- * it is a no-op, and `loadScript` is idempotent, so it coexists with the
- * page-scoped {@link useStudio}.
+ * page. Outside Studio (no design/preview params) it is a no-op.
  */
 export function useStudioConnect() {
   let { search } = useLocation()
-  let hasPageData = matchesHaveWeaverseData(useMatches())
   useEffect(() => {
-    // A route will render its own page-scoped bridge; don't pre-empt it.
-    if (hasPageData) {
-      return
-    }
     // Loopback Studio hosts are only honored when the storefront itself is
     // loopback (see resolveStudioScriptSrc), so pass the document's hostname.
     let hostname = typeof window === 'undefined' ? '' : window.location.hostname
@@ -80,7 +77,7 @@ export function useStudioConnect() {
     if (src) {
       loadScript(src).catch(console.error)
     }
-  }, [search, hasPageData])
+  }, [search])
 }
 
 export function useStudio(weaverse: WeaverseHydrogen) {
