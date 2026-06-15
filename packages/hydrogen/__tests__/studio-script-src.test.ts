@@ -126,6 +126,14 @@ describe('resolveStudioScriptSrc (URL gate)', () => {
       `${HOST}/static/studio/hydrogen/index.js?v=9`
     )
   })
+
+  it('honors a loopback host for local-builder previews (client opt-in)', () => {
+    let search =
+      '?isDesignMode=true&weaverseHost=http%3A%2F%2Flocalhost%3A3456&weaverseVersion=9'
+    expect(resolveStudioScriptSrc(search)).toBe(
+      'http://localhost:3456/static/studio/hydrogen/index.js?v=9'
+    )
+  })
 })
 
 describe('isTrustedStudioHost', () => {
@@ -136,9 +144,18 @@ describe('isTrustedStudioHost', () => {
     expect(isTrustedStudioHost('https://foo.weaverse.dev')).toBe(true)
   })
 
-  it('trusts localhost for previewing against a local builder', () => {
-    expect(isTrustedStudioHost('http://localhost:3456')).toBe(true)
-    expect(isTrustedStudioHost('http://127.0.0.1:3456')).toBe(true)
+  it('trusts loopback hosts only when loopback is opted in', () => {
+    // Server-safe default rejects loopback so a public ?weaverseHost= can't
+    // turn into an SSRF target; the browser script resolver opts in.
+    expect(isTrustedStudioHost('http://localhost:3456')).toBe(false)
+    expect(isTrustedStudioHost('http://127.0.0.1:3456')).toBe(false)
+    expect(isTrustedStudioHost('http://studio.localhost')).toBe(false)
+    let opts = { allowLoopback: true }
+    expect(isTrustedStudioHost('http://localhost:3456', opts)).toBe(true)
+    expect(isTrustedStudioHost('http://127.0.0.1:3456', opts)).toBe(true)
+    expect(isTrustedStudioHost('http://studio.localhost', opts)).toBe(true)
+    // Opting in to loopback never widens trust to other untrusted hosts.
+    expect(isTrustedStudioHost('https://attacker.example', opts)).toBe(false)
   })
 
   it('rejects untrusted, look-alike, and embedded-trusted hosts', () => {
