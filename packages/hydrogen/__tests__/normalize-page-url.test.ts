@@ -39,6 +39,21 @@ describe('normalizePageUrl', () => {
     )
   })
 
+  it('should_strip_the_react_router_data_suffix_so_client_nav_shares_the_document_key', () => {
+    expect(normalizePageUrl('https://shop.com/products/shirt.data')).toBe(
+      'https://shop.com/products/shirt'
+    )
+    expect(normalizePageUrl('https://shop.com/.data')).toBe('https://shop.com/')
+  })
+
+  it('should_keep_data_strip_independent_of_kept_control_params', () => {
+    expect(
+      normalizePageUrl(
+        'https://shop.com/products/shirt.data?isDesignMode=true&utm_source=fb'
+      )
+    ).toBe('https://shop.com/products/shirt?isDesignMode=true')
+  })
+
   it('should_return_input_unchanged_when_not_an_absolute_url', () => {
     expect(normalizePageUrl('/relative/path?x=1')).toBe('/relative/path?x=1')
   })

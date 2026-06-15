@@ -31,5 +31,14 @@ export function normalizePageUrl(url: string): string {
   )
   kept.sort(([a], [b]) => a.localeCompare(b))
   const search = new URLSearchParams(kept).toString()
-  return `${parsed.origin}${parsed.pathname}${search ? `?${search}` : ''}`
+  // React Router single-fetch requests loader data from `/<path>.data`, which
+  // resolves to the same Builder page as `/<path>`. Strip the suffix so a
+  // client navigation and a document load hash to one edge-cache key (the
+  // api.weaverse.io worker keys on this url) instead of two — keeping a page's
+  // first client navigation off the cold-MISS path.
+  let { pathname } = parsed
+  if (pathname.endsWith('.data')) {
+    pathname = pathname.slice(0, -'.data'.length)
+  }
+  return `${parsed.origin}${pathname}${search ? `?${search}` : ''}`
 }
