@@ -61,7 +61,7 @@ function waitForStudio(): Promise<Window['weaverseStudio'] | null> {
  * script can load before the page streams in, so `checkWeaversePage()` may
  * briefly observe `NOT_WEAVERSE_PAGE`. The complete fix is a "loading" state in
  * `checkWeaversePage` so the handshake retries rather than latching — that lives
- * in the Studio script, not here.
+ * in the Studio script, not here. Tracked in Weaverse/builder#2515.
  *
  * Mounted via {@link withWeaverse}, which must be the root route's `Layout`
  * export so the bridge renders even when a route's `ErrorBoundary` replaces the
