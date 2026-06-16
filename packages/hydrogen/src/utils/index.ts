@@ -7,6 +7,7 @@ import type {
   WeaverseProjectConfigs,
   WeaverseStudioQueries,
 } from '../types'
+import { isTrustedStudioHost } from './studio-script-src'
 
 // Track warned types to avoid spam
 let warnedTypes = new Set<string>()
@@ -115,13 +116,22 @@ export function getWeaverseConfigs(
   let url = new URL(request.url)
   let isRevisionPreview = url.searchParams.has('__revisionId')
   let configuredWeaverseHost = WEAVERSE_HOST || envFromProcess.WEAVERSE_HOST
+  // `weaverseHost` arrives from the request URL (Studio drives the preview
+  // iframe with it), so it is attacker-controllable; only honor it when it is a
+  // trusted Weaverse origin, otherwise fall back to the env/default host. This
+  // stops a crafted `?weaverseHost=` from pointing Studio scripts or data reads
+  // at an arbitrary origin.
+  let trustedUrlHost =
+    typeof weaverseHost === 'string' && isTrustedStudioHost(weaverseHost)
+      ? weaverseHost
+      : ''
   let resolvedWeaverseHost =
-    weaverseHost || configuredWeaverseHost || 'https://studio.weaverse.io'
+    trustedUrlHost || configuredWeaverseHost || 'https://studio.weaverse.io'
   // Public data reads default to the edge proxy, but an explicit custom
   // WEAVERSE_HOST (staging/self-hosted Weaverse) must stay the API base so
   // those deployments don't fetch page/config data from the production proxy.
-  let resolvedWeaverseApiBase = weaverseHost
-    ? weaverseHost
+  let resolvedWeaverseApiBase = trustedUrlHost
+    ? trustedUrlHost
     : WEAVERSE_PUBLIC_API_BASE ||
       envFromProcess.WEAVERSE_PUBLIC_API_BASE ||
       (configuredWeaverseHost &&
