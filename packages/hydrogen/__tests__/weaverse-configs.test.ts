@@ -79,6 +79,49 @@ describe('getWeaverseConfigs', () => {
     expect(configs.weaverseHost).toBe('https://preview.weaverse.io')
     expect(configs.weaverseApiBase).toBe('https://preview.weaverse.io')
   })
+
+  it('should_ignore_an_untrusted_url_weaverse_host', () => {
+    // A crafted ?weaverseHost= must not redirect Studio scripts or data reads
+    // to an attacker origin; fall back to the configured/default host.
+    let request = new Request(
+      'https://example.com/products/blue-shirt?weaverseHost=https://attacker.example'
+    )
+    let configs = getWeaverseConfigs(request, {
+      WEAVERSE_HOST: 'https://studio.weaverse.io',
+      WEAVERSE_PUBLIC_API_BASE: 'https://api.weaverse.io',
+      WEAVERSE_PROJECT_ID: 'project-1',
+    } as unknown as HydrogenEnv)
+
+    expect(configs.weaverseHost).toBe('https://studio.weaverse.io')
+    expect(configs.weaverseApiBase).toBe('https://api.weaverse.io')
+  })
+
+  it('should_ignore_a_loopback_url_weaverse_host', () => {
+    // SSRF guard: a public ?weaverseHost= pointing at loopback must not become
+    // the server-side API base for page/theme fetches.
+    let request = new Request(
+      'https://example.com/products/blue-shirt?weaverseHost=http://127.0.0.1:3000'
+    )
+    let configs = getWeaverseConfigs(request, {
+      WEAVERSE_PROJECT_ID: 'project-1',
+    } as unknown as HydrogenEnv)
+
+    expect(configs.weaverseHost).toBe('https://studio.weaverse.io')
+    expect(configs.weaverseApiBase).toBe('https://api.weaverse.io')
+  })
+
+  it('should_ignore_a_cleartext_url_weaverse_host', () => {
+    // A trusted domain over http must not downgrade server-side fetches.
+    let request = new Request(
+      'https://example.com/products/blue-shirt?weaverseHost=http://preview.weaverse.io'
+    )
+    let configs = getWeaverseConfigs(request, {
+      WEAVERSE_PROJECT_ID: 'project-1',
+    } as unknown as HydrogenEnv)
+
+    expect(configs.weaverseHost).toBe('https://studio.weaverse.io')
+    expect(configs.weaverseApiBase).toBe('https://api.weaverse.io')
+  })
 })
 
 describe('WeaverseClient API URLs', () => {

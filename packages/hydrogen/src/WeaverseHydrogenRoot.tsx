@@ -53,7 +53,7 @@ import {
 import { normalizeRequestInfo } from './utils/studio-request-info'
 import { syncReusedInstance } from './utils/sync-reused-instance'
 import { ThemeTextStore } from './utils/theme-text-store'
-import { useStudio } from './utils/use-studio'
+import { useStudio, useStudioConnect } from './utils/use-studio'
 import {
   ThemeSettingsStoreContext,
   useCreateThemeSettingsStore,
@@ -325,6 +325,11 @@ const StudioBridge = memo(({ context }: { context: WeaverseHydrogen }) => {
   return null
 })
 
+const StudioConnect = memo(() => {
+  useStudioConnect()
+  return null
+})
+
 /**
  * Component lists already pushed into the element registry. Registration is
  * idempotent (the registry checks `has(type)`), but walking the full list
@@ -497,10 +502,18 @@ export type WithWeaverseOptions = {
 }
 
 /**
- * Higher-order component that wraps your app with Weaverse theme settings
- * and translation context.
+ * Higher-order component that wraps your app with Weaverse theme settings and
+ * translation context, and mounts the Studio connect bridge.
  *
- * @param Component - The root component to wrap
+ * Export the result as your root route's **`Layout`** (not the default route
+ * `Component`). In React Router the root `Layout` wraps both the matched route
+ * and its `ErrorBoundary`, so the Studio bridge keeps rendering on 404s and
+ * loader/render errors — exactly the pages where Studio must still answer its
+ * handshake instead of reporting a false "Connection lost". A default-component
+ * wrapper (`export default withWeaverse(App)`) is replaced by the error
+ * boundary on those routes and would drop the bridge.
+ *
+ * @param Component - The root layout component to wrap
  * @param options   - Optional configuration (e.g. an external `t` function)
  * @returns Wrapped component with theme settings + translation providers
  *
@@ -508,11 +521,11 @@ export type WithWeaverseOptions = {
  * ```typescript
  * import { withWeaverse } from '@weaverse/hydrogen'
  *
- * // Basic usage
- * export default withWeaverse(App)
+ * // Basic usage — export as the root route Layout
+ * export const Layout = withWeaverse(RootLayout)
  *
- * // With external translation function
- * export default withWeaverse(App, { t: myI18nFunction })
+ * // With an external translation function
+ * export const Layout = withWeaverse(RootLayout, { t: myI18nFunction })
  * ```
  */
 export function withWeaverse(
@@ -534,6 +547,7 @@ export function withWeaverse(
           t={options?.t}
           themeTextStore={themeTextStoreRef.current}
         >
+          <StudioConnect />
           <Component {...props} />
         </ThemeTextProvider>
       </ThemeSettingsStoreContext.Provider>

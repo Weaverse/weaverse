@@ -10,6 +10,7 @@ import type { WeaverseHydrogen } from '~/index'
 import { hasWeaverseStudio } from '~/types'
 import { useThemeText } from '../hooks/theme-text-context'
 import { registerPixelInstance, shouldFirePixel } from './pixel'
+import { getStudioScriptSrc, resolveStudioScriptSrc } from './studio-script-src'
 import { useThemeSettingsStore } from './use-theme-settings-store'
 
 const STUDIO_READY_POLL_MS = 50
@@ -38,6 +39,47 @@ function waitForStudio(): Promise<Window['weaverseStudio'] | null> {
   })
 }
 
+/**
+ * Load the Studio bridge script on every design/preview render so Studio's
+ * `checkWeaversePage()` handshake is answered instead of timing out — crucially
+ * on routes where the page-scoped {@link useStudio} never mounts: 404s, error
+ * boundaries, and non-Weaverse routes. The bridge registers its RPC endpoint
+ * and `window.weaverseStudio` the moment the script executes, independent of any
+ * page binding. Without this, a content-less route never loads the script and
+ * Studio reports a false "Connection lost" instead of "this page has no Weaverse
+ * content set up".
+ *
+ * `loadScript` is idempotent, so on content routes this coexists with the
+ * page-scoped {@link useStudio} (same src) — that hook still binds the page via
+ * `init`. Gating this on whether a route "has Weaverse data" is deliberately
+ * avoided: route matches can't tell whether the page-scoped bridge actually
+ * mounts (an `ErrorBoundary` replacing a data route, or data passed via the
+ * `data` prop), and suppressing the script there would reintroduce the timeout
+ * this fixes. Loading the script is harmless; it only registers the responder.
+ *
+ * Known limitation: on a route whose `weaverseData` is a deferred Promise, the
+ * script can load before the page streams in, so `checkWeaversePage()` may
+ * briefly observe `NOT_WEAVERSE_PAGE`. The complete fix is a "loading" state in
+ * `checkWeaversePage` so the handshake retries rather than latching — that lives
+ * in the Studio script, not here. Tracked in Weaverse/builder#2515.
+ *
+ * Mounted via {@link withWeaverse}, which must be the root route's `Layout`
+ * export so the bridge renders even when a route's `ErrorBoundary` replaces the
+ * page. Outside Studio (no design/preview params) it is a no-op.
+ */
+export function useStudioConnect() {
+  let { search } = useLocation()
+  useEffect(() => {
+    // Loopback Studio hosts are only honored when the storefront itself is
+    // loopback (see resolveStudioScriptSrc), so pass the document's hostname.
+    let hostname = typeof window === 'undefined' ? '' : window.location.hostname
+    let src = resolveStudioScriptSrc(search, hostname)
+    if (src) {
+      loadScript(src).catch(console.error)
+    }
+  }, [search])
+}
+
 export function useStudio(weaverse: WeaverseHydrogen) {
   let { revalidate } = useRevalidator()
   let navigation = useNavigation()
@@ -55,25 +97,34 @@ export function useStudio(weaverse: WeaverseHydrogen) {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: only revalidate on pathname/search changes
   useEffect(() => {
-    if (navigation.state === 'idle') {
-      if (isRevisionPreview || isPreviewMode) {
-        let previewSrc = `${weaverseHost}/static/studio/hydrogen/preview.js?v=${weaverseVersion}`
-        loadScript(previewSrc).catch(console.error)
-      } else if (isDesignMode) {
-        weaverse.internal = {
-          ...weaverse.internal,
-          navigate,
-          revalidate,
-          merchantOverrides,
-          themeSettingsStore,
-          themeTextStore,
-        }
-        let studioSrc = `${weaverseHost}/static/studio/hydrogen/index.js?v=${weaverseVersion}`
-        loadScript(studioSrc)
-          .then(waitForStudio)
-          .then((studio) => studio?.init(weaverse))
-          .catch(console.error)
+    if (navigation.state !== 'idle') {
+      return
+    }
+    let src = getStudioScriptSrc({
+      isDesignMode,
+      isPreviewMode,
+      isRevisionPreview,
+      weaverseHost,
+      weaverseVersion,
+    })
+    if (!src) {
+      return
+    }
+    if (isRevisionPreview || isPreviewMode) {
+      loadScript(src).catch(console.error)
+    } else {
+      weaverse.internal = {
+        ...weaverse.internal,
+        navigate,
+        revalidate,
+        merchantOverrides,
+        themeSettingsStore,
+        themeTextStore,
       }
+      loadScript(src)
+        .then(waitForStudio)
+        .then((studio) => studio?.init(weaverse))
+        .catch(console.error)
     }
   }, [pathname, search, navigation.state])
   usePixel(weaverse)
