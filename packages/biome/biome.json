@@ -1,5 +1,9 @@
 {
-  "extends": ["ultracite/biome/core", "ultracite/biome/react", "ultracite/biome/remix"],
+  "extends": [
+    "ultracite/biome/core",
+    "ultracite/biome/react",
+    "ultracite/biome/remix"
+  ],
   "linter": {
     "rules": {
       "style": {
@@ -24,7 +28,8 @@
         "noMagicNumbers": "warn",
         "useReadonlyClassProperties": "warn",
         "useConsistentTypeDefinitions": "warn",
-        "useConsistentArrowReturn": "warn"
+        "useConsistentArrowReturn": "warn",
+        "noIncrementDecrement": "warn"
       },
       "a11y": {
         "noStaticElementInteractions": "off",
@@ -67,7 +72,9 @@
         "noDeprecatedImports": "warn",
         "noEmptySource": "warn",
         "noReactForwardRef": "warn",
-        "noUnusedExpressions": "warn"
+        "noUnusedExpressions": "warn",
+        "noShadow": "warn",
+        "noUnnecessaryConditions": "warn"
       },
       "security": {
         "noDangerouslySetInnerHtml": "off"
@@ -85,10 +92,7 @@
         "useImageSize": "warn"
       },
       "nursery": {
-        "noShadow": "warn",
-        "useSortedClasses": "off",
-        "noUnnecessaryConditions": "warn",
-        "noIncrementDecrement": "warn"
+        "useSortedClasses": "off"
       },
       "performance": {
         "noNamespaceImport": "warn",

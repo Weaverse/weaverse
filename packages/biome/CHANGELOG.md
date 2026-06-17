@@ -1,5 +1,11 @@
 # @weaverse/biome
 
+## 5.8.0
+
+### Minor Changes
+
+- upgrade `@biomejs/biome` to v2.5.0 and migrate config schema/rules
+
 ## 5.7.3
 
 ### Patch Changes

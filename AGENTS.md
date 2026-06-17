@@ -34,7 +34,7 @@ turbo test --filter=@weaverse/hydrogen
 - **Script runner**: pnpm (`pnpm run <script>` from any workspace package)
 - **Test runner**: Vite+ (`vp test`, exposed via the `vite-plus` catalog dep) — Vitest under the hood
 - **Build orchestrator**: Turbo (`turbo.json` defines task pipeline)
-- **Linting/Formatting**: Biome 2.4.4 (configured in `packages/biome/biome.json`)
+- **Linting/Formatting:** Biome 2.5.0 (configured in `packages/biome/biome.json`)
 - **Testing**: Bun's native test runner
 - **Pre-commit hooks**: Lefthook runs `biome check --write` on staged files
 - **CI**: GitHub Actions — `biome ci .` + `pnpm run typecheck` + `pnpm run test`
