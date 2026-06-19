@@ -2,9 +2,11 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vitest/config'
 
-const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
+const packageRoot = dirname(fileURLToPath(import.meta.url))
+const repoRoot = resolve(packageRoot, '../..')
 
 export default defineConfig({
+  root: packageRoot,
   resolve: {
     alias: {
       react: resolve(repoRoot, 'node_modules/react'),
@@ -14,6 +16,6 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    include: ['packages/next/**/*.{test,spec}.{ts,tsx}'],
+    include: ['__tests__/**/*.{test,spec}.{ts,tsx}'],
   },
 })
