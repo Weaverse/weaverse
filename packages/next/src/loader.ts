@@ -50,16 +50,15 @@ export async function runWeaverseComponentLoaders(
 ): Promise<WeaverseNextLoaderData | null> {
   let { client, context, commerce } = args
   let sourceData = args.data ?? client.data
-  let sourceItems = sourceData?.page?.items
-  if (!(sourceData && sourceItems?.length)) {
-    return sourceData
+  if (!(sourceData && sourceData.page.items.length)) {
+    return sourceData ?? null
   }
 
   let data: WeaverseNextLoaderData = {
     ...sourceData,
     page: {
       ...sourceData.page,
-      items: sourceItems.map(cloneItem),
+      items: sourceData.page.items.map(cloneItem),
     },
   }
   let items = data.page.items

@@ -43,7 +43,7 @@ export interface WeaverseNextRendererProps {
  * framework-neutral `Weaverse` core instance (no React Router hooks) and hands
  * it to the shared `WeaverseRoot`.
  */
-export const WeaverseNextRenderer = memo(function WeaverseNextRenderer(
+export const WeaverseNextRenderer = memo(function WeaverseNextRendererComponent(
   props: WeaverseNextRendererProps
 ) {
   let context = useContext(WeaverseNextContext)

@@ -21,7 +21,7 @@ export function registerWeaverseNextComponents(
   ensureNextItemConstructor()
 
   for (let component of components) {
-    let type = component?.schema?.type
+    let type = component.schema.type
     if (type && !registeredComponentTypes.has(type)) {
       Weaverse.registerElement({
         type,

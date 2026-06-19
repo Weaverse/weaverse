@@ -29,12 +29,12 @@ class NextClient implements WeaverseNextClient {
   data: WeaverseNextLoaderData | null = null
   dataContext: Record<string, unknown> = {}
 
-  private _fetchPage?: WeaverseNextClientConfig['fetchPage']
-  private _fetchThemeSettings?: WeaverseNextClientConfig['fetchThemeSettings']
+  private readonly _fetchPage?: WeaverseNextClientConfig['fetchPage']
+  private readonly _fetchThemeSettings?: WeaverseNextClientConfig['fetchThemeSettings']
 
   constructor(config: WeaverseNextClientConfig) {
     this.projectId = config.projectId
-    this.components = config.components ?? []
+    this.components = config.components
     registerWeaverseNextComponents(this.components)
     this.themeSchema = config.themeSchema
     this.themeSettings = config.themeSettings ?? {}
@@ -49,7 +49,7 @@ class NextClient implements WeaverseNextClient {
     return this.commerce?.storefront
   }
 
-  loadPage = async (
+  loadPage = (
     input: WeaverseNextLoadPageInput = {}
   ): Promise<WeaverseNextLoaderData | null> => {
     if (!this._fetchPage) {
@@ -60,7 +60,7 @@ class NextClient implements WeaverseNextClient {
     return this._fetchPage(input)
   }
 
-  loadThemeSettings = async (
+  loadThemeSettings = (
     context?: WeaverseNextRequestContext
   ): Promise<unknown> => {
     if (!this._fetchThemeSettings) {

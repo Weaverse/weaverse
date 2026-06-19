@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { forwardRef, type ReactNode } from 'react'
+import type { ReactNode, RefObject } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it, vi } from 'vitest'
 import {
@@ -21,6 +21,7 @@ import type {
 } from '../src/types'
 
 const OUTSIDE_PROVIDER_ERROR = /must be used inside a <WeaverseNextProvider>/
+const SRC_FILE_REGEX = /\.(ts|tsx)$/
 
 // ─── Fixtures ────────────────────────────────────────────────────────
 
@@ -42,14 +43,15 @@ const heroSchema = createSchema({
   ],
 })
 
-const Hero = forwardRef<HTMLElement, WeaverseNextComponentProps>(
-  (props, ref) => (
-    <section ref={ref}>
-      <h1>{props.heading as string}</h1>
-      <p>{props.text as string}</p>
-      {props.children as ReactNode}
-    </section>
-  )
+const Hero = ({
+  ref,
+  ...props
+}: WeaverseNextComponentProps & { ref?: RefObject<HTMLElement | null> }) => (
+  <section ref={ref}>
+    <h1>{props.heading as string}</h1>
+    <p>{props.text as string}</p>
+    {props.children as ReactNode}
+  </section>
 )
 Hero.displayName = 'Hero'
 
@@ -226,11 +228,11 @@ describe('runWeaverseComponentLoaders', () => {
     let loaderComponent = {
       default: Hero,
       schema: createSchema({ type: 'featured', title: 'Featured' }),
-      loader: async (args: WeaverseNextComponentLoaderArgs) => {
-        received = args
+      loader: async (loaderArgs: WeaverseNextComponentLoaderArgs) => {
+        received = loaderArgs
         // Both the explicit commerce path and the alias must resolve.
-        await args.commerce?.storefront?.query('query Products { id }')
-        await args.weaverse.storefront?.query('query Alias { id }')
+        await loaderArgs.commerce?.storefront?.query('query Products { id }')
+        await loaderArgs.weaverse.storefront?.query('query Alias { id }')
         return queryResult
       },
     }
@@ -254,8 +256,8 @@ describe('runWeaverseComponentLoaders', () => {
 
     // Assert
     expect(received).not.toBeNull()
-    let args = received as unknown as WeaverseNextComponentLoaderArgs
-    expect(args.data).toEqual({
+    let capturedArgs = received as unknown as WeaverseNextComponentLoaderArgs
+    expect(capturedArgs.data).toEqual({
       count: 4,
     })
     expect(query).toHaveBeenCalledTimes(2)
@@ -271,9 +273,9 @@ describe('runWeaverseComponentLoaders', () => {
     let component = {
       default: Hero,
       schema: createSchema({ type: 'node', title: 'Node' }),
-      loader: async (args: WeaverseNextComponentLoaderArgs<{ id: string }>) => {
+      loader: (args: WeaverseNextComponentLoaderArgs<{ id: string }>) => {
         loaderCalls.push(args.data.id)
-        return null
+        return Promise.resolve(null)
       },
     }
     let client = createWeaverseNextClient({
@@ -350,7 +352,7 @@ describe('package boundaries', () => {
   it('should_not_import_react_router_or_remix_oxygen_in_src', () => {
     // Arrange
     let srcDir = join(import.meta.dirname, '..', 'src')
-    let files = readdirSync(srcDir).filter((f) => /\.(ts|tsx)$/.test(f))
+    let files = readdirSync(srcDir).filter((f) => SRC_FILE_REGEX.test(f))
 
     // Act
     let offenders: string[] = []
