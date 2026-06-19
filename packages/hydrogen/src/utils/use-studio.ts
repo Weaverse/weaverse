@@ -9,7 +9,11 @@ import {
 import type { WeaverseHydrogen } from '~/index'
 import { hasWeaverseStudio } from '~/types'
 import { useThemeText } from '../hooks/theme-text-context'
-import { registerPixelInstance, shouldFirePixel } from './pixel'
+import {
+  observeNavigation,
+  registerPixelInstance,
+  shouldFirePixel,
+} from './pixel'
 import { getStudioScriptSrc, resolveStudioScriptSrc } from './studio-script-src'
 import { useThemeSettingsStore } from './use-theme-settings-store'
 
@@ -133,13 +137,24 @@ export function useStudio(weaverse: WeaverseHydrogen) {
 export function usePixel(context: WeaverseHydrogen) {
   let { projectId, pageId, isDesignMode, weaverseHost } = context
   let { key: navigationKey } = useLocation()
-  // biome-ignore lint/correctness/useExhaustiveDependencies: only track once on mount
+  // Observe every navigation so a persistent layout-level instance forgets
+  // the previous navigation's fired pages on a real key change — but NOT on
+  // an in-place remount that keeps the same history entry (e.g. the
+  // `data={null}` suppress/restore path), which must not double-count.
   useEffect(() => {
     if (!(projectId && pageId) || isDesignMode) {
       return
     }
-    // Register BEFORE deciding to fire: the navigation state must live
-    // exactly as long as some Weaverse instance is mounted (see pixel.ts).
+    observeNavigation(navigationKey)
+  }, [navigationKey, projectId, pageId, isDesignMode])
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: fire once on mount
+  useEffect(() => {
+    if (!(projectId && pageId) || isDesignMode) {
+      return
+    }
+    // Register BEFORE deciding to fire: the navigation state must live at
+    // least as long as some Weaverse instance is mounted (see pixel.ts).
     let unregister = registerPixelInstance()
     if (shouldFirePixel(navigationKey, pageId)) {
       let img = new Image()
