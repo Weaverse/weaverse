@@ -267,6 +267,105 @@ describe('runWeaverseComponentLoaders', () => {
     expect(data.page.items[0].loaderData).toBeUndefined()
   })
 
+  it('should_merge_schema_defaults_before_running_component_loader', async () => {
+    // Arrange
+    let receivedData: unknown
+    let component = {
+      default: Hero,
+      schema: createSchema({
+        type: 'featured-defaults',
+        title: 'Featured Defaults',
+        settings: [
+          {
+            group: 'Content',
+            inputs: [
+              {
+                type: 'range',
+                name: 'count',
+                label: 'Count',
+                defaultValue: 8,
+              },
+              {
+                type: 'text',
+                name: 'heading',
+                label: 'Heading',
+                defaultValue: 'Featured products',
+              },
+            ],
+          },
+        ],
+      }),
+      loader: (args: WeaverseNextComponentLoaderArgs) => {
+        receivedData = args.data
+        return Promise.resolve({ ok: true })
+      },
+    }
+    let client = createWeaverseNextClient({
+      projectId: 'proj-test',
+      components: [component],
+    })
+    let data: WeaverseNextLoaderData = {
+      page: {
+        id: 'page-1',
+        items: [
+          {
+            id: 'featured-1',
+            type: 'featured-defaults',
+            data: { heading: 'Manual heading' },
+          },
+        ],
+      },
+    }
+
+    // Act
+    await runWeaverseComponentLoaders({ client, data })
+
+    // Assert
+    expect(receivedData).toEqual({ count: 8, heading: 'Manual heading' })
+  })
+
+  it('should_keep_rendering_other_items_when_one_component_loader_fails', async () => {
+    // Arrange
+    let warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+    let failingComponent = {
+      default: Hero,
+      schema: createSchema({ type: 'failing', title: 'Failing' }),
+      loader: () => Promise.reject(new Error('storefront failed')),
+    }
+    let workingComponent = {
+      default: Hero,
+      schema: createSchema({ type: 'working', title: 'Working' }),
+      loader: async () => ({ ok: true }),
+    }
+    let client = createWeaverseNextClient({
+      projectId: 'proj-test',
+      components: [failingComponent, workingComponent],
+    })
+    let data: WeaverseNextLoaderData = {
+      page: {
+        id: 'page-1',
+        items: [
+          { id: 'bad', type: 'failing', data: {} },
+          { id: 'good', type: 'working', data: {} },
+        ],
+      },
+    }
+
+    // Act
+    let result = await runWeaverseComponentLoaders({ client, data })
+
+    // Assert
+    expect(result?.page.items[0].loaderData).toBeUndefined()
+    expect(result?.page.items[1].loaderData).toEqual({ ok: true })
+    expect(warn).toHaveBeenCalledWith(
+      '❌ Item loader run failed.',
+      'failing',
+      'bad',
+      expect.any(Error)
+    )
+    warn.mockRestore()
+  })
+
   it('should_walk_inline_children_recursively', async () => {
     // Arrange
     let loaderCalls: string[] = []

@@ -41,8 +41,14 @@ export interface WeaverseNextProviderProps {
  * sections. Next-native replacement for `withWeaverse` + route loader data —
  * no React Router route matches are emulated.
  *
+ * In App Router, create/pass `client` only from a client component wrapper. A
+ * `WeaverseNextClient` contains functions and component references, so it is
+ * not serializable across a Server Component → Client Component boundary.
+ *
  * @example
  * ```tsx
+ * 'use client'
+ *
  * <WeaverseNextProvider client={client} rootData={rootData} pageData={pageData} commerce={commerce}>
  *   <WeaverseNextRenderer />
  * </WeaverseNextProvider>

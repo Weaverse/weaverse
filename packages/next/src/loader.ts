@@ -6,6 +6,7 @@ import type {
   WeaverseNextLoaderData,
   WeaverseNextRequestContext,
 } from './types'
+import { generateDataFromSchema } from './utils'
 
 export interface RunComponentLoadersArgs {
   client: WeaverseNextClient
@@ -50,8 +51,11 @@ export async function runWeaverseComponentLoaders(
 ): Promise<WeaverseNextLoaderData | null> {
   let { client, context, commerce } = args
   let sourceData = args.data ?? client.data
-  if (!(sourceData && sourceData.page.items.length)) {
-    return sourceData ?? null
+  if (!sourceData) {
+    return null
+  }
+  if (!sourceData.page.items.length) {
+    return sourceData
   }
 
   let data: WeaverseNextLoaderData = {
@@ -83,12 +87,16 @@ export async function runWeaverseComponentLoaders(
 
       let component = componentMap.get(item.type)
       if (component?.loader) {
-        item.loaderData = await component.loader({
-          data: item.data ?? {},
-          weaverse: client,
-          context: resolvedContext,
-          commerce: resolvedCommerce,
-        })
+        try {
+          item.loaderData = await component.loader({
+            data: { ...generateDataFromSchema(component.schema), ...item.data },
+            weaverse: client,
+            context: resolvedContext,
+            commerce: resolvedCommerce,
+          })
+        } catch (error) {
+          console.warn('❌ Item loader run failed.', item.type, item.id, error)
+        }
       }
 
       let children = item.children
