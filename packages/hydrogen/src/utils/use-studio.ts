@@ -140,7 +140,7 @@ export function usePixel(context: WeaverseHydrogen) {
     }
     // Register BEFORE deciding to fire: the navigation state must live
     // exactly as long as some Weaverse instance is mounted (see pixel.ts).
-    let unregister = registerPixelInstance()
+    let unregister = registerPixelInstance(pageId)
     if (shouldFirePixel(navigationKey, pageId)) {
       let img = new Image()
       img.onload = () => img.remove()

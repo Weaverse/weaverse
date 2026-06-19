@@ -1,24 +1,25 @@
-// One pixel per page per navigation. Nested compositions mount multiple
-// Weaverse instances on one URL; both would otherwise double-count the
-// same impression.
+// One pixel per page per navigation. Two facts shape the dedup:
 //
-// Two mechanisms cooperate:
+// 1. Co-located instances: nested compositions mount multiple Weaverse
+//    instances of the same page on one URL; only the first should count.
+// 2. The pixel effect runs once per instance mount (see `usePixel`), so a
+//    given instance never re-fires — a navigation is always a fresh mount.
 //
-// 1. Key TRANSITIONS (not novelty): `location.key` is stable per history
-//    entry, so a back/forward POP restores the entry's ORIGINAL key. We
-//    remember only the current key and reset on change — any navigation
-//    between Weaverse pages counts again.
-// 2. Instance lifetime: navigating to a route WITHOUT a Weaverse instance
-//    (cart, search, account) never calls into this module, so the stored
-//    key would still match on Back and wrongly suppress the revisit. When
-//    the last registered instance unmounts, forget the navigation state.
+// `firedPageIds` is scoped to the current navigation key and reset on a key
+// TRANSITION. `mountCounts` tracks how many instances of each pageId are
+// currently mounted; when the LAST instance of a pageId unmounts we forget
+// its fired state. That second mechanism is what makes a detour-and-Back to
+// the SAME history entry (`location.key` restored unchanged) count the
+// revisit: without the per-page refcount, a persistent layout-level Weaverse
+// instance would keep the navigation state alive across the detour and
+// wrongly suppress the page's revisit pixel.
 //
 // Known tradeoff: React StrictMode's dev-only mount→cleanup→mount cycle
-// resets the state and double-fires in development — parity with the
-// pre-dedupe behavior; production semantics are unaffected.
+// double-fires in development — parity with the pre-dedupe behavior;
+// production semantics are unaffected.
 let currentNavigationKey: string | null = null
 let firedPageIds = new Set<string>()
-let mountedInstances = 0
+let mountCounts = new Map<string, number>()
 
 export function shouldFirePixel(
   navigationKey: string,
@@ -36,17 +37,22 @@ export function shouldFirePixel(
 }
 
 /**
- * Track the mounted Weaverse instance; returns the unmount cleanup.
- * Call before `shouldFirePixel` so the navigation state's lifetime is
- * bounded by "at least one Weaverse instance is on screen".
+ * Track a mounted Weaverse instance for `pageId`; returns the unmount
+ * cleanup. Call before `shouldFirePixel` so the navigation state's lifetime
+ * is bounded by "at least one instance of this page is on screen". When the
+ * last instance of a pageId unmounts, its fired state is dropped so a Back
+ * navigation that restores the same history entry re-counts it — even while
+ * another Weaverse instance stays mounted across the detour.
  */
-export function registerPixelInstance(): () => void {
-  mountedInstances += 1
+export function registerPixelInstance(pageId: string): () => void {
+  mountCounts.set(pageId, (mountCounts.get(pageId) ?? 0) + 1)
   return () => {
-    mountedInstances -= 1
-    if (mountedInstances === 0) {
-      currentNavigationKey = null
-      firedPageIds.clear()
+    let next = (mountCounts.get(pageId) ?? 1) - 1
+    if (next > 0) {
+      mountCounts.set(pageId, next)
+      return
     }
+    mountCounts.delete(pageId)
+    firedPageIds.delete(pageId)
   }
 }

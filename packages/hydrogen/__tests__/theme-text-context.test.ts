@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { getNestedKey, interpolate } from '../src/hooks/theme-text-context'
+import {
+  createTranslate,
+  getNestedKey,
+  interpolate,
+} from '../src/hooks/theme-text-context'
 
 describe('getNestedKey', () => {
   const data = {
@@ -97,7 +101,7 @@ describe('interpolate', () => {
 })
 
 describe('t() function integration', () => {
-  // Simulate the t() logic directly (same as in ThemeTextProvider)
+  // Exercise the REAL t() builder (no reimplementation, no drift).
   function createT(
     staticContent: Record<string, unknown>,
     merchantOverrides?: Record<string, unknown>,
@@ -106,27 +110,7 @@ describe('t() function integration', () => {
       variables?: Record<string, string | number>
     ) => string
   ) {
-    return (
-      key: string,
-      variables?: Record<string, string | number>
-    ): string => {
-      // Priority 1: external t
-      if (externalT) {
-        const external = externalT(key, variables)
-        if (external && external !== key) {
-          return external
-        }
-      }
-      // Priority 2: merchant overrides
-      const override = merchantOverrides
-        ? getNestedKey(merchantOverrides, key)
-        : undefined
-      // Priority 3: static content
-      const staticValue = getNestedKey(staticContent, key)
-      // Priority 4: key itself
-      const raw = override ?? staticValue ?? key
-      return interpolate(raw, variables)
-    }
+    return createTranslate({ staticContent, merchantOverrides, externalT })
   }
 
   const staticContent = {
@@ -244,5 +228,91 @@ describe('t() function integration', () => {
   it('should work with undefined externalT (backwards compat)', () => {
     const t = createT(staticContent, undefined, undefined)
     expect(t('cart.title')).toBe('Cart')
+  })
+})
+
+describe('createTranslate design-mode overrides', () => {
+  const staticContent = {
+    cart: {
+      title: 'Cart',
+      subtitle: 'Review your items',
+      empty: { message: 'Empty' },
+    },
+  }
+
+  it('should prefer a flat design override over merchant and static', () => {
+    const t = createTranslate({
+      staticContent,
+      merchantOverrides: { cart: { title: 'Giỏ hàng' } },
+      designOverrides: { 'cart.title': 'Live Cart' },
+    })
+    expect(t('cart.title')).toBe('Live Cart')
+  })
+
+  it('should NOT wipe sibling keys when overriding a nested leaf', () => {
+    // Regression: a shallow `{...merchant, ...unflatten(design)}` merge
+    // replaced the whole `cart` subtree, dropping every non-overridden
+    // sibling. Per-key lookup must leave siblings resolving normally.
+    const t = createTranslate({
+      staticContent,
+      merchantOverrides: {
+        cart: {
+          title: 'Giỏ hàng',
+          subtitle: 'Xem lại',
+          empty: { message: 'Trống' },
+        },
+      },
+      designOverrides: { 'cart.title': 'Live Cart' },
+    })
+    expect(t('cart.title')).toBe('Live Cart')
+    // Siblings still resolve from merchantOverrides, not the static/default.
+    expect(t('cart.subtitle')).toBe('Xem lại')
+    expect(t('cart.empty.message')).toBe('Trống')
+  })
+
+  it('should interpolate variables in a design override', () => {
+    const t = createTranslate({
+      staticContent: { badge: { sale: '-{{percentage}}% Off' } },
+      designOverrides: { 'badge.sale': 'Save {{percentage}}%' },
+    })
+    expect(t('badge.sale', { percentage: 40 })).toBe('Save 40%')
+  })
+
+  it('should ignore an empty design override map', () => {
+    const t = createTranslate({ staticContent, designOverrides: {} })
+    expect(t('cart.title')).toBe('Cart')
+  })
+
+  it('should let external t win over a design override', () => {
+    const t = createTranslate({
+      staticContent,
+      designOverrides: { 'cart.title': 'Live Cart' },
+      externalT: (key) => (key === 'cart.title' ? 'Panier' : key),
+    })
+    expect(t('cart.title')).toBe('Panier')
+  })
+
+  it('should not resolve inherited Object.prototype keys as overrides', () => {
+    // `designOverrides.toString` etc. are inherited functions; an unguarded
+    // `designOverrides[key]` would return a function and break interpolate.
+    const t = createTranslate({
+      staticContent: { greeting: 'Hi' },
+      designOverrides: {},
+    })
+    expect(t('toString')).toBe('toString')
+    expect(t('constructor')).toBe('constructor')
+    expect(t('greeting')).toBe('Hi')
+  })
+
+  it('should not pollute Object.prototype from design override keys', () => {
+    // JSON.parse defines `__proto__` as an own key; building nested objects
+    // from such keys (the old unflatten path) polluted the prototype.
+    const malicious = JSON.parse('{"__proto__.polluted":"yes"}') as Record<
+      string,
+      string
+    >
+    const t = createTranslate({ staticContent, designOverrides: malicious })
+    t('cart.title')
+    expect(({} as Record<string, unknown>).polluted).toBeUndefined()
   })
 })
