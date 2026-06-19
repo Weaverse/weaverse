@@ -160,6 +160,7 @@ $ pnpm run build (orchestrated by Turbo)
      ├─→ @weaverse/schema (no deps)
      ├─→ @weaverse/biome (no deps)
      ├─→ @weaverse/i18n (no deps)
+     ├─→ @weaverse/experiments (no deps)
      │
      ├─→ @weaverse/react (depends on core)
      ├─→ @weaverse/cli (no deps)
