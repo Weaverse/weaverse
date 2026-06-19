@@ -170,6 +170,15 @@ importers:
         specifier: ^19.2.13
         version: 19.2.14
 
+  packages/next:
+    dependencies:
+      '@weaverse/react':
+        specifier: 5.16.3
+        version: 5.16.3
+      '@weaverse/schema':
+        specifier: 0.10.0
+        version: 0.10.0
+
   packages/react:
     dependencies:
       '@weaverse/core':

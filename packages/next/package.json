@@ -1,0 +1,53 @@
+{
+  "name": "@weaverse/next",
+  "author": "Weaverse Team",
+  "description": "Next.js App Router integration for building Weaverse-powered storefronts",
+  "version": "5.16.3",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "module": "dist/index.mjs",
+  "publishConfig": {
+    "access": "public",
+    "@weaverse:registry": "https://registry.npmjs.org"
+  },
+  "repository": {
+    "url": "git+https://github.com/Weaverse/weaverse.git",
+    "directory": "packages/next"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "clean": "rimraf dist",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "tsup": {
+    "entry": [
+      "src/index.ts"
+    ],
+    "format": [
+      "esm",
+      "cjs"
+    ],
+    "dts": true,
+    "sourcemap": true,
+    "clean": true,
+    "outDir": "dist",
+    "treeshake": true
+  },
+  "dependencies": {
+    "@weaverse/react": "5.16.3",
+    "@weaverse/schema": "0.10.0"
+  },
+  "peerDependencies": {
+    "react": ">=19",
+    "react-dom": ">=19"
+  }
+}
