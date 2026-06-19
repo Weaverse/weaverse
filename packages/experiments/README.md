@@ -112,7 +112,9 @@ at two seams:
 ```tsx
 // app/root.tsx
 import { Analytics, useAnalytics } from '@shopify/hydrogen'
+import type { Assignment } from '@weaverse/experiments'
 import { WeaverseExperiments } from '@weaverse/experiments/react'
+import type { ReactNode } from 'react'
 
 export default function App() {
   let { assignments, cart, shop, consent } = useLoaderData<typeof loader>()
@@ -127,25 +129,43 @@ export default function App() {
         ),
       }}
     >
-      <ExperimentExposure assignments={assignments} />
-      <Outlet />
+      <Experiments assignments={assignments}>
+        <Outlet />
+      </Experiments>
     </Analytics.Provider>
   )
 }
 
-function ExperimentExposure({ assignments }) {
+// Wrapping the app is required: a self-closing <WeaverseExperiments /> provides
+// its context to no descendants, so useExperiment(...) under the Outlet would
+// read the empty default. Attach onExpose only once consent is granted —
+// otherwise the provider marks a variant exposed before canTrack() is true and
+// a later consent grant never re-publishes the impression.
+function Experiments({
+  assignments,
+  children,
+}: {
+  assignments: Assignment[]
+  children: ReactNode
+}) {
   let { publish, canTrack } = useAnalytics()
+  let tracking = canTrack()
   return (
     <WeaverseExperiments
       value={assignments}
-      onExpose={(a) => {
-        if (!canTrack()) return // respect Customer Privacy consent
-        publish('custom_experiment_viewed', {
-          experimentId: a.experimentId,
-          variantId: a.variant.id,
-        })
-      }}
-    />
+      onExpose={
+        tracking
+          ? (a) => {
+              publish('custom_experiment_viewed', {
+                experimentId: a.experimentId,
+                variantId: a.variant.id,
+              })
+            }
+          : undefined
+      }
+    >
+      {children}
+    </WeaverseExperiments>
   )
 }
 ```

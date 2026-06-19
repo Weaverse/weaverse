@@ -49,4 +49,23 @@ describe('createExposureTracker', () => {
 
     expect(onExpose).toHaveBeenCalledTimes(2)
   })
+
+  it('should_re_expose_when_the_sink_throws_instead_of_marking_seen', () => {
+    let tracker = createExposureTracker()
+    let calls = 0
+    let flaky = () => {
+      calls += 1
+      if (calls === 1) {
+        throw new Error('sink down')
+      }
+    }
+    let assignments = [assignment('a', 'control')]
+
+    // First emit throws before the pair is marked seen…
+    expect(() => tracker.expose(assignments, flaky)).toThrow('sink down')
+    // …so a later call re-exposes it instead of dropping the event.
+    tracker.expose(assignments, flaky)
+
+    expect(calls).toBe(2)
+  })
 })

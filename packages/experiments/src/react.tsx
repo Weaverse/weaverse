@@ -25,7 +25,9 @@ export interface ExposureTracker {
  * Creates a stateful exposure tracker. Kept synchronous and framework-free so
  * the fire-once logic is unit-testable without a DOM; the React component below
  * just drives it from an effect. Re-exposes when a variant changes for the same
- * experiment (the variant id is part of the dedupe key).
+ * experiment (the variant id is part of the dedupe key). A pair is recorded
+ * only after `onExpose` returns, so a throwing sink re-exposes rather than
+ * dropping the event.
  */
 export function createExposureTracker(): ExposureTracker {
   let seen = new Set<string>()
@@ -34,8 +36,10 @@ export function createExposureTracker(): ExposureTracker {
       for (let assignment of assignments) {
         let key = `${assignment.experimentId}:${assignment.variant.id}`
         if (!seen.has(key)) {
-          seen.add(key)
+          // Emit first, record second: if the sink throws, the pair stays
+          // unmarked and re-exposes on the next call instead of being lost.
           onExpose(assignment)
+          seen.add(key)
         }
       }
     },
