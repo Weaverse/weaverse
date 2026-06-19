@@ -178,6 +178,13 @@ importers:
       '@weaverse/schema':
         specifier: 0.10.0
         version: 0.10.0
+    peerDependencies:
+      react:
+        specifier: '>=19'
+        version: 19.2.5
+      react-dom:
+        specifier: '>=19'
+        version: 19.2.5(react@19.2.5)
 
   packages/react:
     dependencies:
