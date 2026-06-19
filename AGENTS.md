@@ -52,6 +52,7 @@ turbo test --filter=@weaverse/hydrogen
 @weaverse/i18n              ← internationalization
 @weaverse/next              ← Next.js integration
 @weaverse/remix             ← Remix integration
+@weaverse/experiments       ← A/B testing (independent; zero-dep engine + optional react peer)
 ```
 
 ### Key Directories
@@ -67,6 +68,7 @@ packages/
   i18n/          Internationalization utilities
   next/          Next.js integration
   remix/         Remix integration
+  experiments/   Framework-agnostic A/B testing (engine + /server + /react)
 templates/
   pilot/         Example Hydrogen storefront theme
 archived/

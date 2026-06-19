@@ -118,6 +118,16 @@ importers:
 
   packages/core: {}
 
+  packages/experiments:
+    dependencies:
+      react:
+        specifier: '>=18'
+        version: 19.2.4
+    devDependencies:
+      '@types/react':
+        specifier: ^19.2.13
+        version: 19.2.14
+
   packages/hydrogen:
     dependencies:
       '@shopify/hydrogen':
