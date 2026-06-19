@@ -46,7 +46,9 @@ export interface ExperimentsResult {
   /**
    * `projectId` from the designated experiment's chosen variant, or `undefined`
    * when that variant declares none. Feed it to `new WeaverseClient(...)` or
-   * `weaverse.loadPage({ projectId })`.
+   * `weaverse.loadPage({ projectId })`. During a Weaverse Studio preview
+   * (`?weaverseProjectId=…`) this is the pinned project instead, so each variant
+   * stays previewable by opening its own project in Studio.
    */
   projectId?: string
   /** The stable visitor seed used to compute the assignments. */
@@ -98,12 +100,26 @@ export function getExperiments(
   let name = cookieName ?? DEFAULT_SEED_COOKIE
   let headers = new Headers()
 
+  // Weaverse Studio drives the storefront preview with the project being edited
+  // pinned via the `weaverseProjectId` query param — priority-1 in the SDK's
+  // projectId resolver, which keeps the LAST value of the key. Each variant is
+  // its own project, so previewing a variant means opening that project in
+  // Studio. Defer to it here: otherwise the hashed assignment below would supply
+  // a `projectId` that overrides `loadPage({ projectId })` and hijack the
+  // preview, pinning the editor to whichever variant the cookie buckets into.
+  let previewProjectId = new URL(request.url).searchParams
+    .getAll('weaverseProjectId')
+    .at(-1)
+
   let seed = config.seed
   let setCookie: string | undefined
   if (!seed) {
     let existing = readCookie(request.headers.get('cookie'), name)
     if (existing) {
       seed = existing
+    } else if (previewProjectId) {
+      // Resolve deterministically for the preview without persisting a cookie.
+      seed = previewProjectId
     } else {
       seed = crypto.randomUUID()
       setCookie = `${name}=${seed}; Path=/; Max-Age=${maxAge ?? ONE_YEAR_SECONDS}; SameSite=Lax; HttpOnly; Secure`
@@ -112,6 +128,26 @@ export function getExperiments(
   }
 
   let assignments = resolveExperiments(experiments, seed)
+
+  if (previewProjectId) {
+    // Force the assignment whose variant maps to the previewed project so
+    // `useExperiment(...)` and analytics `customData` match what Studio renders.
+    assignments = assignments.map((assignment) => {
+      let previewed = experiments
+        .find((experiment) => experiment.id === assignment.experimentId)
+        ?.variants.find((variant) => variant.projectId === previewProjectId)
+      return previewed
+        ? { experimentId: assignment.experimentId, variant: previewed }
+        : assignment
+    })
+    return {
+      assignments,
+      seed,
+      projectId: previewProjectId,
+      setCookie,
+      headers,
+    }
+  }
 
   let projectExperimentId = projectIdFrom ?? experiments[0]?.id
   let projectId = assignments.find(

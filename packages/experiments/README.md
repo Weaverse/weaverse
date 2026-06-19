@@ -199,6 +199,21 @@ resolveExperiments([experiment], stableSeed('visitor', '123'))
   without changing visitor seeds.
 - **`projectId`** on a variant maps the experiment to a Weaverse project.
 
+## Previewing variants in Weaverse Studio
+
+Each variant is a separate Weaverse project, so you preview a variant by **opening
+its project in Weaverse Studio** — just like editing any project. Studio drives the
+storefront preview with that project pinned via the `weaverseProjectId` query param
+(priority-1 in the Hydrogen SDK's project resolver).
+
+`getExperiments` handles this automatically: when `weaverseProjectId` is present it
+**defers to Studio** — it returns that project as `projectId` (so
+`loadPage({ projectId })` loads exactly what you opened) and forces the matching
+variant's assignment (so `useExperiment(...)` and analytics `customData` reflect the
+previewed variant). No seed cookie is minted during a preview. Without this, the
+hashed assignment would override `loadPage` and pin the editor to a single bucket —
+you could never reach the other variant from Studio.
+
 ## Framework-agnostic usage
 
 `getExperiments` takes a standard `Request` and returns standard `Headers`, so the

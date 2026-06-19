@@ -134,3 +134,88 @@ describe('getExperiments', () => {
     expect(result.setCookie).toContain('_wv_vid=')
   })
 })
+
+describe('getExperiments — Weaverse Studio preview', () => {
+  function studioRequest(previewProjectId: string, cookie?: string): Request {
+    let url = `https://shop.example/?weaverseProjectId=${previewProjectId}&isDesignMode=true`
+    return new Request(url, { headers: cookie ? { cookie } : {} })
+  }
+
+  it('should_pin_the_previewed_project_over_the_hashed_assignment', () => {
+    // Same sticky visitor, both preview directions: the seed can only hash to
+    // one variant, so at least one of these is a real override — both returning
+    // the pinned variant proves Studio wins over the hash.
+    let toB = getExperiments(studioRequest('proj-b', '_wv_vid=sticky-user'), {
+      experiments: [THEME_TEST],
+    })
+    let toControl = getExperiments(
+      studioRequest('proj-control', '_wv_vid=sticky-user'),
+      { experiments: [THEME_TEST] }
+    )
+
+    expect(toB.projectId).toBe('proj-b')
+    expect(toB.assignments[0].variant.id).toBe('b')
+    expect(toControl.projectId).toBe('proj-control')
+    expect(toControl.assignments[0].variant.id).toBe('control')
+  })
+
+  it('should_not_persist_a_seed_cookie_during_a_preview', () => {
+    let result = getExperiments(studioRequest('proj-b'), {
+      experiments: [THEME_TEST],
+    })
+
+    expect(result.setCookie).toBeUndefined()
+    expect(result.headers.get('Set-Cookie')).toBeNull()
+  })
+
+  it('should_only_force_the_experiment_that_owns_the_previewed_project', () => {
+    let layout: Experiment = {
+      id: 'layout-test',
+      variants: [{ id: 'a' }, { id: 'b' }],
+    }
+    let preview = getExperiments(
+      studioRequest('proj-b', '_wv_vid=sticky-user'),
+      {
+        experiments: [layout, THEME_TEST],
+      }
+    )
+    let live = getExperiments(requestWithCookie('_wv_vid=sticky-user'), {
+      experiments: [layout, THEME_TEST],
+    })
+
+    let themePreview = preview.assignments.find(
+      (a) => a.experimentId === 'theme-test'
+    )
+    expect(themePreview?.variant.id).toBe('b')
+    // The unrelated experiment keeps its normal hashed assignment.
+    let layoutPreview = preview.assignments.find(
+      (a) => a.experimentId === 'layout-test'
+    )
+    let layoutLive = live.assignments.find(
+      (a) => a.experimentId === 'layout-test'
+    )
+    expect(layoutPreview?.variant.id).toBe(layoutLive?.variant.id)
+  })
+
+  it('should_defer_to_studio_for_a_project_outside_any_experiment', () => {
+    // Previewing the default project (no matching variant): no variant forced,
+    // but the override still steps aside so the SDK loads Studio's project.
+    let result = getExperiments(
+      studioRequest('proj-default', '_wv_vid=sticky-user'),
+      { experiments: [THEME_TEST] }
+    )
+
+    expect(result.projectId).toBe('proj-default')
+  })
+
+  it('should_keep_the_last_weaverseProjectId_when_the_key_is_duplicated', () => {
+    // getRequestQueries keeps the LAST value of a duplicated key; match it so
+    // the pin agrees with the SDK's projectId resolver.
+    let url =
+      'https://shop.example/?weaverseProjectId=proj-control&weaverseProjectId=proj-b'
+    let result = getExperiments(new Request(url), { experiments: [THEME_TEST] })
+
+    expect(result.projectId).toBe('proj-b')
+    expect(result.assignments[0].variant.id).toBe('b')
+  })
+})
