@@ -1,19 +1,27 @@
 import { afterEach, describe, expect, it } from 'vitest'
-import { registerPixelInstance, shouldFirePixel } from '../src/utils/pixel'
+import {
+  observeNavigation,
+  registerPixelInstance,
+  shouldFirePixel,
+} from '../src/utils/pixel'
 
-// Each mounted instance mirrors `usePixel`: register(pageId) THEN decide to
-// fire. Track registrations so every test ends with zero mounted instances —
-// the module then fully forgets its navigation state.
+// Each mounted instance mirrors `usePixel`'s two effects: an observe effect
+// (runs on mount and on every navigation key change) and a fire effect (runs
+// once on mount: register, then decide). `navigate()` models a STILL-mounted
+// instance re-running only its observe effect. Track registrations so every
+// test ends with zero mounted instances — the module then resets fully.
 let cleanups: (() => void)[] = []
 function mountInstance(navigationKey: string, pageId: string) {
-  let unregister = registerPixelInstance(pageId)
+  observeNavigation(navigationKey)
+  let unregister = registerPixelInstance()
   let fired = shouldFirePixel(navigationKey, pageId)
   let unmount = () => {
     unregister()
     cleanups = cleanups.filter((c) => c !== unmount)
   }
   cleanups.push(unmount)
-  return { fired, unmount }
+  let navigate = (nextKey: string) => observeNavigation(nextKey)
+  return { fired, unmount, navigate }
 }
 afterEach(() => {
   for (let cleanup of [...cleanups]) {
@@ -55,9 +63,9 @@ describe('shouldFirePixel', () => {
   })
 
   it('should_count_revisits_after_detouring_through_non_weaverse_routes', () => {
-    // Weaverse page A → cart (no Weaverse instance, key never observed by
-    // this module) → Back to A with the SAME stored key. The page's last
-    // instance unmounted, so its fired state was forgotten.
+    // Weaverse page A → cart (no Weaverse instance) → Back to A with the SAME
+    // stored key. No instance survived the detour, so the last-unmount reset
+    // forgot the navigation and the revisit counts.
     let a = mountInstance('key-a', 'page-a')
     expect(a.fired).toBe(true)
     a.unmount()
@@ -67,14 +75,15 @@ describe('shouldFirePixel', () => {
   })
 
   it('should_keep_state_while_a_nested_layout_instance_stays_mounted', () => {
-    // /help/contact → /help/other: the layout's instance never unmounts,
-    // so state must NOT reset on the child swap alone — the new child fires
-    // via its key transition, and duplicates still dedupe.
+    // /help/contact → /help/other: the layout's instance never unmounts, so
+    // state must NOT reset on the child swap alone — the new child fires via
+    // its key transition, and duplicates still dedupe.
     let layout = mountInstance('key-a', 'page-layout')
     let contact = mountInstance('key-a', 'page-contact')
     expect(layout.fired).toBe(true)
     expect(contact.fired).toBe(true)
     contact.unmount()
+    layout.navigate('key-b')
     let other = mountInstance('key-b', 'page-other')
     let otherDup = mountInstance('key-b', 'page-other')
     expect(other.fired).toBe(true)
@@ -82,22 +91,37 @@ describe('shouldFirePixel', () => {
   })
 
   it('should_count_a_revisit_after_a_detour_while_a_layout_instance_persists', () => {
-    // The regression: a persistent layout-level Weaverse instance never
-    // unmounts, so the old single global mounted-instance counter never hit
-    // zero and never reset. A Back to the SAME history entry (key-a
-    // unchanged) then wrongly suppressed the page's revisit pixel.
+    // A persistent layout-level instance survives the detour and OBSERVES the
+    // key round-trip (key-a → key-cart → key-a), so the Back is recognised as
+    // a real navigation and the page's revisit pixel fires.
     let layout = mountInstance('key-a', 'page-layout')
     let a = mountInstance('key-a', 'page-a')
     expect(layout.fired).toBe(true)
     expect(a.fired).toBe(true)
-    // Navigate A → /cart: the page instance unmounts, the layout persists.
+    // Navigate A → /cart: the page instance unmounts, the layout persists and
+    // observes the detour key, then the Back to the original entry.
     a.unmount()
-    // /cart has no Weaverse instance; nothing registered, key unobserved.
-    // Back → /a restores key-a while the layout is still mounted.
+    layout.navigate('key-cart')
+    layout.navigate('key-a')
     let aRevisit = mountInstance('key-a', 'page-a')
     expect(aRevisit.fired).toBe(true)
     // A co-located duplicate on the revisit still dedupes.
     let aRevisitDup = mountInstance('key-a', 'page-a')
     expect(aRevisitDup.fired).toBe(false)
+  })
+
+  it('should_not_double_count_an_in_place_remount_on_the_same_navigation', () => {
+    // The `data={null}` suppress/restore path unmounts and remounts a page on
+    // the SAME history entry (key unchanged) while a layout-level instance
+    // stays mounted. The key never transitions, so fired state survives and
+    // the restore must NOT emit a second pixel.
+    let layout = mountInstance('key-a', 'page-layout')
+    let a = mountInstance('key-a', 'page-a')
+    expect(layout.fired).toBe(true)
+    expect(a.fired).toBe(true)
+    // Suppressed in place (no navigation, no key change); layout persists.
+    a.unmount()
+    let aRestored = mountInstance('key-a', 'page-a')
+    expect(aRestored.fired).toBe(false)
   })
 })

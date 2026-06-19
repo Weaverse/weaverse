@@ -1,34 +1,51 @@
-// One pixel per page per navigation. Two facts shape the dedup:
+// One pixel per page per navigation. A few facts shape the dedup:
 //
 // 1. Co-located instances: nested compositions mount multiple Weaverse
-//    instances of the same page on one URL; only the first should count.
-// 2. The pixel effect runs once per instance mount (see `usePixel`), so a
-//    given instance never re-fires — a navigation is always a fresh mount.
+//    instances on one URL; each page is counted at most once.
+// 2. The pixel FIRE effect runs once per instance mount (see `usePixel`), so
+//    an instance never re-fires on its own — a navigation is a fresh mount.
+// 3. `location.key` is stable per history entry. A back/forward POP restores
+//    the entry's ORIGINAL key, and an in-place remount on the same entry
+//    (e.g. the `data={null}` suppress/restore path in WeaverseHydrogenRoot)
+//    keeps that same key. A REAL navigation is therefore a key CHANGE.
 //
-// `firedPageIds` is scoped to the current navigation key and reset on a key
-// TRANSITION. `mountCounts` tracks how many instances of each pageId are
-// currently mounted; when the LAST instance of a pageId unmounts we forget
-// its fired state. That second mechanism is what makes a detour-and-Back to
-// the SAME history entry (`location.key` restored unchanged) count the
-// revisit: without the per-page refcount, a persistent layout-level Weaverse
-// instance would keep the navigation state alive across the detour and
-// wrongly suppress the page's revisit pixel.
+// `firedPageIds` is the set of pages already counted for the current
+// navigation. It is forgotten in two ways:
+//   - On a key TRANSITION reported by ANY mounted instance via
+//     `observeNavigation` (driven by a per-navigation effect). A persistent
+//     layout-level instance keeps observing across a detour through a
+//     non-Weaverse route (cart, search, account), so a Back to the original
+//     entry is recognised as a new navigation and the page re-counts — while
+//     an in-place suppress/restore (no key change) does NOT re-count.
+//   - When the LAST instance unmounts (`registerPixelInstance`), covering the
+//     detour case where no instance survives to observe the key round-trip
+//     (a page with no persistent layout going to /cart and back).
 //
 // Known tradeoff: React StrictMode's dev-only mount→cleanup→mount cycle
-// double-fires in development — parity with the pre-dedupe behavior;
-// production semantics are unaffected.
+// resets state and double-fires in development — parity with the pre-dedupe
+// behavior; production semantics are unaffected.
 let currentNavigationKey: string | null = null
 let firedPageIds = new Set<string>()
-let mountCounts = new Map<string, number>()
+let mountedInstances = 0
+
+/**
+ * Record the navigation key seen by a mounted instance. A change of key is a
+ * real navigation and forgets the previous navigation's fired pages; an
+ * unchanged key (an in-place remount / suppress-restore on the same history
+ * entry) leaves them intact, so the page is not double-counted.
+ */
+export function observeNavigation(navigationKey: string): void {
+  if (navigationKey !== currentNavigationKey) {
+    currentNavigationKey = navigationKey
+    firedPageIds.clear()
+  }
+}
 
 export function shouldFirePixel(
   navigationKey: string,
   pageId: string
 ): boolean {
-  if (navigationKey !== currentNavigationKey) {
-    currentNavigationKey = navigationKey
-    firedPageIds.clear()
-  }
+  observeNavigation(navigationKey)
   if (firedPageIds.has(pageId)) {
     return false
   }
@@ -37,22 +54,18 @@ export function shouldFirePixel(
 }
 
 /**
- * Track a mounted Weaverse instance for `pageId`; returns the unmount
- * cleanup. Call before `shouldFirePixel` so the navigation state's lifetime
- * is bounded by "at least one instance of this page is on screen". When the
- * last instance of a pageId unmounts, its fired state is dropped so a Back
- * navigation that restores the same history entry re-counts it — even while
- * another Weaverse instance stays mounted across the detour.
+ * Track a mounted Weaverse instance; returns the unmount cleanup. When the
+ * last instance unmounts, the navigation state is forgotten so a Back that
+ * restores the same history entry counts again even if no instance survived
+ * to observe the detour.
  */
-export function registerPixelInstance(pageId: string): () => void {
-  mountCounts.set(pageId, (mountCounts.get(pageId) ?? 0) + 1)
+export function registerPixelInstance(): () => void {
+  mountedInstances += 1
   return () => {
-    let next = (mountCounts.get(pageId) ?? 1) - 1
-    if (next > 0) {
-      mountCounts.set(pageId, next)
-      return
+    mountedInstances -= 1
+    if (mountedInstances === 0) {
+      currentNavigationKey = null
+      firedPageIds.clear()
     }
-    mountCounts.delete(pageId)
-    firedPageIds.delete(pageId)
   }
 }
