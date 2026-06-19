@@ -908,7 +908,7 @@ export class WeaverseClient {
    * Fetches page content, executes component loaders, and handles empty items fallback.
    *
    * @param params - Optional page loading parameters
-   * @param params.type - Page type (HOME, PAGE, PRODUCT, COLLECTION, etc.)
+   * @param params.type - Page type (INDEX, PAGE, PRODUCT, COLLECTION, etc.)
    * @param params.handle - Page handle for dynamic routes
    * @param params.locale - Locale override
    * @param params.projectId - Route-level project ID override (for multi-project)
@@ -921,7 +921,7 @@ export class WeaverseClient {
    * const data = await weaverse.loadPage()
    *
    * // With page type
-   * const data = await weaverse.loadPage({ type: 'HOME' })
+   * const data = await weaverse.loadPage({ type: 'INDEX' })
    *
    * // Route-level project override
    * const data = await weaverse.loadPage({
