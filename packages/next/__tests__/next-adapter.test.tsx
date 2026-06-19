@@ -159,6 +159,19 @@ describe('hooks outside provider', () => {
       OUTSIDE_PROVIDER_ERROR
     )
   })
+
+  it('should_throw_clear_error_when_useWeaversePageData_used_outside_provider', () => {
+    // Arrange
+    function Probe() {
+      useWeaversePageData()
+      return null
+    }
+
+    // Act + Assert
+    expect(() => renderToStaticMarkup(<Probe />)).toThrow(
+      OUTSIDE_PROVIDER_ERROR
+    )
+  })
 })
 
 // ─── 3. Component loader execution ───────────────────────────────────
