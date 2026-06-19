@@ -1,6 +1,6 @@
 {
   "name": "@weaverse/experiments",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Framework-agnostic A/B testing and experimentation for Weaverse — deterministic, storage-free variant assignment",
   "author": "Weaverse",
   "license": "MIT",

@@ -73,19 +73,29 @@ export function createWeaverseClient(args) {
 **2. Provide assignments to React and forward exposure to analytics.**
 
 ```tsx
-// app/root.tsx
+// app/root.tsx — App renders inside <Analytics.Provider> (see below)
+import { useAnalytics } from '@shopify/hydrogen'
 import { WeaverseExperiments } from '@weaverse/experiments/react'
 
 export default function App() {
   let { assignments } = useLoaderData<typeof loader>()
+  let { publish, canTrack } = useAnalytics()
+  let tracking = canTrack()
   return (
     <WeaverseExperiments
       value={assignments}
-      onExpose={(a) =>
-        window.gtag?.('event', 'experiment_view', {
-          experiment_id: a.experimentId,
-          variant_id: a.variant.id,
-        })
+      // Attach onExpose only once consent allows it. A sink that silently
+      // no-ops (analytics not loaded yet, or consent withheld) would mark the
+      // variant exposed without sending — and it never retries. See the
+      // "Analytics integration" section for the full setup.
+      onExpose={
+        tracking
+          ? (a) =>
+              publish('custom_experiment_viewed', {
+                experimentId: a.experimentId,
+                variantId: a.variant.id,
+              })
+          : undefined
       }
     >
       <Outlet />

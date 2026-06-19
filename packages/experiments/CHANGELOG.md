@@ -1,5 +1,12 @@
 # @weaverse/experiments
 
+## 0.1.1
+
+- **Docs** — fix the quick-start exposure example: gate `onExpose` on
+  `canTrack()` rather than optional-chaining `window.gtag?.(…)`. A no-op
+  sink (analytics not loaded yet, or consent withheld) otherwise marked the
+  variant exposed without sending, dropping the impression permanently.
+
 ## 0.1.0
 
 Initial release — framework-agnostic A/B testing and experimentation.
