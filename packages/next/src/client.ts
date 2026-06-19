@@ -1,3 +1,4 @@
+import { registerWeaverseNextComponents } from './registry'
 import type {
   WeaverseNextClient,
   WeaverseNextClientConfig,
@@ -34,6 +35,7 @@ class NextClient implements WeaverseNextClient {
   constructor(config: WeaverseNextClientConfig) {
     this.projectId = config.projectId
     this.components = config.components ?? []
+    registerWeaverseNextComponents(this.components)
     this.themeSchema = config.themeSchema
     this.themeSettings = config.themeSettings ?? {}
     this.requestContext = config.requestContext
