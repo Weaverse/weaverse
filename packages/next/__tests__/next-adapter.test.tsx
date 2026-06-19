@@ -174,7 +174,28 @@ describe('hooks outside provider', () => {
   })
 })
 
-// ─── 3. Component loader execution ───────────────────────────────────
+// ─── 3. Client fetchers are request-safe ──────────────────────────────
+
+describe('createWeaverseNextClient', () => {
+  it('should_return_loaded_page_without_mutating_shared_client_data', async () => {
+    // Arrange
+    let pageData = makePageData()
+    let client = createWeaverseNextClient({
+      projectId: 'proj-test',
+      components: [heroComponent],
+      fetchPage: async () => pageData,
+    })
+
+    // Act
+    let result = await client.loadPage({ type: 'INDEX' })
+
+    // Assert
+    expect(result).toBe(pageData)
+    expect(client.data).toBeNull()
+  })
+})
+
+// ─── 4. Component loader execution ───────────────────────────────────
 
 describe('runWeaverseComponentLoaders', () => {
   it('should_pass_commerce_storefront_and_alias_then_attach_loaderData', async () => {

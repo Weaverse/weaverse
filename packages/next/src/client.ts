@@ -57,9 +57,7 @@ class NextClient implements WeaverseNextClient {
         '[WeaverseNextClient] loadPage requires a `fetchPage` function in client config.'
       )
     }
-    let result = await this._fetchPage(input)
-    this.data = result
-    return result
+    return this._fetchPage(input)
   }
 
   loadThemeSettings = async (
