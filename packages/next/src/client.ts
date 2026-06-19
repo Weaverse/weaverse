@@ -68,13 +68,7 @@ class NextClient implements WeaverseNextClient {
         '[WeaverseNextClient] loadThemeSettings requires a `fetchThemeSettings` function in client config.'
       )
     }
-    let settings = await this._fetchThemeSettings(
-      context ?? this.requestContext
-    )
-    if (settings && typeof settings === 'object') {
-      this.themeSettings = settings as Record<string, unknown>
-    }
-    return settings
+    return this._fetchThemeSettings(context ?? this.requestContext)
   }
 }
 

@@ -193,6 +193,24 @@ describe('createWeaverseNextClient', () => {
     expect(result).toBe(pageData)
     expect(client.data).toBeNull()
   })
+
+  it('should_return_loaded_theme_settings_without_mutating_shared_client_theme_settings', async () => {
+    // Arrange
+    let themeSettings = { topbarText: 'Request scoped' }
+    let client = createWeaverseNextClient({
+      projectId: 'proj-test',
+      components: [heroComponent],
+      themeSettings: { topbarText: 'Initial' },
+      fetchThemeSettings: async () => themeSettings,
+    })
+
+    // Act
+    let result = await client.loadThemeSettings()
+
+    // Assert
+    expect(result).toBe(themeSettings)
+    expect(client.themeSettings).toEqual({ topbarText: 'Initial' })
+  })
 })
 
 // ─── 4. Component loader execution ───────────────────────────────────
