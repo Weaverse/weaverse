@@ -1,3 +1,4 @@
+import type { SchemaType } from '@weaverse/schema'
 import { registerWeaverseNextComponents } from './registry'
 import type {
   WeaverseNextClient,
@@ -9,6 +10,7 @@ import type {
   WeaverseNextRequestContext,
   WeaverseNextStorefront,
 } from './types'
+import { generateDataFromSchema } from './utils'
 
 /**
  * Request-safe Weaverse client for Next.js. Holds the component registry, theme
@@ -37,7 +39,14 @@ class NextClient implements WeaverseNextClient {
     this.components = config.components
     registerWeaverseNextComponents(this.components)
     this.themeSchema = config.themeSchema
-    this.themeSettings = config.themeSettings ?? {}
+    // Seed `themeSchema` defaults before merchant-provided overrides, mirroring
+    // Hydrogen's `loadThemeSettings` (schema defaults under remote `theme`).
+    // Without this, `useThemeSettings()` would miss any setting the merchant
+    // never explicitly overrode.
+    this.themeSettings = {
+      ...generateDataFromSchema(config.themeSchema as SchemaType | undefined),
+      ...config.themeSettings,
+    }
     this.requestContext = config.requestContext
     this.commerce = config.commerce
     this._fetchPage = config.fetchPage

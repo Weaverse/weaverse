@@ -78,6 +78,21 @@ export async function runWeaverseComponentLoaders(
   let resolvedContext = context ?? client.requestContext
   let resolvedCommerce = commerce ?? client.commerce
 
+  // Per-call `weaverse` alias. When a request-scoped `commerce` is passed, the
+  // `weaverse.storefront` compatibility alias must resolve to *that* storefront,
+  // not the client's construction-time commerce. Pilot-style loaders call
+  // `weaverse.storefront.query(...)`, so a stale alias would query the wrong
+  // (or an undefined) storefront. When no override is given we reuse the client
+  // as-is to preserve its prototype getters.
+  let resolvedWeaverse: WeaverseNextClient =
+    resolvedCommerce === client.commerce
+      ? client
+      : {
+          ...client,
+          commerce: resolvedCommerce,
+          storefront: resolvedCommerce?.storefront,
+        }
+
   async function walk(nodes: WeaverseNextComponentData[]) {
     for (let item of nodes) {
       if (!item || visited.has(item.id)) {
@@ -90,7 +105,7 @@ export async function runWeaverseComponentLoaders(
         try {
           item.loaderData = await component.loader({
             data: { ...generateDataFromSchema(component.schema), ...item.data },
-            weaverse: client,
+            weaverse: resolvedWeaverse,
             context: resolvedContext,
             commerce: resolvedCommerce,
           })

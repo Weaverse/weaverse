@@ -179,6 +179,46 @@ describe('hooks outside provider', () => {
 // ─── 3. Client fetchers are request-safe ──────────────────────────────
 
 describe('createWeaverseNextClient', () => {
+  it('should_seed_theme_schema_defaults_under_merchant_overrides', () => {
+    // Arrange — theme schema declares two settings with defaults; the merchant
+    // only overrides one of them.
+    let themeSchema = createSchema({
+      type: 'theme',
+      title: 'Theme',
+      settings: [
+        {
+          group: 'Layout',
+          inputs: [
+            {
+              type: 'range',
+              name: 'pageWidth',
+              label: 'Page width',
+              defaultValue: 1200,
+            },
+            {
+              type: 'text',
+              name: 'topbarText',
+              label: 'Topbar text',
+              defaultValue: 'Default topbar',
+            },
+          ],
+        },
+      ],
+    })
+    let client = createWeaverseNextClient({
+      projectId: 'proj-test',
+      components: [heroComponent],
+      themeSchema,
+      themeSettings: { topbarText: 'Merchant topbar' },
+    })
+
+    // Assert — schema default fills the missing key; override wins where set.
+    expect(client.themeSettings).toEqual({
+      pageWidth: 1200,
+      topbarText: 'Merchant topbar',
+    })
+  })
+
   it('should_return_loaded_page_without_mutating_shared_client_data', async () => {
     // Arrange
     let pageData = makePageData()
@@ -265,6 +305,45 @@ describe('runWeaverseComponentLoaders', () => {
     expect(result?.page.items[0]).not.toBe(data.page.items[0])
     expect(result?.page.items[0].loaderData).toEqual(queryResult)
     expect(data.page.items[0].loaderData).toBeUndefined()
+  })
+
+  it('should_point_weaverse_storefront_alias_at_per_call_commerce', async () => {
+    // Arrange — client built with a construction-time storefront, but the
+    // loader run receives a different request-scoped commerce.
+    let clientQuery = vi.fn().mockResolvedValue({ from: 'client' })
+    let clientStorefront = { query: clientQuery, i18n: { country: 'US' } }
+    let requestQuery = vi.fn().mockResolvedValue({ from: 'request' })
+    let requestStorefront = { query: requestQuery, i18n: { country: 'JP' } }
+    let aliasStorefront: unknown
+    let component = {
+      default: Hero,
+      schema: createSchema({ type: 'aliased', title: 'Aliased' }),
+      loader: async (args: WeaverseNextComponentLoaderArgs) => {
+        aliasStorefront = args.weaverse.storefront
+        await args.weaverse.storefront?.query('query Alias { id }')
+        return { ok: true }
+      },
+    }
+    let client = createWeaverseNextClient({
+      projectId: 'proj-test',
+      components: [component],
+      commerce: { storefront: clientStorefront },
+    })
+    let data: WeaverseNextLoaderData = {
+      page: { id: 'page-1', items: [{ id: 'a1', type: 'aliased', data: {} }] },
+    }
+
+    // Act — pass request-scoped commerce that differs from client.commerce.
+    await runWeaverseComponentLoaders({
+      client,
+      data,
+      commerce: { storefront: requestStorefront },
+    })
+
+    // Assert — the alias resolves to the per-call storefront, not the stale one.
+    expect(aliasStorefront).toBe(requestStorefront)
+    expect(requestQuery).toHaveBeenCalledTimes(1)
+    expect(clientQuery).not.toHaveBeenCalled()
   })
 
   it('should_merge_schema_defaults_before_running_component_loader', async () => {
