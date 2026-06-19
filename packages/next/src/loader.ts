@@ -23,6 +23,17 @@ function isItemNode(node: unknown): node is WeaverseNextComponentData {
   )
 }
 
+function cloneItem(item: WeaverseNextComponentData): WeaverseNextComponentData {
+  return {
+    ...item,
+    children: Array.isArray(item.children)
+      ? item.children.map((child) =>
+          isItemNode(child) ? cloneItem(child) : { ...child }
+        )
+      : item.children,
+  }
+}
+
 /**
  * Walk a serialized page tree and run each registered component's `loader`,
  * attaching the result to the item as `loaderData`.
@@ -32,17 +43,26 @@ function isItemNode(node: unknown): node is WeaverseNextComponentData {
  * they are inline item objects; flat `items` arrays are covered by the
  * top-level walk.
  *
- * @returns the same `data` object (mutated in place) for convenience.
+ * @returns a cloned `data` object with `loaderData` attached to cloned items.
  */
 export async function runWeaverseComponentLoaders(
   args: RunComponentLoadersArgs
 ): Promise<WeaverseNextLoaderData | null> {
   let { client, context, commerce } = args
-  let data = args.data ?? client.data
-  let items = data?.page?.items
-  if (!items?.length) {
-    return data
+  let sourceData = args.data ?? client.data
+  let sourceItems = sourceData?.page?.items
+  if (!(sourceData && sourceItems?.length)) {
+    return sourceData
   }
+
+  let data: WeaverseNextLoaderData = {
+    ...sourceData,
+    page: {
+      ...sourceData.page,
+      items: sourceItems.map(cloneItem),
+    },
+  }
+  let items = data.page.items
 
   let componentMap = new Map<string, WeaverseNextComponent>()
   for (let component of client.components) {

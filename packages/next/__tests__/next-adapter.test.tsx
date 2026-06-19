@@ -259,7 +259,10 @@ describe('runWeaverseComponentLoaders', () => {
       count: 4,
     })
     expect(query).toHaveBeenCalledTimes(2)
+    expect(result).not.toBe(data)
+    expect(result?.page.items[0]).not.toBe(data.page.items[0])
     expect(result?.page.items[0].loaderData).toEqual(queryResult)
+    expect(data.page.items[0].loaderData).toBeUndefined()
   })
 
   it('should_walk_inline_children_recursively', async () => {
