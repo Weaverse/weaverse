@@ -346,6 +346,94 @@ describe('WeaverseNextRenderer', () => {
   })
 })
 
+// ─── 4b. Default `main` root handling ────────────────────────────────
+
+// Flat page model: a single root `main` item whose `children` are `{ id }`
+// refs into the top-level `items` array — the shape Weaverse actually serves.
+function makeFlatPageData(): WeaverseNextLoaderData {
+  return {
+    page: {
+      id: 'page-flat',
+      items: [
+        {
+          id: 'item-main',
+          type: 'main',
+          children: [{ id: 'hero-1' }, { id: 'hero-2' }],
+        },
+        { id: 'hero-1', type: 'hero', data: { text: 'First section' } },
+        { id: 'hero-2', type: 'hero', data: { text: 'Second section' } },
+      ],
+    },
+  }
+}
+
+describe('default main root handling', () => {
+  it('should_render_child_sections_when_consumer_does_not_register_main', () => {
+    // Arrange — client registers only `hero`, never a `main` component.
+    let client = makeClient()
+    client.data = makeFlatPageData()
+
+    // Act
+    let html = renderToStaticMarkup(
+      <WeaverseNextProvider client={client}>
+        <WeaverseNextRenderer />
+      </WeaverseNextProvider>
+    )
+
+    // Assert — both children resolved through the default `main` root.
+    expect(html).toContain('First section')
+    expect(html).toContain('Second section')
+    expect(html).toContain('Default Heading') // hero schema default
+  })
+
+  it('should_forward_weaverse_dom_attributes_onto_the_default_main_element', () => {
+    // Arrange
+    let client = makeClient()
+    client.data = makeFlatPageData()
+
+    // Act
+    let html = renderToStaticMarkup(
+      <WeaverseNextRenderer client={client} data={client.data} />
+    )
+
+    // Assert — default `main` spreads the renderer-injected DOM attributes.
+    expect(html).toContain('data-wv-id="item-main"')
+    expect(html).toContain('data-wv-type="main"')
+  })
+
+  it('should_prefer_user_registered_main_over_the_default_main', () => {
+    // Arrange — this runs after the default `main` has already been registered.
+    let CustomMain = (props: WeaverseNextComponentProps) => {
+      let { children, ...rest } = props
+      return (
+        <main {...rest} data-custom-main="yes">
+          {children as ReactNode}
+        </main>
+      )
+    }
+    let client = createWeaverseNextClient({
+      projectId: 'proj-test',
+      components: [
+        {
+          default: CustomMain,
+          schema: createSchema({ type: 'main', title: 'Main' }),
+        },
+        heroComponent,
+      ],
+    })
+    client.data = makeFlatPageData()
+
+    // Act
+    let html = renderToStaticMarkup(
+      <WeaverseNextRenderer client={client} data={client.data} />
+    )
+
+    // Assert
+    expect(html).toContain('data-custom-main="yes"')
+    expect(html).toContain('First section')
+  })
+})
+
 // ─── 5. No React Router / remix-oxygen source imports ────────────────
 
 describe('package boundaries', () => {
