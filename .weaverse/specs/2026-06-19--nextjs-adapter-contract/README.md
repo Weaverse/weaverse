@@ -411,6 +411,18 @@ This spec is complete when:
 - A public npm release.
 - Production docs.
 
+## Pilot usage audit result
+
+The Pilot usage audit is recorded in [`pilot-usage-audit.md`](./pilot-usage-audit.md).
+
+Key changes from the audit:
+
+- Component loaders are a v0 must-have because Pilot has real Storefront-backed section loaders.
+- Explicit root/page data hooks are a v0 must-have because many Pilot sections read `useLoaderData` / `useRouteLoaderData` today.
+- Runtime hooks (`useThemeSettings`, `useParentInstance`, `useItemInstance`, `useWeaverse`) should be re-exported by `@weaverse/next` for migration ergonomics.
+- Loader args should expose explicit `commerce.storefront`; `weaverse.storefront` can exist as a compatibility alias.
+- The adapter should not emulate React Router route matches. Next apps should pass route data through provider props and use Next-native route files.
+
 ## Immediate next action
 
-Do **Slice 2: Pilot usage audit** before implementing the package shell. The audit should prove which current `@weaverse/hydrogen` APIs Pilot actually depends on so the v0 Next adapter does not overbuild or miss a must-have runtime contract.
+Implement **Slice 1: package shell + renderer/provider spike** in `packages/next`, informed by the Pilot audit. Keep it small: types, provider, renderer, schema/hook re-exports, and fixture tests for page tree render + component loader + explicit root/page data.
