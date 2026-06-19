@@ -3,11 +3,11 @@ import { ensureNextItemConstructor } from './item'
 import type { WeaverseNextComponent } from './types'
 
 /**
- * Component lists already pushed into the element registry. Registration is
- * idempotent, but walking the full list allocates on every call — theme
- * component arrays are module-level constants, so register each identity once.
+ * Component types already pushed into the element registry. Registration is
+ * idempotent by `schema.type`, so callers may pass fresh arrays per request
+ * without causing repeated global registry writes.
  */
-const registeredComponentLists = new WeakSet<WeaverseNextComponent[]>()
+const registeredComponentTypes = new Set<string>()
 
 /**
  * Register Next adapter components with the shared Weaverse element registry.
@@ -20,18 +20,16 @@ export function registerWeaverseNextComponents(
 ) {
   ensureNextItemConstructor()
 
-  if (registeredComponentLists.has(components)) {
-    return
-  }
   for (let component of components) {
-    if (component?.schema?.type) {
+    let type = component?.schema?.type
+    if (type && !registeredComponentTypes.has(type)) {
       Weaverse.registerElement({
-        type: component.schema.type,
+        type,
         Component: component.default,
         schema: component.schema,
         loader: component.loader,
       })
+      registeredComponentTypes.add(type)
     }
   }
-  registeredComponentLists.add(components)
 }

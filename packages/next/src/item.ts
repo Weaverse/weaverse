@@ -22,5 +22,11 @@ export class WeaverseNextItem extends WeaverseItemStore {
  * once is safe. Invoked by the renderer before it builds a Weaverse instance.
  */
 export function ensureNextItemConstructor() {
-  Weaverse.ItemConstructor = WeaverseNextItem
+  if (
+    !Weaverse.ItemConstructor ||
+    Weaverse.ItemConstructor === WeaverseItemStore ||
+    Weaverse.ItemConstructor === WeaverseNextItem
+  ) {
+    Weaverse.ItemConstructor = WeaverseNextItem
+  }
 }
