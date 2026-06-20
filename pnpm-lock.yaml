@@ -137,8 +137,8 @@ importers:
         specifier: '3'
         version: 3.0.3(@shopify/oxygen-workers-types@4.2.0)(react-router@7.14.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
       '@weaverse/react':
-        specifier: 5.16.3
-        version: 5.16.3
+        specifier: 5.17.0
+        version: link:../react
       '@weaverse/schema':
         specifier: 0.10.0
         version: 0.10.0
@@ -205,8 +205,8 @@ importers:
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: 5.16.3
-        version: 5.16.3
+        specifier: 5.17.0
+        version: link:../core
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
