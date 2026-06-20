@@ -34,7 +34,7 @@ import { isValidSchema } from '@weaverse/schema'
 import type * as React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
 import type { NavigateFunction } from 'react-router'
-import type { ThemeTextStore } from './utils/theme-text-store'
+import type { TranslationStore } from './utils/translation-store'
 import type { ThemeSettingsStore } from './utils/use-theme-settings-store'
 import type { WeaverseHydrogen } from './WeaverseHydrogenRoot'
 import type { WeaverseClient } from './weaverse-client'
@@ -116,7 +116,9 @@ export type WeaverseInternal = {
   navigate: NavigateFunction
   revalidate: () => void
   themeSettingsStore: ThemeSettingsStore
-  themeTextStore?: ThemeTextStore | null
+  translationStore?: TranslationStore | null
+  /** @deprecated Use translationStore instead. */
+  themeTextStore?: TranslationStore | null
   merchantOverrides?: Record<string, unknown> | null
 }
 

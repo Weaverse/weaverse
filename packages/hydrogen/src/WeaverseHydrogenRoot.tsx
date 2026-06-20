@@ -23,9 +23,9 @@ import {
 } from 'react-router'
 import { defaultComponents } from '~/components'
 import {
-  ThemeTextProvider,
   type TranslateFunction,
-} from './hooks/theme-text-context'
+  TranslationProvider,
+} from './hooks/translation-context'
 import { createWeaverseDataContext } from './hooks/use-weaverse-data-context'
 import type {
   HydrogenComponentData,
@@ -52,7 +52,7 @@ import {
 } from './utils/pick-weaverse-data'
 import { normalizeRequestInfo } from './utils/studio-request-info'
 import { syncReusedInstance } from './utils/sync-reused-instance'
-import { ThemeTextStore } from './utils/theme-text-store'
+import { TranslationStore } from './utils/translation-store'
 import { useStudio, useStudioConnect } from './utils/use-studio'
 import {
   ThemeSettingsStoreContext,
@@ -496,7 +496,7 @@ export type WithWeaverseOptions = {
   /**
    * Optional external translation function (e.g. from Shopify i18n).
    * When provided it becomes the **highest-priority** source
-   * in the `t()` resolution chain exposed by `useThemeText()`.
+   * in the `t()` resolution chain exposed by `useTranslation()`.
    */
   t?: TranslateFunction
 }
@@ -534,22 +534,22 @@ export function withWeaverse(
 ) {
   return (props: JSX.IntrinsicAttributes) => {
     const themeSettingsStore = useCreateThemeSettingsStore()
-    const themeTextData = useThemeTextData()
-    const themeTextStoreRef = useRef<ThemeTextStore | null>(null)
-    if (!themeTextStoreRef.current) {
-      themeTextStoreRef.current = new ThemeTextStore()
+    const translationData = useTranslationData()
+    const translationStoreRef = useRef<TranslationStore | null>(null)
+    if (!translationStoreRef.current) {
+      translationStoreRef.current = new TranslationStore()
     }
     return (
       <ThemeSettingsStoreContext.Provider value={themeSettingsStore}>
-        <ThemeTextProvider
-          merchantOverrides={themeTextData.merchantOverrides}
-          staticContent={themeTextData.staticContent}
+        <TranslationProvider
+          merchantOverrides={translationData.merchantOverrides}
+          staticContent={translationData.staticContent}
           t={options?.t}
-          themeTextStore={themeTextStoreRef.current}
+          translationStore={translationStoreRef.current}
         >
           <StudioConnect />
           <Component {...props} />
-        </ThemeTextProvider>
+        </TranslationProvider>
       </ThemeSettingsStoreContext.Provider>
     )
   }
@@ -559,7 +559,7 @@ export function withWeaverse(
  * Internal hook to read staticContent and merchantOverrides from root loader data.
  * Similar pattern to useThemeSettingsStore – reads from the 'root' route loader.
  */
-function useThemeTextData(): {
+function useTranslationData(): {
   staticContent: Record<string, unknown>
   merchantOverrides?: Record<string, unknown>
 } {

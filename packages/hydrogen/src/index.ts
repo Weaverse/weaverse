@@ -100,12 +100,18 @@ export * from './components'
 export {
   getNestedKey,
   interpolate,
+  // Deprecated aliases — kept for backward compatibility.
   ThemeTextProvider,
   type ThemeTextProviderProps,
   type ThemeTextValue,
   type TranslateFunction,
+  // Canonical translation API.
+  TranslationProvider,
+  type TranslationProviderProps,
+  type TranslationValue,
   useThemeText,
-} from './hooks/theme-text-context'
+  useTranslation,
+} from './hooks/translation-context'
 // Export Hydrogen-specific hooks
 export {
   createWeaverseDataContext,
@@ -116,7 +122,7 @@ export {
 export * from './seo'
 export * from './types'
 export * from './utils'
-export { ThemeTextStore } from './utils/theme-text-store'
+export { ThemeTextStore, TranslationStore } from './utils/translation-store'
 export * from './WeaverseHydrogenRoot'
 export * from './weaverse-client'
 // Re-export utilities from @weaverse/react
