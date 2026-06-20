@@ -3,7 +3,27 @@ import {
   createTranslate,
   getNestedKey,
   interpolate,
+  ThemeTextProvider,
+  TranslationProvider,
+  useThemeText,
+  useTranslation,
 } from '../src/hooks/theme-text-context'
+import { ThemeTextStore, TranslationStore } from '../src/utils/theme-text-store'
+
+describe('translation public API exports', () => {
+  it('should expose canonical and deprecated provider/hook aliases', () => {
+    expect(TranslationProvider).toBeTypeOf('function')
+    expect(useTranslation).toBeTypeOf('function')
+    expect(ThemeTextProvider).toBe(TranslationProvider)
+    expect(useThemeText).toBe(useTranslation)
+  })
+
+  it('should expose canonical and deprecated store aliases', () => {
+    expect(TranslationStore).toBeTypeOf('function')
+    expect(ThemeTextStore).toBe(TranslationStore)
+    expect(new ThemeTextStore()).toBeInstanceOf(TranslationStore)
+  })
+})
 
 describe('getNestedKey', () => {
   const data = {

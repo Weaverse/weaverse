@@ -8,7 +8,7 @@ import {
 } from 'react-router'
 import type { WeaverseHydrogen } from '~/index'
 import { hasWeaverseStudio } from '~/types'
-import { useThemeText } from '../hooks/theme-text-context'
+import { useTranslation } from '../hooks/translation-context'
 import {
   observeNavigation,
   registerPixelInstance,
@@ -90,7 +90,7 @@ export function useStudio(weaverse: WeaverseHydrogen) {
   let { pathname, search } = useLocation()
   let navigate = useNavigate()
   let themeSettingsStore = useThemeSettingsStore()
-  let { themeTextStore, merchantOverrides } = useThemeText()
+  let { translationStore, themeTextStore, merchantOverrides } = useTranslation()
   let {
     isDesignMode,
     weaverseHost,
@@ -123,6 +123,8 @@ export function useStudio(weaverse: WeaverseHydrogen) {
         revalidate,
         merchantOverrides,
         themeSettingsStore,
+        translationStore,
+        // Deprecated alias for existing Studio bridge integrations.
         themeTextStore,
       }
       loadScript(src)
