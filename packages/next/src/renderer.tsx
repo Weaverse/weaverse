@@ -1,8 +1,10 @@
 'use client'
 
-import { Weaverse, WeaverseRoot } from '@weaverse/react'
+import { WeaverseRoot } from '@weaverse/react'
 import { memo, useContext, useMemo } from 'react'
 import { WeaverseNextContext } from './provider'
+import { createWeaverseNextRuntime } from './runtime'
+import { WeaverseNextStudioBridge } from './studio-bridge'
 import type {
   WeaverseNextClient,
   WeaverseNextLoaderData,
@@ -59,23 +61,22 @@ export const WeaverseNextRenderer = memo(function WeaverseNextRendererComponent(
       return null
     }
 
-    let instance = new Weaverse({
-      projectId: client?.projectId || page.id || 'weaverse-next',
-      data: page,
+    return createWeaverseNextRuntime({
+      client,
+      data: { ...(data as WeaverseNextLoaderData), page },
+      dataContext,
+      themeSettingsStore: context?.themeSettingsStore,
     })
-    instance.dataContext = dataContext
-    instance.isDesignMode = client?.requestContext?.isDesignMode ?? false
-    return instance
-  }, [
-    client?.projectId,
-    client?.requestContext?.isDesignMode,
-    page,
-    dataContext,
-  ])
+  }, [client, page, data, dataContext, context?.themeSettingsStore])
 
   if (!weaverse) {
     return null
   }
 
-  return <WeaverseRoot context={weaverse} />
+  return (
+    <>
+      <WeaverseRoot context={weaverse} />
+      <WeaverseNextStudioBridge runtime={weaverse} />
+    </>
+  )
 })

@@ -4,8 +4,13 @@ import type { ReactNode, RefObject } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it, vi } from 'vitest'
 import {
+  bindWeaverseNextStudioRuntime,
+  buildWeaverseNextRequestInfo,
   createSchema,
   createWeaverseNextClient,
+  createWeaverseNextRuntime,
+  createWeaverseNextThemeSettingsStore,
+  resolveWeaverseNextStudioScriptSrc,
   runWeaverseComponentLoaders,
   useThemeSettings,
   useWeaverseCommerce,
@@ -634,5 +639,149 @@ describe('package boundaries', () => {
 
     // Assert
     expect(offenders).toEqual([])
+  })
+})
+
+// ─── 6. Studio runtime contract ───────────────────────────────────────
+
+describe('Studio runtime contract', () => {
+  it('should_build_request_info_from_url_and_search_params', () => {
+    // Arrange
+    let searchParams = new URLSearchParams(
+      'isDesignMode=true&isPreviewMode=false&foo=old&foo=new'
+    )
+
+    // Act
+    let requestInfo = buildWeaverseNextRequestInfo({
+      i18n: { country: 'US', language: 'EN' },
+      pathname: '/products/hat',
+      searchParams,
+      url: 'https://shop.example/products/hat?ignored=yes',
+    })
+
+    // Assert
+    expect(requestInfo).toEqual({
+      pathname: '/products/hat',
+      search: '?isDesignMode=true&isPreviewMode=false&foo=old&foo=new',
+      queries: { isDesignMode: true, isPreviewMode: false, foo: 'new' },
+      i18n: { country: 'US', language: 'EN' },
+    })
+  })
+
+  it('should_expose_theme_settings_store_with_live_update_method', () => {
+    // Arrange
+    let listener = vi.fn()
+    let store = createWeaverseNextThemeSettingsStore({
+      publicEnv: { PUBLIC_KEY: 'safe' },
+      schema: { type: 'theme' },
+      settings: { heading: 'Before' },
+    })
+
+    // Act
+    let unsubscribe = store.subscribe(listener)
+    store.updateThemeSettings({ heading: 'After' })
+    unsubscribe()
+    store.updateThemeSettings({ heading: 'Ignored listener' })
+
+    // Assert
+    expect(store.schema).toEqual({ type: 'theme' })
+    expect(store.publicEnv).toEqual({ PUBLIC_KEY: 'safe' })
+    expect(store.getSnapshot()).toEqual({ heading: 'Ignored listener' })
+    expect(store.getServerSnapshot()).toEqual({ heading: 'Ignored listener' })
+    expect(listener).toHaveBeenCalledTimes(1)
+  })
+
+  it('should_use_last_duplicate_studio_control_params_for_script_src', () => {
+    // Arrange
+    let searchParams = new URLSearchParams(
+      'isDesignMode=false&isDesignMode=true&weaverseHost=https%3A%2F%2Fevil.example&weaverseHost=https%3A%2F%2Fstudio.weaverse.io&weaverseVersion=old&weaverseVersion=new'
+    )
+
+    // Act
+    let src = resolveWeaverseNextStudioScriptSrc(
+      { searchParams },
+      { storefrontHostname: 'shop.example' }
+    )
+
+    // Assert
+    expect(src).toBe(
+      'https://studio.weaverse.io/static/studio/hydrogen/index.js?v=new'
+    )
+  })
+
+  it('should_create_studio_runtime_with_request_info_and_internal_contract', () => {
+    // Arrange
+    let previousWindow = globalThis.window
+    let fakeWindow = {} as Window &
+      typeof globalThis & { __weaverses?: unknown }
+    vi.stubGlobal('window', fakeWindow)
+    let client = makeClient({
+      requestContext: {
+        isDesignMode: true,
+        pathname: '/',
+        searchParams: new URLSearchParams('isDesignMode=true'),
+      },
+      themeSchema: { type: 'theme' },
+      themeSettings: { color: 'blue' },
+    })
+    let data = {
+      ...makePageData(),
+      pageAssignment: { type: 'INDEX' },
+      project: { id: 'project-record' },
+    }
+
+    // Act
+    let runtime = createWeaverseNextRuntime({ client, data })
+
+    // Assert
+    expect(runtime.pageId).toBe('page-1')
+    expect(runtime.projectId).toBe('proj-test')
+    expect(runtime.isDesignMode).toBe(true)
+    expect(runtime.requestInfo).toEqual({
+      pathname: '/',
+      search: '?isDesignMode=true',
+      queries: { isDesignMode: true },
+    })
+    expect(runtime.internal.project).toEqual({ id: 'project-record' })
+    expect(runtime.internal.pageAssignment).toEqual({ type: 'INDEX' })
+    expect(runtime.internal.themeSettingsStore?.settings).toEqual({
+      color: 'blue',
+    })
+    expect((fakeWindow.__weaverses as Record<string, unknown>)['page-1']).toBe(
+      runtime
+    )
+    vi.stubGlobal('window', previousWindow)
+  })
+
+  it('should_call_studio_init_once_then_refresh_for_reused_runtime', () => {
+    // Arrange
+    let previousWindow = globalThis.window
+    let init = vi.fn()
+    let refreshStudio = vi.fn()
+    let fakeWindow = {
+      weaverseStudio: { init, refreshStudio },
+    } as unknown as Window & typeof globalThis
+    vi.stubGlobal('window', fakeWindow)
+    let client = makeClient({
+      requestContext: { isDesignMode: true, pathname: '/' },
+    })
+    let runtime = createWeaverseNextRuntime({ client, data: makePageData() })
+
+    // Act
+    bindWeaverseNextStudioRuntime(runtime)
+    bindWeaverseNextStudioRuntime(runtime)
+
+    // Assert
+    expect(init).toHaveBeenCalledTimes(1)
+    expect(init).toHaveBeenCalledWith(runtime)
+    expect(refreshStudio).toHaveBeenCalledTimes(1)
+    expect(refreshStudio).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: runtime.data,
+        pageId: 'page-1',
+        requestInfo: runtime.requestInfo,
+      })
+    )
+    vi.stubGlobal('window', previousWindow)
   })
 })

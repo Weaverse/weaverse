@@ -5,6 +5,45 @@ import type {
 import type { PageType, SchemaType } from '@weaverse/schema'
 import type { ComponentType, ForwardRefExoticComponent, ReactNode } from 'react'
 
+export interface WeaverseNextRequestInfo {
+  i18n?: WeaverseNextI18n
+  pathname: string
+  queries: Record<string, string | boolean>
+  search: string
+}
+
+export interface WeaverseNextThemeSettingsStore {
+  getServerSnapshot: () => Record<string, unknown>
+  getSnapshot: () => Record<string, unknown>
+  publicEnv?: Record<string, string | undefined>
+  schema?: unknown
+  settings: Record<string, unknown>
+  subscribe: (listener: () => void) => () => void
+  updateThemeSettings: (next: Record<string, unknown>) => void
+}
+
+export interface WeaverseNextRuntimeInternal {
+  merchantOverrides?: unknown
+  navigate?: (
+    to: string,
+    options?: { preventScrollReset?: boolean } | Record<string, unknown>
+  ) => void
+  pageAssignment?: unknown
+  project?: unknown
+  revalidate?: (options?: unknown) => Promise<void> | void
+  themeSettingsStore?: WeaverseNextThemeSettingsStore
+  themeTextStore?: unknown
+}
+
+export interface WeaverseNextRuntimeConfig {
+  client?: WeaverseNextClient
+  data: WeaverseNextLoaderData
+  dataContext?: Record<string, unknown>
+  navigate?: WeaverseNextRuntimeInternal['navigate']
+  revalidate?: WeaverseNextRuntimeInternal['revalidate']
+  themeSettingsStore?: WeaverseNextThemeSettingsStore
+}
+
 /**
  * Locale/market info passed through to component loaders and the Storefront
  * client. Kept structurally close to Hydrogen's `WeaverseI18n` but without the

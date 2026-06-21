@@ -1,7 +1,14 @@
 'use client'
 
 import { createContext, type ReactNode, useMemo } from 'react'
-import type { WeaverseNextClient, WeaverseNextCommerceContext } from './types'
+import { createWeaverseNextThemeSettingsStore } from './theme-settings-store'
+import type {
+  WeaverseNextClient,
+  WeaverseNextCommerceContext,
+  WeaverseNextThemeSettingsStore,
+} from './types'
+
+const EMPTY_THEME_SETTINGS: Record<string, unknown> = {}
 
 /**
  * Value carried by {@link WeaverseNextContext}. Holds the explicit data
@@ -14,6 +21,7 @@ export interface WeaverseNextContextValue {
   pageData?: unknown
   rootData?: unknown
   themeSettings: Record<string, unknown>
+  themeSettingsStore: WeaverseNextThemeSettingsStore
 }
 
 /**
@@ -57,15 +65,27 @@ export interface WeaverseNextProviderProps {
 export function WeaverseNextProvider(props: WeaverseNextProviderProps) {
   let { children, client, rootData, pageData, commerce, themeSettings } = props
 
+  let themeSettingsValue =
+    themeSettings ?? client?.themeSettings ?? EMPTY_THEME_SETTINGS
+  let themeSettingsStore = useMemo(
+    () =>
+      createWeaverseNextThemeSettingsStore({
+        schema: client?.themeSchema,
+        settings: themeSettingsValue,
+      }),
+    [client?.themeSchema, themeSettingsValue]
+  )
+
   let value = useMemo<WeaverseNextContextValue>(
     () => ({
       client,
       rootData,
       pageData,
       commerce: commerce ?? client?.commerce,
-      themeSettings: themeSettings ?? client?.themeSettings ?? {},
+      themeSettings: themeSettingsStore.getSnapshot(),
+      themeSettingsStore,
     }),
-    [client, rootData, pageData, commerce, themeSettings]
+    [client, rootData, pageData, commerce, themeSettingsStore]
   )
 
   return (
