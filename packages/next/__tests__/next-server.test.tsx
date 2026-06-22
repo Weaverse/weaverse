@@ -1,7 +1,11 @@
 import { describe, expect, it, vi } from 'vitest'
 import { createSchema } from '../src/index'
-import * as serverEntry from '../src/server'
-import { createWeaverseNextServerClient } from '../src/server'
+import {
+  createWeaverseNextServerClient,
+  getWeaverseNextConfigs,
+  normalizeNextPageUrl,
+  resolveRequestUrl,
+} from '../src/server'
 import type {
   WeaverseNextComponentLoaderArgs,
   WeaverseNextComponentProps,
@@ -259,9 +263,9 @@ describe('createWeaverseNextServerClient loadPage', () => {
     let featured = {
       default: Hero,
       schema: createSchema({ type: 'featured', title: 'Featured' }),
-      loader: async (args: WeaverseNextComponentLoaderArgs) => {
+      loader: (args: WeaverseNextComponentLoaderArgs) => {
         received = args
-        return {}
+        return Promise.resolve({})
       },
     }
     let fetchMock = makeFetch({
@@ -461,7 +465,7 @@ describe('createWeaverseNextServerClient loadThemeSettings', () => {
 
 describe('getWeaverseNextConfigs trusted host normalization', () => {
   it('should_canonicalize_a_trusted_query_host_to_its_origin', () => {
-    let configs = serverEntry.getWeaverseNextConfigs({
+    let configs = getWeaverseNextConfigs({
       searchParams: new URLSearchParams({
         weaverseHost: 'https://studio.weaverse.io/foo?x=1',
       }),
@@ -473,7 +477,7 @@ describe('getWeaverseNextConfigs trusted host normalization', () => {
   })
 
   it('should_ignore_an_untrusted_query_host', () => {
-    let configs = serverEntry.getWeaverseNextConfigs({
+    let configs = getWeaverseNextConfigs({
       searchParams: new URLSearchParams({
         weaverseHost: 'https://evil.example/foo',
       }),
@@ -488,9 +492,9 @@ describe('getWeaverseNextConfigs trusted host normalization', () => {
 
 describe('@weaverse/next/server exports', () => {
   it('should_expose_runtime_and_helper_symbols', () => {
-    expect(typeof serverEntry.createWeaverseNextServerClient).toBe('function')
-    expect(typeof serverEntry.getWeaverseNextConfigs).toBe('function')
-    expect(typeof serverEntry.normalizeNextPageUrl).toBe('function')
-    expect(typeof serverEntry.resolveRequestUrl).toBe('function')
+    expect(typeof createWeaverseNextServerClient).toBe('function')
+    expect(typeof getWeaverseNextConfigs).toBe('function')
+    expect(typeof normalizeNextPageUrl).toBe('function')
+    expect(typeof resolveRequestUrl).toBe('function')
   })
 })

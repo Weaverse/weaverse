@@ -4,6 +4,7 @@ import { registerWeaverseNextComponents } from '../registry'
 import { buildWeaverseNextRequestInfo } from '../request-info'
 import type {
   WeaverseNextBaseConfigs,
+  WeaverseNextCacheConfig,
   WeaverseNextCommerceContext,
   WeaverseNextComponent,
   WeaverseNextComponentData,
@@ -22,10 +23,12 @@ import type {
   WeaverseNextThemeSettingsResponse,
 } from '../types'
 import { generateDataFromSchema } from '../utils'
-import { getContextSearchParams, getWeaverseNextConfigs } from './configs'
+import { getWeaverseNextConfigs } from './configs'
 import { normalizeNextPageUrl, resolveRequestUrl } from './normalize-page-url'
 
 const DEFAULT_FETCH_TIMEOUT_MS = 10_000
+const RANDOM_ID_RADIX = 36
+const RANDOM_ID_SLICE_START = 2
 
 const JSON_HEADERS = {
   'Content-Type': 'application/json',
@@ -38,7 +41,7 @@ type NextRequestInit = RequestInit & {
   next?: { revalidate?: number | false; tags?: string[] }
 }
 
-type LooseThemeSchema = {
+interface LooseThemeSchema {
   i18n?: { staticContent?: Record<string, unknown> }
   inspector?: unknown[]
   settings?: {
@@ -57,7 +60,7 @@ function generateUuid(): string {
   if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
     return crypto.randomUUID()
   }
-  return `id-${Math.random().toString(36).slice(2)}`
+  return `id-${Math.random().toString(RANDOM_ID_RADIX).slice(RANDOM_ID_SLICE_START)}`
 }
 
 /**
@@ -307,124 +310,123 @@ class NextServerClient implements WeaverseNextServerClient {
     }
   }
 
-  loadPage = async (
-    input: WeaverseNextLoadPageInput = {}
-  ): Promise<WeaverseNextLoaderData | null> => {
-    try {
-      let {
-        cache,
-        projectId: routeProjectId,
-        ...rest
-      } = input as WeaverseNextServerLoadPageInput
-      let effectiveProjectId =
-        (typeof routeProjectId === 'string' && routeProjectId.trim()) ||
-        (await this.resolveProjectId())
-
-      // Propagate a route-level projectId override to the public configs *before*
-      // running component loaders and returning, so `client.projectId`,
-      // `args.weaverse.projectId`, and the runtime all observe the override.
-      if (effectiveProjectId) {
-        this.configs = this._buildPublicConfigs(effectiveProjectId)
+  private _getLoadPageInput(input: WeaverseNextLoadPageInput) {
+    let {
+      cache,
+      projectId: routeProjectId,
+      ...rest
+    } = input as WeaverseNextServerLoadPageInput
+    let params: Record<string, unknown> = {}
+    for (let [key, value] of Object.entries(rest)) {
+      if (value !== undefined) {
+        params[key] = value
       }
+    }
+    return { cache, params, routeProjectId }
+  }
 
-      // Studio "section preview" mode renders a single section from its presets
-      // without a real page fetch — and must work even without a projectId.
-      if (this._baseConfigs.isPreviewMode) {
-        let previewData = this._generatePreviewData(effectiveProjectId || 'x')
-        this.data = previewData
-        return previewData
-      }
+  private async _resolveLoadPageProjectId(routeProjectId?: string) {
+    let effectiveProjectId =
+      (typeof routeProjectId === 'string' && routeProjectId.trim()) ||
+      (await this.resolveProjectId())
+    if (effectiveProjectId) {
+      this.configs = this._buildPublicConfigs(effectiveProjectId)
+    }
+    return effectiveProjectId
+  }
 
-      if (!effectiveProjectId) {
-        throw new Error('Missing Weaverse projectId!')
-      }
-
-      // Build params: forward serializable load fields (type/handle/locale +
-      // any extra), dropping undefined values, cache, and projectId.
-      let params: Record<string, unknown> = {}
-      for (let [key, value] of Object.entries(rest)) {
-        if (value !== undefined) {
-          params[key] = value
-        }
-      }
-
-      let i18n = this.requestContext?.i18n ?? this.commerce?.storefront?.i18n
-      let url = normalizeNextPageUrl(resolveRequestUrl(this.requestContext))
-      let body = {
-        projectId: effectiveProjectId,
+  private async _fetchPagePayload(
+    projectId: string,
+    params: Record<string, unknown>,
+    cache?: WeaverseNextCacheConfig
+  ) {
+    let i18n = this.requestContext?.i18n ?? this.commerce?.storefront?.i18n
+    let url = normalizeNextPageUrl(resolveRequestUrl(this.requestContext))
+    let apiUrl = `${this._baseConfigs.weaverseApiBase}/api/public/project`
+    let userAgent = this.requestContext?.headers?.get('user-agent') ?? ''
+    return this.fetchWithCache<Record<string, unknown>>(apiUrl, {
+      method: 'POST',
+      body: JSON.stringify({
+        projectId,
         url,
         i18n,
         params,
         isDesignMode: this._baseConfigs.isDesignMode,
-      }
+      }),
+      headers: { ...JSON_HEADERS, 'X-Visitor-UA': userAgent },
+      ...(cache ?? {}),
+    })
+  }
 
-      let apiUrl = `${this._baseConfigs.weaverseApiBase}/api/public/project`
-      let userAgent = this.requestContext?.headers?.get('user-agent') ?? ''
-      let payload = await this.fetchWithCache<Record<string, unknown>>(apiUrl, {
-        method: 'POST',
-        body: JSON.stringify(body),
-        headers: { ...JSON_HEADERS, 'X-Visitor-UA': userAgent },
-        ...(cache ?? {}),
+  private _assertNoPageError(payload: Record<string, unknown>) {
+    if ('error' in payload && typeof payload.error === 'string') {
+      throw new Error(payload.error)
+    }
+  }
+
+  private _createLoaderData(
+    payload: Record<string, unknown>,
+    projectId: string
+  ): WeaverseNextLoaderData {
+    this._assertNoPageError(payload)
+    let page = payload.page as WeaverseNextPageData | undefined
+    let project = payload.project as WeaverseNextLoaderData['project']
+    let pageAssignment = payload.pageAssignment as
+      | WeaverseNextLoaderData['pageAssignment']
+      | undefined
+
+    page ??= this._generateFallbackPage(
+      '<div style="text-align: center;">Please add new section to start.</div>'
+    )
+    project ??= {
+      id: projectId,
+      name: 'Weaverse project not found.',
+      weaverseShopId: '',
+    }
+    if (Array.isArray(page.items) && page.items.length === 0) {
+      page.items.push({
+        type: 'main',
+        id: page.rootId || generateUuid(),
+        data: {},
       })
+    }
 
-      if (payload && typeof payload === 'object' && 'error' in payload) {
-        let errorValue = (payload as { error?: unknown }).error
-        if (typeof errorValue === 'string') {
-          throw new Error(errorValue)
-        }
-      }
-
-      let record = (
-        payload && typeof payload === 'object' ? payload : {}
-      ) as Record<string, unknown>
-      let page = record.page as WeaverseNextPageData | undefined
-      let project = record.project as
-        | WeaverseNextLoaderData['project']
-        | undefined
-      let pageAssignment = record.pageAssignment as
-        | WeaverseNextLoaderData['pageAssignment']
-        | undefined
-
-      if (!project) {
-        project = {
-          id: effectiveProjectId,
-          name: 'Weaverse project not found.',
-          weaverseShopId: '',
-        }
-      }
-      if (!page) {
-        page = this._generateFallbackPage(
-          '<div style="text-align: center;">Please add new section to start.</div>'
-        )
-      }
-      if (Array.isArray(page.items) && page.items.length === 0) {
-        page.items.push({
-          type: 'main',
-          id: page.rootId || generateUuid(),
-          data: {},
-        })
-      }
-
-      let configs = {
-        ...this._buildPublicConfigs(effectiveProjectId),
+    return {
+      page,
+      project,
+      pageAssignment,
+      configs: {
+        ...this._buildPublicConfigs(projectId),
         requestInfo: buildWeaverseNextRequestInfo(this.requestContext),
+      },
+    }
+  }
+
+  private async _runLoaders(data: WeaverseNextLoaderData) {
+    this.data = data
+    let withLoaders = await runWeaverseComponentLoaders({ client: this, data })
+    this.data = withLoaders ?? data
+    return this.data
+  }
+
+  loadPage = async (
+    input: WeaverseNextLoadPageInput = {}
+  ): Promise<WeaverseNextLoaderData | null> => {
+    try {
+      let { cache, params, routeProjectId } = this._getLoadPageInput(input)
+      let projectId = await this._resolveLoadPageProjectId(routeProjectId)
+      if (this._baseConfigs.isPreviewMode) {
+        let previewData = this._generatePreviewData(projectId || 'x')
+        this.data = previewData
+        return previewData
+      }
+      if (!projectId) {
+        throw new Error('Missing Weaverse projectId!')
       }
 
-      let data: WeaverseNextLoaderData = {
-        page,
-        project,
-        pageAssignment,
-        configs,
-      }
-
-      // Run component loaders server-side so sections get their data.
-      this.data = data
-      let withLoaders = await runWeaverseComponentLoaders({
-        client: this,
-        data,
-      })
-      this.data = withLoaders ?? data
-      return this.data
+      let payload = await this._fetchPagePayload(projectId, params, cache)
+      let data = this._createLoaderData(payload, projectId)
+      return await this._runLoaders(data)
     } catch (error) {
       console.error('❌ Page load failed', {
         url: this.requestContext?.url,
@@ -544,4 +546,4 @@ export function createWeaverseNextServerClient(
   return new NextServerClient(config)
 }
 
-export { getContextSearchParams }
+export { getContextSearchParams } from './configs'
