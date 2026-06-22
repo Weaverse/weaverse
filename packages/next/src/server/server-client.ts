@@ -1,6 +1,5 @@
 import type { SchemaType } from '@weaverse/schema'
 import { runWeaverseComponentLoaders } from '../loader'
-import { registerWeaverseNextComponents } from '../registry'
 import { buildWeaverseNextRequestInfo } from '../request-info'
 import type {
   WeaverseNextBaseConfigs,
@@ -86,8 +85,15 @@ class NextServerClient implements WeaverseNextServerClient {
   private _resolvedProjectId?: string
 
   constructor(config: WeaverseNextServerClientConfig) {
+    // Server client keeps the component definitions for server-side loaders
+    // (`runWeaverseComponentLoaders`) and preview-data generation, but it
+    // intentionally does NOT call `registerWeaverseNextComponents`. Registering
+    // pulls in `../registry` → `@weaverse/react`, which evaluates
+    // `React.createContext()` at module load — invalid in the RSC/server graph
+    // and the cause of `(0 , x.createContext) is not a function`. The client
+    // wrapper/renderer (root `@weaverse/next` client entry) registers the real
+    // render components instead, keeping `@weaverse/next/server` React-free.
     this.components = config.components
-    registerWeaverseNextComponents(this.components)
     this.commerce = config.commerce
     this.requestContext = config.requestContext
     this.themeSchema = config.themeSchema
