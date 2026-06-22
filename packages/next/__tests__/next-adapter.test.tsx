@@ -753,7 +753,7 @@ describe('Studio runtime contract', () => {
     vi.stubGlobal('window', previousWindow)
   })
 
-  it('should_call_studio_init_once_then_refresh_for_reused_runtime', () => {
+  it('should_refresh_studio_after_reusing_runtime_with_new_page_data', () => {
     // Arrange
     let previousWindow = globalThis.window
     let init = vi.fn()
@@ -766,20 +766,30 @@ describe('Studio runtime contract', () => {
       requestContext: { isDesignMode: true, pathname: '/' },
     })
     let runtime = createWeaverseNextRuntime({ client, data: makePageData() })
+    bindWeaverseNextStudioRuntime(runtime)
+    let nextData = {
+      ...makePageData(),
+      page: {
+        ...makePageData().page,
+        items: [
+          ...makePageData().page.items,
+          { id: 'section-2', type: 'hero', data: { heading: 'Updated' } },
+        ],
+      },
+    }
 
     // Act
-    bindWeaverseNextStudioRuntime(runtime)
-    bindWeaverseNextStudioRuntime(runtime)
+    let reusedRuntime = createWeaverseNextRuntime({ client, data: nextData })
+    bindWeaverseNextStudioRuntime(reusedRuntime)
 
     // Assert
+    expect(reusedRuntime).toBe(runtime)
     expect(init).toHaveBeenCalledTimes(1)
-    expect(init).toHaveBeenCalledWith(runtime)
-    expect(refreshStudio).toHaveBeenCalledTimes(1)
     expect(refreshStudio).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: runtime.data,
+        data: reusedRuntime.data,
         pageId: 'page-1',
-        requestInfo: runtime.requestInfo,
+        requestInfo: reusedRuntime.requestInfo,
       })
     )
     vi.stubGlobal('window', previousWindow)

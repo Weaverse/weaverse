@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import {
   bindWeaverseNextStudioRuntime,
   type WeaverseNextRuntime,
@@ -19,6 +19,9 @@ export interface WeaverseNextStudioBridgeProps {
 /** Page-level Studio runtime binder. */
 export function WeaverseNextStudioBridge(props: WeaverseNextStudioBridgeProps) {
   let { runtime, navigate, revalidate } = props
+  let lastRuntimeRef = useRef(runtime)
+  let lastRuntimeDataRef = useRef(runtime.data)
+  let lastRequestInfoRef = useRef(runtime.requestInfo)
 
   useEffect(() => {
     if (navigate) {
@@ -45,6 +48,26 @@ export function WeaverseNextStudioBridge(props: WeaverseNextStudioBridgeProps) {
 
     return () => window.clearInterval(interval)
   }, [runtime, navigate, revalidate])
+
+  useEffect(() => {
+    if (lastRuntimeRef.current !== runtime) {
+      lastRuntimeRef.current = runtime
+      lastRuntimeDataRef.current = runtime.data
+      lastRequestInfoRef.current = runtime.requestInfo
+      return
+    }
+
+    if (
+      lastRuntimeDataRef.current === runtime.data &&
+      lastRequestInfoRef.current === runtime.requestInfo
+    ) {
+      return
+    }
+
+    lastRuntimeDataRef.current = runtime.data
+    lastRequestInfoRef.current = runtime.requestInfo
+    bindWeaverseNextStudioRuntime(runtime)
+  }, [runtime, runtime.data, runtime.requestInfo])
 
   return null
 }
