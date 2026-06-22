@@ -1,13 +1,17 @@
 import type { WeaverseNextRequestContext } from './types'
 
-const TRUSTED_STUDIO_HOSTS = new Set([
-  'https://studio.weaverse.io',
-  'https://studio.weaverse.dev',
-])
+/**
+ * Weaverse-controlled apex domains the Studio bridge may be served from
+ * (matched on the host itself and any subdomain), mirroring Hydrogen's
+ * `TRUSTED_STUDIO_DOMAINS`.
+ */
+const TRUSTED_STUDIO_DOMAINS = ['weaverse.io', 'weaverse.dev']
 
 function isLoopbackHostname(hostname: string): boolean {
   return (
-    hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1'
+    hostname === 'localhost' ||
+    hostname === '127.0.0.1' ||
+    hostname.endsWith('.localhost')
   )
 }
 
@@ -23,16 +27,37 @@ function normalizeOrigin(value: string | null): string | null {
   }
 }
 
+/**
+ * Whether `origin` is one we trust to serve the Studio bridge script. Matches
+ * Hydrogen's `isTrustedStudioHost`: trusts `weaverse.io` / `weaverse.dev` and
+ * their subdomains over https, plus loopback (`localhost` / `*.localhost` /
+ * `127.0.0.1`) — but only when the storefront itself is loopback (genuine
+ * local-builder dev). Loopback is the only place http is allowed; every other
+ * trusted host must be https. Arbitrary origins are rejected.
+ */
 function isTrustedStudioOrigin(
   origin: string,
   storefrontHostname: string
 ): boolean {
-  if (TRUSTED_STUDIO_HOSTS.has(origin)) {
-    return true
+  let parsed: URL
+  try {
+    parsed = new URL(origin)
+  } catch {
+    return false
   }
 
-  let hostname = new URL(origin).hostname
-  return isLoopbackHostname(hostname) && isLoopbackHostname(storefrontHostname)
+  let { hostname, protocol } = parsed
+  if (isLoopbackHostname(storefrontHostname) && isLoopbackHostname(hostname)) {
+    return protocol === 'http:' || protocol === 'https:'
+  }
+
+  if (protocol !== 'https:') {
+    return false
+  }
+
+  return TRUSTED_STUDIO_DOMAINS.some(
+    (domain) => hostname === domain || hostname.endsWith(`.${domain}`)
+  )
 }
 
 function toSearchParams(context?: WeaverseNextRequestContext): URLSearchParams {
@@ -88,7 +113,7 @@ export function resolveWeaverseNextStudioScriptSrc(
     return null
   }
 
-  let storefrontHostname = options.storefrontHostname ?? 'localhost'
+  let storefrontHostname = options.storefrontHostname ?? ''
   if (!isTrustedStudioOrigin(origin, storefrontHostname)) {
     return null
   }

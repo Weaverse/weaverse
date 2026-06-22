@@ -132,10 +132,6 @@ export class WeaverseNextRuntime extends Weaverse {
     this.isPreviewMode = requestContext?.isPreviewMode ?? false
     this.isRevisionPreview = requestContext?.isRevisionPreview ?? false
     this.sectionType = requestContext?.sectionType
-    this.weaverseHost =
-      getConfigString(configs, 'weaverseHost') ?? this.weaverseHost
-    this.weaverseVersion =
-      getConfigString(configs, 'weaverseVersion') ?? this.weaverseVersion
 
     this.internal = {
       navigate: config.navigate,
@@ -177,11 +173,19 @@ export function createWeaverseNextRuntime(
   let requestKey = getRuntimeKey(page.id, requestInfo)
 
   if (existing?.__weaverseNextRequestKey === requestKey) {
-    existing.setProjectData(page)
+    let nextIsDesignMode = config.client?.requestContext?.isDesignMode ?? false
+    // In design mode the live Studio runtime owns the page tree, including
+    // unsaved drafts. Reapplying loader `page` data here would clobber those
+    // edits, so leave the project data untouched and let
+    // `bindWeaverseNextStudioRuntime` push the latest state via `refreshStudio`.
+    // Published / preview reuse has no draft state, so fresh data still wins.
+    if (!(existing.isDesignMode || nextIsDesignMode)) {
+      existing.setProjectData(page)
+    }
     existing.dataContext = resolveDataContext(config)
     existing.requestInfo = requestInfo
     existing.projectId = resolveProjectId(config.client, config.data, page.id)
-    existing.isDesignMode = config.client?.requestContext?.isDesignMode ?? false
+    existing.isDesignMode = nextIsDesignMode
     existing.isPreviewMode =
       config.client?.requestContext?.isPreviewMode ?? false
     existing.isRevisionPreview =

@@ -128,6 +128,13 @@ hydrate Studio, and `bindWeaverseNextStudioRuntime` wires live updates. The
 server client emits `configs.requestInfo` and design-mode flags the bridge
 expects.
 
+> **Mount `WeaverseNextStudioConnect` at your root/client shell.**
+> `WeaverseNextRenderer` mounts the in-page runtime bridge but does **not**
+> inject the Studio bridge script by itself. The script (which lets Studio's
+> `checkWeaversePage()` handshake answer on every route, including content-less
+> ones) is loaded by `WeaverseNextStudioConnect`, so it must be rendered once at
+> the app root/client shell for the Studio editor to connect.
+
 ## Current limitations
 
 - Server fetch has a timeout + single attempt; it does not yet replicate

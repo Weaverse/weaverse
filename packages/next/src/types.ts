@@ -23,7 +23,6 @@ export interface WeaverseNextThemeSettingsStore {
 }
 
 export interface WeaverseNextRuntimeInternal {
-  merchantOverrides?: unknown
   navigate?: (
     to: string,
     options?: { preventScrollReset?: boolean } | Record<string, unknown>
@@ -32,7 +31,6 @@ export interface WeaverseNextRuntimeInternal {
   project?: unknown
   revalidate?: (options?: unknown) => Promise<void> | void
   themeSettingsStore?: WeaverseNextThemeSettingsStore
-  themeTextStore?: unknown
 }
 
 export interface WeaverseNextRuntimeConfig {

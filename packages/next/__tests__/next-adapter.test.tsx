@@ -709,6 +709,70 @@ describe('Studio runtime contract', () => {
     )
   })
 
+  it('should_trust_non_studio_weaverse_subdomains_for_script_src', () => {
+    // Arrange — a non-`studio` subdomain of a trusted apex domain, matching
+    // Hydrogen's subdomain trust.
+    let searchParams = new URLSearchParams(
+      'isDesignMode=true&weaverseHost=https%3A%2F%2Fpreview.weaverse.dev'
+    )
+
+    // Act
+    let src = resolveWeaverseNextStudioScriptSrc(
+      { searchParams },
+      { storefrontHostname: 'shop.example' }
+    )
+
+    // Assert
+    expect(src).toBe(
+      'https://preview.weaverse.dev/static/studio/hydrogen/index.js'
+    )
+  })
+
+  it('should_reject_untrusted_weaverse_host_for_script_src', () => {
+    // Arrange
+    let searchParams = new URLSearchParams(
+      'isDesignMode=true&weaverseHost=https%3A%2F%2Fweaverse.io.evil.example'
+    )
+
+    // Act
+    let src = resolveWeaverseNextStudioScriptSrc(
+      { searchParams },
+      { storefrontHostname: 'shop.example' }
+    )
+
+    // Assert
+    expect(src).toBeNull()
+  })
+
+  it('should_trust_loopback_studio_host_only_when_storefront_is_loopback', () => {
+    // Arrange
+    let searchParams = new URLSearchParams(
+      'isDesignMode=true&weaverseHost=http%3A%2F%2Flocalhost%3A3000'
+    )
+
+    // Act — loopback storefront opts into the loopback host (local builder).
+    let loopbackSrc = resolveWeaverseNextStudioScriptSrc(
+      { searchParams },
+      { storefrontHostname: 'localhost' }
+    )
+    // Same crafted host on a public storefront must be rejected.
+    let publicSrc = resolveWeaverseNextStudioScriptSrc(
+      { searchParams },
+      { storefrontHostname: 'shop.example' }
+    )
+    // Omitting storefrontHostname must also be safe-by-default, not loopback.
+    let omittedStorefrontSrc = resolveWeaverseNextStudioScriptSrc({
+      searchParams,
+    })
+
+    // Assert
+    expect(loopbackSrc).toBe(
+      'http://localhost:3000/static/studio/hydrogen/index.js'
+    )
+    expect(publicSrc).toBeNull()
+    expect(omittedStorefrontSrc).toBeNull()
+  })
+
   it('should_create_studio_runtime_with_request_info_and_internal_contract', () => {
     // Arrange
     let previousWindow = globalThis.window
@@ -792,6 +856,72 @@ describe('Studio runtime contract', () => {
         requestInfo: reusedRuntime.requestInfo,
       })
     )
+    vi.stubGlobal('window', previousWindow)
+  })
+
+  it('should_not_clobber_studio_drafts_when_reusing_runtime_in_design_mode', () => {
+    // Arrange — a live design-mode runtime owns the page tree (incl. unsaved
+    // drafts); reusing it with fresh loader data must not replace that tree.
+    let previousWindow = globalThis.window
+    let fakeWindow = {} as Window &
+      typeof globalThis & { __weaverses?: unknown }
+    vi.stubGlobal('window', fakeWindow)
+    let client = makeClient({
+      requestContext: { isDesignMode: true, pathname: '/' },
+    })
+    let runtime = createWeaverseNextRuntime({ client, data: makePageData() })
+    let setProjectData = vi.spyOn(runtime, 'setProjectData')
+    let nextData = {
+      ...makePageData(),
+      page: {
+        ...makePageData().page,
+        items: [
+          ...makePageData().page.items,
+          { id: 'section-2', type: 'hero', data: { heading: 'Server data' } },
+        ],
+      },
+    }
+
+    // Act
+    let reusedRuntime = createWeaverseNextRuntime({ client, data: nextData })
+
+    // Assert — same runtime, draft tree untouched, no project-data reset.
+    expect(reusedRuntime).toBe(runtime)
+    expect(setProjectData).not.toHaveBeenCalled()
+    expect(reusedRuntime.data.items).toHaveLength(1)
+    vi.stubGlobal('window', previousWindow)
+  })
+
+  it('should_apply_fresh_page_data_when_reusing_runtime_outside_design_mode', () => {
+    // Arrange — published/non-design reuse has no draft state, so the latest
+    // loader data must win.
+    let previousWindow = globalThis.window
+    let fakeWindow = {} as Window &
+      typeof globalThis & { __weaverses?: unknown }
+    vi.stubGlobal('window', fakeWindow)
+    let client = makeClient({
+      requestContext: { isDesignMode: false, pathname: '/' },
+    })
+    let runtime = createWeaverseNextRuntime({ client, data: makePageData() })
+    let setProjectData = vi.spyOn(runtime, 'setProjectData')
+    let nextData = {
+      ...makePageData(),
+      page: {
+        ...makePageData().page,
+        items: [
+          ...makePageData().page.items,
+          { id: 'section-2', type: 'hero', data: { heading: 'Server data' } },
+        ],
+      },
+    }
+
+    // Act
+    let reusedRuntime = createWeaverseNextRuntime({ client, data: nextData })
+
+    // Assert — same runtime, but the fresh page tree is applied.
+    expect(reusedRuntime).toBe(runtime)
+    expect(setProjectData).toHaveBeenCalledTimes(1)
+    expect(reusedRuntime.data.items).toHaveLength(2)
     vi.stubGlobal('window', previousWindow)
   })
 })
