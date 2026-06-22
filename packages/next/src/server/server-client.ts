@@ -335,7 +335,7 @@ class NextServerClient implements WeaverseNextServerClient {
     return effectiveProjectId
   }
 
-  private async _fetchPagePayload(
+  private _fetchPagePayload(
     projectId: string,
     params: Record<string, unknown>,
     cache?: WeaverseNextCacheConfig
