@@ -22,13 +22,17 @@ export interface AppRouterInstance {
   replace: (href: string, options?: { scroll?: boolean }) => void
 }
 
+function noop() {
+  // Test stub: intentionally no-op.
+}
+
 const NOOP_ROUTER: AppRouterInstance = {
-  back: () => {},
-  forward: () => {},
-  prefetch: () => {},
-  push: () => {},
-  refresh: () => {},
-  replace: () => {},
+  back: noop,
+  forward: noop,
+  prefetch: noop,
+  push: noop,
+  refresh: noop,
+  replace: noop,
 }
 
 let currentRouter: AppRouterInstance = NOOP_ROUTER
