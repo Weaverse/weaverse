@@ -1,6 +1,6 @@
 'use client'
 
-import { useContext } from 'react'
+import { useContext, useSyncExternalStore } from 'react'
 import { WeaverseNextContext } from './provider'
 import type { WeaverseNextCommerceContext } from './types'
 
@@ -36,9 +36,15 @@ export function useWeaverseCommerce<T = WeaverseNextCommerceContext>(): T {
 }
 
 /**
- * Read Weaverse theme settings. Next version backed by provider root/theme
- * data (`client.themeSettings`), not the Hydrogen theme-settings store.
+ * Read live Weaverse theme settings. The Studio bridge updates the provider's
+ * external store via `updateThemeSettings`, so components re-render during live
+ * design-mode edits.
  */
 export function useThemeSettings<T = Record<string, unknown>>(): T {
-  return useWeaverseNextContext('useThemeSettings').themeSettings as T
+  let { themeSettingsStore } = useWeaverseNextContext('useThemeSettings')
+  return useSyncExternalStore(
+    themeSettingsStore.subscribe,
+    themeSettingsStore.getSnapshot,
+    themeSettingsStore.getServerSnapshot
+  ) as T
 }

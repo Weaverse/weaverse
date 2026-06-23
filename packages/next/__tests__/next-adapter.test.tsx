@@ -4,8 +4,13 @@ import type { ReactNode, RefObject } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it, vi } from 'vitest'
 import {
+  bindWeaverseNextStudioRuntime,
+  buildWeaverseNextRequestInfo,
   createSchema,
   createWeaverseNextClient,
+  createWeaverseNextRuntime,
+  createWeaverseNextThemeSettingsStore,
+  resolveWeaverseNextStudioScriptSrc,
   runWeaverseComponentLoaders,
   useThemeSettings,
   useWeaverseCommerce,
@@ -634,5 +639,289 @@ describe('package boundaries', () => {
 
     // Assert
     expect(offenders).toEqual([])
+  })
+})
+
+// ─── 6. Studio runtime contract ───────────────────────────────────────
+
+describe('Studio runtime contract', () => {
+  it('should_build_request_info_from_url_and_search_params', () => {
+    // Arrange
+    let searchParams = new URLSearchParams(
+      'isDesignMode=true&isPreviewMode=false&foo=old&foo=new'
+    )
+
+    // Act
+    let requestInfo = buildWeaverseNextRequestInfo({
+      i18n: { country: 'US', language: 'EN' },
+      pathname: '/products/hat',
+      searchParams,
+      url: 'https://shop.example/products/hat?ignored=yes',
+    })
+
+    // Assert
+    expect(requestInfo).toEqual({
+      pathname: '/products/hat',
+      search: '?isDesignMode=true&isPreviewMode=false&foo=old&foo=new',
+      queries: { isDesignMode: true, isPreviewMode: false, foo: 'new' },
+      i18n: { country: 'US', language: 'EN' },
+    })
+  })
+
+  it('should_expose_theme_settings_store_with_live_update_method', () => {
+    // Arrange
+    let listener = vi.fn()
+    let store = createWeaverseNextThemeSettingsStore({
+      publicEnv: { PUBLIC_KEY: 'safe' },
+      schema: { type: 'theme' },
+      settings: { heading: 'Before' },
+    })
+
+    // Act
+    let unsubscribe = store.subscribe(listener)
+    store.updateThemeSettings({ heading: 'After' })
+    unsubscribe()
+    store.updateThemeSettings({ heading: 'Ignored listener' })
+
+    // Assert
+    expect(store.schema).toEqual({ type: 'theme' })
+    expect(store.publicEnv).toEqual({ PUBLIC_KEY: 'safe' })
+    expect(store.getSnapshot()).toEqual({ heading: 'Ignored listener' })
+    expect(store.getServerSnapshot()).toEqual({ heading: 'Ignored listener' })
+    expect(listener).toHaveBeenCalledTimes(1)
+  })
+
+  it('should_use_last_duplicate_studio_control_params_for_script_src', () => {
+    // Arrange
+    let searchParams = new URLSearchParams(
+      'isDesignMode=false&isDesignMode=true&weaverseHost=https%3A%2F%2Fevil.example&weaverseHost=https%3A%2F%2Fstudio.weaverse.io&weaverseVersion=old&weaverseVersion=new'
+    )
+
+    // Act
+    let src = resolveWeaverseNextStudioScriptSrc(
+      { searchParams },
+      { storefrontHostname: 'shop.example' }
+    )
+
+    // Assert
+    expect(src).toBe(
+      'https://studio.weaverse.io/static/studio/hydrogen/index.js?v=new'
+    )
+  })
+
+  it('should_trust_non_studio_weaverse_subdomains_for_script_src', () => {
+    // Arrange — a non-`studio` subdomain of a trusted apex domain, matching
+    // Hydrogen's subdomain trust.
+    let searchParams = new URLSearchParams(
+      'isDesignMode=true&weaverseHost=https%3A%2F%2Fpreview.weaverse.dev'
+    )
+
+    // Act
+    let src = resolveWeaverseNextStudioScriptSrc(
+      { searchParams },
+      { storefrontHostname: 'shop.example' }
+    )
+
+    // Assert
+    expect(src).toBe(
+      'https://preview.weaverse.dev/static/studio/hydrogen/index.js'
+    )
+  })
+
+  it('should_reject_untrusted_weaverse_host_for_script_src', () => {
+    // Arrange
+    let searchParams = new URLSearchParams(
+      'isDesignMode=true&weaverseHost=https%3A%2F%2Fweaverse.io.evil.example'
+    )
+
+    // Act
+    let src = resolveWeaverseNextStudioScriptSrc(
+      { searchParams },
+      { storefrontHostname: 'shop.example' }
+    )
+
+    // Assert
+    expect(src).toBeNull()
+  })
+
+  it('should_trust_loopback_studio_host_only_when_storefront_is_loopback', () => {
+    // Arrange
+    let searchParams = new URLSearchParams(
+      'isDesignMode=true&weaverseHost=http%3A%2F%2Flocalhost%3A3000'
+    )
+
+    // Act — loopback storefront opts into the loopback host (local builder).
+    let loopbackSrc = resolveWeaverseNextStudioScriptSrc(
+      { searchParams },
+      { storefrontHostname: 'localhost' }
+    )
+    // Same crafted host on a public storefront must be rejected.
+    let publicSrc = resolveWeaverseNextStudioScriptSrc(
+      { searchParams },
+      { storefrontHostname: 'shop.example' }
+    )
+    // Omitting storefrontHostname must also be safe-by-default, not loopback.
+    let omittedStorefrontSrc = resolveWeaverseNextStudioScriptSrc({
+      searchParams,
+    })
+
+    // Assert
+    expect(loopbackSrc).toBe(
+      'http://localhost:3000/static/studio/hydrogen/index.js'
+    )
+    expect(publicSrc).toBeNull()
+    expect(omittedStorefrontSrc).toBeNull()
+  })
+
+  it('should_create_studio_runtime_with_request_info_and_internal_contract', () => {
+    // Arrange
+    let previousWindow = globalThis.window
+    let fakeWindow = {} as Window &
+      typeof globalThis & { __weaverses?: unknown }
+    vi.stubGlobal('window', fakeWindow)
+    let client = makeClient({
+      requestContext: {
+        isDesignMode: true,
+        pathname: '/',
+        searchParams: new URLSearchParams('isDesignMode=true'),
+      },
+      themeSchema: { type: 'theme' },
+      themeSettings: { color: 'blue' },
+    })
+    let data = {
+      ...makePageData(),
+      pageAssignment: { type: 'INDEX' },
+      project: { id: 'project-record' },
+    }
+
+    // Act
+    let runtime = createWeaverseNextRuntime({ client, data })
+
+    // Assert
+    expect(runtime.pageId).toBe('page-1')
+    expect(runtime.projectId).toBe('proj-test')
+    expect(runtime.isDesignMode).toBe(true)
+    expect(runtime.requestInfo).toEqual({
+      pathname: '/',
+      search: '?isDesignMode=true',
+      queries: { isDesignMode: true },
+    })
+    expect(runtime.internal.project).toEqual({ id: 'project-record' })
+    expect(runtime.internal.pageAssignment).toEqual({ type: 'INDEX' })
+    expect(runtime.internal.themeSettingsStore?.settings).toEqual({
+      color: 'blue',
+    })
+    expect((fakeWindow.__weaverses as Record<string, unknown>)['page-1']).toBe(
+      runtime
+    )
+    vi.stubGlobal('window', previousWindow)
+  })
+
+  it('should_refresh_studio_after_reusing_runtime_with_new_page_data', () => {
+    // Arrange
+    let previousWindow = globalThis.window
+    let init = vi.fn()
+    let refreshStudio = vi.fn()
+    let fakeWindow = {
+      weaverseStudio: { init, refreshStudio },
+    } as unknown as Window & typeof globalThis
+    vi.stubGlobal('window', fakeWindow)
+    let client = makeClient({
+      requestContext: { isDesignMode: true, pathname: '/' },
+    })
+    let runtime = createWeaverseNextRuntime({ client, data: makePageData() })
+    bindWeaverseNextStudioRuntime(runtime)
+    let nextData = {
+      ...makePageData(),
+      page: {
+        ...makePageData().page,
+        items: [
+          ...makePageData().page.items,
+          { id: 'section-2', type: 'hero', data: { heading: 'Updated' } },
+        ],
+      },
+    }
+
+    // Act
+    let reusedRuntime = createWeaverseNextRuntime({ client, data: nextData })
+    bindWeaverseNextStudioRuntime(reusedRuntime)
+
+    // Assert
+    expect(reusedRuntime).toBe(runtime)
+    expect(init).toHaveBeenCalledTimes(1)
+    expect(refreshStudio).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: reusedRuntime.data,
+        pageId: 'page-1',
+        requestInfo: reusedRuntime.requestInfo,
+      })
+    )
+    vi.stubGlobal('window', previousWindow)
+  })
+
+  it('should_not_clobber_studio_drafts_when_reusing_runtime_in_design_mode', () => {
+    // Arrange — a live design-mode runtime owns the page tree (incl. unsaved
+    // drafts); reusing it with fresh loader data must not replace that tree.
+    let previousWindow = globalThis.window
+    let fakeWindow = {} as Window &
+      typeof globalThis & { __weaverses?: unknown }
+    vi.stubGlobal('window', fakeWindow)
+    let client = makeClient({
+      requestContext: { isDesignMode: true, pathname: '/' },
+    })
+    let runtime = createWeaverseNextRuntime({ client, data: makePageData() })
+    let setProjectData = vi.spyOn(runtime, 'setProjectData')
+    let nextData = {
+      ...makePageData(),
+      page: {
+        ...makePageData().page,
+        items: [
+          ...makePageData().page.items,
+          { id: 'section-2', type: 'hero', data: { heading: 'Server data' } },
+        ],
+      },
+    }
+
+    // Act
+    let reusedRuntime = createWeaverseNextRuntime({ client, data: nextData })
+
+    // Assert — same runtime, draft tree untouched, no project-data reset.
+    expect(reusedRuntime).toBe(runtime)
+    expect(setProjectData).not.toHaveBeenCalled()
+    expect(reusedRuntime.data.items).toHaveLength(1)
+    vi.stubGlobal('window', previousWindow)
+  })
+
+  it('should_apply_fresh_page_data_when_reusing_runtime_outside_design_mode', () => {
+    // Arrange — published/non-design reuse has no draft state, so the latest
+    // loader data must win.
+    let previousWindow = globalThis.window
+    let fakeWindow = {} as Window &
+      typeof globalThis & { __weaverses?: unknown }
+    vi.stubGlobal('window', fakeWindow)
+    let client = makeClient({
+      requestContext: { isDesignMode: false, pathname: '/' },
+    })
+    let runtime = createWeaverseNextRuntime({ client, data: makePageData() })
+    let setProjectData = vi.spyOn(runtime, 'setProjectData')
+    let nextData = {
+      ...makePageData(),
+      page: {
+        ...makePageData().page,
+        items: [
+          ...makePageData().page.items,
+          { id: 'section-2', type: 'hero', data: { heading: 'Server data' } },
+        ],
+      },
+    }
+
+    // Act
+    let reusedRuntime = createWeaverseNextRuntime({ client, data: nextData })
+
+    // Assert — same runtime, but the fresh page tree is applied.
+    expect(reusedRuntime).toBe(runtime)
+    expect(setProjectData).toHaveBeenCalledTimes(1)
+    expect(reusedRuntime.data.items).toHaveLength(2)
+    vi.stubGlobal('window', previousWindow)
   })
 })

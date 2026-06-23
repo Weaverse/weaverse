@@ -34,6 +34,28 @@ export {
   WeaverseNextRenderer,
   type WeaverseNextRendererProps,
 } from './renderer'
+export { buildWeaverseNextRequestInfo } from './request-info'
+export {
+  bindWeaverseNextStudioRuntime,
+  createWeaverseNextRuntime,
+  WeaverseNextRuntime,
+} from './runtime'
+export {
+  WeaverseNextStudioBridge,
+  type WeaverseNextStudioBridgeProps,
+} from './studio-bridge'
+export {
+  WeaverseNextStudioConnect,
+  type WeaverseNextStudioConnectProps,
+} from './studio-connect'
+export {
+  type ResolveWeaverseNextStudioScriptSrcOptions,
+  resolveWeaverseNextStudioScriptSrc,
+} from './studio-script-src'
+export {
+  type CreateWeaverseNextThemeSettingsStoreOptions,
+  createWeaverseNextThemeSettingsStore,
+} from './theme-settings-store'
 export type {
   WeaverseCollection,
   WeaverseNextClient,
@@ -48,6 +70,10 @@ export type {
   WeaverseNextLoadPageInput,
   WeaverseNextPageData,
   WeaverseNextRequestContext,
+  WeaverseNextRequestInfo,
+  WeaverseNextRuntimeConfig,
+  WeaverseNextRuntimeInternal,
   WeaverseNextStorefront,
+  WeaverseNextThemeSettingsStore,
   WeaverseProduct,
 } from './types'
