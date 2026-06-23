@@ -61,8 +61,24 @@ packages/next/src/
 ## Server API (`@weaverse/next/server`)
 
 `createWeaverseNextServerClient(config)` returns a client that performs the real
-Weaverse public API fetch — the equivalent of Hydrogen's
+Weaverse public API fetch — the equivalent of Hydrogen/Pilot's
 `context.weaverse.loadPage(...)`.
+
+### Next App Router server context model
+
+Hydrogen's classic storefront runtime is built on React Router. Its request
+handler accepts `getLoadContext(request)`, creates a Hydrogen context, and React
+Router injects that object into every route loader. That is why a Pilot route can
+call `context.weaverse.loadPage(...)` directly.
+
+Next App Router does not inject an app-defined global loader context into
+`app/page.tsx`. A page is a Server Component whose framework-provided inputs are
+`params` and `searchParams`; request-scoped data is read with Next functions such
+as `headers()` / `cookies()`. Hydrogen preview follows that framework model for
+Next examples: fetch in `app/page.tsx` or a server helper, then pass the snapshot
+to client components.
+
+So the Next equivalent is explicit server-client creation at the route boundary:
 
 ```ts
 import { createWeaverseNextServerClient } from '@weaverse/next/server'
