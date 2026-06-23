@@ -54,7 +54,11 @@
     "sourcemap": true,
     "clean": true,
     "outDir": "dist",
-    "treeshake": true
+    "treeshake": true,
+    "external": [
+      "next",
+      "next/navigation"
+    ]
   },
   "dependencies": {
     "@weaverse/react": "5.16.3",

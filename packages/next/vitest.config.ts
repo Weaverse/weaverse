@@ -12,6 +12,12 @@ export default defineConfig({
       '@weaverse/core': resolve(repoRoot, 'packages/core/src/index.ts'),
       '@weaverse/react': resolve(repoRoot, 'packages/react/src/index.ts'),
       '@weaverse/schema': resolve(repoRoot, 'packages/schema/src/index.ts'),
+      // `next` is a peerDependency, not installed in this monorepo. Resolve the
+      // single `next/navigation` import to a local shim for tests.
+      'next/navigation': resolve(
+        packageRoot,
+        '__tests__/__mocks__/next-navigation.ts'
+      ),
       '~': resolve(repoRoot, 'packages/react/src'),
       react: resolve(repoRoot, 'node_modules/react'),
       'react-dom': resolve(repoRoot, 'node_modules/react-dom'),

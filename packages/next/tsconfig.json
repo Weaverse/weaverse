@@ -4,7 +4,8 @@
     "baseUrl": ".",
     "types": ["node"],
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "next/navigation": ["./__tests__/__mocks__/next-navigation.ts"]
     }
   },
   "include": ["src/**/*", "__tests__/**/*"],
