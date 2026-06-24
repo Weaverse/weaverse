@@ -65,6 +65,7 @@
     "@weaverse/schema": "0.10.0"
   },
   "peerDependencies": {
+    "next": ">=14",
     "react": ">=19",
     "react-dom": ">=19"
   }
