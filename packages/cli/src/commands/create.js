@@ -1,4 +1,5 @@
 import chalk from 'chalk'
+import fs from 'fs-extra'
 import inquirer from 'inquirer'
 import { TEMPLATES } from '../constants/templates.js'
 import { promptForMissingOptions } from '../prompts/createPrompts.js'
@@ -86,7 +87,6 @@ export let createProject = async (argv) => {
             `${directoryCheck.message}. Re-run with --force to overwrite it, or choose a different --project-name.`
           )
         }
-        // --force: proceed and overwrite (same as confirming the prompt below).
       } else {
         let { overwrite } = await inquirer.prompt([
           {
@@ -102,6 +102,11 @@ export let createProject = async (argv) => {
           process.exit(0)
         }
       }
+
+      // Overwrite confirmed (via --force or the prompt): clear the directory so
+      // the template extracts cleanly instead of colliding with or leaving
+      // behind stale files from a previous/partial run.
+      await fs.emptyDir(outputPath)
     }
 
     // Create project
