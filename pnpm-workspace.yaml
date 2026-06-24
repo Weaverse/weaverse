@@ -16,14 +16,15 @@ allowBuilds:
   '@biomejs/biome': true
   workerd: true
   '@parcel/watcher': true
+  sharp: true
 
 # Vite+ unified toolchain. `vite` and `vitest` are aliased to the
 # `@voidzero-dev/vite-plus-*` distributions; `vite-plus` is the CLI
 # (`vp`) used by package `test` scripts.
 catalog:
-  vite: npm:@voidzero-dev/vite-plus-core@latest
-  vitest: npm:@voidzero-dev/vite-plus-test@latest
-  vite-plus: latest
+  vite: npm:@voidzero-dev/vite-plus-core@0.1.24
+  vitest: npm:@voidzero-dev/vite-plus-test@0.1.24
+  vite-plus: 0.1.24
 
 verifyDepsBeforeRun: false
 

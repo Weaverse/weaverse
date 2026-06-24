@@ -4,12 +4,12 @@ import { WeaverseRoot } from '@weaverse/react'
 import { memo, useContext, useMemo } from 'react'
 import { WeaverseNextContext } from './provider'
 import { createWeaverseNextRuntime } from './runtime'
-import { WeaverseNextStudioBridge } from './studio-bridge'
 import type {
   WeaverseNextClient,
   WeaverseNextLoaderData,
   WeaverseNextPageData,
 } from './types'
+import { WeaverseNextStudio } from './use-weaverse-next-studio'
 
 const EMPTY_DATA_CONTEXT: Record<string, unknown> = {}
 
@@ -76,7 +76,7 @@ export const WeaverseNextRenderer = memo(function WeaverseNextRendererComponent(
   return (
     <>
       <WeaverseRoot context={weaverse} />
-      <WeaverseNextStudioBridge runtime={weaverse} />
+      <WeaverseNextStudio runtime={weaverse} />
     </>
   )
 })

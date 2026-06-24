@@ -49,6 +49,12 @@ export {
   type WeaverseNextStudioConnectProps,
 } from './studio-connect'
 export {
+  type CreateWeaverseNextStudioInternalsOptions,
+  createWeaverseNextStudioInternals,
+  type WeaverseNextRouterLike,
+  type WeaverseNextStudioInternals,
+} from './studio-router'
+export {
   type ResolveWeaverseNextStudioScriptSrcOptions,
   resolveWeaverseNextStudioScriptSrc,
 } from './studio-script-src'
@@ -77,3 +83,8 @@ export type {
   WeaverseNextThemeSettingsStore,
   WeaverseProduct,
 } from './types'
+export {
+  useWeaverseNextStudioInternals,
+  WeaverseNextStudio,
+  type WeaverseNextStudioProps,
+} from './use-weaverse-next-studio'
