@@ -783,6 +783,15 @@ export class WeaverseClient {
       const { projectId, weaverseHost } = this.configs
       const i18n = this.storefront.i18n
 
+      // Skip entirely when the theme hasn't opted into i18n. Merchant overrides
+      // are locale-specific translations; a theme with no `i18n` schema has no
+      // translatable surface, so the fetch would always come back empty. Gating
+      // here keeps non-i18n storefronts from making a translation API call on
+      // every SSR — same `themeSchema.i18n` condition that guards `staticContent`.
+      if (!this.themeSchema?.i18n) {
+        return
+      }
+
       if (!(projectId && weaverseHost)) {
         return
       }
