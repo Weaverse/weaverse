@@ -680,3 +680,74 @@ describe('directFetch transient retry', () => {
     expect(fetchSpy).toHaveBeenCalledTimes(1)
   })
 })
+
+describe('loadThemeSettings merchant-overrides gating (issue #2291)', () => {
+  let mockContext: any
+  let baseSchema: HydrogenThemeSchema
+  let warnSpy: any
+  let errorSpy: any
+
+  beforeEach(() => {
+    mockContext = createMockContext()
+    baseSchema = {
+      info: {
+        name: 'T',
+        author: 'A',
+        version: '1.0.0',
+        authorProfilePhoto: '',
+        documentationUrl: '',
+        supportUrl: '',
+      },
+      settings: [],
+    }
+    warnSpy = spyOn(console, 'warn').mockImplementation(() => {})
+    errorSpy = spyOn(console, 'error').mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    warnSpy.mockRestore()
+    errorSpy.mockRestore()
+  })
+
+  function makeClient(schema: HydrogenThemeSchema) {
+    return new WeaverseClient({
+      ...mockContext,
+      components: [],
+      themeSchema: schema,
+      projectId: 'proj-123',
+    })
+  }
+
+  function cacheTargets(fetchSpy: any): unknown[] {
+    return fetchSpy.mock.calls.map((c: any) => c[1]?.cacheTarget)
+  }
+
+  it('does not fetch merchant overrides when the theme has no i18n schema', async () => {
+    let client = makeClient(baseSchema)
+    let fetchSpy = spyOn(client, 'fetchWithCache').mockResolvedValue({
+      theme: {},
+    } as any)
+
+    await client.loadThemeSettings()
+
+    expect(cacheTargets(fetchSpy)).not.toContain('merchant-overrides')
+  })
+
+  it('fetches merchant overrides when the theme declares an i18n schema', async () => {
+    let client = makeClient({
+      ...baseSchema,
+      i18n: {
+        urlStructure: 'url-path',
+        defaultLocale: { language: 'EN', country: 'US' } as any,
+        shopLocales: [],
+      },
+    })
+    let fetchSpy = spyOn(client, 'fetchWithCache').mockResolvedValue({
+      theme: {},
+    } as any)
+
+    await client.loadThemeSettings()
+
+    expect(cacheTargets(fetchSpy)).toContain('merchant-overrides')
+  })
+})
