@@ -145,6 +145,39 @@ describe('createWeaverseNextServerClient loadPage', () => {
     expect(configs.weaverseApiKey).toBeUndefined()
   })
 
+  it('should_preserve_design_mode_draft_item_param_for_loader_revalidation', async () => {
+    let fetchMock = makeFetch(makePagePayload())
+    let draftItem = JSON.stringify({
+      id: 'resource-section',
+      type: 'resource-picker-smoke',
+      data: { product: { handle: 'new-product' } },
+    })
+    let client = createWeaverseNextServerClient({
+      components: [heroComponent],
+      projectId: 'proj-123',
+      fetch: fetchMock,
+      requestContext: {
+        url: `https://shop.example/?isDesignMode=true&_rsc=abc&weaverseDraftItem=${encodeURIComponent(
+          draftItem
+        )}&utm_source=drop`,
+      },
+    })
+
+    await client.loadPage()
+
+    let [, init] = fetchMock.mock.calls[0] as [string, RequestInit]
+    let body = JSON.parse(init.body as string)
+    let url = new URL(body.url)
+    expect(body.url).toBe(
+      `https://shop.example/?isDesignMode=true&weaverseDraftItem=${encodeURIComponent(
+        draftItem
+      )}`
+    )
+    expect(url.searchParams.get('weaverseDraftItem')).toBe(draftItem)
+    expect(url.searchParams.has('_rsc')).toBe(false)
+    expect(url.searchParams.has('utm_source')).toBe(false)
+  })
+
   it('should_use_no_store_cache_in_design_mode', async () => {
     let fetchMock = makeFetch(makePagePayload())
     let client = createWeaverseNextServerClient({

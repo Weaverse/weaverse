@@ -1,11 +1,14 @@
 import type { WeaverseNextRequestContext } from '../types'
 
 // Query params that influence Weaverse page resolution on the Builder:
-// revision previews, design-mode flags, and `weaverse*` control params
-// (host, version, project id). Everything else — utm_*, fbclid, gclid,
-// storefront filters — is irrelevant to which page the Builder returns and
-// would otherwise fragment any fetch cache keyed on the request body.
-const KEPT_PARAM_RE = /^(?:__revisionId|isDesignMode|weaverse)/
+// revision previews, design-mode flags, design-mode draft item overrides,
+// and `weaverse*` control params (host, version, project id). Everything
+// else — utm_*, fbclid, gclid, storefront filters — is irrelevant to which
+// page the Builder returns and would otherwise fragment any fetch cache keyed
+// on the request body. `weaverseDraftItem` is the current draft item param;
+// `__weaverseDraftItem` is kept as a legacy compatibility alias.
+const KEPT_PARAM_RE =
+  /^(?:__revisionId|__weaverseDraftItem|isDesignMode|weaverse)/
 const DATA_SUFFIX = '.data'
 
 /**
