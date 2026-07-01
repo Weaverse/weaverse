@@ -2,7 +2,7 @@
   "name": "@weaverse/next",
   "author": "Weaverse Team",
   "description": "Next.js App Router integration for building Weaverse-powered storefronts",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-alpha.3",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
