@@ -55,6 +55,24 @@ function toQueryRecord(
   return queries
 }
 
+const TRANSIENT_STUDIO_PARAMS = new Set([
+  'weaverseDraftItem',
+  // Legacy name from the original design-mode draft-item spike. Keep it out of
+  // runtime requestInfo too, in case an older Builder bundle is in front of a
+  // newer Next storefront.
+  '__weaverseDraftItem',
+])
+
+function getRequestInfoSearchParams(
+  context?: WeaverseNextRequestContext
+): URLSearchParams {
+  let searchParams = new URLSearchParams(getSearchParamsFromContext(context))
+  for (let key of TRANSIENT_STUDIO_PARAMS) {
+    searchParams.delete(key)
+  }
+  return searchParams
+}
+
 /**
  * Build the Hydrogen-like request info shape consumed by the Studio bridge.
  * Duplicate query keys keep the last value, matching `URLSearchParams` iteration
@@ -63,7 +81,7 @@ function toQueryRecord(
 export function buildWeaverseNextRequestInfo(
   context?: WeaverseNextRequestContext
 ): WeaverseNextRequestInfo {
-  let searchParams = getSearchParamsFromContext(context)
+  let searchParams = getRequestInfoSearchParams(context)
   let search = searchParams.toString()
 
   return {

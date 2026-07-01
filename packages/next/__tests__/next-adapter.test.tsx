@@ -668,6 +668,32 @@ describe('Studio runtime contract', () => {
     })
   })
 
+  it('should_hide_transient_draft_item_param_from_studio_request_info', () => {
+    // Arrange
+    let draftItem = JSON.stringify({
+      id: 'section',
+      data: { product: 'draft' },
+    })
+    let searchParams = new URLSearchParams(
+      `isDesignMode=true&weaverseDraftItem=${encodeURIComponent(
+        draftItem
+      )}&weaverseProjectId=project-123`
+    )
+
+    // Act
+    let requestInfo = buildWeaverseNextRequestInfo({
+      pathname: '/',
+      searchParams,
+    })
+
+    // Assert
+    expect(requestInfo).toEqual({
+      pathname: '/',
+      search: '?isDesignMode=true&weaverseProjectId=project-123',
+      queries: { isDesignMode: true, weaverseProjectId: 'project-123' },
+    })
+  })
+
   it('should_expose_theme_settings_store_with_live_update_method', () => {
     // Arrange
     let listener = vi.fn()
