@@ -21,6 +21,7 @@ declare global {
 type StudioBoundRuntime = WeaverseNextRuntime & {
   __weaverseNextStudioBound?: boolean
   __weaverseNextRequestKey?: string
+  __weaverseNextLatestData?: WeaverseNextPageData & { rootId: string }
 }
 
 function getRuntimeWindow(): Window | undefined {
@@ -182,6 +183,14 @@ export function createWeaverseNextRuntime(
     if (!(existing.isDesignMode || nextIsDesignMode)) {
       existing.setProjectData(page)
     }
+    // Always capture the latest server payload. In design mode the live tree
+    // (`existing.data`) is deliberately left untouched above, so it goes stale
+    // after an RSC refresh — `bindWeaverseNextStudioRuntime` must report this
+    // fresh payload to `refreshStudio`, not the stale tree, or a revalidation
+    // (e.g. resource-picker pick) merges back old per-item `loaderData` and the
+    // preview keeps rendering the previous resource. Mirrors Hydrogen, which
+    // always passes the fresh loader params to `refreshStudio`.
+    existing.__weaverseNextLatestData = page
     existing.dataContext = resolveDataContext(config)
     existing.requestInfo = requestInfo
     existing.projectId = resolveProjectId(config.client, config.data, page.id)
@@ -214,6 +223,7 @@ export function createWeaverseNextRuntime(
 
   let runtime = new WeaverseNextRuntime(config) as StudioBoundRuntime
   runtime.__weaverseNextRequestKey = requestKey
+  runtime.__weaverseNextLatestData = page
   registerRuntime(runtime)
   return runtime
 }
@@ -235,8 +245,11 @@ export function bindWeaverseNextStudioRuntime(runtime: WeaverseNextRuntime) {
     return true
   }
 
+  // Report the latest server payload (fresh per-item `loaderData`), not the
+  // live tree: Builder's `refreshStudio` merges the editor draft's structural
+  // edits back on top and only takes the loader payload from this data.
   studio.refreshStudio?.({
-    data: runtime.data,
+    data: boundRuntime.__weaverseNextLatestData ?? runtime.data,
     pageId: runtime.pageId,
     requestInfo: runtime.requestInfo,
   })

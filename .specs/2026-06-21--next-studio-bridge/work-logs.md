@@ -79,3 +79,70 @@ This is not full Studio E2E yet. Still required:
 ## Builder changes
 
 No Builder change appears necessary for this first slice. The code stays in `@weaverse/next` and maps the framework-specific internals to the existing bridge contract.
+
+## 2026-07-02 — @hta218 (with Claude): fix stale refreshStudio payload on RSC revalidation
+
+Symptom (POC "Resource picker smoke" section): picking a product in Studio ran
+the loading bar, the draft was saved, but the section kept rendering the old
+product. Publish + full Studio reload was required to see the new resource.
+
+### Root cause (SDK, `packages/next/src/runtime.ts`)
+
+The revalidation round-trip itself worked end-to-end: Builder's fetch patch
+appended `weaverseDraftItem` to the Next `_rsc` request, the server loader ran
+with the draft product handle, and the RSC response carried fresh per-item
+`loaderData`. The failure was client-side in `createWeaverseNextRuntime`:
+
+1. The reused design-mode runtime deliberately skips `setProjectData(page)`
+   (correct — the live Studio tree owns unsaved drafts), but it also dropped
+   the fresh payload entirely.
+2. `bindWeaverseNextStudioRuntime` then called
+   `studio.refreshStudio({ data: runtime.data, ... })` — the STALE live tree.
+3. Builder's `refreshStudio` merges draft structural edits with the incoming
+   payload's per-item `loaderData` (`buildRevalidatedItems`). With a stale
+   payload it merged back the OLD `loaderData`, so the section re-rendered the
+   previous resource while `revalidationVersion` still bumped — the loading bar
+   completed and the preview looked "done" with stale data.
+
+Hydrogen does not have this bug because `createWeaverseInstance` always passes
+the fresh loader params straight to `window.weaverseStudio.refreshStudio(...)`.
+
+### Fix
+
+- `createWeaverseNextRuntime` now stashes the latest server payload on the
+  runtime (`__weaverseNextLatestData`) on both the create and reuse paths,
+  without touching the design-mode live tree.
+- `bindWeaverseNextStudioRuntime` reports that stashed payload (falling back to
+  `runtime.data`) to `refreshStudio`, mirroring Hydrogen's semantics: fresh
+  data flows as a parameter; Builder owns the draft merge.
+
+### Tests
+
+- Updated `should_refresh_studio_after_reusing_runtime_with_new_page_data` —
+  it previously asserted `data: reusedRuntime.data`, codifying the bug; it now
+  asserts the fresh page items are reported.
+- Added
+  `should_report_fresh_loader_data_to_refresh_studio_when_design_mode_tree_is_stale`
+  simulating the resource-picker flow (stale live tree + fresh `loaderData`).
+
+### Verification
+
+```bash
+pnpm --filter @weaverse/next test       # 3 files, 59 tests passed
+pnpm --filter @weaverse/next typecheck  # passed
+pnpm --filter @weaverse/next build      # passed
+pnpm exec biome check packages/next/src/runtime.ts \
+  packages/next/__tests__/next-adapter.test.tsx --diagnostic-level=error  # clean
+```
+
+### Builder changes
+
+None required — the #2601 Builder changes (draft-item `_rsc` param, deferred
+refresh while silent update is pending, honored `shouldRevalidate` for
+server-only loaders) are correct; the remaining gap was SDK-side only.
+
+### Remaining manual E2E
+
+Publish/pack a new `@weaverse/next` alpha, install it in the POC, and re-run
+the resource-picker smoke: pick a product → loading bar → section renders the
+new product without publish + Studio reload.

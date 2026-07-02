@@ -872,15 +872,81 @@ describe('Studio runtime contract', () => {
     let reusedRuntime = createWeaverseNextRuntime({ client, data: nextData })
     bindWeaverseNextStudioRuntime(reusedRuntime)
 
-    // Assert
+    // Assert — refreshStudio must receive the FRESH server payload, not the
+    // (deliberately untouched) design-mode live tree on `runtime.data`.
     expect(reusedRuntime).toBe(runtime)
     expect(init).toHaveBeenCalledTimes(1)
     expect(refreshStudio).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: reusedRuntime.data,
+        data: expect.objectContaining({
+          items: nextData.page.items,
+        }),
         pageId: 'page-1',
         requestInfo: reusedRuntime.requestInfo,
       })
+    )
+    vi.stubGlobal('window', previousWindow)
+  })
+
+  it('should_report_fresh_loader_data_to_refresh_studio_when_design_mode_tree_is_stale', () => {
+    // Arrange — mirrors a resource-picker revalidation: the RSC refresh returns
+    // fresh per-item `loaderData`, while the reused design-mode runtime keeps
+    // the old live tree. Builder's refreshStudio merges draft structural edits
+    // with THIS payload's loaderData, so passing the stale tree would keep the
+    // previously selected resource rendered.
+    let previousWindow = globalThis.window
+    let init = vi.fn()
+    let refreshStudio = vi.fn()
+    let fakeWindow = {
+      weaverseStudio: { init, refreshStudio },
+    } as unknown as Window & typeof globalThis
+    vi.stubGlobal('window', fakeWindow)
+    let client = makeClient({
+      requestContext: { isDesignMode: true, pathname: '/' },
+    })
+    let staleData = {
+      page: {
+        id: 'page-1',
+        rootId: 'item-root',
+        items: [
+          {
+            id: 'item-root',
+            type: 'hero',
+            data: { product: { handle: 'old-product' } },
+            loaderData: { product: { title: 'Old Product' } },
+          },
+        ],
+      },
+    } as WeaverseNextLoaderData
+    let runtime = createWeaverseNextRuntime({ client, data: staleData })
+    bindWeaverseNextStudioRuntime(runtime)
+    let freshData = {
+      page: {
+        id: 'page-1',
+        rootId: 'item-root',
+        items: [
+          {
+            id: 'item-root',
+            type: 'hero',
+            data: { product: { handle: 'new-product' } },
+            loaderData: { product: { title: 'New Product' } },
+          },
+        ],
+      },
+    } as WeaverseNextLoaderData
+
+    // Act
+    let reusedRuntime = createWeaverseNextRuntime({ client, data: freshData })
+    bindWeaverseNextStudioRuntime(reusedRuntime)
+
+    // Assert — the live tree stays untouched (drafts preserved), but the
+    // refreshStudio payload carries the fresh loaderData.
+    expect(reusedRuntime).toBe(runtime)
+    let refreshedWith = refreshStudio.mock.calls.at(-1)?.[0] as {
+      data: { items: { loaderData?: { product?: { title?: string } } }[] }
+    }
+    expect(refreshedWith.data.items[0].loaderData?.product?.title).toBe(
+      'New Product'
     )
     vi.stubGlobal('window', previousWindow)
   })

@@ -36,6 +36,11 @@ export {
 } from './renderer'
 export { buildWeaverseNextRequestInfo } from './request-info'
 export {
+  DEFAULT_REVALIDATE_ENDPOINT,
+  type RevalidateItemRuntimeLike,
+  revalidateWeaverseNextItem,
+} from './revalidate-item'
+export {
   bindWeaverseNextStudioRuntime,
   createWeaverseNextRuntime,
   WeaverseNextRuntime,

@@ -2,6 +2,10 @@
 
 import { useRouter } from 'next/navigation'
 import { useRef } from 'react'
+import {
+  DEFAULT_REVALIDATE_ENDPOINT,
+  revalidateWeaverseNextItem,
+} from './revalidate-item'
 import type { WeaverseNextRuntime } from './runtime'
 import { WeaverseNextStudioBridge } from './studio-bridge'
 import {
@@ -9,6 +13,7 @@ import {
   createWeaverseNextStudioInternals,
   type WeaverseNextStudioInternals,
 } from './studio-router'
+import type { WeaverseNextRuntimeInternal } from './types'
 
 /**
  * Resolve stable Studio `navigate` / `revalidate` callbacks from the Next App
@@ -44,6 +49,11 @@ export function useWeaverseNextStudioInternals(
 
 export interface WeaverseNextStudioProps
   extends CreateWeaverseNextStudioInternalsOptions {
+  /**
+   * Route the app mounted with `createWeaverseNextRevalidateHandler`.
+   * Defaults to `/api/weaverse/revalidate`.
+   */
+  revalidateEndpoint?: string
   runtime: WeaverseNextRuntime
 }
 
@@ -60,12 +70,34 @@ export interface WeaverseNextStudioProps
  * free of router imports.
  */
 export function WeaverseNextStudio(props: WeaverseNextStudioProps) {
-  let { runtime, replace } = props
+  let { runtime, replace, revalidateEndpoint } = props
   let { navigate, revalidate } = useWeaverseNextStudioInternals({ replace })
+  let endpoint = revalidateEndpoint ?? DEFAULT_REVALIDATE_ENDPOINT
+  // Cache per runtime+endpoint so the bridge bind effect (keyed on callback
+  // identity) doesn't re-run — and re-`refreshStudio` — on every render.
+  // `itemInstances` is a static registry shared by all Weaverse runtimes, so
+  // any live runtime reference resolves the edited item.
+  let revalidateItemRef = useRef<{
+    endpoint: string
+    revalidateItem: NonNullable<WeaverseNextRuntimeInternal['revalidateItem']>
+    runtime: WeaverseNextRuntime
+  } | null>(null)
+  if (
+    revalidateItemRef.current?.endpoint !== endpoint ||
+    revalidateItemRef.current.runtime !== runtime
+  ) {
+    revalidateItemRef.current = {
+      endpoint,
+      revalidateItem: (draftItem) =>
+        revalidateWeaverseNextItem(runtime, draftItem, endpoint),
+      runtime,
+    }
+  }
   return (
     <WeaverseNextStudioBridge
       navigate={navigate}
       revalidate={revalidate}
+      revalidateItem={revalidateItemRef.current.revalidateItem}
       runtime={runtime}
     />
   )
