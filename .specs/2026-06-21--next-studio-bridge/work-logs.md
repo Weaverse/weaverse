@@ -15,7 +15,7 @@ Date: 2026-06-23
 - `packages/next/vitest.config.ts`
 - `packages/next/__tests__/studio-router.test.ts`
 - `packages/next/__tests__/__mocks__/next-navigation.ts`
-- `.weaverse/specs/2026-06-21--next-studio-bridge/claude-handoff-issue-2597.md`
+- `.specs/2026-06-21--next-studio-bridge/claude-handoff-issue-2597.md`
 
 ## Implementation summary
 

@@ -423,6 +423,12 @@ Key changes from the audit:
 - Loader args should expose explicit `commerce.storefront`; `weaverse.storefront` can exist as a compatibility alias.
 - The adapter should not emulate React Router route matches. Next apps should pass route data through provider props and use Next-native route files.
 
+## Files and folders touched
+
+- `packages/next/` — target package (not yet implemented at spec time; shell scoped in Slice 1)
+- `.specs/2026-06-19--nextjs-adapter-contract/` — this spec folder
+- No changes to `packages/core`, `packages/react`, or `packages/hydrogen` in this design step
+
 ## Immediate next action
 
 Implement **Slice 1: package shell + renderer/provider spike** in `packages/next`, informed by the Pilot audit. Keep it small: types, provider, renderer, schema/hook re-exports, and fixture tests for page tree render + component loader + explicit root/page data.

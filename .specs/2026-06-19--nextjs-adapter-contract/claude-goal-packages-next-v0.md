@@ -5,14 +5,14 @@
 Repo: `/Users/hta218/Documents/work/workspace/weaverse`
 Branch: `feat/next-adapter-shell`
 Issue: Weaverse/builder#2533
-Spec folder: `.weaverse/specs/2026-06-19--nextjs-adapter-contract/`
+Spec folder: `.specs/2026-06-19--nextjs-adapter-contract/`
 
 Read these first:
 
 1. `AGENTS.md`
 2. `packages/react/AGENTS.md`
-3. `.weaverse/specs/2026-06-19--nextjs-adapter-contract/README.md`
-4. `.weaverse/specs/2026-06-19--nextjs-adapter-contract/pilot-usage-audit.md`
+3. `.specs/2026-06-19--nextjs-adapter-contract/README.md`
+4. `.specs/2026-06-19--nextjs-adapter-contract/pilot-usage-audit.md`
 5. Current APIs in:
    - `packages/react/src/index.ts`
    - `packages/react/src/renderer.tsx`
@@ -243,7 +243,7 @@ If a command is invalid because of repo tooling, run the equivalent and document
 - Tests pass for provider hooks, component loader execution, and renderer fixture.
 - No source dependency/import on `react-router` or `@shopify/remix-oxygen` in `packages/next`.
 - The API matches the Pilot usage audit direction: explicit root/page data hooks, explicit commerce context, component loaders v0 must-have.
-- Update `.weaverse/specs/2026-06-19--nextjs-adapter-contract/work-log.md` with what changed, commands run, and any limitations.
+- Update `.specs/2026-06-19--nextjs-adapter-contract/work-logs.md` with what changed, commands run, and any limitations.
 
 ## Report back
 

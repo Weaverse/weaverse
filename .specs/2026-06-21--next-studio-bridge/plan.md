@@ -1,13 +1,4 @@
-# Spec: Next.js Studio Bridge compatibility
-
-| Field | Value |
-| --- | --- |
-| Status | Draft for SDK architecture review |
-| Public PR | Weaverse/weaverse#470 |
-| Related Builder issue | Weaverse/builder#2533 |
-| Companion private spec | Weaverse/builder#2586 |
-| Date | 2026-06-21 |
-| Scope | Public `@weaverse/next` SDK contract and verification plan |
+# Plan: Next.js Studio Bridge compatibility
 
 ## Executive summary
 
@@ -75,3 +66,10 @@ Next App Router server route
 4. Verify direct design-mode bridge probes.
 5. Verify actual Studio iframe connection and basic editing.
 6. Split Builder bridge output only if the existing structural bridge cannot be reused.
+
+## Files and folders touched
+
+- `.specs/2026-06-21--next-studio-bridge/` — this spec (public contract, gap analysis, proposed architecture, verification plan)
+- `packages/next/` — target implementation package (see `03-proposed-next-architecture.md`)
+- Companion private spec: `Weaverse/builder#2586` (Studio/RPC implementation audit, out of scope for this repo)
+- No implementation code changes in this spec-only slice

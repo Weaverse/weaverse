@@ -7,7 +7,7 @@
 | Source branch | `fix/390-cart-discount-display` |
 | Source status | clean, read-only audit |
 | Target issue | [Weaverse/builder#2533](https://github.com/Weaverse/builder/issues/2533) |
-| Target spec | `.weaverse/specs/2026-06-19--nextjs-adapter-contract/README.md` |
+| Target spec | `.specs/2026-06-19--nextjs-adapter-contract/README.md` |
 
 ## Executive summary
 

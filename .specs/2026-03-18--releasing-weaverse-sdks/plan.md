@@ -520,7 +520,7 @@ In `.claude/settings.local.json`, remove these two lines (lines 11-12):
 - [ ] **Step 4: Verify no changeset references remain in tracked files**
 
 ```bash
-grep -r "changeset" --include="*.md" --include="*.json" --exclude-dir=node_modules --exclude-dir=.git --exclude="CHANGELOG.md" --exclude="bun.lock" . | grep -v "docs/superpowers/"
+grep -r "changeset" --include="*.md" --include="*.json" --exclude-dir=node_modules --exclude-dir=.git --exclude="CHANGELOG.md" --exclude="bun.lock" . | grep -v "\.specs/"
 ```
 
 Expected: no output (all changeset references removed except historical CHANGELOGs and our own spec/plan docs).

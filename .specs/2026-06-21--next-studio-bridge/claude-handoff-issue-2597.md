@@ -45,9 +45,9 @@ Current Next implementation:
 
 Spec/reference notes:
 
-- `.weaverse/specs/2026-06-21--next-studio-bridge/01-next-runtime-contract.md`
-- `.weaverse/specs/2026-06-21--next-studio-bridge/02-next-adapter-gap-analysis.md`
-- `.weaverse/specs/2026-06-21--next-studio-bridge/03-proposed-next-architecture.md`
+- `.specs/2026-06-21--next-studio-bridge/01-next-runtime-contract.md`
+- `.specs/2026-06-21--next-studio-bridge/02-next-adapter-gap-analysis.md`
+- `.specs/2026-06-21--next-studio-bridge/03-proposed-next-architecture.md`
 
 ## Required implementation shape
 
@@ -113,7 +113,7 @@ If a command fails due to pre-existing unrelated repo state, capture the exact o
 
 Before exiting, write a concise work log to:
 
-`.weaverse/specs/2026-06-21--next-studio-bridge/claude-worklog-issue-2597.md`
+`.specs/2026-06-21--next-studio-bridge/work-logs.md`
 
 Include:
 
