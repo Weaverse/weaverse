@@ -10,6 +10,14 @@ import type {
   WeaverseNextServerClient,
 } from '../src/types'
 
+const STATUS_OK = 200
+const STATUS_BAD_REQUEST = 400
+const STATUS_NOT_FOUND = 404
+const STATUS_UNPROCESSABLE = 422
+const STATUS_SERVER_ERROR = 500
+const RESPONDED_404_ERROR = /responded 404/
+const NO_LIVE_INSTANCE_ERROR = /No live item instance/
+
 const smokeSchema = createSchema({
   type: 'resource-smoke',
   title: 'Resource smoke',
@@ -70,7 +78,7 @@ describe('createWeaverseNextRevalidateHandler', () => {
     let body = await response.json()
 
     // Assert — loader gets the merged draft data and the page-load args shape.
-    expect(response.status).toBe(200)
+    expect(response.status).toBe(STATUS_OK)
     expect(response.headers.get('Cache-Control')).toBe('no-store')
     expect(body).toEqual({ loaderData: { product: { title: 'Fresh' } } })
     expect(loader).toHaveBeenCalledWith({
@@ -108,10 +116,10 @@ describe('createWeaverseNextRevalidateHandler', () => {
     )
 
     // Assert
-    expect(invalidJson.status).toBe(400)
-    expect(missingItem.status).toBe(400)
-    expect(missingId.status).toBe(400)
-    expect(unknownType.status).toBe(404)
+    expect(invalidJson.status).toBe(STATUS_BAD_REQUEST)
+    expect(missingItem.status).toBe(STATUS_BAD_REQUEST)
+    expect(missingId.status).toBe(STATUS_BAD_REQUEST)
+    expect(unknownType.status).toBe(STATUS_NOT_FOUND)
     expect(await unknownType.json()).toEqual({
       error: 'unknown-component-type',
     })
@@ -140,9 +148,9 @@ describe('createWeaverseNextRevalidateHandler', () => {
     }).POST(makeRequest({ draftItem }))
 
     // Assert
-    expect(missingLoader.status).toBe(422)
+    expect(missingLoader.status).toBe(STATUS_UNPROCESSABLE)
     expect(await missingLoader.json()).toEqual({ error: 'missing-loader' })
-    expect(loaderFailed.status).toBe(500)
+    expect(loaderFailed.status).toBe(STATUS_SERVER_ERROR)
     expect(await loaderFailed.json()).toEqual({ error: 'loader-failed' })
   })
 })
@@ -193,14 +201,14 @@ describe('revalidateWeaverseNextItem', () => {
     // Act + Assert — 404 route (app did not mount the handler) must reject.
     await expect(
       revalidateWeaverseNextItem(runtime, draftItem, '/missing')
-    ).rejects.toThrow(/responded 404/)
+    ).rejects.toThrow(RESPONDED_404_ERROR)
     // Unknown live instance must reject without fetching.
     await expect(
       revalidateWeaverseNextItem(runtime, {
         ...draftItem,
         id: 'ghost',
       })
-    ).rejects.toThrow(/No live item instance/)
+    ).rejects.toThrow(NO_LIVE_INSTANCE_ERROR)
     expect(fetchMock).toHaveBeenCalledTimes(1)
     vi.unstubAllGlobals()
   })

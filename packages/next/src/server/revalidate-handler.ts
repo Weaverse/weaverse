@@ -9,6 +9,12 @@ const NO_STORE_HEADERS = {
   'Cache-Control': 'no-store',
 } as const
 
+const STATUS_OK = 200
+const STATUS_BAD_REQUEST = 400
+const STATUS_NOT_FOUND = 404
+const STATUS_UNPROCESSABLE = 422
+const STATUS_SERVER_ERROR = 500
+
 export interface WeaverseNextRevalidateHandlerConfig {
   /**
    * Reuse the app's server-client factory so the loader runs with the same
@@ -79,12 +85,12 @@ export function createWeaverseNextRevalidateHandler(
       try {
         payload = await request.json()
       } catch {
-        return json({ error: 'invalid-payload' }, 400)
+        return json({ error: 'invalid-payload' }, STATUS_BAD_REQUEST)
       }
 
       let draftItem = parseDraftItem(payload)
       if (!draftItem) {
-        return json({ error: 'invalid-payload' }, 400)
+        return json({ error: 'invalid-payload' }, STATUS_BAD_REQUEST)
       }
 
       let client: WeaverseNextServerClient
@@ -92,17 +98,17 @@ export function createWeaverseNextRevalidateHandler(
         client = await config.getClient(request)
       } catch (error) {
         console.error('❌ Revalidate handler getClient failed.', error)
-        return json({ error: 'client-init-failed' }, 500)
+        return json({ error: 'client-init-failed' }, STATUS_SERVER_ERROR)
       }
 
       let component = client.components.find(
         (candidate) => candidate?.schema?.type === draftItem.type
       )
       if (!component) {
-        return json({ error: 'unknown-component-type' }, 404)
+        return json({ error: 'unknown-component-type' }, STATUS_NOT_FOUND)
       }
       if (typeof component.loader !== 'function') {
-        return json({ error: 'missing-loader' }, 422)
+        return json({ error: 'missing-loader' }, STATUS_UNPROCESSABLE)
       }
 
       try {
@@ -117,7 +123,7 @@ export function createWeaverseNextRevalidateHandler(
           context: client.requestContext,
           commerce: client.commerce,
         })
-        return json({ loaderData: loaderData ?? null }, 200)
+        return json({ loaderData: loaderData ?? null }, STATUS_OK)
       } catch (error) {
         console.error(
           '❌ Item loader revalidation failed.',
@@ -125,7 +131,7 @@ export function createWeaverseNextRevalidateHandler(
           draftItem.id,
           error
         )
-        return json({ error: 'loader-failed' }, 500)
+        return json({ error: 'loader-failed' }, STATUS_SERVER_ERROR)
       }
     },
   }
