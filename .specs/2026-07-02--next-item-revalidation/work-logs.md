@@ -52,3 +52,15 @@ Implemented the full SDK slice plus companion Builder + POC wiring.
   NO scroll-to-top and no page remount; fallback QA with the route removed.
 - After QA: merge PR #478 + Builder PR #2601, release `@weaverse/next` alpha,
   revert the POC tarball dependency to the npm version.
+
+## 2026-07-02 — @hta218 — shipped
+
+- Browser QA passed on both paths: Next POC (per-item, no scroll-to-top) and
+  Pilot/Hydrogen (legacy refresh flow unaffected; full Builder suite 2103
+  tests green).
+- Merged: Weaverse/weaverse#478 (SDK) and Weaverse/builder#2601 (Builder
+  feature-detect + fallback).
+- Released `@weaverse/next@0.1.0-alpha.4` (npm dist-tag `alpha`), tagged
+  `@weaverse/next@0.1.0-alpha.4`, `dev` synced with `main`.
+- POC reverted from the local tarball to the npm release; revalidate route
+  committed.

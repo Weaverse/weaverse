@@ -2,7 +2,7 @@
 
 | Field            | Value                                                    |
 | ---------------- | -------------------------------------------------------- |
-| **Status**       | in-progress                                              |
+| **Status**       | completed                                                |
 | **Owner**        | @hta218                                                  |
 | **Issue**        | Related: [Weaverse/builder#2597](https://github.com/Weaverse/builder/issues/2597), [Weaverse/builder#2533](https://github.com/Weaverse/builder/issues/2533) |
 | **Branch**       | `feat/next-item-revalidation` (implementation; spec lands via `fix/next-stale-refresh-studio-payload`) |
