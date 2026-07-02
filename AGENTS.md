@@ -342,6 +342,23 @@ Uses a Claude Code skill (`.claude/skills/releasing-weaverse-sdks/SKILL.md`) for
 4. Schema, CLI, Biome, and i18n are versioned independently
 5. See the skill file for the full 13-step ritual
 
+## Spec-Driven Development (SDD)
+
+> **Full convention**: read [`.claude/rules/spec-driven-development.md`](./.claude/rules/spec-driven-development.md) — it is the authoritative reference. The summary below is for quick orientation only.
+
+All features MUST have a spec folder in `.specs/` at the repo root:
+```
+.specs/YYYY-MM-DD--feature-name/
+├── README.md      # Status, owner, issue, git-branch, original prompt, summary
+├── plan.md        # Under 500 lines, includes touched files/packages list
+└── work-logs.md   # Optional, append-only
+```
+
+**Rules**:
+1. New feature? Create spec folder before writing code
+2. Existing feature? Read spec first; update if scope changes
+3. Plans live **only** in `.specs/<feature>/plan.md` — do NOT put them in `.plan/`, `docs/plans/`, or any other location
+
 ## Common Pitfalls
 
 - **Don't use `npm install` / `bun install`** — use `pnpm install` for dependency management
