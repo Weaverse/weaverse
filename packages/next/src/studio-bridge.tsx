@@ -13,12 +13,13 @@ const STUDIO_BIND_MAX_ATTEMPTS = 100
 export interface WeaverseNextStudioBridgeProps {
   navigate?: WeaverseNextRuntimeInternal['navigate']
   revalidate?: WeaverseNextRuntimeInternal['revalidate']
+  revalidateItem?: WeaverseNextRuntimeInternal['revalidateItem']
   runtime: WeaverseNextRuntime
 }
 
 /** Page-level Studio runtime binder. */
 export function WeaverseNextStudioBridge(props: WeaverseNextStudioBridgeProps) {
-  let { runtime, navigate, revalidate } = props
+  let { runtime, navigate, revalidate, revalidateItem } = props
   let lastRuntimeRef = useRef(runtime)
   let lastRuntimeDataRef = useRef(runtime.data)
   let lastRequestInfoRef = useRef(runtime.requestInfo)
@@ -29,6 +30,9 @@ export function WeaverseNextStudioBridge(props: WeaverseNextStudioBridgeProps) {
     }
     if (revalidate) {
       runtime.internal.revalidate = revalidate
+    }
+    if (revalidateItem) {
+      runtime.internal.revalidateItem = revalidateItem
     }
 
     if (bindWeaverseNextStudioRuntime(runtime) || !runtime.isDesignMode) {
@@ -47,7 +51,7 @@ export function WeaverseNextStudioBridge(props: WeaverseNextStudioBridgeProps) {
     }, STUDIO_BIND_RETRY_INTERVAL_MS)
 
     return () => window.clearInterval(interval)
-  }, [runtime, navigate, revalidate])
+  }, [runtime, navigate, revalidate, revalidateItem])
 
   useEffect(() => {
     if (lastRuntimeRef.current !== runtime) {

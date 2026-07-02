@@ -11,6 +11,11 @@ export {
   normalizeNextPageUrl,
   resolveRequestUrl,
 } from './server/normalize-page-url'
+export {
+  createWeaverseNextRevalidateHandler,
+  type WeaverseNextRevalidateHandlerConfig,
+  type WeaverseNextRevalidateRequestBody,
+} from './server/revalidate-handler'
 export { createWeaverseNextServerClient } from './server/server-client'
 export type {
   WeaverseNextBaseConfigs,

@@ -30,6 +30,12 @@ export interface WeaverseNextRuntimeInternal {
   pageAssignment?: unknown
   project?: unknown
   revalidate?: (options?: unknown) => Promise<void> | void
+  /**
+   * Studio per-item loader revalidation. Builder feature-detects this and
+   * prefers it over the legacy `revalidate()` (`router.refresh()`) flow; it
+   * must reject on failure so Builder can fall back.
+   */
+  revalidateItem?: (draftItem: WeaverseNextComponentData) => Promise<void>
   themeSettingsStore?: WeaverseNextThemeSettingsStore
 }
 
