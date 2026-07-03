@@ -43,10 +43,29 @@ export let installDependenciesAndRun = async (outputPath, projectName) => {
     console.log(chalk.green('\n🎉 Project created successfully!'))
     console.log(chalk.blue('\nNext steps:'))
     console.log(chalk.gray(`1. cd ${projectName}`))
-    console.log(chalk.gray('2. Pull your Shopify environment variables:'))
-    console.log(chalk.gray('   npx shopify hydrogen env pull'))
-    console.log(chalk.gray('3. npm run dev'))
-    console.log(chalk.gray('4. Open http://localhost:3456 in your browser\n'))
+    console.log(chalk.gray('2. npm run dev'))
+    console.log(chalk.gray('3. Open http://localhost:3456 in your browser'))
+    console.log(
+      chalk.gray(
+        '\nThe demo store works out of the box. To connect your own Shopify store later:'
+      )
+    )
+    console.log(
+      chalk.gray(
+        '- Store on a Shopify plan: install the Hydrogen sales channel (https://apps.shopify.com/hydrogen),'
+      )
+    )
+    console.log(
+      chalk.gray(
+        '  create a Hydrogen storefront, then run: npx shopify hydrogen env pull'
+      )
+    )
+    console.log(
+      chalk.gray(
+        '- Development store: install the Headless sales channel (https://apps.shopify.com/headless)'
+      )
+    )
+    console.log(chalk.gray('  and copy the Storefront API values into .env\n'))
 
     return true
   } catch (error) {
@@ -92,9 +111,28 @@ export let showManualInstructions = (projectName) => {
   console.log(chalk.green('\n🎉 Project created successfully!'))
   console.log(chalk.blue('\nNext steps:'))
   console.log(chalk.gray(`1. cd ${projectName}`))
-  console.log(chalk.gray('2. Pull your Shopify environment variables:'))
-  console.log(chalk.gray('   npx shopify hydrogen env pull'))
-  console.log(chalk.gray('3. npm install'))
-  console.log(chalk.gray('4. npm run dev'))
-  console.log(chalk.gray('5. Open http://localhost:3456 in your browser\n'))
+  console.log(chalk.gray('2. npm install'))
+  console.log(chalk.gray('3. npm run dev'))
+  console.log(chalk.gray('4. Open http://localhost:3456 in your browser'))
+  console.log(
+    chalk.gray(
+      '\nThe demo store works out of the box. To connect your own Shopify store later:'
+    )
+  )
+  console.log(
+    chalk.gray(
+      '- Store on a Shopify plan: install the Hydrogen sales channel (https://apps.shopify.com/hydrogen),'
+    )
+  )
+  console.log(
+    chalk.gray(
+      '  create a Hydrogen storefront, then run: npx shopify hydrogen env pull'
+    )
+  )
+  console.log(
+    chalk.gray(
+      '- Development store: install the Headless sales channel (https://apps.shopify.com/headless)'
+    )
+  )
+  console.log(chalk.gray('  and copy the Storefront API values into .env\n'))
 }
