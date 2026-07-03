@@ -70,3 +70,15 @@ describe('promptForMissingOptions (non-interactive)', () => {
     ).rejects.toThrow(/non-interactive run: --project-id\./)
   })
 })
+
+describe('--no-install flag shape', () => {
+  it("createProject treats yargs' install === false as skip-install", async () => {
+    // yargs parses `--no-install` into { install: false }; the literal
+    // 'no-install' key is never set. Guard against regressing to only
+    // checking options['no-install'] (which silently installs everything).
+    let source = await import('node:fs/promises').then((fs) =>
+      fs.readFile(new URL('../src/commands/create.js', import.meta.url), 'utf8')
+    )
+    expect(source).toContain("options.install === false")
+  })
+})

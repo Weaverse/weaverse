@@ -123,8 +123,11 @@ export let createProject = async (argv) => {
     await downloadAndExtractTemplate(template, outputPath, options.commit)
     await createEnvFile(outputPath, options['project-id'])
 
-    // Handle installation and dev server
-    if (options['no-install']) {
+    // Handle installation and dev server.
+    // yargs parses `--no-install` as boolean negation (`install: false`), not
+    // as a literal `no-install` key — accept both shapes so the flag works.
+    let skipInstall = options['no-install'] || options.install === false
+    if (skipInstall) {
       showManualInstructions(projectName)
     } else {
       await installDependenciesAndRun(outputPath, projectName)
