@@ -79,6 +79,6 @@ describe('--no-install flag shape', () => {
     let source = await import('node:fs/promises').then((fs) =>
       fs.readFile(new URL('../src/commands/create.js', import.meta.url), 'utf8')
     )
-    expect(source).toContain("options.install === false")
+    expect(source).toContain('options.install === false')
   })
 })
