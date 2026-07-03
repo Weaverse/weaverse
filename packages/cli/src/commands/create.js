@@ -13,6 +13,7 @@ import {
 import {
   checkDirectoryExists,
   validateCommitHash,
+  validateProjectName,
 } from '../utils/validation.js'
 
 /**
@@ -72,6 +73,15 @@ export let createProject = async (argv) => {
           (t) => t.name
         ).join(', ')}`
       )
+    }
+
+    // Validate the name whether it came from a prompt or a CLI flag —
+    // prompts validate inline, but `--project-name` reaches here unchecked
+    // and the overwrite path empties `outputPath` (e.g. `--project-name=..`
+    // would otherwise point `fs.emptyDir` at the parent directory).
+    let nameValidation = validateProjectName(options['project-name'])
+    if (nameValidation !== true) {
+      throw new Error(nameValidation)
     }
 
     // Prepare project path

@@ -1,5 +1,8 @@
+import { randomBytes } from 'node:crypto'
 import fs from 'fs-extra'
 import ora from 'ora'
+
+export let generateSessionSecret = () => randomBytes(32).toString('hex')
 
 /**
  * Creates .env file from .env.example template with project-specific values
@@ -24,6 +27,19 @@ export let createEnvFile = async (path, projectId) => {
       )
     } else {
       envContent = `${envExampleContent}\nWEAVERSE_PROJECT_ID=${projectId}`
+    }
+
+    // Hydrogen requires SESSION_SECRET; generate a real one so the template's
+    // placeholder (e.g. "foobar") never ships and users are never asked for it.
+    let sessionSecret = generateSessionSecret()
+    if (envContent.includes('SESSION_SECRET=')) {
+      envContent = envContent.replace(
+        // biome-ignore lint/performance/useTopLevelRegex: the func only run once
+        /^SESSION_SECRET=.*/m,
+        `SESSION_SECRET="${sessionSecret}"`
+      )
+    } else {
+      envContent = `${envContent}\nSESSION_SECRET="${sessionSecret}"`
     }
 
     await fs.writeFile(`${path}/.env`, envContent)
