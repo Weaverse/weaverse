@@ -18,6 +18,7 @@ import {
   useWeaverseRootData,
   WeaverseNextProvider,
   WeaverseNextRenderer,
+  WeaverseNextStudioConnect,
 } from '../src/index'
 import type {
   WeaverseNextComponentLoaderArgs,
@@ -733,6 +734,63 @@ describe('Studio runtime contract', () => {
     expect(src).toBe(
       'https://studio.weaverse.io/static/studio/hydrogen/index.js?v=new'
     )
+  })
+
+  it('should_resolve_next_framework_studio_script_when_explicitly_requested', () => {
+    // Arrange
+    let searchParams = new URLSearchParams(
+      'isDesignMode=true&weaverseHost=https%3A%2F%2Fstudio.weaverse.io&weaverseVersion=2026.7.18'
+    )
+
+    // Act
+    let src = resolveWeaverseNextStudioScriptSrc(
+      { searchParams },
+      { framework: 'next', storefrontHostname: 'shop.example' }
+    )
+
+    // Assert
+    expect(src).toBe(
+      'https://studio.weaverse.io/static/studio/next/index.js?v=2026.7.18'
+    )
+  })
+
+  it('should_resolve_next_framework_preview_script_when_explicitly_requested', () => {
+    // Arrange
+    let searchParams = new URLSearchParams(
+      'isPreviewMode=true&weaverseHost=https%3A%2F%2Fstudio.weaverse.io&weaverseVersion=2026.7.18'
+    )
+
+    // Act
+    let src = resolveWeaverseNextStudioScriptSrc(
+      { searchParams },
+      { framework: 'next', storefrontHostname: 'shop.example' }
+    )
+
+    // Assert
+    expect(src).toBe(
+      'https://studio.weaverse.io/static/studio/next/preview.js?v=2026.7.18'
+    )
+  })
+
+  it('should_accept_framework_prop_on_studio_connect', () => {
+    // Arrange
+    let context = {
+      searchParams: new URLSearchParams(
+        'isDesignMode=true&weaverseHost=https%3A%2F%2Fstudio.weaverse.io'
+      ),
+    }
+
+    // Act
+    let html = renderToStaticMarkup(
+      <WeaverseNextStudioConnect
+        context={context}
+        framework="next"
+        storefrontHostname="shop.example"
+      />
+    )
+
+    // Assert
+    expect(html).toBe('')
   })
 
   it('should_trust_non_studio_weaverse_subdomains_for_script_src', () => {

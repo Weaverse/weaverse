@@ -62,6 +62,7 @@ export {
 export {
   type ResolveWeaverseNextStudioScriptSrcOptions,
   resolveWeaverseNextStudioScriptSrc,
+  type WeaverseNextStudioFramework,
 } from './studio-script-src'
 export {
   type CreateWeaverseNextThemeSettingsStoreOptions,
