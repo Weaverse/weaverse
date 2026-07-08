@@ -18,6 +18,7 @@ import {
   useWeaverseRootData,
   WeaverseNextProvider,
   WeaverseNextRenderer,
+  WeaverseNextStudioConnect,
 } from '../src/index'
 import type {
   WeaverseNextComponentLoaderArgs,
@@ -731,8 +732,64 @@ describe('Studio runtime contract', () => {
 
     // Assert
     expect(src).toBe(
-      'https://studio.weaverse.io/static/studio/hydrogen/index.js?v=new'
+      'https://studio.weaverse.io/static/studio/next/index.js?v=new'
     )
+  })
+
+  it('should_resolve_next_studio_script_by_default', () => {
+    // Arrange
+    let searchParams = new URLSearchParams(
+      'isDesignMode=true&weaverseHost=https%3A%2F%2Fstudio.weaverse.io&weaverseVersion=2026.7.18'
+    )
+
+    // Act
+    let src = resolveWeaverseNextStudioScriptSrc(
+      { searchParams },
+      { storefrontHostname: 'shop.example' }
+    )
+
+    // Assert
+    expect(src).toBe(
+      'https://studio.weaverse.io/static/studio/next/index.js?v=2026.7.18'
+    )
+  })
+
+  it('should_resolve_next_preview_script_by_default', () => {
+    // Arrange
+    let searchParams = new URLSearchParams(
+      'isPreviewMode=true&weaverseHost=https%3A%2F%2Fstudio.weaverse.io&weaverseVersion=2026.7.18'
+    )
+
+    // Act
+    let src = resolveWeaverseNextStudioScriptSrc(
+      { searchParams },
+      { storefrontHostname: 'shop.example' }
+    )
+
+    // Assert
+    expect(src).toBe(
+      'https://studio.weaverse.io/static/studio/next/preview.js?v=2026.7.18'
+    )
+  })
+
+  it('should_accept_studio_connect_without_framework_prop', () => {
+    // Arrange
+    let context = {
+      searchParams: new URLSearchParams(
+        'isDesignMode=true&weaverseHost=https%3A%2F%2Fstudio.weaverse.io'
+      ),
+    }
+
+    // Act
+    let html = renderToStaticMarkup(
+      <WeaverseNextStudioConnect
+        context={context}
+        storefrontHostname="shop.example"
+      />
+    )
+
+    // Assert
+    expect(html).toBe('')
   })
 
   it('should_trust_non_studio_weaverse_subdomains_for_script_src', () => {
@@ -749,9 +806,7 @@ describe('Studio runtime contract', () => {
     )
 
     // Assert
-    expect(src).toBe(
-      'https://preview.weaverse.dev/static/studio/hydrogen/index.js'
-    )
+    expect(src).toBe('https://preview.weaverse.dev/static/studio/next/index.js')
   })
 
   it('should_reject_untrusted_weaverse_host_for_script_src', () => {
@@ -793,7 +848,7 @@ describe('Studio runtime contract', () => {
 
     // Assert
     expect(loopbackSrc).toBe(
-      'http://localhost:3000/static/studio/hydrogen/index.js'
+      'http://localhost:3000/static/studio/next/index.js'
     )
     expect(publicSrc).toBeNull()
     expect(omittedStorefrontSrc).toBeNull()
