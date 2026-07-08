@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect } from 'react'
-import type { WeaverseNextStudioFramework } from './studio-script-src'
 import { resolveWeaverseNextStudioScriptSrc } from './studio-script-src'
 import type { WeaverseNextRequestContext } from './types'
 
@@ -31,11 +30,6 @@ function loadScript(src: string) {
 
 export interface WeaverseNextStudioConnectProps {
   context?: WeaverseNextRequestContext
-  /**
-   * Studio bridge framework path to load. Defaults to `hydrogen` for one alpha
-   * migration cycle; pass `next` after Builder serves `/static/studio/next/*`.
-   */
-  framework?: WeaverseNextStudioFramework
   storefrontHostname?: string
 }
 
@@ -53,7 +47,6 @@ export function WeaverseNextStudioConnect(
     }
 
     let src = resolveWeaverseNextStudioScriptSrc(context, {
-      framework: props.framework,
       storefrontHostname:
         props.storefrontHostname ??
         (typeof window === 'undefined' ? undefined : window.location.hostname),
@@ -61,7 +54,7 @@ export function WeaverseNextStudioConnect(
     if (src) {
       loadScript(src)
     }
-  }, [props.context, props.framework, props.storefrontHostname])
+  }, [props.context, props.storefrontHostname])
 
   return null
 }

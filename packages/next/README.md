@@ -144,7 +144,7 @@ Main exports:
 - `WeaverseNextProvider` — React provider for the client runtime.
 - `WeaverseNextRenderer` — renders a Weaverse page tree into React and binds the Studio runtime.
 - `runWeaverseComponentLoaders(args)` — walks a page tree and runs component `loader` functions server-side.
-- `WeaverseNextStudioConnect` — root client component that loads the Studio bridge script in design/preview contexts; accepts `framework="next"` to opt into `/static/studio/next/*`.
+- `WeaverseNextStudioConnect` — root client component that loads the Next Studio bridge script in design/preview contexts.
 - `WeaverseNextStudio` / `WeaverseNextStudioBridge` — Next-native page-level Studio runtime binding.
 - `createWeaverseNextRuntime` / `bindWeaverseNextStudioRuntime` — lower-level runtime helpers.
 - `revalidateWeaverseNextItem()` — client-side per-item revalidation helper wired by `WeaverseNextStudio`.
@@ -337,7 +337,7 @@ Studio has two separate pieces.
 
 ### 1. Root-level script connector
 
-Mount `WeaverseNextStudioConnect` once near the app root. It loads the Studio bridge script in design/preview/revision contexts and does nothing in published mode. For the current alpha migration, the connector defaults to the existing Hydrogen bridge path; pass `framework="next"` after Builder serves `/static/studio/next/*`.
+Mount `WeaverseNextStudioConnect` once near the app root. It loads the Next Studio bridge script in design/preview/revision contexts and does nothing in published mode.
 
 ```tsx
 // app/weaverse-next/studio-connect.tsx
@@ -346,8 +346,7 @@ Mount `WeaverseNextStudioConnect` once near the app root. It loads the Studio br
 import { WeaverseNextStudioConnect } from '@weaverse/next'
 
 export function StudioConnect() {
-  // Use `framework="next"` after Builder serves `/static/studio/next/*`.
-  return <WeaverseNextStudioConnect framework="next" />
+  return <WeaverseNextStudioConnect />
 }
 ```
 

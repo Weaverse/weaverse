@@ -81,17 +81,13 @@ function last(searchParams: URLSearchParams, key: string): string | null {
   return values.length ? (values.at(-1) ?? null) : null
 }
 
-export type WeaverseNextStudioFramework = 'hydrogen' | 'next'
-
 export interface ResolveWeaverseNextStudioScriptSrcOptions {
-  framework?: WeaverseNextStudioFramework
   storefrontHostname?: string
 }
 
 /**
- * Resolve the Studio script URL from request/search context. Defaults to the
- * existing Hydrogen bridge path for compatibility during the alpha migration;
- * pass `framework: 'next'` to opt into the dedicated Next bridge path.
+ * Resolve the Studio script URL from request/search context. `@weaverse/next`
+ * uses the dedicated Next bridge path served by Builder.
  */
 export function resolveWeaverseNextStudioScriptSrc(
   context?: WeaverseNextRequestContext,
@@ -120,9 +116,8 @@ export function resolveWeaverseNextStudioScriptSrc(
     return null
   }
 
-  let framework = options.framework ?? 'hydrogen'
   let bundle = isDesignMode ? 'index.js' : 'preview.js'
   let version = last(searchParams, 'weaverseVersion')
-  let url = `${origin}/static/studio/${framework}/${bundle}`
+  let url = `${origin}/static/studio/next/${bundle}`
   return version ? `${url}?v=${encodeURIComponent(version)}` : url
 }
