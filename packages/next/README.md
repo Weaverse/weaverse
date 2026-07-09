@@ -407,6 +407,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 ```
 
+Mounting it in the root layout (rather than per-page) also covers App Router
+routes that never render `WeaverseNextRenderer`, such as `not-found.tsx` and
+`error.tsx` — Studio needs the bridge script loaded before a page tree
+exists, and the root layout still renders around those routes. This is
+SSR-safe: `WeaverseNextStudioConnect` only touches `document` inside a
+`useEffect`, so it is a no-op during server rendering.
+
 ### 2. Page-level runtime binding
 
 `WeaverseNextRenderer` creates and binds the page runtime. Internally, `WeaverseNextStudio` maps Studio internals to Next App Router:
@@ -484,5 +491,5 @@ app/collections/[handle]/page.tsx            # collection route Weaverse load
 
 - This package is still alpha; API names may change before stable.
 - Next does not provide Hydrogen's global React Router loader context, so apps should keep a small `getWeaverseServerClient(...)` helper.
-- Translation/static-text sidecar parity, multiple Weaverse runtimes on one URL, 404/error-route Studio connection smoke, and global sections are later hardening items.
+- Translation/static-text sidecar parity, multiple Weaverse runtimes on one URL, and global sections are later hardening items.
 - Full Shopify request-handler/redirect parity is app-level follow-up work, not owned by this package yet.

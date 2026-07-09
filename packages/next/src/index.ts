@@ -55,6 +55,8 @@ export {
   type WeaverseNextStudioBridgeProps,
 } from './studio-bridge'
 export {
+  type LoadWeaverseNextStudioScriptOptions,
+  loadWeaverseNextStudioScript,
   WeaverseNextStudioConnect,
   type WeaverseNextStudioConnectProps,
 } from './studio-connect'
