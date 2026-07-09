@@ -8,6 +8,8 @@ import type {
   WeaverseNextComponent,
   WeaverseNextComponentData,
   WeaverseNextConfigs,
+  WeaverseNextCustomPageEntry,
+  WeaverseNextFetchCustomPagesOptions,
   WeaverseNextFetchOptions,
   WeaverseNextLoaderData,
   WeaverseNextLoadPageInput,
@@ -28,6 +30,7 @@ import { normalizeNextPageUrl, resolveRequestUrl } from './normalize-page-url'
 const DEFAULT_FETCH_TIMEOUT_MS = 10_000
 const RANDOM_ID_RADIX = 36
 const RANDOM_ID_SLICE_START = 2
+const MAX_CUSTOM_PAGE_PAGES = 100
 
 const JSON_HEADERS = {
   'Content-Type': 'application/json',
@@ -221,6 +224,77 @@ class NextServerClient implements WeaverseNextServerClient {
     } finally {
       clearTimeout(timeoutId)
     }
+  }
+
+  private _buildCustomPagesUrl(
+    projectId: string,
+    options: WeaverseNextFetchCustomPagesOptions,
+    cursor: string | null
+  ) {
+    let params = new URLSearchParams()
+    if (options.locale) {
+      params.set('locale', options.locale)
+    }
+    if (options.limit) {
+      params.set('limit', String(options.limit))
+    }
+    if (cursor) {
+      params.set('cursor', cursor)
+    }
+    let qs = params.toString()
+    return `${this._baseConfigs.weaverseApiBase}/api/public/v1/projects/${projectId}/custom-pages${
+      qs ? `?${qs}` : ''
+    }`
+  }
+
+  /**
+   * Fetch all published custom pages for sitemap generation. Mirrors Hydrogen's
+   * helper but uses Next's fetch cache knobs (`revalidate` / `tags`). It returns
+   * accumulated results on partial pagination failure so a single API hiccup
+   * does not break sitemap generation entirely.
+   */
+  fetchCustomPages = async (
+    options: WeaverseNextFetchCustomPagesOptions = {}
+  ): Promise<WeaverseNextCustomPageEntry[]> => {
+    let projectId = await this.resolveProjectId()
+    let entries: WeaverseNextCustomPageEntry[] = []
+    if (!projectId) {
+      console.warn(
+        '[WeaverseNext] Failed to fetch custom pages: missing projectId'
+      )
+      return entries
+    }
+
+    let cursor: string | null = null
+    for (let page = 0; page < MAX_CUSTOM_PAGE_PAGES; page += 1) {
+      let url = this._buildCustomPagesUrl(projectId, options, cursor)
+
+      try {
+        let result = await this.fetchWithCache<{
+          data?: WeaverseNextCustomPageEntry[]
+          nextCursor?: string | null
+        }>(url, {
+          revalidate: options.revalidate,
+          tags: options.tags,
+        })
+        entries.push(...(result.data ?? []))
+        if (!result.nextCursor) {
+          return entries
+        }
+        cursor = result.nextCursor
+      } catch (error) {
+        let message = error instanceof Error ? error.message : String(error)
+        console.warn(
+          entries.length === 0
+            ? `[WeaverseNext] Failed to fetch custom pages: ${message}`
+            : `[WeaverseNext] Custom pages pagination interrupted: ${message}`
+        )
+        return entries
+      }
+    }
+
+    console.warn('[WeaverseNext] Custom pages pagination cap reached')
+    return entries
   }
 
   private _generateFallbackPage(message: string): WeaverseNextPageData {

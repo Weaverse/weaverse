@@ -6,6 +6,11 @@
 // `context.weaverse.loadPage(...)` pattern. Kept on a dedicated subpath so the
 // root `@weaverse/next` entry stays free of server-only fetch assumptions.
 
+export {
+  formatWeaverseNextSeoMetadata,
+  getWeaverseNextSeoMetadata,
+  type WeaverseNextSeoMetadata,
+} from './seo'
 export { getWeaverseNextConfigs } from './server/configs'
 export {
   normalizeNextPageUrl,
@@ -21,6 +26,8 @@ export type {
   WeaverseNextBaseConfigs,
   WeaverseNextCacheConfig,
   WeaverseNextConfigs,
+  WeaverseNextCustomPageEntry,
+  WeaverseNextFetchCustomPagesOptions,
   WeaverseNextFetchOptions,
   WeaverseNextProjectId,
   WeaverseNextServerClient,

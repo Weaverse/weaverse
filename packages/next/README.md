@@ -11,8 +11,9 @@ It is the Next equivalent of the useful parts of `@weaverse/hydrogen`, but the a
 - Package status: alpha (`0.1.0-alpha.x`).
 - Target runtime: Next App Router.
 - Peer dependencies: `next >=14`, `react >=19`, `react-dom >=19`.
-- Studio bridge: supported through the existing Studio bridge script plus Next-native runtime callbacks.
+- Studio bridge: supported through the dedicated Next Studio bridge script (`/static/studio/next/*`) plus Next-native runtime callbacks.
 - Resource-picker revalidation: supported through per-item loader revalidation, not full-page `router.refresh()` on the happy path.
+- Low-risk Hydrogen parity helpers: custom-page sitemap fetching, Next metadata conversion, and resource-picker type aliases are available.
 
 ## Quick answers for the team
 
@@ -127,6 +128,7 @@ packages/next/src/
   use-weaverse-next-studio.tsx     # Next-native Studio binder using next/navigation
   revalidate-item.ts               # client per-item loader revalidation
   request-info.ts                  # Studio-compatible request info
+  seo.ts                           # Next Metadata-compatible page SEO helpers
   theme-settings-store.ts          # Studio-compatible theme settings store
   types.ts                         # shared public types
   server/
@@ -160,6 +162,7 @@ Main exports:
 - `createWeaverseNextRevalidateHandler(config)` — route-handler factory for Studio per-item loader revalidation.
 - `getWeaverseNextConfigs(...)` — config/env/query resolution.
 - `normalizeNextPageUrl(...)` / `resolveRequestUrl(...)` — stable page URL helpers.
+- `getWeaverseNextSeoMetadata(...)` / `formatWeaverseNextSeoMetadata(...)` — convert Weaverse `page.seo` into a Next Metadata-compatible object.
 
 ### `createWeaverseNextServerClient`
 
@@ -241,6 +244,7 @@ let theme = await weaverse.loadThemeSettings()
 | --- | --- |
 | `loadPage(input?)` | Fetches the page from `/api/public/project`, builds `WeaverseNextLoaderData`, runs component loaders, and returns page/project/config data. In section preview mode it can synthesize a single-section preview page. |
 | `loadThemeSettings(options?)` | Fetches `/api/public/project_configs`, merges schema defaults under merchant settings, returns theme settings/static content/schema data for design mode. |
+| `fetchCustomPages(options?)` | Fetches published custom pages from `/api/public/v1/projects/:projectId/custom-pages` for sitemap generation, paginating automatically and returning partial results if a later page fails. |
 | `fetchWithCache<T>(url, options?)` | Next-aware fetch helper. Uses `cache: 'no-store'` in design/revision preview and `next: { revalidate, tags }` in published mode. |
 | `resolveProjectId()` / `projectId` | Resolves project id from Studio query, config function/string, or env. |
 | `components` | Server component registry. Components may include `schema` and optional `loader`. |
@@ -271,6 +275,43 @@ Loader args match the page-load and revalidation paths:
 - `commerce` — explicit commerce context.
 - `weaverse` — server/client object with `weaverse.storefront` compatibility alias.
 - `context` — request context.
+
+### SEO metadata
+
+Use the server entry in `generateMetadata()` to map Weaverse `page.seo` into a Next Metadata-compatible object:
+
+```ts
+// app/pages/[handle]/page.tsx
+import { getWeaverseNextSeoMetadata } from '@weaverse/next/server'
+
+export async function generateMetadata(props: {
+  params: Promise<{ handle: string }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}) {
+  let { handle } = await props.params
+  let weaverse = await getWeaverseServerClient(props.searchParams, `/pages/${handle}`)
+  let data = await weaverse.loadPage({ type: 'PAGE', handle })
+  return getWeaverseNextSeoMetadata(data)
+}
+```
+
+The helper is pure and does not import `next/*`; its return shape is intentionally structural so the app can type it as `Metadata` if desired.
+
+### Custom pages for sitemap generation
+
+`fetchCustomPages()` mirrors Hydrogen's sitemap helper and accepts Next cache knobs:
+
+```ts
+let weaverse = await getWeaverseServerClient(Promise.resolve({}), '/')
+let pages = await weaverse.fetchCustomPages({
+  locale: 'en-us',
+  limit: 100,
+  revalidate: 3600,
+  tags: ['weaverse:custom-pages'],
+})
+```
+
+It paginates until the API returns `nextCursor: null`; if a later page fails, it returns the pages already fetched instead of throwing.
 
 ## Rendering in a Next route
 
@@ -443,6 +484,5 @@ app/collections/[handle]/page.tsx            # collection route Weaverse load
 
 - This package is still alpha; API names may change before stable.
 - Next does not provide Hydrogen's global React Router loader context, so apps should keep a small `getWeaverseServerClient(...)` helper.
+- Translation/static-text sidecar parity, multiple Weaverse runtimes on one URL, 404/error-route Studio connection smoke, and global sections are later hardening items.
 - Full Shopify request-handler/redirect parity is app-level follow-up work, not owned by this package yet.
-- Translation/static-text sidecar parity, multiple Weaverse runtimes on one URL, and 404/error-route Studio connection are later hardening items.
-- The Studio bridge currently reuses the existing Studio bridge bundle until a Next-specific bundle is proven necessary.

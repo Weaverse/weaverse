@@ -2,7 +2,7 @@ import type {
   WeaverseElement,
   WeaverseResourcePickerData,
 } from '@weaverse/react'
-import type { PageType, SchemaType } from '@weaverse/schema'
+import type { PageSEOData, PageType, SchemaType } from '@weaverse/schema'
 import type { ComponentType, ForwardRefExoticComponent, ReactNode } from 'react'
 
 export interface WeaverseNextRequestInfo {
@@ -121,6 +121,8 @@ export interface WeaverseNextPageData {
   items: WeaverseNextComponentData[]
   name?: string
   rootId?: string
+  /** Page-level SEO metadata published by Weaverse Builder. */
+  seo?: PageSEOData | null
   [key: string]: unknown
 }
 
@@ -220,6 +222,9 @@ export interface WeaverseNextClient {
 
 export type WeaverseProduct = WeaverseResourcePickerData
 export type WeaverseCollection = WeaverseResourcePickerData
+export type WeaverseBlog = WeaverseResourcePickerData
+export type WeaverseArticle = WeaverseResourcePickerData
+export type WeaverseMetaObject = WeaverseResourcePickerData
 
 // ─── Server client (`@weaverse/next/server`) ──────────────────────────────
 
@@ -309,6 +314,21 @@ export interface WeaverseNextThemeSettingsResponse {
 export interface WeaverseNextThemeSettingsOptions
   extends WeaverseNextCacheConfig {}
 
+export interface WeaverseNextCustomPageEntry {
+  changeFrequency?: 'daily' | 'weekly' | 'monthly'
+  handle: string
+  lastModified: string
+  locale: string | null
+  path: string
+  priority?: number
+}
+
+export interface WeaverseNextFetchCustomPagesOptions
+  extends WeaverseNextCacheConfig {
+  limit?: number
+  locale?: string
+}
+
 /**
  * Config for {@link createWeaverseNextServerClient}. Unlike
  * {@link WeaverseNextClientConfig} (which delegates network I/O to injected
@@ -346,6 +366,9 @@ export interface WeaverseNextServerClientConfig {
 export interface WeaverseNextServerClient extends WeaverseNextClient {
   /** Public, client-safe resolved configs (no server secrets). */
   configs: WeaverseNextConfigs
+  fetchCustomPages: (
+    options?: WeaverseNextFetchCustomPagesOptions
+  ) => Promise<WeaverseNextCustomPageEntry[]>
   fetchWithCache: <T = unknown>(
     url: string,
     options?: WeaverseNextFetchOptions
