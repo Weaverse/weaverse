@@ -3,6 +3,7 @@ import { createSchema } from '../src/index'
 import {
   createWeaverseNextServerClient,
   getWeaverseNextConfigs,
+  getWeaverseNextSeoMetadata,
   normalizeNextPageUrl,
   resolveRequestUrl,
 } from '../src/server'
@@ -494,7 +495,158 @@ describe('createWeaverseNextServerClient loadThemeSettings', () => {
   })
 })
 
-// ─── 3b. trusted weaverseHost normalization ───────────────────────────
+// ─── 3b. custom pages sitemap helper ─────────────────────────────────
+
+describe('createWeaverseNextServerClient fetchCustomPages', () => {
+  it('should_fetch_paginated_custom_pages_with_locale_and_limit', async () => {
+    let fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: [
+            {
+              handle: 'about',
+              lastModified: '2026-07-01T00:00:00.000Z',
+              locale: 'en-us',
+              path: '/pages/about',
+            },
+          ],
+          nextCursor: 'cursor-2',
+        })
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: [
+            {
+              handle: 'faq',
+              lastModified: '2026-07-02T00:00:00.000Z',
+              locale: 'en-us',
+              path: '/pages/faq',
+            },
+          ],
+          nextCursor: null,
+        })
+      ) as unknown as typeof fetch & { mock: { calls: unknown[][] } }
+    let client = createWeaverseNextServerClient({
+      components: [heroComponent],
+      projectId: 'proj-123',
+      fetch: fetchMock,
+    })
+
+    let pages = await client.fetchCustomPages({
+      locale: 'en-us',
+      limit: 1,
+      revalidate: 3600,
+      tags: ['weaverse:custom-pages'],
+    })
+
+    expect(pages.map((page) => page.handle)).toEqual(['about', 'faq'])
+    let [firstUrl, firstInit] = fetchMock.mock.calls[0] as [
+      string,
+      RequestInit & { next?: { revalidate?: number; tags?: string[] } },
+    ]
+    expect(firstUrl).toBe(
+      'https://api.weaverse.io/api/public/v1/projects/proj-123/custom-pages?locale=en-us&limit=1'
+    )
+    expect(firstInit.next).toEqual({
+      revalidate: 3600,
+      tags: ['weaverse:custom-pages'],
+    })
+    let [secondUrl] = fetchMock.mock.calls[1] as [string, RequestInit]
+    expect(secondUrl).toBe(
+      'https://api.weaverse.io/api/public/v1/projects/proj-123/custom-pages?locale=en-us&limit=1&cursor=cursor-2'
+    )
+  })
+
+  it('should_return_partial_results_when_later_page_fails', async () => {
+    let warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+    let fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: [
+            {
+              handle: 'about',
+              lastModified: '2026-07-01T00:00:00.000Z',
+              locale: null,
+              path: '/pages/about',
+            },
+          ],
+          nextCursor: 'cursor-2',
+        })
+      )
+      .mockRejectedValueOnce(
+        new Error('network down')
+      ) as unknown as typeof fetch
+    let client = createWeaverseNextServerClient({
+      components: [heroComponent],
+      projectId: 'proj-123',
+      fetch: fetchMock,
+    })
+
+    let pages = await client.fetchCustomPages()
+
+    expect(pages).toHaveLength(1)
+    expect(pages[0].handle).toBe('about')
+    warn.mockRestore()
+  })
+})
+
+// ─── 3c. SEO metadata helper ───────────────────────────────────────────
+
+describe('getWeaverseNextSeoMetadata', () => {
+  it('should_convert_weaverse_seo_payload_to_next_metadata_shape', () => {
+    let metadata = getWeaverseNextSeoMetadata({
+      page: {
+        id: 'page-1',
+        items: [],
+        seo: {
+          title: 'SEO title',
+          description: 'SEO description',
+          keywords: 'shop,commerce',
+          canonicalUrl: 'https://shop.example/pages/about',
+          openGraph: {
+            title: 'OG title',
+            description: 'OG description',
+            image: 'https://cdn.example/og.jpg',
+          },
+          twitter: {
+            title: 'Twitter title',
+            image: 'https://cdn.example/tw.jpg',
+          },
+          robots: { index: false, follow: true },
+        },
+      },
+    })
+
+    expect(metadata).toEqual({
+      title: 'SEO title',
+      description: 'SEO description',
+      keywords: 'shop,commerce',
+      alternates: { canonical: 'https://shop.example/pages/about' },
+      openGraph: {
+        title: 'OG title',
+        description: 'OG description',
+        images: ['https://cdn.example/og.jpg'],
+        type: 'website',
+      },
+      twitter: {
+        card: 'summary',
+        title: 'Twitter title',
+        images: ['https://cdn.example/tw.jpg'],
+      },
+      robots: { index: false, follow: true },
+    })
+  })
+
+  it('should_return_default_index_follow_when_seo_is_missing', () => {
+    expect(getWeaverseNextSeoMetadata(null)).toEqual({
+      robots: { index: true, follow: true },
+    })
+  })
+})
+
+// ─── 3d. trusted weaverseHost normalization ───────────────────────────
 
 describe('getWeaverseNextConfigs trusted host normalization', () => {
   it('should_canonicalize_a_trusted_query_host_to_its_origin', () => {

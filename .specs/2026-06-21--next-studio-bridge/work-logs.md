@@ -146,3 +146,31 @@ server-only loaders) are correct; the remaining gap was SDK-side only.
 Publish/pack a new `@weaverse/next` alpha, install it in the POC, and re-run
 the resource-picker smoke: pick a product → loading bar → section renders the
 new product without publish + Studio reload.
+
+## 2026-07-09 — low-risk Hydrogen parity slice
+
+After the dedicated Next Studio bridge path was validated end-to-end in the POC, #2659 was audited for remaining `@weaverse/hydrogen` vs `@weaverse/next` gaps. This slice intentionally tackles low-risk parity before deeper Studio/runtime features.
+
+### Scope
+
+- Add custom-page sitemap helper parity on `WeaverseNextServerClient.fetchCustomPages()`.
+- Add Next Metadata-compatible SEO conversion helpers (`getWeaverseNextSeoMetadata`, `formatWeaverseNextSeoMetadata`).
+- Add missing resource picker data aliases (`WeaverseBlog`, `WeaverseArticle`, `WeaverseMetaObject`) next to product/collection aliases.
+- Update `packages/next/README.md` to reflect the dedicated `/static/studio/next/*` bridge and new helper APIs.
+
+### Non-scope
+
+- Translation/static-text sidecar runtime and save-payload support.
+- Multi-runtime/nested page selection semantics.
+- Global sections.
+- Next request-handler/redirect ownership decision.
+
+### Verification target
+
+```bash
+pnpm --filter @weaverse/next test
+pnpm --filter @weaverse/next typecheck
+pnpm --filter @weaverse/next build
+pnpm exec biome check packages/next/src packages/next/__tests__ packages/next/README.md --diagnostic-level=error
+git diff --check
+```

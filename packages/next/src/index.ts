@@ -46,6 +46,11 @@ export {
   WeaverseNextRuntime,
 } from './runtime'
 export {
+  formatWeaverseNextSeoMetadata,
+  getWeaverseNextSeoMetadata,
+  type WeaverseNextSeoMetadata,
+} from './seo'
+export {
   WeaverseNextStudioBridge,
   type WeaverseNextStudioBridgeProps,
 } from './studio-bridge'
@@ -68,7 +73,10 @@ export {
   createWeaverseNextThemeSettingsStore,
 } from './theme-settings-store'
 export type {
+  WeaverseArticle,
+  WeaverseBlog,
   WeaverseCollection,
+  WeaverseMetaObject,
   WeaverseNextClient,
   WeaverseNextClientConfig,
   WeaverseNextCommerceContext,
@@ -76,6 +84,8 @@ export type {
   WeaverseNextComponentData,
   WeaverseNextComponentLoaderArgs,
   WeaverseNextComponentProps,
+  WeaverseNextCustomPageEntry,
+  WeaverseNextFetchCustomPagesOptions,
   WeaverseNextI18n,
   WeaverseNextLoaderData,
   WeaverseNextLoadPageInput,
