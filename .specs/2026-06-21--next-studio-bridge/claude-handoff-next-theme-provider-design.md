@@ -91,3 +91,25 @@ Print:
 - file written
 - recommended pattern
 - any blockers/open questions
+
+## Revision note (post-review correction)
+
+The first pass of `next-theme-provider-design.md` recommended keeping the
+theme settings store + `WeaverseNextProvider` route-scoped, with only Studio
+connect at root. Leo reviewed and corrected this: it breaks the real
+Hydrogen/Pilot architecture, where global modules (`Header`, `Footer`,
+popups, global CSS) render once in root and depend on `useThemeSettings()`
+being readable from root (`app/root.tsx`'s `withWeaverse(RootLayout)` +
+`ThemeSettingsStoreContext`).
+
+The design doc was revised in place to recommend a **root-owned theme
+settings store** (new `WeaverseNextRootProvider`, root-scoped) with the
+**route-scoped page runtime/renderer preserved** (page data still needs
+`searchParams`, so it stays per-route). `WeaverseNextProvider` gains ambient
+adoption of the root store instead of always creating its own, so Studio
+edits and the page renderer share the same instance the root modules read.
+POC PR #1 is now explicitly framed as proving only the store/update path at
+route scope, not the final architecture.
+
+See the "Correction" section at the top of `next-theme-provider-design.md`
+for the full evidence and reasoning.
