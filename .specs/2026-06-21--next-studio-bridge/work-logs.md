@@ -174,3 +174,33 @@ pnpm --filter @weaverse/next build
 pnpm exec biome check packages/next/src packages/next/__tests__ packages/next/README.md --diagnostic-level=error
 git diff --check
 ```
+
+## 2026-07-09 — 404/error-route Studio connect smoke (issue #2659)
+
+Continuing the parity roadmap after the low-risk Hydrogen parity slice: the next low-risk item was making the package-level 404/error-route Studio-connect story explicit and covered by tests.
+
+### Scope
+
+- Extracted `loadWeaverseNextStudioScript(context?, options?)` from `WeaverseNextStudioConnect` in `packages/next/src/studio-connect.tsx` — a pure-ish helper (resolve script src, dedupe by src, append to `document.head` when `document` exists; SSR-safe no-op otherwise) that can be exercised in Node tests without React effect execution. `WeaverseNextStudioConnect` now just calls it from `useEffect`.
+- Exported `loadWeaverseNextStudioScript` / `LoadWeaverseNextStudioScriptOptions` from `@weaverse/next` (`packages/next/src/index.ts`), matching the existing `resolveWeaverseNextStudioScriptSrc` export pattern.
+- Added `packages/next/__tests__/studio-connect.test.ts` with a tiny `document`/`head` stub (Node env, no jsdom) covering: design-mode script load with no page/runtime/renderer data (simulating a `not-found.tsx` / `error.tsx` root layout), preview-mode script load, src-dedupe on repeated calls, SSR no-op when `document` is undefined, and rejection of an untrusted `weaverseHost`.
+- Updated `packages/next/README.md`: documented that mounting `WeaverseNextStudioConnect` in the root layout also covers `not-found.tsx` / `error.tsx` routes (Studio needs the bridge script before a page tree exists), and removed the now-covered "404/error-route Studio connection smoke" line from Current limitations.
+
+### Non-scope
+
+- Translation/static-text, global sections, multi-runtime/nested Weaverse behavior, request-handler/redirect parity.
+- No Builder changes.
+
+### Verification
+
+```bash
+pnpm --filter @weaverse/next test       # 5 files, 76 tests passed
+pnpm --filter @weaverse/next typecheck  # passed
+pnpm --filter @weaverse/next build      # passed
+pnpm exec biome check packages/next/src packages/next/__tests__ packages/next/README.md --diagnostic-level=error  # clean
+git diff --check                        # clean
+```
+
+### Remaining risk
+
+- This is package-level unit coverage of the script-loading behavior only; it does not exercise a real Next `not-found.tsx`/`error.tsx` route or the browser DOM. Manual/E2E confirmation in the POC (mount `WeaverseNextStudioConnect` in root layout, hit a 404 route in design mode, confirm the bridge script tag appears) is still open.
