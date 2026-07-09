@@ -226,6 +226,27 @@ class NextServerClient implements WeaverseNextServerClient {
     }
   }
 
+  private _buildCustomPagesUrl(
+    projectId: string,
+    options: WeaverseNextFetchCustomPagesOptions,
+    cursor: string | null
+  ) {
+    let params = new URLSearchParams()
+    if (options.locale) {
+      params.set('locale', options.locale)
+    }
+    if (options.limit) {
+      params.set('limit', String(options.limit))
+    }
+    if (cursor) {
+      params.set('cursor', cursor)
+    }
+    let qs = params.toString()
+    return `${this._baseConfigs.weaverseApiBase}/api/public/v1/projects/${projectId}/custom-pages${
+      qs ? `?${qs}` : ''
+    }`
+  }
+
   /**
    * Fetch all published custom pages for sitemap generation. Mirrors Hydrogen's
    * helper but uses Next's fetch cache knobs (`revalidate` / `tags`). It returns
@@ -246,21 +267,7 @@ class NextServerClient implements WeaverseNextServerClient {
 
     let cursor: string | null = null
     for (let page = 0; page < MAX_CUSTOM_PAGE_PAGES; page += 1) {
-      let params = new URLSearchParams()
-      if (options.locale) {
-        params.set('locale', options.locale)
-      }
-      if (options.limit) {
-        params.set('limit', String(options.limit))
-      }
-      if (cursor) {
-        params.set('cursor', cursor)
-      }
-
-      let qs = params.toString()
-      let url = `${this._baseConfigs.weaverseApiBase}/api/public/v1/projects/${projectId}/custom-pages${
-        qs ? `?${qs}` : ''
-      }`
+      let url = this._buildCustomPagesUrl(projectId, options, cursor)
 
       try {
         let result = await this.fetchWithCache<{
