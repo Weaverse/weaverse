@@ -41,6 +41,11 @@ export {
   revalidateWeaverseNextItem,
 } from './revalidate-item'
 export {
+  type WeaverseNextRootContextValue,
+  WeaverseNextRootProvider,
+  type WeaverseNextRootProviderProps,
+} from './root-provider'
+export {
   bindWeaverseNextStudioRuntime,
   createWeaverseNextRuntime,
   WeaverseNextRuntime,

@@ -204,3 +204,75 @@ git diff --check                        # clean
 ### Remaining risk
 
 - This is package-level unit coverage of the script-loading behavior only; it does not exercise a real Next `not-found.tsx`/`error.tsx` route or the browser DOM. Manual/E2E confirmation in the POC (mount `WeaverseNextStudioConnect` in root layout, hit a 404 route in design mode, confirm the bridge script tag appears) is still open.
+
+## 2026-07-09 — root-owned theme provider (`next-theme-provider-design.md` implementation slice)
+
+Implemented the SDK slice from `next-theme-provider-design.md`: a root-owned theme settings store shared between global modules (`Header`/`Footer`, mounted once in `app/layout.tsx`) and the route-scoped page runtime, matching Hydrogen's `withWeaverse()` root store split.
+
+### Scope
+
+- Added `WeaverseNextRootProvider` (`packages/next/src/root-provider.tsx`, `'use client'`): creates exactly one `WeaverseNextThemeSettingsStore` via `useRef` (not `useMemo`, so a parent re-render never replaces it), seeded from `initialThemeSettings`/`themeSchema`/`publicEnv`. Updates the existing store in place (`updateThemeSettings`) if `initialThemeSettings` changes identity after mount, rather than replacing it. Also renders `WeaverseNextContext` with a minimal value (`{ themeSettings, themeSettingsStore }`) so `useThemeSettings()` works for components mounted directly under the root provider, with no route-level `WeaverseNextProvider` above them.
+- Added ambient-store adoption to `WeaverseNextProvider` (`packages/next/src/provider.tsx`): reads `WeaverseNextRootContext` via `useContext`; if present, reuses `rootContext.themeSettingsStore` instead of creating a second store (the fallback `useMemo`-created store isn't even constructed in that case). If the route also supplies `themeSettings`/`client.themeSettings`, merges that data into the adopted root store in place inside a `useEffect` (guarded by a ref keyed on value identity so it doesn't re-merge/re-notify every effect run) — the root's initial theme is authoritative for SSR, and the route override applies after client mount. Apps that never mount `WeaverseNextRootProvider` fall back to the pre-existing per-render `useMemo` store, unchanged (still synchronous on SSR).
+- `WeaverseNextRenderer`/`runtime.ts` needed no changes — they already read `context.themeSettingsStore` and pass it through to `runtime.internal.themeSettingsStore`, so once the route provider adopts the root store, the page runtime and Studio's `updateThemeSettings()` calls land on the same instance the root modules read.
+- Exported `WeaverseNextRootProvider`, `WeaverseNextRootProviderProps`, `WeaverseNextRootContextValue` from `packages/next/src/index.ts`.
+- `provider.tsx` and `root-provider.tsx` have a (safe) circular import — each only references the other's export inside a function body (`useContext`/JSX), never at module top-level evaluation, so this is fine under ESM and confirmed clean in the `tsup` build.
+- Added a `## Root theme provider` section to `packages/next/README.md` with a minimal `app/layout.tsx` example and a note on the adoption/merge/fallback contract.
+
+### Tests
+
+Added a `WeaverseNextRootProvider` describe block to `packages/next/__tests__/next-adapter.test.tsx` (5 new tests): root-only consumer, root's SSR value staying authoritative even when a route provider carries pending route theme data (the merge itself now runs in a client-only effect, so it doesn't fire under `renderToStaticMarkup`), root-only settings preserved when the route provider has no explicit theme data, the page renderer (`WeaverseNextRenderer`) observing the same root store instance, and unchanged backward-compatible behavior with no root provider mounted.
+
+Hit one test-fixture pitfall worth flagging for future SDK test authors: `@weaverse/core`'s `Weaverse.itemInstances` is a **process-wide static `Map` keyed by item id** (`packages/core/src/core.ts:89`), and `Weaverse.initProject` calls `itemInstance.setData(item)` on an id collision instead of constructing a fresh item — so reusing a fixture item id like `'item-root'` across unrelated tests in the same file (even with different item `type`s) silently corrupts a *later* test's rendered output. Fixed by giving the new renderer test unique page/item ids (`'page-theme-aware'` / `'theme-aware-root'`); this is pre-existing library behavior, not a new bug introduced by this slice.
+
+### Verification
+
+```bash
+pnpm --filter @weaverse/next test       # 5 files, 81 tests passed
+pnpm --filter @weaverse/next typecheck  # passed
+pnpm --filter @weaverse/next build      # passed (tsup: ESM/CJS/DTS all succeeded)
+pnpm exec biome check packages/next/src packages/next/__tests__ packages/next/README.md --diagnostic-level=error  # clean
+```
+
+### Non-scope
+
+- Starter convention files (`app/weaverse-next/root-provider.tsx`, `loadWeaverseNextRootTheme()`, moving `Header`/`Footer` in the POC) — POC repo untouched per this run's guardrails.
+- Design-mode client-side theme refresh before Studio's own push (flagged as an open product/UX question in the design doc, not a technical blocker).
+- Translation/static-text sidecar, global sections, i18n beyond passthrough, redirects.
+
+### Remaining risk
+
+- Not yet verified against a real Next App Router app (root render smoke, navigation-without-remount smoke, Studio edit propagation smoke from the design doc's verification plan are all POC-level manual/E2E steps, not covered by this package-level unit slice).
+
+## 2026-07-09 — autoreview fixes on the root-owned theme provider slice
+
+Fixed both `[P2]` findings from `autoreview-next-root-theme-provider.md` against the root-owned theme provider slice above.
+
+### Scope
+
+- `packages/next/src/root-provider.tsx`: `rootContextValue` and `contextValue` were plain object literals rebuilt every render with a new identity even though the underlying `themeSettingsStore` (`useRef`-stable) never changes — causing every `useThemeSettings()` consumer (root `Header`/`Footer`) to re-render on every root layout re-render. Wrapped both in `useMemo` keyed on `themeSettingsStore`.
+- `packages/next/src/provider.tsx`: the route-level merge of `themeSettings`/`client.themeSettings` into the adopted root store ran directly in the render function body, guarded only by a ref. Mutating a store shared outside the component's subtree during render violates React's pure-render contract and is a latent correctness risk under concurrent rendering/StrictMode double-invocation, even though it worked for the primary SSR path. Moved the merge into a `useEffect` (same ref guard, now keyed off effect re-runs instead of render re-runs).
+- `packages/next/src/provider.tsx`: removed `themeSettingsValue` from the context `value` memo dependencies. In fallback mode the theme value is represented by a new `themeSettingsStore`; in root-adoption mode the post-mount merge effect notifies `useThemeSettings()` subscribers. Keeping `themeSettingsValue` there would recreate context with a stale root snapshot before the effect fires, causing an avoidable extra render.
+
+### Product semantics change
+
+Moving the merge to an effect changes what SSR renders when a route still passes `themeSettings`/`client.themeSettings` while a root provider is mounted: previously the merge was synchronous so SSR showed the *route's* value; now the merge is client-only, so SSR shows the *root's* initial value, and the route override applies after client mount. This is the intended direction, not an accepted regression — routes shouldn't be loading their own theme settings by default in the final starter, and the root's published-mode initial theme is the priority. Backward compatibility when no root provider is mounted is unchanged: `WeaverseNextProvider client={client with themeSettings}` still renders those settings synchronously on SSR via its own fallback store.
+
+### Tests
+
+- Renamed/rewrote `should_have_route_provider_adopt_the_root_store_and_merge_route_theme_settings` to `should_render_root_ssr_value_even_when_route_provider_carries_pending_theme_data` — now asserts SSR renders the root's value, not the route's, since the merge effect never runs under `renderToStaticMarkup`.
+- Rewrote `should_share_the_same_theme_store_between_root_and_the_page_renderer` to drop the route-level `themeSettings` override (which no longer merges synchronously) and instead prove store sharing by asserting the renderer/runtime path observes the root's own value directly.
+- The client-only merge effect itself has no dedicated unit test: this package's Vitest config runs in a plain `node` environment (no `jsdom`/`react-dom/test-utils`), and every existing provider test renders via `renderToStaticMarkup`, which never executes effects. This is a pre-existing test-environment gap, not something newly introduced by this fix.
+
+### Verification
+
+```bash
+pnpm --filter @weaverse/next test -- __tests__/next-adapter.test.tsx
+pnpm --filter @weaverse/next typecheck
+pnpm --filter @weaverse/next build
+pnpm exec biome check packages/next/src packages/next/__tests__ packages/next/README.md --diagnostic-level=error
+git diff --check
+```
+
+### Remaining risk
+
+- The client-only merge effect (route theme data landing in the root store after mount, and root `Header`/`Footer` re-rendering from it) is unverified by an automated test for the reason above — still an open item for a future jsdom-enabled test pass or POC-level manual check.

@@ -7,7 +7,7 @@
 | **Issue**        | [Weaverse/builder#2533](https://github.com/Weaverse/builder/issues/2533) |
 | **Branch**       | N/A (design-only spec; public PR [Weaverse/weaverse#470](https://github.com/Weaverse/weaverse/pull/470)) |
 | **Created**      | 2026-06-21                                                |
-| **Last Updated** | 2026-06-21                                                |
+| **Last Updated** | 2026-07-09                                                |
 
 ## Original Prompt
 
