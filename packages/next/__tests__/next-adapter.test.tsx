@@ -18,6 +18,7 @@ import {
   useWeaverseRootData,
   WeaverseNextProvider,
   WeaverseNextRenderer,
+  WeaverseNextRootProvider,
   WeaverseNextStudioConnect,
 } from '../src/index'
 import type {
@@ -136,6 +137,141 @@ describe('WeaverseNextProvider hooks', () => {
 
     // Assert
     expect(html).toContain('Free shipping')
+  })
+})
+
+// ─── 1b. Root-owned theme provider ────────────────────────────────────
+
+describe('WeaverseNextRootProvider', () => {
+  it('should_expose_themeSettings_at_root_without_a_route_provider', () => {
+    // Arrange
+    function Probe() {
+      let theme = useThemeSettings<{ topbarText: string }>()
+      return <span>{theme.topbarText}</span>
+    }
+
+    // Act
+    let html = renderToStaticMarkup(
+      <WeaverseNextRootProvider
+        initialThemeSettings={{ topbarText: 'Root free shipping' }}
+      >
+        <Probe />
+      </WeaverseNextRootProvider>
+    )
+
+    // Assert
+    expect(html).toContain('Root free shipping')
+  })
+
+  it('should_render_root_ssr_value_even_when_route_provider_carries_pending_theme_data', () => {
+    // Arrange — route provider supplies its own theme data on top of root's,
+    // but the merge into the root store runs in a client-only effect (not
+    // during render), so it never runs under `renderToStaticMarkup`.
+    let client = makeClient({ themeSettings: { topbarText: 'Route' } })
+
+    function Probe() {
+      let theme = useThemeSettings<{ topbarText: string }>()
+      return <span>{theme.topbarText}</span>
+    }
+
+    // Act
+    let html = renderToStaticMarkup(
+      <WeaverseNextRootProvider initialThemeSettings={{ topbarText: 'Root' }}>
+        <WeaverseNextProvider client={client}>
+          <Probe />
+        </WeaverseNextProvider>
+      </WeaverseNextRootProvider>
+    )
+
+    // Assert — root's initial theme is authoritative on SSR; the route
+    // override applies after client mount, not as a render-phase mutation.
+    expect(html).toContain('Root')
+    expect(html).not.toContain('Route')
+  })
+
+  it('should_keep_root_only_settings_when_route_provider_has_no_explicit_theme_data', () => {
+    // Arrange — route provider carries page data but no theme override.
+    let client = makeClient()
+
+    function Probe() {
+      let theme = useThemeSettings<{ topbarText: string }>()
+      return <span>{theme.topbarText}</span>
+    }
+
+    // Act
+    let html = renderToStaticMarkup(
+      <WeaverseNextRootProvider
+        initialThemeSettings={{ topbarText: 'Root only' }}
+      >
+        <WeaverseNextProvider client={client}>
+          <Probe />
+        </WeaverseNextProvider>
+      </WeaverseNextRootProvider>
+    )
+
+    // Assert
+    expect(html).toContain('Root only')
+  })
+
+  it('should_share_the_same_theme_store_between_root_and_the_page_renderer', () => {
+    // Arrange — a page-tree component reads useThemeSettings() through the
+    // renderer/runtime path; it must observe the root store's value, proving
+    // that path threads the same store instance instead of falling back to
+    // an empty per-route store. No route-level `themeSettings` here, so this
+    // is unaffected by the client-only route-merge effect.
+    let ThemeAware = () => {
+      let theme = useThemeSettings<{ topbarText: string }>()
+      return <div>{theme.topbarText}</div>
+    }
+    let themeAwareComponent = {
+      default: ThemeAware,
+      schema: createSchema({ type: 'theme-aware', title: 'Theme aware' }),
+    }
+    let client = createWeaverseNextClient({
+      projectId: 'proj-test',
+      components: [themeAwareComponent],
+    })
+    client.data = {
+      page: {
+        id: 'page-theme-aware',
+        rootId: 'theme-aware-root',
+        items: [{ id: 'theme-aware-root', type: 'theme-aware' }],
+      },
+    }
+
+    // Act
+    let html = renderToStaticMarkup(
+      <WeaverseNextRootProvider
+        initialThemeSettings={{ topbarText: 'Root shared' }}
+      >
+        <WeaverseNextProvider client={client}>
+          <WeaverseNextRenderer />
+        </WeaverseNextProvider>
+      </WeaverseNextRootProvider>
+    )
+
+    // Assert — the page renderer observes the same root store instance.
+    expect(html).toContain('Root shared')
+  })
+
+  it('should_keep_backward_compatible_behavior_when_no_root_provider_is_mounted', () => {
+    // Arrange — no WeaverseNextRootProvider anywhere in the tree.
+    let client = makeClient({ themeSettings: { topbarText: 'Standalone' } })
+
+    function Probe() {
+      let theme = useThemeSettings<{ topbarText: string }>()
+      return <span>{theme.topbarText}</span>
+    }
+
+    // Act
+    let html = renderToStaticMarkup(
+      <WeaverseNextProvider client={client}>
+        <Probe />
+      </WeaverseNextProvider>
+    )
+
+    // Assert
+    expect(html).toContain('Standalone')
   })
 })
 

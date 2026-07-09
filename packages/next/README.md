@@ -372,6 +372,57 @@ export function WeaversePage({ data }: { data: WeaverseNextLoaderData }) {
 }
 ```
 
+## Root theme provider
+
+Global modules (`Header`, `Footer`, popups, a CSS-var bridge) render once in
+`app/layout.tsx`, outside any route's `WeaverseNextProvider`. Mount
+`WeaverseNextRootProvider` there so `useThemeSettings()` works for them too,
+and so route-level providers share one theme settings store instead of each
+creating their own — matching Hydrogen's root-owned `withWeaverse()` store.
+
+```tsx
+// app/layout.tsx
+import { WeaverseNextRootProvider } from '@weaverse/next'
+import { getWeaverseServerClient } from './weaverse-next/server'
+
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  let weaverse = await getWeaverseServerClient(Promise.resolve({}), '/')
+  let theme = await weaverse.loadThemeSettings()
+
+  return (
+    <html lang="en">
+      <body>
+        <WeaverseNextRootProvider
+          initialThemeSettings={theme.theme}
+          themeSchema={theme.schema}
+        >
+          <Header />
+          {children}
+          <Footer />
+        </WeaverseNextRootProvider>
+      </body>
+    </html>
+  )
+}
+```
+
+A route's `WeaverseNextProvider` automatically adopts the root store when one
+is mounted above it, instead of creating a second one — so Studio's live
+edits reach both the root modules and the page renderer. The root's initial
+theme is authoritative for SSR: routes should not load their own theme
+settings in the final starter. If a route still carries
+`themeSettings`/`client.themeSettings` (e.g. mid-migration), that data merges
+into the root store in a client-only effect after mount, not during render —
+so SSR always renders the root's value, with no render-phase mutation of the
+shared store. Apps that don't mount `WeaverseNextRootProvider` see no
+behavior change: `WeaverseNextProvider` falls back to creating its own store
+and still renders `themeSettings`/`client.themeSettings` synchronously on
+SSR, same as before.
+
 ## Studio setup
 
 Studio has two separate pieces.
