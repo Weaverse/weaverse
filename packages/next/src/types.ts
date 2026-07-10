@@ -104,7 +104,7 @@ export interface WeaverseNextTranslationMapEntry {
 }
 
 /** Per-item translation fields, keyed by field name. */
-export type WeaverseNextTranslationItemEntry = {
+export interface WeaverseNextTranslationItemEntry {
   [key: string]: WeaverseNextTranslationMapEntry
 }
 
@@ -112,7 +112,7 @@ export type WeaverseNextTranslationItemEntry = {
  * Translation map sent from Builder alongside page data in design mode.
  * Keyed by item ID, each value maps field names to translation entries.
  */
-export type WeaverseNextTranslationMap = {
+export interface WeaverseNextTranslationMap {
   [itemId: string]: WeaverseNextTranslationItemEntry
 }
 
@@ -126,9 +126,9 @@ export interface WeaverseNextTranslationEntry {
 }
 
 /** Result of collecting translation changes for the save flow. */
-export type WeaverseNextTranslationChanges = {
-  languageId: string
+export interface WeaverseNextTranslationChanges {
   entries: WeaverseNextTranslationEntry[]
+  languageId: string
 }
 
 /**

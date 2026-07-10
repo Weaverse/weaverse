@@ -118,8 +118,8 @@ export class WeaverseNextRuntime extends Weaverse {
    * components, so translations render without mutating the base `_store`.
    */
   translationMap: WeaverseNextTranslationMap = {}
-  translationLocale = ''
-  translationLanguageId = ''
+  translationLocale = String()
+  translationLanguageId = String()
 
   constructor(config: WeaverseNextRuntimeConfig) {
     let { client, data } = config
