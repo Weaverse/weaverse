@@ -1238,3 +1238,306 @@ describe('Studio runtime contract', () => {
     vi.stubGlobal('window', previousWindow)
   })
 })
+
+// ─── 7. Multi-runtime / nested instance selection ─────────────────────
+
+// A single loader payload for one Weaverse instance, with distinct page/item
+// IDs and its own pageAssignment/project record so co-located runtimes can be
+// told apart. Item IDs are globally unique per test to avoid the process-wide
+// `Weaverse.itemInstances` static map (see the 2026-07-09 work log) leaking
+// item stores across unrelated tests.
+function makeMultiRuntimeData(opts: {
+  pageId: string
+  itemId: string
+  projectId: string
+  projectRecordId: string
+}): WeaverseNextLoaderData {
+  return {
+    page: {
+      id: opts.pageId,
+      rootId: opts.itemId,
+      items: [{ id: opts.itemId, type: 'hero', data: { text: opts.pageId } }],
+    },
+    pageAssignment: {
+      projectId: opts.projectId,
+      type: 'INDEX',
+      locale: '',
+      handle: '',
+    },
+    project: { id: opts.projectRecordId },
+  }
+}
+
+// Hydrogen reference: `WeaverseHydrogenRoot.createWeaverseInstance()` stores
+// every runtime under `window.__weaverses[pageId]` and reuses one only while
+// `pageId + pathname + search` all match. Builder Studio's own active-instance
+// picker (`resolveEditingInstance()`) lives in the Builder repo; the SDK's job
+// is to keep the registry/reuse contract and hand Builder every candidate.
+describe('multi-runtime / nested instance selection', () => {
+  it('should_register_co_located_runtimes_under_distinct_page_ids_without_reuse', () => {
+    // Arrange — same pathname + search (nested/co-located instances share a
+    // URL), different page IDs and root item IDs.
+    let previousWindow = globalThis.window
+    let fakeWindow = {} as Window &
+      typeof globalThis & { __weaverses?: unknown }
+    vi.stubGlobal('window', fakeWindow)
+    let client = makeClient({
+      requestContext: {
+        isDesignMode: true,
+        pathname: '/',
+        searchParams: new URLSearchParams('isDesignMode=true'),
+      },
+    })
+    let dataA = makeMultiRuntimeData({
+      pageId: 'mr-reg-page-a',
+      itemId: 'mr-reg-item-a',
+      projectId: 'proj-a',
+      projectRecordId: 'project-record-a',
+    })
+    let dataB = makeMultiRuntimeData({
+      pageId: 'mr-reg-page-b',
+      itemId: 'mr-reg-item-b',
+      projectId: 'proj-b',
+      projectRecordId: 'project-record-b',
+    })
+
+    // Act
+    let runtimeA = createWeaverseNextRuntime({ client, data: dataA })
+    let runtimeB = createWeaverseNextRuntime({ client, data: dataB })
+
+    // Assert — both runtimes co-exist in the registry, keyed by page ID, and
+    // are never reused across page IDs.
+    let registry = fakeWindow.__weaverses as Record<string, unknown>
+    expect(Object.keys(registry).sort()).toEqual([
+      'mr-reg-page-a',
+      'mr-reg-page-b',
+    ])
+    expect(registry['mr-reg-page-a']).toBe(runtimeA)
+    expect(registry['mr-reg-page-b']).toBe(runtimeB)
+    expect(runtimeA).not.toBe(runtimeB)
+    // `window.__weaverse` tracks the last-created candidate, mirroring
+    // Hydrogen's single-pointer + full registry split. Builder owns deciding
+    // which co-located instance is the editable leaf.
+    expect(fakeWindow.__weaverse).toBe(runtimeB)
+
+    // Each runtime keeps its own identity (pageId, requestInfo, root, and the
+    // save-critical pageAssignment / project record).
+    expect(runtimeA.pageId).toBe('mr-reg-page-a')
+    expect(runtimeB.pageId).toBe('mr-reg-page-b')
+    expect(runtimeA.data.rootId).toBe('mr-reg-item-a')
+    expect(runtimeB.data.rootId).toBe('mr-reg-item-b')
+    expect(runtimeA.requestInfo).toEqual({
+      pathname: '/',
+      search: '?isDesignMode=true',
+      queries: { isDesignMode: true },
+    })
+    expect(runtimeB.requestInfo).toEqual(runtimeA.requestInfo)
+    expect(runtimeA.internal.pageAssignment?.projectId).toBe('proj-a')
+    expect(runtimeB.internal.pageAssignment?.projectId).toBe('proj-b')
+    expect(runtimeA.internal.project).toEqual({ id: 'project-record-a' })
+    expect(runtimeB.internal.project).toEqual({ id: 'project-record-b' })
+    vi.stubGlobal('window', previousWindow)
+  })
+
+  it('should_reuse_the_same_runtime_for_the_same_page_and_url_and_refresh_internal_payload', () => {
+    // Arrange — same page ID and same URL across two loader passes (e.g. an RSC
+    // revalidation), with a changed pageAssignment/project on the second pass.
+    let previousWindow = globalThis.window
+    let fakeWindow = {} as Window &
+      typeof globalThis & { __weaverses?: unknown }
+    vi.stubGlobal('window', fakeWindow)
+    let client = makeClient({
+      requestContext: {
+        isDesignMode: true,
+        pathname: '/',
+        searchParams: new URLSearchParams('isDesignMode=true'),
+      },
+    })
+    let firstData = makeMultiRuntimeData({
+      pageId: 'mr-reuse-page',
+      itemId: 'mr-reuse-item',
+      projectId: 'proj-first',
+      projectRecordId: 'record-first',
+    })
+    let secondData = makeMultiRuntimeData({
+      pageId: 'mr-reuse-page',
+      itemId: 'mr-reuse-item',
+      projectId: 'proj-second',
+      projectRecordId: 'record-second',
+    })
+    secondData.pageAssignment = {
+      projectId: 'proj-second',
+      type: 'COLLECTION',
+      locale: 'en-us',
+      handle: 'sale',
+    }
+
+    // Act
+    let first = createWeaverseNextRuntime({ client, data: firstData })
+    let second = createWeaverseNextRuntime({ client, data: secondData })
+
+    // Assert — the same runtime object is reused, the registry key still points
+    // at it, and internal payload fields are refreshed from the latest loader
+    // data.
+    expect(second).toBe(first)
+    let registry = fakeWindow.__weaverses as Record<string, unknown>
+    expect(registry['mr-reuse-page']).toBe(first)
+    expect(second.internal.pageAssignment).toEqual({
+      projectId: 'proj-second',
+      type: 'COLLECTION',
+      locale: 'en-us',
+      handle: 'sale',
+    })
+    expect(second.internal.project).toEqual({ id: 'record-second' })
+    vi.stubGlobal('window', previousWindow)
+  })
+
+  it('should_not_reuse_a_stale_runtime_for_the_same_page_on_a_different_url', () => {
+    // Arrange — the same page ID served at two different URLs. Mirrors
+    // Hydrogen's "reuse only while the browser stays on the same URL" comment.
+    let previousWindow = globalThis.window
+    let fakeWindow = {} as Window &
+      typeof globalThis & { __weaverses?: unknown }
+    vi.stubGlobal('window', fakeWindow)
+    let clientA = makeClient({
+      requestContext: { isDesignMode: true, pathname: '/collections/a' },
+    })
+    let clientB = makeClient({
+      requestContext: { isDesignMode: true, pathname: '/collections/b' },
+    })
+    let makeData = () =>
+      makeMultiRuntimeData({
+        pageId: 'mr-url-page',
+        itemId: 'mr-url-item',
+        projectId: 'proj-url',
+        projectRecordId: 'record-url',
+      })
+
+    // Act
+    let runtimeA = createWeaverseNextRuntime({
+      client: clientA,
+      data: makeData(),
+    })
+    let runtimeB = createWeaverseNextRuntime({
+      client: clientB,
+      data: makeData(),
+    })
+
+    // Assert — a fresh runtime is created and the registry key is overwritten
+    // to point at the new URL's runtime; the old one is not handed back.
+    expect(runtimeB).not.toBe(runtimeA)
+    expect(runtimeA.requestInfo.pathname).toBe('/collections/a')
+    expect(runtimeB.requestInfo.pathname).toBe('/collections/b')
+    let registry = fakeWindow.__weaverses as Record<string, unknown>
+    expect(registry['mr-url-page']).toBe(runtimeB)
+    vi.stubGlobal('window', previousWindow)
+  })
+
+  it('should_bind_each_co_located_runtime_through_studio_init_without_collapsing_registry', () => {
+    // Arrange — Builder decides which runtime to edit; the SDK must simply pass
+    // every design-mode candidate to `weaverseStudio.init` and keep the
+    // registry intact. We do NOT reimplement `resolveEditingInstance()` here.
+    let previousWindow = globalThis.window
+    let init = vi.fn()
+    let refreshStudio = vi.fn()
+    let fakeWindow = {
+      weaverseStudio: { init, refreshStudio },
+    } as unknown as Window & typeof globalThis
+    vi.stubGlobal('window', fakeWindow)
+    let client = makeClient({
+      requestContext: {
+        isDesignMode: true,
+        pathname: '/',
+        searchParams: new URLSearchParams('isDesignMode=true'),
+      },
+    })
+    let runtimeA = createWeaverseNextRuntime({
+      client,
+      data: makeMultiRuntimeData({
+        pageId: 'mr-bind-page-a',
+        itemId: 'mr-bind-item-a',
+        projectId: 'proj-a',
+        projectRecordId: 'record-a',
+      }),
+    })
+    let runtimeB = createWeaverseNextRuntime({
+      client,
+      data: makeMultiRuntimeData({
+        pageId: 'mr-bind-page-b',
+        itemId: 'mr-bind-item-b',
+        projectId: 'proj-b',
+        projectRecordId: 'record-b',
+      }),
+    })
+
+    // Act
+    let boundA = bindWeaverseNextStudioRuntime(runtimeA)
+    let boundB = bindWeaverseNextStudioRuntime(runtimeB)
+
+    // Assert — both runtimes are initialized as candidates, and the registry
+    // still holds both (binding does not collapse it to a single instance).
+    expect(boundA).toBe(true)
+    expect(boundB).toBe(true)
+    expect(init).toHaveBeenCalledTimes(2)
+    expect(init).toHaveBeenCalledWith(runtimeA)
+    expect(init).toHaveBeenCalledWith(runtimeB)
+    let registry = fakeWindow.__weaverses as Record<string, unknown>
+    expect(registry['mr-bind-page-a']).toBe(runtimeA)
+    expect(registry['mr-bind-page-b']).toBe(runtimeB)
+    vi.stubGlobal('window', previousWindow)
+  })
+
+  it('should_keep_distinct_root_item_stores_and_element_refs_per_runtime', () => {
+    // Builder's DOM leaf selection (`resolveEditingInstance()` walking the DOM
+    // to pick the innermost matching instance) is Builder-owned and covered in
+    // the Builder repo. The SDK-side guarantee it relies on is exercised here:
+    // co-located runtimes with distinct item IDs own distinct root item stores,
+    // each carrying its own element ref. The test env is Node with no jsdom, so
+    // element refs are set directly rather than mounted.
+    let previousWindow = globalThis.window
+    let fakeWindow = {} as Window &
+      typeof globalThis & { __weaverses?: unknown }
+    vi.stubGlobal('window', fakeWindow)
+    let client = makeClient({
+      requestContext: {
+        isDesignMode: true,
+        pathname: '/',
+        searchParams: new URLSearchParams('isDesignMode=true'),
+      },
+    })
+    let runtimeA = createWeaverseNextRuntime({
+      client,
+      data: makeMultiRuntimeData({
+        pageId: 'mr-el-page-a',
+        itemId: 'mr-el-item-a',
+        projectId: 'proj-a',
+        projectRecordId: 'record-a',
+      }),
+    })
+    let runtimeB = createWeaverseNextRuntime({
+      client,
+      data: makeMultiRuntimeData({
+        pageId: 'mr-el-page-b',
+        itemId: 'mr-el-item-b',
+        projectId: 'proj-b',
+        projectRecordId: 'record-b',
+      }),
+    })
+
+    // Act — resolve each runtime's root item store and attach a mock element.
+    let rootStoreA = runtimeA.itemInstances.get(runtimeA.data.rootId)
+    let rootStoreB = runtimeB.itemInstances.get(runtimeB.data.rootId)
+    let elementA = { id: 'element-a' }
+    let elementB = { id: 'element-b' }
+    rootStoreA.ref.current = elementA
+    rootStoreB.ref.current = elementB
+
+    // Assert — distinct stores, distinct element refs.
+    expect(rootStoreA).toBeDefined()
+    expect(rootStoreB).toBeDefined()
+    expect(rootStoreA).not.toBe(rootStoreB)
+    expect(rootStoreA._element).toBe(elementA)
+    expect(rootStoreB._element).toBe(elementB)
+    vi.stubGlobal('window', previousWindow)
+  })
+})
