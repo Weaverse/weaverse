@@ -1007,7 +1007,13 @@ describe('Studio runtime contract', () => {
     })
     let data = {
       ...makePageData(),
-      pageAssignment: { type: 'INDEX' },
+      pageAssignment: {
+        projectId: 'proj-test',
+        type: 'INDEX',
+        locale: '',
+        handle: '',
+        meta: { inherited: false, sourceProjectId: 'proj-test', depth: 0 },
+      },
       project: { id: 'project-record' },
     }
 
@@ -1024,7 +1030,13 @@ describe('Studio runtime contract', () => {
       queries: { isDesignMode: true },
     })
     expect(runtime.internal.project).toEqual({ id: 'project-record' })
-    expect(runtime.internal.pageAssignment).toEqual({ type: 'INDEX' })
+    expect(runtime.internal.pageAssignment).toEqual({
+      projectId: 'proj-test',
+      type: 'INDEX',
+      locale: '',
+      handle: '',
+      meta: { inherited: false, sourceProjectId: 'proj-test', depth: 0 },
+    })
     expect(runtime.internal.themeSettingsStore?.settings).toEqual({
       color: 'blue',
     })
@@ -1046,10 +1058,27 @@ describe('Studio runtime contract', () => {
     let client = makeClient({
       requestContext: { isDesignMode: true, pathname: '/' },
     })
-    let runtime = createWeaverseNextRuntime({ client, data: makePageData() })
+    let initialData = {
+      ...makePageData(),
+      pageAssignment: {
+        projectId: 'proj-test',
+        type: 'INDEX',
+        locale: '',
+        handle: '',
+      },
+    }
+    let runtime = createWeaverseNextRuntime({ client, data: initialData })
     bindWeaverseNextStudioRuntime(runtime)
+    let nextPageAssignment = {
+      projectId: 'proj-test',
+      type: 'COLLECTION',
+      locale: 'en-us',
+      handle: 'sale',
+      meta: { inherited: true, sourceProjectId: 'proj-parent', depth: 1 },
+    }
     let nextData = {
       ...makePageData(),
+      pageAssignment: nextPageAssignment,
       page: {
         ...makePageData().page,
         items: [
@@ -1066,6 +1095,7 @@ describe('Studio runtime contract', () => {
     // Assert — refreshStudio must receive the FRESH server payload, not the
     // (deliberately untouched) design-mode live tree on `runtime.data`.
     expect(reusedRuntime).toBe(runtime)
+    expect(reusedRuntime.internal.pageAssignment).toEqual(nextPageAssignment)
     expect(init).toHaveBeenCalledTimes(1)
     expect(refreshStudio).toHaveBeenCalledWith(
       expect.objectContaining({

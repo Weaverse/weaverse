@@ -47,7 +47,12 @@ function makePagePayload() {
       items: [{ id: 'item-root', type: 'hero', data: { heading: 'Hi' } }],
     },
     project: { id: 'project-record', name: 'Shop', weaverseShopId: 'shop-1' },
-    pageAssignment: { type: 'INDEX' },
+    pageAssignment: {
+      projectId: 'proj-123',
+      type: 'INDEX',
+      locale: '',
+      handle: '',
+    },
   }
 }
 
@@ -177,6 +182,72 @@ describe('createWeaverseNextServerClient loadPage', () => {
     expect(url.searchParams.get('weaverseDraftItem')).toBe(draftItem)
     expect(url.searchParams.has('_rsc')).toBe(false)
     expect(url.searchParams.has('utm_source')).toBe(false)
+  })
+
+  it('should_return_save_compatible_pageAssignment_with_inherited_meta', async () => {
+    let fetchMock = makeFetch({
+      ...makePagePayload(),
+      pageAssignment: {
+        projectId: 'proj-123',
+        type: 'COLLECTION',
+        locale: 'en-us',
+        handle: 'sale',
+        meta: {
+          inherited: true,
+          sourceProjectId: 'parent-project',
+          depth: 1,
+          fallbackReason: 'parent-default',
+        },
+      },
+    })
+    let client = createWeaverseNextServerClient({
+      components: [heroComponent],
+      projectId: 'proj-123',
+      fetch: fetchMock,
+      requestContext: { url: 'https://shop.example/collections/sale' },
+    })
+
+    let data = await client.loadPage({ type: 'COLLECTION', handle: 'sale' })
+
+    expect(data?.pageAssignment).toEqual({
+      projectId: 'proj-123',
+      type: 'COLLECTION',
+      locale: 'en-us',
+      handle: 'sale',
+      meta: {
+        inherited: true,
+        sourceProjectId: 'parent-project',
+        depth: 1,
+        fallbackReason: 'parent-default',
+      },
+    })
+  })
+
+  it('should_normalize_nullish_pageAssignment_locale_to_empty_string', async () => {
+    let fetchMock = makeFetch({
+      ...makePagePayload(),
+      pageAssignment: {
+        projectId: 'proj-123',
+        type: 'PAGE',
+        locale: null,
+        handle: '/abcxyz',
+      },
+    })
+    let client = createWeaverseNextServerClient({
+      components: [heroComponent],
+      projectId: 'proj-123',
+      fetch: fetchMock,
+      requestContext: { url: 'https://shop.example/abcxyz' },
+    })
+
+    let data = await client.loadPage({ type: 'PAGE', handle: '/abcxyz' })
+
+    expect(data?.pageAssignment).toEqual({
+      projectId: 'proj-123',
+      type: 'PAGE',
+      locale: '',
+      handle: '/abcxyz',
+    })
   })
 
   it('should_use_no_store_cache_in_design_mode', async () => {

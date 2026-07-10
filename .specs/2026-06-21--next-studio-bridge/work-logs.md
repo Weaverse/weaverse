@@ -276,3 +276,40 @@ git diff --check
 ### Remaining risk
 
 - The client-only merge effect (route theme data landing in the root store after mount, and root `Header`/`Footer` re-rendering from it) is unverified by an automated test for the reason above — still an open item for a future jsdom-enabled test pass or POC-level manual check.
+
+## 2026-07-10 — pageAssignment / Studio save payload parity
+
+Slice branch: `feat/next-page-assignment-save-parity`
+
+### Scope
+
+- Added an explicit `WeaverseNextPageAssignment` type for the Builder Studio save contract (`projectId`, `type`, `locale`, `handle`, optional inherited/fallback `meta`).
+- Normalized raw `/api/public/project` assignments in `createWeaverseNextServerClient().loadPage()`:
+  - missing/malformed assignments remain `undefined` instead of being fabricated;
+  - nullish `locale` becomes `''`;
+  - object `meta` is preserved for inherited/fallback diagnostics.
+- Tightened `WeaverseNextLoaderData.pageAssignment` and `WeaverseNextRuntimeInternal.pageAssignment` to the explicit type.
+- Added tests proving full save-compatible assignment preservation, null-locale normalization, runtime internal exposure, and runtime reuse updating the assignment after navigation/revalidation.
+
+### Verification
+
+```bash
+pnpm --filter @weaverse/next test -- __tests__/next-server.test.tsx __tests__/next-adapter.test.tsx
+# 5 files, 83 tests passed
+
+pnpm --filter @weaverse/next typecheck
+# passed
+
+pnpm --filter @weaverse/next build
+# passed
+
+pnpm exec biome check packages/next/src packages/next/__tests__ packages/next/README.md --diagnostic-level=error
+# passed
+
+git diff --check
+# passed
+```
+
+### Notes
+
+Claude started the SDK implementation from the handoff and timed out after touching the package source. Hermes completed the missing tests/work-log and ran verification. No Builder database/save endpoint changes were needed for this package-level contract slice.
