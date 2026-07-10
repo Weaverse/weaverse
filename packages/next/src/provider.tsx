@@ -10,6 +10,11 @@ import {
 } from 'react'
 import { WeaverseNextRootContext } from './root-provider'
 import { createWeaverseNextThemeSettingsStore } from './theme-settings-store'
+import {
+  type TranslateFunction,
+  TranslationProvider,
+} from './translation-context'
+import { TranslationStore } from './translation-store'
 import type {
   WeaverseNextClient,
   WeaverseNextCommerceContext,
@@ -17,6 +22,16 @@ import type {
 } from './types'
 
 const EMPTY_THEME_SETTINGS: Record<string, unknown> = {}
+const EMPTY_STATIC_CONTENT: Record<string, unknown> = {}
+
+/** Read `themeSchema.i18n.staticContent` for the fallback (no-root) provider. */
+export function getSchemaStaticContent(
+  schema: unknown
+): Record<string, unknown> {
+  let i18n = (schema as { i18n?: { staticContent?: Record<string, unknown> } })
+    ?.i18n
+  return i18n?.staticContent ?? EMPTY_STATIC_CONTENT
+}
 
 /**
  * Value carried by {@link WeaverseNextContext}. Holds the explicit data
@@ -26,10 +41,14 @@ const EMPTY_THEME_SETTINGS: Record<string, unknown> = {}
 export interface WeaverseNextContextValue {
   client?: WeaverseNextClient
   commerce?: WeaverseNextCommerceContext
+  /** Active-locale static-text overrides, threaded into the runtime. */
+  merchantOverrides?: Record<string, unknown>
   pageData?: unknown
   rootData?: unknown
   themeSettings: Record<string, unknown>
   themeSettingsStore: WeaverseNextThemeSettingsStore
+  /** Live design-mode static-text override store, threaded into the runtime. */
+  translationStore: TranslationStore
 }
 
 /**
@@ -44,10 +63,23 @@ export interface WeaverseNextProviderProps {
   client?: WeaverseNextClient
   /** App-provided commerce context (storefront/cart/customer). */
   commerce?: WeaverseNextCommerceContext
+  /**
+   * Active-locale static-text overrides (nested, from `loadThemeSettings()`).
+   * Adopts the root provider's `merchantOverrides` when omitted.
+   */
+  merchantOverrides?: Record<string, unknown>
   /** Explicit page/route commerce data (replaces section-level `useLoaderData`). */
   pageData?: unknown
   /** Explicit root/global data (replaces `useRouteLoaderData('root')`). */
   rootData?: unknown
+  /**
+   * Theme default locale JSON (`loadThemeSettings().staticContent`). Adopts the
+   * root provider's `staticContent` when omitted, then falls back to
+   * `client.themeSchema.i18n.staticContent`.
+   */
+  staticContent?: Record<string, unknown>
+  /** Optional external translation function (host i18n); highest priority in `t()`. */
+  t?: TranslateFunction
   /** Theme settings override; falls back to `client.themeSettings`. */
   themeSettings?: Record<string, unknown>
 }
@@ -76,6 +108,29 @@ export function WeaverseNextProvider(props: WeaverseNextProviderProps) {
 
   let themeSettingsValue =
     themeSettings ?? client?.themeSettings ?? EMPTY_THEME_SETTINGS
+
+  // Fallback translation store when no `WeaverseNextRootProvider` is mounted.
+  // Otherwise the ambient root store is adopted, so exactly one live static-text
+  // store backs Builder's `updateStaticText()` RPC per page load — mirroring the
+  // theme-settings store adoption below. `useRef`, not `useMemo`: React may
+  // evict memoized values, but this store must survive every re-render so
+  // design-mode overrides already applied by Builder are never dropped.
+  let ownTranslationStoreRef = useRef<TranslationStore | null>(null)
+  if (!(rootContext || ownTranslationStoreRef.current)) {
+    ownTranslationStoreRef.current = new TranslationStore()
+  }
+  let translationStore =
+    rootContext?.translationStore ??
+    (ownTranslationStoreRef.current as TranslationStore)
+
+  // Static content / merchant overrides feeding `useTranslation()`. Precedence:
+  // explicit prop → ambient root value → (static content only) schema default.
+  let staticContent =
+    props.staticContent ??
+    rootContext?.staticContent ??
+    getSchemaStaticContent(client?.themeSchema)
+  let merchantOverrides =
+    props.merchantOverrides ?? rootContext?.merchantOverrides
 
   // Fallback store for apps that don't mount `WeaverseNextRootProvider`. Not
   // created at all when a root store is present, so exactly one
@@ -130,15 +185,32 @@ export function WeaverseNextProvider(props: WeaverseNextProviderProps) {
       rootData,
       pageData,
       commerce: commerce ?? client?.commerce,
+      merchantOverrides,
       themeSettings: themeSettingsStore.getSnapshot(),
       themeSettingsStore,
+      translationStore,
     }),
-    [client, rootData, pageData, commerce, themeSettingsStore]
+    [
+      client,
+      rootData,
+      pageData,
+      commerce,
+      merchantOverrides,
+      themeSettingsStore,
+      translationStore,
+    ]
   )
 
   return (
     <WeaverseNextContext.Provider value={value}>
-      {children}
+      <TranslationProvider
+        merchantOverrides={merchantOverrides}
+        staticContent={staticContent}
+        t={props.t}
+        translationStore={translationStore}
+      >
+        {children}
+      </TranslationProvider>
     </WeaverseNextContext.Provider>
   )
 }

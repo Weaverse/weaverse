@@ -65,9 +65,19 @@ export const WeaverseNextRenderer = memo(function WeaverseNextRendererComponent(
       client,
       data: { ...(data as WeaverseNextLoaderData), page },
       dataContext,
+      merchantOverrides: context?.merchantOverrides,
       themeSettingsStore: context?.themeSettingsStore,
+      translationStore: context?.translationStore,
     })
-  }, [client, page, data, dataContext, context?.themeSettingsStore])
+  }, [
+    client,
+    page,
+    data,
+    dataContext,
+    context?.merchantOverrides,
+    context?.themeSettingsStore,
+    context?.translationStore,
+  ])
 
   if (!weaverse) {
     return null

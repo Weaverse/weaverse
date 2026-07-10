@@ -2,6 +2,7 @@ import { Weaverse } from '@weaverse/react'
 import { ensureNextItemConstructor } from './item'
 import { buildWeaverseNextRequestInfo } from './request-info'
 import { createWeaverseNextThemeSettingsStore } from './theme-settings-store'
+import { TranslationStore } from './translation-store'
 import type {
   WeaverseNextClient,
   WeaverseNextLoaderData,
@@ -134,7 +135,14 @@ export class WeaverseNextRuntime extends Weaverse {
     this.isRevisionPreview = requestContext?.isRevisionPreview ?? false
     this.sectionType = requestContext?.sectionType
 
+    // One store instance backs both the canonical `translationStore` and the
+    // deprecated `themeTextStore` alias, so Builder's `updateStaticText()` RPC
+    // (which reads `internal.themeTextStore`) mutates the same store the
+    // `TranslationProvider` subscribes to.
+    let translationStore = config.translationStore ?? new TranslationStore()
+
     this.internal = {
+      merchantOverrides: config.merchantOverrides,
       navigate: config.navigate,
       pageAssignment: data.pageAssignment,
       project: data.project,
@@ -145,6 +153,8 @@ export class WeaverseNextRuntime extends Weaverse {
           schema: client?.themeSchema,
           settings: client?.themeSettings,
         }),
+      translationStore,
+      themeTextStore: translationStore,
     }
   }
 
@@ -217,6 +227,15 @@ export function createWeaverseNextRuntime(
     if (config.themeSettingsStore) {
       existing.internal.themeSettingsStore = config.themeSettingsStore
     }
+    if (config.translationStore) {
+      existing.internal.translationStore = config.translationStore
+      // Keep the deprecated alias pointing at the same adopted instance.
+      existing.internal.themeTextStore = config.translationStore
+    }
+    // Always assign, including `undefined`, so locale/navigation changes can
+    // clear previously attached merchant overrides instead of leaking stale
+    // static-text values into the next render.
+    existing.internal.merchantOverrides = config.merchantOverrides
     registerRuntime(existing)
     return existing
   }

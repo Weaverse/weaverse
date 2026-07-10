@@ -502,6 +502,30 @@ describe('createWeaverseNextServerClient loadThemeSettings', () => {
     expect(result.staticContent).toEqual({ greeting: 'Hello' })
   })
 
+  it('should_preserve_merchant_overrides_returned_by_the_api', async () => {
+    // Arrange — the storefront API returns locale-specific overrides alongside
+    // the theme; the server client must pass them through untouched so the root
+    // provider can feed them into the translation chain.
+    let fetchMock = makeFetch({
+      theme: { topbarText: 'Remote topbar' },
+      merchantOverrides: { cart: { title: 'Panier' } },
+    })
+    let client = createWeaverseNextServerClient({
+      components: [heroComponent],
+      projectId: 'proj-123',
+      themeSchema,
+      fetch: fetchMock,
+      requestContext: { url: 'https://shop.example/' },
+    })
+
+    // Act
+    let result = await client.loadThemeSettings()
+
+    // Assert — merchant overrides preserved; static content still injected.
+    expect(result.merchantOverrides).toEqual({ cart: { title: 'Panier' } })
+    expect(result.staticContent).toEqual({ greeting: 'Hello' })
+  })
+
   it('should_return_fallback_with_defaults_when_api_fails', async () => {
     let error = vi.spyOn(console, 'error').mockImplementation(() => undefined)
     let fetchMock = vi
