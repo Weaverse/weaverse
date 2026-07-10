@@ -22,12 +22,34 @@ export interface WeaverseNextThemeSettingsStore {
   updateThemeSettings: (next: Record<string, unknown>) => void
 }
 
+/**
+ * Page assignment payload returned by `/api/public/project` and preserved on
+ * loader data so the Builder Studio save pipeline receives the same shape it
+ * gets from Hydrogen (`{ projectId, type, locale, handle }`, plus optional
+ * inherited/fallback `meta`). Kept framework-neutral: `type` accepts a known
+ * {@link PageType} or any string, and `meta` preserves inherited/fallback
+ * metadata (unknown fields included) without asserting a strict shape.
+ */
+export interface WeaverseNextPageAssignment {
+  handle: string
+  locale: string
+  /** Inherited/fallback page metadata; unknown fields preserved as-is. */
+  meta?: {
+    depth?: number
+    inherited?: boolean
+    sourceProjectId?: string
+    [key: string]: unknown
+  }
+  projectId: string
+  type: PageType | string
+}
+
 export interface WeaverseNextRuntimeInternal {
   navigate?: (
     to: string,
     options?: { preventScrollReset?: boolean } | Record<string, unknown>
   ) => void
-  pageAssignment?: unknown
+  pageAssignment?: WeaverseNextPageAssignment
   project?: unknown
   revalidate?: (options?: unknown) => Promise<void> | void
   /**
@@ -133,7 +155,7 @@ export interface WeaverseNextPageData {
 export interface WeaverseNextLoaderData {
   configs?: Record<string, unknown>
   page: WeaverseNextPageData
-  pageAssignment?: Record<string, unknown>
+  pageAssignment?: WeaverseNextPageAssignment
   project?: Record<string, unknown>
   [key: string]: unknown
 }

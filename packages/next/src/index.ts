@@ -96,6 +96,7 @@ export type {
   WeaverseNextI18n,
   WeaverseNextLoaderData,
   WeaverseNextLoadPageInput,
+  WeaverseNextPageAssignment,
   WeaverseNextPageData,
   WeaverseNextRequestContext,
   WeaverseNextRequestInfo,

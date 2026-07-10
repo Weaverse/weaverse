@@ -13,6 +13,7 @@ import type {
   WeaverseNextFetchOptions,
   WeaverseNextLoaderData,
   WeaverseNextLoadPageInput,
+  WeaverseNextPageAssignment,
   WeaverseNextPageData,
   WeaverseNextProjectId,
   WeaverseNextRequestContext,
@@ -63,6 +64,43 @@ function generateUuid(): string {
     return crypto.randomUUID()
   }
   return `id-${Math.random().toString(RANDOM_ID_RADIX).slice(RANDOM_ID_SLICE_START)}`
+}
+
+/**
+ * Normalize the raw `pageAssignment` from `/api/public/project` into a
+ * save-compatible {@link WeaverseNextPageAssignment} so the Builder Studio save
+ * pipeline receives the same shape it gets from Hydrogen. Returns `undefined`
+ * for a missing or malformed assignment (rather than fabricating one), requires
+ * string `projectId`/`type`/`handle`, coerces a nullish `locale` to `''`, and
+ * preserves an object `meta` untouched.
+ */
+function normalizeWeaverseNextPageAssignment(
+  input: unknown
+): WeaverseNextPageAssignment | undefined {
+  if (!input || typeof input !== 'object') {
+    return
+  }
+  let { projectId, type, handle, locale, meta } = input as Record<
+    string,
+    unknown
+  >
+  if (
+    typeof projectId !== 'string' ||
+    typeof type !== 'string' ||
+    typeof handle !== 'string'
+  ) {
+    return
+  }
+  let normalized: WeaverseNextPageAssignment = {
+    projectId,
+    type,
+    handle,
+    locale: typeof locale === 'string' ? locale : '',
+  }
+  if (meta && typeof meta === 'object') {
+    normalized.meta = meta as WeaverseNextPageAssignment['meta']
+  }
+  return normalized
 }
 
 /**
@@ -451,9 +489,9 @@ class NextServerClient implements WeaverseNextServerClient {
     this._assertNoPageError(payload)
     let page = payload.page as WeaverseNextPageData | undefined
     let project = payload.project as WeaverseNextLoaderData['project']
-    let pageAssignment = payload.pageAssignment as
-      | WeaverseNextLoaderData['pageAssignment']
-      | undefined
+    let pageAssignment = normalizeWeaverseNextPageAssignment(
+      payload.pageAssignment
+    )
 
     page ??= this._generateFallbackPage(
       '<div style="text-align: center;">Please add new section to start.</div>'
