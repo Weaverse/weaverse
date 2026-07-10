@@ -4,6 +4,7 @@ import type {
 } from '@weaverse/react'
 import type { PageSEOData, PageType, SchemaType } from '@weaverse/schema'
 import type { ComponentType, ForwardRefExoticComponent, ReactNode } from 'react'
+import type { TranslationStore } from './translation-store'
 
 export interface WeaverseNextRequestInfo {
   i18n?: WeaverseNextI18n
@@ -45,6 +46,8 @@ export interface WeaverseNextPageAssignment {
 }
 
 export interface WeaverseNextRuntimeInternal {
+  /** Active-locale static-text overrides fetched from the API (nested). */
+  merchantOverrides?: Record<string, unknown>
   navigate?: (
     to: string,
     options?: { preventScrollReset?: boolean } | Record<string, unknown>
@@ -59,15 +62,31 @@ export interface WeaverseNextRuntimeInternal {
    */
   revalidateItem?: (draftItem: WeaverseNextComponentData) => Promise<void>
   themeSettingsStore?: WeaverseNextThemeSettingsStore
+  /**
+   * @deprecated Use {@link WeaverseNextRuntimeInternal.translationStore}
+   * instead. Same instance, kept so Builder's existing `updateStaticText()`
+   * RPC (which reads `internal.themeTextStore`) works with Next unchanged.
+   */
+  themeTextStore?: TranslationStore
+  /**
+   * Live design-mode static-text override store. Builder's `updateStaticText()`
+   * RPC mutates it via `updateOverrides()`; the `TranslationProvider` observing
+   * the same instance re-renders `useTranslation()` consumers.
+   */
+  translationStore?: TranslationStore
 }
 
 export interface WeaverseNextRuntimeConfig {
   client?: WeaverseNextClient
   data: WeaverseNextLoaderData
   dataContext?: Record<string, unknown>
+  /** Active-locale static-text overrides threaded onto `internal`. */
+  merchantOverrides?: Record<string, unknown>
   navigate?: WeaverseNextRuntimeInternal['navigate']
   revalidate?: WeaverseNextRuntimeInternal['revalidate']
   themeSettingsStore?: WeaverseNextThemeSettingsStore
+  /** Root/route-owned translation store to attach to `internal`. */
+  translationStore?: TranslationStore
 }
 
 /**

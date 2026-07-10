@@ -79,6 +79,21 @@ export {
   type CreateWeaverseNextThemeSettingsStoreOptions,
   createWeaverseNextThemeSettingsStore,
 } from './theme-settings-store'
+export {
+  createTranslate,
+  getNestedKey,
+  interpolate,
+  ThemeTextProvider,
+  type ThemeTextProviderProps,
+  type ThemeTextValue,
+  type TranslateFunction,
+  TranslationProvider,
+  type TranslationProviderProps,
+  type TranslationValue,
+  useThemeText,
+  useTranslation,
+} from './translation-context'
+export { ThemeTextStore, TranslationStore } from './translation-store'
 export type {
   WeaverseArticle,
   WeaverseBlog,

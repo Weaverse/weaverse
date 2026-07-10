@@ -396,3 +396,71 @@ git diff --check                        # clean (exit 0)
   co-located instances, confirm Builder edits the intended leaf) remains a
   manual/E2E step.
 - Changes left uncommitted per the handoff; Hermes commits/pushes after review.
+
+## 2026-07-10 — translation/static-text foundation parity
+
+Slice branch: `feat/next-translation-sidecar-foundation`
+Tracker: https://github.com/Weaverse/builder/issues/2659
+
+First narrow slice for the broader translation/static-text parity area. This intentionally focuses on **static text translation foundation** and Builder static-text bridge wiring; full item-level translation sidecar remains a later slice.
+
+### Scope
+
+- Added Next-owned `TranslationStore` / deprecated `ThemeTextStore` aliases matching Hydrogen's mutable static-text override store.
+- Added `TranslationProvider`, `useTranslation`, deprecated `useThemeText`, `createTranslate`, `getNestedKey`, and `interpolate` with the Hydrogen priority chain:
+  1. external `t`
+  2. live design overrides from `TranslationStore`
+  3. locale `merchantOverrides`
+  4. theme `staticContent`
+  5. key fallback
+- Wired `WeaverseNextRootProvider` to own one stable root translation store, plus `staticContent`, `merchantOverrides`, and optional external `t`.
+- Wired route-level `WeaverseNextProvider` to adopt the root translation store/static content/merchant overrides, with a standalone fallback store when no root provider is mounted.
+- Wired `WeaverseNextRenderer` / `createWeaverseNextRuntime()` so the runtime exposes:
+  - `internal.translationStore`
+  - deprecated `internal.themeTextStore` (same instance, for Builder's existing `updateStaticText()` RPC)
+  - `internal.merchantOverrides`
+- Reused runtimes refresh translation store/merchant override wiring and clear stale merchant overrides when the latest loader/config has none.
+- Exported the new translation APIs from `@weaverse/next`.
+- Added/confirmed server theme-settings coverage for returned `merchantOverrides` and schema-derived `staticContent`.
+
+### Tests
+
+Added coverage in `packages/next/__tests__/next-adapter.test.tsx` and `next-server.test.tsx` for:
+
+- `TranslationStore` set/merge/subscribe behavior.
+- translation helper behavior: nested lookup, interpolation, priority chain, own-property design override safety.
+- `TranslationProvider` and `useTranslation`, including deprecated store alias and clear error outside provider.
+- `WeaverseNextRootProvider` exposing translations to root/global children.
+- route provider adopting the root translation store/static content.
+- page tree components rendered through `WeaverseNextRenderer` resolving static text.
+- runtime `internal.translationStore` / `themeTextStore` / `merchantOverrides` wiring and reuse refresh/clear behavior.
+- server `loadThemeSettings()` preserving API-provided `merchantOverrides` while injecting schema static content.
+
+### Non-scope
+
+- No Builder changes.
+- No item-level page translation sidecar yet (`translationMap`, translatable section fields, `updateTranslation()`, `getTranslationChanges()` remain a follow-up).
+- No POC update or npm publish in this PR until the code is reviewed/merged.
+
+### Verification
+
+```bash
+pnpm --filter @weaverse/next test -- __tests__/next-adapter.test.tsx __tests__/next-server.test.tsx
+# 5 files, 107 tests passed (test runner executed the whole package suite)
+
+pnpm --filter @weaverse/next typecheck
+# passed
+
+pnpm --filter @weaverse/next build
+# passed
+
+pnpm exec biome check packages/next/src packages/next/__tests__ packages/next/README.md --diagnostic-level=error
+# passed after formatting provider/root-provider
+
+git diff --check
+# passed
+```
+
+### Notes
+
+Claude implemented the initial source/tests from the handoff but timed out before closeout. Hermes reviewed the partial diff, fixed stale `merchantOverrides` clearing on runtime reuse, added regression coverage for that case, fixed the standalone-provider fallback `TranslationStore` to use `useRef` instead of `useMemo`, corrected translation priority docs, formatted, and ran verification.

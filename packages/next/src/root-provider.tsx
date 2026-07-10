@@ -7,12 +7,27 @@ import {
   useMemo,
   useRef,
 } from 'react'
-import { WeaverseNextContext, type WeaverseNextContextValue } from './provider'
+import {
+  getSchemaStaticContent,
+  WeaverseNextContext,
+  type WeaverseNextContextValue,
+} from './provider'
 import { createWeaverseNextThemeSettingsStore } from './theme-settings-store'
+import {
+  type TranslateFunction,
+  TranslationProvider,
+} from './translation-context'
+import { TranslationStore } from './translation-store'
 import type { WeaverseNextThemeSettingsStore } from './types'
 
 export interface WeaverseNextRootContextValue {
+  /** Active-locale static-text overrides shared with route-level providers. */
+  merchantOverrides?: Record<string, unknown>
+  /** Theme default locale JSON shared with route-level providers. */
+  staticContent: Record<string, unknown>
   themeSettingsStore: WeaverseNextThemeSettingsStore
+  /** Single live design-mode static-text override store for the whole session. */
+  translationStore: TranslationStore
 }
 
 /**
@@ -26,7 +41,16 @@ export interface WeaverseNextRootProviderProps {
   children: ReactNode
   /** Root-loaded theme settings (published-mode fetch, no design-mode context). */
   initialThemeSettings?: Record<string, unknown>
+  /** Active-locale static-text overrides from `loadThemeSettings().merchantOverrides`. */
+  merchantOverrides?: Record<string, unknown>
   publicEnv?: Record<string, string | undefined>
+  /**
+   * Theme default locale JSON (`loadThemeSettings().staticContent`). Falls back
+   * to `themeSchema.i18n.staticContent` when omitted.
+   */
+  staticContent?: Record<string, unknown>
+  /** Optional external translation function (host i18n); highest priority in `t()`. */
+  t?: TranslateFunction
   themeSchema?: unknown
 }
 
@@ -50,7 +74,15 @@ export interface WeaverseNextRootProviderProps {
  * ```
  */
 export function WeaverseNextRootProvider(props: WeaverseNextRootProviderProps) {
-  let { children, initialThemeSettings, themeSchema, publicEnv } = props
+  let {
+    children,
+    initialThemeSettings,
+    merchantOverrides,
+    staticContent,
+    t,
+    themeSchema,
+    publicEnv,
+  } = props
 
   // `useRef`, not `useMemo`: a parent re-render must never replace this store —
   // it is the single instance Studio's `updateThemeSettings()` mutates in place.
@@ -63,6 +95,16 @@ export function WeaverseNextRootProvider(props: WeaverseNextRootProviderProps) {
     })
   }
   let themeSettingsStore = storeRef.current
+
+  // Same `useRef` rationale as the theme store: one live static-text store for
+  // the whole session, which Builder's `updateStaticText()` RPC mutates in place
+  // via `runtime.internal.translationStore`. A parent re-render must never swap
+  // it, or design-mode overrides would be lost.
+  let translationStoreRef = useRef<TranslationStore | null>(null)
+  if (!translationStoreRef.current) {
+    translationStoreRef.current = new TranslationStore()
+  }
+  let translationStore = translationStoreRef.current
 
   // If `initialThemeSettings` changes after mount (e.g. root revalidation),
   // update the existing store in place instead of replacing it. This is an
@@ -79,25 +121,51 @@ export function WeaverseNextRootProvider(props: WeaverseNextRootProviderProps) {
     }
   }, [initialThemeSettings, themeSettingsStore])
 
-  // `themeSettingsStore` is `useRef`-stable, so memoizing on it (rather than
-  // recreating these plain objects every render) keeps `useThemeSettings()`
-  // consumers (Header, Footer, ...) from re-rendering on every root re-render.
+  // Prefer an explicit `staticContent` prop (from `loadThemeSettings()`); fall
+  // back to `themeSchema.i18n.staticContent`. Both resolve to referentially
+  // stable objects, so memoizing the context values below stays effective.
+  let resolvedStaticContent =
+    staticContent ?? getSchemaStaticContent(themeSchema)
+
+  // `themeSettingsStore` / `translationStore` are `useRef`-stable, so memoizing
+  // on them (rather than recreating these plain objects every render) keeps
+  // `useThemeSettings()` / `useTranslation()` consumers (Header, Footer, ...)
+  // from re-rendering on every root re-render.
   let rootContextValue = useMemo<WeaverseNextRootContextValue>(
-    () => ({ themeSettingsStore }),
-    [themeSettingsStore]
+    () => ({
+      merchantOverrides,
+      staticContent: resolvedStaticContent,
+      themeSettingsStore,
+      translationStore,
+    }),
+    [
+      merchantOverrides,
+      resolvedStaticContent,
+      themeSettingsStore,
+      translationStore,
+    ]
   )
   let contextValue = useMemo<WeaverseNextContextValue>(
     () => ({
+      merchantOverrides,
       themeSettings: themeSettingsStore.getSnapshot(),
       themeSettingsStore,
+      translationStore,
     }),
-    [themeSettingsStore]
+    [merchantOverrides, themeSettingsStore, translationStore]
   )
 
   return (
     <WeaverseNextRootContext.Provider value={rootContextValue}>
       <WeaverseNextContext.Provider value={contextValue}>
-        {children}
+        <TranslationProvider
+          merchantOverrides={merchantOverrides}
+          staticContent={resolvedStaticContent}
+          t={t}
+          translationStore={translationStore}
+        >
+          {children}
+        </TranslationProvider>
       </WeaverseNextContext.Provider>
     </WeaverseNextRootContext.Provider>
   )

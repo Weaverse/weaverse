@@ -7,12 +7,18 @@ import {
   bindWeaverseNextStudioRuntime,
   buildWeaverseNextRequestInfo,
   createSchema,
+  createTranslate,
   createWeaverseNextClient,
   createWeaverseNextRuntime,
   createWeaverseNextThemeSettingsStore,
+  getNestedKey,
+  interpolate,
   resolveWeaverseNextStudioScriptSrc,
   runWeaverseComponentLoaders,
+  TranslationProvider,
+  TranslationStore,
   useThemeSettings,
+  useTranslation,
   useWeaverseCommerce,
   useWeaversePageData,
   useWeaverseRootData,
@@ -28,6 +34,8 @@ import type {
 } from '../src/types'
 
 const OUTSIDE_PROVIDER_ERROR = /must be used inside a <WeaverseNextProvider>/
+const OUTSIDE_TRANSLATION_PROVIDER_ERROR =
+  /useTranslation must be used within <TranslationProvider>/
 const SRC_FILE_REGEX = /\.(ts|tsx)$/
 
 // ─── Fixtures ────────────────────────────────────────────────────────
@@ -1538,6 +1546,414 @@ describe('multi-runtime / nested instance selection', () => {
     expect(rootStoreA).not.toBe(rootStoreB)
     expect(rootStoreA._element).toBe(elementA)
     expect(rootStoreB._element).toBe(elementB)
+    vi.stubGlobal('window', previousWindow)
+  })
+})
+
+// ─── 8. Translation / static-text foundation ──────────────────────────
+
+describe('TranslationStore', () => {
+  it('should_replace_all_overrides_on_setOverrides_and_notify_subscribers', () => {
+    // Arrange
+    let store = new TranslationStore()
+    let listener = vi.fn()
+    store.updateOverrides({ 'cart.title': 'Bag' })
+
+    // Act
+    let unsubscribe = store.subscribe(listener)
+    store.setOverrides({ 'cart.subtitle': 'Items' })
+
+    // Assert — setOverrides replaces (not merges) and notifies once.
+    expect(store.getSnapshot()).toEqual({ 'cart.subtitle': 'Items' })
+    expect(store.getServerSnapshot()).toEqual({ 'cart.subtitle': 'Items' })
+    expect(listener).toHaveBeenCalledTimes(1)
+
+    // Act — after unsubscribe, no further notifications.
+    unsubscribe()
+    store.setOverrides({ 'cart.title': 'Cart' })
+
+    // Assert
+    expect(listener).toHaveBeenCalledTimes(1)
+  })
+
+  it('should_merge_overrides_on_updateOverrides_keeping_untouched_siblings', () => {
+    // Arrange
+    let store = new TranslationStore()
+    store.setOverrides({ 'cart.title': 'Cart', 'cart.subtitle': 'Items' })
+
+    // Act — update one key; the sibling must survive.
+    store.updateOverrides({ 'cart.title': 'Shopping Cart' })
+
+    // Assert
+    expect(store.getSnapshot()).toEqual({
+      'cart.title': 'Shopping Cart',
+      'cart.subtitle': 'Items',
+    })
+  })
+})
+
+describe('translation helpers', () => {
+  it('should_read_nested_dot_paths_and_fall_back_when_missing_or_non_string', () => {
+    expect(getNestedKey({ cart: { title: 'Cart' } }, 'cart.title')).toBe('Cart')
+    expect(getNestedKey({}, 'cart.title', 'fallback')).toBe('fallback')
+    // A non-string leaf resolves to the fallback, never the object itself.
+    expect(getNestedKey({ cart: { title: {} } }, 'cart.title')).toBeUndefined()
+  })
+
+  it('should_interpolate_double_brace_variables_and_leave_unknowns_intact', () => {
+    expect(interpolate('Hello {{name}}!', { name: 'World' })).toBe(
+      'Hello World!'
+    )
+    expect(interpolate('-{{percentage}}% Off', { percentage: 15 })).toBe(
+      '-15% Off'
+    )
+    expect(interpolate('Hi {{missing}}', { name: 'x' })).toBe('Hi {{missing}}')
+  })
+})
+
+describe('createTranslate priority chain', () => {
+  it('should_resolve_external_then_design_then_merchant_then_static_then_key', () => {
+    // Arrange — externalT only knows one key and echoes the rest, so the
+    // internal chain (design > merchant > static > key) continues for those.
+    let externalT = vi.fn((key: string) =>
+      key === 'nav.home' ? 'Accueil' : key
+    )
+    let t = createTranslate({
+      staticContent: {
+        cart: { title: 'Cart', subtitle: 'Your items', footer: 'Checkout' },
+        badge: { sale: '-{{percentage}}% Off' },
+      },
+      merchantOverrides: {
+        cart: { title: 'Shopping Cart', subtitle: 'Locale items' },
+      },
+      designOverrides: { 'cart.title': 'Bag' },
+      externalT,
+    })
+
+    // Assert
+    expect(t('nav.home')).toBe('Accueil') // external t wins
+    expect(t('cart.title')).toBe('Bag') // design > merchant > static
+    expect(t('cart.subtitle')).toBe('Locale items') // merchant > static
+    expect(t('cart.footer')).toBe('Checkout') // static content
+    expect(t('badge.sale', { percentage: 15 })).toBe('-15% Off') // interpolate
+    expect(t('missing.key')).toBe('missing.key') // key fallback
+  })
+
+  it('should_only_apply_own_design_override_keys_so_prototype_is_not_leaked', () => {
+    // Arrange — an inherited Object.prototype member must not resolve through
+    // the design-override lookup (own-property check) or the static lookup.
+    let t = createTranslate({
+      staticContent: { greeting: 'Hi' },
+      designOverrides: {},
+    })
+
+    // Assert — `toString` is inherited, not an own key; falls back to the key.
+    expect(t('toString')).toBe('toString')
+  })
+})
+
+describe('TranslationProvider / useTranslation', () => {
+  it('should_resolve_translations_inside_the_provider_on_the_server', () => {
+    // Arrange
+    function Probe() {
+      let { t } = useTranslation()
+      return <span>{t('cart.title')}</span>
+    }
+
+    // Act
+    let html = renderToStaticMarkup(
+      <TranslationProvider staticContent={{ cart: { title: 'Cart' } }}>
+        <Probe />
+      </TranslationProvider>
+    )
+
+    // Assert
+    expect(html).toContain('Cart')
+  })
+
+  it('should_layer_live_store_design_overrides_over_static_content', () => {
+    // Arrange — an override already present in the store is picked up via
+    // getServerSnapshot during SSR (no window in the node test env).
+    let store = new TranslationStore()
+    store.setOverrides({ 'cart.title': 'Bag' })
+    function Probe() {
+      let { t } = useTranslation()
+      return <span>{t('cart.title')}</span>
+    }
+
+    // Act
+    let html = renderToStaticMarkup(
+      <TranslationProvider
+        staticContent={{ cart: { title: 'Cart' } }}
+        translationStore={store}
+      >
+        <Probe />
+      </TranslationProvider>
+    )
+
+    // Assert — design override beats static content.
+    expect(html).toContain('Bag')
+    expect(html).not.toContain('Cart')
+  })
+
+  it('should_expose_the_store_under_both_translationStore_and_deprecated_themeTextStore', () => {
+    // Arrange
+    let store = new TranslationStore()
+    let seen: unknown[] = []
+    function Probe() {
+      let value = useTranslation()
+      seen.push(value.translationStore, value.themeTextStore)
+      return null
+    }
+
+    // Act
+    renderToStaticMarkup(
+      <TranslationProvider staticContent={{}} translationStore={store}>
+        <Probe />
+      </TranslationProvider>
+    )
+
+    // Assert — one instance, exposed under both names.
+    expect(seen[0]).toBe(store)
+    expect(seen[1]).toBe(store)
+  })
+
+  it('should_throw_a_clear_error_when_useTranslation_is_used_outside_a_provider', () => {
+    // Arrange
+    function Probe() {
+      useTranslation()
+      return null
+    }
+
+    // Act + Assert
+    expect(() => renderToStaticMarkup(<Probe />)).toThrow(
+      OUTSIDE_TRANSLATION_PROVIDER_ERROR
+    )
+  })
+})
+
+describe('WeaverseNextRootProvider translation wiring', () => {
+  it('should_expose_useTranslation_to_root_children_using_staticContent', () => {
+    // Arrange — a global child (Header/Footer) under the root provider, with no
+    // route-level WeaverseNextProvider.
+    function Probe() {
+      let { t } = useTranslation()
+      return <span>{t('cart.title')}</span>
+    }
+
+    // Act
+    let html = renderToStaticMarkup(
+      <WeaverseNextRootProvider staticContent={{ cart: { title: 'Cart' } }}>
+        <Probe />
+      </WeaverseNextRootProvider>
+    )
+
+    // Assert
+    expect(html).toContain('Cart')
+  })
+
+  it('should_derive_root_staticContent_from_themeSchema_i18n_when_no_prop', () => {
+    // Arrange
+    function Probe() {
+      let { t } = useTranslation()
+      return <span>{t('greeting')}</span>
+    }
+
+    // Act
+    let html = renderToStaticMarkup(
+      <WeaverseNextRootProvider
+        themeSchema={{ i18n: { staticContent: { greeting: 'Hello' } } }}
+      >
+        <Probe />
+      </WeaverseNextRootProvider>
+    )
+
+    // Assert
+    expect(html).toContain('Hello')
+  })
+
+  it('should_share_one_translation_store_between_root_and_a_nested_route_provider', () => {
+    // Arrange — capture the adopted store both directly under root and under a
+    // nested route provider; adoption means the two are the same instance.
+    let client = makeClient()
+    let stores: unknown[] = []
+    function Capture() {
+      stores.push(useTranslation().translationStore)
+      return null
+    }
+
+    // Act
+    renderToStaticMarkup(
+      <WeaverseNextRootProvider staticContent={{ cart: { title: 'Cart' } }}>
+        <Capture />
+        <WeaverseNextProvider client={client}>
+          <Capture />
+        </WeaverseNextProvider>
+      </WeaverseNextRootProvider>
+    )
+
+    // Assert
+    expect(stores).toHaveLength(2)
+    expect(stores[0]).toBeInstanceOf(TranslationStore)
+    expect(stores[0]).toBe(stores[1])
+  })
+
+  it('should_let_a_route_child_read_root_staticContent_when_route_supplies_none', () => {
+    // Arrange — route provider passes no staticContent and its client has no
+    // themeSchema; a route child must still resolve via the adopted root value.
+    let client = makeClient()
+    function Probe() {
+      let { t } = useTranslation()
+      return <span>{t('cart.title')}</span>
+    }
+
+    // Act
+    let html = renderToStaticMarkup(
+      <WeaverseNextRootProvider staticContent={{ cart: { title: 'Cart' } }}>
+        <WeaverseNextProvider client={client}>
+          <Probe />
+        </WeaverseNextProvider>
+      </WeaverseNextRootProvider>
+    )
+
+    // Assert
+    expect(html).toContain('Cart')
+  })
+
+  it('should_resolve_translations_for_page_tree_components_through_the_renderer', () => {
+    // Arrange — a registered section reads useTranslation() and must resolve
+    // against the root staticContent adopted by the route provider + renderer.
+    let ThemeText = () => {
+      let { t } = useTranslation()
+      return <div>{t('cart.title')}</div>
+    }
+    let client = createWeaverseNextClient({
+      projectId: 'proj-test',
+      components: [
+        {
+          default: ThemeText,
+          schema: createSchema({ type: 'theme-text', title: 'Theme text' }),
+        },
+      ],
+    })
+    client.data = {
+      page: {
+        id: 'page-tr-render',
+        rootId: 'tr-render-root',
+        items: [{ id: 'tr-render-root', type: 'theme-text' }],
+      },
+    }
+
+    // Act
+    let html = renderToStaticMarkup(
+      <WeaverseNextRootProvider staticContent={{ cart: { title: 'Cart' } }}>
+        <WeaverseNextProvider client={client}>
+          <WeaverseNextRenderer />
+        </WeaverseNextProvider>
+      </WeaverseNextRootProvider>
+    )
+
+    // Assert
+    expect(html).toContain('Cart')
+  })
+})
+
+describe('runtime translation bridge', () => {
+  it('should_default_internal_translation_store_and_alias_when_none_provided', () => {
+    // Arrange
+    let client = makeClient()
+    let data: WeaverseNextLoaderData = {
+      page: {
+        id: 'tr-default-page',
+        rootId: 'tr-default-item',
+        items: [{ id: 'tr-default-item', type: 'hero', data: {} }],
+      },
+    }
+
+    // Act
+    let runtime = createWeaverseNextRuntime({ client, data })
+
+    // Assert — a store exists and both names point at the same instance, so
+    // Builder's updateStaticText() RPC (which reads themeTextStore) works.
+    expect(runtime.internal.translationStore).toBeInstanceOf(TranslationStore)
+    expect(runtime.internal.themeTextStore).toBe(
+      runtime.internal.translationStore
+    )
+  })
+
+  it('should_attach_provided_translation_store_and_merchant_overrides_to_internal', () => {
+    // Arrange
+    let client = makeClient()
+    let translationStore = new TranslationStore()
+    let merchantOverrides = { cart: { title: 'Cart' } }
+    let data: WeaverseNextLoaderData = {
+      page: {
+        id: 'tr-attach-page',
+        rootId: 'tr-attach-item',
+        items: [{ id: 'tr-attach-item', type: 'hero', data: {} }],
+      },
+    }
+
+    // Act
+    let runtime = createWeaverseNextRuntime({
+      client,
+      data,
+      merchantOverrides,
+      translationStore,
+    })
+
+    // Assert
+    expect(runtime.internal.translationStore).toBe(translationStore)
+    expect(runtime.internal.themeTextStore).toBe(translationStore)
+    expect(runtime.internal.merchantOverrides).toBe(merchantOverrides)
+  })
+
+  it('should_refresh_internal_translation_wiring_when_reusing_a_runtime', () => {
+    // Arrange — same page ID + URL, so the runtime is reused across loader
+    // passes; the adopted store/overrides must be refreshed onto internal.
+    let previousWindow = globalThis.window
+    let fakeWindow = {} as Window &
+      typeof globalThis & { __weaverses?: unknown }
+    vi.stubGlobal('window', fakeWindow)
+    let client = makeClient({
+      requestContext: { isDesignMode: false, pathname: '/' },
+    })
+    let data: WeaverseNextLoaderData = {
+      page: {
+        id: 'tr-reuse-page',
+        rootId: 'tr-reuse-item',
+        items: [{ id: 'tr-reuse-item', type: 'hero', data: {} }],
+      },
+    }
+    let first = createWeaverseNextRuntime({ client, data })
+    let nextStore = new TranslationStore()
+    let nextOverrides = { cart: { title: 'Updated' } }
+
+    // Act
+    let reused = createWeaverseNextRuntime({
+      client,
+      data,
+      merchantOverrides: nextOverrides,
+      translationStore: nextStore,
+    })
+
+    // Assert — same runtime, translation wiring refreshed from the latest config.
+    expect(reused).toBe(first)
+    expect(reused.internal.translationStore).toBe(nextStore)
+    expect(reused.internal.themeTextStore).toBe(nextStore)
+    expect(reused.internal.merchantOverrides).toBe(nextOverrides)
+
+    // Act — a later loader pass with no overrides must clear the previous
+    // locale's overrides instead of leaking them into the next render.
+    let cleared = createWeaverseNextRuntime({
+      client,
+      data,
+      translationStore: nextStore,
+    })
+
+    // Assert
+    expect(cleared).toBe(first)
+    expect(cleared.internal.merchantOverrides).toBeUndefined()
     vi.stubGlobal('window', previousWindow)
   })
 })
