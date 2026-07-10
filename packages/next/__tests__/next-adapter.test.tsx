@@ -1957,3 +1957,451 @@ describe('runtime translation bridge', () => {
     vi.stubGlobal('window', previousWindow)
   })
 })
+
+// ─── 9. Item-level translation sidecar ────────────────────────────────
+
+// Parity with Hydrogen's `WeaverseHydrogenItem.getSnapShot()` overlay +
+// `WeaverseHydrogen` sidecar methods. Item IDs are globally unique per test to
+// avoid the process-wide `Weaverse.itemInstances` static map leaking stores
+// across unrelated tests (see the 2026-07-09 work-log pitfall).
+describe('item-level translation sidecar', () => {
+  it('should_overlay_translated_values_from_page_data_over_the_base_store', () => {
+    // Arrange — the loader attached an item-level translation sidecar.
+    let client = makeClient()
+    let data: WeaverseNextLoaderData = {
+      page: {
+        id: 'tr-overlay-page',
+        rootId: 'tr-overlay-item',
+        items: [
+          {
+            id: 'tr-overlay-item',
+            type: 'hero',
+            data: { heading: 'Original' },
+          },
+        ],
+        translationMap: {
+          'tr-overlay-item': {
+            heading: { originalValue: 'Original', translatedValue: 'Traduit' },
+          },
+        },
+        translationLocale: 'fr',
+        translationLanguageId: 'lang-fr',
+      },
+    }
+
+    // Act
+    let runtime = createWeaverseNextRuntime({ client, data })
+    let item = runtime.itemInstances.get('tr-overlay-item')
+    let snapshot = item.getSnapShot()
+
+    // Assert — snapshot carries the translated value; base store is untouched.
+    expect(runtime.translationLocale).toBe('fr')
+    expect(runtime.translationLanguageId).toBe('lang-fr')
+    expect(snapshot.heading).toBe('Traduit')
+    expect(item._store.heading).toBe('Original')
+  })
+
+  it('should_return_the_base_store_snapshot_when_the_item_has_no_translations', () => {
+    // Arrange — no sidecar on the page data.
+    let client = makeClient()
+    let data: WeaverseNextLoaderData = {
+      page: {
+        id: 'tr-none-page',
+        rootId: 'tr-none-item',
+        items: [
+          { id: 'tr-none-item', type: 'hero', data: { heading: 'Base' } },
+        ],
+      },
+    }
+
+    // Act
+    let runtime = createWeaverseNextRuntime({ client, data })
+    let item = runtime.itemInstances.get('tr-none-item')
+
+    // Assert — the fast path returns the base store object itself.
+    expect(runtime.translationMap).toEqual({})
+    expect(item.getSnapShot()).toBe(item._store)
+    expect(item.getSnapShot().heading).toBe('Base')
+  })
+
+  it('should_memoize_the_merged_snapshot_until_the_translation_entry_changes', () => {
+    // Arrange
+    let client = makeClient()
+    let data: WeaverseNextLoaderData = {
+      page: {
+        id: 'tr-memo-page',
+        rootId: 'tr-memo-item',
+        items: [
+          { id: 'tr-memo-item', type: 'hero', data: { heading: 'Original' } },
+        ],
+        translationMap: {
+          'tr-memo-item': {
+            heading: { originalValue: 'Original', translatedValue: 'V1' },
+          },
+        },
+        translationLocale: 'fr',
+        translationLanguageId: 'lang-fr',
+      },
+    }
+    let runtime = createWeaverseNextRuntime({ client, data })
+    let item = runtime.itemInstances.get('tr-memo-item')
+
+    // Act — two reads with nothing changed.
+    let first = item.getSnapShot()
+    let second = item.getSnapShot()
+
+    // Assert — same store + same translation entry → identical object ref.
+    expect(second).toBe(first)
+    expect(first.heading).toBe('V1')
+
+    // Act — editing the field assigns a fresh per-item entry (cache invalidates).
+    runtime.updateTranslation('tr-memo-item', 'heading', 'Original', 'V2')
+    let third = item.getSnapShot()
+
+    // Assert — new object, new value.
+    expect(third).not.toBe(first)
+    expect(third.heading).toBe('V2')
+  })
+
+  it('should_set_locale_and_refresh_items_when_setTranslationSidecar_is_called', () => {
+    // Arrange — start with no sidecar, subscribe to the item.
+    let client = makeClient()
+    let data: WeaverseNextLoaderData = {
+      page: {
+        id: 'tr-set-page',
+        rootId: 'tr-set-item',
+        items: [
+          { id: 'tr-set-item', type: 'hero', data: { heading: 'Original' } },
+        ],
+      },
+    }
+    let runtime = createWeaverseNextRuntime({ client, data })
+    let item = runtime.itemInstances.get('tr-set-item')
+    let listener = vi.fn()
+    let unsubscribe = item.subscribe(listener)
+
+    // Act
+    runtime.setTranslationSidecar(
+      {
+        'tr-set-item': {
+          heading: { originalValue: 'Original', translatedValue: 'Neu' },
+        },
+      },
+      'de',
+      'lang-de'
+    )
+    unsubscribe()
+
+    // Assert — locale/languageId/map applied, item refreshed, snapshot updated.
+    expect(runtime.translationLocale).toBe('de')
+    expect(runtime.translationLanguageId).toBe('lang-de')
+    expect(listener).toHaveBeenCalled()
+    expect(item.getSnapShot().heading).toBe('Neu')
+  })
+
+  it('should_update_only_the_translation_map_and_fire_the_item_subscriber', () => {
+    // Arrange
+    let client = makeClient()
+    let data: WeaverseNextLoaderData = {
+      page: {
+        id: 'tr-update-page',
+        rootId: 'tr-update-item',
+        items: [
+          { id: 'tr-update-item', type: 'hero', data: { heading: 'Original' } },
+        ],
+        translationMap: {},
+        translationLocale: 'fr',
+        translationLanguageId: 'lang-fr',
+      },
+    }
+    let runtime = createWeaverseNextRuntime({ client, data })
+    let item = runtime.itemInstances.get('tr-update-item')
+    let listener = vi.fn()
+    let unsubscribe = item.subscribe(listener)
+
+    // Act
+    runtime.updateTranslation(
+      'tr-update-item',
+      'heading',
+      'Original',
+      'Traduit'
+    )
+    unsubscribe()
+
+    // Assert — base store untouched, map holds the entry, subscriber fired once,
+    // and the merged snapshot renders the translated value.
+    expect(item._store.heading).toBe('Original')
+    expect(runtime.translationMap['tr-update-item'].heading).toEqual({
+      originalValue: 'Original',
+      translatedValue: 'Traduit',
+    })
+    expect(listener).toHaveBeenCalledTimes(1)
+    expect(item.getSnapShot().heading).toBe('Traduit')
+  })
+
+  it('should_render_translated_values_through_the_page_renderer', () => {
+    // Arrange — a hero whose heading is translated via the page sidecar.
+    let client = makeClient()
+    client.data = {
+      page: {
+        id: 'tr-render-overlay-page',
+        rootId: 'tr-render-overlay-item',
+        items: [
+          {
+            id: 'tr-render-overlay-item',
+            type: 'hero',
+            data: { heading: 'Original heading' },
+          },
+        ],
+        translationMap: {
+          'tr-render-overlay-item': {
+            heading: {
+              originalValue: 'Original heading',
+              translatedValue: 'Titre traduit',
+            },
+          },
+        },
+        translationLocale: 'fr',
+        translationLanguageId: 'lang-fr',
+      },
+    }
+
+    // Act
+    let html = renderToStaticMarkup(
+      <WeaverseNextProvider client={client}>
+        <WeaverseNextRenderer />
+      </WeaverseNextProvider>
+    )
+
+    // Assert — the overlay reaches the rendered output; the base copy is gone.
+    expect(html).toContain('Titre traduit')
+    expect(html).not.toContain('Original heading')
+  })
+
+  it('should_collect_translation_changes_with_data_prefixed_keys', () => {
+    // Arrange
+    let client = makeClient()
+    let data: WeaverseNextLoaderData = {
+      page: {
+        id: 'tr-changes-page',
+        rootId: 'tr-changes-item',
+        items: [{ id: 'tr-changes-item', type: 'hero', data: {} }],
+      },
+    }
+    let runtime = createWeaverseNextRuntime({ client, data })
+    runtime.setTranslationSidecar(
+      {
+        'tr-changes-item': {
+          heading: { originalValue: 'Original', translatedValue: 'Traduit' },
+        },
+      },
+      'fr',
+      'lang-fr'
+    )
+
+    // Act
+    let changes = runtime.getTranslationChanges()
+
+    // Assert — entries carry the `data.<field>` key namespace Builder expects.
+    expect(changes).toEqual({
+      languageId: 'lang-fr',
+      entries: [
+        {
+          itemId: 'tr-changes-item',
+          key: 'data.heading',
+          originalValue: 'Original',
+          translatedValue: 'Traduit',
+        },
+      ],
+    })
+  })
+
+  it('should_return_undefined_translation_changes_when_locale_language_or_entries_missing', () => {
+    // Arrange
+    let client = makeClient()
+    let data: WeaverseNextLoaderData = {
+      page: {
+        id: 'tr-empty-changes-page',
+        rootId: 'tr-empty-changes-item',
+        items: [{ id: 'tr-empty-changes-item', type: 'hero', data: {} }],
+      },
+    }
+    let runtime = createWeaverseNextRuntime({ client, data })
+
+    // Assert — no locale/languageId and no entries → undefined.
+    expect(runtime.getTranslationChanges()).toBeUndefined()
+
+    // Act — locale + languageId set, but the map is still empty.
+    runtime.setTranslationSidecar({}, 'fr', 'lang-fr')
+
+    // Assert — empty entries → undefined.
+    expect(runtime.getTranslationChanges()).toBeUndefined()
+
+    // Act — a map entry exists, but the languageId is missing.
+    runtime.setTranslationSidecar(
+      {
+        'tr-empty-changes-item': {
+          heading: { originalValue: 'a', translatedValue: 'b' },
+        },
+      },
+      'fr',
+      ''
+    )
+
+    // Assert — missing languageId → undefined even with entries.
+    expect(runtime.getTranslationChanges()).toBeUndefined()
+  })
+
+  it('should_clear_a_stale_sidecar_when_setProjectData_gets_page_data_without_one', () => {
+    // Arrange — a runtime that started with a translation sidecar.
+    let client = makeClient()
+    let data: WeaverseNextLoaderData = {
+      page: {
+        id: 'tr-clear-page',
+        rootId: 'tr-clear-item',
+        items: [{ id: 'tr-clear-item', type: 'hero', data: {} }],
+        translationMap: {
+          'tr-clear-item': {
+            heading: { originalValue: 'a', translatedValue: 'b' },
+          },
+        },
+        translationLocale: 'fr',
+        translationLanguageId: 'lang-fr',
+      },
+    }
+    let runtime = createWeaverseNextRuntime({ client, data })
+    expect(runtime.translationLocale).toBe('fr')
+
+    // Act — replace with fresh page data that carries no sidecar.
+    runtime.setProjectData({
+      id: 'tr-clear-page',
+      rootId: 'tr-clear-item',
+      items: [{ id: 'tr-clear-item', type: 'hero', data: {} }],
+    })
+
+    // Assert — the stale sidecar is cleared to defaults.
+    expect(runtime.translationMap).toEqual({})
+    expect(runtime.translationLocale).toBe('')
+    expect(runtime.translationLanguageId).toBe('')
+  })
+
+  it('should_apply_a_fresh_sidecar_through_setProjectData_on_non_design_reuse', () => {
+    // Arrange — published/non-design reuse: same page ID + URL across two passes.
+    let previousWindow = globalThis.window
+    let fakeWindow = {} as Window &
+      typeof globalThis & { __weaverses?: unknown }
+    vi.stubGlobal('window', fakeWindow)
+    let client = makeClient({
+      requestContext: { isDesignMode: false, pathname: '/' },
+    })
+    let firstData: WeaverseNextLoaderData = {
+      page: {
+        id: 'tr-reuse-side-page',
+        rootId: 'tr-reuse-side-item',
+        items: [
+          {
+            id: 'tr-reuse-side-item',
+            type: 'hero',
+            data: { heading: 'Original' },
+          },
+        ],
+      },
+    }
+    let runtime = createWeaverseNextRuntime({ client, data: firstData })
+    expect(runtime.translationMap).toEqual({})
+    let secondData: WeaverseNextLoaderData = {
+      page: {
+        id: 'tr-reuse-side-page',
+        rootId: 'tr-reuse-side-item',
+        items: [
+          {
+            id: 'tr-reuse-side-item',
+            type: 'hero',
+            data: { heading: 'Original' },
+          },
+        ],
+        translationMap: {
+          'tr-reuse-side-item': {
+            heading: { originalValue: 'Original', translatedValue: 'Traduit' },
+          },
+        },
+        translationLocale: 'fr',
+        translationLanguageId: 'lang-fr',
+      },
+    }
+
+    // Act — non-design reuse re-applies project data (and its sidecar).
+    let reused = createWeaverseNextRuntime({ client, data: secondData })
+
+    // Assert — same runtime, fresh sidecar extracted, item overlays it.
+    expect(reused).toBe(runtime)
+    expect(reused.translationLocale).toBe('fr')
+    expect(
+      reused.translationMap['tr-reuse-side-item'].heading.translatedValue
+    ).toBe('Traduit')
+    let item = reused.itemInstances.get('tr-reuse-side-item')
+    expect(item.getSnapShot().heading).toBe('Traduit')
+    vi.stubGlobal('window', previousWindow)
+  })
+
+  it('should_not_clobber_a_live_sidecar_when_reusing_a_design_mode_runtime', () => {
+    // Arrange — a live design-mode runtime owns its translation sidecar; Builder
+    // pushes edits via setTranslationSidecar/updateTranslation, so a reuse pass
+    // with fresh loader data must not overwrite the live map.
+    let previousWindow = globalThis.window
+    let fakeWindow = {} as Window &
+      typeof globalThis & { __weaverses?: unknown }
+    vi.stubGlobal('window', fakeWindow)
+    let client = makeClient({
+      requestContext: { isDesignMode: true, pathname: '/' },
+    })
+    let runtime = createWeaverseNextRuntime({
+      client,
+      data: {
+        page: {
+          id: 'tr-design-reuse-page',
+          rootId: 'tr-design-reuse-item',
+          items: [{ id: 'tr-design-reuse-item', type: 'hero', data: {} }],
+        },
+      },
+    })
+    // Builder pushes a live translation edit into the running runtime.
+    runtime.updateTranslation(
+      'tr-design-reuse-item',
+      'heading',
+      'Original',
+      'Live edit'
+    )
+    let setProjectData = vi.spyOn(runtime, 'setProjectData')
+
+    // Act — a reuse pass arrives with fresh loader data carrying its own sidecar.
+    let reused = createWeaverseNextRuntime({
+      client,
+      data: {
+        page: {
+          id: 'tr-design-reuse-page',
+          rootId: 'tr-design-reuse-item',
+          items: [{ id: 'tr-design-reuse-item', type: 'hero', data: {} }],
+          translationMap: {
+            'tr-design-reuse-item': {
+              heading: {
+                originalValue: 'Original',
+                translatedValue: 'Server value',
+              },
+            },
+          },
+          translationLocale: 'fr',
+          translationLanguageId: 'lang-fr',
+        },
+      },
+    })
+
+    // Assert — same runtime, project data not reset, live edit preserved.
+    expect(reused).toBe(runtime)
+    expect(setProjectData).not.toHaveBeenCalled()
+    expect(
+      reused.translationMap['tr-design-reuse-item'].heading.translatedValue
+    ).toBe('Live edit')
+    vi.stubGlobal('window', previousWindow)
+  })
+})

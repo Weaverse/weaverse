@@ -464,3 +464,69 @@ git diff --check
 ### Notes
 
 Claude implemented the initial source/tests from the handoff but timed out before closeout. Hermes reviewed the partial diff, fixed stale `merchantOverrides` clearing on runtime reuse, added regression coverage for that case, fixed the standalone-provider fallback `TranslationStore` to use `useRef` instead of `useMemo`, corrected translation priority docs, formatted, and ran verification.
+
+## 2026-07-10 — item-level translation sidecar parity
+
+Slice branch: `feat/next-item-translation-sidecar`
+Tracker: https://github.com/Weaverse/builder/issues/2659
+
+Follow-up to PR #488 static-text foundation. This slice implements the item-level/page translation sidecar contract that Builder Studio already uses for Hydrogen.
+
+### Scope
+
+- Added Next item-level translation sidecar types:
+  - `WeaverseNextTranslationMapEntry`
+  - `WeaverseNextTranslationItemEntry`
+  - `WeaverseNextTranslationMap`
+  - `WeaverseNextTranslationEntry`
+  - `WeaverseNextTranslationChanges`
+- `WeaverseNextItem.getSnapShot()` now overlays `runtime.translationMap[itemId][field].translatedValue` over the base `_store`, memoized by `_store` ref + per-item translation entry ref like Hydrogen.
+- `WeaverseNextRuntime` now implements:
+  - `extractTranslationSidecar()` from page data
+  - `setTranslationSidecar(map, locale, languageId)` + item refresh
+  - `updateTranslation(itemId, key, originalValue, translatedValue)` + single-item notify
+  - `getTranslationChanges()` with Builder's `data.<field>` key namespace
+  - `setProjectData()` sidecar re-extraction/clearing on project data replacement
+- Reused non-design runtimes apply fresh sidecars through `setProjectData()`; design-mode runtime reuse still avoids clobbering the live Studio-owned tree/sidecar.
+- No Builder changes.
+
+### Tests
+
+Added `packages/next/__tests__/next-adapter.test.tsx` coverage for:
+
+- snapshot overlay from page `translationMap`
+- base fast path when no translations exist
+- snapshot memoization and invalidation after `updateTranslation()`
+- `setTranslationSidecar()` locale/languageId/map updates and item refresh
+- `updateTranslation()` not mutating base `_store` and firing the item subscriber
+- renderer output using translated values
+- `getTranslationChanges()` output/undefined guards
+- clearing stale sidecar when `setProjectData()` receives data without sidecar
+- non-design runtime reuse applying a fresh sidecar
+- design-mode runtime reuse preserving live Studio translation sidecar edits
+
+### Verification
+
+```bash
+pnpm --filter @weaverse/next test -- __tests__/next-adapter.test.tsx
+# 5 files, 118 tests passed (test runner executed the whole package suite)
+
+pnpm --filter @weaverse/next typecheck
+# passed
+
+pnpm --filter @weaverse/next build
+# passed
+
+pnpm exec biome check packages/next/src packages/next/__tests__ packages/next/README.md --diagnostic-level=error
+# passed
+
+git diff --check
+# passed
+
+autoreview-copilot --mode local
+# clean, no accepted/actionable findings
+```
+
+### Notes
+
+Claude implemented the source/tests from the handoff but timed out before closeout. Hermes inspected the diff, fixed formatting/lint, added the work-log, ran verification, and ran autoreview.

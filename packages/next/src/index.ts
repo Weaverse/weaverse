@@ -119,6 +119,11 @@ export type {
   WeaverseNextRuntimeInternal,
   WeaverseNextStorefront,
   WeaverseNextThemeSettingsStore,
+  WeaverseNextTranslationChanges,
+  WeaverseNextTranslationEntry,
+  WeaverseNextTranslationItemEntry,
+  WeaverseNextTranslationMap,
+  WeaverseNextTranslationMapEntry,
   WeaverseProduct,
 } from './types'
 export {
