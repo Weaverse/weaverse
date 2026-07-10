@@ -10,6 +10,9 @@ import type {
   WeaverseNextRequestInfo,
   WeaverseNextRuntimeConfig,
   WeaverseNextRuntimeInternal,
+  WeaverseNextTranslationChanges,
+  WeaverseNextTranslationEntry,
+  WeaverseNextTranslationMap,
 } from './types'
 
 declare global {
@@ -107,7 +110,14 @@ export class WeaverseNextRuntime extends Weaverse {
   isPreviewMode: boolean
   isRevisionPreview: boolean
   sectionType?: string
-  translationMap: Record<string, unknown> = {}
+
+  // ─── Item-level translation sidecar (design mode only) ─────────────
+  /**
+   * Translation map received from Builder in design mode, keyed by item ID.
+   * `WeaverseNextItem.getSnapShot()` overlays these onto the data handed to
+   * components, so translations render without mutating the base `_store`.
+   */
+  translationMap: WeaverseNextTranslationMap = {}
   translationLocale = ''
   translationLanguageId = ''
 
@@ -156,20 +166,117 @@ export class WeaverseNextRuntime extends Weaverse {
       translationStore,
       themeTextStore: translationStore,
     }
+
+    // Read any item-level translation sidecar the loader attached to the page
+    // data. Runs after `super()` has built `this.data` and the item stores.
+    this.extractTranslationSidecar()
   }
 
-  extractTranslationSidecar = () => undefined
+  /**
+   * Pull `translationMap` / `translationLocale` / `translationLanguageId` off
+   * the current page data (Builder attaches them in design mode). Unlike
+   * Hydrogen, this also clears the sidecar to defaults when the new page data
+   * carries none, so a reused runtime / project-data swap can't leave a stale
+   * map overlaying the fresh tree.
+   */
+  extractTranslationSidecar = () => {
+    let pageData = this.data as WeaverseNextPageData | undefined
+    let translationMap = pageData?.translationMap as
+      | WeaverseNextTranslationMap
+      | undefined
+    if (translationMap) {
+      this.translationMap = translationMap
+      this.translationLocale = (pageData?.translationLocale as string) || ''
+      this.translationLanguageId =
+        (pageData?.translationLanguageId as string) || ''
+    } else {
+      this.translationMap = {}
+      this.translationLocale = ''
+      this.translationLanguageId = ''
+    }
+  }
+
+  /**
+   * Replace the translation sidecar (Builder pushes this when translation data
+   * arrives or the active language changes) and refresh every item so their
+   * merged snapshots recompute.
+   */
   setTranslationSidecar = (
-    map: Record<string, unknown> = {},
+    map: WeaverseNextTranslationMap = {},
     locale = '',
     languageId = ''
   ) => {
     this.translationMap = map
     this.translationLocale = locale
     this.translationLanguageId = languageId
+    this.refreshAllItems()
   }
-  updateTranslation = () => undefined
-  getTranslationChanges = () => undefined
+
+  /**
+   * Update a single translatable field for one item. Assigns a new per-item
+   * entry object so `WeaverseNextItem.getSnapShot()`'s translation-ref cache
+   * invalidates, then triggers only that item's subscribers.
+   */
+  updateTranslation = (
+    itemId: string,
+    key: string,
+    originalValue: string,
+    translatedValue: string
+  ) => {
+    if (!this.translationMap[itemId]) {
+      this.translationMap[itemId] = {}
+    }
+    // New entry reference so the item's snapshot cache detects the change.
+    this.translationMap[itemId] = {
+      ...this.translationMap[itemId],
+      [key]: { originalValue, translatedValue },
+    }
+    let instance = this.itemInstances.get(itemId)
+    if (instance) {
+      instance.triggerUpdate()
+    }
+  }
+
+  /**
+   * Collect translation changes for the save flow. Returns `undefined` unless
+   * both the locale and language ID are set and at least one entry exists;
+   * each entry key is namespaced as `data.<field>` to match Builder.
+   */
+  getTranslationChanges = (): WeaverseNextTranslationChanges | undefined => {
+    let languageId = this.translationLanguageId
+    if (!(this.translationLocale && languageId)) {
+      return
+    }
+
+    let entries: WeaverseNextTranslationEntry[] = []
+    for (let [itemId, fields] of Object.entries(this.translationMap)) {
+      for (let [key, entry] of Object.entries(fields)) {
+        entries.push({
+          itemId,
+          key: `data.${key}`,
+          originalValue: entry.originalValue,
+          translatedValue: entry.translatedValue,
+        })
+      }
+    }
+
+    if (entries.length === 0) {
+      return
+    }
+    return { languageId, entries }
+  }
+
+  /**
+   * Re-extract the translation sidecar whenever project data is replaced (route
+   * change / non-design reuse), before rebuilding item stores. Takes the
+   * renderable page shape (`rootId` resolved) that `getRenderablePage()` and
+   * the reuse branch pass in.
+   */
+  setProjectData = (data: WeaverseNextPageData & { rootId: string }) => {
+    this.data = data
+    this.extractTranslationSidecar()
+    this.initProject()
+  }
 }
 
 export function createWeaverseNextRuntime(

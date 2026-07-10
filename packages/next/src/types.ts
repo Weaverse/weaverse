@@ -89,6 +89,48 @@ export interface WeaverseNextRuntimeConfig {
   translationStore?: TranslationStore
 }
 
+// ─── Item-level translation sidecar types (design mode) ──────────────
+//
+// Kept structurally aligned with Hydrogen's `TranslationMapEntry` /
+// `TranslationItemEntry` / `TranslationMap` / `TranslationEntry` /
+// `TranslationChanges` so Builder Studio's item-translation RPC contract works
+// against `@weaverse/next` unchanged. Values stay strings for now; broaden to
+// object values only when Builder image handling forces it (with tests).
+
+/** A single translated field for one item. */
+export interface WeaverseNextTranslationMapEntry {
+  originalValue: string
+  translatedValue: string
+}
+
+/** Per-item translation fields, keyed by field name. */
+export type WeaverseNextTranslationItemEntry = {
+  [key: string]: WeaverseNextTranslationMapEntry
+}
+
+/**
+ * Translation map sent from Builder alongside page data in design mode.
+ * Keyed by item ID, each value maps field names to translation entries.
+ */
+export type WeaverseNextTranslationMap = {
+  [itemId: string]: WeaverseNextTranslationItemEntry
+}
+
+/** A single translation entry for save payloads. */
+export interface WeaverseNextTranslationEntry {
+  deleted?: boolean
+  itemId: string
+  key: string
+  originalValue: string
+  translatedValue: string
+}
+
+/** Result of collecting translation changes for the save flow. */
+export type WeaverseNextTranslationChanges = {
+  languageId: string
+  entries: WeaverseNextTranslationEntry[]
+}
+
 /**
  * Locale/market info passed through to component loaders and the Storefront
  * client. Kept structurally close to Hydrogen's `WeaverseI18n` but without the
