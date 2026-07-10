@@ -313,3 +313,86 @@ git diff --check
 ### Notes
 
 Claude started the SDK implementation from the handoff and timed out after touching the package source. Hermes completed the missing tests/work-log and ran verification. No Builder database/save endpoint changes were needed for this package-level contract slice.
+
+## 2026-07-10 — multi-runtime / nested instance selection parity
+
+Slice branch: `feat/next-multi-runtime-selection`
+Tracker: https://github.com/Weaverse/builder/issues/2659
+
+Continuing Epic 2663 after `@weaverse/next@0.1.0-alpha.7`. This slice codifies the
+multi-runtime / nested Weaverse instance contract as package-level tests so
+`@weaverse/next` provably matches Hydrogen's `window.__weaverses` registry/reuse
+semantics and hands Builder Studio every runtime candidate.
+
+### Outcome: tests-only (no SDK bug found)
+
+Audited `createWeaverseNextRuntime` / `bindWeaverseNextStudioRuntime` against the
+Hydrogen reference behavior in `packages/hydrogen/src/WeaverseHydrogenRoot.tsx`
+(`createWeaverseInstance()`) and Builder's `resolveEditingInstance()` /
+`init()` selection. The existing Next implementation already satisfies the
+contract, so no source change was needed — this is a tests + work-log slice.
+
+### Scope
+
+Added a `multi-runtime / nested instance selection` describe block to
+`packages/next/__tests__/next-adapter.test.tsx` (5 tests):
+
+1. **Co-located multi-runtime registry** — two design-mode runtimes at the same
+   `pathname + search` but different page/root IDs both land in
+   `window.__weaverses` under their own keys, are not reused across page IDs, and
+   each keeps its own `pageId` / `requestInfo` / `data.rootId` /
+   `internal.pageAssignment` / `internal.project`. Also asserts
+   `window.__weaverse` tracks the last-created candidate — Hydrogen's
+   single-pointer + full-registry split. Builder owns deciding which co-located
+   instance is the editable leaf.
+2. **Same page + same URL reuse** — same `pageId` + same `requestInfo` returns
+   the same runtime object, the registry key still points at it, and internal
+   payload fields (`pageAssignment`, `project`) refresh from the latest loader
+   pass.
+3. **Same page + different URL** — `page` at `/collections/a` then `/collections/b`
+   returns a fresh runtime object and overwrites `window.__weaverses[pageId]`,
+   mirroring Hydrogen's "reuse only while the browser stays on the same URL".
+4. **Studio bind per runtime** — with `window.weaverseStudio = { init, refreshStudio }`
+   stubbed, binding both co-located design-mode runtimes calls `init` for each
+   runtime object and leaves both registry keys intact. Builder's
+   `resolveEditingInstance()` is intentionally NOT reimplemented in the SDK test;
+   the SDK only verifies both candidates pass through.
+5. **Distinct root item stores / element refs** — co-located runtimes with
+   distinct item IDs own distinct root item stores, each carrying its own element
+   ref (set directly, since the Node test env has no jsdom). Documents that the
+   actual DOM leaf-selection walk is Builder-owned and covered there.
+
+Item IDs are globally unique per test (prefixed `mr-*`) to avoid the process-wide
+`Weaverse.itemInstances` static map leaking item stores across tests (the pitfall
+flagged in the 2026-07-09 root-theme-provider entry).
+
+### Non-scope
+
+- No Builder Studio selection-logic changes (`resolveEditingInstance()` stays
+  Builder-owned).
+- No new public API surface — the existing runtime already satisfies the contract.
+- Translation/static-text, global sections, markets/i18n, redirect helpers untouched.
+- No npm publish / POC update — Hermes handles release flow after review/merge.
+
+### Verification
+
+```bash
+pnpm --filter @weaverse/next test -- __tests__/next-adapter.test.tsx
+# 5 files, 88 tests passed (83 → 88). NOTE: the `-- <file>` arg did not filter;
+# vitest ran the whole package suite (all 5 files). +5 tests = the new block.
+
+pnpm --filter @weaverse/next typecheck  # passed (exit 0)
+pnpm --filter @weaverse/next build      # passed (tsup ESM/CJS/DTS all succeeded)
+pnpm exec biome check packages/next/src packages/next/__tests__ packages/next/README.md --diagnostic-level=error
+# Checked 33 files. No errors.
+git diff --check                        # clean (exit 0)
+```
+
+### Remaining risk
+
+- Package-level unit coverage only. It does not exercise a real browser DOM or
+  Builder's `resolveEditingInstance()` leaf pick — that path is Builder-owned and
+  covered in the Builder repo. Full nested-instance Studio E2E in the POC (two
+  co-located instances, confirm Builder edits the intended leaf) remains a
+  manual/E2E step.
+- Changes left uncommitted per the handoff; Hermes commits/pushes after review.
