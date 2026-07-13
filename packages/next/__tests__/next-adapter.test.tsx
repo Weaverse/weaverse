@@ -1,5 +1,6 @@
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { Weaverse } from '@weaverse/react'
 import type { ReactNode, RefObject } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it, vi } from 'vitest'
@@ -1213,9 +1214,10 @@ describe('Studio runtime contract', () => {
     vi.stubGlobal('window', previousWindow)
   })
 
-  it('should_apply_fresh_page_data_when_reusing_runtime_outside_design_mode', () => {
+  it('should_defer_fresh_page_data_until_after_render_when_reusing_runtime_outside_design_mode', () => {
     // Arrange — published/non-design reuse has no draft state, so the latest
-    // loader data must win.
+    // loader data must win, but not by emitting external-store updates during
+    // the renderer's render phase.
     let previousWindow = globalThis.window
     let fakeWindow = {} as Window &
       typeof globalThis & { __weaverses?: unknown }
@@ -1236,13 +1238,84 @@ describe('Studio runtime contract', () => {
       },
     }
 
-    // Act
+    // Act — runtime factory runs during React render.
     let reusedRuntime = createWeaverseNextRuntime({ client, data: nextData })
 
-    // Assert — same runtime, but the fresh page tree is applied.
+    // Assert — same runtime, but fresh page data is only queued until the
+    // renderer's post-commit effect flushes it.
     expect(reusedRuntime).toBe(runtime)
+    expect(setProjectData).not.toHaveBeenCalled()
+    expect(reusedRuntime.data.items).toHaveLength(1)
+    expect(reusedRuntime.pendingProjectData?.items).toHaveLength(2)
+
+    reusedRuntime.flushRenderPhaseUpdates()
+
     expect(setProjectData).toHaveBeenCalledTimes(1)
+    expect(reusedRuntime.pendingProjectData).toBeUndefined()
     expect(reusedRuntime.data.items).toHaveLength(2)
+    vi.stubGlobal('window', previousWindow)
+  })
+
+  it('should_flatten_fresh_item_data_when_locale_navigation_recreates_runtime_for_same_page', () => {
+    // Arrange — locale/client navigation serves the same page id under a new
+    // request key ('/fr-fr'), so a new runtime is built, but core
+    // `initProject()` finds the existing item instance in the process-wide
+    // `Weaverse.itemInstances` map and only calls `setData(item)` — nested
+    // `item.data` is flattened onto the store solely in the `WeaverseNextItem`
+    // constructor, so top-level props go stale.
+    let previousWindow = globalThis.window
+    let fakeWindow = {} as Window &
+      typeof globalThis & { __weaverses?: unknown }
+    vi.stubGlobal('window', fakeWindow)
+    let enData: WeaverseNextLoaderData = {
+      page: {
+        id: 'page-1',
+        rootId: 'item-root',
+        items: [{ id: 'item-root', type: 'hero', data: { text: 'Hello EN' } }],
+      },
+    }
+    let frData: WeaverseNextLoaderData = {
+      page: {
+        id: 'page-1',
+        rootId: 'item-root',
+        items: [
+          { id: 'item-root', type: 'hero', data: { text: 'Bonjour FR' } },
+        ],
+      },
+    }
+    createWeaverseNextRuntime({
+      client: makeClient({
+        requestContext: { isDesignMode: false, pathname: '/' },
+      }),
+      data: enData,
+    })
+    let existingItem = Weaverse.itemInstances.get('item-root')
+    expect(existingItem).toBeDefined()
+    let notify = vi.fn()
+    let unsubscribe = existingItem?.subscribe(notify)
+
+    // Act — same page id, different pathname → new runtime, reused item store.
+    let runtime = createWeaverseNextRuntime({
+      client: makeClient({
+        requestContext: { isDesignMode: false, pathname: '/fr-fr' },
+      }),
+      data: frData,
+    })
+
+    // Assert — the runtime data carries the fresh nested payload, and the item
+    // snapshot must expose it as a flattened top-level prop. The subscriber
+    // notification is deferred for the renderer's post-commit flush so runtime
+    // construction remains render-phase safe.
+    expect(runtime.data.items[0]?.data).toMatchObject({ text: 'Bonjour FR' })
+    let item = runtime.itemInstances.get('item-root')
+    expect(item).toBeDefined()
+    expect(item?.getSnapShot().text).toBe('Bonjour FR')
+    expect(notify).not.toHaveBeenCalled()
+
+    runtime.flushRenderPhaseUpdates()
+
+    expect(notify).toHaveBeenCalledTimes(1)
+    unsubscribe?.()
     vi.stubGlobal('window', previousWindow)
   })
 })
@@ -2330,11 +2403,16 @@ describe('item-level translation sidecar', () => {
       },
     }
 
-    // Act — non-design reuse re-applies project data (and its sidecar).
+    // Act — runtime reuse happens during render, so fresh project data (and its
+    // sidecar) is queued until the renderer's post-commit flush.
     let reused = createWeaverseNextRuntime({ client, data: secondData })
 
-    // Assert — same runtime, fresh sidecar extracted, item overlays it.
+    // Assert — same runtime, with the fresh sidecar pending until flush.
     expect(reused).toBe(runtime)
+    expect(reused.translationLocale).toBe('')
+
+    reused.flushRenderPhaseUpdates()
+
     expect(reused.translationLocale).toBe('fr')
     expect(
       reused.translationMap['tr-reuse-side-item'].heading.translatedValue

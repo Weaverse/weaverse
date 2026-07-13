@@ -1,7 +1,7 @@
 'use client'
 
 import { WeaverseRoot } from '@weaverse/react'
-import { memo, useContext, useMemo } from 'react'
+import { memo, useContext, useEffect, useLayoutEffect, useMemo } from 'react'
 import { WeaverseNextContext } from './provider'
 import { createWeaverseNextRuntime } from './runtime'
 import type {
@@ -12,6 +12,8 @@ import type {
 import { WeaverseNextStudio } from './use-weaverse-next-studio'
 
 const EMPTY_DATA_CONTEXT: Record<string, unknown> = {}
+const useIsomorphicLayoutEffect =
+  typeof window === 'undefined' ? useEffect : useLayoutEffect
 
 function getRenderablePage(
   data: WeaverseNextLoaderData | null | undefined
@@ -78,6 +80,10 @@ export const WeaverseNextRenderer = memo(function WeaverseNextRendererComponent(
     context?.themeSettingsStore,
     context?.translationStore,
   ])
+
+  useIsomorphicLayoutEffect(() => {
+    weaverse?.flushRenderPhaseUpdates()
+  }, [weaverse])
 
   if (!weaverse) {
     return null

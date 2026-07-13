@@ -8,6 +8,50 @@ import type {
 import { generateDataFromSchema } from './utils'
 
 /**
+ * Spread a serialized item's nested `data` field into top-level props — the
+ * shape the shared `@weaverse/react` renderer expects. Top-level fields win
+ * over nested ones, matching the constructor's original
+ * `Object.assign(store, schemaDefaults, data, rest)` merge order. Flat payloads
+ * with no nested `data` pass through unchanged.
+ */
+function flattenItemData(update: Omit<ElementData, 'id' | 'type'>) {
+  let { data, ...rest } = update
+  if (!(data && typeof data === 'object' && !Array.isArray(data))) {
+    return rest
+  }
+  return { ...data, ...rest }
+}
+
+/**
+ * While set, item `setData()` queues its subscriber notification here instead
+ * of emitting synchronously. `createWeaverseNextRuntime()` runs during React
+ * render (the renderer's `useMemo`), and constructing a runtime makes core's
+ * `initProject()` call `setData()` on reused item instances (locale/client
+ * navigation) — emitting to `useSyncExternalStore` subscribers mid-render
+ * trips React's setState-in-render warning. Data is still applied
+ * synchronously; only the emit is deferred.
+ */
+let deferredItemUpdates: Set<WeaverseNextItem> | null = null
+
+/**
+ * Run `create` with item update emissions deferred, returning its result and
+ * the items whose `setData()` fired meanwhile. The caller is responsible for
+ * calling `triggerUpdate()` on them once React has committed.
+ */
+export function collectDeferredItemUpdates<T>(
+  create: () => T
+): [T, WeaverseNextItem[]] {
+  let previousQueue = deferredItemUpdates
+  let queue = new Set<WeaverseNextItem>()
+  deferredItemUpdates = queue
+  try {
+    return [create(), [...queue]]
+  } finally {
+    deferredItemUpdates = previousQueue
+  }
+}
+
+/**
  * Item store that flattens the serialized item's nested `data` field onto the
  * store and seeds schema defaults — same shape Hydrogen produces, so the
  * shared `@weaverse/react` renderer can spread props at the top level.
@@ -27,9 +71,28 @@ export class WeaverseNextItem extends WeaverseItemStore {
 
   constructor(initialData: WeaverseNextComponentData, weaverse: Weaverse) {
     super(initialData as ElementData, weaverse)
-    let { data, ...rest } = initialData
     let schemaData = generateDataFromSchema(this.Element?.schema)
-    Object.assign(this._store, schemaData, data, rest)
+    Object.assign(this._store, schemaData, flattenItemData(initialData))
+  }
+
+  /**
+   * Flatten nested `data` on updates exactly like the constructor does. Core's
+   * `initProject()` calls `setData(item)` when a new runtime serves a page
+   * whose item instances already exist (e.g. locale/client navigation), and
+   * the inherited shallow merge would leave stale top-level props behind.
+   * Assigning through the inherited `data` setter swaps the `_store` ref,
+   * which invalidates the memoized snapshot below. The subscriber emit is
+   * queued instead of fired when a render-phase deferral is active (see
+   * `collectDeferredItemUpdates`).
+   */
+  setData = (update: Omit<ElementData, 'id' | 'type'>) => {
+    this.data = flattenItemData(update)
+    if (deferredItemUpdates) {
+      deferredItemUpdates.add(this)
+    } else {
+      this.triggerUpdate()
+    }
+    return this.data
   }
 
   /**
