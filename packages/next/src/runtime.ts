@@ -1,5 +1,9 @@
 import { Weaverse } from '@weaverse/react'
-import { ensureNextItemConstructor } from './item'
+import {
+  collectDeferredItemUpdates,
+  ensureNextItemConstructor,
+  type WeaverseNextItem,
+} from './item'
 import { buildWeaverseNextRequestInfo } from './request-info'
 import { createWeaverseNextThemeSettingsStore } from './theme-settings-store'
 import { TranslationStore } from './translation-store'
@@ -120,6 +124,24 @@ export class WeaverseNextRuntime extends Weaverse {
   translationMap: WeaverseNextTranslationMap = {}
   translationLocale = String()
   translationLanguageId = String()
+
+  /**
+   * Fresh page data captured while React was rendering. Runtime reuse happens
+   * inside the renderer's render phase (`useMemo`), where applying it through
+   * `setProjectData()` would emit item updates to `useSyncExternalStore`
+   * subscribers mid-render. The renderer applies it post-commit via
+   * `flushRenderPhaseUpdates()`. Never set on design-mode runtimes — the live
+   * Studio tree owns the page data there.
+   */
+  pendingProjectData?: WeaverseNextPageData & { rootId: string }
+
+  /**
+   * Reused item instances whose data was refreshed while this runtime was
+   * constructed during render (core `initProject()` calls `setData()` on
+   * them). Their data is already fresh; only the subscriber notification was
+   * deferred to `flushRenderPhaseUpdates()`.
+   */
+  pendingItemUpdates: WeaverseNextItem[] = []
 
   constructor(config: WeaverseNextRuntimeConfig) {
     let { client, data } = config
@@ -277,6 +299,29 @@ export class WeaverseNextRuntime extends Weaverse {
     this.extractTranslationSidecar()
     this.initProject()
   }
+
+  /**
+   * Apply updates deferred off the render phase: swap in any pending page data
+   * captured on runtime reuse, then notify items whose data was refreshed
+   * during construction. The renderer calls this from a layout effect right
+   * after commit, so subscribers re-render before paint (no content flash) and
+   * without React's setState-in-render warning.
+   */
+  flushRenderPhaseUpdates = () => {
+    let pendingData = this.pendingProjectData
+    if (pendingData) {
+      this.pendingProjectData = undefined
+      this.setProjectData(pendingData)
+    }
+
+    let pendingItems = this.pendingItemUpdates
+    if (pendingItems.length > 0) {
+      this.pendingItemUpdates = []
+      for (let item of pendingItems) {
+        item.triggerUpdate()
+      }
+    }
+  }
 }
 
 export function createWeaverseNextRuntime(
@@ -296,9 +341,16 @@ export function createWeaverseNextRuntime(
     // unsaved drafts. Reapplying loader `page` data here would clobber those
     // edits, so leave the project data untouched and let
     // `bindWeaverseNextStudioRuntime` push the latest state via `refreshStudio`.
-    // Published / preview reuse has no draft state, so fresh data still wins.
-    if (!(existing.isDesignMode || nextIsDesignMode)) {
-      existing.setProjectData(page)
+    // Published / preview reuse has no draft state, so fresh data still wins —
+    // but this factory runs during React render (the renderer's `useMemo`),
+    // and `setProjectData()` → `initProject()` → `setData()` would emit item
+    // updates to `useSyncExternalStore` subscribers mid-render (React's
+    // setState-in-render warning). Stash the page instead; the renderer
+    // applies it post-commit via `flushRenderPhaseUpdates()`.
+    if (existing.isDesignMode || nextIsDesignMode) {
+      existing.pendingProjectData = undefined
+    } else {
+      existing.pendingProjectData = page
     }
     // Always capture the latest server payload. In design mode the live tree
     // (`existing.data`) is deliberately left untouched above, so it goes stale
@@ -347,7 +399,15 @@ export function createWeaverseNextRuntime(
     return existing
   }
 
-  let runtime = new WeaverseNextRuntime(config) as StudioBoundRuntime
+  // Constructing a fresh runtime also happens during render, and core
+  // `initProject()` reuses process-wide item instances holding the same item
+  // ids (locale/client navigation recreates the runtime under a new request
+  // key) by calling `setData()` on them. Defer those subscriber emits to the
+  // renderer's post-commit `flushRenderPhaseUpdates()` as well.
+  let [runtime, refreshedItems] = collectDeferredItemUpdates(
+    () => new WeaverseNextRuntime(config) as StudioBoundRuntime
+  )
+  runtime.pendingItemUpdates = refreshedItems
   runtime.__weaverseNextRequestKey = requestKey
   runtime.__weaverseNextLatestData = page
   registerRuntime(runtime)
