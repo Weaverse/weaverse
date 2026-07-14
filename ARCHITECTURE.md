@@ -17,11 +17,11 @@
 │                                                                                    │
 │  ┌──────────────────────────┐  ┌──────────────────┐  ┌──────────────────┐          │
 │  │  @weaverse/hydrogen      │  │  @weaverse/next  │  │ @weaverse/remix  │          │
-│  │  (Shopify + RRv7)        │  │  (Next.js)       │  │ (Remix)          │          │
-│  │                          │  │  [Stub]          │  │ [Stub]           │          │
-│  │  WeaverseClient          │  └──────────────────┘  └──────────────────┘          │
-│  │  WeaverseHydrogenRoot    │                                                      │
-│  │  Hydrogen-specific hooks  │                                                      │
+│  │  (Shopify + RRv7)        │  │  (Next.js App)   │  │ (Remix)          │          │
+│  │                          │  │  [Alpha]         │  │ [Stub]           │          │
+│  │  WeaverseClient          │  │  Server client   │  └──────────────────┘          │
+│  │  WeaverseHydrogenRoot    │  │  Renderer/Studio │                                  │
+│  │  Hydrogen-specific hooks  │  └──────────────────┘                                  │
 │  └────────────┬─────────────┘                                                      │
 │               │                                                                    │
 └───────────────┼────────────────────────────────────────────────────────────────────┘
@@ -165,13 +165,13 @@ $ pnpm run build (orchestrated by Turbo)
      ├─→ @weaverse/react (depends on core)
      ├─→ @weaverse/cli (no deps)
      │
-     └─→ @weaverse/hydrogen (depends on react + schema)
-     └─→ @weaverse/next, @weaverse/remix (no deps)
+     ├─→ @weaverse/hydrogen (depends on react + schema)
+     ├─→ @weaverse/next (depends on react + schema; publishes `.` and `./server` entrypoints)
+     └─→ @weaverse/remix (stub)
 
 Each Package Build (tsup):
-src/index.ts → [dist/index.js (CJS), dist/index.mjs (ESM)]
-            → dist/index.d.ts (TypeScript declarations)
-            → dist/index.*.map (source maps)
+- Most packages: `src/index.ts` → CJS/ESM/declarations/maps.
+- `@weaverse/next`: `src/index.ts` and `src/server.ts` → root client/shared entrypoint plus server-only entrypoint.
 ```
 
 ## Code Quality Checks (Pre-commit & CI)
@@ -259,7 +259,7 @@ Version Groups:
 | Platform | Status | Notes |
 |----------|--------|-------|
 | Shopify Hydrogen (React Router v7) | **Primary** | Full support via `@weaverse/hydrogen` |
-| Next.js | Future/Stub | SSR/Static Generation |
+| Next.js App Router | Alpha | `@weaverse/next` server client, renderer/provider, Studio bridge, revalidation, i18n/static-text foundations |
 | Remix | Future/Stub | Server-side rendering |
 | Generic React Router v7 | Supported | Via `@weaverse/react` directly |
 

@@ -542,5 +542,7 @@ app/collections/[handle]/page.tsx            # collection route Weaverse load
 
 - This package is still alpha; API names may change before stable.
 - Next does not provide Hydrogen's global React Router loader context, so apps should keep a small `getWeaverseServerClient(...)` helper.
-- Translation/static-text sidecar parity, multiple Weaverse runtimes on one URL, and global sections are later hardening items.
+- Apps must still wire their App Router route context explicitly for page loads and per-item revalidation; validate product/collection/custom/locale routes in the starter before treating them as production-ready.
+- Global sections are Builder-owned; `@weaverse/next` should only need fixes if manual Studio QA finds a rendering/runtime boundary issue.
 - Full Shopify request-handler/redirect parity is app-level follow-up work, not owned by this package yet.
+- Stable API decisions are still pending for schema export breadth, a public theme-schema type, utility parity, and internal dependency alignment.
