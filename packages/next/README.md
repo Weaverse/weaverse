@@ -152,7 +152,9 @@ Main exports:
 - `revalidateWeaverseNextItem()` — client-side per-item revalidation helper wired by `WeaverseNextStudio`.
 - Hooks: `useThemeSettings`, `useWeaversePageData`, `useWeaverseRootData`, `useWeaverseCommerce`.
 - Re-exported migration helpers from `@weaverse/react`: `useWeaverse`, `useParentInstance`, `useItemInstance`, `useChildInstances`.
-- `createSchema` and schema types from `@weaverse/schema`.
+- Full `@weaverse/schema` surface, including `createSchema`, schema types, validators, and schema helper utilities.
+- `generateDataFromSchema(schema)` — framework-neutral default-setting extraction utility shared with component/theme schema flows.
+- Public `WeaverseNextThemeSchema` type for root/server theme settings config.
 
 ## Server API (`@weaverse/next/server`)
 
@@ -538,6 +540,19 @@ app/products/[handle]/page.tsx               # product route Weaverse load
 app/collections/[handle]/page.tsx            # collection route Weaverse load
 ```
 
+## Alpha migration notes
+
+### After `0.1.0-alpha.9`
+
+- The root `@weaverse/next` entry re-exports the full `@weaverse/schema` surface for Hydrogen migration parity. This includes `createSchema`, schema types, validators, and helper utilities.
+- Theme schema fields are now structurally typed with `WeaverseNextThemeSchema` instead of `unknown` across client/root/server theme settings APIs. Most existing schema objects remain assignable, but alpha consumers with very loose local schema types may need to annotate/cast them before the next publish.
+- `generateDataFromSchema` is public from the root entry and accepts component schemas or `WeaverseNextThemeSchema`.
+- Version bumping still happens in the release flow; do not publish another alpha without bumping `packages/next/package.json` first.
+
+### Bundle note
+
+The Next package build keeps `@weaverse/schema` as an external package re-export. It does not inline Zod/schema validators into `@weaverse/next`'s generated `dist/index.*` bundles. App-level bundle size still depends on what a consuming Next app imports and how its bundler tree-shakes `@weaverse/schema`.
+
 ## Current limitations
 
 - This package is still alpha; API names may change before stable.
@@ -545,4 +560,3 @@ app/collections/[handle]/page.tsx            # collection route Weaverse load
 - Apps must still wire their App Router route context explicitly for page loads and per-item revalidation; validate product/collection/custom/locale routes in the starter before treating them as production-ready.
 - Global sections are Builder-owned; `@weaverse/next` should only need fixes if manual Studio QA finds a rendering/runtime boundary issue.
 - Full Shopify request-handler/redirect parity is app-level follow-up work, not owned by this package yet.
-- Stable API decisions are still pending for schema export breadth, a public theme-schema type, utility parity, and internal dependency alignment.

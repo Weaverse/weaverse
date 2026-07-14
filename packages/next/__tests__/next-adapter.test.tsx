@@ -329,9 +329,9 @@ describe('hooks outside provider', () => {
   })
 })
 
-// ─── 3. Client fetchers are request-safe ──────────────────────────────
+// ─── 3. Root API exports ──────────────────────────────────────────────
 
-describe('createWeaverseNextClient', () => {
+describe('@weaverse/next root API exports', () => {
   it('should_export_theme_schema_type_and_schema_default_utility_from_root_entry', () => {
     // Arrange
     let themeSchema: WeaverseNextThemeSchema = {
@@ -363,7 +363,11 @@ describe('createWeaverseNextClient', () => {
     // Assert
     expect(defaults).toEqual({ announcement: 'Free shipping' })
   })
+})
 
+// ─── 4. Client fetchers are request-safe ──────────────────────────────
+
+describe('createWeaverseNextClient', () => {
   it('should_seed_theme_schema_defaults_under_merchant_overrides', () => {
     // Arrange — theme schema declares two settings with defaults; the merchant
     // only overrides one of them.
