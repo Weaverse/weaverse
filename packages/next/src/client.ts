@@ -1,4 +1,3 @@
-import type { SchemaType } from '@weaverse/schema'
 import { registerWeaverseNextComponents } from './registry'
 import type {
   WeaverseNextClient,
@@ -9,6 +8,7 @@ import type {
   WeaverseNextLoadPageInput,
   WeaverseNextRequestContext,
   WeaverseNextStorefront,
+  WeaverseNextThemeSchema,
 } from './types'
 import { generateDataFromSchema } from './utils'
 
@@ -24,7 +24,7 @@ import { generateDataFromSchema } from './utils'
 class NextClient implements WeaverseNextClient {
   projectId: string
   components: WeaverseNextComponent[]
-  themeSchema?: unknown
+  themeSchema?: WeaverseNextThemeSchema
   themeSettings: Record<string, unknown>
   requestContext?: WeaverseNextRequestContext
   commerce?: WeaverseNextCommerceContext
@@ -44,7 +44,7 @@ class NextClient implements WeaverseNextClient {
     // Without this, `useThemeSettings()` would miss any setting the merchant
     // never explicitly overrode.
     this.themeSettings = {
-      ...generateDataFromSchema(config.themeSchema as SchemaType | undefined),
+      ...generateDataFromSchema(config.themeSchema),
       ...config.themeSettings,
     }
     this.requestContext = config.requestContext

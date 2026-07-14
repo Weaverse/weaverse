@@ -2,7 +2,12 @@ import type {
   WeaverseElement,
   WeaverseResourcePickerData,
 } from '@weaverse/react'
-import type { PageSEOData, PageType, SchemaType } from '@weaverse/schema'
+import type {
+  InspectorGroup,
+  PageSEOData,
+  PageType,
+  SchemaType,
+} from '@weaverse/schema'
 import type { ComponentType, ForwardRefExoticComponent, ReactNode } from 'react'
 import type { TranslationStore } from './translation-store'
 
@@ -17,7 +22,7 @@ export interface WeaverseNextThemeSettingsStore {
   getServerSnapshot: () => Record<string, unknown>
   getSnapshot: () => Record<string, unknown>
   publicEnv?: Record<string, string | undefined>
-  schema?: unknown
+  schema?: WeaverseNextThemeSchema
   settings: Record<string, unknown>
   subscribe: (listener: () => void) => () => void
   updateThemeSettings: (next: Record<string, unknown>) => void
@@ -143,6 +148,49 @@ export interface WeaverseNextI18n {
   language?: string
   locale?: string
   pathPrefix?: string
+  [key: string]: unknown
+}
+
+/**
+ * Theme schema shape accepted by the Next adapter. Mirrors Hydrogen's
+ * `HydrogenThemeSchema` but keeps locale data framework-neutral via
+ * {@link WeaverseNextI18n} instead of Shopify Hydrogen's `I18nBase`.
+ */
+export interface WeaverseNextThemeSchemaInput {
+  condition?: unknown
+  defaultValue?: unknown
+  name?: string
+  [key: string]: unknown
+}
+
+export interface WeaverseNextThemeSchemaGroup {
+  group?: string
+  inputs?: WeaverseNextThemeSchemaInput[]
+  [key: string]: unknown
+}
+
+export interface WeaverseNextThemeSchema {
+  i18n?: {
+    defaultLocale?: WeaverseNextI18n
+    shopLocales?: WeaverseNextI18n[]
+    staticContent?: Record<string, unknown>
+    /** Enable the translation UI in Builder. */
+    translation?: boolean
+    urlStructure?: 'url-path' | 'subdomain' | 'top-level-domain'
+    [key: string]: unknown
+  }
+  info?: {
+    author?: string
+    authorProfilePhoto?: string
+    documentationUrl?: string
+    name?: string
+    supportUrl?: string
+    version?: string
+    [key: string]: unknown
+  }
+  /** @deprecated Use settings instead. */
+  inspector?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[]
+  settings?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[]
   [key: string]: unknown
 }
 
@@ -275,7 +323,7 @@ export interface WeaverseNextClientConfig {
   ) => Promise<unknown>
   projectId: string
   requestContext?: WeaverseNextRequestContext
-  themeSchema?: unknown
+  themeSchema?: WeaverseNextThemeSchema
   themeSettings?: Record<string, unknown>
 }
 
@@ -299,7 +347,7 @@ export interface WeaverseNextClient {
   requestContext?: WeaverseNextRequestContext
   /** Compatibility alias for `commerce.storefront`. */
   storefront?: WeaverseNextStorefront
-  themeSchema?: unknown
+  themeSchema?: WeaverseNextThemeSchema
   themeSettings: Record<string, unknown>
 }
 
@@ -383,7 +431,7 @@ export interface WeaverseNextThemeSettingsResponse {
   _loadFailed?: boolean
   merchantOverrides?: Record<string, unknown>
   publicEnv?: Record<string, string | undefined>
-  schema?: unknown
+  schema?: WeaverseNextThemeSchema
   staticContent?: Record<string, unknown>
   theme?: Record<string, unknown>
   [key: string]: unknown
@@ -430,7 +478,7 @@ export interface WeaverseNextServerClientConfig {
   fetchTimeoutMs?: number
   projectId?: WeaverseNextProjectId
   requestContext?: WeaverseNextRequestContext
-  themeSchema?: unknown
+  themeSchema?: WeaverseNextThemeSchema
   themeSettings?: Record<string, unknown>
   /** Optional override for the resolved Weaverse public API base. */
   weaverseApiBase?: string

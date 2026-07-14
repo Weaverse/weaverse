@@ -1,4 +1,5 @@
 import type { SchemaType } from '@weaverse/schema'
+import type { WeaverseNextThemeSchema } from './types'
 
 /**
  * Generate default component data from a schema's `settings` inputs.
@@ -9,7 +10,7 @@ import type { SchemaType } from '@weaverse/schema'
  * schema predates `settings`.
  */
 export function generateDataFromSchema(
-  schema: SchemaType | undefined
+  schema: SchemaType | WeaverseNextThemeSchema | undefined
 ): Record<string, unknown> {
   let data: Record<string, unknown> = {}
   if (!schema) {

@@ -9,12 +9,7 @@ export {
   useParentInstance,
   useWeaverse,
 } from '@weaverse/react'
-export type {
-  InspectorGroup,
-  PageType,
-  SchemaType,
-} from '@weaverse/schema'
-export { createSchema } from '@weaverse/schema'
+export * from '@weaverse/schema'
 export { createWeaverseNextClient } from './client'
 export {
   useThemeSettings,
@@ -118,6 +113,7 @@ export type {
   WeaverseNextRuntimeConfig,
   WeaverseNextRuntimeInternal,
   WeaverseNextStorefront,
+  WeaverseNextThemeSchema,
   WeaverseNextThemeSettingsStore,
   WeaverseNextTranslationChanges,
   WeaverseNextTranslationEntry,
@@ -131,3 +127,4 @@ export {
   WeaverseNextStudio,
   type WeaverseNextStudioProps,
 } from './use-weaverse-next-studio'
+export { generateDataFromSchema } from './utils'

@@ -4,6 +4,12 @@ import { Weaverse } from '@weaverse/react'
 import type { ReactNode, RefObject } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it, vi } from 'vitest'
+import type {
+  WeaverseNextComponentLoaderArgs,
+  WeaverseNextComponentProps,
+  WeaverseNextLoaderData,
+  WeaverseNextThemeSchema,
+} from '../src/index'
 import {
   bindWeaverseNextStudioRuntime,
   buildWeaverseNextRequestInfo,
@@ -12,6 +18,7 @@ import {
   createWeaverseNextClient,
   createWeaverseNextRuntime,
   createWeaverseNextThemeSettingsStore,
+  generateDataFromSchema,
   getNestedKey,
   interpolate,
   resolveWeaverseNextStudioScriptSrc,
@@ -28,11 +35,6 @@ import {
   WeaverseNextRootProvider,
   WeaverseNextStudioConnect,
 } from '../src/index'
-import type {
-  WeaverseNextComponentLoaderArgs,
-  WeaverseNextComponentProps,
-  WeaverseNextLoaderData,
-} from '../src/types'
 
 const OUTSIDE_PROVIDER_ERROR = /must be used inside a <WeaverseNextProvider>/
 const OUTSIDE_TRANSLATION_PROVIDER_ERROR =
@@ -330,6 +332,38 @@ describe('hooks outside provider', () => {
 // ─── 3. Client fetchers are request-safe ──────────────────────────────
 
 describe('createWeaverseNextClient', () => {
+  it('should_export_theme_schema_type_and_schema_default_utility_from_root_entry', () => {
+    // Arrange
+    let themeSchema: WeaverseNextThemeSchema = {
+      info: { name: 'Next theme', version: '0.1.0' },
+      settings: [
+        {
+          group: 'Layout',
+          inputs: [
+            {
+              type: 'text',
+              name: 'announcement',
+              label: 'Announcement',
+              defaultValue: 'Free shipping',
+            },
+          ],
+        },
+      ],
+      i18n: {
+        urlStructure: 'url-path',
+        defaultLocale: { language: 'EN', country: 'US' },
+        shopLocales: [{ language: 'FR', country: 'FR', pathPrefix: 'fr-fr' }],
+        translation: true,
+      },
+    }
+
+    // Act
+    let defaults = generateDataFromSchema(themeSchema)
+
+    // Assert
+    expect(defaults).toEqual({ announcement: 'Free shipping' })
+  })
+
   it('should_seed_theme_schema_defaults_under_merchant_overrides', () => {
     // Arrange — theme schema declares two settings with defaults; the merchant
     // only overrides one of them.

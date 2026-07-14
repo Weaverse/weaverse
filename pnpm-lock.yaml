@@ -158,8 +158,8 @@ importers:
   packages/next:
     dependencies:
       '@weaverse/react':
-        specifier: 5.16.3
-        version: 5.16.3
+        specifier: 5.16.4
+        version: 5.16.4
       '@weaverse/schema':
         specifier: 0.10.0
         version: 0.10.0
@@ -1559,16 +1559,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@weaverse/core@5.16.3':
-    resolution: {integrity: sha512-40MRRsGODjKgFO09agoHlKwx94tLv6boFRpyKqB2Yy/KX47E5fKrNJCRlW6rNl4kJ4tXcYOosx9MAx5uIn8LVg==, tarball: https://registry.npmjs.org/@weaverse/core/-/core-5.16.3.tgz}
-    engines: {node: '>=18'}
-
   '@weaverse/core@5.16.4':
     resolution: {integrity: sha512-9BPJb8OKHM131FSB5FYh2XYfC2ZYLDgFwTyWuwoCTsd+Ij/ceS8Dv8hFJrREsa0UWNHw0IZPRRISXjzwo7WkSw==, tarball: https://registry.npmjs.org/@weaverse/core/-/core-5.16.4.tgz}
-    engines: {node: '>=18'}
-
-  '@weaverse/react@5.16.3':
-    resolution: {integrity: sha512-ZFwkAqvdMsQgDMTLHM13uVRkDYKBOfp6LsMONPc+p57m2h4Xw0GnZHt7OREoPvqXMeY+wsAOEY/diNJwKzKzGw==, tarball: https://registry.npmjs.org/@weaverse/react/-/react-5.16.3.tgz}
     engines: {node: '>=18'}
 
   '@weaverse/react@5.16.4':
@@ -4001,16 +3993,7 @@ snapshots:
   '@voidzero-dev/vite-plus-win32-x64-msvc@0.1.24':
     optional: true
 
-  '@weaverse/core@5.16.3': {}
-
   '@weaverse/core@5.16.4': {}
-
-  '@weaverse/react@5.16.3':
-    dependencies:
-      '@weaverse/core': 5.16.3
-      clsx: 2.1.1
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
 
   '@weaverse/react@5.16.4':
     dependencies:

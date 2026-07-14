@@ -61,7 +61,7 @@
     ]
   },
   "dependencies": {
-    "@weaverse/react": "5.16.3",
+    "@weaverse/react": "5.16.4",
     "@weaverse/schema": "0.10.0"
   },
   "peerDependencies": {

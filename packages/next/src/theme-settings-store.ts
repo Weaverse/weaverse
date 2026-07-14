@@ -1,8 +1,11 @@
-import type { WeaverseNextThemeSettingsStore } from './types'
+import type {
+  WeaverseNextThemeSchema,
+  WeaverseNextThemeSettingsStore,
+} from './types'
 
 export interface CreateWeaverseNextThemeSettingsStoreOptions {
   publicEnv?: Record<string, string | undefined>
-  schema?: unknown
+  schema?: WeaverseNextThemeSchema
   settings?: Record<string, unknown>
 }
 

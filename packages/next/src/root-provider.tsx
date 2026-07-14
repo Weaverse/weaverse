@@ -18,7 +18,10 @@ import {
   TranslationProvider,
 } from './translation-context'
 import { TranslationStore } from './translation-store'
-import type { WeaverseNextThemeSettingsStore } from './types'
+import type {
+  WeaverseNextThemeSchema,
+  WeaverseNextThemeSettingsStore,
+} from './types'
 
 export interface WeaverseNextRootContextValue {
   /** Active-locale static-text overrides shared with route-level providers. */
@@ -51,7 +54,7 @@ export interface WeaverseNextRootProviderProps {
   staticContent?: Record<string, unknown>
   /** Optional external translation function (host i18n); highest priority in `t()`. */
   t?: TranslateFunction
-  themeSchema?: unknown
+  themeSchema?: WeaverseNextThemeSchema
 }
 
 /**

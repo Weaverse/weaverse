@@ -1,4 +1,3 @@
-import type { SchemaType } from '@weaverse/schema'
 import { runWeaverseComponentLoaders } from '../loader'
 import { buildWeaverseNextRequestInfo } from '../request-info'
 import type {
@@ -21,6 +20,7 @@ import type {
   WeaverseNextServerClientConfig,
   WeaverseNextServerLoadPageInput,
   WeaverseNextStorefront,
+  WeaverseNextThemeSchema,
   WeaverseNextThemeSettingsOptions,
   WeaverseNextThemeSettingsResponse,
 } from '../types'
@@ -44,14 +44,7 @@ type NextRequestInit = RequestInit & {
   next?: { revalidate?: number | false; tags?: string[] }
 }
 
-interface LooseThemeSchema {
-  i18n?: { staticContent?: Record<string, unknown> }
-  inspector?: unknown[]
-  settings?: {
-    inputs?: { condition?: unknown }[]
-    [key: string]: unknown
-  }[]
-}
+type LooseThemeSchema = WeaverseNextThemeSchema
 
 function asThemeSchema(schema: unknown): LooseThemeSchema | undefined {
   return schema && typeof schema === 'object'
@@ -112,7 +105,7 @@ class NextServerClient implements WeaverseNextServerClient {
   components: WeaverseNextComponent[]
   commerce?: WeaverseNextCommerceContext
   requestContext?: WeaverseNextRequestContext
-  themeSchema?: unknown
+  themeSchema?: WeaverseNextThemeSchema
   themeSettings: Record<string, unknown>
   data: WeaverseNextLoaderData | null = null
   dataContext: Record<string, unknown> = {}
@@ -140,7 +133,7 @@ class NextServerClient implements WeaverseNextServerClient {
     this.themeSchema = config.themeSchema
     // Seed schema defaults before merchant overrides, mirroring the root client.
     this.themeSettings = {
-      ...generateDataFromSchema(config.themeSchema as SchemaType | undefined),
+      ...generateDataFromSchema(config.themeSchema),
       ...config.themeSettings,
     }
     this._projectIdInput = config.projectId
@@ -564,9 +557,7 @@ class NextServerClient implements WeaverseNextServerClient {
   ): Promise<WeaverseNextThemeSettingsResponse> => {
     let options = optionsInput as WeaverseNextThemeSettingsOptions
     let themeSchema = asThemeSchema(this.themeSchema)
-    let defaultThemeSettings = generateDataFromSchema(
-      this.themeSchema as SchemaType | undefined
-    )
+    let defaultThemeSettings = generateDataFromSchema(this.themeSchema)
     let staticContent = themeSchema?.i18n?.staticContent
 
     try {
@@ -605,9 +596,8 @@ class NextServerClient implements WeaverseNextServerClient {
       }
 
       if (isDesignMode) {
-        result = {
-          ...result,
-          schema: themeSchema
+        let serializableSchema: WeaverseNextThemeSchema | undefined =
+          themeSchema
             ? {
                 ...themeSchema,
                 settings: themeSchema.settings?.map((group) => ({
@@ -622,7 +612,10 @@ class NextServerClient implements WeaverseNextServerClient {
                   ),
                 })),
               }
-            : undefined,
+            : undefined
+        result = {
+          ...result,
+          schema: serializableSchema,
           publicEnv: this._baseConfigs.publicEnv,
         }
       }
