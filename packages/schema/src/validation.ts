@@ -169,6 +169,12 @@ export const InspectorGroupSchema = z.object({
     .array(InputSchema)
     .min(1, 'At least one input is required')
     .describe('The inputs of the group'),
+  outlineGroup: z
+    .enum(['header', 'footer', 'popup'])
+    .optional()
+    .describe(
+      'Surfaces this settings group as a pinned entry in the Page Outline, grouped by role'
+    ),
 })
 
 export const PageTypeSchema = z.union([
