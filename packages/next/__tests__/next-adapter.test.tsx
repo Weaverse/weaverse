@@ -1552,6 +1552,153 @@ describe('multi-runtime / nested instance selection', () => {
     vi.stubGlobal('window', previousWindow)
   })
 
+  it('should_reinit_reused_runtime_when_it_is_not_the_active_studio_page', () => {
+    // Arrange — this mirrors Studio navigation Home -> PDP -> Home. The Home
+    // runtime is already bound when returning to it, but Builder's active bridge
+    // still points at PDP. Calling refreshStudio(Home) would be ignored by
+    // Builder as a cross-page refresh, leaving `beforeNavigate()` stuck in the
+    // disconnected/disabled state. The SDK must reactivate Home via init().
+    let previousWindow = globalThis.window
+    let fakeWindow = {
+      weaverseStudio: {
+        weaverse: undefined,
+        init: vi.fn((runtime) => {
+          fakeWindow.weaverseStudio.weaverse = runtime
+        }),
+        refreshStudio: vi.fn(),
+      },
+    } as unknown as Window &
+      typeof globalThis & {
+        weaverseStudio: {
+          weaverse?: unknown
+          init: ReturnType<typeof vi.fn>
+          refreshStudio: ReturnType<typeof vi.fn>
+        }
+      }
+    vi.stubGlobal('window', fakeWindow)
+    let homeClient = makeClient({
+      requestContext: {
+        isDesignMode: true,
+        pathname: '/',
+        searchParams: new URLSearchParams('isDesignMode=true'),
+      },
+    })
+    let pdpClient = makeClient({
+      requestContext: {
+        isDesignMode: true,
+        pathname: '/products/oxygen-snowboard',
+        searchParams: new URLSearchParams('isDesignMode=true'),
+      },
+    })
+    let homeData = makeMultiRuntimeData({
+      pageId: 'mr-nav-home-page',
+      itemId: 'mr-nav-home-item',
+      projectId: 'proj-home',
+      projectRecordId: 'record-home',
+    })
+    let pdpData = makeMultiRuntimeData({
+      pageId: 'mr-nav-pdp-page',
+      itemId: 'mr-nav-pdp-item',
+      projectId: 'proj-pdp',
+      projectRecordId: 'record-pdp',
+    })
+    let homeRuntime = createWeaverseNextRuntime({
+      client: homeClient,
+      data: homeData,
+    })
+    bindWeaverseNextStudioRuntime(homeRuntime)
+    let pdpRuntime = createWeaverseNextRuntime({
+      client: pdpClient,
+      data: pdpData,
+    })
+    bindWeaverseNextStudioRuntime(pdpRuntime)
+
+    // Act — Next reuses the already-bound Home runtime when navigating back.
+    let reusedHomeRuntime = createWeaverseNextRuntime({
+      client: homeClient,
+      data: homeData,
+    })
+    bindWeaverseNextStudioRuntime(reusedHomeRuntime)
+
+    // Assert
+    expect(reusedHomeRuntime).toBe(homeRuntime)
+    expect(fakeWindow.weaverseStudio.init.mock.calls).toEqual([
+      [homeRuntime],
+      [pdpRuntime],
+      [homeRuntime],
+    ])
+    expect(fakeWindow.weaverseStudio.init).toHaveBeenLastCalledWith(homeRuntime)
+    expect(fakeWindow.weaverseStudio.refreshStudio).not.toHaveBeenCalled()
+    expect(fakeWindow.weaverseStudio.weaverse).toBe(homeRuntime)
+    vi.stubGlobal('window', previousWindow)
+  })
+
+  it('should_not_reinit_an_inactive_co_located_runtime_on_the_same_url', () => {
+    // Arrange — nested/co-located runtimes share one URL. Builder decides which
+    // page is the editable leaf. A background rebind from the sibling must not
+    // steal active Studio ownership by calling init() again.
+    let previousWindow = globalThis.window
+    let fakeWindow = {
+      weaverseStudio: {
+        weaverse: undefined,
+        init: vi.fn((runtime) => {
+          fakeWindow.weaverseStudio.weaverse = runtime
+        }),
+        refreshStudio: vi.fn(),
+      },
+    } as unknown as Window &
+      typeof globalThis & {
+        weaverseStudio: {
+          weaverse?: unknown
+          init: ReturnType<typeof vi.fn>
+          refreshStudio: ReturnType<typeof vi.fn>
+        }
+      }
+    vi.stubGlobal('window', fakeWindow)
+    let client = makeClient({
+      requestContext: {
+        isDesignMode: true,
+        pathname: '/',
+        searchParams: new URLSearchParams('isDesignMode=true'),
+      },
+    })
+    let runtimeA = createWeaverseNextRuntime({
+      client,
+      data: makeMultiRuntimeData({
+        pageId: 'mr-same-url-page-a',
+        itemId: 'mr-same-url-item-a',
+        projectId: 'proj-a',
+        projectRecordId: 'record-a',
+      }),
+    })
+    let runtimeB = createWeaverseNextRuntime({
+      client,
+      data: makeMultiRuntimeData({
+        pageId: 'mr-same-url-page-b',
+        itemId: 'mr-same-url-item-b',
+        projectId: 'proj-b',
+        projectRecordId: 'record-b',
+      }),
+    })
+    bindWeaverseNextStudioRuntime(runtimeA)
+    bindWeaverseNextStudioRuntime(runtimeB)
+
+    // Act — runtime A is already bound but inactive while B is active on the
+    // same URL.
+    bindWeaverseNextStudioRuntime(runtimeA)
+
+    // Assert
+    expect(fakeWindow.weaverseStudio.init.mock.calls).toEqual([
+      [runtimeA],
+      [runtimeB],
+    ])
+    expect(fakeWindow.weaverseStudio.refreshStudio).toHaveBeenCalledWith(
+      expect.objectContaining({ pageId: runtimeA.pageId })
+    )
+    expect(fakeWindow.weaverseStudio.weaverse).toBe(runtimeB)
+    vi.stubGlobal('window', previousWindow)
+  })
+
   it('should_bind_each_co_located_runtime_through_studio_init_without_collapsing_registry', () => {
     // Arrange — Builder decides which runtime to edit; the SDK must simply pass
     // every design-mode candidate to `weaverseStudio.init` and keep the
