@@ -425,7 +425,21 @@ export function bindWeaverseNextStudioRuntime(runtime: WeaverseNextRuntime) {
   }
 
   let boundRuntime = runtime as StudioBoundRuntime
-  if (!boundRuntime.__weaverseNextStudioBound) {
+  // Builder's bridge tracks a single active runtime (`studio.weaverse`). When
+  // an already-bound runtime is reused after navigating away and back (Home ->
+  // PDP -> Home), the bridge is still on the other URL, and Builder ignores
+  // `refreshStudio` for a non-active pageId — Studio would stay disconnected
+  // (outline skeleton, publish disabled). Re-init only when the active runtime
+  // belongs to a different URL; same-URL co-located runtimes must stay on the
+  // refresh path so the SDK does not override Builder's editable-instance
+  // choice.
+  let activeRuntime = studio.weaverse as WeaverseNextRuntime | undefined
+  let activeRequestInfo = activeRuntime?.requestInfo
+  let isActiveUrl =
+    !activeRequestInfo ||
+    (activeRequestInfo.pathname === runtime.requestInfo.pathname &&
+      activeRequestInfo.search === runtime.requestInfo.search)
+  if (!(boundRuntime.__weaverseNextStudioBound && isActiveUrl)) {
     studio.init?.(runtime)
     boundRuntime.__weaverseNextStudioBound = true
     return true
