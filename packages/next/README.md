@@ -245,7 +245,7 @@ let theme = await weaverse.loadThemeSettings()
 | Member | Description |
 | --- | --- |
 | `loadPage(input?)` | Fetches the page from `/api/public/project`, builds `WeaverseNextLoaderData`, runs component loaders, and returns page/project/config data. In section preview mode it can synthesize a single-section preview page. |
-| `loadThemeSettings(options?)` | Fetches `/api/public/project_configs`, merges schema defaults under merchant settings, returns theme settings/static content/schema data for design mode. |
+| `loadThemeSettings(options?)` | Fetches `/api/public/project_configs`, merges schema defaults under merchant settings, returns theme settings/static content/schema data for design mode. When the theme schema declares `i18n` and `requestContext.i18n` supplies both `language` and `country`, it also fetches locale static-text overrides from `/api/translation/static` in parallel and returns them as `merchantOverrides`. A failed or skipped overrides fetch never fails theme settings. |
 | `fetchCustomPages(options?)` | Fetches published custom pages from `/api/public/v1/projects/:projectId/custom-pages` for sitemap generation, paginating automatically and returning partial results if a later page fails. |
 | `fetchWithCache<T>(url, options?)` | Next-aware fetch helper. Uses `cache: 'no-store'` in design/revision preview and `next: { revalidate, tags }` in published mode. |
 | `resolveProjectId()` / `projectId` | Resolves project id from Studio query, config function/string, or env. |
@@ -284,12 +284,13 @@ Use the server entry in `generateMetadata()` to map Weaverse `page.seo` into a N
 
 ```ts
 // app/pages/[handle]/page.tsx
+import type { Metadata } from 'next'
 import { getWeaverseNextSeoMetadata } from '@weaverse/next/server'
 
 export async function generateMetadata(props: {
   params: Promise<{ handle: string }>
   searchParams: Promise<Record<string, string | string[] | undefined>>
-}) {
+}): Promise<Metadata> {
   let { handle } = await props.params
   let weaverse = await getWeaverseServerClient(props.searchParams, `/pages/${handle}`)
   let data = await weaverse.loadPage({ type: 'PAGE', handle })
@@ -297,7 +298,17 @@ export async function generateMetadata(props: {
 }
 ```
 
-The helper is pure and does not import `next/*`; its return shape is intentionally structural so the app can type it as `Metadata` if desired.
+The helper is pure and has no runtime dependency on `next`; it only imports the
+`Metadata` type. Its return value is directly assignable to Next `Metadata`.
+
+Two Builder-only SEO values are normalized so Next can always render the result:
+
+- Open Graph type `product` falls back to `website` (Next throws on `product`).
+  The other Builder types — `website`, `article`, `profile`, `video.other` — are
+  passed through unchanged.
+- Twitter card types `app` and `player` fall back to `summary`, because Builder
+  does not collect the extra descriptors those cards need (Next throws without
+  the `app` fields, and a `player` card without a player URL renders empty).
 
 ### Custom pages for sitemap generation
 
