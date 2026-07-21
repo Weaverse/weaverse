@@ -548,6 +548,65 @@ class NextServerClient implements WeaverseNextServerClient {
     }
   }
 
+  /**
+   * Resolve the request locale (e.g. `fr-ca`) used for merchant overrides.
+   * Unlike Hydrogen — which defaults to `en`/`us` because a Hydrogen
+   * storefront always has an i18n context — Next apps may not thread one
+   * through, so a missing language or country means "no explicit locale" and
+   * the translation fetch is skipped rather than guessed.
+   */
+  private _resolveOverridesLocale(): string | undefined {
+    let i18n = this.requestContext?.i18n
+    let language =
+      typeof i18n?.language === 'string' ? i18n.language.trim() : ''
+    let country = typeof i18n?.country === 'string' ? i18n.country.trim() : ''
+    if (!(language && country)) {
+      return
+    }
+    return `${language.toLowerCase()}-${country.toLowerCase()}`
+  }
+
+  /**
+   * Fetch locale-specific static-text overrides from the translation API.
+   * Ported from Hydrogen's `fetchMerchantOverrides`: skipped entirely when the
+   * theme has no `i18n` schema (nothing translatable) or when the request has
+   * no explicit locale, and never allowed to fail theme settings.
+   */
+  private async _fetchMerchantOverrides(
+    projectId: string,
+    options: WeaverseNextThemeSettingsOptions
+  ): Promise<Record<string, unknown> | undefined> {
+    let { weaverseHost } = this._baseConfigs
+    if (!(asThemeSchema(this.themeSchema)?.i18n && projectId && weaverseHost)) {
+      return
+    }
+
+    let locale = this._resolveOverridesLocale()
+    if (!locale) {
+      return
+    }
+
+    let url = `${weaverseHost}/api/translation/static?projectId=${projectId}&locale=${locale}`
+    try {
+      let overrides = await this.fetchWithCache<Record<string, unknown>>(url, {
+        method: 'GET',
+        headers: { Accept: 'application/json' },
+        revalidate: options.revalidate,
+        tags: options.tags,
+      })
+      return typeof overrides === 'object' && overrides !== null
+        ? overrides
+        : undefined
+    } catch (error) {
+      // Translations are additive — a failure must not break theme settings.
+      console.warn(
+        '[WeaverseNext] Unable to load merchant overrides, using theme defaults:',
+        error instanceof Error ? error.message : String(error)
+      )
+      return
+    }
+  }
+
   loadThemeSettings = async (
     // Broad param keeps this assignable to `WeaverseNextClient.loadThemeSettings`;
     // only the cache fields below are honored — no request-context override.
@@ -568,16 +627,18 @@ class NextServerClient implements WeaverseNextServerClient {
 
       let { isDesignMode } = this._baseConfigs
       let url = `${this._baseConfigs.weaverseApiBase}/api/public/project_configs`
-      let result = await this.fetchWithCache<WeaverseNextThemeSettingsResponse>(
-        url,
-        {
+      // Project configs and locale overrides are independent reads — mirror
+      // Hydrogen and fetch them in parallel instead of serially.
+      let [result, merchantOverrides] = await Promise.all([
+        this.fetchWithCache<WeaverseNextThemeSettingsResponse>(url, {
           method: 'POST',
           body: JSON.stringify({ projectId, isDesignMode }),
           headers: JSON_HEADERS,
           revalidate: options.revalidate,
           tags: options.tags,
-        }
-      )
+        }),
+        this._fetchMerchantOverrides(projectId, options),
+      ])
 
       if (typeof result !== 'object' || result === null) {
         result = { theme: defaultThemeSettings }
@@ -593,6 +654,12 @@ class NextServerClient implements WeaverseNextServerClient {
 
       if (staticContent) {
         result.staticContent = staticContent
+      }
+
+      // Only overwrite when the translation API actually returned overrides so
+      // a missing/failed fetch can't wipe overrides shipped by project_configs.
+      if (merchantOverrides) {
+        result.merchantOverrides = merchantOverrides
       }
 
       if (isDesignMode) {

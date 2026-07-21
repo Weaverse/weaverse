@@ -32,6 +32,21 @@ function makeFetch(payload: unknown, { ok = true, status = 200 } = {}) {
   ) as unknown as typeof fetch & { mock: { calls: unknown[][] } }
 }
 
+/**
+ * A `fetch` double that picks its payload by matching a URL fragment, so
+ * parallel calls (project configs + translations) can return different data.
+ * A URL with no matching entry rejects, standing in for an API failure.
+ */
+function makeRoutedFetch(routes: Record<string, unknown>) {
+  return vi.fn((url: string) => {
+    let match = Object.keys(routes).find((fragment) => url.includes(fragment))
+    if (!match) {
+      throw new Error(`No route for ${url}`)
+    }
+    return Promise.resolve(jsonResponse(routes[match]))
+  }) as unknown as typeof fetch & { mock: { calls: [string, RequestInit][] } }
+}
+
 const Hero = (props: WeaverseNextComponentProps) => (
   <section>{props.heading as string}</section>
 )
@@ -526,6 +541,101 @@ describe('createWeaverseNextServerClient loadThemeSettings', () => {
     // Assert — merchant overrides preserved; static content still injected.
     expect(result.merchantOverrides).toEqual({ cart: { title: 'Panier' } })
     expect(result.staticContent).toEqual({ greeting: 'Hello' })
+  })
+
+  it('should_fetch_locale_merchant_overrides_when_schema_and_request_locale_exist', async () => {
+    // Arrange
+    let fetchMock = makeRoutedFetch({
+      project_configs: { theme: { topbarText: 'Remote topbar' } },
+      'translation/static': { cart: { title: 'Panier' } },
+    })
+    let client = createWeaverseNextServerClient({
+      components: [heroComponent],
+      projectId: 'proj-123',
+      themeSchema,
+      fetch: fetchMock,
+      requestContext: {
+        url: 'https://shop.example/',
+        i18n: { language: 'FR', country: 'CA' },
+      },
+    })
+
+    // Act
+    let result = await client.loadThemeSettings()
+
+    // Assert
+    expect(fetchMock.mock.calls[1][0]).toBe(
+      'https://studio.weaverse.io/api/translation/static?projectId=proj-123&locale=fr-ca'
+    )
+    expect(result.merchantOverrides).toEqual({ cart: { title: 'Panier' } })
+  })
+
+  it('should_skip_merchant_overrides_fetch_when_request_has_no_locale', async () => {
+    let fetchMock = makeFetch({ theme: {} })
+    let client = createWeaverseNextServerClient({
+      components: [heroComponent],
+      projectId: 'proj-123',
+      themeSchema,
+      fetch: fetchMock,
+      requestContext: {
+        url: 'https://shop.example/',
+        i18n: { language: 'FR' },
+      },
+    })
+
+    await client.loadThemeSettings()
+
+    expect(fetchMock.mock.calls).toHaveLength(1)
+  })
+
+  it('should_skip_merchant_overrides_fetch_when_theme_schema_has_no_i18n', async () => {
+    let fetchMock = makeFetch({ theme: {} })
+    let client = createWeaverseNextServerClient({
+      components: [heroComponent],
+      projectId: 'proj-123',
+      themeSchema: { type: 'theme', settings: [] },
+      fetch: fetchMock,
+      requestContext: {
+        url: 'https://shop.example/',
+        i18n: { language: 'FR', country: 'CA' },
+      },
+    })
+
+    await client.loadThemeSettings()
+
+    expect(fetchMock.mock.calls).toHaveLength(1)
+  })
+
+  it('should_still_return_theme_when_merchant_overrides_fetch_fails', async () => {
+    let warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+    let fetchMock = makeRoutedFetch({
+      project_configs: {
+        theme: { topbarText: 'Remote topbar' },
+        merchantOverrides: { cart: { title: 'API fallback' } },
+      },
+    })
+    let client = createWeaverseNextServerClient({
+      components: [heroComponent],
+      projectId: 'proj-123',
+      themeSchema,
+      fetch: fetchMock,
+      requestContext: {
+        url: 'https://shop.example/',
+        i18n: { language: 'FR', country: 'CA' },
+      },
+    })
+
+    let result = await client.loadThemeSettings()
+
+    expect(result._loadFailed).toBeUndefined()
+    expect(result.theme).toEqual({
+      pageWidth: 1200,
+      topbarText: 'Remote topbar',
+    })
+    expect(result.merchantOverrides).toEqual({
+      cart: { title: 'API fallback' },
+    })
+    warn.mockRestore()
   })
 
   it('should_return_fallback_with_defaults_when_api_fails', async () => {
