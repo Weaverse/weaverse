@@ -1,27 +1,27 @@
 import type { PageSEOData } from '@weaverse/schema'
+import type { Metadata } from 'next'
 import type { WeaverseNextLoaderData, WeaverseNextPageData } from './types'
 
+/** Next's own `openGraph` / `twitter` unions, reused so the helper's result
+ * is directly assignable to `Metadata` without a consumer-side adapter. */
+type NextOpenGraph = NonNullable<Metadata['openGraph']>
+type NextTwitter = NonNullable<Metadata['twitter']>
+
+/**
+ * Weaverse page SEO expressed as a subset of Next's `Metadata`. Assignable to
+ * `Metadata` as-is: `const metadata: Metadata = getWeaverseNextSeoMetadata(data)`.
+ */
 export interface WeaverseNextSeoMetadata {
   alternates?: { canonical?: string }
   description?: string
   keywords?: string
-  openGraph?: {
-    description?: string
-    images?: string[]
-    title?: string
-    type?: string
-  }
+  openGraph?: NextOpenGraph
   robots: {
     follow: boolean
     index: boolean
   }
   title?: string
-  twitter?: {
-    card?: string
-    description?: string
-    images?: string[]
-    title?: string
-  }
+  twitter?: NextTwitter
 }
 
 function hasOpenGraphContent(seo: PageSEOData['openGraph']): boolean {
@@ -30,6 +30,27 @@ function hasOpenGraphContent(seo: PageSEOData['openGraph']): boolean {
 
 function hasTwitterContent(seo: PageSEOData['twitter']): boolean {
   return Boolean(seo?.title || seo?.description || seo?.image || seo?.cardType)
+}
+
+function normalizeTwitterCard(
+  cardType: NonNullable<PageSEOData['twitter']>['cardType']
+): 'summary' | 'summary_large_image' {
+  return cardType === 'summary_large_image' ? 'summary_large_image' : 'summary'
+}
+
+/**
+ * Map a Builder Open Graph type onto Next's `OpenGraphType` union. Every
+ * Builder value except `product` exists in Next's union and is preserved
+ * verbatim; `product` is not modeled by Next and makes `generateMetadata()`
+ * throw, so it degrades to `website` — the closest renderable equivalent.
+ */
+function normalizeOpenGraphType(
+  type: NonNullable<PageSEOData['openGraph']>['type']
+): 'article' | 'profile' | 'video.other' | 'website' {
+  if (type === 'article' || type === 'profile' || type === 'video.other') {
+    return type
+  }
+  return 'website'
 }
 
 export function formatWeaverseNextSeoMetadata(
@@ -64,14 +85,18 @@ export function formatWeaverseNextSeoMetadata(
       title: openGraph?.title,
       description: openGraph?.description,
       images: openGraph?.image ? [openGraph.image] : undefined,
-      type: openGraph?.type || 'website',
+      type: normalizeOpenGraphType(openGraph?.type),
     }
   }
 
   let twitter = seo.twitter
   if (hasTwitterContent(twitter)) {
+    // Builder does not collect the descriptors Next requires for `app` cards
+    // (Next throws when they are missing) or `player` cards (which render an
+    // empty, useless card without a player URL and dimensions). Downgrade both
+    // to `summary` rather than emitting metadata Next cannot render.
     metadata.twitter = {
-      card: twitter?.cardType || 'summary',
+      card: normalizeTwitterCard(twitter?.cardType),
       title: twitter?.title,
       description: twitter?.description,
       images: twitter?.image ? [twitter.image] : undefined,

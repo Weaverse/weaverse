@@ -1,7 +1,9 @@
+import type { Metadata } from 'next'
 import { describe, expect, it, vi } from 'vitest'
 import { createSchema } from '../src/index'
 import {
   createWeaverseNextServerClient,
+  formatWeaverseNextSeoMetadata,
   getWeaverseNextConfigs,
   getWeaverseNextSeoMetadata,
   normalizeNextPageUrl,
@@ -737,6 +739,78 @@ describe('getWeaverseNextSeoMetadata', () => {
   it('should_return_default_index_follow_when_seo_is_missing', () => {
     expect(getWeaverseNextSeoMetadata(null)).toEqual({
       robots: { index: true, follow: true },
+    })
+  })
+
+  it('should_be_assignable_to_next_metadata_without_an_adapter', () => {
+    // Compile-time assertions: `tsc --noEmit` fails if the helper's return
+    // type ever drifts away from Next's `Metadata`.
+    let metadata: Metadata = getWeaverseNextSeoMetadata(null)
+    let formatted: Metadata = formatWeaverseNextSeoMetadata({
+      title: 'SEO title',
+      openGraph: { type: 'article', title: 'OG title' },
+      twitter: { cardType: 'summary_large_image', title: 'Twitter title' },
+    })
+
+    expect(metadata.robots).toEqual({ index: true, follow: true })
+    expect(formatted.openGraph).toMatchObject({ type: 'article' })
+    expect(formatted.twitter).toMatchObject({ card: 'summary_large_image' })
+  })
+
+  it('should_fall_back_to_website_when_open_graph_type_is_product', () => {
+    // `product` is a Builder-only OG type; Next throws on it, so it degrades.
+    let metadata: Metadata = formatWeaverseNextSeoMetadata({
+      openGraph: { type: 'product', image: 'https://cdn.example/og.jpg' },
+    })
+
+    expect(metadata.openGraph).toEqual({
+      title: undefined,
+      description: undefined,
+      images: ['https://cdn.example/og.jpg'],
+      type: 'website',
+    })
+  })
+
+  it.each([
+    'website',
+    'article',
+    'profile',
+    'video.other',
+  ] as const)('should_preserve_open_graph_type_when_next_supports_%s', (type) => {
+    let metadata: Metadata = formatWeaverseNextSeoMetadata({
+      openGraph: { type },
+    })
+
+    expect(metadata.openGraph).toMatchObject({ type })
+  })
+
+  it.each([
+    'app',
+    'player',
+  ] as const)('should_downgrade_twitter_card_to_summary_when_builder_sends_%s', (cardType) => {
+    let metadata: Metadata = formatWeaverseNextSeoMetadata({
+      twitter: { cardType, image: 'https://cdn.example/tw.jpg' },
+    })
+
+    expect(metadata.twitter).toEqual({
+      card: 'summary',
+      title: undefined,
+      description: undefined,
+      images: ['https://cdn.example/tw.jpg'],
+    })
+  })
+
+  it('should_omit_open_graph_and_twitter_when_seo_has_no_content', () => {
+    let metadata = formatWeaverseNextSeoMetadata({
+      title: 'SEO title',
+      openGraph: {},
+      twitter: {},
+      robots: { index: false },
+    })
+
+    expect(metadata).toEqual({
+      title: 'SEO title',
+      robots: { index: false, follow: true },
     })
   })
 })
