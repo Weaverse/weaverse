@@ -64,6 +64,9 @@
     "@weaverse/react": "5.16.4",
     "@weaverse/schema": "0.10.0"
   },
+  "devDependencies": {
+    "next": "16.2.9"
+  },
   "peerDependencies": {
     "next": ">=14",
     "react": ">=19",
