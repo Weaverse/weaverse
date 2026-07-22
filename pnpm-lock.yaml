@@ -163,15 +163,16 @@ importers:
       '@weaverse/schema':
         specifier: 0.10.0
         version: 0.10.0
-      next:
-        specifier: '>=14'
-        version: 16.2.9(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       react:
         specifier: '>=19'
         version: 19.2.5
       react-dom:
         specifier: '>=19'
         version: 19.2.5(react@19.2.5)
+    devDependencies:
+      next:
+        specifier: 16.2.9
+        version: 16.2.9(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
 
   packages/react:
     dependencies:

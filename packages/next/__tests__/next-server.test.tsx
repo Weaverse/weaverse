@@ -1,7 +1,9 @@
+import type { Metadata } from 'next'
 import { describe, expect, it, vi } from 'vitest'
 import { createSchema } from '../src/index'
 import {
   createWeaverseNextServerClient,
+  formatWeaverseNextSeoMetadata,
   getWeaverseNextConfigs,
   getWeaverseNextSeoMetadata,
   normalizeNextPageUrl,
@@ -28,6 +30,21 @@ function makeFetch(payload: unknown, { ok = true, status = 200 } = {}) {
   return vi.fn(async () =>
     jsonResponse(payload, ok, status)
   ) as unknown as typeof fetch & { mock: { calls: unknown[][] } }
+}
+
+/**
+ * A `fetch` double that picks its payload by matching a URL fragment, so
+ * parallel calls (project configs + translations) can return different data.
+ * A URL with no matching entry rejects, standing in for an API failure.
+ */
+function makeRoutedFetch(routes: Record<string, unknown>) {
+  return vi.fn((url: string) => {
+    let match = Object.keys(routes).find((fragment) => url.includes(fragment))
+    if (!match) {
+      throw new Error(`No route for ${url}`)
+    }
+    return Promise.resolve(jsonResponse(routes[match]))
+  }) as unknown as typeof fetch & { mock: { calls: [string, RequestInit][] } }
 }
 
 const Hero = (props: WeaverseNextComponentProps) => (
@@ -526,6 +543,101 @@ describe('createWeaverseNextServerClient loadThemeSettings', () => {
     expect(result.staticContent).toEqual({ greeting: 'Hello' })
   })
 
+  it('should_fetch_locale_merchant_overrides_when_schema_and_request_locale_exist', async () => {
+    // Arrange
+    let fetchMock = makeRoutedFetch({
+      project_configs: { theme: { topbarText: 'Remote topbar' } },
+      'translation/static': { cart: { title: 'Panier' } },
+    })
+    let client = createWeaverseNextServerClient({
+      components: [heroComponent],
+      projectId: 'proj-123',
+      themeSchema,
+      fetch: fetchMock,
+      requestContext: {
+        url: 'https://shop.example/',
+        i18n: { language: 'FR', country: 'CA' },
+      },
+    })
+
+    // Act
+    let result = await client.loadThemeSettings()
+
+    // Assert
+    expect(fetchMock.mock.calls[1][0]).toBe(
+      'https://studio.weaverse.io/api/translation/static?projectId=proj-123&locale=fr-ca'
+    )
+    expect(result.merchantOverrides).toEqual({ cart: { title: 'Panier' } })
+  })
+
+  it('should_skip_merchant_overrides_fetch_when_request_has_no_locale', async () => {
+    let fetchMock = makeFetch({ theme: {} })
+    let client = createWeaverseNextServerClient({
+      components: [heroComponent],
+      projectId: 'proj-123',
+      themeSchema,
+      fetch: fetchMock,
+      requestContext: {
+        url: 'https://shop.example/',
+        i18n: { language: 'FR' },
+      },
+    })
+
+    await client.loadThemeSettings()
+
+    expect(fetchMock.mock.calls).toHaveLength(1)
+  })
+
+  it('should_skip_merchant_overrides_fetch_when_theme_schema_has_no_i18n', async () => {
+    let fetchMock = makeFetch({ theme: {} })
+    let client = createWeaverseNextServerClient({
+      components: [heroComponent],
+      projectId: 'proj-123',
+      themeSchema: { type: 'theme', settings: [] },
+      fetch: fetchMock,
+      requestContext: {
+        url: 'https://shop.example/',
+        i18n: { language: 'FR', country: 'CA' },
+      },
+    })
+
+    await client.loadThemeSettings()
+
+    expect(fetchMock.mock.calls).toHaveLength(1)
+  })
+
+  it('should_still_return_theme_when_merchant_overrides_fetch_fails', async () => {
+    let warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+    let fetchMock = makeRoutedFetch({
+      project_configs: {
+        theme: { topbarText: 'Remote topbar' },
+        merchantOverrides: { cart: { title: 'API fallback' } },
+      },
+    })
+    let client = createWeaverseNextServerClient({
+      components: [heroComponent],
+      projectId: 'proj-123',
+      themeSchema,
+      fetch: fetchMock,
+      requestContext: {
+        url: 'https://shop.example/',
+        i18n: { language: 'FR', country: 'CA' },
+      },
+    })
+
+    let result = await client.loadThemeSettings()
+
+    expect(result._loadFailed).toBeUndefined()
+    expect(result.theme).toEqual({
+      pageWidth: 1200,
+      topbarText: 'Remote topbar',
+    })
+    expect(result.merchantOverrides).toEqual({
+      cart: { title: 'API fallback' },
+    })
+    warn.mockRestore()
+  })
+
   it('should_return_fallback_with_defaults_when_api_fails', async () => {
     let error = vi.spyOn(console, 'error').mockImplementation(() => undefined)
     let fetchMock = vi
@@ -737,6 +849,78 @@ describe('getWeaverseNextSeoMetadata', () => {
   it('should_return_default_index_follow_when_seo_is_missing', () => {
     expect(getWeaverseNextSeoMetadata(null)).toEqual({
       robots: { index: true, follow: true },
+    })
+  })
+
+  it('should_be_assignable_to_next_metadata_without_an_adapter', () => {
+    // Compile-time assertions: `tsc --noEmit` fails if the helper's return
+    // type ever drifts away from Next's `Metadata`.
+    let metadata: Metadata = getWeaverseNextSeoMetadata(null)
+    let formatted: Metadata = formatWeaverseNextSeoMetadata({
+      title: 'SEO title',
+      openGraph: { type: 'article', title: 'OG title' },
+      twitter: { cardType: 'summary_large_image', title: 'Twitter title' },
+    })
+
+    expect(metadata.robots).toEqual({ index: true, follow: true })
+    expect(formatted.openGraph).toMatchObject({ type: 'article' })
+    expect(formatted.twitter).toMatchObject({ card: 'summary_large_image' })
+  })
+
+  it('should_fall_back_to_website_when_open_graph_type_is_product', () => {
+    // `product` is a Builder-only OG type; Next throws on it, so it degrades.
+    let metadata: Metadata = formatWeaverseNextSeoMetadata({
+      openGraph: { type: 'product', image: 'https://cdn.example/og.jpg' },
+    })
+
+    expect(metadata.openGraph).toEqual({
+      title: undefined,
+      description: undefined,
+      images: ['https://cdn.example/og.jpg'],
+      type: 'website',
+    })
+  })
+
+  it.each([
+    'website',
+    'article',
+    'profile',
+    'video.other',
+  ] as const)('should_preserve_open_graph_type_when_next_supports_%s', (type) => {
+    let metadata: Metadata = formatWeaverseNextSeoMetadata({
+      openGraph: { type },
+    })
+
+    expect(metadata.openGraph).toMatchObject({ type })
+  })
+
+  it.each([
+    'app',
+    'player',
+  ] as const)('should_downgrade_twitter_card_to_summary_when_builder_sends_%s', (cardType) => {
+    let metadata: Metadata = formatWeaverseNextSeoMetadata({
+      twitter: { cardType, image: 'https://cdn.example/tw.jpg' },
+    })
+
+    expect(metadata.twitter).toEqual({
+      card: 'summary',
+      title: undefined,
+      description: undefined,
+      images: ['https://cdn.example/tw.jpg'],
+    })
+  })
+
+  it('should_omit_open_graph_and_twitter_when_seo_has_no_content', () => {
+    let metadata = formatWeaverseNextSeoMetadata({
+      title: 'SEO title',
+      openGraph: {},
+      twitter: {},
+      robots: { index: false },
+    })
+
+    expect(metadata).toEqual({
+      title: 'SEO title',
+      robots: { index: false, follow: true },
     })
   })
 })
