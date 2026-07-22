@@ -1356,6 +1356,84 @@ describe('Studio runtime contract', () => {
     unsubscribe?.()
     vi.stubGlobal('window', previousWindow)
   })
+
+  it('should_rebind_reused_item_instances_to_the_new_runtime_when_locale_navigation_recreates_runtime', () => {
+    // Arrange — same page/item id served under two locales. Core keeps item
+    // stores in the process-wide `Weaverse.itemInstances` map, so the FR
+    // runtime reuses the EN store; without rebinding, `item.weaverse` still
+    // points at the EN runtime and `getSnapShot()` reads the EN translation
+    // sidecar / `requestInfo`.
+    let previousWindow = globalThis.window
+    let fakeWindow = {} as Window &
+      typeof globalThis & { __weaverses?: unknown }
+    vi.stubGlobal('window', fakeWindow)
+    let enData: WeaverseNextLoaderData = {
+      page: {
+        id: 'rebind-page',
+        rootId: 'rebind-item',
+        items: [{ id: 'rebind-item', type: 'hero', data: { text: 'Hello' } }],
+        translationMap: {
+          'rebind-item': {
+            text: { originalValue: 'Hello', translatedValue: 'Hello EN' },
+          },
+        },
+        translationLocale: 'en-us',
+        translationLanguageId: 'lang-en',
+      },
+    }
+    let frData: WeaverseNextLoaderData = {
+      page: {
+        id: 'rebind-page',
+        rootId: 'rebind-item',
+        items: [{ id: 'rebind-item', type: 'hero', data: { text: 'Hello' } }],
+        translationMap: {
+          'rebind-item': {
+            text: { originalValue: 'Hello', translatedValue: 'Bonjour FR' },
+          },
+        },
+        translationLocale: 'fr-fr',
+        translationLanguageId: 'lang-fr',
+      },
+    }
+    let enRuntime = createWeaverseNextRuntime({
+      client: makeClient({
+        requestContext: {
+          isDesignMode: false,
+          pathname: '/',
+          i18n: { country: 'US', language: 'EN', locale: 'en-US' },
+        },
+      }),
+      data: enData,
+    })
+    let enItem = enRuntime.itemInstances.get('rebind-item')
+    expect(enItem?.weaverse).toBe(enRuntime)
+    expect(enItem?.getSnapShot().text).toBe('Hello EN')
+
+    // Act — new pathname → new request key → freshly constructed FR runtime.
+    let frRuntime = createWeaverseNextRuntime({
+      client: makeClient({
+        requestContext: {
+          isDesignMode: false,
+          pathname: '/fr-fr',
+          i18n: { country: 'FR', language: 'FR', locale: 'fr-FR' },
+        },
+      }),
+      data: frData,
+    })
+
+    // Assert — new runtime, same reused item store, but rebound to FR so its
+    // snapshot resolves through the FR sidecar and FR request info.
+    expect(frRuntime).not.toBe(enRuntime)
+    let frItem = frRuntime.itemInstances.get('rebind-item')
+    expect(frItem).toBe(enItem)
+    expect(frItem?.weaverse).toBe(frRuntime)
+    expect(frItem?.weaverse.requestInfo).toMatchObject({
+      pathname: '/fr-fr',
+      i18n: { locale: 'fr-FR' },
+    })
+    expect(frItem?.getSnapShot().text).toBe('Bonjour FR')
+    vi.stubGlobal('window', previousWindow)
+  })
 })
 
 // ─── 7. Multi-runtime / nested instance selection ─────────────────────
