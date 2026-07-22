@@ -45,6 +45,10 @@ Spec-only branch. No package or POC implementation is included in this PR.
 - Frozen-diff scope/secret scan passed; all referenced SDK/POC paths and current
   contract assertions were checked against source.
 - Copilot autoreview was unavailable due quota exhaustion (HTTP 402).
-- Claude Code no-tools review found one SDD traceability blocker plus table/auth
-  clarifications; all were fixed. The second pass returned `APPROVE` with no
-  blockers.
+- Initial Claude Code no-tools review found one SDD traceability blocker plus
+  table/auth clarifications; all were fixed, then its second pass approved.
+- A later source-auditing subagent found five deeper blockers: duplicate-control
+  precedence, `PageType` validation, pathname canonicalization, mandatory POC
+  tests/exact routes, and an invalid Biome command. All five were corrected.
+- Targeted post-fix review returned `APPROVE` with no blockers. The corrected
+  Biome command checked 35 SDK files successfully.

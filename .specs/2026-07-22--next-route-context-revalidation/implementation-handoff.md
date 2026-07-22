@@ -19,6 +19,9 @@ the expected failure, then make the minimum implementation pass.
   `WeaverseNextRequestContext`, and passes it to the consumer factory.
 - Registered component loaders receive a client whose `requestContext` matches
   the active storefront route.
+- `pageType` is a `PageTypeSchema`-validated `PageType`, not an arbitrary string.
+- Duplicate Studio controls use the last value, and pathname/URL pathname share
+  one URL-canonicalized value.
 - Browser input cannot choose project ID, Weaverse host, API base, API key, or
   server env.
 - In-place loader application, fallback behavior, and scroll continuity remain
@@ -30,7 +33,8 @@ the expected failure, then make the minimum implementation pass.
 
 1. Add failing tests showing `buildWeaverseNextRequestInfo()` preserves optional
    `pageType` and `handle` from `WeaverseNextRequestContext`.
-2. Add the two optional fields to `WeaverseNextRequestInfo` and its builder.
+2. Add `pageType?: PageType` and `handle?: string` to
+   `WeaverseNextRequestInfo` and its builder.
 3. Run the focused request-info/runtime tests.
 
 ### 2. Client route-context serialization
@@ -49,17 +53,23 @@ the expected failure, then make the minimum implementation pass.
 1. Add failing tests for a valid localized PDP context.
 2. Extend `getClient` with an optional second `requestContext` argument.
 3. Validate and sanitize `routeContext` before client creation.
-4. Reconstruct pathname, `URLSearchParams`, same-origin URL, i18n, page type,
-   handle, and mode flags.
+4. Validate page type with `PageTypeSchema`; reconstruct canonical pathname,
+   `URLSearchParams`, same-origin URL, i18n, handle, and mode flags.
 5. Prove the registered loader receives that reconstructed context through the
    returned client's `requestContext`.
-6. Add hostile path/search/control-param tests and legacy missing-context test.
+6. Add literal/encoded dot-segment tests proving `pathname === url.pathname`.
+7. Add duplicate Studio-control tests proving last-value and cache-mode parity
+   with `getWeaverseNextConfigs()`.
+8. Add hostile path/search/control-param tests and legacy missing-context test.
 
 ### 4. POC route factory
 
 1. Refactor the POC server-client helper so page routes can pass `pageType` and
    `handle`, and the revalidation route can pass an explicit request context.
-2. Update Product, Collection, Index, and Custom load boundaries as appropriate.
+2. Update `app/[locale]/page.tsx`, Product
+   `app/[locale]/products/[handle]/page.tsx`, Collection
+   `app/[locale]/collections/[handle]/page.tsx`, and Custom
+   `app/[locale]/[...slug]/page.tsx`.
 3. Update the client wrapper to restore `pageType` and `handle` from serialized
    `configs.requestInfo`.
 4. Wire the revalidation handler callback's second argument into the explicit
@@ -67,6 +77,9 @@ the expected failure, then make the minimum implementation pass.
 5. Extend the existing real Storefront API smoke loader response with a compact
    route-context snapshot used only as QA evidence; do not replace Shopify data
    with fixtures or fallback demo data.
+6. Add `app/weaverse-next/revalidation-context.test.ts`; require assertions for
+   Product/Collection/Custom identity, explicit callback context, and legacy
+   missing-context fallback. The existing `npm test` glob runs this file.
 
 ### 5. Documentation and compatibility
 
@@ -74,7 +87,9 @@ the expected failure, then make the minimum implementation pass.
 2. Document that `requestContext` is validated browser input and project/host/env
    must still come from server config.
 3. Keep the old one-argument `getClient` callback example valid.
-4. Run package tests, typecheck, build, and formatting/lint checks.
+4. Run package tests, typecheck, build, and formatting/lint checks. Use
+   `pnpm exec biome check packages/next/src packages/next/__tests__
+   --diagnostic-level=error` from the SDK root.
 
 ### 6. Packed consumer and Studio QA
 
@@ -99,7 +114,12 @@ the expected failure, then make the minimum implementation pass.
   host, API key, API base, commerce client, or the whole runtime/client.
 - Do not trust `queries`; derive query values from sanitized `search` so there is
   one canonical representation.
+- Do not use `URLSearchParams.get()` for Studio controls; preserve current
+  last-duplicate precedence.
+- Do not retain raw pathname after URL canonicalization; context pathname and URL
+  pathname must be identical.
 - Do not change the endpoint default or Builder RPC signature.
+- Do not change Builder source for this slice.
 - Do not weaken registered-component lookup, no-store responses, or failure
   fallback.
 - Do not publish until packed-tarball POC and manual Studio checks pass.
@@ -108,6 +128,7 @@ the expected failure, then make the minimum implementation pass.
 
 - SDK implementation and regression tests
 - Package documentation update
-- POC integration and context-aware real-data smoke evidence
+- POC integration, automated route-context regressions, and real-data smoke
+  evidence
 - Updated spec work log with command outputs and manual QA result
 - Alpha release only after review and explicit approval

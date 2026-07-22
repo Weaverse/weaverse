@@ -134,7 +134,7 @@ export interface WeaverseNextRevalidateRouteContext {
     WeaverseNextI18n,
     'country' | 'label' | 'language' | 'locale' | 'pathPrefix'
   >
-  pageType?: PageType | string
+  pageType?: PageType
   pathname: string
   search: string
 }
@@ -150,7 +150,7 @@ Extend `WeaverseNextRequestInfo`:
 export interface WeaverseNextRequestInfo {
   handle?: string
   i18n?: WeaverseNextI18n
-  pageType?: PageType | string
+  pageType?: PageType
   pathname: string
   queries: Record<string, string | boolean>
   search: string
@@ -265,7 +265,8 @@ returns `undefined` without runtime request info and otherwise:
 - copies a valid pathname;
 - parses and re-serializes `search` with `URLSearchParams`;
 - copies only known i18n string fields;
-- copies bounded string `pageType` and `handle`;
+- copies `pageType` only when `PageTypeSchema` accepts it and copies a bounded
+  string `handle`;
 - removes denied query controls case-insensitively.
 
 Denied server-owned controls:
@@ -296,11 +297,10 @@ Client sanitization keeps normal traffic clean; it is not the security boundary.
 
 ## Handler validation and security boundary
 
-The route handler treats every body field as attacker-controlled. It repeats the
-client deny-list, validates strict route-field shapes and bounds, fixes the URL to
-the endpoint origin before assigning pathname/search, and rejects malformed
-present context with `400 { "error": "invalid-route-context" }` before client
-creation. Missing context remains valid legacy input.
+The route handler repeats the client deny-list, validates `PageTypeSchema`, fixes
+the URL origin, canonicalizes both pathname identities once, and uses last-value
+Studio-control semantics. Malformed present context returns
+`400 { "error": "invalid-route-context" }`; missing context stays legacy-valid.
 
 Only pathname, sanitized search, narrow i18n, page type, and handle cross the JSON
 boundary. Project ID, Studio host, API bases/keys, version controls, env, headers,
@@ -364,8 +364,8 @@ a future major version and only with adoption evidence.
 ## Exact SDK files
 
 - `packages/next/src/types.ts`
-  - add optional `pageType`/`handle` to `WeaverseNextRequestInfo` if not already
-    represented at implementation time;
+  - add optional `pageType: PageType`/`handle` to `WeaverseNextRequestInfo` if
+    not already represented at implementation time;
   - keep server request-context fields unchanged.
 - `packages/next/src/request-info.ts`
   - serialize page type and handle.
@@ -386,20 +386,18 @@ a future major version and only with adoption evidence.
 - `packages/next/README.md`
   - route wiring, trust boundary, and migration example.
 
-No Builder source file should change for this slice.
-
 ## POC files
 
 Expected integration surface in `Weaverse/weaverse-hydrogen-next-poc`:
 
-- `app/weaverse-next/server.ts`
-- `app/weaverse-next/wrapper.tsx`
-- `app/weaverse-next/server-components.ts`
+- `app/weaverse-next/server.ts`, `wrapper.tsx`, `server-components.ts`
+- `app/weaverse-next/revalidation-context.test.ts` (new; matched by `npm test`)
 - `app/weaverse-next/components.tsx` only if a design-mode QA snapshot is rendered
 - `app/api/weaverse/revalidate/route.ts`
-- Product/Collection/Index/Custom page load boundaries that construct clients
-- focused tests for server-client context construction if the POC test harness
-  supports them
+- route boundaries: `app/[locale]/page.tsx`, plus `products/[handle]/page.tsx`,
+  `collections/[handle]/page.tsx`, and `[...slug]/page.tsx` under `app/[locale]/`
+
+The POC test covers Product/Collection/Custom identity, callback wiring, and legacy fallback.
 
 Use the existing resource-picker smoke component because it queries real Shopify
 Storefront API product/collection data. Extend its loader result with a compact
@@ -415,6 +413,8 @@ The ordered TDD workflow and packed-consumer checklist are normative in
   denied controls;
 - the handler reconstructs a same-origin request context and preserves legacy
   missing-context behavior;
+- duplicate Studio controls use the last value/cache path, while literal/encoded
+  dot segments produce one canonical pathname in both context fields;
 - loader data still applies in place and non-OK responses still trigger fallback;
 - package test/typecheck/build/Biome gates pass;
 - the exact packed candidate passes the POC build;
@@ -428,7 +428,7 @@ Expected SDK commands, adjusted only if package scripts changed:
 pnpm --filter @weaverse/next test
 pnpm --filter @weaverse/next typecheck
 pnpm --filter @weaverse/next build
-pnpm biome check packages/next/src packages/next/__tests__
+pnpm exec biome check packages/next/src packages/next/__tests__ --diagnostic-level=error
 ```
 
 Do not claim consumer parity from SDK unit tests alone.
