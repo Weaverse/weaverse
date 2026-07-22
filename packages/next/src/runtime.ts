@@ -107,6 +107,37 @@ function registerRuntime(runtime: WeaverseNextRuntime) {
   runtimeWindow.__weaverse = runtime
 }
 
+/**
+ * Lifecycle invariant: every item store rendered by a runtime must point back
+ * at that same runtime (`item.weaverse === runtime`).
+ *
+ * Core keeps `Weaverse.itemInstances` process-wide and keyed by item id only,
+ * so a client navigation that recreates the runtime under a new request key
+ * (e.g. `/` → `/fr-fr`) reuses the existing stores and merely calls
+ * `setData()` on them — their `weaverse` back-reference is never updated and
+ * keeps pointing at the previous runtime. Anything an item reads through that
+ * reference then stays stale: `WeaverseNextItem.getSnapShot()` reads
+ * `this.weaverse.translationMap` (locale sidecar), and `Element` /
+ * `requestInfo` consumers read the old locale's runtime until a full reload
+ * builds clean instances.
+ *
+ * Rebind only the items belonging to the freshly rendered page — other
+ * runtimes co-located on the same document own their own item ids and must
+ * keep their bindings.
+ */
+function rebindPageItemsToRuntime(runtime: WeaverseNextRuntime) {
+  let items = (runtime.data as WeaverseNextPageData | undefined)?.items
+  if (!items) {
+    return
+  }
+  for (let { id } of items) {
+    let instance = runtime.itemInstances.get(id) as WeaverseNextItem | undefined
+    if (instance && instance.weaverse !== runtime) {
+      instance.weaverse = runtime
+    }
+  }
+}
+
 export class WeaverseNextRuntime extends Weaverse {
   pageId: string
   internal: WeaverseNextRuntimeInternal
@@ -408,6 +439,11 @@ export function createWeaverseNextRuntime(
     () => new WeaverseNextRuntime(config) as StudioBoundRuntime
   )
   runtime.pendingItemUpdates = refreshedItems
+  // Reused stores are still bound to the runtime that built them; rebind before
+  // returning so consumers read snapshots through this runtime (see
+  // `rebindPageItemsToRuntime`). Rebinding touches no subscriber, so it stays
+  // render-phase safe alongside the deferred item updates above.
+  rebindPageItemsToRuntime(runtime)
   runtime.__weaverseNextRequestKey = requestKey
   runtime.__weaverseNextLatestData = page
   registerRuntime(runtime)
