@@ -9,7 +9,15 @@ import { replaceContentDataConnectorsDeep } from './utils/data-connector'
 const REACT_VERSION_THRESHOLD = 18
 const reactVersion = Number(React.version?.split('.')[0]) || 0
 
-// Create a safe version of useSyncExternalStore that works in both client and server environments
+/**
+ * Reads an external store in React while remaining safe during server rendering
+ * and on React versions without `useSyncExternalStore`.
+ *
+ * @param subscribe - Registers a callback for store changes.
+ * @param getSnapshot - Returns the current client snapshot.
+ * @param getServerSnapshot - Returns the server snapshot; defaults to `getSnapshot`.
+ * @returns The current external-store snapshot.
+ */
 export const useSafeExternalStore = (
   subscribe: any,
   getSnapshot: any,
@@ -52,6 +60,10 @@ const getRootId = (context: Weaverse): string => {
   // Strategy 3: Fallback to projectId
   return context.projectId
 }
+/**
+ * Renders a Weaverse content tree and provides its runtime to descendant
+ * components.
+ */
 export const WeaverseRoot = memo(({ context }: WeaverseRootPropsType) => {
   const data = useSafeExternalStore(
     context.subscribe,
