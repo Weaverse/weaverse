@@ -43,8 +43,8 @@ export interface WeaverseNextRendererProps {
 /**
  * Render a serialized Weaverse page tree through `@weaverse/react` primitives.
  *
- * Reads the client/page data from {@link WeaverseNextContext} when no props are
- * passed, or accepts an explicit `client` + `data` for standalone use. Builds a
+ * Reads the client/page data supplied by {@link WeaverseNextProvider} when no
+ * props are passed, or accepts an explicit `client` + `data` for standalone use. Builds a
  * framework-neutral `Weaverse` core instance (no React Router hooks) and hands
  * it to the shared `WeaverseRoot`.
  */

@@ -28,6 +28,7 @@ export {
   useWeaversePageData,
   useWeaverseRootData,
 } from './hooks'
+export type { WeaverseNextItem } from './item'
 export {
   type RunComponentLoadersArgs,
   runWeaverseComponentLoaders,
@@ -59,6 +60,8 @@ export {
 export {
   formatWeaverseNextSeoMetadata,
   getWeaverseNextSeoMetadata,
+  type NextOpenGraph,
+  type NextTwitter,
   type WeaverseNextSeoMetadata,
 } from './seo'
 export {
@@ -105,6 +108,7 @@ export type {
   WeaverseBlog,
   WeaverseCollection,
   WeaverseMetaObject,
+  WeaverseNextCacheConfig,
   WeaverseNextClient,
   WeaverseNextClientConfig,
   WeaverseNextCommerceContext,
@@ -125,6 +129,8 @@ export type {
   WeaverseNextRuntimeInternal,
   WeaverseNextStorefront,
   WeaverseNextThemeSchema,
+  WeaverseNextThemeSchemaGroup,
+  WeaverseNextThemeSchemaInput,
   WeaverseNextThemeSettingsStore,
   WeaverseNextTranslationChanges,
   WeaverseNextTranslationEntry,

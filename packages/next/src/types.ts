@@ -46,8 +46,8 @@ export interface WeaverseNextThemeSettingsStore {
  * loader data so the Builder Studio save pipeline receives the same shape it
  * gets from Hydrogen (`{ projectId, type, locale, handle }`, plus optional
  * inherited/fallback `meta`). Kept framework-neutral: `type` accepts a known
- * {@link PageType} or any string, and `meta` preserves inherited/fallback
- * metadata (unknown fields included) without asserting a strict shape.
+ * `PageType` or any string, and `meta` preserves inherited/fallback metadata
+ * (unknown fields included) without asserting a strict shape.
  */
 export interface WeaverseNextPageAssignment {
   /** Assigned page handle. */
@@ -354,7 +354,7 @@ export interface WeaverseNextComponentData {
   data?: Record<string, unknown>
   /** Stable Weaverse item identifier. */
   id: string
-  /** Attached by {@link runWeaverseComponentLoaders} after a loader runs. */
+  /** Attached by the root-entry `runWeaverseComponentLoaders` after a loader runs. */
   loaderData?: unknown
   /** Registered component schema type. */
   type: string
@@ -476,8 +476,8 @@ export interface WeaverseNextClientConfig {
 }
 
 /**
- * Request-safe client returned by {@link createWeaverseNextClient}. Holds the
- * registry/config plus the currently loaded page data, and is the object passed
+ * Request-safe client returned by the root-entry `createWeaverseNextClient`.
+ * Holds the registry/config plus the currently loaded page data and is passed
  * to component loaders as `weaverse`.
  */
 export interface WeaverseNextClient {
@@ -663,9 +663,9 @@ export interface WeaverseNextFetchCustomPagesOptions
 }
 
 /**
- * Config for {@link createWeaverseNextServerClient}. Unlike
- * {@link WeaverseNextClientConfig} (which delegates network I/O to injected
- * fetchers), the server client performs the real Weaverse API fetch itself, so
+ * Config for {@link createWeaverseNextServerClient}. Unlike the root-entry
+ * `WeaverseNextClientConfig` (which delegates network I/O to injected fetchers),
+ * the server client performs the real Weaverse API fetch itself, so
  * it accepts request context, env, and cache options instead.
  */
 export interface WeaverseNextServerClientConfig {

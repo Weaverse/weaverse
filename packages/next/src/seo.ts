@@ -2,10 +2,11 @@ import type { PageSEOData } from '@weaverse/schema'
 import type { Metadata } from 'next'
 import type { WeaverseNextLoaderData, WeaverseNextPageData } from './types'
 
-/** Next's own `openGraph` / `twitter` unions, reused so the helper's result
- * is directly assignable to `Metadata` without a consumer-side adapter. */
-type NextOpenGraph = NonNullable<Metadata['openGraph']>
-type NextTwitter = NonNullable<Metadata['twitter']>
+/** Open Graph metadata accepted by Next.js's `Metadata` API. */
+export type NextOpenGraph = NonNullable<Metadata['openGraph']>
+
+/** Twitter card metadata accepted by Next.js's `Metadata` API. */
+export type NextTwitter = NonNullable<Metadata['twitter']>
 
 /**
  * Weaverse page SEO expressed as a subset of Next's `Metadata`. Assignable to

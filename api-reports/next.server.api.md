@@ -34,6 +34,12 @@ export function getWeaverseNextSeoMetadata(data: WeaverseNextLoaderData | Weaver
 } | null | undefined): WeaverseNextSeoMetadata;
 
 // @public
+export type NextOpenGraph = NonNullable<Metadata['openGraph']>;
+
+// @public
+export type NextTwitter = NonNullable<Metadata['twitter']>;
+
+// @public
 export function normalizeNextPageUrl(url: string): string;
 
 // @public
@@ -66,6 +72,64 @@ export interface WeaverseNextBaseConfigs {
 export interface WeaverseNextCacheConfig {
     revalidate?: number | false;
     tags?: string[];
+}
+
+// @public
+export interface WeaverseNextClient {
+    commerce?: WeaverseNextCommerceContext;
+    components: WeaverseNextComponent[];
+    data: WeaverseNextLoaderData | null;
+    dataContext: Record<string, unknown>;
+    loadPage: (input?: WeaverseNextLoadPageInput) => Promise<WeaverseNextLoaderData | null>;
+    loadThemeSettings: (context?: WeaverseNextRequestContext) => Promise<unknown>;
+    projectId: string;
+    requestContext?: WeaverseNextRequestContext;
+    storefront?: WeaverseNextStorefront;
+    themeSchema?: WeaverseNextThemeSchema;
+    themeSettings: Record<string, unknown>;
+}
+
+// @public
+export interface WeaverseNextCommerceContext {
+    [key: string]: unknown;
+    cart?: unknown;
+    customerAccount?: unknown;
+    storefront?: WeaverseNextStorefront;
+}
+
+// @public
+export interface WeaverseNextComponent<TProps extends WeaverseNextComponentProps = WeaverseNextComponentProps> {
+    default: ComponentType<TProps> | ForwardRefExoticComponent<TProps>;
+    loader?: (args: WeaverseNextComponentLoaderArgs) => Promise<unknown>;
+    schema: SchemaType;
+}
+
+// @public
+export interface WeaverseNextComponentData {
+    [key: string]: unknown;
+    children?: WeaverseNextComponentData[] | {
+        id: string;
+    }[];
+    data?: Record<string, unknown>;
+    id: string;
+    loaderData?: unknown;
+    type: string;
+}
+
+// @public
+export interface WeaverseNextComponentLoaderArgs<TData = unknown> {
+    commerce?: WeaverseNextCommerceContext;
+    context?: WeaverseNextRequestContext;
+    data: TData;
+    weaverse: WeaverseNextClient;
+}
+
+// @public
+export interface WeaverseNextComponentProps<L = unknown> extends Partial<WeaverseElement> {
+    [key: string]: unknown;
+    children?: ReactNode;
+    className?: string;
+    loaderData?: L;
 }
 
 // @public
@@ -105,7 +169,74 @@ export interface WeaverseNextFetchOptions extends RequestInit {
 }
 
 // @public
+export interface WeaverseNextI18n {
+    [key: string]: unknown;
+    country?: string;
+    label?: string;
+    language?: string;
+    locale?: string;
+    pathPrefix?: string;
+}
+
+// @public
+export interface WeaverseNextLoaderData {
+    [key: string]: unknown;
+    configs?: Record<string, unknown>;
+    page: WeaverseNextPageData;
+    pageAssignment?: WeaverseNextPageAssignment;
+    project?: Record<string, unknown>;
+}
+
+// @public
+export interface WeaverseNextLoadPageInput {
+    [key: string]: unknown;
+    handle?: string;
+    locale?: string;
+    type?: PageType;
+}
+
+// @public
+export interface WeaverseNextPageAssignment {
+    handle: string;
+    locale: string;
+    meta?: {
+        depth?: number;
+        inherited?: boolean;
+        sourceProjectId?: string;
+        [key: string]: unknown;
+    };
+    projectId: string;
+    type: PageType | string;
+}
+
+// @public
+export interface WeaverseNextPageData {
+    [key: string]: unknown;
+    id: string;
+    items: WeaverseNextComponentData[];
+    name?: string;
+    rootId?: string;
+    seo?: PageSEOData | null;
+}
+
+// @public
 export type WeaverseNextProjectId = string | ((context?: WeaverseNextRequestContext) => string | Promise<string> | undefined);
+
+// @public
+export interface WeaverseNextRequestContext {
+    [key: string]: unknown;
+    handle?: string;
+    headers?: Headers;
+    i18n?: WeaverseNextI18n;
+    isDesignMode?: boolean;
+    isPreviewMode?: boolean;
+    isRevisionPreview?: boolean;
+    pageType?: PageType;
+    pathname?: string;
+    searchParams?: URLSearchParams;
+    sectionType?: string;
+    url?: URL | string;
+}
 
 // @public
 export interface WeaverseNextRevalidateHandlerConfig {
@@ -164,6 +295,53 @@ export interface WeaverseNextServerClientConfig {
 export interface WeaverseNextServerLoadPageInput extends WeaverseNextLoadPageInput {
     cache?: WeaverseNextCacheConfig;
     projectId?: string;
+}
+
+// @public
+export interface WeaverseNextStorefront {
+    [key: string]: unknown;
+    i18n?: WeaverseNextI18n;
+    query: (query: string, options?: unknown) => Promise<unknown>;
+}
+
+// @public
+export interface WeaverseNextThemeSchema {
+    [key: string]: unknown;
+    i18n?: {
+        defaultLocale?: WeaverseNextI18n;
+        shopLocales?: WeaverseNextI18n[];
+        staticContent?: Record<string, unknown>;
+        translation?: boolean;
+        urlStructure?: 'url-path' | 'subdomain' | 'top-level-domain';
+        [key: string]: unknown;
+    };
+    info?: {
+        author?: string;
+        authorProfilePhoto?: string;
+        documentationUrl?: string;
+        name?: string;
+        supportUrl?: string;
+        version?: string;
+        [key: string]: unknown;
+    };
+    // @deprecated
+    inspector?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[];
+    settings?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[];
+}
+
+// @public
+export interface WeaverseNextThemeSchemaGroup {
+    [key: string]: unknown;
+    group?: string;
+    inputs?: WeaverseNextThemeSchemaInput[];
+}
+
+// @public
+export interface WeaverseNextThemeSchemaInput {
+    [key: string]: unknown;
+    condition?: unknown;
+    defaultValue?: unknown;
+    name?: string;
 }
 
 // @public

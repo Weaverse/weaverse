@@ -14,7 +14,7 @@ import { JSX } from 'react/jsx-runtime';
 import { MemoExoticComponent } from 'react';
 import type { Metadata } from 'next';
 import type { PageSEOData } from '@weaverse/schema';
-import { PageType } from '@weaverse/schema';
+import type { PageType } from '@weaverse/schema';
 import { ReactNode } from 'react';
 import type { SchemaType } from '@weaverse/schema';
 import { useChildInstances } from '@weaverse/react';
@@ -95,6 +95,12 @@ export function loadWeaverseNextStudioScript(context?: WeaverseNextRequestContex
 export interface LoadWeaverseNextStudioScriptOptions {
     storefrontHostname?: string;
 }
+
+// @public
+export type NextOpenGraph = NonNullable<Metadata['openGraph']>;
+
+// @public
+export type NextTwitter = NonNullable<Metadata['twitter']>;
 
 // @public
 export function resolveWeaverseNextStudioScriptSrc(context?: WeaverseNextRequestContext, options?: ResolveWeaverseNextStudioScriptSrcOptions): string | null;
@@ -218,6 +224,12 @@ export type WeaverseCollection = WeaverseResourcePickerData;
 export type WeaverseMetaObject = WeaverseResourcePickerData;
 
 // @public
+export interface WeaverseNextCacheConfig {
+    revalidate?: number | false;
+    tags?: string[];
+}
+
+// @public
 export interface WeaverseNextClient {
     commerce?: WeaverseNextCommerceContext;
     components: WeaverseNextComponent[];
@@ -311,6 +323,14 @@ export interface WeaverseNextI18n {
     language?: string;
     locale?: string;
     pathPrefix?: string;
+}
+
+// @public
+export class WeaverseNextItem extends WeaverseItemStore {
+    constructor(initialData: WeaverseNextComponentData, weaverse: Weaverse);
+    getSnapShot: () => ElementData;
+    setData: (update: Omit<ElementData, "id" | "type">) => ElementData;
+    weaverse: WeaverseNextRuntime;
 }
 
 // @public
@@ -572,6 +592,21 @@ export interface WeaverseNextThemeSchema {
     // @deprecated
     inspector?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[];
     settings?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[];
+}
+
+// @public
+export interface WeaverseNextThemeSchemaGroup {
+    [key: string]: unknown;
+    group?: string;
+    inputs?: WeaverseNextThemeSchemaInput[];
+}
+
+// @public
+export interface WeaverseNextThemeSchemaInput {
+    [key: string]: unknown;
+    condition?: unknown;
+    defaultValue?: unknown;
+    name?: string;
 }
 
 // @public
