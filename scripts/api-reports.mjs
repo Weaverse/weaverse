@@ -9,7 +9,14 @@ let REPORT_DIR = join(ROOT_DIR, 'api-reports')
 let TEMP_DIR = join(ROOT_DIR, 'node_modules', '.cache', 'api-reports')
 let RUNTIME_REPORT = join(REPORT_DIR, 'runtime-exports.api.md')
 let UPDATE_REPORTS = process.argv.includes('--update')
-const DOCUMENTED_PACKAGES = new Set(['schema'])
+const DOCUMENTED_PACKAGES = new Set([
+  'core',
+  'experiments',
+  'hydrogen',
+  'next',
+  'react',
+  'schema',
+])
 let publishedPackages = getPublishedPackages(ROOT_DIR)
 let typeEntrypoints = publishedPackages.flatMap((publishedPackage) =>
   publishedPackage.entrypoints
