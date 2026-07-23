@@ -137,11 +137,11 @@ importers:
         specifier: '3'
         version: 3.0.3(@shopify/oxygen-workers-types@4.2.0)(react-router@7.14.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
       '@weaverse/react':
-        specifier: 5.17.0
-        version: 5.17.0
+        specifier: 5.17.1
+        version: 5.17.1
       '@weaverse/schema':
-        specifier: 0.11.0
-        version: 0.11.0
+        specifier: 0.11.1
+        version: 0.11.1
       react:
         specifier: '>=19'
         version: 19.2.5
@@ -177,8 +177,8 @@ importers:
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: 5.17.0
-        version: 5.17.0
+        specifier: 5.17.1
+        version: 5.17.1
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -1564,23 +1564,23 @@ packages:
     resolution: {integrity: sha512-9BPJb8OKHM131FSB5FYh2XYfC2ZYLDgFwTyWuwoCTsd+Ij/ceS8Dv8hFJrREsa0UWNHw0IZPRRISXjzwo7WkSw==, tarball: https://registry.npmjs.org/@weaverse/core/-/core-5.16.4.tgz}
     engines: {node: '>=18'}
 
-  '@weaverse/core@5.17.0':
-    resolution: {integrity: sha512-Pz+jKEw6w9Hq8Cjz30WcieRbI7X5cPOz1cXqS7VTJtisK7lYz2Q1iCbj+blTbMDUYFvEszU45tmmkD231Gs6Jg==, tarball: https://registry.npmjs.org/@weaverse/core/-/core-5.17.0.tgz}
+  '@weaverse/core@5.17.1':
+    resolution: {integrity: sha512-DVLJ35hXNO3yeoTgOR8c2KZFSMSAIowqqi80QPP004W2q21ClTEGc2N2lBA+qFXC17uBjXvOV4sLe7xzw+H74A==, tarball: https://registry.npmjs.org/@weaverse/core/-/core-5.17.1.tgz}
     engines: {node: '>=18'}
 
   '@weaverse/react@5.16.4':
     resolution: {integrity: sha512-r0PlYae9iMlbW54CU/+gulys6hfmo+fBZePh7e9yJlOwTIJIA76aV8rl8OmhNTra3PPsest8zGJj5eDfB0x1dw==, tarball: https://registry.npmjs.org/@weaverse/react/-/react-5.16.4.tgz}
     engines: {node: '>=18'}
 
-  '@weaverse/react@5.17.0':
-    resolution: {integrity: sha512-Y2WU7QFyJlgP224vrM9+HPxUHckHk6OObz+BpYKMclvy4uNwecD8Iher5a8+kQUwwnEG2FkQ2TH9GXa2ItSiaQ==, tarball: https://registry.npmjs.org/@weaverse/react/-/react-5.17.0.tgz}
+  '@weaverse/react@5.17.1':
+    resolution: {integrity: sha512-PPFfFVprTx1/Mt/kpV2noP5pyGI/xzEag1uk2DsWhdP9q7DV2MQy4R4ILQl9xKVAh7k9X+Rgp8x7oWxrVm+tCg==, tarball: https://registry.npmjs.org/@weaverse/react/-/react-5.17.1.tgz}
     engines: {node: '>=18'}
 
   '@weaverse/schema@0.10.0':
     resolution: {integrity: sha512-yKy13aCaddmTcxNP1VSZcpt58Sn6K9264E3cuTPIPKydwIK9RVlAyalIQHDUjyWiw+Yf0XEZVPyZOFuHRMJ5ng==, tarball: https://registry.npmjs.org/@weaverse/schema/-/schema-0.10.0.tgz}
 
-  '@weaverse/schema@0.11.0':
-    resolution: {integrity: sha512-fYwI2oclVWXLp3qLeNgRz6d6ArMtT05ITX9fZ2/HjYMoWHJJAWPuwx9E8kzEEReFIWux24GPL03eoWNF2aTSyw==, tarball: https://registry.npmjs.org/@weaverse/schema/-/schema-0.11.0.tgz}
+  '@weaverse/schema@0.11.1':
+    resolution: {integrity: sha512-WYLoo/n1D2+KQVbx/RYqkaxo1sXRKpwKPhAwVr+CPvUWu0a5l7CFl0sM7FZJxUfmWUp/NI+PRhM8VIaxxjL7qg==, tarball: https://registry.npmjs.org/@weaverse/schema/-/schema-0.11.1.tgz}
 
   '@xstate/fsm@2.0.0':
     resolution: {integrity: sha512-p/zcvBMoU2ap5byMefLkR+AM+Eh99CU/SDEQeccgKlmFNOMDwphaRGqdk+emvel/SaGZ7Rf9sDvzAplLzLdEVQ==}
@@ -4007,7 +4007,7 @@ snapshots:
 
   '@weaverse/core@5.16.4': {}
 
-  '@weaverse/core@5.17.0': {}
+  '@weaverse/core@5.17.1': {}
 
   '@weaverse/react@5.16.4':
     dependencies:
@@ -4016,9 +4016,9 @@ snapshots:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
 
-  '@weaverse/react@5.17.0':
+  '@weaverse/react@5.17.1':
     dependencies:
-      '@weaverse/core': 5.17.0
+      '@weaverse/core': 5.17.1
       clsx: 2.1.1
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
@@ -4027,7 +4027,7 @@ snapshots:
     dependencies:
       zod: 4.4.3
 
-  '@weaverse/schema@0.11.0':
+  '@weaverse/schema@0.11.1':
     dependencies:
       zod: 4.4.3
 
