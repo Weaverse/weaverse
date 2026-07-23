@@ -1,10 +1,12 @@
 import type {
   BasicInput,
+  ComponentAvailabilityContext,
   ComponentPresets,
   HeadingInput,
   InspectorGroup,
   PageType,
   RangeInputConfigs,
+  Resolvable,
   SchemaType,
   SchemaValidationIssue,
 } from './validation'
@@ -39,6 +41,7 @@ export type SchemaTypeStrict = {
     pages?: PageType[]
     groups?: ('*' | 'header' | 'footer' | 'body')[]
   }
+  enabled?: Resolvable<boolean, ComponentAvailabilityContext>
   presets?: {
     children?: ComponentPresets[]
     [key: string]: any
@@ -101,6 +104,7 @@ export function createSchemaTypeSafe(schema: {
     pages?: PageType[]
     groups?: ('*' | 'header' | 'footer' | 'body')[]
   }
+  enabled?: Resolvable<boolean, ComponentAvailabilityContext>
   presets?: {
     children?: ComponentPresets[]
     [key: string]: any
@@ -172,6 +176,11 @@ export class SchemaBuilder {
 
   enabledOn(enabledOn: SchemaType['enabledOn']): SchemaBuilder {
     this.schema.enabledOn = enabledOn
+    return this
+  }
+
+  enabled(enabled: SchemaType['enabled']): SchemaBuilder {
+    this.schema.enabled = enabled
     return this
   }
 
@@ -394,6 +403,8 @@ export const groupHelpers = {
 
 export type {
   BasicInput,
+  ComponentAvailabilityContext,
+  ComponentGroup,
   ComponentPresets,
   ComponentValidationOptions,
   ConfigsProps,
@@ -403,6 +414,7 @@ export type {
   InspectorGroup,
   PageType,
   RangeInputConfigs,
+  Resolvable,
   SchemaMigration,
   SchemaType,
   SchemaValidationFailure,

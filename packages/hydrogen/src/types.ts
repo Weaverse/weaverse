@@ -595,6 +595,17 @@ export type CreateHydrogenSchemaOptions = {
     pages?: PageType[]
     groups?: ('*' | 'header' | 'footer' | 'body')[]
   }
+  enabled?:
+    | boolean
+    | ((context: {
+        page: {
+          id: string
+          type: PageType
+          handle: string
+          locale: string
+        }
+        group: 'body' | 'header' | 'footer'
+      }) => boolean)
   presets?: {
     children?: SchemaComponentPresets[]
     [key: string]: any

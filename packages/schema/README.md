@@ -66,6 +66,7 @@ export type ElementSchema = {
     pages?: ('*' | PageType)[]
     groups?: ('*' | 'header' | 'footer' | 'body')[]
   }
+  enabled?: Resolvable<boolean, ComponentAvailabilityContext>
   presets?: {
     children?: Array<{ type: string; [key: string]: any }>
     [key: string]: any
@@ -144,6 +145,30 @@ if (isValidSchema(data)) {
 }
 ```
 
+### Context-aware component availability
+
+Use `enabled` when availability depends on the current page or placement group:
+
+```typescript
+import { createSchema } from '@weaverse/schema'
+
+const schema = createSchema({
+  title: 'Freebies',
+  type: 'freebies',
+  enabledOn: {
+    pages: ['CUSTOM'],
+  },
+  enabled: ({ page, group }) =>
+    page.handle === 'freebies/essential' && group === 'body',
+})
+```
+
+`enabled` accepts a boolean or a synchronous callback. The callback receives
+`page` (`id`, `type`, `handle`, and `locale`) and `group` (`body`, `header`, or
+`footer`). When both `enabledOn` and `enabled` are set, both rules must pass.
+The SDK preserves callbacks without executing them; the Weaverse preview bridge
+evaluates them against its current page context.
+
 ### Schema Builder Pattern
 
 Create schemas fluently with the builder pattern:
@@ -175,6 +200,7 @@ const schema = schemaBuilder()
     pages: ['PRODUCT', 'COLLECTION'],
     groups: ['body']
   })
+  .enabled(({ group }) => group === 'body')
   .build()
 ```
 
@@ -328,7 +354,7 @@ All types are inferred from Zod schemas, ensuring:
 - Runtime validation matches TypeScript types
 - Single source of truth for type definitions
 - Automatic type generation from schema changes
-- Proper serialization support (no function types in schemas)
+- Context-aware component availability callbacks are preserved for preview-side evaluation
 
 ## Development
 

@@ -184,6 +184,20 @@ export const PageTypeSchema = z.union([
   z.literal('CUSTOM'),
 ])
 
+export type Resolvable<T, Context> = T | ((context: Context) => T)
+
+export type ComponentGroup = 'body' | 'header' | 'footer'
+
+export interface ComponentAvailabilityContext {
+  group: ComponentGroup
+  page: {
+    id: string
+    type: PageType
+    handle: string
+    locale: string
+  }
+}
+
 export const ComponentPresetsSchema = z
   .object({
     type: z.string().describe('The type of the component'),
@@ -246,6 +260,13 @@ export const ElementSchema = z
       })
       .optional()
       .describe('Where this element can be enabled'),
+    enabled: z
+      .custom<Resolvable<boolean, ComponentAvailabilityContext>>(
+        (value) => typeof value === 'boolean' || typeof value === 'function',
+        'Enabled must be a boolean or synchronous function'
+      )
+      .optional()
+      .describe('Whether this element is available in the current context'),
     presets: z
       .object({
         children: z
