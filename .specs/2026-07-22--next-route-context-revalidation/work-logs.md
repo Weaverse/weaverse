@@ -185,6 +185,11 @@ All changes left uncommitted for Hermes review.
   diffs independently and returned `APPROVE` / `APPROVE` with no blockers. Hermes
   separately executed the canonical SDK, registry POC, packed POC, and actual
   route probe gates recorded above.
+- A later asynchronous SDK docs review caught that the route-handler snippet
+  imported `createWeaverseServerClientFromContext` without defining it in the
+  canonical app-helper snippet. The README now defines and exports that explicit
+  context path; `getWeaverseServerClient` delegates to it so both initial and
+  revalidation flows use the same constructor.
 - The SDK branch is ready for a normal PR after these corrections.
 - The POC branch must open as draft and remain blocked until the SDK PR merges,
   a new prerelease is published, and `package.json` / `package-lock.json` are

@@ -174,7 +174,8 @@ This helper is app-level (not exported by `@weaverse/next`); it plays the role
 of Hydrogen's global load context, but the app owns route identity explicitly.
 The App Router boundary supplies `pathname`, `pageType`, and `handle`, so the
 same identity reaches page loads and per-item revalidation loaders. It uses the
-exported `PageType` and `WeaverseNextRequestContext` types:
+exported `PageType` and `WeaverseNextRequestContext` types. The module defines
+both helpers used by the route-handler example below:
 
 ```ts
 import { createWeaverseNextServerClient } from '@weaverse/next/server'
@@ -212,8 +213,6 @@ export async function getWeaverseServerClient(
     }`
   )
 
-  let storefront = getStaticStorefrontClient()
-
   let requestContext: WeaverseNextRequestContext = {
     url,
     headers: requestHeaders,
@@ -223,6 +222,19 @@ export async function getWeaverseServerClient(
     handle: identity.handle,
     i18n: { country: 'US', language: 'EN', locale: 'en-US' },
   }
+
+  return createWeaverseServerClientFromContext(requestContext)
+}
+
+// Explicit-context path used by the revalidation callback. The context has
+// already been validated by the SDK handler; project/host/env remain app-owned.
+export function createWeaverseServerClientFromContext(
+  requestContext: WeaverseNextRequestContext
+) {
+  // A localized app should select/cache this client from its own supported
+  // market allowlist using requestContext.i18n. This compact example uses the
+  // default market configured by the app helper.
+  let storefront = getStaticStorefrontClient()
 
   return createWeaverseNextServerClient({
     components: serverComponents,
