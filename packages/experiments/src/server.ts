@@ -7,6 +7,8 @@
  * It resolves a stable visitor seed (minting a first-party cookie once if
  * needed), assigns every configured experiment deterministically, and maps the
  * chosen variant to a Weaverse `projectId` for project-level A/B testing.
+ *
+ * @packageDocumentation
  */
 
 import type { Assignment, Experiment } from './index.js'
@@ -15,6 +17,7 @@ import { resolveExperiments } from './index.js'
 const DEFAULT_SEED_COOKIE = '_wv_vid'
 const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365
 
+/** Configures experiment resolution for an incoming request. */
 export interface ExperimentsServerConfig {
   /** Cookie name used to persist the minted visitor seed. Default `_wv_vid`. */
   cookieName?: string
@@ -35,6 +38,7 @@ export interface ExperimentsServerConfig {
   seed?: string
 }
 
+/** Contains assignments and response metadata resolved for a request. */
 export interface ExperimentsResult {
   /** One assignment per configured experiment, in input order. */
   assignments: Assignment[]

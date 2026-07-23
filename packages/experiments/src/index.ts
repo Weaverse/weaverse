@@ -8,8 +8,11 @@
  *
  * This module has zero dependencies and zero runtime globals; it runs in any
  * JavaScript environment (Node, browsers, Cloudflare Workers, Deno, Bun).
+ *
+ * @packageDocumentation
  */
 
+/** Describes one possible outcome in an experiment. */
 export interface ExperimentVariant {
   /** Stable identifier for the variant, e.g. `'control'` or `'b'`. */
   id: string
@@ -25,6 +28,7 @@ export interface ExperimentVariant {
   weight?: number
 }
 
+/** Defines an experiment and the variants available for assignment. */
 export interface Experiment {
   /** Stable identifier, also mixed into the hash so experiments are independent. */
   id: string
@@ -37,8 +41,11 @@ export interface Experiment {
   variants: ExperimentVariant[]
 }
 
+/** Records the variant selected for an experiment. */
 export interface Assignment {
+  /** Identifier of the experiment that produced this assignment. */
   experimentId: string
+  /** Variant selected for the visitor seed. */
   variant: ExperimentVariant
 }
 

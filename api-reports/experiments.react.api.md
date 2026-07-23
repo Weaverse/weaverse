@@ -10,7 +10,7 @@ import type { ReactNode } from 'react';
 // @public
 export function createExposureTracker(): ExposureTracker;
 
-// @public (undocumented)
+// @public
 export interface ExposureTracker {
     expose(assignments: Assignment[], onExpose: (assignment: Assignment) => void): void;
 }
@@ -24,14 +24,11 @@ export function useExperiments(): Assignment[];
 // @public
 export function WeaverseExperiments(input: WeaverseExperimentsProps): JSX.Element;
 
-// @public (undocumented)
+// @public
 export interface WeaverseExperimentsProps {
-    // (undocumented)
     children?: ReactNode;
     onExpose?: (assignment: Assignment) => void;
     value: Assignment[];
 }
-
-// (No @packageDocumentation comment for this package)
 
 ```

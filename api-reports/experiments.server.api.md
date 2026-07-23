@@ -4,7 +4,7 @@
 
 ```ts
 
-// @public (undocumented)
+// @public
 export interface ExperimentsResult {
     assignments: Assignment[];
     headers: Headers;
@@ -13,7 +13,7 @@ export interface ExperimentsResult {
     setCookie?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface ExperimentsServerConfig {
     cookieName?: string;
     experiments: Experiment[];
@@ -24,7 +24,5 @@ export interface ExperimentsServerConfig {
 
 // @public
 export function getExperiments(request: Request, config: ExperimentsServerConfig): ExperimentsResult;
-
-// (No @packageDocumentation comment for this package)
 
 ```

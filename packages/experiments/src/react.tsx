@@ -4,12 +4,15 @@
  * `react` is an optional peer dependency: importing this entry is the only
  * thing that pulls React in. The agnostic engine (`@weaverse/experiments`) and
  * the request adapter (`@weaverse/experiments/server`) stay React-free.
+ *
+ * @packageDocumentation
  */
 
 import type { ReactNode } from 'react'
 import { createContext, useContext, useEffect, useRef } from 'react'
 import type { Assignment } from './index.js'
 
+/** Tracks which experiment assignments have emitted exposure events. */
 export interface ExposureTracker {
   /**
    * Invokes `onExpose` once per `(experimentId, variant.id)` pair across the
@@ -54,7 +57,9 @@ let ExperimentsContext = createContext<ExperimentsContextValue>({
   assignments: [],
 })
 
+/** Props for the {@link WeaverseExperiments} provider. */
 export interface WeaverseExperimentsProps {
+  /** React content that can consume the provided assignments. */
   children?: ReactNode
   /**
    * Fired once per `(experiment, variant)` when first exposed on the client.
