@@ -66,6 +66,7 @@ export type WeaverseCSSProperties = CSSProperties
 
 /** Nested CSS rules keyed by a child selector. */
 export type ChildElementCSS = Partial<{
+  /** Styles for a nested child selector. */
   [selector: string]: WeaverseCSSProperties & ChildElementCSS
 }>
 
@@ -210,7 +211,10 @@ export type BasicInput<ConfigsType = AdditionalInputConfigs> = {
     | number
     | boolean
     | Partial<WeaverseImage>
-    | { [x: string]: any }
+    | {
+        /** Structured input data keyed by field name. */
+        [x: string]: any
+      }
   /** Placeholder text shown by supported controls. */
   placeholder?: string
   /** Supporting text shown alongside the input. */

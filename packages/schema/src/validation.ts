@@ -615,8 +615,11 @@ export function isValidSchema(schema: unknown): schema is SchemaType {
 export interface VersionedSchema extends SchemaType {
   /** Migration metadata */
   readonly migrations?: {
+    /** Source schema version. */
     from: string
+    /** Target schema version. */
     to: string
+    /** Transforms data from the source version to the target version. */
     migrate: (oldSchema: any) => SchemaType
   }[]
   /** Schema version for future migrations */
@@ -670,8 +673,15 @@ export class SchemaRegistry {
    * Validate that all registered schemas are valid
    */
   validateAll(): {
+    /** Names of schemas that passed validation. */
     valid: string[]
-    invalid: Array<{ name: string; issues: readonly SchemaValidationIssue[] }>
+    /** Registered schemas that failed validation and their issues. */
+    invalid: Array<{
+      /** Registered schema name. */
+      name: string
+      /** Validation issues found in the schema. */
+      issues: readonly SchemaValidationIssue[]
+    }>
   } {
     const valid: string[] = []
     const invalid: Array<{

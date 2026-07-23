@@ -223,6 +223,4 @@ export type WeaverseVideo = {
     previewSrc: string;
 };
 
-// (No @packageDocumentation comment for this package)
-
 ```

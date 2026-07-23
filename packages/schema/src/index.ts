@@ -1,3 +1,10 @@
+/**
+ * Authoring contracts, builders, and development-time validation for Weaverse
+ * component schemas.
+ *
+ * @packageDocumentation
+ */
+
 import type {
   BasicInput,
   HeadingInput,
@@ -20,7 +27,9 @@ export type {
 
 /** Schema type with required title and type fields in non-strict projects. */
 export type SchemaTypeStrict = SchemaType & {
+  /** Short component title displayed in Studio. */
   title: string
+  /** Stable kebab-case component identifier. */
   type: string
 }
 

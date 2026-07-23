@@ -82,6 +82,7 @@ export class WeaverseItemStore extends EventEmitter {
     return this._store
   }
 
+  // Setter behavior is documented on the getter, which owns the property's JSDoc.
   set data(update: Omit<ElementData, 'id' | 'type'>) {
     this._store = { ...this._store, ...update }
   }

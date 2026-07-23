@@ -584,6 +584,4 @@ export interface VersionedSchema extends SchemaType {
 
 export { z }
 
-// (No @packageDocumentation comment for this package)
-
 ```

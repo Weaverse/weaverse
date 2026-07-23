@@ -38,7 +38,9 @@ export let useItemInstance = (id?: string) => {
 /**
  * Returns the parent instance of the current rendered item.
  *
- * @returns The parent item instance, or `null` at the root or when unavailable.
+ * @returns The parent item instance. At the root, the empty parent ID falls
+ * back to the current item instance; returns `null` only when that lookup is
+ * unavailable.
  */
 export let useParentInstance = () => {
   let { parentId } = useContext(WeaverseItemContext)
