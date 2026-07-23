@@ -16,7 +16,8 @@ export interface MergeObject {
 
 /**
  * Recursively merges object properties from `source` into a copy of `target`.
- * Arrays and non-object values from `source` replace the target value.
+ * Each nested non-array object owned by `source` is mutated in place and reused
+ * in the result. Arrays and non-object values replace the target value.
  */
 export function merge(target: MergeObject, source: MergeObject): MergeObject {
   let t = { ...(target || {}) }

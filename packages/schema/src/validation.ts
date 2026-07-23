@@ -732,10 +732,46 @@ export class SchemaRegistry {
  */
 export const schemaRegistry = new SchemaRegistry()
 
-/**
- * Schema development utilities
- */
-export const devTools = {
+/** Summary statistics produced by schema development analysis. */
+export interface SchemaAnalysisStats {
+  /** Number of inspector setting groups. */
+  groupCount: number
+  /** Whether the schema declares child component types. */
+  hasChildTypes: boolean
+  /** Whether the schema declares instance limits. */
+  hasLimits: boolean
+  /** Whether the schema provides component presets. */
+  hasPresets: boolean
+  /** Total number of inputs across all setting groups. */
+  inputCount: number
+  /** Schema title shown in Studio. */
+  title: string
+  /** Stable schema component type. */
+  type: string
+}
+
+/** Result returned when development tools analyze a component schema. */
+export interface SchemaAnalysisResult {
+  /** Validation issues, empty when the schema is valid. */
+  issues: readonly SchemaValidationIssue[]
+  /** Aggregate information about the schema structure. */
+  stats: SchemaAnalysisStats
+  /** Whether the schema passed validation. */
+  valid: boolean
+}
+
+/** Development-only helpers for inspecting component schemas. */
+export interface SchemaDevTools {
+  /** Analyze validation state and structural statistics for a schema. */
+  analyzeSchema(schema: SchemaType): SchemaAnalysisResult
+  /** Generate a TypeScript props interface from schema inputs. */
+  generateTypeInterface(schema: SchemaType): string
+  /** Format a schema as indented JSON for debugging. */
+  prettyPrint(schema: SchemaType): string
+}
+
+/** Schema development utilities. */
+export const devTools: SchemaDevTools = {
   /**
    * Pretty print a schema for debugging
    */

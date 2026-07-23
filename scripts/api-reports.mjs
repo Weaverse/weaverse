@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { Extractor, ExtractorConfig } from '@microsoft/api-extractor'
-import ts from 'typescript'
+import { getUndocumentedMembers } from './public-api-docs.mjs'
 import { getEsmExportNames, getPublishedPackages } from './public-packages.mjs'
 
 let ROOT_DIR = join(dirname(fileURLToPath(import.meta.url)), '..')
@@ -21,106 +21,6 @@ mkdirSync(REPORT_DIR, { recursive: true })
 mkdirSync(TEMP_DIR, { recursive: true })
 
 let failed = false
-
-function hasDocumentation(node, sourceFile) {
-  if (ts.getJSDocCommentsAndTags(node).length > 0) {
-    return true
-  }
-  if (
-    !(ts.isGetAccessorDeclaration(node) || ts.isSetAccessorDeclaration(node))
-  ) {
-    return false
-  }
-  let memberName = node.name.getText(sourceFile)
-  return Boolean(
-    node.parent.members?.some(
-      (member) =>
-        member !== node &&
-        (ts.isGetAccessorDeclaration(member) ||
-          ts.isSetAccessorDeclaration(member)) &&
-        member.name.getText(sourceFile) === memberName &&
-        ts.getJSDocCommentsAndTags(member).length > 0
-    )
-  )
-}
-
-function isPublicMember(node) {
-  let modifiers = ts.getModifiers(node) ?? []
-  return !modifiers.some(
-    (modifier) =>
-      modifier.kind === ts.SyntaxKind.PrivateKeyword ||
-      modifier.kind === ts.SyntaxKind.ProtectedKeyword
-  )
-}
-
-function getUndocumentedMembers(declarationFile) {
-  let sourceFile = ts.createSourceFile(
-    declarationFile,
-    readFileSync(declarationFile, 'utf8'),
-    ts.ScriptTarget.Latest,
-    true,
-    ts.ScriptKind.TS
-  )
-  let gaps = []
-  let memberKinds = new Set([
-    ts.SyntaxKind.CallSignature,
-    ts.SyntaxKind.ConstructSignature,
-    ts.SyntaxKind.GetAccessor,
-    ts.SyntaxKind.IndexSignature,
-    ts.SyntaxKind.MethodDeclaration,
-    ts.SyntaxKind.MethodSignature,
-    ts.SyntaxKind.PropertyDeclaration,
-    ts.SyntaxKind.PropertySignature,
-    ts.SyntaxKind.SetAccessor,
-  ])
-
-  function visit(node, owner) {
-    if (
-      memberKinds.has(node.kind) &&
-      isPublicMember(node) &&
-      !hasDocumentation(node, sourceFile)
-    ) {
-      let position = sourceFile.getLineAndCharacterOfPosition(
-        node.getStart(sourceFile)
-      )
-      let memberName =
-        node.name?.getText(sourceFile) ?? node.getText(sourceFile)
-      gaps.push(`${owner}.${memberName} (line ${position.line + 1})`)
-    }
-    ts.forEachChild(node, (child) => visit(child, owner))
-  }
-
-  for (let statement of sourceFile.statements) {
-    if (
-      !ts
-        .getModifiers(statement)
-        ?.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword)
-    ) {
-      continue
-    }
-    let owner = statement.name?.getText(sourceFile) ?? '<anonymous export>'
-    if (
-      ts.isClassDeclaration(statement) ||
-      ts.isInterfaceDeclaration(statement) ||
-      ts.isTypeAliasDeclaration(statement)
-    ) {
-      visit(statement, owner)
-      continue
-    }
-    if (ts.isFunctionDeclaration(statement)) {
-      for (let parameter of statement.parameters) {
-        if (parameter.type) {
-          visit(parameter.type, owner)
-        }
-      }
-      if (statement.type) {
-        visit(statement.type, owner)
-      }
-    }
-  }
-
-  return gaps
-}
 
 for (let { publishedPackage, entrypoint } of typeEntrypoints) {
   let { folderName, folder } = publishedPackage

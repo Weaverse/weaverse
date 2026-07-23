@@ -135,23 +135,7 @@ export function createSchemaTypeSafe(schema: SchemaTypeStrict): SchemaType;
 export function createValidatedComponentArray<T extends Record<string, any>>(components: T, options?: ComponentValidationOptions): T[keyof T][];
 
 // @public
-export const devTools: {
-    prettyPrint: (schema: SchemaType) => string;
-    analyzeSchema: (schema: SchemaType) => {
-        valid: boolean;
-        issues: readonly SchemaValidationIssue[];
-        stats: {
-            title: string;
-            type: string;
-            inputCount: number;
-            groupCount: number;
-            hasChildTypes: boolean;
-            hasPresets: boolean;
-            hasLimits: boolean;
-        };
-    };
-    generateTypeInterface: (schema: SchemaType) => string;
-};
+export const devTools: SchemaDevTools;
 
 // @public
 export const ElementSchema: z.ZodObject<{
@@ -361,6 +345,24 @@ export const RangeInputConfigsSchema: z.ZodObject<{
 export type Resolvable<T, Context> = T | ((context: Context) => T);
 
 // @public
+export interface SchemaAnalysisResult {
+    issues: readonly SchemaValidationIssue[];
+    stats: SchemaAnalysisStats;
+    valid: boolean;
+}
+
+// @public
+export interface SchemaAnalysisStats {
+    groupCount: number;
+    hasChildTypes: boolean;
+    hasLimits: boolean;
+    hasPresets: boolean;
+    inputCount: number;
+    title: string;
+    type: string;
+}
+
+// @public
 export class SchemaBuilder {
     constructor(initial?: Partial<SchemaType>);
     addChildType(childType: string): SchemaBuilder;
@@ -380,6 +382,13 @@ export class SchemaBuilder {
 
 // @public
 export function schemaBuilder(initial?: Partial<SchemaType>): SchemaBuilder;
+
+// @public
+export interface SchemaDevTools {
+    analyzeSchema(schema: SchemaType): SchemaAnalysisResult;
+    generateTypeInterface(schema: SchemaType): string;
+    prettyPrint(schema: SchemaType): string;
+}
 
 // @public
 export const SchemaList: z.ZodRecord<z.ZodString, z.ZodObject<{
