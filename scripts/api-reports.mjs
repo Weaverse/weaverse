@@ -9,6 +9,7 @@ let REPORT_DIR = join(ROOT_DIR, 'api-reports')
 let TEMP_DIR = join(ROOT_DIR, 'node_modules', '.cache', 'api-reports')
 let RUNTIME_REPORT = join(REPORT_DIR, 'runtime-exports.api.md')
 let UPDATE_REPORTS = process.argv.includes('--update')
+const DOCUMENTED_PACKAGES = new Set(['schema'])
 let publishedPackages = getPublishedPackages(ROOT_DIR)
 let typeEntrypoints = publishedPackages.flatMap((publishedPackage) =>
   publishedPackage.entrypoints
@@ -53,7 +54,9 @@ for (let { publishedPackage, entrypoint } of typeEntrypoints) {
           default: { logLevel: 'error' },
           'ae-forgotten-export': { logLevel: 'none' },
           'ae-missing-release-tag': { logLevel: 'none' },
-          'ae-undocumented': { logLevel: 'none' },
+          'ae-undocumented': {
+            logLevel: DOCUMENTED_PACKAGES.has(folderName) ? 'error' : 'none',
+          },
           'ae-unresolved-link': { logLevel: 'none' },
         },
         tsdocMessageReporting: {

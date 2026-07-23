@@ -1,45 +1,110 @@
+import type { z } from 'zod/v4'
 import type {
   BasicInput,
+  BasicInputSchema,
+  ComponentPresets,
+  ComponentPresetsSchema,
+  ConfigsProps,
+  ConfigsPropsSchema,
+  ElementSchema,
   HeadingInput,
+  HeadingInputSchema,
+  Input,
+  InputSchema,
   InputType,
   InspectorGroup,
+  InspectorGroupSchema,
+  inputTypeSchema,
   PageType,
+  PageTypeSchema,
+  RangeInputConfigs,
+  RangeInputConfigsSchema,
+  SchemaType,
+  SelectInputConfigs,
+  SelectInputConfigsSchema,
+  ToggleGroupConfigs,
+  ToggleGroupConfigsSchema,
 } from '../src'
 
-// Test that types are properly exported and can be used
-const basicInput: BasicInput = {
+type MutuallyAssignable<Left, Right> = [Left] extends [Right]
+  ? [Right] extends [Left]
+    ? true
+    : false
+  : false
+
+type Assert<Condition extends true> = Condition
+
+export type AssertInputType = Assert<
+  MutuallyAssignable<InputType, z.output<typeof inputTypeSchema>>
+>
+export type AssertSelectInputConfigs = Assert<
+  MutuallyAssignable<
+    SelectInputConfigs,
+    z.output<typeof SelectInputConfigsSchema>
+  >
+>
+export type AssertToggleGroupConfigs = Assert<
+  MutuallyAssignable<
+    ToggleGroupConfigs,
+    z.output<typeof ToggleGroupConfigsSchema>
+  >
+>
+export type AssertRangeInputConfigs = Assert<
+  MutuallyAssignable<
+    RangeInputConfigs,
+    z.output<typeof RangeInputConfigsSchema>
+  >
+>
+export type AssertConfigsProps = Assert<
+  MutuallyAssignable<ConfigsProps, z.output<typeof ConfigsPropsSchema>>
+>
+export type AssertBasicInput = Assert<
+  MutuallyAssignable<BasicInput, z.output<typeof BasicInputSchema>>
+>
+export type AssertHeadingInput = Assert<
+  MutuallyAssignable<HeadingInput, z.output<typeof HeadingInputSchema>>
+>
+export type AssertInput = Assert<
+  MutuallyAssignable<Input, z.output<typeof InputSchema>>
+>
+export type AssertInspectorGroup = Assert<
+  MutuallyAssignable<InspectorGroup, z.output<typeof InspectorGroupSchema>>
+>
+export type AssertPageType = Assert<
+  MutuallyAssignable<PageType, z.output<typeof PageTypeSchema>>
+>
+export type AssertComponentPresets = Assert<
+  MutuallyAssignable<ComponentPresets, z.output<typeof ComponentPresetsSchema>>
+>
+export type AssertSchemaType = Assert<
+  MutuallyAssignable<SchemaType, z.output<typeof ElementSchema>>
+>
+
+let basicInput: BasicInput = {
   type: 'text',
   name: 'title',
-  label: 'Title',
-  placeholder: 'Enter title',
-  helpText: 'This is the title',
-  shouldRevalidate: false,
-  condition: 'someCondition',
-  defaultValue: 'Default Title',
+  condition: (data: { showTitle?: boolean }) => data.showTitle ?? true,
+  defaultValue: Symbol('legacy value'),
 }
-
-const headingInput: HeadingInput = {
+let headingInput: HeadingInput = {
   type: 'heading',
-  label: 'Section Settings',
-  // Can have additional properties
-  someExtraProperty: true,
+  label: 'Section settings',
+  customProperty: true,
 }
-
-const _inspectorGroup: InspectorGroup = {
+let legacyPreset: ComponentPresets = {
+  type: 'legacy-preset',
+  children: [123],
+}
+let inspectorGroup: InspectorGroup = {
   group: 'Layout',
   inputs: [basicInput, headingInput],
 }
+let schema: SchemaType = {
+  title: 'Type alignment',
+  type: 'type-alignment',
+  settings: [inspectorGroup],
+  presets: { children: [legacyPreset] },
+  enabled: ({ page }) => page.type === 'PRODUCT',
+}
 
-const _pageType: PageType = 'PRODUCT'
-const _inputType: InputType = 'toggle-group'
-
-// Type assertions to ensure compatibility
-export type AssertBasicInput = BasicInput extends BasicInput ? true : false
-export type AssertHeadingInput = HeadingInput extends HeadingInput
-  ? true
-  : false
-export type AssertInspectorGroup = InspectorGroup extends InspectorGroup
-  ? true
-  : false
-
-console.log('Type alignment test passed!')
+void schema

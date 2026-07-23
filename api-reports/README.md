@@ -8,6 +8,6 @@ pnpm run api:check    # build and verify reports are current
 pnpm run package:check # verify reports and packed strict/non-strict consumers
 ```
 
-Review report diffs as public package changes. The package check also verifies that declaration maps resolve to authored sources included in each tarball. Schema remains on a bundled declaration until its Zod-inferred types can be made source-preserving without changing strict/non-strict compatibility.
+Review report diffs as public package changes. The package check also verifies that declaration maps resolve to authored sources included in each tarball. Schema uses explicit, Zod-aligned public contracts and enforces complete public documentation in CI; the remaining packages will adopt documentation enforcement incrementally.
 
 `@weaverse/cli` and `@weaverse/biome` are published directly and do not expose TypeScript declaration entrypoints, so they have no API report.

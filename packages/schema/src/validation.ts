@@ -9,6 +9,7 @@ import { z } from 'zod/v4'
 // Re-export Zod for backward compatibility and convenience
 export { z }
 
+/** Runtime validator for supported Studio input control types. */
 export const inputTypeSchema = z.union([
   z.literal('heading'),
   z.literal('text'),
@@ -33,6 +34,7 @@ export const inputTypeSchema = z.union([
   z.literal('toggle-group'),
 ])
 
+/** Runtime validator for select input configuration. */
 export const SelectInputConfigsSchema = z.object({
   options: z
     .array(
@@ -44,6 +46,7 @@ export const SelectInputConfigsSchema = z.object({
     .optional(),
 })
 
+/** Runtime validator for toggle-group input configuration. */
 export const ToggleGroupConfigsSchema = z.object({
   options: z
     .array(
@@ -56,6 +59,7 @@ export const ToggleGroupConfigsSchema = z.object({
     .optional(),
 })
 
+/** Runtime validator for numeric range input configuration. */
 export const RangeInputConfigsSchema = z.object({
   min: z.number().optional(),
   max: z.number().optional(),
@@ -63,12 +67,14 @@ export const RangeInputConfigsSchema = z.object({
   unit: z.string().optional(),
 })
 
+/** Runtime validator for input-specific configuration. */
 export const ConfigsPropsSchema = z.union([
   SelectInputConfigsSchema,
   ToggleGroupConfigsSchema,
   RangeInputConfigsSchema,
 ])
 
+/** Runtime validator for configurable Studio inputs. */
 export const BasicInputSchema = z
   .object({
     type: inputTypeSchema,
@@ -151,6 +157,7 @@ export const BasicInputSchema = z
     }
   })
 
+/** Runtime validator for organizational setting headings. */
 export const HeadingInputSchema = z
   .object({
     type: z.literal('heading'),
@@ -158,8 +165,10 @@ export const HeadingInputSchema = z
   })
   .passthrough() // Allow additional properties with [key: string]: any
 
+/** Runtime validator for settings and organizational headings. */
 export const InputSchema = z.union([BasicInputSchema, HeadingInputSchema])
 
+/** Runtime validator for a labeled group of component settings. */
 export const InspectorGroupSchema = z.object({
   group: z
     .string()
@@ -171,6 +180,7 @@ export const InspectorGroupSchema = z.object({
     .describe('The inputs of the group'),
 })
 
+/** Runtime validator for storefront page types. */
 export const PageTypeSchema = z.union([
   z.literal('*'),
   z.literal('INDEX'),
@@ -184,10 +194,13 @@ export const PageTypeSchema = z.union([
   z.literal('CUSTOM'),
 ])
 
+/** A static value or a synchronous callback deriving it from context. */
 export type Resolvable<T, Context> = T | ((context: Context) => T)
 
+/** Placement groups understood by component availability rules. */
 export type ComponentGroup = 'body' | 'header' | 'footer'
 
+/** Context passed to function-based component availability rules. */
 export interface ComponentAvailabilityContext {
   /** Placement group currently being evaluated. */
   group: ComponentGroup
@@ -204,6 +217,7 @@ export interface ComponentAvailabilityContext {
   }
 }
 
+/** Runtime validator for nested component presets. */
 export const ComponentPresetsSchema = z
   .object({
     type: z.string().describe('The type of the component'),
@@ -215,6 +229,7 @@ export const ComponentPresetsSchema = z
   .catchall(z.any())
   .describe('Component preset configuration')
 
+/** Runtime validator for public component schemas. */
 export const ElementSchema = z
   .object({
     title: z
@@ -288,13 +303,16 @@ export const ElementSchema = z
   })
   .describe('The schema of the element')
 
+/** Runtime validator for a component-type-to-schema registry. */
 export const SchemaList = z.record(z.string(), ElementSchema)
 
 // section schema
+/** Runtime validator for standalone schema titles. */
 export const titleSchema = z
   .string()
   .min(3, 'Title must be at least 3 characters')
   .max(50, 'Title must be less than 50 characters')
+/** Runtime validator for standalone schema type identifiers. */
 export const typeSchema = z
   .string()
   .min(3, 'Type must be at least 3 characters')
@@ -308,30 +326,187 @@ export const typeSchema = z
     'Type cannot start or end with a hyphen'
   )
 
-// Type exports - inferred from Zod schemas
+// Public authoring contracts. Runtime alignment is verified in
+// test/type-alignment.test.ts against each schema's z.output type.
 
-type InferredSchemaType = z.infer<typeof ElementSchema>
+/** Input controls supported by Weaverse Studio. */
+export type InputType =
+  | 'heading'
+  | 'text'
+  | 'richtext'
+  | 'textarea'
+  | 'url'
+  | 'image'
+  | 'video'
+  | 'switch'
+  | 'range'
+  | 'select'
+  | 'position'
+  | 'product'
+  | 'product-list'
+  | 'collection'
+  | 'collection-list'
+  | 'blog'
+  | 'metaobject'
+  | 'color'
+  | 'datepicker'
+  | 'map-autocomplete'
+  | 'toggle-group'
 
-export type SchemaType = Omit<InferredSchemaType, 'enabledOn'> & {
-  /**
-   * @deprecated Use `enabled` for both static and context-aware availability
-   * rules. Existing schemas remain supported, and both rules must pass when
-   * both properties are present.
-   */
-  enabledOn?: InferredSchemaType['enabledOn']
+/** Configuration for a select input. */
+export interface SelectInputConfigs {
+  /** Choices shown in the select menu. */
+  options?: Array<{
+    /** Merchant-facing option label. */
+    label: string
+    /** Value stored in component data. */
+    value: string
+  }>
 }
 
-export type InputType = z.infer<typeof inputTypeSchema>
-export type BasicInput = z.infer<typeof BasicInputSchema>
-export type HeadingInput = z.infer<typeof HeadingInputSchema>
-export type Input = z.infer<typeof InputSchema>
-export type InspectorGroup = z.infer<typeof InspectorGroupSchema>
-export type PageType = z.infer<typeof PageTypeSchema>
-export type SelectInputConfigs = z.infer<typeof SelectInputConfigsSchema>
-export type ToggleGroupConfigs = z.infer<typeof ToggleGroupConfigsSchema>
-export type RangeInputConfigs = z.infer<typeof RangeInputConfigsSchema>
-export type ConfigsProps = z.infer<typeof ConfigsPropsSchema>
-export type ComponentPresets = z.infer<typeof ComponentPresetsSchema>
+/** Configuration for a toggle-group input. */
+export interface ToggleGroupConfigs {
+  /** Choices shown in the toggle group. */
+  options?: Array<{
+    /** Merchant-facing option label. */
+    label: string
+    /** Value stored in component data. */
+    value: string
+    /** Optional icon name displayed with the option. */
+    icon?: string
+  }>
+}
+
+/** Configuration for a numeric range input. */
+export interface RangeInputConfigs {
+  /** Maximum selectable value. */
+  max?: number
+  /** Minimum selectable value. */
+  min?: number
+  /** Increment between selectable values. */
+  step?: number
+  /** Unit displayed next to the value. */
+  unit?: string
+}
+
+/** Input-specific configuration accepted by Studio controls. */
+export type ConfigsProps =
+  | SelectInputConfigs
+  | ToggleGroupConfigs
+  | RangeInputConfigs
+
+/** A configurable component property shown in Weaverse Studio. */
+export interface BasicInput {
+  /**
+   * Controls whether Studio displays this input for the current component data.
+   * String conditions remain supported but are deprecated; prefer a function.
+   */
+  // biome-ignore lint/complexity/noBannedTypes: preserves the existing public contract inferred by Zod
+  condition?: string | Function
+  /** Control-specific options and constraints. */
+  configs?: ConfigsProps
+  /** Initial value assigned when the component is created. */
+  defaultValue?: unknown
+  /** Supporting guidance shown below the control. */
+  helpText?: string
+  /** Merchant-facing field label. */
+  label?: string
+  /** Component prop name receiving the configured value. */
+  name: string
+  /** Placeholder shown by text-like controls. */
+  placeholder?: string
+  /** Whether changing this value reruns the component loader. */
+  shouldRevalidate?: boolean
+  /** Studio control used to edit the property. */
+  type: InputType
+}
+
+/** A non-editable heading used to organize Studio settings. */
+export interface HeadingInput {
+  /** Text displayed above the following settings. */
+  label: string
+  /** Heading discriminator. */
+  type: 'heading'
+  /** Additional Studio metadata retained for backward compatibility. */
+  [key: string]: unknown
+}
+
+/** A setting input or organizational heading. */
+export type Input = BasicInput | HeadingInput
+
+/** A labeled group of component settings. */
+export interface InspectorGroup {
+  /** Group title displayed in Studio. */
+  group: string
+  /** Settings rendered inside the group. */
+  inputs: Input[]
+}
+
+/** Storefront page types available to component placement rules. */
+export type PageType =
+  | '*'
+  | 'INDEX'
+  | 'PRODUCT'
+  | 'ALL_PRODUCTS'
+  | 'COLLECTION'
+  | 'COLLECTION_LIST'
+  | 'PAGE'
+  | 'BLOG'
+  | 'ARTICLE'
+  | 'CUSTOM'
+
+/** Initial data and nested children created by a component preset. */
+export interface ComponentPresets {
+  /** Nested child component presets retained in their legacy permissive shape. */
+  // biome-ignore lint/suspicious/noExplicitAny: preserves the existing recursive Zod contract
+  children?: any[]
+  /** Registered component type to create. */
+  type: string
+  /** Additional component setting defaults. */
+  // biome-ignore lint/suspicious/noExplicitAny: presets intentionally accept arbitrary component data
+  [key: string]: any
+}
+
+/** Public component schema authoring contract. */
+export interface SchemaType {
+  /** Component types allowed as direct children. */
+  childTypes?: string[]
+  /** Whether the component can be inserted in the current page context. */
+  enabled?: Resolvable<boolean, ComponentAvailabilityContext>
+  /**
+   * Legacy page and placement availability restrictions.
+   * @deprecated Use {@link enabled} for both static and context-aware
+   * availability. Existing schemas remain supported, and both rules must pass
+   * when both properties are present.
+   */
+  enabledOn?: {
+    /** Page types where the component can be inserted. */
+    pages?: PageType[]
+    /** Placement groups where the component can be inserted. */
+    groups?: Array<'*' | ComponentGroup>
+  }
+  /**
+   * Legacy setting groups shown in Studio.
+   * @deprecated Use {@link settings} instead.
+   */
+  inspector?: InspectorGroup[]
+  /** Maximum number of instances allowed under the same parent. */
+  limit?: number
+  /** Initial component data and optional child presets. */
+  presets?: {
+    /** Child components created with the parent. */
+    children?: ComponentPresets[]
+    /** Additional component setting defaults. */
+    // biome-ignore lint/suspicious/noExplicitAny: presets intentionally accept arbitrary component data
+    [key: string]: any
+  }
+  /** Setting groups shown in the Studio inspector. */
+  settings?: InspectorGroup[]
+  /** Short component title displayed in Studio. */
+  title: string
+  /** Stable kebab-case component identifier. */
+  type: string
+}
 
 /**
  * Enhanced validation result types for better error reporting
@@ -349,18 +524,27 @@ export type SchemaValidationIssue = {
   readonly received?: unknown
 }
 
+/** Successful schema validation result. */
 export type SchemaValidationSuccess<T> = {
+  /** Indicates that validation succeeded. */
   readonly success: true
+  /** Validated and normalized value. */
   readonly data: T
+  /** Successful results never contain issues. */
   readonly issues?: undefined
 }
 
+/** Failed schema validation result. */
 export type SchemaValidationFailure = {
+  /** Indicates that validation failed. */
   readonly success: false
+  /** Validation issues found in the input. */
   readonly issues: readonly SchemaValidationIssue[]
+  /** Failed results never contain validated data. */
   readonly data?: undefined
 }
 
+/** Discriminated result returned by schema validation helpers. */
 export type SchemaValidationResult<T> =
   | SchemaValidationSuccess<T>
   | SchemaValidationFailure
@@ -439,12 +623,17 @@ export interface VersionedSchema extends SchemaType {
   readonly version?: string
 }
 
-export type SchemaMigration = {
+/** Migration between two schema versions. */
+export interface SchemaMigration {
+  /** Source schema version. */
   from: string
-  to: string
+  /** Transforms data from the source version to the target version. */
   migrate: (oldSchema: any) => SchemaType
+  /** Target schema version. */
+  to: string
 }
 
+/** In-memory registry for schemas and their migrations. */
 export class SchemaRegistry {
   private readonly schemas = new Map<string, SchemaType>()
   private readonly migrations = new Map<string, SchemaMigration[]>()
@@ -630,17 +819,48 @@ export const devTools = {
  * with minimal dependencies and clean error reporting.
  */
 
-export type SimpleValidationResult<T = any> = {
-  success: boolean
+/** Result returned by lightweight component validation. */
+export interface SimpleValidationResult<T = any> {
+  /** Validated component metadata when successful. */
   data?: T
-  error?: string
+  /** Individual validation issue messages. */
   details?: string[]
+  /** Human-readable failure summary. */
+  error?: string
+  /** Whether validation succeeded. */
+  success: boolean
 }
 
-export type ComponentValidationOptions = {
-  validate?: boolean
-  skipMissing?: boolean
+/** One component that failed bulk validation. */
+export interface InvalidComponentResult {
+  /** Individual validation issue messages. */
+  details?: string[]
+  /** Human-readable failure summary. */
+  error: string
+  /** Registry key of the invalid component. */
+  name: string
+}
+
+/** Result returned by bulk component validation. */
+export interface ComponentsValidationResult {
+  /** Components that failed validation. */
+  invalid: InvalidComponentResult[]
+  /** Whether every evaluated component passed validation. */
+  success: boolean
+  /** Total number of entries supplied to validation. */
+  total: number
+  /** Registry keys of valid components. */
+  valid: string[]
+}
+
+/** Options controlling bulk component validation. */
+export interface ComponentValidationOptions {
+  /** Whether validation failures should be logged. */
   logErrors?: boolean
+  /** Whether null or undefined component entries should be ignored. */
+  skipMissing?: boolean
+  /** Whether component schemas should be validated. */
+  validate?: boolean
 }
 
 /**
@@ -704,15 +924,10 @@ export function validateComponentSimple(
 export function validateComponentsSimple(
   components: Record<string, any>,
   options: ComponentValidationOptions = {}
-): {
-  success: boolean
-  valid: string[]
-  invalid: Array<{ name: string; error: string; details?: string[] }>
-  total: number
-} {
+): ComponentsValidationResult {
   const { skipMissing = false, logErrors = false } = options
   const valid: string[] = []
-  const invalid: Array<{ name: string; error: string; details?: string[] }> = []
+  const invalid: InvalidComponentResult[] = []
 
   for (const [name, component] of Object.entries(components)) {
     if (!component && skipMissing) {
@@ -778,39 +993,54 @@ export function createValidatedComponentArray<T extends Record<string, any>>(
   return Object.values(components)
 }
 
-/**
- * Development helper to analyze component registry
- */
-export function analyzeComponentRegistry(components: Record<string, any>): {
-  summary: {
-    total: number
-    valid: number
-    invalid: number
-    types: string[]
-    duplicateTypes: string[]
-  }
-  details: Array<{
-    name: string
-    type?: string
-    title?: string
-    valid: boolean
-    error?: string
-    settingsCount?: number
-    hasPresets?: boolean
-  }>
-} {
+/** Aggregate statistics for a component registry. */
+export interface ComponentRegistrySummary {
+  /** Component types registered more than once. */
+  duplicateTypes: string[]
+  /** Number of invalid components. */
+  invalid: number
+  /** Number of supplied components. */
+  total: number
+  /** Unique registered component types. */
+  types: string[]
+  /** Number of valid components. */
+  valid: number
+}
+
+/** Validation and schema details for one registered component. */
+export interface ComponentRegistryDetail {
+  /** Human-readable validation failure. */
+  error?: string
+  /** Whether the component defines presets. */
+  hasPresets?: boolean
+  /** Registry key of the component. */
+  name: string
+  /** Number of Studio setting groups. */
+  settingsCount?: number
+  /** Merchant-facing component title. */
+  title?: string
+  /** Registered component type. */
+  type?: string
+  /** Whether the component passed validation. */
+  valid: boolean
+}
+
+/** Result returned by component registry analysis. */
+export interface ComponentRegistryAnalysis {
+  /** Per-component validation and schema details. */
+  details: ComponentRegistryDetail[]
+  /** Aggregate registry statistics. */
+  summary: ComponentRegistrySummary
+}
+
+/** Development helper that analyzes a component registry. */
+export function analyzeComponentRegistry(
+  components: Record<string, any>
+): ComponentRegistryAnalysis {
   const validation = validateComponentsSimple(components)
   const types = new Set<string>()
   const duplicateTypes = new Set<string>()
-  const details: Array<{
-    name: string
-    type?: string
-    title?: string
-    valid: boolean
-    error?: string
-    settingsCount?: number
-    hasPresets?: boolean
-  }> = []
+  const details: ComponentRegistryDetail[] = []
 
   for (const [name, component] of Object.entries(components)) {
     const result = validateComponentSimple(component, name)

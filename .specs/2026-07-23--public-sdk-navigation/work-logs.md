@@ -29,3 +29,14 @@
 - Replaced internal source aliases with relative imports so TypeScript-generated maps remain byte/column faithful; ESM Experiments sources now author their required `.js` specifiers directly.
 - Added exact identity maps for authored `.d.ts` inputs using `@jridgewell/gen-mapping` and trace-based validation for every sampled position.
 - Added the declaration builder to Turbo's global cache inputs and added CJS consumer coverage alongside ESM checks.
+
+## 2026-07-23 — @paul (Phase 3: Schema)
+
+- Replaced Zod-inferred public authoring aliases with explicit interfaces and unions matching the existing output contract.
+- Added bidirectional assignability checks between every explicit schema contract and its `z.output` type.
+- Enabled Schema's source-preserving declarations and declaration maps after strict/loose packed consumers proved compatibility.
+- Added hover documentation for every public Schema symbol and property, including direct migration guidance on deprecated APIs.
+- Reduced Schema's API report from 55 undocumented markers to zero and enabled `ae-undocumented` as a CI error for the package.
+- Preserved the legacy permissive recursive preset contract (`children?: any[]`) with a concrete compile-time fixture.
+- Replaced anonymous validation and registry result objects with named, documented public interfaces.
+- Strengthened packed deprecation checks to require migration guidance for `enabledOn`, `inspector`, and `SchemaBuilder.enabledOn`.

@@ -5,7 +5,7 @@ import type {
   RangeInputConfigs,
   SchemaType,
   SchemaValidationIssue,
-} from './validation'
+} from './validation.js'
 
 // `process` is statically replaced by the consuming bundler (Vite/Hydrogen)
 // at build time; this ambient declaration only satisfies the type checker in a
@@ -16,7 +16,7 @@ export type {
   OpenGraphType,
   PageSEOData,
   TwitterCardType,
-} from './page-seo'
+} from './page-seo.js'
 
 /** Schema type with required title and type fields in non-strict projects. */
 export type SchemaTypeStrict = SchemaType & {
@@ -89,30 +89,36 @@ export function createSchemaTypeSafe(schema: SchemaTypeStrict): SchemaType {
 export class SchemaBuilder {
   private readonly schema: Partial<SchemaType>
 
+  /** Creates a builder initialized with an optional partial schema. */
   constructor(initial?: Partial<SchemaType>) {
     this.schema = { ...initial }
   }
 
+  /** Sets the merchant-facing component title. */
   title(title: string): SchemaBuilder {
     this.schema.title = title
     return this
   }
 
+  /** Sets the stable component type identifier. */
   type(type: string): SchemaBuilder {
     this.schema.type = type
     return this
   }
 
+  /** Sets the maximum number of allowed sibling instances. */
   limit(limit: number): SchemaBuilder {
     this.schema.limit = limit
     return this
   }
 
+  /** Replaces all Studio setting groups. */
   settings(settings: InspectorGroup[]): SchemaBuilder {
     this.schema.settings = settings
     return this
   }
 
+  /** Appends one Studio setting group. */
   addSetting(group: InspectorGroup): SchemaBuilder {
     if (!this.schema.settings) {
       this.schema.settings = []
@@ -121,11 +127,13 @@ export class SchemaBuilder {
     return this
   }
 
+  /** Replaces the allowed direct child component types. */
   childTypes(childTypes: string[]): SchemaBuilder {
     this.schema.childTypes = childTypes
     return this
   }
 
+  /** Appends one allowed direct child component type. */
   addChildType(childType: string): SchemaBuilder {
     if (!this.schema.childTypes) {
       this.schema.childTypes = []
@@ -134,17 +142,22 @@ export class SchemaBuilder {
     return this
   }
 
-  /** @deprecated Use {@link enabled} instead. */
+  /**
+   * Sets legacy page and placement restrictions.
+   * @deprecated Use {@link enabled} instead.
+   */
   enabledOn(enabledOn: SchemaType['enabledOn']): SchemaBuilder {
     this.schema.enabledOn = enabledOn
     return this
   }
 
+  /** Sets static or context-aware component availability. */
   enabled(enabled: SchemaType['enabled']): SchemaBuilder {
     this.schema.enabled = enabled
     return this
   }
 
+  /** Sets initial component data and optional child presets. */
   presets(presets: SchemaType['presets']): SchemaBuilder {
     this.schema.presets = presets
     return this
@@ -367,12 +380,17 @@ export type {
   ComponentAvailabilityContext,
   ComponentGroup,
   ComponentPresets,
+  ComponentRegistryAnalysis,
+  ComponentRegistryDetail,
+  ComponentRegistrySummary,
+  ComponentsValidationResult,
   ComponentValidationOptions,
   ConfigsProps,
   HeadingInput,
   Input,
   InputType,
   InspectorGroup,
+  InvalidComponentResult,
   PageType,
   RangeInputConfigs,
   Resolvable,
@@ -386,7 +404,7 @@ export type {
   SimpleValidationResult,
   ToggleGroupConfigs,
   VersionedSchema,
-} from './validation'
+} from './validation.js'
 // Re-export the schema definitions and validation runtime. These are
 // tree-shakeable: storefront bundles that only call `createSchema` never
 // reference them, so `./validation` (and zod) is dropped from production builds.
@@ -417,4 +435,4 @@ export {
   validateComponentsSimple,
   validateSchema,
   z,
-} from './validation'
+} from './validation.js'

@@ -7,74 +7,35 @@
 import { z } from 'zod/v4';
 
 // @public
-export function analyzeComponentRegistry(components: Record<string, any>): {
-    summary: {
-        total: number;
-        valid: number;
-        invalid: number;
-        types: string[];
-        duplicateTypes: string[];
-    };
-    details: Array<{
-        name: string;
-        type?: string;
-        title?: string;
-        valid: boolean;
-        error?: string;
-        settingsCount?: number;
-        hasPresets?: boolean;
-    }>;
-};
+export function analyzeComponentRegistry(components: Record<string, any>): ComponentRegistryAnalysis;
 
-// @public (undocumented)
-export type BasicInput = z.infer<typeof BasicInputSchema>;
+// @public
+export interface BasicInput {
+    condition?: string | Function;
+    configs?: ConfigsProps;
+    defaultValue?: unknown;
+    helpText?: string;
+    label?: string;
+    name: string;
+    placeholder?: string;
+    shouldRevalidate?: boolean;
+    type: InputType;
+}
 
-// @public (undocumented)
+// @public
 export const BasicInputSchema: z.ZodObject<{
     type: z.ZodUnion<readonly [z.ZodLiteral<"heading">, z.ZodLiteral<"text">, z.ZodLiteral<"richtext">, z.ZodLiteral<"textarea">, z.ZodLiteral<"url">, z.ZodLiteral<"image">, z.ZodLiteral<"video">, z.ZodLiteral<"switch">, z.ZodLiteral<"range">, z.ZodLiteral<"select">, z.ZodLiteral<"position">, z.ZodLiteral<"product">, z.ZodLiteral<"product-list">, z.ZodLiteral<"collection">, z.ZodLiteral<"collection-list">, z.ZodLiteral<"blog">, z.ZodLiteral<"metaobject">, z.ZodLiteral<"color">, z.ZodLiteral<"datepicker">, z.ZodLiteral<"map-autocomplete">, z.ZodLiteral<"toggle-group">]>;
     name: z.ZodString;
     label: z.ZodOptional<z.ZodString>;
     placeholder: z.ZodOptional<z.ZodString>;
     helpText: z.ZodOptional<z.ZodString>;
-    configs: z.ZodOptional<z.ZodCustom<{
-        options?: {
-            label: string;
-            value: string;
-        }[] | undefined;
-    } | {
-        options?: {
-            label: string;
-            value: string;
-            icon?: string | undefined;
-        }[] | undefined;
-    } | {
-        min?: number | undefined;
-        max?: number | undefined;
-        step?: number | undefined;
-        unit?: string | undefined;
-    } | undefined, {
-        options?: {
-            label: string;
-            value: string;
-        }[] | undefined;
-    } | {
-        options?: {
-            label: string;
-            value: string;
-            icon?: string | undefined;
-        }[] | undefined;
-    } | {
-        min?: number | undefined;
-        max?: number | undefined;
-        step?: number | undefined;
-        unit?: string | undefined;
-    } | undefined>>;
+    configs: z.ZodOptional<z.ZodCustom<ConfigsProps | undefined, ConfigsProps | undefined>>;
     shouldRevalidate: z.ZodOptional<z.ZodBoolean>;
     condition: z.ZodOptional<z.ZodUnknown> & z.ZodType<string | Function | undefined, unknown, z.core.$ZodTypeInternals<string | Function | undefined, unknown>>;
     defaultValue: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodRecord<z.ZodString, z.ZodUnknown>, z.ZodUnknown]>>;
 }, z.core.$strip>;
 
-// @public (undocumented)
+// @public
 export interface ComponentAvailabilityContext {
     group: ComponentGroup;
     page: {
@@ -85,29 +46,67 @@ export interface ComponentAvailabilityContext {
     };
 }
 
-// @public (undocumented)
+// @public
 export type ComponentGroup = 'body' | 'header' | 'footer';
 
-// @public (undocumented)
-export type ComponentPresets = z.infer<typeof ComponentPresetsSchema>;
+// @public
+export interface ComponentPresets {
+    [key: string]: any;
+    children?: any[];
+    type: string;
+}
 
-// @public (undocumented)
+// @public
 export const ComponentPresetsSchema: z.ZodObject<{
     type: z.ZodString;
     children: z.ZodOptional<z.ZodArray<z.ZodLazy<z.ZodType<any, unknown, z.core.$ZodTypeInternals<any, unknown>>>>>;
 }, z.core.$catchall<z.ZodAny>>;
 
-// @public (undocumented)
-export type ComponentValidationOptions = {
-    validate?: boolean;
-    skipMissing?: boolean;
+// @public
+export interface ComponentRegistryAnalysis {
+    details: ComponentRegistryDetail[];
+    summary: ComponentRegistrySummary;
+}
+
+// @public
+export interface ComponentRegistryDetail {
+    error?: string;
+    hasPresets?: boolean;
+    name: string;
+    settingsCount?: number;
+    title?: string;
+    type?: string;
+    valid: boolean;
+}
+
+// @public
+export interface ComponentRegistrySummary {
+    duplicateTypes: string[];
+    invalid: number;
+    total: number;
+    types: string[];
+    valid: number;
+}
+
+// @public
+export interface ComponentsValidationResult {
+    invalid: InvalidComponentResult[];
+    success: boolean;
+    total: number;
+    valid: string[];
+}
+
+// @public
+export interface ComponentValidationOptions {
     logErrors?: boolean;
-};
+    skipMissing?: boolean;
+    validate?: boolean;
+}
 
-// @public (undocumented)
-export type ConfigsProps = z.infer<typeof ConfigsPropsSchema>;
+// @public
+export type ConfigsProps = SelectInputConfigs | ToggleGroupConfigs | RangeInputConfigs;
 
-// @public (undocumented)
+// @public
 export const ConfigsPropsSchema: z.ZodUnion<readonly [z.ZodObject<{
     options: z.ZodOptional<z.ZodArray<z.ZodObject<{
         label: z.ZodString;
@@ -154,7 +153,7 @@ export const devTools: {
     generateTypeInterface: (schema: SchemaType) => string;
 };
 
-// @public (undocumented)
+// @public
 export const ElementSchema: z.ZodObject<{
     title: z.ZodString;
     type: z.ZodString;
@@ -167,39 +166,7 @@ export const ElementSchema: z.ZodObject<{
             label: z.ZodOptional<z.ZodString>;
             placeholder: z.ZodOptional<z.ZodString>;
             helpText: z.ZodOptional<z.ZodString>;
-            configs: z.ZodOptional<z.ZodCustom<{
-                options?: {
-                    label: string;
-                    value: string;
-                }[] | undefined;
-            } | {
-                options?: {
-                    label: string;
-                    value: string;
-                    icon?: string | undefined;
-                }[] | undefined;
-            } | {
-                min?: number | undefined;
-                max?: number | undefined;
-                step?: number | undefined;
-                unit?: string | undefined;
-            } | undefined, {
-                options?: {
-                    label: string;
-                    value: string;
-                }[] | undefined;
-            } | {
-                options?: {
-                    label: string;
-                    value: string;
-                    icon?: string | undefined;
-                }[] | undefined;
-            } | {
-                min?: number | undefined;
-                max?: number | undefined;
-                step?: number | undefined;
-                unit?: string | undefined;
-            } | undefined>>;
+            configs: z.ZodOptional<z.ZodCustom<ConfigsProps | undefined, ConfigsProps | undefined>>;
             shouldRevalidate: z.ZodOptional<z.ZodBoolean>;
             condition: z.ZodOptional<z.ZodUnknown> & z.ZodType<string | Function | undefined, unknown, z.core.$ZodTypeInternals<string | Function | undefined, unknown>>;
             defaultValue: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodRecord<z.ZodString, z.ZodUnknown>, z.ZodUnknown]>>;
@@ -216,39 +183,7 @@ export const ElementSchema: z.ZodObject<{
             label: z.ZodOptional<z.ZodString>;
             placeholder: z.ZodOptional<z.ZodString>;
             helpText: z.ZodOptional<z.ZodString>;
-            configs: z.ZodOptional<z.ZodCustom<{
-                options?: {
-                    label: string;
-                    value: string;
-                }[] | undefined;
-            } | {
-                options?: {
-                    label: string;
-                    value: string;
-                    icon?: string | undefined;
-                }[] | undefined;
-            } | {
-                min?: number | undefined;
-                max?: number | undefined;
-                step?: number | undefined;
-                unit?: string | undefined;
-            } | undefined, {
-                options?: {
-                    label: string;
-                    value: string;
-                }[] | undefined;
-            } | {
-                options?: {
-                    label: string;
-                    value: string;
-                    icon?: string | undefined;
-                }[] | undefined;
-            } | {
-                min?: number | undefined;
-                max?: number | undefined;
-                step?: number | undefined;
-                unit?: string | undefined;
-            } | undefined>>;
+            configs: z.ZodOptional<z.ZodCustom<ConfigsProps | undefined, ConfigsProps | undefined>>;
             shouldRevalidate: z.ZodOptional<z.ZodBoolean>;
             condition: z.ZodOptional<z.ZodUnknown> & z.ZodType<string | Function | undefined, unknown, z.core.$ZodTypeInternals<string | Function | undefined, unknown>>;
             defaultValue: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodRecord<z.ZodString, z.ZodUnknown>, z.ZodUnknown]>>;
@@ -280,17 +215,21 @@ export const groupHelpers: {
     custom: (groupName: string, inputs: (BasicInput | HeadingInput)[]) => InspectorGroup;
 };
 
-// @public (undocumented)
-export type HeadingInput = z.infer<typeof HeadingInputSchema>;
+// @public
+export interface HeadingInput {
+    [key: string]: unknown;
+    label: string;
+    type: 'heading';
+}
 
-// @public (undocumented)
+// @public
 export const HeadingInputSchema: z.ZodObject<{
     type: z.ZodLiteral<"heading">;
     label: z.ZodString;
 }, z.core.$loose>;
 
-// @public (undocumented)
-export type Input = z.infer<typeof InputSchema>;
+// @public
+export type Input = BasicInput | HeadingInput;
 
 // @public
 export const inputHelpers: {
@@ -306,46 +245,14 @@ export const inputHelpers: {
     heading: (label: string, options?: Omit<HeadingInput, "type" | "label">) => HeadingInput;
 };
 
-// @public (undocumented)
+// @public
 export const InputSchema: z.ZodUnion<readonly [z.ZodObject<{
     type: z.ZodUnion<readonly [z.ZodLiteral<"heading">, z.ZodLiteral<"text">, z.ZodLiteral<"richtext">, z.ZodLiteral<"textarea">, z.ZodLiteral<"url">, z.ZodLiteral<"image">, z.ZodLiteral<"video">, z.ZodLiteral<"switch">, z.ZodLiteral<"range">, z.ZodLiteral<"select">, z.ZodLiteral<"position">, z.ZodLiteral<"product">, z.ZodLiteral<"product-list">, z.ZodLiteral<"collection">, z.ZodLiteral<"collection-list">, z.ZodLiteral<"blog">, z.ZodLiteral<"metaobject">, z.ZodLiteral<"color">, z.ZodLiteral<"datepicker">, z.ZodLiteral<"map-autocomplete">, z.ZodLiteral<"toggle-group">]>;
     name: z.ZodString;
     label: z.ZodOptional<z.ZodString>;
     placeholder: z.ZodOptional<z.ZodString>;
     helpText: z.ZodOptional<z.ZodString>;
-    configs: z.ZodOptional<z.ZodCustom<{
-        options?: {
-            label: string;
-            value: string;
-        }[] | undefined;
-    } | {
-        options?: {
-            label: string;
-            value: string;
-            icon?: string | undefined;
-        }[] | undefined;
-    } | {
-        min?: number | undefined;
-        max?: number | undefined;
-        step?: number | undefined;
-        unit?: string | undefined;
-    } | undefined, {
-        options?: {
-            label: string;
-            value: string;
-        }[] | undefined;
-    } | {
-        options?: {
-            label: string;
-            value: string;
-            icon?: string | undefined;
-        }[] | undefined;
-    } | {
-        min?: number | undefined;
-        max?: number | undefined;
-        step?: number | undefined;
-        unit?: string | undefined;
-    } | undefined>>;
+    configs: z.ZodOptional<z.ZodCustom<ConfigsProps | undefined, ConfigsProps | undefined>>;
     shouldRevalidate: z.ZodOptional<z.ZodBoolean>;
     condition: z.ZodOptional<z.ZodUnknown> & z.ZodType<string | Function | undefined, unknown, z.core.$ZodTypeInternals<string | Function | undefined, unknown>>;
     defaultValue: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodRecord<z.ZodString, z.ZodUnknown>, z.ZodUnknown]>>;
@@ -354,16 +261,19 @@ export const InputSchema: z.ZodUnion<readonly [z.ZodObject<{
     label: z.ZodString;
 }, z.core.$loose>]>;
 
-// @public (undocumented)
-export type InputType = z.infer<typeof inputTypeSchema>;
+// @public
+export type InputType = 'heading' | 'text' | 'richtext' | 'textarea' | 'url' | 'image' | 'video' | 'switch' | 'range' | 'select' | 'position' | 'product' | 'product-list' | 'collection' | 'collection-list' | 'blog' | 'metaobject' | 'color' | 'datepicker' | 'map-autocomplete' | 'toggle-group';
 
-// @public (undocumented)
+// @public
 export const inputTypeSchema: z.ZodUnion<readonly [z.ZodLiteral<"heading">, z.ZodLiteral<"text">, z.ZodLiteral<"richtext">, z.ZodLiteral<"textarea">, z.ZodLiteral<"url">, z.ZodLiteral<"image">, z.ZodLiteral<"video">, z.ZodLiteral<"switch">, z.ZodLiteral<"range">, z.ZodLiteral<"select">, z.ZodLiteral<"position">, z.ZodLiteral<"product">, z.ZodLiteral<"product-list">, z.ZodLiteral<"collection">, z.ZodLiteral<"collection-list">, z.ZodLiteral<"blog">, z.ZodLiteral<"metaobject">, z.ZodLiteral<"color">, z.ZodLiteral<"datepicker">, z.ZodLiteral<"map-autocomplete">, z.ZodLiteral<"toggle-group">]>;
 
-// @public (undocumented)
-export type InspectorGroup = z.infer<typeof InspectorGroupSchema>;
+// @public
+export interface InspectorGroup {
+    group: string;
+    inputs: Input[];
+}
 
-// @public (undocumented)
+// @public
 export const InspectorGroupSchema: z.ZodObject<{
     group: z.ZodString;
     inputs: z.ZodArray<z.ZodUnion<readonly [z.ZodObject<{
@@ -372,39 +282,7 @@ export const InspectorGroupSchema: z.ZodObject<{
         label: z.ZodOptional<z.ZodString>;
         placeholder: z.ZodOptional<z.ZodString>;
         helpText: z.ZodOptional<z.ZodString>;
-        configs: z.ZodOptional<z.ZodCustom<{
-            options?: {
-                label: string;
-                value: string;
-            }[] | undefined;
-        } | {
-            options?: {
-                label: string;
-                value: string;
-                icon?: string | undefined;
-            }[] | undefined;
-        } | {
-            min?: number | undefined;
-            max?: number | undefined;
-            step?: number | undefined;
-            unit?: string | undefined;
-        } | undefined, {
-            options?: {
-                label: string;
-                value: string;
-            }[] | undefined;
-        } | {
-            options?: {
-                label: string;
-                value: string;
-                icon?: string | undefined;
-            }[] | undefined;
-        } | {
-            min?: number | undefined;
-            max?: number | undefined;
-            step?: number | undefined;
-            unit?: string | undefined;
-        } | undefined>>;
+        configs: z.ZodOptional<z.ZodCustom<ConfigsProps | undefined, ConfigsProps | undefined>>;
         shouldRevalidate: z.ZodOptional<z.ZodBoolean>;
         condition: z.ZodOptional<z.ZodUnknown> & z.ZodType<string | Function | undefined, unknown, z.core.$ZodTypeInternals<string | Function | undefined, unknown>>;
         defaultValue: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodRecord<z.ZodString, z.ZodUnknown>, z.ZodUnknown]>>;
@@ -415,37 +293,37 @@ export const InspectorGroupSchema: z.ZodObject<{
 }, z.core.$strip>;
 
 // @public
+export interface InvalidComponentResult {
+    details?: string[];
+    error: string;
+    name: string;
+}
+
+// @public
 export function isValidSchema(schema: unknown): schema is SchemaType;
 
 // @public
 export function mergeSchemas(base: SchemaType, ...overrides: Partial<SchemaType>[]): SchemaType;
 
-// @public (undocumented)
+// @public
 export type OpenGraphType = 'website' | 'article' | 'product' | 'profile' | 'video.other';
 
 // @public
 export interface PageSEOData {
-    // (undocumented)
     canonicalUrl?: string;
-    // (undocumented)
     description?: string;
-    // (undocumented)
     keywords?: string;
-    // (undocumented)
     openGraph?: {
         title?: string;
         description?: string;
         image?: string;
         type?: OpenGraphType;
     };
-    // (undocumented)
     robots?: {
         index?: boolean;
         follow?: boolean;
     };
-    // (undocumented)
     title?: string;
-    // (undocumented)
     twitter?: {
         cardType?: TwitterCardType;
         title?: string;
@@ -454,19 +332,24 @@ export interface PageSEOData {
     };
 }
 
-// @public (undocumented)
-export type PageType = z.infer<typeof PageTypeSchema>;
+// @public
+export type PageType = '*' | 'INDEX' | 'PRODUCT' | 'ALL_PRODUCTS' | 'COLLECTION' | 'COLLECTION_LIST' | 'PAGE' | 'BLOG' | 'ARTICLE' | 'CUSTOM';
 
-// @public (undocumented)
+// @public
 export const PageTypeSchema: z.ZodUnion<readonly [z.ZodLiteral<"*">, z.ZodLiteral<"INDEX">, z.ZodLiteral<"PRODUCT">, z.ZodLiteral<"ALL_PRODUCTS">, z.ZodLiteral<"COLLECTION">, z.ZodLiteral<"COLLECTION_LIST">, z.ZodLiteral<"PAGE">, z.ZodLiteral<"BLOG">, z.ZodLiteral<"ARTICLE">, z.ZodLiteral<"CUSTOM">]>;
 
 // @public
 export function parseSchema(schema: unknown): SchemaType;
 
-// @public (undocumented)
-export type RangeInputConfigs = z.infer<typeof RangeInputConfigsSchema>;
+// @public
+export interface RangeInputConfigs {
+    max?: number;
+    min?: number;
+    step?: number;
+    unit?: string;
+}
 
-// @public (undocumented)
+// @public
 export const RangeInputConfigsSchema: z.ZodObject<{
     min: z.ZodOptional<z.ZodNumber>;
     max: z.ZodOptional<z.ZodNumber>;
@@ -474,40 +357,31 @@ export const RangeInputConfigsSchema: z.ZodObject<{
     unit: z.ZodOptional<z.ZodString>;
 }, z.core.$strip>;
 
-// @public (undocumented)
+// @public
 export type Resolvable<T, Context> = T | ((context: Context) => T);
 
 // @public
 export class SchemaBuilder {
     constructor(initial?: Partial<SchemaType>);
-    // (undocumented)
     addChildType(childType: string): SchemaBuilder;
-    // (undocumented)
     addSetting(group: InspectorGroup): SchemaBuilder;
     build(): SchemaType;
     buildUnsafe(): SchemaType;
-    // (undocumented)
     childTypes(childTypes: string[]): SchemaBuilder;
-    // (undocumented)
     enabled(enabled: SchemaType['enabled']): SchemaBuilder;
-    // @deprecated (undocumented)
+    // @deprecated
     enabledOn(enabledOn: SchemaType['enabledOn']): SchemaBuilder;
-    // (undocumented)
     limit(limit: number): SchemaBuilder;
-    // (undocumented)
     presets(presets: SchemaType['presets']): SchemaBuilder;
-    // (undocumented)
     settings(settings: InspectorGroup[]): SchemaBuilder;
-    // (undocumented)
     title(title: string): SchemaBuilder;
-    // (undocumented)
     type(type: string): SchemaBuilder;
 }
 
 // @public
 export function schemaBuilder(initial?: Partial<SchemaType>): SchemaBuilder;
 
-// @public (undocumented)
+// @public
 export const SchemaList: z.ZodRecord<z.ZodString, z.ZodObject<{
     title: z.ZodString;
     type: z.ZodString;
@@ -520,39 +394,7 @@ export const SchemaList: z.ZodRecord<z.ZodString, z.ZodObject<{
             label: z.ZodOptional<z.ZodString>;
             placeholder: z.ZodOptional<z.ZodString>;
             helpText: z.ZodOptional<z.ZodString>;
-            configs: z.ZodOptional<z.ZodCustom<{
-                options?: {
-                    label: string;
-                    value: string;
-                }[] | undefined;
-            } | {
-                options?: {
-                    label: string;
-                    value: string;
-                    icon?: string | undefined;
-                }[] | undefined;
-            } | {
-                min?: number | undefined;
-                max?: number | undefined;
-                step?: number | undefined;
-                unit?: string | undefined;
-            } | undefined, {
-                options?: {
-                    label: string;
-                    value: string;
-                }[] | undefined;
-            } | {
-                options?: {
-                    label: string;
-                    value: string;
-                    icon?: string | undefined;
-                }[] | undefined;
-            } | {
-                min?: number | undefined;
-                max?: number | undefined;
-                step?: number | undefined;
-                unit?: string | undefined;
-            } | undefined>>;
+            configs: z.ZodOptional<z.ZodCustom<ConfigsProps | undefined, ConfigsProps | undefined>>;
             shouldRevalidate: z.ZodOptional<z.ZodBoolean>;
             condition: z.ZodOptional<z.ZodUnknown> & z.ZodType<string | Function | undefined, unknown, z.core.$ZodTypeInternals<string | Function | undefined, unknown>>;
             defaultValue: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodRecord<z.ZodString, z.ZodUnknown>, z.ZodUnknown]>>;
@@ -569,39 +411,7 @@ export const SchemaList: z.ZodRecord<z.ZodString, z.ZodObject<{
             label: z.ZodOptional<z.ZodString>;
             placeholder: z.ZodOptional<z.ZodString>;
             helpText: z.ZodOptional<z.ZodString>;
-            configs: z.ZodOptional<z.ZodCustom<{
-                options?: {
-                    label: string;
-                    value: string;
-                }[] | undefined;
-            } | {
-                options?: {
-                    label: string;
-                    value: string;
-                    icon?: string | undefined;
-                }[] | undefined;
-            } | {
-                min?: number | undefined;
-                max?: number | undefined;
-                step?: number | undefined;
-                unit?: string | undefined;
-            } | undefined, {
-                options?: {
-                    label: string;
-                    value: string;
-                }[] | undefined;
-            } | {
-                options?: {
-                    label: string;
-                    value: string;
-                    icon?: string | undefined;
-                }[] | undefined;
-            } | {
-                min?: number | undefined;
-                max?: number | undefined;
-                step?: number | undefined;
-                unit?: string | undefined;
-            } | undefined>>;
+            configs: z.ZodOptional<z.ZodCustom<ConfigsProps | undefined, ConfigsProps | undefined>>;
             shouldRevalidate: z.ZodOptional<z.ZodBoolean>;
             condition: z.ZodOptional<z.ZodUnknown> & z.ZodType<string | Function | undefined, unknown, z.core.$ZodTypeInternals<string | Function | undefined, unknown>>;
             defaultValue: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodRecord<z.ZodString, z.ZodUnknown>, z.ZodUnknown]>>;
@@ -624,14 +434,14 @@ export const SchemaList: z.ZodRecord<z.ZodString, z.ZodObject<{
     }, z.core.$catchall<z.ZodAny>>>;
 }, z.core.$strip>>;
 
-// @public (undocumented)
-export type SchemaMigration = {
+// @public
+export interface SchemaMigration {
     from: string;
-    to: string;
     migrate: (oldSchema: any) => SchemaType;
-};
+    to: string;
+}
 
-// @public (undocumented)
+// @public
 export class SchemaRegistry {
     get(name: string): SchemaType | undefined;
     list(): string[];
@@ -649,10 +459,26 @@ export class SchemaRegistry {
 // @public
 export const schemaRegistry: SchemaRegistry;
 
-// @public (undocumented)
-export type SchemaType = Omit<InferredSchemaType, 'enabledOn'> & {
-    enabledOn?: InferredSchemaType['enabledOn'];
-};
+// @public
+export interface SchemaType {
+    childTypes?: string[];
+    enabled?: Resolvable<boolean, ComponentAvailabilityContext>;
+    // @deprecated
+    enabledOn?: {
+        pages?: PageType[];
+        groups?: Array<'*' | ComponentGroup>;
+    };
+    // @deprecated
+    inspector?: InspectorGroup[];
+    limit?: number;
+    presets?: {
+        children?: ComponentPresets[];
+        [key: string]: any;
+    };
+    settings?: InspectorGroup[];
+    title: string;
+    type: string;
+}
 
 // @public
 export type SchemaTypeStrict = SchemaType & {
@@ -660,7 +486,7 @@ export type SchemaTypeStrict = SchemaType & {
     type: string;
 };
 
-// @public (undocumented)
+// @public
 export type SchemaValidationFailure = {
     readonly success: false;
     readonly issues: readonly SchemaValidationIssue[];
@@ -676,20 +502,25 @@ export type SchemaValidationIssue = {
     readonly received?: unknown;
 };
 
-// @public (undocumented)
+// @public
 export type SchemaValidationResult<T> = SchemaValidationSuccess<T> | SchemaValidationFailure;
 
-// @public (undocumented)
+// @public
 export type SchemaValidationSuccess<T> = {
     readonly success: true;
     readonly data: T;
     readonly issues?: undefined;
 };
 
-// @public (undocumented)
-export type SelectInputConfigs = z.infer<typeof SelectInputConfigsSchema>;
+// @public
+export interface SelectInputConfigs {
+    options?: Array<{
+        label: string;
+        value: string;
+    }>;
+}
 
-// @public (undocumented)
+// @public
 export const SelectInputConfigsSchema: z.ZodObject<{
     options: z.ZodOptional<z.ZodArray<z.ZodObject<{
         label: z.ZodString;
@@ -698,20 +529,26 @@ export const SelectInputConfigsSchema: z.ZodObject<{
 }, z.core.$strip>;
 
 // @public
-export type SimpleValidationResult<T = any> = {
-    success: boolean;
+export interface SimpleValidationResult<T = any> {
     data?: T;
-    error?: string;
     details?: string[];
-};
+    error?: string;
+    success: boolean;
+}
 
-// @public (undocumented)
+// @public
 export const titleSchema: z.ZodString;
 
-// @public (undocumented)
-export type ToggleGroupConfigs = z.infer<typeof ToggleGroupConfigsSchema>;
+// @public
+export interface ToggleGroupConfigs {
+    options?: Array<{
+        label: string;
+        value: string;
+        icon?: string;
+    }>;
+}
 
-// @public (undocumented)
+// @public
 export const ToggleGroupConfigsSchema: z.ZodObject<{
     options: z.ZodOptional<z.ZodArray<z.ZodObject<{
         label: z.ZodString;
@@ -720,26 +557,17 @@ export const ToggleGroupConfigsSchema: z.ZodObject<{
     }, z.core.$strip>>>;
 }, z.core.$strip>;
 
-// @public (undocumented)
+// @public
 export type TwitterCardType = 'summary' | 'summary_large_image' | 'app' | 'player';
 
-// @public (undocumented)
+// @public
 export const typeSchema: z.ZodString;
 
 // @public
 export function validateComponentSimple(component: any, componentName?: string): SimpleValidationResult;
 
 // @public
-export function validateComponentsSimple(components: Record<string, any>, options?: ComponentValidationOptions): {
-    success: boolean;
-    valid: string[];
-    invalid: Array<{
-        name: string;
-        error: string;
-        details?: string[];
-    }>;
-    total: number;
-};
+export function validateComponentsSimple(components: Record<string, any>, options?: ComponentValidationOptions): ComponentsValidationResult;
 
 // @public
 export function validateSchema(schema: unknown): SchemaValidationResult<SchemaType>;
