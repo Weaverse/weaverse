@@ -59,6 +59,8 @@ describe('getUndocumentedMembers', () => {
         'genericValue.undocumentedGenericMember',
         'promisedValue.undocumentedPromiseMember',
         'zodiacValue.undocumentedZodiacMember',
+        'zodFormValue.undocumentedZodFormMember',
+        'importedZodFormValue.undocumentedImportedZodFormMember',
       ]
     )
   })

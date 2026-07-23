@@ -1,8 +1,6 @@
 import { readFileSync } from 'node:fs'
 import ts from 'typescript'
 
-const ZOD_TYPE_NAME = /^(?:Zod|\$Zod)(?:$|[A-Z])/
-
 const MEMBER_KINDS = new Set([
   ts.SyntaxKind.CallSignature,
   ts.SyntaxKind.ConstructSignature,
@@ -54,23 +52,56 @@ function isPublicMember(node) {
   )
 }
 
-function isZodImplementationReference(node, sourceFile) {
-  if (!ts.isTypeReferenceNode(node)) {
-    return false
+function getZodImportNames(sourceFile) {
+  let names = new Set()
+  for (let statement of sourceFile.statements) {
+    if (
+      !(
+        ts.isImportDeclaration(statement) &&
+        ts.isStringLiteral(statement.moduleSpecifier)
+      )
+    ) {
+      continue
+    }
+    let moduleName = statement.moduleSpecifier.text
+    if (moduleName !== 'zod' && !moduleName.startsWith('zod/')) {
+      continue
+    }
+    let importClause = statement.importClause
+    if (importClause?.name) {
+      names.add(importClause.name.text)
+    }
+    let bindings = importClause?.namedBindings
+    if (bindings && ts.isNamespaceImport(bindings)) {
+      names.add(bindings.name.text)
+    } else if (bindings && ts.isNamedImports(bindings)) {
+      for (let element of bindings.elements) {
+        names.add(element.name.text)
+      }
+    }
   }
-
-  let typeName = node.typeName.getText(sourceFile)
-  let nameParts = typeName.split('.')
-  let zodTypeName = nameParts.at(-1) ?? ''
-  let isZodType = ZOD_TYPE_NAME.test(zodTypeName)
-
-  return isZodType && (nameParts.length === 1 || nameParts[0] === 'z')
+  return names
 }
 
-function createPublicTypeVisitor(sourceFile, gaps) {
+function getTypeReferenceRootName(typeName) {
+  let current = typeName
+  while (ts.isQualifiedName(current)) {
+    current = current.left
+  }
+  return current.text
+}
+
+function isZodImplementationReference(node, zodImportNames) {
+  return (
+    ts.isTypeReferenceNode(node) &&
+    zodImportNames.has(getTypeReferenceRootName(node.typeName))
+  )
+}
+
+function createPublicTypeVisitor(sourceFile, gaps, zodImportNames) {
   function visitPublicType(node, owner) {
     if (
-      isZodImplementationReference(node, sourceFile) ||
+      isZodImplementationReference(node, zodImportNames) ||
       (ts.canHaveModifiers(node) && !isPublicMember(node))
     ) {
       return
@@ -154,7 +185,12 @@ export function getUndocumentedMembers(declarationFile) {
     ts.ScriptKind.TS
   )
   let gaps = []
-  let visitPublicType = createPublicTypeVisitor(sourceFile, gaps)
+  let zodImportNames = getZodImportNames(sourceFile)
+  let visitPublicType = createPublicTypeVisitor(
+    sourceFile,
+    gaps,
+    zodImportNames
+  )
 
   for (let statement of sourceFile.statements) {
     if (isExported(statement)) {

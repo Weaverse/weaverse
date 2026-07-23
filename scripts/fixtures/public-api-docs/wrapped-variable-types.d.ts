@@ -1,3 +1,5 @@
+import type { ZodForm as ExternalZodForm } from 'zod-form'
+
 /** Union-wrapped public value. */
 export declare const unionValue:
   | string
@@ -36,4 +38,14 @@ export declare const promisedValue: Promise<{
 /** Non-Zod generic whose name merely starts with the same letters. */
 export declare const zodiacValue: Zodiac<{
   undocumentedZodiacMember: string
+}>
+
+/** Authored generic whose name resembles a Zod implementation type. */
+export declare const zodFormValue: ZodForm<{
+  undocumentedZodFormMember: string
+}>
+
+/** Lookalike type imported from a package other than Zod. */
+export declare const importedZodFormValue: ExternalZodForm<{
+  undocumentedImportedZodFormMember: string
 }>

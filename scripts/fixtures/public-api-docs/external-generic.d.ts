@@ -1,3 +1,5 @@
+import { ZodType, z } from 'zod'
+
 /** Generated namespaced Zod schema declaration. */
 export declare const NamespacedSchema: z.ZodObject<{
   undocumentedNamespacedZodMember: z.ZodString
