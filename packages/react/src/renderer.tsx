@@ -1,8 +1,8 @@
 import type { Weaverse } from '@weaverse/core'
 import clsx from 'clsx'
 import React, { memo, useEffect, useMemo, useRef } from 'react'
-import { useItemInstance, useWeaverse } from '~/hooks'
 import { WeaverseContextProvider, WeaverseItemContext } from './context'
+import { useItemInstance, useWeaverse } from './hooks'
 import type { ItemComponentProps, WeaverseRootPropsType } from './types'
 import { replaceContentDataConnectorsDeep } from './utils/data-connector'
 

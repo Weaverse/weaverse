@@ -21,6 +21,12 @@ importers:
       '@biomejs/biome':
         specifier: 2.5.0
         version: 2.5.0
+      '@jridgewell/gen-mapping':
+        specifier: 0.3.13
+        version: 0.3.13
+      '@jridgewell/trace-mapping':
+        specifier: 0.3.31
+        version: 0.3.31
       '@microsoft/api-extractor':
         specifier: 7.58.12
         version: 7.58.12(@types/node@25.5.2)

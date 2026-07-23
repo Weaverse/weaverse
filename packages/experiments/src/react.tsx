@@ -8,7 +8,7 @@
 
 import type { ReactNode } from 'react'
 import { createContext, useContext, useEffect, useRef } from 'react'
-import type { Assignment } from './index'
+import type { Assignment } from './index.js'
 
 export interface ExposureTracker {
   /**

@@ -13,7 +13,7 @@ export interface ExperimentsResult {
     setCookie?: string;
 }
 
-// @public
+// @public (undocumented)
 export interface ExperimentsServerConfig {
     cookieName?: string;
     experiments: Experiment[];

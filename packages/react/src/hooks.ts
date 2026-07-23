@@ -1,6 +1,6 @@
 import { Weaverse, type WeaverseItemStore } from '@weaverse/core'
 import { useContext } from 'react'
-import { WeaverseContext, WeaverseItemContext } from '~/context'
+import { WeaverseContext, WeaverseItemContext } from './context'
 
 // Re-export the data connector utilities
 export {
