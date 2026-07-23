@@ -116,6 +116,12 @@ export type DirectFetchResponse<T = unknown> = {
 };
 
 // @public
+export interface FetchCustomPagesOptions {
+    limit?: number;
+    locale?: string;
+}
+
+// @public
 export type FetchProjectPayload = {
     page?: HydrogenPageData;
     project?: HydrogenProjectType;
@@ -150,9 +156,7 @@ export function getNestedKey(obj: Record<string, unknown>, path: string, fallbac
 export function getPreviewData(type: string, components: HydrogenComponent[], weaverseHost: string): WeaverseLoaderData;
 
 // @public
-export function getRequestQueries<T = Record<string, string | boolean>>(request: Request, options?: {
-    allowedKeys?: string[];
-}): T;
+export function getRequestQueries<T = Record<string, string | boolean>>(request: Request, options?: RequestQueryOptions): T;
 
 // @public
 export function getSelectedProductOptions(request: Request): SelectedOptionInput[];
@@ -161,21 +165,20 @@ export function getSelectedProductOptions(request: Request): SelectedOptionInput
 export function getWeaverseConfigs(request: Request, env: HydrogenEnv): WeaverseProjectConfigs;
 
 // @public
-export function getWeaverseSeoMeta(data: WeaverseLoaderData | HydrogenPageData | {
-    page?: HydrogenPageData | null;
-} | null | undefined): MetaDescriptor[];
+export function getWeaverseSeoMeta(data: WeaverseSeoInput): MetaDescriptor[];
 
 // @public
-export function hasError(response: unknown): response is {
-    error: string;
-};
+export function hasError(response: unknown): response is WeaverseErrorResponse;
 
 // @public
-export function hasWeaverseStudio(window: Window): window is Window & {
-    weaverseStudio: WeaverseStudio;
-};
+export function hasWeaverseStudio(window: Window): window is WeaverseStudioWindow;
 
 export { HeadingInput }
+
+// @public
+export interface HydrogenChildComponentReference {
+    id: string;
+}
 
 // @public
 export type HydrogenComponent<T extends HydrogenComponentProps = any> = {
@@ -186,9 +189,7 @@ export type HydrogenComponent<T extends HydrogenComponentProps = any> = {
 
 // @public
 export interface HydrogenComponentData extends ElementData {
-    children?: {
-        id: string;
-    }[];
+    children?: HydrogenChildComponentReference[];
     createdAt?: string;
     data?: Record<string, ComponentDataValue | Record<string, unknown>>;
     deletedAt?: string;
@@ -368,6 +369,11 @@ export type PublicEnv = {
 // @public
 export function registerComponent(element: HydrogenElement): void;
 
+// @public
+export interface RequestQueryOptions {
+    allowedKeys?: string[];
+}
+
 export { Resolvable }
 
 // @public
@@ -378,9 +384,7 @@ export interface RouteKeyedDataContext {
 
 // @public
 export interface RouteLoaderArgs extends LoaderFunctionArgs {
-    context: AppLoadContext & {
-        weaverse: WeaverseClient;
-    };
+    context: WeaverseRouteAppLoadContext;
 }
 
 export { SchemaValidationIssue }
@@ -529,14 +533,8 @@ export class WeaverseClient {
     customerAccount: WeaverseClientArgs['customerAccount'];
     env: WeaverseClientArgs['env'];
     execComponentLoader: (item: HydrogenComponentData) => Promise<HydrogenComponentData>;
-    fetchCustomPages(opts?: {
-        locale?: string;
-        limit?: number;
-    }): Promise<CustomPageEntry[]>;
-    fetchWithCache: <T = unknown>(url: string, options?: RequestInit & {
-        cacheTarget?: BuilderApiCacheTarget;
-        strategy?: CachingStrategy;
-    }) => Promise<T>;
+    fetchCustomPages(opts?: FetchCustomPagesOptions): Promise<CustomPageEntry[]>;
+    fetchWithCache: <T = unknown>(url: string, options?: WeaverseFetchWithCacheOptions) => Promise<T>;
     generateFallbackPage: (message: string) => HydrogenPageData;
     loadPage: (params?: LoadPageParams) => Promise<WeaverseLoaderData | null>;
     loadThemeSettings: (strategy?: CachingStrategy) => Promise<ThemeSettingsResponse>;
@@ -572,6 +570,17 @@ export class WeaverseError extends Error {
     readonly code: string;
     readonly context?: Record<string, unknown>;
     readonly statusCode?: number;
+}
+
+// @public
+export interface WeaverseErrorResponse {
+    error: string;
+}
+
+// @public
+export interface WeaverseFetchWithCacheOptions extends RequestInit {
+    cacheTarget?: BuilderApiCacheTarget;
+    strategy?: CachingStrategy;
 }
 
 // @public
@@ -702,6 +711,19 @@ export type WeaverseProjectConfigs = {
 };
 
 // @public
+export interface WeaverseRouteAppLoadContext extends AppLoadContext {
+    weaverse: WeaverseClient;
+}
+
+// @public
+export type WeaverseSeoInput = WeaverseLoaderData | HydrogenPageData | WeaverseSeoPageContainer | null | undefined;
+
+// @public
+export interface WeaverseSeoPageContainer {
+    page?: HydrogenPageData | null;
+}
+
+// @public
 export interface WeaverseStudio {
     init: (weaverse: WeaverseHydrogen) => void;
     refreshStudio: (params: WeaverseHydrogenParams) => void;
@@ -717,6 +739,11 @@ export type WeaverseStudioQueries = {
     isPreviewMode?: boolean;
     sectionType?: string;
 };
+
+// @public
+export interface WeaverseStudioWindow extends Window {
+    weaverseStudio: WeaverseStudio;
+}
 
 // @public
 export interface WeaverseThemeData {

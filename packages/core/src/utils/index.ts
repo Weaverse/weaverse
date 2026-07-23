@@ -8,14 +8,17 @@ export let isBrowser = typeof window !== 'undefined' && !isReactNative
 /** Whether the current browser window is embedded in an iframe. */
 export let isIframe = isBrowser && window.top !== window.self
 
+/** An object whose properties can be recursively merged. */
+export interface MergeObject {
+  /** Property value keyed by its object field name. */
+  [key: string]: any
+}
+
 /**
  * Recursively merges object properties from `source` into a copy of `target`.
  * Arrays and non-object values from `source` replace the target value.
  */
-export function merge(
-  target: Record<string, any>,
-  source: Record<string, any>
-) {
+export function merge(target: MergeObject, source: MergeObject): MergeObject {
   let t = { ...(target || {}) }
   // Iterate through `source` properties and if an `Object` set property to merge of `target` and `source` properties
   for (let key of Object.keys(source)) {

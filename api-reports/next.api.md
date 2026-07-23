@@ -33,12 +33,15 @@ export function bindWeaverseNextStudioRuntime(runtime: WeaverseNextRuntime): boo
 export function buildWeaverseNextRequestInfo(context?: WeaverseNextRequestContext): WeaverseNextRequestInfo;
 
 // @public
-export function createTranslate(sources: {
-    staticContent: Record<string, unknown>;
-    merchantOverrides?: Record<string, unknown>;
+export function createTranslate(sources: CreateTranslateSources): TranslateFunction;
+
+// @public
+export interface CreateTranslateSources {
     designOverrides?: Record<string, string>;
     externalT?: TranslateFunction;
-}): TranslateFunction;
+    merchantOverrides?: Record<string, unknown>;
+    staticContent: Record<string, unknown>;
+}
 
 // @public
 export function createWeaverseNextClient(config: WeaverseNextClientConfig): WeaverseNextClient;
@@ -77,9 +80,7 @@ export function generateDataFromSchema(schema: SchemaType | WeaverseNextThemeSch
 export function getNestedKey(obj: Record<string, unknown>, path: string, fallback?: string): string | undefined;
 
 // @public
-export function getWeaverseNextSeoMetadata(data: WeaverseNextLoaderData | WeaverseNextPageData | {
-    page?: WeaverseNextPageData | null;
-} | null | undefined): WeaverseNextSeoMetadata;
+export function getWeaverseNextSeoMetadata(data: WeaverseNextSeoInput): WeaverseNextSeoMetadata;
 
 // @public
 export function interpolate(template: string, variables?: Record<string, string | number>): string;
@@ -391,6 +392,11 @@ export interface WeaverseNextProviderProps {
 }
 
 // @public
+export interface WeaverseNextRenderablePage extends WeaverseNextPageData {
+    rootId: string;
+}
+
+// @public
 export const WeaverseNextRenderer: MemoExoticComponent<(props: WeaverseNextRendererProps) => JSX.Element | null>;
 
 // @public
@@ -468,14 +474,10 @@ export class WeaverseNextRuntime extends Weaverse {
     isRevisionPreview: boolean;
     pageId: string;
     pendingItemUpdates: WeaverseNextItem[];
-    pendingProjectData?: WeaverseNextPageData & {
-        rootId: string;
-    };
+    pendingProjectData?: WeaverseNextRenderablePage;
     requestInfo: WeaverseNextRequestInfo;
     sectionType?: string;
-    setProjectData: (data: WeaverseNextPageData & {
-        rootId: string;
-    }) => void;
+    setProjectData: (data: WeaverseNextRenderablePage) => void;
     setTranslationSidecar: (map?: WeaverseNextTranslationMap, locale?: string, languageId?: string) => void;
     translationLanguageId: string;
     translationLocale: string;
@@ -512,6 +514,9 @@ export interface WeaverseNextRuntimeInternal {
 }
 
 // @public
+export type WeaverseNextSeoInput = WeaverseNextLoaderData | WeaverseNextPageData | WeaverseNextSeoPageContainer | null | undefined;
+
+// @public
 export interface WeaverseNextSeoMetadata {
     alternates?: {
         canonical?: string;
@@ -525,6 +530,11 @@ export interface WeaverseNextSeoMetadata {
     };
     title?: string;
     twitter?: NextTwitter;
+}
+
+// @public
+export interface WeaverseNextSeoPageContainer {
+    page?: WeaverseNextPageData | null;
 }
 
 // @public

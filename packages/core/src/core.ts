@@ -229,8 +229,16 @@ export class Weaverse extends EventEmitter {
   }
 }
 
+/** Component definition accepted by {@link registerElement}. */
+export interface RegisterElementDefinition {
+  /** Unique element type used as the registry key. */
+  type: string
+  /** Additional framework-specific component metadata. */
+  [key: string]: any
+}
+
 /** Registers a component definition for its declared element type. */
-export function registerElement(element: { type: string; [x: string]: any }) {
+export function registerElement(element: RegisterElementDefinition) {
   if (element?.type) {
     if (!Weaverse.elementRegistry.has(element.type)) {
       Weaverse.elementRegistry.set(element?.type, element)

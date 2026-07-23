@@ -29,7 +29,7 @@ declare global {
 type StudioBoundRuntime = WeaverseNextRuntime & {
   __weaverseNextStudioBound?: boolean
   __weaverseNextRequestKey?: string
-  __weaverseNextLatestData?: WeaverseNextPageData & { rootId: string }
+  __weaverseNextLatestData?: WeaverseNextRenderablePage
 }
 
 function getRuntimeWindow(): Window | undefined {
@@ -38,7 +38,7 @@ function getRuntimeWindow(): Window | undefined {
 
 function getRenderablePage(
   data: WeaverseNextLoaderData
-): WeaverseNextPageData & { rootId: string } {
+): WeaverseNextRenderablePage {
   let page = data.page
   let rootId =
     page.rootId ??
@@ -138,6 +138,12 @@ function rebindPageItemsToRuntime(runtime: WeaverseNextRuntime) {
   }
 }
 
+/** Weaverse page data with the root component resolved for rendering. */
+export interface WeaverseNextRenderablePage extends WeaverseNextPageData {
+  /** Component item ID used as the root of the rendered page tree. */
+  rootId: string
+}
+
 /**
  * Browser runtime that adapts a Next.js loader payload to `@weaverse/react`
  * and exposes the navigation, settings, and translation state used by Studio.
@@ -176,7 +182,7 @@ export class WeaverseNextRuntime extends Weaverse {
    * `flushRenderPhaseUpdates()`. Never set on design-mode runtimes — the live
    * Studio tree owns the page data there.
    */
-  pendingProjectData?: WeaverseNextPageData & { rootId: string }
+  pendingProjectData?: WeaverseNextRenderablePage
 
   /**
    * Reused item instances whose data was refreshed while this runtime was
@@ -338,7 +344,7 @@ export class WeaverseNextRuntime extends Weaverse {
    * renderable page shape (`rootId` resolved) that `getRenderablePage()` and
    * the reuse branch pass in.
    */
-  setProjectData = (data: WeaverseNextPageData & { rootId: string }) => {
+  setProjectData = (data: WeaverseNextRenderablePage) => {
     this.data = data
     this.extractTranslationSidecar()
     this.initProject()

@@ -55,6 +55,7 @@ export {
 export {
   bindWeaverseNextStudioRuntime,
   createWeaverseNextRuntime,
+  type WeaverseNextRenderablePage,
   WeaverseNextRuntime,
 } from './runtime'
 export {
@@ -62,7 +63,9 @@ export {
   getWeaverseNextSeoMetadata,
   type NextOpenGraph,
   type NextTwitter,
+  type WeaverseNextSeoInput,
   type WeaverseNextSeoMetadata,
+  type WeaverseNextSeoPageContainer,
 } from './seo'
 export {
   WeaverseNextStudioBridge,
@@ -89,6 +92,7 @@ export {
   createWeaverseNextThemeSettingsStore,
 } from './theme-settings-store'
 export {
+  type CreateTranslateSources,
   createTranslate,
   getNestedKey,
   interpolate,

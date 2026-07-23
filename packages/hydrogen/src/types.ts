@@ -70,21 +70,31 @@ export type ComponentLoaderArgs<T = any, _E = any> = {
   weaverse: WeaverseClient
 }
 
+/** Application load context initialized with a request-scoped Weaverse client. */
+export interface WeaverseRouteAppLoadContext extends AppLoadContext {
+  /** Client used to load Weaverse content for the current request. */
+  weaverse: WeaverseClient
+}
+
 /** React Router loader arguments whose app context includes the Weaverse client. */
 export interface RouteLoaderArgs extends RemixOxygenLoaderArgs {
   /** Request-scoped application context with the initialized Weaverse client. */
-  context: AppLoadContext & {
-    weaverse: WeaverseClient
-  }
+  context: WeaverseRouteAppLoadContext
 }
 
 /** Primitive value accepted in a component's persisted data. */
 export type ComponentDataValue = string | number | boolean | undefined | null
 
+/** Reference to a direct child component instance. */
+export interface HydrogenChildComponentReference {
+  /** Unique identifier of the child component instance. */
+  id: string
+}
+
 /** Serialized component instance returned in a Weaverse page. */
 export interface HydrogenComponentData extends ElementData {
   /** References to direct child component instances. */
-  children?: { id: string }[]
+  children?: HydrogenChildComponentReference[]
   /** ISO timestamp recording when the component instance was created. */
   createdAt?: string
   /** Persisted component setting values and structured payloads. */
@@ -709,8 +719,14 @@ export function isFetchProjectPayload(
   )
 }
 
+/** Response containing an error message returned by a Weaverse request. */
+export interface WeaverseErrorResponse {
+  /** Human-readable request failure message. */
+  error: string
+}
+
 /** Checks whether a response contains a string error message. */
-export function hasError(response: unknown): response is { error: string } {
+export function hasError(response: unknown): response is WeaverseErrorResponse {
   return (
     typeof response === 'object' &&
     response !== null &&
@@ -818,10 +834,16 @@ export interface WeaverseStudio {
   refreshStudio: (params: WeaverseHydrogenParams) => void
 }
 
+/** Browser window after the Weaverse Studio bridge has initialized. */
+export interface WeaverseStudioWindow extends Window {
+  /** Studio bridge used to initialize and refresh the Hydrogen runtime. */
+  weaverseStudio: WeaverseStudio
+}
+
 /** Checks whether the browser window exposes the Weaverse Studio bridge. */
 export function hasWeaverseStudio(
   window: Window
-): window is Window & { weaverseStudio: WeaverseStudio } {
+): window is WeaverseStudioWindow {
   return 'weaverseStudio' in window && typeof window.weaverseStudio === 'object'
 }
 

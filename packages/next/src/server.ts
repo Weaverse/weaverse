@@ -15,7 +15,9 @@ export {
   getWeaverseNextSeoMetadata,
   type NextOpenGraph,
   type NextTwitter,
+  type WeaverseNextSeoInput,
   type WeaverseNextSeoMetadata,
+  type WeaverseNextSeoPageContainer,
 } from './seo'
 export {
   getWeaverseNextConfigs,
@@ -27,6 +29,7 @@ export {
 } from './server/normalize-page-url'
 export {
   createWeaverseNextRevalidateHandler,
+  type WeaverseNextRevalidateHandler,
   type WeaverseNextRevalidateHandlerConfig,
   type WeaverseNextRevalidateRequestBody,
 } from './server/revalidate-handler'

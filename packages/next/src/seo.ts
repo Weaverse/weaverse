@@ -2,6 +2,20 @@ import type { PageSEOData } from '@weaverse/schema'
 import type { Metadata } from 'next'
 import type { WeaverseNextLoaderData, WeaverseNextPageData } from './types'
 
+/** Object containing an optional Weaverse page for SEO extraction. */
+export interface WeaverseNextSeoPageContainer {
+  /** Page whose published SEO fields should be formatted. */
+  page?: WeaverseNextPageData | null
+}
+
+/** Input accepted by {@link getWeaverseNextSeoMetadata}. */
+export type WeaverseNextSeoInput =
+  | WeaverseNextLoaderData
+  | WeaverseNextPageData
+  | WeaverseNextSeoPageContainer
+  | null
+  | undefined
+
 /** Open Graph metadata accepted by Next.js's `Metadata` API. */
 export type NextOpenGraph = NonNullable<Metadata['openGraph']>
 
@@ -130,12 +144,7 @@ export function formatWeaverseNextSeoMetadata(
  * `generateMetadata`. Missing data returns indexable/followable robot defaults.
  */
 export function getWeaverseNextSeoMetadata(
-  data:
-    | WeaverseNextLoaderData
-    | WeaverseNextPageData
-    | { page?: WeaverseNextPageData | null }
-    | null
-    | undefined
+  data: WeaverseNextSeoInput
 ): WeaverseNextSeoMetadata {
   if (!data) {
     return formatWeaverseNextSeoMetadata(null)
@@ -143,6 +152,6 @@ export function getWeaverseNextSeoMetadata(
   let page =
     'items' in data && 'id' in data
       ? (data as WeaverseNextPageData)
-      : ((data as { page?: WeaverseNextPageData | null }).page ?? null)
+      : ((data as WeaverseNextSeoPageContainer).page ?? null)
   return formatWeaverseNextSeoMetadata(page?.seo ?? null)
 }

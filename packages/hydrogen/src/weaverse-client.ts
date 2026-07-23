@@ -105,6 +105,22 @@ export type BuilderApiCacheTarget =
   | 'project'
   | 'theme-settings'
 
+/** Fetch options accepted by {@link WeaverseClient.fetchWithCache}. */
+export interface WeaverseFetchWithCacheOptions extends RequestInit {
+  /** Builder API resource whose default freshness policy should be used. */
+  cacheTarget?: BuilderApiCacheTarget
+  /** Explicit Hydrogen caching strategy overriding the resource default. */
+  strategy?: CachingStrategy
+}
+
+/** Pagination and locale options for {@link WeaverseClient.fetchCustomPages}. */
+export interface FetchCustomPagesOptions {
+  /** Maximum number of custom pages requested per API page. */
+  limit?: number
+  /** Locale whose published custom pages should be returned. */
+  locale?: string
+}
+
 const SMART_CACHE_STRATEGIES: Record<BuilderApiCacheTarget, CachingStrategy> = {
   project: DEFAULT_CACHE_STRATEGY,
   'theme-settings': DEFAULT_CACHE_STRATEGY,
@@ -609,10 +625,7 @@ export class WeaverseClient {
    */
   public fetchWithCache = async <T = unknown>(
     url: string,
-    options: RequestInit & {
-      cacheTarget?: BuilderApiCacheTarget
-      strategy?: CachingStrategy
-    } = {}
+    options: WeaverseFetchWithCacheOptions = {}
   ): Promise<T> => {
     const { cacheTarget, strategy: strategyOverride, ...fetchOptions } = options
     const strategy =
@@ -879,10 +892,9 @@ export class WeaverseClient {
    * Fetch all published custom pages for sitemap generation.
    * Paginates automatically, never throws, returns accumulated results on partial failure.
    */
-  async fetchCustomPages(opts?: {
-    locale?: string
-    limit?: number
-  }): Promise<CustomPageEntry[]> {
+  async fetchCustomPages(
+    opts?: FetchCustomPagesOptions
+  ): Promise<CustomPageEntry[]> {
     const { weaverseApiBase, projectId } = this.configs
     const entries: CustomPageEntry[] = []
     const MAX_PAGES = 100

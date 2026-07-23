@@ -300,9 +300,12 @@ export let isReactNative: boolean;
 export function loadScript(src: string): Promise<unknown>;
 
 // @public
-export function merge(target: Record<string, any>, source: Record<string, any>): {
-    [x: string]: any;
-};
+export function merge(target: MergeObject, source: MergeObject): MergeObject;
+
+// @public
+export interface MergeObject {
+    [key: string]: any;
+}
 
 // @public
 export type PositionInputValue = 'top left' | 'top center' | 'top right' | 'center left' | 'center center' | 'center right' | 'bottom left' | 'bottom center' | 'bottom right';
@@ -316,10 +319,13 @@ export type RangeInputConfigs = {
 };
 
 // @public
-export function registerElement(element: {
+export function registerElement(element: RegisterElementDefinition): void;
+
+// @public
+export interface RegisterElementDefinition {
+    [key: string]: any;
     type: string;
-    [x: string]: any;
-}): void;
+}
 
 // @public
 export type SelectInputConfigs = {

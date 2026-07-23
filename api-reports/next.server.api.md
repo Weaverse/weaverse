@@ -15,9 +15,7 @@ import type { SchemaType } from '@weaverse/schema';
 import type { WeaverseElement } from '@weaverse/react';
 
 // @public
-export function createWeaverseNextRevalidateHandler(config: WeaverseNextRevalidateHandlerConfig): {
-    POST: (request: Request) => Promise<Response>;
-};
+export function createWeaverseNextRevalidateHandler(config: WeaverseNextRevalidateHandlerConfig): WeaverseNextRevalidateHandler;
 
 // @public
 export function createWeaverseNextServerClient(config: WeaverseNextServerClientConfig): WeaverseNextServerClient;
@@ -29,9 +27,7 @@ export function formatWeaverseNextSeoMetadata(seo: PageSEOData | null | undefine
 export function getWeaverseNextConfigs(context?: WeaverseNextRequestContext, options?: ResolveConfigsOptions): WeaverseNextBaseConfigs;
 
 // @public
-export function getWeaverseNextSeoMetadata(data: WeaverseNextLoaderData | WeaverseNextPageData | {
-    page?: WeaverseNextPageData | null;
-} | null | undefined): WeaverseNextSeoMetadata;
+export function getWeaverseNextSeoMetadata(data: WeaverseNextSeoInput): WeaverseNextSeoMetadata;
 
 // @public
 export type NextOpenGraph = NonNullable<Metadata['openGraph']>;
@@ -239,6 +235,11 @@ export interface WeaverseNextRequestContext {
 }
 
 // @public
+export interface WeaverseNextRevalidateHandler {
+    POST: (request: Request) => Promise<Response>;
+}
+
+// @public
 export interface WeaverseNextRevalidateHandlerConfig {
     getClient: (request: Request) => Promise<WeaverseNextServerClient> | WeaverseNextServerClient;
 }
@@ -247,6 +248,9 @@ export interface WeaverseNextRevalidateHandlerConfig {
 export interface WeaverseNextRevalidateRequestBody {
     draftItem: WeaverseNextComponentData;
 }
+
+// @public
+export type WeaverseNextSeoInput = WeaverseNextLoaderData | WeaverseNextPageData | WeaverseNextSeoPageContainer | null | undefined;
 
 // @public
 export interface WeaverseNextSeoMetadata {
@@ -262,6 +266,11 @@ export interface WeaverseNextSeoMetadata {
     };
     title?: string;
     twitter?: NextTwitter;
+}
+
+// @public
+export interface WeaverseNextSeoPageContainer {
+    page?: WeaverseNextPageData | null;
 }
 
 // @public

@@ -43,6 +43,12 @@ function mergeInspectorSettings(
   return deepMergeArrays(settings, inspector)
 }
 
+/** Options for extracting query parameters from a request URL. */
+export interface RequestQueryOptions {
+  /** Query parameter names to include; all parameters are included when omitted. */
+  allowedKeys?: string[]
+}
+
 /**
  * Extract and parse query parameters from a request URL.
  * Supports optional allowlist for security-sensitive applications.
@@ -65,7 +71,7 @@ function mergeInspectorSettings(
  */
 export function getRequestQueries<T = Record<string, string | boolean>>(
   request: Request,
-  options?: { allowedKeys?: string[] }
+  options?: RequestQueryOptions
 ): T {
   let url = new URL(request.url)
   let queries: Record<string, unknown> = {}

@@ -54,6 +54,12 @@ function parseDraftItem(payload: unknown): WeaverseNextComponentData | null {
   return draftItem as WeaverseNextComponentData
 }
 
+/** App Router handler returned for Studio item revalidation requests. */
+export interface WeaverseNextRevalidateHandler {
+  /** Handle a Studio request to rerun one registered component loader. */
+  POST: (request: Request) => Promise<Response>
+}
+
 /**
  * Create the Studio per-item revalidation route handler.
  *
@@ -80,7 +86,7 @@ function parseDraftItem(payload: unknown): WeaverseNextComponentData | null {
  */
 export function createWeaverseNextRevalidateHandler(
   config: WeaverseNextRevalidateHandlerConfig
-): { POST: (request: Request) => Promise<Response> } {
+): WeaverseNextRevalidateHandler {
   return {
     POST: async (request: Request) => {
       let payload: unknown

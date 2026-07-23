@@ -126,6 +126,18 @@ export interface TranslationProviderProps {
   translationStore?: TranslationStore | null
 }
 
+/** Translation sources accepted by {@link createTranslate}. */
+export interface CreateTranslateSources {
+  /** Unsaved live overrides received from Builder design mode. */
+  designOverrides?: Record<string, string>
+  /** Host application's highest-priority translation function. */
+  externalT?: TranslateFunction
+  /** Active-locale static-text overrides loaded from Weaverse. */
+  merchantOverrides?: Record<string, unknown>
+  /** Default-locale static content from the theme schema. */
+  staticContent: Record<string, unknown>
+}
+
 /**
  * Build the `t()` translation function over a fixed set of sources.
  *
@@ -142,12 +154,9 @@ export interface TranslationProviderProps {
  * per-key own-property lookup never builds nested objects from
  * merchant-controlled keys, so it cannot pollute `Object.prototype`.
  */
-export function createTranslate(sources: {
-  staticContent: Record<string, unknown>
-  merchantOverrides?: Record<string, unknown>
-  designOverrides?: Record<string, string>
-  externalT?: TranslateFunction
-}): TranslateFunction {
+export function createTranslate(
+  sources: CreateTranslateSources
+): TranslateFunction {
   let { staticContent, merchantOverrides, designOverrides, externalT } = sources
   return (key, variables) => {
     // Priority 1: external t (e.g. Shopify i18n, third-party library).
