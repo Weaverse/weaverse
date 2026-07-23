@@ -22,22 +22,22 @@
 - Packed artifacts, not source imports, prove the package interface.
 - Existing permissive schema authoring behavior has compatibility fixtures.
 
-## Phase 2 — Restore authored-source navigation (in progress)
+## Phase 2 — Restore authored-source navigation (completed)
 
 1. Prototype source-preserving declaration output on `@weaverse/schema`.
-   - Result: unbundled Zod inference changed strict/non-strict consumer behavior, so Schema remains bundled until Phase 3 introduces equivalent explicit contracts.
-2. Emit source-preserving declarations and declaration maps for Core, React, Hydrogen, Experiments, and Next.
+   - Initial result: unbundled Zod inference changed strict/non-strict consumer behavior.
+   - Resolution: Phase 3 explicit contracts removed that compatibility boundary.
+2. Emit source-preserving declarations and declaration maps for Core, React, Hydrogen, Schema, Experiments, and Next.
 3. Include every mapped source in each tarball and verify map targets after packing.
-4. Complete Schema navigation after its compatibility boundary is removed.
 
 ### Exit criteria
 
 - Cmd/Ctrl+click from a packed consumer resolves to an included authored declaration/source file.
 - No package depends on missing declaration-map targets.
 
-## Phase 3 — Document the public interface
+## Phase 3 — Document the public interface (in progress)
 
-1. Add explicit documented contracts alongside inferred types, beginning with schema authoring types.
+1. Add explicit documented contracts alongside inferred types, beginning with schema authoring types. (Schema completed.)
 2. Prove bidirectional assignability against `z.input` and `z.output` where relevant.
 3. Add JSDoc to public functions, classes, methods, options, callbacks, and object properties.
 4. Preserve `@deprecated` tags and direct migration guidance in emitted declarations.
@@ -50,7 +50,7 @@
 
 ## Phase 4 — Enforcement and rollout
 
-1. Add CI checks for undocumented public declarations and broken map targets.
+1. Add CI checks for undocumented public declarations and broken map targets. (Schema documentation enforcement enabled.)
 2. Review API reports for every active TypeScript package.
 3. Build, typecheck, test, and inspect packed tarballs.
 4. Release packages in dependency order.

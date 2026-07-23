@@ -25,8 +25,6 @@ let PNPM = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm'
 const RUNTIME_JSON_BLOCK = /```json\n([\s\S]*?)\n```/
 // Next's browser entry imports next/navigation, which is resolved by its bundler.
 const NODE_ESM_EXCLUSIONS = new Set(['@weaverse/next'])
-// Schema's Zod-inferred types change consumer strictness when emitted unbundled.
-const DECLARATION_MAP_EXCLUSIONS = new Set(['@weaverse/schema'])
 let publishedPackages = getPublishedPackages(ROOT_DIR)
 let typeEntrypoints = publishedPackages.flatMap((publishedPackage) =>
   publishedPackage.entrypoints
@@ -81,7 +79,12 @@ function normalizeEntry(entryFile) {
   return entryFile.startsWith('./') ? entryFile.slice(2) : entryFile
 }
 
-function hasDeprecatedEnabledOnProperty(declarationFile) {
+function hasDeprecatedMember(
+  declarationFile,
+  memberName,
+  memberKind,
+  migrationTarget
+) {
   let sourceFile = ts.createSourceFile(
     declarationFile,
     readFileSync(declarationFile, 'utf8'),
@@ -92,14 +95,17 @@ function hasDeprecatedEnabledOnProperty(declarationFile) {
   let found = false
 
   function visit(node) {
-    if (
-      ts.isPropertySignature(node) &&
-      node.name?.getText(sourceFile) === 'enabledOn' &&
-      ts
+    let kindMatches =
+      (memberKind === 'property' && ts.isPropertySignature(node)) ||
+      (memberKind === 'method' && ts.isMethodDeclaration(node))
+    if (kindMatches && node.name?.getText(sourceFile) === memberName) {
+      found = ts
         .getJSDocTags(node)
-        .some((tag) => tag.kind === ts.SyntaxKind.JSDocDeprecatedTag)
-    ) {
-      found = true
+        .some(
+          (tag) =>
+            tag.kind === ts.SyntaxKind.JSDocDeprecatedTag &&
+            tag.getText(sourceFile).includes(migrationTarget)
+        )
     }
     ts.forEachChild(node, visit)
   }
@@ -179,15 +185,13 @@ try {
       }
     }
 
-    let declarationFolders = DECLARATION_MAP_EXCLUSIONS.has(packageJson.name)
-      ? new Set()
-      : new Set(
-          publishedPackage.entrypoints
-            .filter((entrypoint) => entrypoint.types)
-            .map((entrypoint) =>
-              dirname(join(packedFolder, normalizeEntry(entrypoint.types)))
-            )
+    let declarationFolders = new Set(
+      publishedPackage.entrypoints
+        .filter((entrypoint) => entrypoint.types)
+        .map((entrypoint) =>
+          dirname(join(packedFolder, normalizeEntry(entrypoint.types)))
         )
+    )
     let declarationFiles = [...declarationFolders].flatMap((folder) =>
       walk(folder).filter((file) => file.endsWith('.d.ts'))
     )
@@ -223,7 +227,18 @@ try {
     }
   }
 
-  for (let packageName of ['@weaverse/hydrogen', '@weaverse/schema']) {
+  let deprecationRequirements = {
+    '@weaverse/hydrogen': [['enabledOn', 'property', 'enabled']],
+    '@weaverse/schema': [
+      ['enabledOn', 'property', 'enabled'],
+      ['inspector', 'property', 'settings'],
+      ['enabledOn', 'method', 'enabled'],
+    ],
+  }
+
+  for (let [packageName, requirements] of Object.entries(
+    deprecationRequirements
+  )) {
     let publishedPackage = publishedPackages.find(
       (candidate) => candidate.packageJson.name === packageName
     )
@@ -239,10 +254,16 @@ try {
         return walk(dirname(entryFile)).filter((file) => file.endsWith('.d.ts'))
       })
 
-    if (!declarationFiles.some(hasDeprecatedEnabledOnProperty)) {
-      throw new Error(
-        `${packageName} lost enabledOn property deprecation metadata`
-      )
+    for (let [memberName, memberKind, migrationTarget] of requirements) {
+      if (
+        !declarationFiles.some((file) =>
+          hasDeprecatedMember(file, memberName, memberKind, migrationTarget)
+        )
+      ) {
+        throw new Error(
+          `${packageName} lost ${memberName} ${memberKind} migration guidance`
+        )
+      }
     }
   }
 
