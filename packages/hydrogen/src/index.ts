@@ -33,6 +33,7 @@ export function getSelectedProductOptions(
   )
 }
 
+/** Placeholder asset URLs for component schema defaults and theme previews. */
 export const IMAGES_PLACEHOLDERS = {
   logo_white:
     'https://cdn.shopify.com/s/files/1/0838/0052/3057/files/fpo-logo-w-600x200.svg',

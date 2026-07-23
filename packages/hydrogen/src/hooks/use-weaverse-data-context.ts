@@ -6,7 +6,10 @@ export interface RouteKeyedDataContext {
   [routeKey: `routes/${string}`]: Record<string, unknown>
 }
 
-// Flat route-keyed data context: {root: {...}, "routes/xxx": {...}}
+/**
+ * Flat loader-data map keyed by React Router route ID.
+ * Use route IDs such as `root` or `routes/products.$handle` in data bindings.
+ */
 export type WeaverseDataContext = RouteKeyedDataContext &
   Record<string, unknown>
 

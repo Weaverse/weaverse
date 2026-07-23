@@ -77,7 +77,9 @@ The fix was to defer that work until the component is actually rendered.
 ====================================
 */
 
+/** Runtime store for one rendered Hydrogen component instance. */
 export class WeaverseHydrogenItem extends WeaverseItemStore {
+  /** Owning Hydrogen runtime instance. */
   declare weaverse: WeaverseHydrogen
 
   /**
@@ -99,6 +101,7 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
     Object.assign(this._store, schemaData, data, rest)
   }
 
+  /** Registered component definition for this item's type. */
   get Element(): HydrogenElement {
     return super.Element
   }
@@ -144,22 +147,42 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
 
 Weaverse.ItemConstructor = WeaverseHydrogenItem
 
+/**
+ * Hydrogen-specific Weaverse runtime that owns page data, component stores,
+ * Studio state, and translation sidecars for one rendered page.
+ */
 export class WeaverseHydrogen extends Weaverse {
+  /** Identifier of the rendered page. */
   pageId: string
+  /** Runtime services and project metadata exposed to integrations. */
   internal: Partial<WeaverseInternal>
+  /** Normalized URL and locale information for the current request. */
   requestInfo: WeaverseLoaderRequestInfo
+  /** Identifier of the project supplying the page. */
   projectId: string
+  /** Origin used for Studio assets and editor communication. */
   weaverseHost: string
+  /** Base URL used for public content API requests. */
   weaverseApiBase: string
+  /** API key supplied by Studio preview requests. */
   weaverseApiKey: string
+  /** Studio asset version supplied by the preview request. */
   weaverseVersion: string
+  /** Whether the page is running inside the visual editor. */
   isDesignMode: boolean
+  /** Whether a single component preview is being rendered. */
   isPreviewMode: boolean
+  /** Whether a saved page revision is being previewed. */
   isRevisionPreview: boolean
+  /** Component type requested by section preview mode. */
   sectionType: string
+  /** Component item store constructor used by the core runtime. */
   declare ItemConstructor: typeof WeaverseHydrogenItem
+  /** Current page content owned by the runtime. */
   declare data: HydrogenPageData
+  /** Component item stores indexed by instance ID. */
   declare static itemInstances: Map<string, WeaverseHydrogenItem>
+  /** Registered component definitions indexed by component type. */
   declare static elementRegistry: Map<string, HydrogenElement>
 
   // ─── Translation sidecar (design mode only) ────────────────────────
@@ -170,7 +193,9 @@ export class WeaverseHydrogen extends Weaverse {
    * returned to components, so translations render without monkey-patching.
    */
   translationMap: TranslationMap = {}
+  /** Locale code for the active translation sidecar. */
   translationLocale = ''
+  /** Builder language identifier for the active translation sidecar. */
   translationLanguageId = ''
 
   constructor(params: WeaverseHydrogenParams) {
@@ -401,6 +426,12 @@ export function registerComponent(element: HydrogenElement) {
   WeaverseHydrogen.registerElement(element)
 }
 
+/**
+ * Renders the Weaverse page for the current React Router route.
+ *
+ * Pass `data` to override automatic route-loader resolution. A promise is
+ * handled with React Router's `Await`, while explicit `null` suppresses output.
+ */
 export const WeaverseHydrogenRoot = memo(
   ({
     components,
@@ -413,6 +444,7 @@ export const WeaverseHydrogenRoot = memo(
       </div>
     ),
   }: {
+    /** Theme components available to the page renderer. */
     components: HydrogenComponent[]
     /**
      * Optional explicit `weaverseData` payload. When provided, bypasses the
@@ -424,6 +456,7 @@ export const WeaverseHydrogenRoot = memo(
      * pages on the same URL. See issue #451.
      */
     data?: WeaverseDataValue
+    /** Component rendered when page data cannot be resolved or awaited. */
     errorComponent?: React.FC<{ error: Error | unknown }>
   }) => {
     const matches = useMatches()

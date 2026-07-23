@@ -89,6 +89,10 @@ export function getRequestQueries<T = Record<string, string | boolean>>(
   return queries as T
 }
 
+/**
+ * Resolves project, endpoint, and Studio mode configuration for a request.
+ * URL-provided Studio values take precedence over environment defaults.
+ */
 export function getWeaverseConfigs(
   request: Request,
   env: HydrogenEnv
@@ -296,6 +300,7 @@ function recursivelyAddDataItem(
   return id
 }
 
+/** Creates synthetic loader data for previewing one registered component type. */
 export function getPreviewData(
   type: string,
   components: HydrogenComponent[],

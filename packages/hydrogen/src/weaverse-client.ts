@@ -116,21 +116,39 @@ const SMART_CACHE_STRATEGIES: Record<BuilderApiCacheTarget, CachingStrategy> = {
   },
 } as const
 
+/**
+ * Request-scoped client for loading Weaverse pages and theme settings in Hydrogen.
+ *
+ * Create one client from the Hydrogen app context, then call {@link loadPage}
+ * from route loaders and {@link loadThemeSettings} from the root loader.
+ */
 export class WeaverseClient {
+  /** Builder API version used by this client. */
   API = API_PATH
+  /** Stable project configuration shared by page requests. */
   basePageConfigs: Omit<WeaverseProjectConfigs, 'requestInfo'>
+  /** Stable request body fields shared by page requests. */
   basePageRequestBody: Omit<FetchProjectRequestBody, 'url'>
+  /** Resolved project and rendering-mode configuration. */
   configs: WeaverseProjectConfigs
+  /** Hydrogen cache wrapper used for Builder API requests. */
   withCache: ReturnType<typeof createWithCache>
 
-  // Required dependencies
+  /** Incoming request associated with this client instance. */
   request: WeaverseClientArgs['request']
+  /** Hydrogen customer-account client, when configured. */
   customerAccount: WeaverseClientArgs['customerAccount']
+  /** Hydrogen Storefront API client and locale context. */
   storefront: WeaverseClientArgs['storefront']
+  /** Components registered for page rendering and component loaders. */
   components: WeaverseClientArgs['components']
+  /** Theme schema used for defaults and Studio editing. */
   themeSchema: WeaverseClientArgs['themeSchema']
+  /** Hydrogen runtime environment variables. */
   env: WeaverseClientArgs['env']
+  /** Cache storage supplied by the Hydrogen runtime. */
   cache: WeaverseClientArgs['cache']
+  /** Background execution hook supplied by the Oxygen runtime. */
   waitUntil: WeaverseClientArgs['waitUntil']
 
   // Performance optimizations
@@ -1120,6 +1138,7 @@ export class WeaverseClient {
     }
   }
 
+  /** Executes the registered loader for one component and attaches its result. */
   execComponentLoader = async (item: HydrogenComponentData) => {
     const { data = {}, type, id } = item
     const component = this.componentsByType.get(type)

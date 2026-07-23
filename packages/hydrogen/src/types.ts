@@ -62,27 +62,38 @@ export type {
   WeaverseVideo,
 }
 
+/** Arguments passed to a component's server-side loader. */
 export type ComponentLoaderArgs<T = any, _E = any> = {
   data: T
   weaverse: WeaverseClient
 }
 
+/** React Router loader arguments whose app context includes the Weaverse client. */
 export interface RouteLoaderArgs extends RemixOxygenLoaderArgs {
+  /** Request-scoped application context with the initialized Weaverse client. */
   context: AppLoadContext & {
     weaverse: WeaverseClient
   }
 }
 
-// Define a more specific type for component data
+/** Primitive value accepted in a component's persisted data. */
 export type ComponentDataValue = string | number | boolean | undefined | null
 
+/** Serialized component instance returned in a Weaverse page. */
 export interface HydrogenComponentData extends ElementData {
+  /** References to direct child component instances. */
   children?: { id: string }[]
+  /** ISO timestamp recording when the component instance was created. */
   createdAt?: string
+  /** Persisted component setting values and structured payloads. */
   data?: Record<string, ComponentDataValue | Record<string, unknown>>
+  /** ISO timestamp recording soft deletion, when applicable. */
   deletedAt?: string
+  /** Unique component instance identifier. */
   id: string
+  /** Registered component type used to select its renderer. */
   type: string
+  /** ISO timestamp recording the latest component update. */
   updatedAt?: string
 }
 
@@ -92,12 +103,17 @@ export interface HydrogenComponentData extends ElementData {
  */
 export type HydrogenComponentSchema = SchemaType
 
+/** Props supplied by Weaverse when rendering a registered Hydrogen component. */
 export interface HydrogenComponentProps<L = any> extends WeaverseElement {
+  /** Rendered child component instances. */
   children?: React.JSX.Element[]
+  /** Optional CSS class passed through by the renderer. */
   className?: string
+  /** Result returned by the component's server-side loader. */
   loaderData?: L
 }
 
+/** Normalized request details attached to loader data for Studio navigation. */
 export type WeaverseLoaderRequestInfo = {
   search: string
   pathname: string
@@ -105,10 +121,12 @@ export type WeaverseLoaderRequestInfo = {
   i18n: WeaverseI18n
 }
 
+/** Published theme setting values keyed by schema setting name. */
 export type HydrogenThemeSettings = {
   [key: string]: any
 }
 
+/** Project metadata returned with a Weaverse page payload. */
 export type HydrogenProjectType = {
   id: string
   weaverseShopId: string
@@ -116,6 +134,7 @@ export type HydrogenProjectType = {
   [key: string]: any
 }
 
+/** Runtime services and project metadata exposed to Weaverse integrations. */
 export type WeaverseInternal = {
   pageAssignment: HydrogenPageAssignment
   project: HydrogenProjectType
@@ -133,6 +152,7 @@ export type WeaverseInternal = {
  */
 export type HydrogenComponentPresets = SchemaComponentPresets
 
+/** Registered runtime definition for a Hydrogen component type. */
 export type HydrogenElement = {
   Component:
     | ForwardRefExoticComponent<HydrogenComponentProps>
@@ -143,20 +163,34 @@ export type HydrogenElement = {
   loader?: (args: ComponentLoaderArgs) => Promise<unknown>
 }
 
+/** Initialization parameters for a request-scoped {@link WeaverseHydrogen} runtime. */
 export interface WeaverseHydrogenParams
   extends Omit<WeaverseCoreParams, 'ItemConstructor'> {
+  /** Page content used to initialize component instances. */
   data: HydrogenPageData
+  /** Route loader data made available to component data bindings. */
   dataContext?: Record<string, unknown> | null
+  /** Runtime services and metadata available to integrations. */
   internal: Partial<WeaverseInternal>
+  /** Whether the page is running inside the visual editor. */
   isDesignMode?: boolean
+  /** Whether a component preview is being rendered. */
   isPreviewMode?: boolean
+  /** Whether a saved page revision is being previewed. */
   isRevisionPreview?: boolean
+  /** Identifier of the page being rendered. */
   pageId: string
+  /** Identifier of the Weaverse project supplying content. */
   projectId: string
+  /** Normalized URL and locale information for this request. */
   requestInfo: WeaverseLoaderRequestInfo
+  /** Component type requested by section preview mode. */
   sectionType?: string
+  /** Base URL used for public Weaverse API requests. */
   weaverseApiBase: string
+  /** API key supplied by Studio preview requests. */
   weaverseApiKey: string
+  /** Origin used for Weaverse Studio assets and editor communication. */
   weaverseHost: string
   /**
    * Public data API origin. Keep `weaverseHost` for Studio scripts/editor
@@ -164,9 +198,11 @@ export interface WeaverseHydrogenParams
    * when edge caching is enabled.
    */
   weaversePublicApiBase?: string
+  /** Optional Studio asset version used by preview integrations. */
   weaverseVersion?: string
 }
 
+/** Export shape for a renderable component, its schema, and optional loader. */
 export type HydrogenComponent<T extends HydrogenComponentProps = any> = {
   default: ForwardRefExoticComponent<T> | ((props: T) => React.JSX.Element)
   schema: HydrogenComponentSchema
@@ -174,6 +210,7 @@ export type HydrogenComponent<T extends HydrogenComponentProps = any> = {
   loader?: (args: ComponentLoaderArgs) => Promise<unknown>
 }
 
+/** Weaverse Studio query parameters recognized by the Hydrogen runtime. */
 export type WeaverseStudioQueries = {
   weaverseProjectId: string
   weaverseApiKey: string
@@ -184,11 +221,13 @@ export type WeaverseStudioQueries = {
   sectionType?: string
 }
 
+/** Storefront-safe environment values exposed with theme settings. */
 export type PublicEnv = {
   PUBLIC_STORE_DOMAIN: string
   PUBLIC_STOREFRONT_API_TOKEN: string
 }
 
+/** Resolved project, API endpoint, and rendering-mode configuration. */
 export type WeaverseProjectConfigs = {
   projectId: string
   weaverseHost: string
@@ -203,6 +242,7 @@ export type WeaverseProjectConfigs = {
   publicEnv?: PublicEnv
 }
 
+/** Assignment describing which project page handles a storefront route. */
 export type HydrogenPageAssignment = {
   projectId: string
   type: PageType
@@ -215,6 +255,7 @@ export type HydrogenPageAssignment = {
   }
 }
 
+/** Complete payload returned by {@link WeaverseClient.loadPage}. */
 export type WeaverseLoaderData = {
   configs: Omit<WeaverseProjectConfigs, 'publicEnv'> & {
     requestInfo: WeaverseLoaderRequestInfo
@@ -224,10 +265,15 @@ export type WeaverseLoaderData = {
   pageAssignment?: HydrogenPageAssignment
 }
 
+/** Published Weaverse page content consumed by the Hydrogen renderer. */
 export interface HydrogenPageData extends WeaverseProjectDataType {
+  /** Internal cache identifier attached by the content API when available. */
   __cacheId?: string
+  /** Unique page identifier. */
   id: string
+  /** Serialized component instances belonging to the page. */
   items: HydrogenComponentData[]
+  /** Human-readable page name. */
   name: string
   /**
    * Page-level SEO metadata published by Weaverse Builder. `null` when
@@ -236,15 +282,18 @@ export interface HydrogenPageData extends WeaverseProjectDataType {
    * override".
    */
   seo?: PageSEOData | null
+  /** Additional page fields supplied by the content API. */
   [key: string]: any
 }
 
+/** Locale metadata used when requesting localized Weaverse content. */
 export type WeaverseI18n = I18nBase & {
   label?: string
   pathPrefix?: string
   [key: string]: any
 }
 
+/** Theme metadata, global settings, and localization configuration. */
 export type HydrogenThemeSchema = {
   info: {
     name: string
@@ -267,6 +316,7 @@ export type HydrogenThemeSchema = {
   }
 }
 
+/** Request body sent to the Weaverse project content endpoint. */
 export type FetchProjectRequestBody = {
   projectId: string
   url: string
@@ -279,6 +329,7 @@ export type FetchProjectRequestBody = {
   isDesignMode?: boolean
 }
 
+/** Project content response before it is normalized into loader data. */
 export type FetchProjectPayload = {
   page?: HydrogenPageData // Page might be missing for some routes
   project?: HydrogenProjectType // Project might be missing in error cases
@@ -425,23 +476,24 @@ export type WeaverseClientArgs = HydrogenContext & {
   fetchTimeoutMs?: number
 }
 
+/** Product selected through a Weaverse resource-picker setting. */
 export type WeaverseProduct = WeaverseResourcePickerData
+/** Collection selected through a Weaverse resource-picker setting. */
 export type WeaverseCollection = WeaverseResourcePickerData
+/** Blog selected through a Weaverse resource-picker setting. */
 export type WeaverseBlog = WeaverseResourcePickerData
+/** Article selected through a Weaverse resource-picker setting. */
 export type WeaverseArticle = WeaverseResourcePickerData
+/** Metaobject selected through a Weaverse resource-picker setting. */
 export type WeaverseMetaObject = WeaverseResourcePickerData
 
-/**
- * Response types for improved type safety
- */
-
-// Response wrapper from withCache.fetch
+/** Response returned by Hydrogen's cached fetch helper. */
 export type WithCacheFetchResponse<T> = {
   data: T
   response: Response
 }
 
-// Theme settings response structure
+/** Theme configuration returned by the Weaverse project API. */
 export type ThemeSettingsResponse = {
   theme?: HydrogenThemeSettings
   schema?: HydrogenThemeSchema
@@ -454,21 +506,24 @@ export type ThemeSettingsResponse = {
   _loadFailed?: boolean
 }
 
-// Direct fetch response structure
+/** Minimal response shape used by direct, uncached API requests. */
 export type DirectFetchResponse<T = unknown> = {
   data?: T
   error?: string
 }
 
-// Cache response validation function type
+/** Predicate used to decide whether a fetched response may be cached. */
 export type CacheResponseValidator<T = unknown> = (
   response: WithCacheFetchResponse<T> | T
 ) => boolean
 
-// Weaverse Error class for better error handling
+/** Error raised by Weaverse requests with a stable code and optional context. */
 export class WeaverseError extends Error {
+  /** Machine-readable error code. */
   public readonly code: string
+  /** HTTP status associated with the failure, when available. */
   public readonly statusCode?: number
+  /** Structured diagnostic details for logging and error handling. */
   public readonly context?: Record<string, unknown>
 
   constructor(
@@ -499,12 +554,19 @@ export type ProjectIdValidationResult = {
   error?: string
 }
 
+/** Published custom page entry suitable for sitemap generation. */
 export interface CustomPageEntry {
+  /** Suggested sitemap update frequency. */
   changeFrequency?: 'daily' | 'weekly' | 'monthly'
+  /** Weaverse custom page handle. */
   handle: string
+  /** ISO timestamp of the latest published update. */
   lastModified: string
+  /** Locale code, or `null` for the project's default locale. */
   locale: string | null
+  /** Storefront path for the custom page. */
   path: string
+  /** Optional sitemap priority from zero to one. */
   priority?: number
 }
 
@@ -523,6 +585,7 @@ export function isWithCacheFetchResponse<T>(
   )
 }
 
+/** Checks whether a value contains the required project response fields. */
 export function isFetchProjectPayload(
   payload: unknown
 ): payload is FetchProjectPayload {
@@ -535,6 +598,7 @@ export function isFetchProjectPayload(
   )
 }
 
+/** Checks whether a response contains a string error message. */
 export function hasError(response: unknown): response is { error: string } {
   return (
     typeof response === 'object' &&
@@ -544,6 +608,7 @@ export function hasError(response: unknown): response is { error: string } {
   )
 }
 
+/** Checks whether a value contains a theme settings object. */
 export function isThemeSettingsResponse(
   data: unknown
 ): data is ThemeSettingsResponse {
@@ -622,7 +687,7 @@ interface WeaverseStudio {
   refreshStudio: (params: WeaverseHydrogenParams) => void
 }
 
-// Type guard to safely access weaverseStudio
+/** Checks whether the browser window exposes the Weaverse Studio bridge. */
 export function hasWeaverseStudio(
   window: Window
 ): window is Window & { weaverseStudio: WeaverseStudio } {
@@ -756,9 +821,11 @@ export type LoadPageParams = {
 
 // ─── Translation sidecar types (design mode) ─────────────────────────
 
-/** A single translated field for one item */
+/** A single translated field for one item. */
 export interface TranslationMapEntry {
+  /** Source-locale value used to detect subsequent content changes. */
   originalValue: string
+  /** Localized value rendered for the target locale. */
   translatedValue: string
 }
 
@@ -775,12 +842,17 @@ export type TranslationMap = {
   [itemId: string]: TranslationItemEntry
 }
 
-/** A single translation entry for save payloads */
+/** A single translation entry for save payloads. */
 export interface TranslationEntry {
+  /** Marks an existing translation for deletion. */
   deleted?: boolean
+  /** Identifier of the component instance owning the field. */
   itemId: string
+  /** Dot-path to the translated component field. */
   key: string
+  /** Source-locale value used to detect content changes. */
   originalValue: string
+  /** Localized value to persist. */
   translatedValue: string
 }
 

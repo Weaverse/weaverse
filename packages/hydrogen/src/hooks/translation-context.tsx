@@ -64,6 +64,7 @@ export type TranslateFunction = (
   variables?: Record<string, string | number>
 ) => string
 
+/** Translation function, stores, and locale overrides exposed by the provider. */
 export type TranslationValue = {
   /**
    * Translate a key with optional variable interpolation.
@@ -93,6 +94,7 @@ export type TranslationValue = {
 const TranslationContext = createContext<TranslationValue | null>(null)
 TranslationContext.displayName = 'WeaverseTranslationContext'
 
+/** Inputs accepted by {@link TranslationProvider}. */
 export type TranslationProviderProps = {
   staticContent: Record<string, unknown>
   merchantOverrides?: Record<string, unknown>
@@ -249,18 +251,22 @@ export function useTranslation(): TranslationValue {
 // ---------------------------------------------------------------------------
 
 /**
+ * Legacy name for {@link TranslationProvider}.
  * @deprecated Use {@link TranslationProvider} instead.
  */
 export const ThemeTextProvider = TranslationProvider
 /**
+ * Legacy name for {@link useTranslation}.
  * @deprecated Use {@link useTranslation} instead.
  */
 export const useThemeText = useTranslation
 /**
+ * Legacy name for {@link TranslationValue}.
  * @deprecated Use {@link TranslationValue} instead.
  */
 export type ThemeTextValue = TranslationValue
 /**
+ * Legacy name for {@link TranslationProviderProps}.
  * @deprecated Use {@link TranslationProviderProps} instead.
  */
 export type ThemeTextProviderProps = TranslationProviderProps
