@@ -12,7 +12,9 @@ import type { ComponentType, ForwardRefExoticComponent, ReactNode } from 'react'
 import type { TranslationStore } from './translation-store'
 
 export interface WeaverseNextRequestInfo {
+  handle?: string
   i18n?: WeaverseNextI18n
+  pageType?: PageType
   pathname: string
   queries: Record<string, string | boolean>
   search: string

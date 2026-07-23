@@ -1,5 +1,14 @@
+import type { PageType } from '@weaverse/schema'
+import { PageTypeSchema } from '@weaverse/schema'
+import {
+  ROUTE_CONTEXT_I18N_KEYS,
+  sanitizeRouteContextSearch,
+  type WeaverseNextRevalidateRouteContext,
+} from '../revalidate-item'
 import type {
   WeaverseNextComponentData,
+  WeaverseNextI18n,
+  WeaverseNextRequestContext,
   WeaverseNextServerClient,
 } from '../types'
 import { generateDataFromSchema } from '../utils'
@@ -15,19 +24,182 @@ const STATUS_NOT_FOUND = 404
 const STATUS_UNPROCESSABLE = 422
 const STATUS_SERVER_ERROR = 500
 
+const MAX_PATHNAME_LENGTH = 2048
+const MAX_SEARCH_LENGTH = 8192
+const MAX_HANDLE_LENGTH = 512
+const MAX_I18N_FIELD_LENGTH = 256
+// ASCII control characters (C0 range + DEL) are never valid in a route path.
+// biome-ignore lint/suspicious/noControlCharactersInRegex: rejecting control chars in untrusted pathnames is the intent.
+const CONTROL_CHAR_PATTERN = /[\u0000-\u001F\u007F]/
+
 export interface WeaverseNextRevalidateHandlerConfig {
   /**
    * Reuse the app's server-client factory so the loader runs with the same
    * component registry and commerce (storefront) context as page loads.
+   *
+   * The optional second argument is the validated, same-origin route context
+   * reconstructed from the request body. It is `undefined` for legacy bodies
+   * that carry no `routeContext`, so a one-argument `(request) => client`
+   * callback remains valid. Consumers must still source project ID, Studio
+   * host, API bases/keys, and env from server config — never from this
+   * browser-provided context.
    */
   getClient: (
-    request: Request
+    request: Request,
+    requestContext?: WeaverseNextRequestContext
   ) => Promise<WeaverseNextServerClient> | WeaverseNextServerClient
 }
 
 /** POST body accepted by the revalidate route. */
 export interface WeaverseNextRevalidateRequestBody {
   draftItem: WeaverseNextComponentData
+  routeContext?: WeaverseNextRevalidateRouteContext
+}
+
+/**
+ * Whether a browser-provided pathname is safe to reconstruct a same-origin URL
+ * from. Rejects protocol-relative (`//`), absolute-URL, backslash, control
+ * character, query-in-path, and fragment-in-path inputs before any URL is
+ * built. Literal/encoded dot segments are allowed here and normalized later by
+ * the URL pathname setter.
+ */
+function isValidPathname(pathname: string): boolean {
+  if (!pathname || pathname.length > MAX_PATHNAME_LENGTH) {
+    return false
+  }
+  if (pathname[0] !== '/' || pathname.startsWith('//')) {
+    return false
+  }
+  if (pathname.includes('\\') || pathname.includes('?')) {
+    return false
+  }
+  if (pathname.includes('#') || CONTROL_CHAR_PATTERN.test(pathname)) {
+    return false
+  }
+  return true
+}
+
+/**
+ * Validate and pick the allowed i18n fields. Returns `undefined` for a valid
+ * empty result and `null` for malformed input (arrays, nested values, non-string
+ * or oversized fields) so the handler can fail closed.
+ */
+function sanitizeRouteContextI18n(
+  input: unknown
+): WeaverseNextI18n | undefined | null {
+  if (input === undefined) {
+    return
+  }
+  if (typeof input !== 'object' || input === null || Array.isArray(input)) {
+    return null
+  }
+  let source = input as Record<string, unknown>
+  let result: Record<string, string> = {}
+  for (let key of ROUTE_CONTEXT_I18N_KEYS) {
+    let value = source[key]
+    if (value === undefined) {
+      continue
+    }
+    if (typeof value !== 'string' || value.length > MAX_I18N_FIELD_LENGTH) {
+      return null
+    }
+    result[key] = value
+  }
+  return Object.keys(result).length ? result : undefined
+}
+
+/**
+ * Reconstruct a validated, same-origin {@link WeaverseNextRequestContext} from
+ * the untrusted route context. Returns `null` for any malformed field so the
+ * handler can answer `400 invalid-route-context` before creating a client. The
+ * endpoint origin is fixed first, then validated components are assigned, so
+ * the browser cannot change protocol, host, port, or credentials.
+ */
+function reconstructRouteContext(
+  request: Request,
+  routeContext: unknown
+): WeaverseNextRequestContext | null {
+  if (
+    typeof routeContext !== 'object' ||
+    routeContext === null ||
+    Array.isArray(routeContext)
+  ) {
+    return null
+  }
+  let { pathname, search, handle, pageType, i18n } = routeContext as Record<
+    string,
+    unknown
+  >
+
+  if (typeof pathname !== 'string' || !isValidPathname(pathname)) {
+    return null
+  }
+
+  if (typeof search !== 'string' || search.length > MAX_SEARCH_LENGTH) {
+    return null
+  }
+  let rawSearch = search
+  if (rawSearch.length && !rawSearch.startsWith('?')) {
+    return null
+  }
+
+  let sanitizedI18n = sanitizeRouteContextI18n(i18n)
+  if (sanitizedI18n === null) {
+    return null
+  }
+
+  let resolvedPageType: PageType | undefined
+  if (pageType !== undefined) {
+    let parsed = PageTypeSchema.safeParse(pageType)
+    if (!parsed.success) {
+      return null
+    }
+    resolvedPageType = parsed.data
+  }
+
+  let resolvedHandle: string | undefined
+  if (handle !== undefined) {
+    if (
+      typeof handle !== 'string' ||
+      !handle ||
+      handle.length > MAX_HANDLE_LENGTH
+    ) {
+      return null
+    }
+    resolvedHandle = handle
+  }
+
+  // Fix the endpoint origin first, then assign validated components. Reuse the
+  // URL's canonical pathname in both context fields so raw input never survives
+  // in only one place.
+  let endpointUrl = new URL(request.url)
+  let routeUrl = new URL(endpointUrl.origin)
+  routeUrl.pathname = pathname
+  routeUrl.search = sanitizeRouteContextSearch(rawSearch)
+  let canonicalPathname = routeUrl.pathname
+  let searchParams = routeUrl.searchParams
+
+  // Last value wins for duplicated Studio controls, matching
+  // `getWeaverseNextConfigs()` and its cache-mode resolution.
+  let lastParam = (key: string): string | undefined => {
+    let values = searchParams.getAll(key)
+    return values.length ? values.at(-1) : undefined
+  }
+
+  return {
+    pathname: canonicalPathname,
+    searchParams,
+    url: routeUrl,
+    // Headers come from the actual same-origin POST, never its JSON body.
+    headers: new Headers(request.headers),
+    ...(sanitizedI18n ? { i18n: sanitizedI18n } : {}),
+    ...(resolvedPageType ? { pageType: resolvedPageType } : {}),
+    ...(resolvedHandle ? { handle: resolvedHandle } : {}),
+    isDesignMode: lastParam('isDesignMode') === 'true',
+    isPreviewMode: lastParam('isPreviewMode') === 'true',
+    isRevisionPreview: searchParams.has('__revisionId'),
+    sectionType: lastParam('sectionType') || undefined,
+  }
 }
 
 function json(body: Record<string, unknown>, status: number) {
@@ -93,9 +265,21 @@ export function createWeaverseNextRevalidateHandler(
         return json({ error: 'invalid-payload' }, STATUS_BAD_REQUEST)
       }
 
+      // Missing `routeContext` is valid legacy input; a present but malformed
+      // context is rejected at the trust boundary before any client is created.
+      let requestContext: WeaverseNextRequestContext | undefined
+      let body = payload as { routeContext?: unknown }
+      if (Object.hasOwn(body, 'routeContext')) {
+        let reconstructed = reconstructRouteContext(request, body.routeContext)
+        if (!reconstructed) {
+          return json({ error: 'invalid-route-context' }, STATUS_BAD_REQUEST)
+        }
+        requestContext = reconstructed
+      }
+
       let client: WeaverseNextServerClient
       try {
-        client = await config.getClient(request)
+        client = await config.getClient(request, requestContext)
       } catch (error) {
         console.error('❌ Revalidate handler getClient failed.', error)
         return json({ error: 'client-init-failed' }, STATUS_SERVER_ERROR)

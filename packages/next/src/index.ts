@@ -31,9 +31,11 @@ export {
 } from './renderer'
 export { buildWeaverseNextRequestInfo } from './request-info'
 export {
+  buildWeaverseNextRevalidateRouteContext,
   DEFAULT_REVALIDATE_ENDPOINT,
   type RevalidateItemRuntimeLike,
   revalidateWeaverseNextItem,
+  type WeaverseNextRevalidateRouteContext,
 } from './revalidate-item'
 export {
   type WeaverseNextRootContextValue,
