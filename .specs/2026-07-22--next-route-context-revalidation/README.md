@@ -5,9 +5,9 @@
 | **Status** | in-progress |
 | **Owner** | @hta218 |
 | **Issue** | [Weaverse/builder#2737](https://github.com/Weaverse/builder/issues/2737) |
-| **Branch** | `docs/next-route-context-revalidation` |
+| **Branch** | `fix/next-route-context-revalidation` |
 | **Created** | 2026-07-22 |
-| **Last Updated** | 2026-07-22 |
+| **Last Updated** | 2026-07-23 |
 
 ## Original Prompt
 

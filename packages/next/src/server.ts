@@ -6,6 +6,7 @@
 // `context.weaverse.loadPage(...)` pattern. Kept on a dedicated subpath so the
 // root `@weaverse/next` entry stays free of server-only fetch assumptions.
 
+export type { WeaverseNextRevalidateRouteContext } from './revalidate-item'
 export {
   formatWeaverseNextSeoMetadata,
   getWeaverseNextSeoMetadata,

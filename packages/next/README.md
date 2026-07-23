@@ -170,15 +170,26 @@ Main exports:
 
 Example helper for a Next route/server component boundary:
 
+This helper is app-level (not exported by `@weaverse/next`); it plays the role
+of Hydrogen's global load context, but the app owns route identity explicitly.
+The App Router boundary supplies `pathname`, `pageType`, and `handle`, so the
+same identity reaches page loads and per-item revalidation loaders. It uses the
+exported `PageType` and `WeaverseNextRequestContext` types. The module defines
+both helpers used by the route-handler example below:
+
 ```ts
 import { createWeaverseNextServerClient } from '@weaverse/next/server'
+import type { PageType, WeaverseNextRequestContext } from '@weaverse/next'
 import { headers } from 'next/headers'
 import { serverComponents } from './server-components'
 import { getStaticStorefrontClient } from './storefront'
 
 export async function getWeaverseServerClient(
   searchParamsPromise: Promise<Record<string, string | string[] | undefined>>,
-  pathname = '/'
+  pathname = '/',
+  // Route identity the App Router segment owns. Seeding it here means loaders
+  // resolve the same page type / handle during SSR and per-item revalidation.
+  identity: { pageType?: PageType; handle?: string } = {}
 ) {
   let [headersList, rawSearchParams] = await Promise.all([
     headers(),
@@ -202,6 +213,27 @@ export async function getWeaverseServerClient(
     }`
   )
 
+  let requestContext: WeaverseNextRequestContext = {
+    url,
+    headers: requestHeaders,
+    searchParams,
+    pathname,
+    pageType: identity.pageType,
+    handle: identity.handle,
+    i18n: { country: 'US', language: 'EN', locale: 'en-US' },
+  }
+
+  return createWeaverseServerClientFromContext(requestContext)
+}
+
+// Explicit-context path used by the revalidation callback. The context has
+// already been validated by the SDK handler; project/host/env remain app-owned.
+export function createWeaverseServerClientFromContext(
+  requestContext: WeaverseNextRequestContext
+) {
+  // A localized app should select/cache this client from its own supported
+  // market allowlist using requestContext.i18n. This compact example uses the
+  // default market configured by the app helper.
   let storefront = getStaticStorefrontClient()
 
   return createWeaverseNextServerClient({
@@ -220,24 +252,34 @@ export async function getWeaverseServerClient(
           },
         }
       : undefined,
-    requestContext: {
-      url,
-      headers: requestHeaders,
-      searchParams,
-      pathname,
-      i18n: { country: 'US', language: 'EN', locale: 'en-US' },
-    },
+    requestContext,
     cache: { revalidate: 60, tags: ['weaverse'] },
   })
 }
 ```
 
-Then each route can stay close to the Hydrogen mental model:
+Then each route stays close to the Hydrogen mental model while supplying the
+route identity the segment owns — an `INDEX` home route and a handle-bearing
+`PRODUCT` route:
 
 ```ts
-let weaverse = await getWeaverseServerClient(props.searchParams, '/')
+// app/page.tsx — the INDEX segment owns the page type.
+let weaverse = await getWeaverseServerClient(props.searchParams, '/', {
+  pageType: 'INDEX',
+})
 let data = await weaverse.loadPage({ type: 'INDEX' })
 let theme = await weaverse.loadThemeSettings()
+```
+
+```ts
+// app/products/[handle]/page.tsx — the PRODUCT segment supplies the handle.
+let { handle } = await props.params
+let weaverse = await getWeaverseServerClient(
+  props.searchParams,
+  `/products/${handle}`,
+  { pageType: 'PRODUCT', handle }
+)
+let data = await weaverse.loadPage({ type: 'PRODUCT', handle })
 ```
 
 ### Server client members
@@ -349,16 +391,18 @@ import {
   WeaverseNextProvider,
   WeaverseNextRenderer,
 } from '@weaverse/next'
-import type { WeaverseNextLoaderData } from '@weaverse/next'
+import type {
+  WeaverseNextLoaderData,
+  WeaverseNextRequestInfo,
+} from '@weaverse/next'
 import { components } from './components'
 
 export function WeaversePage({ data }: { data: WeaverseNextLoaderData }) {
+  // The server client returns `requestInfo` in the exported shape, so restore
+  // the full route identity — including `pageType` and `handle` — into the
+  // client request context instead of a narrow inline subset.
   let requestInfo = data.configs?.requestInfo as
-    | {
-        i18n?: { country?: string; language?: string; locale?: string }
-        pathname?: string
-        search?: string
-      }
+    | WeaverseNextRequestInfo
     | undefined
   let projectId =
     (data.configs?.projectId as string | undefined) ?? data.project?.id
@@ -374,6 +418,8 @@ export function WeaversePage({ data }: { data: WeaverseNextLoaderData }) {
       isPreviewMode: Boolean(data.configs?.isPreviewMode),
       isRevisionPreview: Boolean(data.configs?.isRevisionPreview),
       i18n: requestInfo?.i18n,
+      pageType: requestInfo?.pageType,
+      handle: requestInfo?.handle,
     },
   })
 
@@ -492,13 +538,38 @@ The root script connector and page-level renderer are both required for full Stu
 
 Resource-picker edits should refresh only the affected item's server loader data. The happy path should not call `router.refresh()` because refreshing the whole RSC tree can remount the page and reset scroll.
 
-Mount the route handler in the consuming app:
+Mount the route handler in the consuming app. `getClient` receives a second
+argument — the validated, same-origin route context reconstructed from the
+request body — so the revalidated loader runs with the same pathname, locale,
+page type, handle, and ordinary search params as the active storefront route.
+The two server-client helpers below are app-level consumer helpers, not exports
+from `@weaverse/next`:
 
 ```ts
 // app/api/weaverse/revalidate/route.ts
 import { createWeaverseNextRevalidateHandler } from '@weaverse/next/server'
-import { getWeaverseServerClient } from '../../../weaverse-next/server'
+import {
+  createWeaverseServerClientFromContext,
+  getWeaverseServerClient,
+} from '../../../weaverse-next/server'
 
+export const { POST } = createWeaverseNextRevalidateHandler({
+  // `requestContext` is validated browser input for route identity only.
+  // Project ID, Studio host, API base/key, and env must still come from
+  // server config — never from this context — and it is `undefined` for
+  // legacy request bodies that carry no route context.
+  getClient: (_request, requestContext) =>
+    requestContext
+      ? createWeaverseServerClientFromContext(requestContext)
+      : getWeaverseServerClient(Promise.resolve({})),
+})
+```
+
+The existing one-argument callback still works. A handler mounted with a
+`(request) => client` callback ignores the optional second argument and keeps
+compiling and running, so old wiring needs no change:
+
+```ts
 export const { POST } = createWeaverseNextRevalidateHandler({
   getClient: () => getWeaverseServerClient(Promise.resolve({})),
 })
@@ -508,15 +579,46 @@ Flow:
 
 ```text
 Studio resource picker edit
-  -> Builder calls runtime.internal.revalidateItem(draftItem)
-  -> SDK POSTs { draftItem } to /api/weaverse/revalidate
+  -> Builder calls runtime.internal.revalidateItem(draftItem)   (unchanged)
+  -> SDK snapshots runtime.requestInfo, strips server-owned/transient controls
+  -> SDK POSTs { draftItem, routeContext? } to /api/weaverse/revalidate
+  -> handler validates + sanitizes routeContext at the trust boundary
+  -> handler reconstructs a same-origin WeaverseNextRequestContext
+  -> getClient(request, requestContext) builds the route-aware server client
   -> route handler finds the registered component by draftItem.type
-  -> handler runs that component's loader with draft item data
-  -> response returns { loaderData }
+  -> handler runs that component's loader with draft data + client.requestContext
+  -> response returns { loaderData } with Cache-Control: no-store
   -> SDK applies loaderData to the live item instance in place
 ```
 
-If the route is missing or returns an error, Builder falls back to the older route-refresh path.
+If the route is missing or returns an error, Builder falls back to the older
+route-refresh path.
+
+### Trust boundary
+
+The revalidation endpoint is public and every JSON field is attacker-controlled.
+The SDK sanitizes `routeContext` on the client for clean traffic, but the route
+handler is the security boundary and re-validates independently:
+
+- Only `pathname`, sanitized `search`, a narrow i18n subset, a
+  `PageTypeSchema`-valid `pageType`, and a bounded `handle` cross the boundary.
+  Headers, cookies, auth, env, project ID, Studio host, API base/key, commerce
+  clients, the runtime, and the client are never serialized.
+- Server-owned controls (`weaverseProjectId`, `weaverseHost`, `weaverseApiKey`,
+  `weaverseApiBase`, `weaversePublicApiBase`, `weaverseVersion`, `projectId`) and
+  transient transport controls (`weaverseDraftItem`, `__weaverseDraftItem`,
+  `_rsc`) are stripped case-insensitively on both sides, so a crafted body cannot
+  influence server config resolution.
+- The origin is fixed from the endpoint request before assigning any
+  browser-provided pathname/search, so input cannot change protocol, host, port,
+  or credentials. `pathname` and `url.pathname` share one URL-canonicalized value.
+- A malformed present `routeContext` returns `400 { error: 'invalid-route-context' }`
+  before `getClient` runs; a missing `routeContext` is valid legacy input and
+  passes `undefined` to the callback.
+- Route context is routing input, never an authorization decision. A registered
+  loader must not treat pathname, handle, page type, locale, or search as proof
+  of access; customer/private data still requires independent server-side session
+  and authorization checks derived from the actual request.
 
 ## Config resolution
 

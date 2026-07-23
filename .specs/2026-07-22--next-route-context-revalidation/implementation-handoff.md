@@ -11,6 +11,19 @@ the expected failure, then make the minimum implementation pass.
 2. Consumer verification: `Weaverse/weaverse-hydrogen-next-poc`
 3. Builder: read-only verification only; no contract change is expected
 
+## Current execution
+
+- SDK branch: `fix/next-route-context-revalidation`
+- SDK base: `94bbeec729ef277a11d5a39edbaed2c51f2dd42c`
+- POC branch: `fix/next-route-context-revalidation`
+- Claude Code implemented the SDK and POC slices and left both worktrees uncommitted.
+- Hermes completed source review, focused RED/GREEN corrections, SDK/package gates,
+  packed-tarball POC gates, and local route/API smoke; independent review and
+  PR publication are the remaining execution steps.
+- The POC stays source-compatible with its pinned `@weaverse/next@0.1.0-alpha.13`
+  but uses the legacy callback path until the next SDK prerelease is published
+  and pinned; its PR must remain draft/blocked on that dependency.
+
 ## Required behavior
 
 - `internal.revalidateItem(draftItem)` remains unchanged for Builder.
@@ -100,7 +113,9 @@ the expected failure, then make the minimum implementation pass.
 4. Exercise localized Product, Collection, and Custom routes in Studio.
 5. Change a real product and collection resource on the smoke section.
 6. Inspect the revalidation response/visible QA snapshot for exact pathname,
-   locale, page type/handle, and ordinary query params.
+   locale, page type/handle, and the harmless allowlisted QA queries. Verify
+   full ordinary query preservation in the server-side contract tests rather
+   than reflecting arbitrary query values into public loader data.
 7. Confirm no page remount, scroll reset, stale draft, secret-bearing body field,
    or unexpected full-route refresh.
 8. Remove the endpoint temporarily or mock a non-OK response and confirm Builder
