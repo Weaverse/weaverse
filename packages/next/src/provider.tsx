@@ -39,13 +39,19 @@ export function getSchemaStaticContent(
  * `useRouteLoaderData` inside sections.
  */
 export interface WeaverseNextContextValue {
+  /** Client used by the renderer and component-loader compatibility hooks. */
   client?: WeaverseNextClient
+  /** App-provided commerce context for rendered components. */
   commerce?: WeaverseNextCommerceContext
   /** Active-locale static-text overrides, threaded into the runtime. */
   merchantOverrides?: Record<string, unknown>
+  /** Page-scoped data exposed to rendered components. */
   pageData?: unknown
+  /** Root-scoped data exposed to rendered components. */
   rootData?: unknown
+  /** Current merged theme-setting values. */
   themeSettings: Record<string, unknown>
+  /** External store that publishes live theme-setting updates. */
   themeSettingsStore: WeaverseNextThemeSettingsStore
   /** Live design-mode static-text override store, threaded into the runtime. */
   translationStore: TranslationStore

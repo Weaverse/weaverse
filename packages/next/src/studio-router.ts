@@ -9,11 +9,23 @@ import type { WeaverseNextRuntimeInternal } from './types'
  */
 export interface WeaverseNextRouterLike {
   /** Add a route to browser history. */
-  push: (href: string, options?: { scroll?: boolean }) => void
+  push: (
+    href: string,
+    options?: {
+      /** Whether to scroll to the top after navigation. */
+      scroll?: boolean
+    }
+  ) => void
   /** Refresh the current App Router route and server data. */
   refresh: () => void
   /** Replace the current browser-history entry. */
-  replace: (href: string, options?: { scroll?: boolean }) => void
+  replace: (
+    href: string,
+    options?: {
+      /** Whether to scroll to the top after navigation. */
+      scroll?: boolean
+    }
+  ) => void
 }
 
 /** Resolved Studio navigation/revalidation callbacks for a Next runtime. */

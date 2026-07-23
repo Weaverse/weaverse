@@ -13,6 +13,7 @@ export interface RevalidateItemRuntimeLike {
   itemInstances: Map<
     string,
     {
+      /** Merge refreshed loader data into the live item store. */
       setData: (update: Record<string, unknown>) => unknown
     }
   >

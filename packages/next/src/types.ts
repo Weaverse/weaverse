@@ -56,9 +56,13 @@ export interface WeaverseNextPageAssignment {
   locale: string
   /** Inherited/fallback page metadata; unknown fields preserved as-is. */
   meta?: {
+    /** Number of inheritance levels between source and assigned projects. */
     depth?: number
+    /** Whether the assignment was inherited from another project. */
     inherited?: boolean
+    /** Project that supplied an inherited assignment. */
     sourceProjectId?: string
+    /** Additional assignment metadata returned by the API. */
     [key: string]: unknown
   }
   /** Project that owns the assignment. */
@@ -74,7 +78,12 @@ export interface WeaverseNextRuntimeInternal {
   /** Navigate the preview while preserving React Router-compatible options. */
   navigate?: (
     to: string,
-    options?: { preventScrollReset?: boolean } | Record<string, unknown>
+    options?:
+      | {
+          /** Preserve the current preview scroll position after navigation. */
+          preventScrollReset?: boolean
+        }
+      | Record<string, unknown>
   ) => void
   /** Assignment metadata used by Studio save operations. */
   pageAssignment?: WeaverseNextPageAssignment
@@ -200,44 +209,64 @@ export interface WeaverseNextI18n {
   [key: string]: unknown
 }
 
+/** Framework-neutral theme-setting input accepted by the Next adapter. */
+export interface WeaverseNextThemeSchemaInput {
+  /** Optional visibility condition evaluated by Builder. */
+  condition?: unknown
+  /** Default value applied when no merchant value exists. */
+  defaultValue?: unknown
+  /** Setting key used in the generated theme-settings object. */
+  name?: string
+  /** Additional schema fields preserved for Builder compatibility. */
+  [key: string]: unknown
+}
+
+/** Named group of theme-setting inputs displayed in Builder. */
+export interface WeaverseNextThemeSchemaGroup {
+  /** Group label displayed in Builder. */
+  group?: string
+  /** Theme-setting inputs contained in this group. */
+  inputs?: WeaverseNextThemeSchemaInput[]
+  /** Additional group metadata preserved for Builder compatibility. */
+  [key: string]: unknown
+}
+
 /**
  * Theme schema shape accepted by the Next adapter. Mirrors Hydrogen's
- * `HydrogenThemeSchema` but keeps locale data framework-neutral via
- * {@link WeaverseNextI18n} instead of Shopify Hydrogen's `I18nBase`.
+ * `HydrogenThemeSchema` while keeping locale data framework-neutral via
+ * {@link WeaverseNextI18n}.
  */
-export interface WeaverseNextThemeSchemaInput {
-  condition?: unknown
-  defaultValue?: unknown
-  name?: string
-  [key: string]: unknown
-}
-
-export interface WeaverseNextThemeSchemaGroup {
-  group?: string
-  inputs?: WeaverseNextThemeSchemaInput[]
-  [key: string]: unknown
-}
-
-/** Framework-neutral theme schema consumed by the Next adapter. */
 export interface WeaverseNextThemeSchema {
   /** Theme localization configuration and default static content. */
   i18n?: {
+    /** Locale used when no storefront locale matches. */
     defaultLocale?: WeaverseNextI18n
+    /** Locales supported by the storefront. */
     shopLocales?: WeaverseNextI18n[]
+    /** Default translated strings keyed by dot path or nested key. */
     staticContent?: Record<string, unknown>
     /** Enable the translation UI in Builder. */
     translation?: boolean
+    /** Storefront URL strategy used to distinguish locales. */
     urlStructure?: 'url-path' | 'subdomain' | 'top-level-domain'
+    /** Additional localization metadata preserved for compatibility. */
     [key: string]: unknown
   }
   /** Theme identity, version, support, and documentation metadata. */
   info?: {
+    /** Theme author or organization name. */
     author?: string
+    /** URL of the author's profile image. */
     authorProfilePhoto?: string
+    /** URL of the theme documentation. */
     documentationUrl?: string
+    /** Display name of the theme. */
     name?: string
+    /** URL where merchants can request theme support. */
     supportUrl?: string
+    /** Published theme version. */
     version?: string
+    /** Additional theme identity metadata preserved for compatibility. */
     [key: string]: unknown
   }
   /**
@@ -315,7 +344,12 @@ export interface WeaverseNextRequestContext {
 /** A single serialized item in a Weaverse page tree. */
 export interface WeaverseNextComponentData {
   /** Inline child items or references to items in the page's flat item list. */
-  children?: WeaverseNextComponentData[] | { id: string }[]
+  children?:
+    | WeaverseNextComponentData[]
+    | {
+        /** ID of the referenced child item. */
+        id: string
+      }[]
   /** Authored component setting values. */
   data?: Record<string, unknown>
   /** Stable Weaverse item identifier. */
@@ -622,7 +656,7 @@ export interface WeaverseNextCustomPageEntry {
 /** Pagination, locale, and cache options for fetching custom pages. */
 export interface WeaverseNextFetchCustomPagesOptions
   extends WeaverseNextCacheConfig {
-  /** Maximum page count requested from each API call. */
+  /** Maximum number of custom-page results returned per request. */
   limit?: number
   /** Only return custom pages assigned to this locale. */
   locale?: string

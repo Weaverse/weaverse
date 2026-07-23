@@ -57,6 +57,7 @@ export function collectDeferredItemUpdates<T>(
  * shared `@weaverse/react` renderer can spread props at the top level.
  */
 export class WeaverseNextItem extends WeaverseItemStore {
+  /** Browser runtime that owns this item store. */
   declare weaverse: WeaverseNextRuntime
 
   /**
@@ -69,6 +70,7 @@ export class WeaverseNextItem extends WeaverseItemStore {
   private _snapshotTranslationRef: WeaverseNextTranslationItemEntry | null =
     null
 
+  /** Create an item store from serialized component data and its runtime. */
   constructor(initialData: WeaverseNextComponentData, weaverse: Weaverse) {
     super(initialData as ElementData, weaverse)
     let schemaData = generateDataFromSchema(this.Element?.schema)

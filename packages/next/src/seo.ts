@@ -13,7 +13,10 @@ type NextTwitter = NonNullable<Metadata['twitter']>
  */
 export interface WeaverseNextSeoMetadata {
   /** Canonical URL settings for Next's metadata API. */
-  alternates?: { canonical?: string }
+  alternates?: {
+    /** Preferred URL for search indexing. */
+    canonical?: string
+  }
   /** Page meta description. */
   description?: string
   /** Page meta keywords. */
@@ -22,7 +25,9 @@ export interface WeaverseNextSeoMetadata {
   openGraph?: NextOpenGraph
   /** Search crawler indexing and link-following directives. */
   robots: {
+    /** Whether crawlers may follow links on the page. */
     follow: boolean
+    /** Whether crawlers may index the page. */
     index: boolean
   }
   /** Page title. */

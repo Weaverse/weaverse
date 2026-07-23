@@ -15,7 +15,10 @@ export {
   getWeaverseNextSeoMetadata,
   type WeaverseNextSeoMetadata,
 } from './seo'
-export { getWeaverseNextConfigs } from './server/configs'
+export {
+  getWeaverseNextConfigs,
+  type ResolveConfigsOptions,
+} from './server/configs'
 export {
   normalizeNextPageUrl,
   resolveRequestUrl,

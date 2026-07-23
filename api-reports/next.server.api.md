@@ -37,6 +37,14 @@ export function getWeaverseNextSeoMetadata(data: WeaverseNextLoaderData | Weaver
 export function normalizeNextPageUrl(url: string): string;
 
 // @public
+export interface ResolveConfigsOptions {
+    env?: Record<string, string | undefined>;
+    weaverseApiBase?: string;
+    weaverseHost?: string;
+    weaverseVersion?: string;
+}
+
+// @public
 export function resolveRequestUrl(context?: WeaverseNextRequestContext): string;
 
 // @public

@@ -186,6 +186,7 @@ export class WeaverseNextRuntime extends Weaverse {
    */
   pendingItemUpdates: WeaverseNextItem[] = []
 
+  /** Create a browser runtime from a loaded page and its request context. */
   constructor(config: WeaverseNextRuntimeConfig) {
     let { client, data } = config
     let page = getRenderablePage(data)
