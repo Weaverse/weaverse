@@ -20,11 +20,14 @@ import type {
 import type {
   // Enhanced type exports from schema package
   BasicInput,
+  ComponentAvailabilityContext,
+  ComponentGroup,
   HeadingInput,
   InputType,
   InspectorGroup,
   PageSEOData,
   PageType,
+  Resolvable,
   ComponentPresets as SchemaComponentPresets,
   SchemaType,
   SchemaValidationIssue,
@@ -45,11 +48,14 @@ export type { CachingStrategy } from '@shopify/hydrogen'
 export type {
   // Enhanced type exports
   BasicInput,
+  ComponentAvailabilityContext,
+  ComponentGroup,
   HeadingInput,
   InputType,
   InspectorGroup,
   PageType,
   PositionInputValue,
+  Resolvable,
   SchemaValidationIssue,
   SchemaValidationResult,
   WeaverseImage,
@@ -595,17 +601,7 @@ export type CreateHydrogenSchemaOptions = {
     pages?: PageType[]
     groups?: ('*' | 'header' | 'footer' | 'body')[]
   }
-  enabled?:
-    | boolean
-    | ((context: {
-        page: {
-          id: string
-          type: PageType
-          handle: string
-          locale: string
-        }
-        group: 'body' | 'header' | 'footer'
-      }) => boolean)
+  enabled?: Resolvable<boolean, ComponentAvailabilityContext>
   presets?: {
     children?: SchemaComponentPresets[]
     [key: string]: any
