@@ -492,13 +492,38 @@ The root script connector and page-level renderer are both required for full Stu
 
 Resource-picker edits should refresh only the affected item's server loader data. The happy path should not call `router.refresh()` because refreshing the whole RSC tree can remount the page and reset scroll.
 
-Mount the route handler in the consuming app:
+Mount the route handler in the consuming app. `getClient` receives a second
+argument — the validated, same-origin route context reconstructed from the
+request body — so the revalidated loader runs with the same pathname, locale,
+page type, handle, and ordinary search params as the active storefront route.
+The two server-client helpers below are app-level consumer helpers, not exports
+from `@weaverse/next`:
 
 ```ts
 // app/api/weaverse/revalidate/route.ts
 import { createWeaverseNextRevalidateHandler } from '@weaverse/next/server'
-import { getWeaverseServerClient } from '../../../weaverse-next/server'
+import {
+  createWeaverseServerClientFromContext,
+  getWeaverseServerClient,
+} from '../../../weaverse-next/server'
 
+export const { POST } = createWeaverseNextRevalidateHandler({
+  // `requestContext` is validated browser input for route identity only.
+  // Project ID, Studio host, API base/key, and env must still come from
+  // server config — never from this context — and it is `undefined` for
+  // legacy request bodies that carry no route context.
+  getClient: (_request, requestContext) =>
+    requestContext
+      ? createWeaverseServerClientFromContext(requestContext)
+      : getWeaverseServerClient(Promise.resolve({})),
+})
+```
+
+The existing one-argument callback still works. A handler mounted with a
+`(request) => client` callback ignores the optional second argument and keeps
+compiling and running, so old wiring needs no change:
+
+```ts
 export const { POST } = createWeaverseNextRevalidateHandler({
   getClient: () => getWeaverseServerClient(Promise.resolve({})),
 })
@@ -508,15 +533,46 @@ Flow:
 
 ```text
 Studio resource picker edit
-  -> Builder calls runtime.internal.revalidateItem(draftItem)
-  -> SDK POSTs { draftItem } to /api/weaverse/revalidate
+  -> Builder calls runtime.internal.revalidateItem(draftItem)   (unchanged)
+  -> SDK snapshots runtime.requestInfo, strips server-owned/transient controls
+  -> SDK POSTs { draftItem, routeContext? } to /api/weaverse/revalidate
+  -> handler validates + sanitizes routeContext at the trust boundary
+  -> handler reconstructs a same-origin WeaverseNextRequestContext
+  -> getClient(request, requestContext) builds the route-aware server client
   -> route handler finds the registered component by draftItem.type
-  -> handler runs that component's loader with draft item data
-  -> response returns { loaderData }
+  -> handler runs that component's loader with draft data + client.requestContext
+  -> response returns { loaderData } with Cache-Control: no-store
   -> SDK applies loaderData to the live item instance in place
 ```
 
-If the route is missing or returns an error, Builder falls back to the older route-refresh path.
+If the route is missing or returns an error, Builder falls back to the older
+route-refresh path.
+
+### Trust boundary
+
+The revalidation endpoint is public and every JSON field is attacker-controlled.
+The SDK sanitizes `routeContext` on the client for clean traffic, but the route
+handler is the security boundary and re-validates independently:
+
+- Only `pathname`, sanitized `search`, a narrow i18n subset, a
+  `PageTypeSchema`-valid `pageType`, and a bounded `handle` cross the boundary.
+  Headers, cookies, auth, env, project ID, Studio host, API base/key, commerce
+  clients, the runtime, and the client are never serialized.
+- Server-owned controls (`weaverseProjectId`, `weaverseHost`, `weaverseApiKey`,
+  `weaverseApiBase`, `weaversePublicApiBase`, `weaverseVersion`, `projectId`) and
+  transient transport controls (`weaverseDraftItem`, `__weaverseDraftItem`,
+  `_rsc`) are stripped case-insensitively on both sides, so a crafted body cannot
+  influence server config resolution.
+- The origin is fixed from the endpoint request before assigning any
+  browser-provided pathname/search, so input cannot change protocol, host, port,
+  or credentials. `pathname` and `url.pathname` share one URL-canonicalized value.
+- A malformed present `routeContext` returns `400 { error: 'invalid-route-context' }`
+  before `getClient` runs; a missing `routeContext` is valid legacy input and
+  passes `undefined` to the callback.
+- Route context is routing input, never an authorization decision. A registered
+  loader must not treat pathname, handle, page type, locale, or search as proof
+  of access; customer/private data still requires independent server-side session
+  and authorization checks derived from the actual request.
 
 ## Config resolution
 

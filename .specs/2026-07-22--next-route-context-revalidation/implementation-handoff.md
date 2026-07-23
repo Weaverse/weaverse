@@ -11,6 +11,19 @@ the expected failure, then make the minimum implementation pass.
 2. Consumer verification: `Weaverse/weaverse-hydrogen-next-poc`
 3. Builder: read-only verification only; no contract change is expected
 
+## Current execution
+
+- SDK branch: `fix/next-route-context-revalidation`
+- SDK base: `94bbeec729ef277a11d5a39edbaed2c51f2dd42c`
+- POC branch: `fix/next-route-context-revalidation`
+- Claude Code implemented the SDK and POC slices and left both worktrees uncommitted.
+- Hermes completed source review, focused RED/GREEN corrections, SDK/package gates,
+  packed-tarball POC gates, and local route/API smoke; independent review and
+  PR publication are the remaining execution steps.
+- The POC stays source-compatible with its pinned `@weaverse/next@0.1.0-alpha.13`
+  but uses the legacy callback path until the next SDK prerelease is published
+  and pinned; its PR must remain draft/blocked on that dependency.
+
 ## Required behavior
 
 - `internal.revalidateItem(draftItem)` remains unchanged for Builder.
