@@ -8,10 +8,10 @@ import type { CSSProperties } from 'react';
 import type { ForwardRefExoticComponent } from 'react';
 import { RefObject } from 'react';
 
-// @public (undocumented)
+// @public
 export type AdditionalInputConfigs = SelectInputConfigs | ToggleGroupConfigs | RangeInputConfigs;
 
-// @public (undocumented)
+// @public
 export type AdvancedGroupType = 'border' | 'alignment' | 'background' | 'dimensions' | 'spacing' | 'typography' | 'visibility' | 'shadows-and-effects' | 'layout-background';
 
 // @public
@@ -28,62 +28,58 @@ export type BasicInput<ConfigsType = AdditionalInputConfigs> = {
     helpText?: string;
 };
 
-// @public (undocumented)
+// @public
 export type BreakPoints = {
     mobile: string;
     desktop: string;
 };
 
-// @public (undocumented)
+// @public
 export type ChildElementCSS = Partial<{
     [selector: string]: WeaverseCSSProperties & ChildElementCSS;
 }>;
 
-// @public (undocumented)
+// @public
 export type ElementCSS = {
     '@desktop'?: WeaverseCSSProperties | ChildElementCSS;
     '@mobile'?: WeaverseCSSProperties | ChildElementCSS;
 };
 
-// @public (undocumented)
+// @public
 export type ElementData = {
     id: string;
     type: string;
     [key: string]: any;
 };
 
-// @public (undocumented)
+// @public
 export type ElementSchema = {
     title: string;
     type: string;
 };
 
-// @public (undocumented)
+// @public
 export class EventEmitter {
     constructor();
-    // (undocumented)
     emit: (data: any) => void;
-    // (undocumented)
     listeners: Set<AnyFunction>;
-    // (undocumented)
     subscribe: (fn: AnyFunction) => () => void;
-    // (undocumented)
     unsubscribe: (fn: AnyFunction) => void;
 }
 
-// @public (undocumented)
+// @public
 export type InputType = 'blog' | 'collection' | 'collection-list' | 'color' | 'datepicker' | 'image' | 'video' | 'map-autocomplete' | 'position' | 'product' | 'product-list' | 'range' | 'richtext' | 'select' | 'switch' | 'text' | 'textarea' | 'toggle-group' | 'metaobject' | 'url';
 
-// @public (undocumented)
+// @public
 export let isBrowser: boolean;
 
-// @public (undocumented)
+// @public
 export let isIframe: boolean;
 
-// @public (undocumented)
+// @public
 export let isReactNative: boolean;
 
-// @public (undocumented)
+// @public
 export function loadScript(src: string): Promise<unknown>;
 
 // @public
@@ -91,10 +87,10 @@ export function merge(target: Record<string, any>, source: Record<string, any>):
     [x: string]: any;
 };
 
-// @public (undocumented)
+// @public
 export type PositionInputValue = 'top left' | 'top center' | 'top right' | 'center left' | 'center center' | 'center right' | 'bottom left' | 'bottom center' | 'bottom right';
 
-// @public (undocumented)
+// @public
 export type RangeInputConfigs = {
     min?: number;
     max?: number;
@@ -102,13 +98,13 @@ export type RangeInputConfigs = {
     unit?: string;
 };
 
-// @public (undocumented)
+// @public
 export function registerElement(element: {
     type: string;
     [x: string]: any;
 }): void;
 
-// @public (undocumented)
+// @public
 export type SelectInputConfigs = {
     options?: {
         value: string;
@@ -116,7 +112,7 @@ export type SelectInputConfigs = {
     }[];
 };
 
-// @public (undocumented)
+// @public
 export type ToggleGroupConfigs = {
     options?: {
         value: string;
@@ -125,58 +121,38 @@ export type ToggleGroupConfigs = {
     }[];
 };
 
-// @public (undocumented)
+// @public
 export type ToolbarAction = 'general-settings' | 'settings-level-2' | 'duplicate' | 'delete' | 'global-sections';
 
-// @public (undocumented)
+// @public
 export class Weaverse extends EventEmitter {
     constructor(params: WeaverseCoreParams);
-    // (undocumented)
     contentRootElement: HTMLElement | null;
-    // (undocumented)
     createItemInstance: (data: ElementData) => WeaverseItemStore;
-    // (undocumented)
     data: WeaverseProjectDataType;
-    // (undocumented)
     dataContext: Record<string, unknown> | null;
-    // (undocumented)
     static elementRegistry: Map<any, any>;
-    // (undocumented)
     get elementRegistry(): Map<any, any>;
-    // (undocumented)
     getSnapShot: () => WeaverseProjectDataType;
     initProject: () => void;
-    // (undocumented)
     isDesignMode: boolean;
-    // (undocumented)
     isPreviewMode: boolean;
-    // (undocumented)
     static ItemConstructor: typeof WeaverseItemStore;
-    // (undocumented)
     static itemInstances: Map<any, any>;
-    // (undocumented)
     get itemInstances(): Map<any, any>;
-    // (undocumented)
     static mediaBreakPoints: BreakPoints;
-    // (undocumented)
     projectId: string;
-    // (undocumented)
     refreshAllItems(): void;
     static registerElement: typeof registerElement;
-    // (undocumented)
     sdkVersion: string;
     setProjectData: (data: WeaverseProjectDataType) => void;
-    // (undocumented)
     studioBridge?: any;
-    // (undocumented)
     triggerUpdate: () => void;
-    // (undocumented)
     weaverseHost: string;
-    // (undocumented)
     weaverseVersion: string;
 }
 
-// @public (undocumented)
+// @public
 export type WeaverseCoreParams = {
     mediaBreakPoints?: BreakPoints;
     weaverseHost?: string;
@@ -186,10 +162,10 @@ export type WeaverseCoreParams = {
     isDesignMode?: boolean;
 };
 
-// @public (undocumented)
+// @public
 export type WeaverseCSSProperties = CSSProperties;
 
-// @public (undocumented)
+// @public
 export type WeaverseElement = {
     Component: ForwardRefExoticComponent<any>;
     type: string;
@@ -197,7 +173,7 @@ export type WeaverseElement = {
     'data-wv-type': string;
 };
 
-// @public (undocumented)
+// @public
 export type WeaverseImage = {
     id: string;
     url: string;
@@ -207,48 +183,37 @@ export type WeaverseImage = {
     previewSrc: string;
 };
 
-// @public (undocumented)
+// @public
 export class WeaverseItemStore extends EventEmitter {
     constructor(initialData: ElementData, weaverse: Weaverse);
-    // (undocumented)
     get data(): ElementData;
     set data(update: Omit<ElementData, 'id' | 'type'>);
-    // (undocumented)
     get Element(): any;
-    // (undocumented)
     get _element(): HTMLElement | null;
-    // (undocumented)
     getDefaultCss: () => ElementCSS;
-    // (undocumented)
     getSnapShot: () => ElementData;
-    // (undocumented)
     get _id(): string;
-    // (undocumented)
     ref: RefObject<HTMLElement | null>;
-    // (undocumented)
     setData: (update: Omit<ElementData, "id" | "type">) => ElementData;
-    // (undocumented)
     _store: ElementData;
-    // (undocumented)
     triggerUpdate: () => void;
-    // (undocumented)
     weaverse: Weaverse;
 }
 
-// @public (undocumented)
+// @public
 export type WeaverseProjectDataType = {
     id?: string;
     items: ElementData[];
     rootId: string;
 };
 
-// @public (undocumented)
+// @public
 export type WeaverseResourcePickerData = {
     id: number;
     handle: string;
 };
 
-// @public (undocumented)
+// @public
 export type WeaverseVideo = {
     id: string;
     url: string;

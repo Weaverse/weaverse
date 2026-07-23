@@ -1,12 +1,16 @@
+/** Whether the current runtime is React Native. */
 export let isReactNative =
   typeof navigator === 'object' && navigator.product === 'ReactNative'
+
+/** Whether the current runtime provides a browser window. */
 export let isBrowser = typeof window !== 'undefined' && !isReactNative
+
+/** Whether the current browser window is embedded in an iframe. */
 export let isIframe = isBrowser && window.top !== window.self
 
 /**
- * Deep merge two objects.
- * @param target
- * @param source
+ * Recursively merges object properties from `source` into a copy of `target`.
+ * Arrays and non-object values from `source` replace the target value.
  */
 export function merge(
   target: Record<string, any>,
@@ -30,6 +34,11 @@ export function merge(
 // caller arriving before the script *executes* would resolve early and read
 // globals (e.g. `window.weaverseStudio`) that aren't set yet. See issue #451.
 let scriptLoadPromises = new Map<string, Promise<unknown>>()
+
+/**
+ * Loads a script once and reuses the same promise for concurrent callers.
+ * Failed loads are removed so a later call can retry.
+ */
 export function loadScript(src: string) {
   let pending = scriptLoadPromises.get(src)
   if (pending) {
