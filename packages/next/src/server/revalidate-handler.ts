@@ -80,9 +80,27 @@ function isValidPathname(pathname: string): boolean {
 }
 
 /**
+ * Whether a value is a plain object (literal or `null`-prototype), the only
+ * i18n container the wire shape allows. Arrays, class instances, and other
+ * exotic objects are rejected so nothing exotic reaches field validation.
+ */
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+    return false
+  }
+  let proto = Object.getPrototypeOf(value)
+  return proto === Object.prototype || proto === null
+}
+
+/**
  * Validate and pick the allowed i18n fields. Returns `undefined` for a valid
- * empty result and `null` for malformed input (arrays, nested values, non-string
- * or oversized fields) so the handler can fail closed.
+ * empty result and `null` for malformed input so the handler can fail closed.
+ *
+ * The normative i18n shape carries only the {@link ROUTE_CONTEXT_I18N_KEYS}.
+ * Malformed input is rejected rather than silently narrowed: any unknown own
+ * key (nested object, extra string, anything), a non-plain container (array,
+ * class instance), or a known key whose value is not an optional string of at
+ * most {@link MAX_I18N_FIELD_LENGTH} characters fails closed.
  */
 function sanitizeRouteContextI18n(
   input: unknown
@@ -90,10 +108,18 @@ function sanitizeRouteContextI18n(
   if (input === undefined) {
     return
   }
-  if (typeof input !== 'object' || input === null || Array.isArray(input)) {
+  if (!isPlainObject(input)) {
     return null
   }
-  let source = input as Record<string, unknown>
+  let source = input
+  let allowed = new Set<string>(ROUTE_CONTEXT_I18N_KEYS)
+  // Reject unknown own keys instead of dropping them, so a crafted context
+  // cannot smuggle extra properties past the trust boundary.
+  for (let key of Object.keys(source)) {
+    if (!allowed.has(key)) {
+      return null
+    }
+  }
   let result: Record<string, string> = {}
   for (let key of ROUTE_CONTEXT_I18N_KEYS) {
     let value = source[key]

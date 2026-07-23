@@ -554,6 +554,28 @@ describe('createWeaverseNextRevalidateHandler route context', () => {
     expect(received).toHaveLength(0)
   })
 
+  it('should_reject_i18n_with_unknown_own_keys_before_client_creation', async () => {
+    // Arrange — the normative i18n shape is only country/label/language/
+    // locale/pathPrefix. Unknown own keys must fail closed, not be dropped.
+    let { POST, received } = makeCapturingHandler()
+    let malformed = [
+      // Unknown nested property.
+      { pathname: '/x', search: '', i18n: { unknownNested: { evil: true } } },
+      // Unknown string property alongside a valid one.
+      { pathname: '/x', search: '', i18n: { country: 'FR', evil: 'x' } },
+    ]
+
+    // Act + Assert
+    for (let routeContext of malformed) {
+      let response = await POST(makeRequest(routeBody(routeContext)))
+      expect(response.status).toBe(STATUS_BAD_REQUEST)
+      expect(await response.json()).toEqual(INVALID_ROUTE_CONTEXT)
+      expect(response.headers.get('Cache-Control')).toBe('no-store')
+    }
+    // The malformed context is rejected before any client is created.
+    expect(received).toHaveLength(0)
+  })
+
   it('should_treat_spoofed_route_context_as_routing_input_only', async () => {
     // Arrange — a valid-looking context cannot make an unknown type executable.
     let { POST } = makeCapturingHandler()
