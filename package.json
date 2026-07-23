@@ -18,6 +18,9 @@
     "test:run": "vp test --run --bail=1",
     "build": "turbo run build --filter=./packages/*",
     "build:graph": "turbo run build --graph=repo-graph.svg",
+    "api:report": "pnpm run build && node scripts/api-reports.mjs --update",
+    "api:check": "pnpm run build && node scripts/api-reports.mjs",
+    "package:check": "pnpm run build && node scripts/api-reports.mjs && node scripts/check-packed-packages.mjs",
     "postinstall": "lefthook install",
     "typecheck": "turbo run typecheck --filter=./packages/*",
     "biome": "biome check --diagnostic-level=error",
@@ -29,6 +32,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.0",
+    "@microsoft/api-extractor": "7.58.12",
     "@types/node": "25.5.2",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
@@ -51,7 +55,7 @@
     "turbo-darwin-arm64": "^2.8.17"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22.13"
   },
   "packageManager": "pnpm@11.1.2"
 }
