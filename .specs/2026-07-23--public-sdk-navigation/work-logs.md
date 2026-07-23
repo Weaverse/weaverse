@@ -47,3 +47,8 @@
 - Preserved all public signatures and deprecated APIs while adding direct migration guidance.
 - Regenerated all API reports with zero `(undocumented)` markers.
 - Promoted `ae-undocumented` to a CI error for every public TypeScript package.
+- Exported every named type reachable through a public signature and made forgotten exports/unresolved links fail CI.
+- Added package documentation for all nine TypeScript entrypoints.
+- Added tested declaration-rollup traversal for public properties, inline function shapes, generic wrappers, accessors, and exported variables.
+- Scoped generated Zod implementation exemptions by actual `zod` import provenance, with lookalike regression fixtures.
+- Revalidated all builds, typechecks, 481 tests, API reports, and eight packed packages across nine TypeScript entrypoints.

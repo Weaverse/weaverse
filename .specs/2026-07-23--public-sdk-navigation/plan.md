@@ -52,7 +52,7 @@
 
 1. Add CI checks for undocumented public declarations and broken map targets. (Completed.)
 2. Review API reports for every active TypeScript package. (Completed.)
-3. Build, typecheck, test, and inspect packed tarballs.
+3. Build, typecheck, test, and inspect packed tarballs. (Completed.)
 4. Release packages in dependency order.
 
 ## Files and folders in scope
