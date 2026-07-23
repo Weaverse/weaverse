@@ -189,11 +189,17 @@ export type Resolvable<T, Context> = T | ((context: Context) => T)
 export type ComponentGroup = 'body' | 'header' | 'footer'
 
 export interface ComponentAvailabilityContext {
+  /** Placement group currently being evaluated. */
   group: ComponentGroup
+  /** Active storefront page information. */
   page: {
+    /** Weaverse page identifier. */
     id: string
+    /** Weaverse page type. */
     type: PageType
+    /** Route handle, without a leading slash. */
     handle: string
+    /** Active storefront locale. */
     locale: string
   }
 }
@@ -303,7 +309,18 @@ export const typeSchema = z
   )
 
 // Type exports - inferred from Zod schemas
-export type SchemaType = z.infer<typeof ElementSchema>
+
+type InferredSchemaType = z.infer<typeof ElementSchema>
+
+export type SchemaType = Omit<InferredSchemaType, 'enabledOn'> & {
+  /**
+   * @deprecated Use `enabled` for both static and context-aware availability
+   * rules. Existing schemas remain supported, and both rules must pass when
+   * both properties are present.
+   */
+  enabledOn?: InferredSchemaType['enabledOn']
+}
+
 export type InputType = z.infer<typeof inputTypeSchema>
 export type BasicInput = z.infer<typeof BasicInputSchema>
 export type HeadingInput = z.infer<typeof HeadingInputSchema>

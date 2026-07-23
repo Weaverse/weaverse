@@ -588,15 +588,14 @@ export function isValidHydrogenSchema(
   return isValidSchema(schema)
 }
 
-/**
- * Type-safe helper to create component schemas with validation
- */
+/** Type-safe component schema authoring options. */
 export type CreateHydrogenSchemaOptions = {
   title: string
   type: string
   limit?: number
   settings?: InspectorGroup[]
   childTypes?: string[]
+  /** @deprecated Use `enabled` instead. */
   enabledOn?: {
     pages?: PageType[]
     groups?: ('*' | 'header' | 'footer' | 'body')[]

@@ -1,12 +1,8 @@
 import type {
   BasicInput,
-  ComponentAvailabilityContext,
-  ComponentPresets,
   HeadingInput,
   InspectorGroup,
-  PageType,
   RangeInputConfigs,
-  Resolvable,
   SchemaType,
   SchemaValidationIssue,
 } from './validation'
@@ -22,30 +18,10 @@ export type {
   TwitterCardType,
 } from './page-seo'
 
-/**
- * Type-safe schema type with enforced required fields.
- * Use this when you need strict TypeScript checking for required fields.
- *
- * Note: The inferred SchemaType may show 'title' and 'type' as optional
- * in TypeScript when strict mode is disabled, but they are required at runtime.
- * This type explicitly enforces them as required.
- */
-export type SchemaTypeStrict = {
+/** Schema type with required title and type fields in non-strict projects. */
+export type SchemaTypeStrict = SchemaType & {
   title: string
   type: string
-  limit?: number
-  inspector?: InspectorGroup[]
-  settings?: InspectorGroup[]
-  childTypes?: string[]
-  enabledOn?: {
-    pages?: PageType[]
-    groups?: ('*' | 'header' | 'footer' | 'body')[]
-  }
-  enabled?: Resolvable<boolean, ComponentAvailabilityContext>
-  presets?: {
-    children?: ComponentPresets[]
-    [key: string]: any
-  }
 }
 
 function reportSchemaIssues(issues: readonly SchemaValidationIssue[]): void {
@@ -93,23 +69,7 @@ export function createSchema(schema: SchemaType): SchemaType {
  * when the consumer's TypeScript `strict` mode is disabled. Validation is
  * dev-only, exactly as in {@link createSchema}.
  */
-export function createSchemaTypeSafe(schema: {
-  title: string
-  type: string
-  limit?: number
-  inspector?: InspectorGroup[]
-  settings?: InspectorGroup[]
-  childTypes?: string[]
-  enabledOn?: {
-    pages?: PageType[]
-    groups?: ('*' | 'header' | 'footer' | 'body')[]
-  }
-  enabled?: Resolvable<boolean, ComponentAvailabilityContext>
-  presets?: {
-    children?: ComponentPresets[]
-    [key: string]: any
-  }
-}): SchemaType {
+export function createSchemaTypeSafe(schema: SchemaTypeStrict): SchemaType {
   if (process.env.NODE_ENV !== 'production') {
     void import('./validation')
       .then(({ validateSchema }) => {
@@ -174,6 +134,7 @@ export class SchemaBuilder {
     return this
   }
 
+  /** @deprecated Use {@link enabled} instead. */
   enabledOn(enabledOn: SchemaType['enabledOn']): SchemaBuilder {
     this.schema.enabledOn = enabledOn
     return this

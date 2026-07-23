@@ -58,7 +58,7 @@ let schema = schemaBuilder()
     ]),
   ]))
   .childTypes(['hero-slide'])
-  .enabledOn({ pages: ['PRODUCT'], groups: ['body'] })
+  .enabled(({ page, group }) => page.type === 'PRODUCT' && group === 'body')
   .build()
 
 // Quick input helpers
@@ -110,6 +110,7 @@ devTools.generateTypeInterface(schema) // TypeScript interface string
 ## Anti-Patterns
 
 - **Don't** use `inspector` → use `settings`
+- **Don't** use `enabledOn` → use `enabled` with page/group checks
 - **Don't** import from `zod` → use `zod/v4` for v4 features
 - **Don't** mutate schema objects after creation
 - **Don't** skip validation in production — use `validateSchema()` or `isValidSchema()`

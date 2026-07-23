@@ -62,6 +62,7 @@ export type ElementSchema = {
   inspector?: InspectorGroup[] // @deprecated Use settings instead
   settings?: InspectorGroup[]
   childTypes?: string[]
+  /** @deprecated Use enabled instead. */
   enabledOn?: {
     pages?: ('*' | PageType)[]
     groups?: ('*' | 'header' | 'footer' | 'body')[]
@@ -155,19 +156,35 @@ import { createSchema } from '@weaverse/schema'
 const schema = createSchema({
   title: 'Freebies',
   type: 'freebies',
-  enabledOn: {
-    pages: ['CUSTOM'],
-  },
   enabled: ({ page, group }) =>
-    page.handle === 'freebies/essential' && group === 'body',
+    page.type === 'CUSTOM' &&
+    page.handle === 'freebies/essential' &&
+    group === 'body',
 })
 ```
 
 `enabled` accepts a boolean or a synchronous callback. The callback receives
 `page` (`id`, `type`, `handle`, and `locale`) and `group` (`body`, `header`, or
-`footer`). When both `enabledOn` and `enabled` are set, both rules must pass.
-The SDK preserves callbacks without executing them; the Weaverse preview bridge
+`footer`). The SDK preserves callbacks without executing them; the Weaverse preview bridge
 evaluates them against its current page context.
+
+`enabledOn` is deprecated. Move its page and group checks into `enabled`:
+
+```typescript
+// Before
+const legacy = createSchema({
+  title: 'Product recommendations',
+  type: 'product-recommendations',
+  enabledOn: { pages: ['PRODUCT'], groups: ['body'] },
+})
+
+// After
+const current = createSchema({
+  title: 'Product recommendations',
+  type: 'product-recommendations',
+  enabled: ({ page, group }) => page.type === 'PRODUCT' && group === 'body',
+})
+```
 
 ### Schema Builder Pattern
 
@@ -196,11 +213,9 @@ const schema = schemaBuilder()
       inputHelpers.switch('showPrice', 'Show Price', true)
     ])
   )
-  .enabledOn({
-    pages: ['PRODUCT', 'COLLECTION'],
-    groups: ['body']
-  })
-  .enabled(({ group }) => group === 'body')
+  .enabled(({ page, group }) =>
+    ['PRODUCT', 'COLLECTION'].includes(page.type) && group === 'body'
+  )
   .build()
 ```
 
@@ -360,13 +375,13 @@ All types are inferred from Zod schemas, ensuring:
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Build the package
-npm run build
+pnpm run build
 
 # Type check
-npm run typecheck
+pnpm run typecheck
 ```
 
 ## Type Safety and Required Fields
@@ -377,19 +392,15 @@ The `title` and `type` fields are **required** at runtime (enforced by Zod valid
 
 #### Runtime Validation
 
-The schema always enforces required fields at runtime:
+`createSchema()` returns the original schema and reports validation issues in development. Use `parseSchema()` when invalid input must throw:
 
 ```typescript
-// ✅ This works
-const validSchema = createSchema({
+const schema = createSchema({
   title: 'My Component',
   type: 'my-component',
 })
 
-// ❌ This throws a ZodError at runtime
-const invalidSchema = createSchema({
-  // Missing required fields
-})
+const validatedSchema = parseSchema(unknownSchema) // Throws on invalid input
 ```
 
 #### TypeScript Type Safety
@@ -450,7 +461,7 @@ const schema = createSchema({
 
 ### Functions
 
-- `createSchema(schema: SchemaType)` - Validates and returns a schema
+- `createSchema(schema: SchemaType)` - Returns a schema and schedules development-only validation
 - `createSchemaTypeSafe(schema: SchemaTypeStrict)` - Type-safe schema creation with enforced required fields
 
 ### Schemas
@@ -467,6 +478,7 @@ The schema package is now the source of truth for all component schema types. Th
 ### Deprecated Fields
 
 - `inspector` is deprecated in favor of `settings` (both have the same structure)
+- `enabledOn` is deprecated in favor of `enabled`; move page and group checks into the callback
 
 ## Type System Architecture
 
