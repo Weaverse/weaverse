@@ -1,0 +1,410 @@
+import { spawnSync } from 'node:child_process'
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs'
+import { tmpdir } from 'node:os'
+import { dirname, join } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+import ts from 'typescript'
+import {
+  collectPublishedFiles,
+  getEsmExportNames,
+  getPublishedPackages,
+} from './public-packages.mjs'
+
+let ROOT_DIR = join(dirname(fileURLToPath(import.meta.url)), '..')
+let RUNTIME_REPORT = join(ROOT_DIR, 'api-reports', 'runtime-exports.api.md')
+let PNPM = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm'
+const RUNTIME_JSON_BLOCK = /```json\n([\s\S]*?)\n```/
+// Next's browser entry imports next/navigation, which is resolved by its bundler.
+const NODE_ESM_EXCLUSIONS = new Set(['@weaverse/next'])
+let publishedPackages = getPublishedPackages(ROOT_DIR)
+let typeEntrypoints = publishedPackages.flatMap((publishedPackage) =>
+  publishedPackage.entrypoints
+    .filter((entrypoint) => entrypoint.types)
+    .map((entrypoint) => ({ publishedPackage, entrypoint }))
+)
+let scratchDir = mkdtempSync(join(tmpdir(), 'weaverse-packed-packages-'))
+let consumerDir = join(scratchDir, 'consumer')
+
+function run(command, args, options = {}) {
+  let result = spawnSync(command, args, {
+    cwd: ROOT_DIR,
+    encoding: 'utf8',
+    ...options,
+  })
+
+  if (result.status !== 0) {
+    let output = `${result.stdout ?? ''}${result.stderr ?? ''}`.trim()
+    throw new Error(`${command} ${args.join(' ')} failed\n${output}`)
+  }
+
+  return result.stdout.trim()
+}
+
+function normalizeEntry(entryFile) {
+  return entryFile.startsWith('./') ? entryFile.slice(2) : entryFile
+}
+
+function hasDeprecatedEnabledOnProperty(declarationFile) {
+  let sourceFile = ts.createSourceFile(
+    declarationFile,
+    readFileSync(declarationFile, 'utf8'),
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TS
+  )
+  let found = false
+
+  function visit(node) {
+    if (
+      ts.isPropertySignature(node) &&
+      node.name?.getText(sourceFile) === 'enabledOn' &&
+      ts
+        .getJSDocTags(node)
+        .some((tag) => tag.kind === ts.SyntaxKind.JSDocDeprecatedTag)
+    ) {
+      found = true
+    }
+    ts.forEachChild(node, visit)
+  }
+
+  visit(sourceFile)
+  return found
+}
+
+try {
+  mkdirSync(consumerDir, { recursive: true })
+
+  let packedDependencies = {}
+  for (let publishedPackage of publishedPackages) {
+    let { folderName, folder, packageJson } = publishedPackage
+    let tarball = join(scratchDir, `${folderName}.tgz`)
+
+    run(PNPM, ['pack', '--out', tarball], { cwd: folder })
+    packedDependencies[packageJson.name] = `file:${tarball}`
+  }
+
+  let rootPackageJson = JSON.parse(
+    readFileSync(join(ROOT_DIR, 'package.json'), 'utf8')
+  )
+  packedDependencies['@types/react'] =
+    rootPackageJson.devDependencies['@types/react']
+  packedDependencies['@types/react-dom'] =
+    rootPackageJson.devDependencies['@types/react-dom']
+
+  writeFileSync(
+    join(consumerDir, 'package.json'),
+    `${JSON.stringify(
+      {
+        private: true,
+        type: 'module',
+        packageManager: 'pnpm@11.1.2',
+        dependencies: packedDependencies,
+      },
+      null,
+      2
+    )}\n`
+  )
+  run(
+    PNPM,
+    [
+      'install',
+      '--prefer-offline',
+      '--ignore-scripts',
+      '--strict-peer-dependencies=false',
+    ],
+    { cwd: consumerDir }
+  )
+
+  for (let publishedPackage of publishedPackages) {
+    let { packageJson } = publishedPackage
+    let packedFolder = join(
+      consumerDir,
+      'node_modules',
+      ...packageJson.name.split('/')
+    )
+    let packedPackageJson = JSON.parse(
+      readFileSync(join(packedFolder, 'package.json'), 'utf8')
+    )
+    let entryFiles = collectPublishedFiles(packedPackageJson.exports)
+
+    for (let field of ['main', 'module', 'types', 'typings']) {
+      if (packedPackageJson[field]) {
+        entryFiles.add(packedPackageJson[field])
+      }
+    }
+    collectPublishedFiles(packedPackageJson.bin, entryFiles)
+
+    for (let entryFile of entryFiles) {
+      if (!existsSync(join(packedFolder, normalizeEntry(entryFile)))) {
+        throw new Error(
+          `${packageJson.name} is missing packed entry ${entryFile}`
+        )
+      }
+    }
+  }
+
+  for (let packageName of ['@weaverse/hydrogen', '@weaverse/schema']) {
+    let publishedPackage = publishedPackages.find(
+      (candidate) => candidate.packageJson.name === packageName
+    )
+    let declarationFiles = publishedPackage.entrypoints
+      .filter((entrypoint) => entrypoint.types)
+      .map((entrypoint) =>
+        join(
+          consumerDir,
+          'node_modules',
+          ...packageName.split('/'),
+          normalizeEntry(entrypoint.types)
+        )
+      )
+
+    if (!declarationFiles.some(hasDeprecatedEnabledOnProperty)) {
+      throw new Error(
+        `${packageName} lost enabledOn property deprecation metadata`
+      )
+    }
+  }
+
+  let runtimeJson = readFileSync(RUNTIME_REPORT, 'utf8').match(
+    RUNTIME_JSON_BLOCK
+  )?.[1]
+  if (!runtimeJson) {
+    throw new Error('Runtime export report does not contain a JSON block')
+  }
+  let runtimeExports = JSON.parse(runtimeJson)
+  let esmEntrypoints = typeEntrypoints.filter(
+    ({ entrypoint }) => entrypoint.import
+  )
+  let cjsEntrypoints = typeEntrypoints.filter(
+    ({ entrypoint }) => entrypoint.require
+  )
+
+  for (let { publishedPackage, entrypoint } of esmEntrypoints) {
+    let packedModule = join(
+      consumerDir,
+      'node_modules',
+      ...publishedPackage.packageJson.name.split('/'),
+      normalizeEntry(entrypoint.import)
+    )
+    let actual = getEsmExportNames(packedModule, (specifier) => {
+      let exports = runtimeExports[specifier]
+      if (!exports) {
+        throw new Error(`Cannot resolve runtime exports for ${specifier}`)
+      }
+      return exports
+    })
+    if (
+      JSON.stringify(actual) !==
+      JSON.stringify(runtimeExports[entrypoint.specifier])
+    ) {
+      throw new Error(`Runtime exports changed for ${entrypoint.specifier}`)
+    }
+  }
+
+  let runtimeCheck = `let expected = ${JSON.stringify(runtimeExports)}
+
+function verify(specifier, runtimeModule) {
+  let expectedNames = expected[specifier]
+  let actual = Object.keys(runtimeModule)
+    .filter(
+      (name) =>
+        !['default', 'module.exports'].includes(name) || expectedNames.includes(name)
+    )
+    .sort()
+  if (JSON.stringify(actual) !== JSON.stringify(expectedNames)) {
+    throw new Error(
+      \`Runtime exports changed for \${specifier}: expected \${expectedNames.join(', ')}, received \${actual.join(', ')}\`
+    )
+  }
+}
+`
+  let executableEsmEntrypoints = esmEntrypoints.filter(
+    ({ entrypoint }) => !NODE_ESM_EXCLUSIONS.has(entrypoint.specifier)
+  )
+  writeFileSync(
+    join(consumerDir, 'runtime.mjs'),
+    `${executableEsmEntrypoints
+      .map(({ publishedPackage, entrypoint }, index) => {
+        let modulePath = join(
+          consumerDir,
+          'node_modules',
+          ...publishedPackage.packageJson.name.split('/'),
+          normalizeEntry(entrypoint.import)
+        )
+        return `import * as runtime${index} from '${pathToFileURL(modulePath).href}'`
+      })
+      .join('\n')}\n\n${runtimeCheck}\n${executableEsmEntrypoints
+      .map(
+        ({ entrypoint }, index) =>
+          `verify('${entrypoint.specifier}', runtime${index})`
+      )
+      .join('\n')}\n`
+  )
+  writeFileSync(
+    join(consumerDir, 'runtime.cjs'),
+    `${runtimeCheck}\n${cjsEntrypoints
+      .map(
+        ({ entrypoint }) =>
+          `verify('${entrypoint.specifier}', require('${entrypoint.specifier}'))`
+      )
+      .join('\n')}\n`
+  )
+  run(process.execPath, ['runtime.mjs'], { cwd: consumerDir })
+  run(process.execPath, ['runtime.cjs'], { cwd: consumerDir })
+
+  writeFileSync(
+    join(consumerDir, 'index.ts'),
+    `${typeEntrypoints
+      .map(
+        ({ entrypoint }, index) =>
+          `import * as api${index} from '${entrypoint.specifier}'`
+      )
+      .join('\n')}
+import type {
+  ComponentAvailabilityContext as HydrogenAvailabilityContext,
+  Resolvable as HydrogenResolvable,
+} from '@weaverse/hydrogen'
+import type {
+  BasicInput,
+  ComponentAvailabilityContext,
+  HeadingInput,
+  Resolvable,
+  SchemaType,
+} from '@weaverse/schema'
+
+let modules = [${typeEntrypoints.map((_, index) => `api${index}`).join(', ')}]
+let heading: HeadingInput = {
+  type: 'heading',
+  label: 'Compatibility heading',
+  customProperty: true,
+}
+let input: BasicInput = {
+  type: 'text',
+  name: 'title',
+  condition: 'data.showTitle',
+  defaultValue: Symbol('legacy value'),
+}
+let componentSchema: SchemaType = {
+  type: 'compatibility-section',
+  title: 'Compatibility section',
+  enabledOn: { pages: ['PRODUCT'], groups: ['body'] },
+  settings: [{ group: 'Content', inputs: [heading, input] }],
+}
+let enabled: Resolvable<boolean, ComponentAvailabilityContext> = ({ page }) =>
+  page.type === 'PRODUCT'
+let hydrogenEnabled: HydrogenResolvable<
+  boolean,
+  HydrogenAvailabilityContext
+> = enabled
+
+void [modules, componentSchema, hydrogenEnabled]
+`
+  )
+  writeFileSync(
+    join(consumerDir, 'strict.ts'),
+    `import type { SchemaType } from '@weaverse/schema'
+
+// @ts-expect-error Strict consumers reject legacy null fields.
+let invalidStrictSchema: SchemaType = { title: null, type: null }
+void invalidStrictSchema
+`
+  )
+  writeFileSync(
+    join(consumerDir, 'loose.ts'),
+    `import type { SchemaType } from '@weaverse/schema'
+
+let legacyLooseSchema: SchemaType = { title: null, type: null }
+void legacyLooseSchema
+`
+  )
+
+  for (let strict of [true, false]) {
+    let configPath = join(
+      consumerDir,
+      `tsconfig.${strict ? 'strict' : 'loose'}.json`
+    )
+    writeFileSync(
+      configPath,
+      `${JSON.stringify(
+        {
+          compilerOptions: {
+            target: 'ES2022',
+            module: 'NodeNext',
+            moduleResolution: 'NodeNext',
+            strict,
+            noEmit: true,
+            skipLibCheck: true,
+            jsx: 'react-jsx',
+          },
+          files: ['index.ts', strict ? 'strict.ts' : 'loose.ts'],
+        },
+        null,
+        2
+      )}\n`
+    )
+    run(
+      process.execPath,
+      [
+        join(ROOT_DIR, 'node_modules', 'typescript', 'bin', 'tsc'),
+        '--project',
+        configPath,
+      ],
+      { cwd: consumerDir }
+    )
+  }
+
+  writeFileSync(
+    join(consumerDir, 'declaration-check.ts'),
+    `import * as core from '@weaverse/core'
+import * as react from '@weaverse/react'
+import * as schema from '@weaverse/schema'
+import * as experiments from '@weaverse/experiments'
+import * as experimentReact from '@weaverse/experiments/react'
+import * as experimentServer from '@weaverse/experiments/server'
+
+void [core, react, schema, experiments, experimentReact, experimentServer]
+`
+  )
+  let declarationConfig = join(consumerDir, 'tsconfig.declarations.json')
+  writeFileSync(
+    declarationConfig,
+    `${JSON.stringify(
+      {
+        compilerOptions: {
+          target: 'ES2022',
+          module: 'NodeNext',
+          moduleResolution: 'NodeNext',
+          strict: true,
+          noEmit: true,
+          skipLibCheck: false,
+          jsx: 'react-jsx',
+        },
+        files: ['declaration-check.ts'],
+      },
+      null,
+      2
+    )}\n`
+  )
+  run(
+    process.execPath,
+    [
+      join(ROOT_DIR, 'node_modules', 'typescript', 'bin', 'tsc'),
+      '--project',
+      declarationConfig,
+    ],
+    { cwd: consumerDir }
+  )
+
+  console.log(
+    `Verified ${publishedPackages.length} packed packages and ${typeEntrypoints.length} TypeScript entrypoints`
+  )
+} finally {
+  rmSync(scratchDir, { recursive: true, force: true })
+}
