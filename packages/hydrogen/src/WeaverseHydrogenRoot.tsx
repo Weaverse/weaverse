@@ -90,6 +90,7 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
   private _snapshotStoreRef: ElementData | null = null
   private _snapshotTranslationRef: TranslationItemEntry | null = null
 
+  /** Creates an item store from serialized component data and its owner. */
   constructor(initialData: HydrogenComponentData, weaverse: WeaverseHydrogen) {
     super(initialData, weaverse)
     const { data, ...rest } = initialData
@@ -164,7 +165,10 @@ export class WeaverseHydrogen extends Weaverse {
   weaverseHost: string
   /** Base URL used for public content API requests. */
   weaverseApiBase: string
-  /** API key supplied by Studio preview requests. */
+  /**
+   * API key read from environment/configuration for storefront requests or
+   * supplied by Studio requests while editing and previewing.
+   */
   weaverseApiKey: string
   /** Studio asset version supplied by the preview request. */
   weaverseVersion: string
@@ -198,6 +202,7 @@ export class WeaverseHydrogen extends Weaverse {
   /** Builder language identifier for the active translation sidecar. */
   translationLanguageId = ''
 
+  /** Creates a page runtime from resolved loader data and request settings. */
   constructor(params: WeaverseHydrogenParams) {
     const { internal, pageId, requestInfo, ...coreParams } = params
     super({ ...coreParams })

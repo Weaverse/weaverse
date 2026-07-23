@@ -1,3 +1,10 @@
+/**
+ * React and React Router integrations for rendering Weaverse content in
+ * Shopify Hydrogen storefronts.
+ *
+ * @packageDocumentation
+ */
+
 import { getSelectedProductOptions as hydrogen_getSelectedProductOptions } from '@shopify/hydrogen'
 import type { SelectedOptionInput } from '@shopify/hydrogen/storefront-api-types'
 import {

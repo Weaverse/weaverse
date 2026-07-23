@@ -96,7 +96,9 @@ TranslationContext.displayName = 'WeaverseTranslationContext'
 
 /** Inputs accepted by {@link TranslationProvider}. */
 export type TranslationProviderProps = {
+  /** Theme-provided default-locale translation content. */
   staticContent: Record<string, unknown>
+  /** Active-locale translations published by the merchant. */
   merchantOverrides?: Record<string, unknown>
   /**
    * Optional external translation function.
@@ -113,6 +115,7 @@ export type TranslationProviderProps = {
    * is also provided.
    */
   themeTextStore?: TranslationStore | null
+  /** React content that can consume the translation context. */
   children: ReactNode
 }
 

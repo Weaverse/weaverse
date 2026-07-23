@@ -1,8 +1,10 @@
 import { type UIMatch, useMatches } from 'react-router'
 
-// Route-keyed data structure interfaces
+/** Loader data indexed by React Router's conventional route identifiers. */
 export interface RouteKeyedDataContext {
+  /** Root route loader data, when the root loader returned an object. */
   root?: Record<string, unknown>
+  /** Loader data for a non-root route keyed by its route identifier. */
   [routeKey: `routes/${string}`]: Record<string, unknown>
 }
 

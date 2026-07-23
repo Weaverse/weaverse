@@ -158,6 +158,7 @@ export class WeaverseClient {
   // Configuration
   private readonly fetchTimeoutMs: number
 
+  /** Creates a request-scoped client from the Hydrogen app context. */
   constructor(args: WeaverseClientArgs) {
     // Assign required dependencies
     this.request = args.request

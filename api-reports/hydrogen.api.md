@@ -706,6 +706,4 @@ export type WithWeaverseOptions = {
 
 export * from "@weaverse/schema";
 
-// (No @packageDocumentation comment for this package)
-
 ```

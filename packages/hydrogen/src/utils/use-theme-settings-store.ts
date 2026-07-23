@@ -13,14 +13,19 @@ type WeaverseThemeData = {
   publicEnv?: PublicEnv
 }
 
+/** Mutable, subscribable store for theme settings received from the root loader. */
 export class ThemeSettingsStore {
+  /** Current merged theme setting values. */
   settings: HydrogenThemeSettings = {}
+  /** Theme schema exposed to Studio, when available. */
   schema?: HydrogenThemeSchema
+  /** Storefront-safe environment values, when available. */
   publicEnv?: PublicEnv
   private listeners: Set<() => void> = new Set()
   private hasWarnedListenerCount = false
   private isDestroyed = false
 
+  /** Creates a theme settings store from root-loader theme data. */
   constructor(data: WeaverseThemeData) {
     const { theme, schema, publicEnv } = data || {}
     this.settings = { ...theme }
@@ -31,6 +36,7 @@ export class ThemeSettingsStore {
     }
   }
 
+  /** Merges setting changes into the current snapshot and notifies subscribers. */
   updateThemeSettings = (newSettings: HydrogenThemeSettings) => {
     if (this.isDestroyed) {
       console.warn('ThemeSettingsStore: Cannot update destroyed store')
@@ -44,10 +50,13 @@ export class ThemeSettingsStore {
     this.emit()
   }
 
+  /** Returns the current client snapshot for `useSyncExternalStore`. */
   getSnapshot = () => this.settings
 
+  /** Returns the current server snapshot for `useSyncExternalStore`. */
   getServerSnapshot = () => this.settings
 
+  /** Subscribes to setting changes and returns an unsubscribe callback. */
   subscribe = (callback: () => void) => {
     if (this.isDestroyed) {
       console.warn('ThemeSettingsStore: Cannot subscribe to destroyed store')
@@ -85,6 +94,7 @@ export class ThemeSettingsStore {
     }
   }
 
+  /** Clears subscribers and detaches the browser-global store reference. */
   destroy = () => {
     if (this.isDestroyed) {
       return
