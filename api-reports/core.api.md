@@ -8,11 +8,14 @@ import type { CSSProperties } from 'react';
 import type { ForwardRefExoticComponent } from 'react';
 import { RefObject } from 'react';
 
-// @public (undocumented)
+// @public
 export type AdditionalInputConfigs = SelectInputConfigs | ToggleGroupConfigs | RangeInputConfigs;
 
-// @public (undocumented)
+// @public
 export type AdvancedGroupType = 'border' | 'alignment' | 'background' | 'dimensions' | 'spacing' | 'typography' | 'visibility' | 'shadows-and-effects' | 'layout-background';
+
+// @public
+export type AnyFunction = (...args: any[]) => any;
 
 // @public
 export type BasicInput<ConfigsType = AdditionalInputConfigs> = {
@@ -28,73 +31,286 @@ export type BasicInput<ConfigsType = AdditionalInputConfigs> = {
     helpText?: string;
 };
 
-// @public (undocumented)
+// @public
 export type BreakPoints = {
     mobile: string;
     desktop: string;
 };
 
-// @public (undocumented)
+// @public
 export type ChildElementCSS = Partial<{
     [selector: string]: WeaverseCSSProperties & ChildElementCSS;
 }>;
 
-// @public (undocumented)
+// @public
 export type ElementCSS = {
     '@desktop'?: WeaverseCSSProperties | ChildElementCSS;
     '@mobile'?: WeaverseCSSProperties | ChildElementCSS;
 };
 
-// @public (undocumented)
+// @public
 export type ElementData = {
     id: string;
     type: string;
     [key: string]: any;
 };
 
-// @public (undocumented)
+// @public
 export type ElementSchema = {
     title: string;
     type: string;
 };
 
-// @public (undocumented)
+// @public
 export class EventEmitter {
     constructor();
-    // (undocumented)
     emit: (data: any) => void;
-    // (undocumented)
     listeners: Set<AnyFunction>;
-    // (undocumented)
     subscribe: (fn: AnyFunction) => () => void;
-    // (undocumented)
     unsubscribe: (fn: AnyFunction) => void;
 }
 
-// @public (undocumented)
+// @public
+export type IconName =
+| 'accessibility'
+| 'activity-square'
+| 'alarm-clock-off'
+| 'alarm-clock'
+| 'alarm-minus'
+| 'alarm-plus'
+| 'album'
+| 'alert-circle'
+| 'alert-octagon'
+| 'alert-triangle'
+| 'align-box-center-bottom-outline'
+| 'align-box-center-middle-outline'
+| 'align-box-center-top-outline'
+| 'align-box-left-bottom-outline'
+| 'align-box-left-middle-outline'
+| 'align-box-left-top-outline'
+| 'align-box-right-bottom-outline'
+| 'align-box-right-middle-outline'
+| 'align-box-right-top-outline'
+| 'align-center-vertical'
+| 'align-end-vertical'
+| 'align-left'
+| 'align-right'
+| 'align-start-vertical'
+| 'arrow-down-a-z'
+| 'arrow-down-narrow-wide'
+| 'arrow-left-from-line'
+| 'arrow-left-right'
+| 'arrow-up-a-z'
+| 'arrow-up-narrow-wide'
+| 'atom'
+| 'blocks'
+| 'book-image'
+| 'book-marked'
+| 'book-text'
+| 'book'
+| 'box-select'
+| 'box'
+| 'boxes'
+| 'brackets'
+| 'calendar-minus'
+| 'calendar-plus'
+| 'calendar'
+| 'check-check'
+| 'check-circle'
+| 'check'
+| 'chevron-down'
+| 'chevron-left'
+| 'chevron-right'
+| 'chevron-up'
+| 'chevrons-up-down'
+| 'circle-dot'
+| 'circle'
+| 'code'
+| 'columns-2'
+| 'columns-3'
+| 'concierge-bell'
+| 'contact'
+| 'copy'
+| 'corner-up-left'
+| 'expand'
+| 'external-link'
+| 'eye-off'
+| 'eye'
+| 'facebook'
+| 'file-code-2'
+| 'file-plus-2'
+| 'file-search'
+| 'file-text'
+| 'file'
+| 'filter'
+| 'flag'
+| 'flask-conical'
+| 'focus'
+| 'fold-horizontal'
+| 'fold-vertical'
+| 'folder-git-2'
+| 'folder-open'
+| 'folder-plus'
+| 'folder-search'
+| 'folder-symlink'
+| 'folder'
+| 'form-input'
+| 'frown'
+| 'gallery-horizontal-end'
+| 'gallery-horizontal'
+| 'gauge'
+| 'github'
+| 'globe'
+| 'grid-2x2'
+| 'grip-vertical'
+| 'hammer'
+| 'hard-drive-download'
+| 'help-circle'
+| 'home'
+| 'hourglass'
+| 'image-off'
+| 'image-plus'
+| 'image'
+| 'images'
+| 'info'
+| 'languages'
+| 'layers'
+| 'layout-dashboard'
+| 'layout-grid'
+| 'layout-list'
+| 'layout-panel-left'
+| 'layout-template'
+| 'life-buoy'
+| 'lightbulb'
+| 'link'
+| 'linkedin'
+| 'list-end'
+| 'list-start'
+| 'list-todo'
+| 'loader-2'
+| 'loader'
+| 'log-out'
+| 'map-pinned'
+| 'map'
+| 'maximize'
+| 'message-circle'
+| 'message-square'
+| 'messages-square'
+| 'minimize'
+| 'minus'
+| 'monitor-play'
+| 'monitor'
+| 'moon'
+| 'more-horizontal'
+| 'more-vertical'
+| 'mouse-pointer-2'
+| 'mouse-pointer-click'
+| 'mouse-pointer-square-dashed'
+| 'mouse-pointer-square'
+| 'mouse-pointer'
+| 'mouse'
+| 'move-down-left'
+| 'move-down-right'
+| 'move-down'
+| 'move-horizontal'
+| 'move-left'
+| 'move-right'
+| 'move-up-left'
+| 'move-up-right'
+| 'move-up'
+| 'newspaper'
+| 'notebook-tabs'
+| 'package-check'
+| 'package-open'
+| 'package'
+| 'paintbrush-2'
+| 'paintbrush'
+| 'palette'
+| 'panel-left'
+| 'pen'
+| 'pencil-line'
+| 'pencil'
+| 'phone'
+| 'plane-landing'
+| 'play-circle'
+| 'plus-circle'
+| 'plus-square'
+| 'plus'
+| 'presentation'
+| 'puzzle'
+| 'rectangle-horizontal'
+| 'rocket'
+| 'search'
+| 'settings'
+| 'shield-question'
+| 'shopping-bag'
+| 'shopping-cart'
+| 'shrink'
+| 'slack'
+| 'sliders-horizontal'
+| 'sliders'
+| 'slideshow-outline'
+| 'smartphone'
+| 'sparkles'
+| 'square'
+| 'squircle'
+| 'star-filled'
+| 'star-half-filled'
+| 'star'
+| 'store'
+| 'stretch-vertical'
+| 'sun'
+| 'tag'
+| 'tags'
+| 'terminal'
+| 'text-cursor-input'
+| 'timer'
+| 'trash'
+| 'truck'
+| 'twitter'
+| 'type'
+| 'undo-2'
+| 'undo'
+| 'upload-cloud'
+| 'upload'
+| 'user'
+| 'users'
+| 'video'
+| 'wand-2'
+| 'wand-sparkles'
+| 'x-logo'
+| 'x-octagon'
+| 'x'
+| 'youtube'
+| 'zap'
+
+// @public
 export type InputType = 'blog' | 'collection' | 'collection-list' | 'color' | 'datepicker' | 'image' | 'video' | 'map-autocomplete' | 'position' | 'product' | 'product-list' | 'range' | 'richtext' | 'select' | 'switch' | 'text' | 'textarea' | 'toggle-group' | 'metaobject' | 'url';
 
-// @public (undocumented)
+// @public
 export let isBrowser: boolean;
 
-// @public (undocumented)
+// @public
 export let isIframe: boolean;
 
-// @public (undocumented)
+// @public
 export let isReactNative: boolean;
 
-// @public (undocumented)
+// @public
 export function loadScript(src: string): Promise<unknown>;
 
 // @public
-export function merge(target: Record<string, any>, source: Record<string, any>): {
-    [x: string]: any;
-};
+export function merge(target: MergeObject, source: MergeObject): MergeObject;
 
-// @public (undocumented)
+// @public
+export interface MergeObject {
+    [key: string]: any;
+}
+
+// @public
 export type PositionInputValue = 'top left' | 'top center' | 'top right' | 'center left' | 'center center' | 'center right' | 'bottom left' | 'bottom center' | 'bottom right';
 
-// @public (undocumented)
+// @public
 export type RangeInputConfigs = {
     min?: number;
     max?: number;
@@ -102,13 +318,16 @@ export type RangeInputConfigs = {
     unit?: string;
 };
 
-// @public (undocumented)
-export function registerElement(element: {
-    type: string;
-    [x: string]: any;
-}): void;
+// @public
+export function registerElement(element: RegisterElementDefinition): void;
 
-// @public (undocumented)
+// @public
+export interface RegisterElementDefinition {
+    [key: string]: any;
+    type: string;
+}
+
+// @public
 export type SelectInputConfigs = {
     options?: {
         value: string;
@@ -116,7 +335,7 @@ export type SelectInputConfigs = {
     }[];
 };
 
-// @public (undocumented)
+// @public
 export type ToggleGroupConfigs = {
     options?: {
         value: string;
@@ -125,58 +344,38 @@ export type ToggleGroupConfigs = {
     }[];
 };
 
-// @public (undocumented)
+// @public
 export type ToolbarAction = 'general-settings' | 'settings-level-2' | 'duplicate' | 'delete' | 'global-sections';
 
-// @public (undocumented)
+// @public
 export class Weaverse extends EventEmitter {
     constructor(params: WeaverseCoreParams);
-    // (undocumented)
     contentRootElement: HTMLElement | null;
-    // (undocumented)
     createItemInstance: (data: ElementData) => WeaverseItemStore;
-    // (undocumented)
     data: WeaverseProjectDataType;
-    // (undocumented)
     dataContext: Record<string, unknown> | null;
-    // (undocumented)
     static elementRegistry: Map<any, any>;
-    // (undocumented)
     get elementRegistry(): Map<any, any>;
-    // (undocumented)
     getSnapShot: () => WeaverseProjectDataType;
     initProject: () => void;
-    // (undocumented)
     isDesignMode: boolean;
-    // (undocumented)
     isPreviewMode: boolean;
-    // (undocumented)
     static ItemConstructor: typeof WeaverseItemStore;
-    // (undocumented)
     static itemInstances: Map<any, any>;
-    // (undocumented)
     get itemInstances(): Map<any, any>;
-    // (undocumented)
     static mediaBreakPoints: BreakPoints;
-    // (undocumented)
     projectId: string;
-    // (undocumented)
     refreshAllItems(): void;
     static registerElement: typeof registerElement;
-    // (undocumented)
     sdkVersion: string;
     setProjectData: (data: WeaverseProjectDataType) => void;
-    // (undocumented)
     studioBridge?: any;
-    // (undocumented)
     triggerUpdate: () => void;
-    // (undocumented)
     weaverseHost: string;
-    // (undocumented)
     weaverseVersion: string;
 }
 
-// @public (undocumented)
+// @public
 export type WeaverseCoreParams = {
     mediaBreakPoints?: BreakPoints;
     weaverseHost?: string;
@@ -186,10 +385,10 @@ export type WeaverseCoreParams = {
     isDesignMode?: boolean;
 };
 
-// @public (undocumented)
+// @public
 export type WeaverseCSSProperties = CSSProperties;
 
-// @public (undocumented)
+// @public
 export type WeaverseElement = {
     Component: ForwardRefExoticComponent<any>;
     type: string;
@@ -197,7 +396,7 @@ export type WeaverseElement = {
     'data-wv-type': string;
 };
 
-// @public (undocumented)
+// @public
 export type WeaverseImage = {
     id: string;
     url: string;
@@ -207,48 +406,37 @@ export type WeaverseImage = {
     previewSrc: string;
 };
 
-// @public (undocumented)
+// @public
 export class WeaverseItemStore extends EventEmitter {
     constructor(initialData: ElementData, weaverse: Weaverse);
-    // (undocumented)
     get data(): ElementData;
     set data(update: Omit<ElementData, 'id' | 'type'>);
-    // (undocumented)
     get Element(): any;
-    // (undocumented)
     get _element(): HTMLElement | null;
-    // (undocumented)
     getDefaultCss: () => ElementCSS;
-    // (undocumented)
     getSnapShot: () => ElementData;
-    // (undocumented)
     get _id(): string;
-    // (undocumented)
     ref: RefObject<HTMLElement | null>;
-    // (undocumented)
     setData: (update: Omit<ElementData, "id" | "type">) => ElementData;
-    // (undocumented)
     _store: ElementData;
-    // (undocumented)
     triggerUpdate: () => void;
-    // (undocumented)
     weaverse: Weaverse;
 }
 
-// @public (undocumented)
+// @public
 export type WeaverseProjectDataType = {
     id?: string;
     items: ElementData[];
     rootId: string;
 };
 
-// @public (undocumented)
+// @public
 export type WeaverseResourcePickerData = {
     id: number;
     handle: string;
 };
 
-// @public (undocumented)
+// @public
 export type WeaverseVideo = {
     id: string;
     url: string;
@@ -257,7 +445,5 @@ export type WeaverseVideo = {
     height: number;
     previewSrc: string;
 };
-
-// (No @packageDocumentation comment for this package)
 
 ```

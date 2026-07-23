@@ -40,3 +40,15 @@
 - Preserved the legacy permissive recursive preset contract (`children?: any[]`) with a concrete compile-time fixture.
 - Replaced anonymous validation and registry result objects with named, documented public interfaces.
 - Strengthened packed deprecation checks to require migration guidance for `enabledOn`, `inspector`, and `SchemaBuilder.enabledOn`.
+
+## 2026-07-23 — @paul (Phase 3: remaining packages)
+
+- Added useful hover documentation to every public Core, React, Hydrogen, Experiments, and Next declaration and property.
+- Preserved all public signatures and deprecated APIs while adding direct migration guidance.
+- Regenerated all API reports with zero `(undocumented)` markers.
+- Promoted `ae-undocumented` to a CI error for every public TypeScript package.
+- Exported every named type reachable through a public signature and made forgotten exports/unresolved links fail CI.
+- Added package documentation for all nine TypeScript entrypoints.
+- Added tested declaration-rollup traversal for public properties, inline function shapes, generic wrappers, accessors, and exported variables.
+- Scoped generated Zod implementation exemptions by actual `zod` import provenance, with lookalike regression fixtures.
+- Revalidated all builds, typechecks, 481 tests, API reports, and eight packed packages across nine TypeScript entrypoints.

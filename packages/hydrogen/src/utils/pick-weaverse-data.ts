@@ -1,6 +1,10 @@
 import type { UIMatch } from 'react-router'
 import type { WeaverseLoaderData } from '../types'
 
+/**
+ * Weaverse page data accepted by {@link WeaverseHydrogenRoot}, including
+ * deferred React Router loader results and an explicit no-render value.
+ */
 export type WeaverseDataValue =
   | WeaverseLoaderData
   | Promise<WeaverseLoaderData>

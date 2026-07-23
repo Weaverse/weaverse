@@ -2,17 +2,30 @@ import { Weaverse, type WeaverseItemStore } from '@weaverse/core'
 import { useContext } from 'react'
 import { WeaverseContext, WeaverseItemContext } from './context'
 
+export type { DataContext } from './utils/data-connector'
 // Re-export the data connector utilities
 export {
   replaceContentDataConnectors,
   replaceContentDataConnectorsDeep,
 } from './utils/data-connector'
 
+/**
+ * Returns the active Weaverse runtime from React context.
+ *
+ * @typeParam T - Runtime subtype expected by the integration.
+ */
 export function useWeaverse<T = Weaverse>() {
   let weaverse = useContext(WeaverseContext)
   return weaverse as T
 }
 
+/**
+ * Returns a Weaverse item instance by ID, or the current rendered item when no
+ * ID is provided.
+ *
+ * @param id - Optional item ID to look up.
+ * @returns The matching item instance, or `null` when it is unavailable.
+ */
 export let useItemInstance = (id?: string) => {
   let { id: currentId } = useContext(WeaverseItemContext)
   let instance = Weaverse.itemInstances.get(id || currentId)
@@ -23,11 +36,23 @@ export let useItemInstance = (id?: string) => {
   return instance as WeaverseItemStore
 }
 
+/**
+ * Returns the parent instance of the current rendered item.
+ *
+ * @returns The parent item instance. At the root, the empty parent ID falls
+ * back to the current item instance; returns `null` only when that lookup is
+ * unavailable.
+ */
 export let useParentInstance = () => {
   let { parentId } = useContext(WeaverseItemContext)
   return useItemInstance(parentId || '')
 }
 
+/**
+ * Returns the direct child instances of an item.
+ *
+ * @param id - Optional parent item ID; defaults to the current rendered item.
+ */
 export let useChildInstances = (id?: string) => {
   let currentInstance = useItemInstance(id)
   if (!currentInstance) {

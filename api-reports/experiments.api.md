@@ -4,18 +4,16 @@
 
 ```ts
 
-// @public (undocumented)
+// @public
 export interface Assignment {
-    // (undocumented)
     experimentId: string;
-    // (undocumented)
     variant: ExperimentVariant;
 }
 
 // @public
 export function assignVariant(experiment: Experiment, seed: string): Assignment;
 
-// @public (undocumented)
+// @public
 export interface Experiment {
     id: string;
     seed?: string;
@@ -37,7 +35,5 @@ export function resolveExperiments(experiments: Experiment[], seed: string): Ass
 
 // @public
 export function stableSeed(...parts: Array<string | null | undefined>): string;
-
-// (No @packageDocumentation comment for this package)
 
 ```

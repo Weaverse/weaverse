@@ -1,23 +1,35 @@
-// Server entrypoint for `@weaverse/next/server`.
-//
-// Exposes the server-side Weaverse client that performs the real Weaverse
-// public API fetch (page + theme settings) from Next.js App Router routes and
-// server components — the equivalent of Hydrogen's
-// `context.weaverse.loadPage(...)` pattern. Kept on a dedicated subpath so the
-// root `@weaverse/next` entry stays free of server-only fetch assumptions.
+/**
+ * Server-only Weaverse APIs for Next.js App Router server components and route
+ * handlers.
+ *
+ * When migrating from Hydrogen's `context.weaverse`, create a request-scoped
+ * client with {@link createWeaverseNextServerClient}, then call `loadPage()` or
+ * `loadThemeSettings()`. Keep rendering providers and components imported from
+ * the root `@weaverse/next` entrypoint.
+ *
+ * @packageDocumentation
+ */
 
 export {
   formatWeaverseNextSeoMetadata,
   getWeaverseNextSeoMetadata,
+  type NextOpenGraph,
+  type NextTwitter,
+  type WeaverseNextSeoInput,
   type WeaverseNextSeoMetadata,
+  type WeaverseNextSeoPageContainer,
 } from './seo'
-export { getWeaverseNextConfigs } from './server/configs'
+export {
+  getWeaverseNextConfigs,
+  type ResolveConfigsOptions,
+} from './server/configs'
 export {
   normalizeNextPageUrl,
   resolveRequestUrl,
 } from './server/normalize-page-url'
 export {
   createWeaverseNextRevalidateHandler,
+  type WeaverseNextRevalidateHandler,
   type WeaverseNextRevalidateHandlerConfig,
   type WeaverseNextRevalidateRequestBody,
 } from './server/revalidate-handler'
@@ -25,14 +37,30 @@ export { createWeaverseNextServerClient } from './server/server-client'
 export type {
   WeaverseNextBaseConfigs,
   WeaverseNextCacheConfig,
+  WeaverseNextClient,
+  WeaverseNextCommerceContext,
+  WeaverseNextComponent,
+  WeaverseNextComponentData,
+  WeaverseNextComponentLoaderArgs,
+  WeaverseNextComponentProps,
   WeaverseNextConfigs,
   WeaverseNextCustomPageEntry,
   WeaverseNextFetchCustomPagesOptions,
   WeaverseNextFetchOptions,
+  WeaverseNextI18n,
+  WeaverseNextLoaderData,
+  WeaverseNextLoadPageInput,
+  WeaverseNextPageAssignment,
+  WeaverseNextPageData,
   WeaverseNextProjectId,
+  WeaverseNextRequestContext,
   WeaverseNextServerClient,
   WeaverseNextServerClientConfig,
   WeaverseNextServerLoadPageInput,
+  WeaverseNextStorefront,
+  WeaverseNextThemeSchema,
+  WeaverseNextThemeSchemaGroup,
+  WeaverseNextThemeSchemaInput,
   WeaverseNextThemeSettingsOptions,
   WeaverseNextThemeSettingsResponse,
 } from './types'

@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { Extractor, ExtractorConfig } from '@microsoft/api-extractor'
+import { getUndocumentedMembers } from './public-api-docs.mjs'
 import { getEsmExportNames, getPublishedPackages } from './public-packages.mjs'
 
 let ROOT_DIR = join(dirname(fileURLToPath(import.meta.url)), '..')
@@ -9,7 +10,6 @@ let REPORT_DIR = join(ROOT_DIR, 'api-reports')
 let TEMP_DIR = join(ROOT_DIR, 'node_modules', '.cache', 'api-reports')
 let RUNTIME_REPORT = join(REPORT_DIR, 'runtime-exports.api.md')
 let UPDATE_REPORTS = process.argv.includes('--update')
-const DOCUMENTED_PACKAGES = new Set(['schema'])
 let publishedPackages = getPublishedPackages(ROOT_DIR)
 let typeEntrypoints = publishedPackages.flatMap((publishedPackage) =>
   publishedPackage.entrypoints
@@ -44,7 +44,10 @@ for (let { publishedPackage, entrypoint } of typeEntrypoints) {
         reportTempFolder: TEMP_DIR,
       },
       docModel: { enabled: false },
-      dtsRollup: { enabled: false },
+      dtsRollup: {
+        enabled: true,
+        untrimmedFilePath: join(TEMP_DIR, `${reportName}.d.ts`),
+      },
       tsdocMetadata: { enabled: false },
       messages: {
         compilerMessageReporting: {
@@ -52,12 +55,10 @@ for (let { publishedPackage, entrypoint } of typeEntrypoints) {
         },
         extractorMessageReporting: {
           default: { logLevel: 'error' },
-          'ae-forgotten-export': { logLevel: 'none' },
+          'ae-forgotten-export': { logLevel: 'error' },
           'ae-missing-release-tag': { logLevel: 'none' },
-          'ae-undocumented': {
-            logLevel: DOCUMENTED_PACKAGES.has(folderName) ? 'error' : 'none',
-          },
-          'ae-unresolved-link': { logLevel: 'none' },
+          'ae-undocumented': { logLevel: 'error' },
+          'ae-unresolved-link': { logLevel: 'error' },
         },
         tsdocMessageReporting: {
           default: { logLevel: 'none' },
@@ -75,6 +76,31 @@ for (let { publishedPackage, entrypoint } of typeEntrypoints) {
   })
 
   if (!result.succeeded) {
+    failed = true
+    continue
+  }
+
+  let declarationFile = join(TEMP_DIR, `${reportName}.d.ts`)
+  let documentationGaps = getUndocumentedMembers(declarationFile)
+  if (documentationGaps.length > 0) {
+    console.error(
+      `${entrypoint.specifier} has undocumented public members:\n${documentationGaps
+        .map((gap) => `  - ${gap}`)
+        .join('\n')}`
+    )
+    failed = true
+  }
+
+  let reportFile = join(REPORT_DIR, `${reportName}.api.md`)
+  if (
+    existsSync(reportFile) &&
+    readFileSync(reportFile, 'utf8').includes(
+      '(No @packageDocumentation comment for this package)'
+    )
+  ) {
+    console.error(
+      `${entrypoint.specifier} has no @packageDocumentation comment`
+    )
     failed = true
   }
 }

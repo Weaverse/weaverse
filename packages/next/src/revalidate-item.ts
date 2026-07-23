@@ -1,5 +1,6 @@
 import type { WeaverseNextComponentData } from './types'
 
+/** Default App Router endpoint used for Studio item-loader revalidation. */
 export const DEFAULT_REVALIDATE_ENDPOINT = '/api/weaverse/revalidate'
 
 /**
@@ -8,9 +9,11 @@ export const DEFAULT_REVALIDATE_ENDPOINT = '/api/weaverse/revalidate'
  * plain mock.
  */
 export interface RevalidateItemRuntimeLike {
+  /** Live item stores keyed by Weaverse item ID. */
   itemInstances: Map<
     string,
     {
+      /** Merge refreshed loader data into the live item store. */
       setData: (update: Record<string, unknown>) => unknown
     }
   >

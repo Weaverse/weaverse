@@ -4,7 +4,20 @@
 
 ```ts
 
-// @public (undocumented)
+// @public
+export interface Assignment {
+    experimentId: string;
+    variant: ExperimentVariant;
+}
+
+// @public
+export interface Experiment {
+    id: string;
+    seed?: string;
+    variants: ExperimentVariant[];
+}
+
+// @public
 export interface ExperimentsResult {
     assignments: Assignment[];
     headers: Headers;
@@ -13,7 +26,7 @@ export interface ExperimentsResult {
     setCookie?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface ExperimentsServerConfig {
     cookieName?: string;
     experiments: Experiment[];
@@ -23,8 +36,13 @@ export interface ExperimentsServerConfig {
 }
 
 // @public
-export function getExperiments(request: Request, config: ExperimentsServerConfig): ExperimentsResult;
+export interface ExperimentVariant {
+    id: string;
+    projectId?: string;
+    weight?: number;
+}
 
-// (No @packageDocumentation comment for this package)
+// @public
+export function getExperiments(request: Request, config: ExperimentsServerConfig): ExperimentsResult;
 
 ```

@@ -15,6 +15,7 @@ const STATUS_NOT_FOUND = 404
 const STATUS_UNPROCESSABLE = 422
 const STATUS_SERVER_ERROR = 500
 
+/** Configuration for the App Router item-revalidation handler. */
 export interface WeaverseNextRevalidateHandlerConfig {
   /**
    * Reuse the app's server-client factory so the loader runs with the same
@@ -27,6 +28,7 @@ export interface WeaverseNextRevalidateHandlerConfig {
 
 /** POST body accepted by the revalidate route. */
 export interface WeaverseNextRevalidateRequestBody {
+  /** Unsaved Studio item settings to pass to the registered component loader. */
   draftItem: WeaverseNextComponentData
 }
 
@@ -50,6 +52,12 @@ function parseDraftItem(payload: unknown): WeaverseNextComponentData | null {
     return null
   }
   return draftItem as WeaverseNextComponentData
+}
+
+/** App Router handler returned for Studio item revalidation requests. */
+export interface WeaverseNextRevalidateHandler {
+  /** Handle a Studio request to rerun one registered component loader. */
+  POST: (request: Request) => Promise<Response>
 }
 
 /**
@@ -78,7 +86,7 @@ function parseDraftItem(payload: unknown): WeaverseNextComponentData | null {
  */
 export function createWeaverseNextRevalidateHandler(
   config: WeaverseNextRevalidateHandlerConfig
-): { POST: (request: Request) => Promise<Response> } {
+): WeaverseNextRevalidateHandler {
   return {
     POST: async (request: Request) => {
       let payload: unknown

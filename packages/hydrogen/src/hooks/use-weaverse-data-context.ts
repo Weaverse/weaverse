@@ -1,12 +1,17 @@
 import { type UIMatch, useMatches } from 'react-router'
 
-// Route-keyed data structure interfaces
+/** Loader data indexed by React Router's conventional route identifiers. */
 export interface RouteKeyedDataContext {
+  /** Root route loader data, when the root loader returned an object. */
   root?: Record<string, unknown>
+  /** Loader data for a non-root route keyed by its route identifier. */
   [routeKey: `routes/${string}`]: Record<string, unknown>
 }
 
-// Flat route-keyed data context: {root: {...}, "routes/xxx": {...}}
+/**
+ * Flat loader-data map keyed by React Router route ID.
+ * Use route IDs such as `root` or `routes/products.$handle` in data bindings.
+ */
 export type WeaverseDataContext = RouteKeyedDataContext &
   Record<string, unknown>
 

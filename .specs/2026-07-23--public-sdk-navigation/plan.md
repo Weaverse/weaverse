@@ -35,9 +35,9 @@
 - Cmd/Ctrl+click from a packed consumer resolves to an included authored declaration/source file.
 - No package depends on missing declaration-map targets.
 
-## Phase 3 — Document the public interface (in progress)
+## Phase 3 — Document the public interface (completed)
 
-1. Add explicit documented contracts alongside inferred types, beginning with schema authoring types. (Schema completed.)
+1. Add explicit documented contracts alongside inferred types, beginning with schema authoring types.
 2. Prove bidirectional assignability against `z.input` and `z.output` where relevant.
 3. Add JSDoc to public functions, classes, methods, options, callbacks, and object properties.
 4. Preserve `@deprecated` tags and direct migration guidance in emitted declarations.
@@ -48,11 +48,11 @@
 - Every public symbol/property has useful hover documentation.
 - Intentional type tightening is split into a separately versioned migration.
 
-## Phase 4 — Enforcement and rollout
+## Phase 4 — Enforcement and rollout (in progress)
 
-1. Add CI checks for undocumented public declarations and broken map targets. (Schema documentation enforcement enabled.)
-2. Review API reports for every active TypeScript package.
-3. Build, typecheck, test, and inspect packed tarballs.
+1. Add CI checks for undocumented public declarations and broken map targets. (Completed.)
+2. Review API reports for every active TypeScript package. (Completed.)
+3. Build, typecheck, test, and inspect packed tarballs. (Completed.)
 4. Release packages in dependency order.
 
 ## Files and folders in scope

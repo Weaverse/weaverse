@@ -14,7 +14,10 @@ import type { ReactNode } from 'react';
 import { Weaverse } from '@weaverse/core';
 import { WeaverseItemStore } from '@weaverse/core';
 
-// @public (undocumented)
+// @public
+export type DataContext = Record<string, unknown>;
+
+// @public
 export type ItemComponentProps = {
     instance: InstanceType<typeof WeaverseItemStore>;
 };
@@ -25,56 +28,50 @@ export function replaceContentDataConnectors(content: string, dataContext: DataC
 // @public
 export function replaceContentDataConnectorsDeep<T>(data: T, dataContext: DataContext | null | undefined, visited?: WeakSet<WeakKey>, forceClone?: boolean): T;
 
-// @public (undocumented)
+// @public
 export let useChildInstances: (id?: string) => WeaverseItemStore[];
 
-// @public (undocumented)
+// @public
 export let useItemInstance: (id?: string) => WeaverseItemStore | null;
 
-// @public (undocumented)
+// @public
 export let useParentInstance: () => WeaverseItemStore | null;
 
-// @public (undocumented)
+// @public
 export const useSafeExternalStore: (subscribe: any, getSnapshot: any, getServerSnapshot?: any) => any;
 
-// @public (undocumented)
+// @public
 export function useWeaverse<T = Weaverse>(): T;
 
-// @public (undocumented)
+// @public
 export let WeaverseContext: Context<Weaverse>;
 
-// @public (undocumented)
+// @public
 export let WeaverseContextProvider: Provider<Weaverse>;
 
-// @public (undocumented)
+// @public
 export interface WeaverseElementProps extends Partial<ReactElement> {
-    // (undocumented)
     'data-wv-id'?: string;
-    // (undocumented)
     children?: ReactElement | ReactElement[] | ReactNode | ReactNode[];
-    // (undocumented)
     className?: string;
-    // (undocumented)
     css?: ElementCSS;
 }
 
-// @public (undocumented)
+// @public
 export let WeaverseItemContext: Context<    {
 id: string;
 parentId: string;
 }>;
 
-// @public (undocumented)
+// @public
 export const WeaverseRoot: React_2.MemoExoticComponent<(input: WeaverseRootPropsType) => JSX.Element | null>;
 
-// @public (undocumented)
+// @public
 export type WeaverseRootPropsType = {
     context: Weaverse;
 };
 
 
 export * from "@weaverse/core";
-
-// (No @packageDocumentation comment for this package)
 
 ```

@@ -1,8 +1,14 @@
+/** Rendering mode and host details used to select a Studio bridge script. */
 export interface StudioMode {
+  /** Whether the storefront is running inside the visual editor. */
   isDesignMode?: boolean
+  /** Whether a component preview is being rendered. */
   isPreviewMode?: boolean
+  /** Whether a saved page revision is being previewed. */
   isRevisionPreview?: boolean
+  /** Trusted origin serving Studio bridge assets. */
   weaverseHost: string
+  /** Studio asset version appended to the script URL. */
   weaverseVersion: string
 }
 

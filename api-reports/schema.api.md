@@ -135,23 +135,7 @@ export function createSchemaTypeSafe(schema: SchemaTypeStrict): SchemaType;
 export function createValidatedComponentArray<T extends Record<string, any>>(components: T, options?: ComponentValidationOptions): T[keyof T][];
 
 // @public
-export const devTools: {
-    prettyPrint: (schema: SchemaType) => string;
-    analyzeSchema: (schema: SchemaType) => {
-        valid: boolean;
-        issues: readonly SchemaValidationIssue[];
-        stats: {
-            title: string;
-            type: string;
-            inputCount: number;
-            groupCount: number;
-            hasChildTypes: boolean;
-            hasPresets: boolean;
-            hasLimits: boolean;
-        };
-    };
-    generateTypeInterface: (schema: SchemaType) => string;
-};
+export const devTools: SchemaDevTools;
 
 // @public
 export const ElementSchema: z.ZodObject<{
@@ -237,10 +221,7 @@ export const inputHelpers: {
     textarea: (name: string, label?: string, options?: Partial<BasicInput>) => BasicInput;
     switch: (name: string, label?: string, defaultValue?: boolean, options?: Partial<BasicInput>) => BasicInput;
     range: (name: string, label?: string, configs?: RangeInputConfigs, options?: Partial<BasicInput>) => BasicInput;
-    select: (name: string, label: string, options: Array<{
-        label: string;
-        value: string;
-    }>, inputOptions?: Partial<BasicInput>) => BasicInput;
+    select: (name: string, label: string, options: SelectInputOption[], inputOptions?: Partial<BasicInput>) => BasicInput;
     image: (name: string, label?: string, options?: Partial<BasicInput>) => BasicInput;
     heading: (label: string, options?: Omit<HeadingInput, "type" | "label">) => HeadingInput;
 };
@@ -361,6 +342,24 @@ export const RangeInputConfigsSchema: z.ZodObject<{
 export type Resolvable<T, Context> = T | ((context: Context) => T);
 
 // @public
+export interface SchemaAnalysisResult {
+    issues: readonly SchemaValidationIssue[];
+    stats: SchemaAnalysisStats;
+    valid: boolean;
+}
+
+// @public
+export interface SchemaAnalysisStats {
+    groupCount: number;
+    hasChildTypes: boolean;
+    hasLimits: boolean;
+    hasPresets: boolean;
+    inputCount: number;
+    title: string;
+    type: string;
+}
+
+// @public
 export class SchemaBuilder {
     constructor(initial?: Partial<SchemaType>);
     addChildType(childType: string): SchemaBuilder;
@@ -380,6 +379,13 @@ export class SchemaBuilder {
 
 // @public
 export function schemaBuilder(initial?: Partial<SchemaType>): SchemaBuilder;
+
+// @public
+export interface SchemaDevTools {
+    analyzeSchema(schema: SchemaType): SchemaAnalysisResult;
+    generateTypeInterface(schema: SchemaType): string;
+    prettyPrint(schema: SchemaType): string;
+}
 
 // @public
 export const SchemaList: z.ZodRecord<z.ZodString, z.ZodObject<{
@@ -514,10 +520,7 @@ export type SchemaValidationSuccess<T> = {
 
 // @public
 export interface SelectInputConfigs {
-    options?: Array<{
-        label: string;
-        value: string;
-    }>;
+    options?: SelectInputOption[];
 }
 
 // @public
@@ -527,6 +530,12 @@ export const SelectInputConfigsSchema: z.ZodObject<{
         value: z.ZodString;
     }, z.core.$strip>>>;
 }, z.core.$strip>;
+
+// @public
+export interface SelectInputOption {
+    label: string;
+    value: string;
+}
 
 // @public
 export interface SimpleValidationResult<T = any> {
@@ -583,7 +592,5 @@ export interface VersionedSchema extends SchemaType {
 }
 
 export { z }
-
-// (No @packageDocumentation comment for this package)
 
 ```

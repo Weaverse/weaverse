@@ -353,15 +353,18 @@ export type InputType =
   | 'map-autocomplete'
   | 'toggle-group'
 
+/** A choice shown in a select input. */
+export interface SelectInputOption {
+  /** Merchant-facing option label. */
+  label: string
+  /** Value stored in component data. */
+  value: string
+}
+
 /** Configuration for a select input. */
 export interface SelectInputConfigs {
   /** Choices shown in the select menu. */
-  options?: Array<{
-    /** Merchant-facing option label. */
-    label: string
-    /** Value stored in component data. */
-    value: string
-  }>
+  options?: SelectInputOption[]
 }
 
 /** Configuration for a toggle-group input. */
@@ -475,9 +478,9 @@ export interface SchemaType {
   enabled?: Resolvable<boolean, ComponentAvailabilityContext>
   /**
    * Legacy page and placement availability restrictions.
-   * @deprecated Use {@link enabled} for both static and context-aware
-   * availability. Existing schemas remain supported, and both rules must pass
-   * when both properties are present.
+   * @deprecated Use `enabled` for both static and context-aware availability.
+   * Existing schemas remain supported, and both rules must pass when both
+   * properties are present.
    */
   enabledOn?: {
     /** Page types where the component can be inserted. */
@@ -487,7 +490,7 @@ export interface SchemaType {
   }
   /**
    * Legacy setting groups shown in Studio.
-   * @deprecated Use {@link settings} instead.
+   * @deprecated Use `settings` instead.
    */
   inspector?: InspectorGroup[]
   /** Maximum number of instances allowed under the same parent. */
@@ -615,8 +618,11 @@ export function isValidSchema(schema: unknown): schema is SchemaType {
 export interface VersionedSchema extends SchemaType {
   /** Migration metadata */
   readonly migrations?: {
+    /** Source schema version. */
     from: string
+    /** Target schema version. */
     to: string
+    /** Transforms data from the source version to the target version. */
     migrate: (oldSchema: any) => SchemaType
   }[]
   /** Schema version for future migrations */
@@ -670,8 +676,15 @@ export class SchemaRegistry {
    * Validate that all registered schemas are valid
    */
   validateAll(): {
+    /** Names of schemas that passed validation. */
     valid: string[]
-    invalid: Array<{ name: string; issues: readonly SchemaValidationIssue[] }>
+    /** Registered schemas that failed validation and their issues. */
+    invalid: Array<{
+      /** Registered schema name. */
+      name: string
+      /** Validation issues found in the schema. */
+      issues: readonly SchemaValidationIssue[]
+    }>
   } {
     const valid: string[] = []
     const invalid: Array<{
@@ -722,10 +735,46 @@ export class SchemaRegistry {
  */
 export const schemaRegistry = new SchemaRegistry()
 
-/**
- * Schema development utilities
- */
-export const devTools = {
+/** Summary statistics produced by schema development analysis. */
+export interface SchemaAnalysisStats {
+  /** Number of inspector setting groups. */
+  groupCount: number
+  /** Whether the schema declares child component types. */
+  hasChildTypes: boolean
+  /** Whether the schema declares instance limits. */
+  hasLimits: boolean
+  /** Whether the schema provides component presets. */
+  hasPresets: boolean
+  /** Total number of inputs across all setting groups. */
+  inputCount: number
+  /** Schema title shown in Studio. */
+  title: string
+  /** Stable schema component type. */
+  type: string
+}
+
+/** Result returned when development tools analyze a component schema. */
+export interface SchemaAnalysisResult {
+  /** Validation issues, empty when the schema is valid. */
+  issues: readonly SchemaValidationIssue[]
+  /** Aggregate information about the schema structure. */
+  stats: SchemaAnalysisStats
+  /** Whether the schema passed validation. */
+  valid: boolean
+}
+
+/** Development-only helpers for inspecting component schemas. */
+export interface SchemaDevTools {
+  /** Analyze validation state and structural statistics for a schema. */
+  analyzeSchema(schema: SchemaType): SchemaAnalysisResult
+  /** Generate a TypeScript props interface from schema inputs. */
+  generateTypeInterface(schema: SchemaType): string
+  /** Format a schema as indented JSON for debugging. */
+  prettyPrint(schema: SchemaType): string
+}
+
+/** Schema development utilities. */
+export const devTools: SchemaDevTools = {
   /**
    * Pretty print a schema for debugging
    */

@@ -13,23 +13,29 @@
  * (e.g. "cart.title" → "Shopping Cart").
  */
 export class TranslationStore {
+  /** Current flat translation overrides keyed by dot path. */
   overrides: Record<string, string> = {}
   private readonly listeners: Set<() => void> = new Set()
 
+  /** Replace every override and notify subscribers. */
   setOverrides = (overrides: Record<string, string>) => {
     this.overrides = { ...overrides }
     this.emit()
   }
 
+  /** Merge changed overrides into the current values and notify subscribers. */
   updateOverrides = (newOverrides: Record<string, string>) => {
     this.overrides = { ...this.overrides, ...newOverrides }
     this.emit()
   }
 
+  /** Return the current client-side override snapshot. */
   getSnapshot = () => this.overrides
 
+  /** Return the override snapshot used during server rendering. */
   getServerSnapshot = () => this.overrides
 
+  /** Subscribe to override changes and return an unsubscribe function. */
   subscribe = (callback: () => void) => {
     this.listeners.add(callback)
     return () => {
@@ -49,12 +55,15 @@ export class TranslationStore {
 }
 
 /**
- * @deprecated Use {@link TranslationStore} instead. Kept as a backward-compatible
- * alias and will remain exported for existing integrations.
+ * Legacy constructor name for {@link TranslationStore}.
+ *
+ * @deprecated Replace `ThemeTextStore` with {@link TranslationStore}; the
+ * store contract and runtime behavior are unchanged.
  */
 export const ThemeTextStore = TranslationStore
 /**
- * @deprecated Use {@link TranslationStore} instead. Kept as a backward-compatible
- * alias and will remain exported for existing integrations.
+ * Legacy type name for {@link TranslationStore}.
+ *
+ * @deprecated Import {@link TranslationStore} instead.
  */
 export type ThemeTextStore = TranslationStore

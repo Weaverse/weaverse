@@ -1,3 +1,10 @@
+/**
+ * Authoring contracts, builders, and development-time validation for Weaverse
+ * component schemas.
+ *
+ * @packageDocumentation
+ */
+
 import type {
   BasicInput,
   HeadingInput,
@@ -5,6 +12,7 @@ import type {
   RangeInputConfigs,
   SchemaType,
   SchemaValidationIssue,
+  SelectInputOption,
 } from './validation.js'
 
 // `process` is statically replaced by the consuming bundler (Vite/Hydrogen)
@@ -20,7 +28,9 @@ export type {
 
 /** Schema type with required title and type fields in non-strict projects. */
 export type SchemaTypeStrict = SchemaType & {
+  /** Short component title displayed in Studio. */
   title: string
+  /** Stable kebab-case component identifier. */
   type: string
 }
 
@@ -144,7 +154,7 @@ export class SchemaBuilder {
 
   /**
    * Sets legacy page and placement restrictions.
-   * @deprecated Use {@link enabled} instead.
+   * @deprecated Use `enabled` instead.
    */
   enabledOn(enabledOn: SchemaType['enabledOn']): SchemaBuilder {
     this.schema.enabledOn = enabledOn
@@ -290,7 +300,7 @@ export const inputHelpers = {
   select: (
     name: string,
     label: string,
-    options: Array<{ label: string; value: string }>,
+    options: SelectInputOption[],
     inputOptions?: Partial<BasicInput>
   ): BasicInput => ({
     type: 'select',
@@ -394,6 +404,9 @@ export type {
   PageType,
   RangeInputConfigs,
   Resolvable,
+  SchemaAnalysisResult,
+  SchemaAnalysisStats,
+  SchemaDevTools,
   SchemaMigration,
   SchemaType,
   SchemaValidationFailure,
@@ -401,6 +414,7 @@ export type {
   SchemaValidationResult,
   SchemaValidationSuccess,
   SelectInputConfigs,
+  SelectInputOption,
   SimpleValidationResult,
   ToggleGroupConfigs,
   VersionedSchema,

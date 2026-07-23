@@ -8,9 +8,22 @@ import { JSX } from 'react/jsx-runtime';
 import type { ReactNode } from 'react';
 
 // @public
+export interface Assignment {
+    experimentId: string;
+    variant: ExperimentVariant;
+}
+
+// @public
 export function createExposureTracker(): ExposureTracker;
 
-// @public (undocumented)
+// @public
+export interface ExperimentVariant {
+    id: string;
+    projectId?: string;
+    weight?: number;
+}
+
+// @public
 export interface ExposureTracker {
     expose(assignments: Assignment[], onExpose: (assignment: Assignment) => void): void;
 }
@@ -24,14 +37,11 @@ export function useExperiments(): Assignment[];
 // @public
 export function WeaverseExperiments(input: WeaverseExperimentsProps): JSX.Element;
 
-// @public (undocumented)
+// @public
 export interface WeaverseExperimentsProps {
-    // (undocumented)
     children?: ReactNode;
     onExpose?: (assignment: Assignment) => void;
     value: Assignment[];
 }
-
-// (No @packageDocumentation comment for this package)
 
 ```

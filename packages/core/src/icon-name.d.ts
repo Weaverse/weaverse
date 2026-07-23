@@ -1,5 +1,6 @@
 // This file is generated from Weaverse Studio
 
+/** Icon identifiers supported by Weaverse Studio controls. */
 export type IconName =
   | 'accessibility'
   | 'activity-square'

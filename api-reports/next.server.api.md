@@ -15,53 +15,52 @@ import type { SchemaType } from '@weaverse/schema';
 import type { WeaverseElement } from '@weaverse/react';
 
 // @public
-export function createWeaverseNextRevalidateHandler(config: WeaverseNextRevalidateHandlerConfig): {
-    POST: (request: Request) => Promise<Response>;
-};
+export function createWeaverseNextRevalidateHandler(config: WeaverseNextRevalidateHandlerConfig): WeaverseNextRevalidateHandler;
 
 // @public
 export function createWeaverseNextServerClient(config: WeaverseNextServerClientConfig): WeaverseNextServerClient;
 
-// @public (undocumented)
+// @public
 export function formatWeaverseNextSeoMetadata(seo: PageSEOData | null | undefined): WeaverseNextSeoMetadata;
 
 // @public
 export function getWeaverseNextConfigs(context?: WeaverseNextRequestContext, options?: ResolveConfigsOptions): WeaverseNextBaseConfigs;
 
-// @public (undocumented)
-export function getWeaverseNextSeoMetadata(data: WeaverseNextLoaderData | WeaverseNextPageData | {
-    page?: WeaverseNextPageData | null;
-} | null | undefined): WeaverseNextSeoMetadata;
+// @public
+export function getWeaverseNextSeoMetadata(data: WeaverseNextSeoInput): WeaverseNextSeoMetadata;
+
+// @public
+export type NextOpenGraph = NonNullable<Metadata['openGraph']>;
+
+// @public
+export type NextTwitter = NonNullable<Metadata['twitter']>;
 
 // @public
 export function normalizeNextPageUrl(url: string): string;
+
+// @public
+export interface ResolveConfigsOptions {
+    env?: Record<string, string | undefined>;
+    weaverseApiBase?: string;
+    weaverseHost?: string;
+    weaverseVersion?: string;
+}
 
 // @public
 export function resolveRequestUrl(context?: WeaverseNextRequestContext): string;
 
 // @public
 export interface WeaverseNextBaseConfigs {
-    // (undocumented)
     envProjectId: string;
-    // (undocumented)
     isDesignMode: boolean;
-    // (undocumented)
     isPreviewMode: boolean;
-    // (undocumented)
     isRevisionPreview: boolean;
-    // (undocumented)
     publicEnv: Record<string, string | undefined>;
-    // (undocumented)
     queryProjectId: string;
-    // (undocumented)
     sectionType: string;
-    // (undocumented)
     weaverseApiBase: string;
-    // (undocumented)
     weaverseApiKey: string;
-    // (undocumented)
     weaverseHost: string;
-    // (undocumented)
     weaverseVersion: string;
 }
 
@@ -72,106 +71,213 @@ export interface WeaverseNextCacheConfig {
 }
 
 // @public
-export interface WeaverseNextConfigs {
-    // (undocumented)
-    isDesignMode: boolean;
-    // (undocumented)
-    isPreviewMode: boolean;
-    // (undocumented)
-    isRevisionPreview: boolean;
-    // (undocumented)
+export interface WeaverseNextClient {
+    commerce?: WeaverseNextCommerceContext;
+    components: WeaverseNextComponent[];
+    data: WeaverseNextLoaderData | null;
+    dataContext: Record<string, unknown>;
+    loadPage: (input?: WeaverseNextLoadPageInput) => Promise<WeaverseNextLoaderData | null>;
+    loadThemeSettings: (context?: WeaverseNextRequestContext) => Promise<unknown>;
     projectId: string;
-    // (undocumented)
+    requestContext?: WeaverseNextRequestContext;
+    storefront?: WeaverseNextStorefront;
+    themeSchema?: WeaverseNextThemeSchema;
+    themeSettings: Record<string, unknown>;
+}
+
+// @public
+export interface WeaverseNextCommerceContext {
+    [key: string]: unknown;
+    cart?: unknown;
+    customerAccount?: unknown;
+    storefront?: WeaverseNextStorefront;
+}
+
+// @public
+export interface WeaverseNextComponent<TProps extends WeaverseNextComponentProps = WeaverseNextComponentProps> {
+    default: ComponentType<TProps> | ForwardRefExoticComponent<TProps>;
+    loader?: (args: WeaverseNextComponentLoaderArgs) => Promise<unknown>;
+    schema: SchemaType;
+}
+
+// @public
+export interface WeaverseNextComponentData {
+    [key: string]: unknown;
+    children?: WeaverseNextComponentData[] | {
+        id: string;
+    }[];
+    data?: Record<string, unknown>;
+    id: string;
+    loaderData?: unknown;
+    type: string;
+}
+
+// @public
+export interface WeaverseNextComponentLoaderArgs<TData = unknown> {
+    commerce?: WeaverseNextCommerceContext;
+    context?: WeaverseNextRequestContext;
+    data: TData;
+    weaverse: WeaverseNextClient;
+}
+
+// @public
+export interface WeaverseNextComponentProps<L = unknown> extends Partial<WeaverseElement> {
+    [key: string]: unknown;
+    children?: ReactNode;
+    className?: string;
+    loaderData?: L;
+}
+
+// @public
+export interface WeaverseNextConfigs {
+    isDesignMode: boolean;
+    isPreviewMode: boolean;
+    isRevisionPreview: boolean;
+    projectId: string;
     publicEnv: Record<string, string | undefined>;
-    // (undocumented)
     sectionType: string;
-    // (undocumented)
     weaverseApiBase: string;
-    // (undocumented)
     weaverseHost: string;
-    // (undocumented)
     weaversePublicApiBase: string;
-    // (undocumented)
     weaverseVersion: string;
 }
 
-// @public (undocumented)
+// @public
 export interface WeaverseNextCustomPageEntry {
-    // (undocumented)
     changeFrequency?: 'daily' | 'weekly' | 'monthly';
-    // (undocumented)
     handle: string;
-    // (undocumented)
     lastModified: string;
-    // (undocumented)
     locale: string | null;
-    // (undocumented)
     path: string;
-    // (undocumented)
     priority?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface WeaverseNextFetchCustomPagesOptions extends WeaverseNextCacheConfig {
-    // (undocumented)
     limit?: number;
-    // (undocumented)
     locale?: string;
 }
 
 // @public
 export interface WeaverseNextFetchOptions extends RequestInit {
-    // (undocumented)
     revalidate?: number | false;
-    // (undocumented)
     tags?: string[];
+}
+
+// @public
+export interface WeaverseNextI18n {
+    [key: string]: unknown;
+    country?: string;
+    label?: string;
+    language?: string;
+    locale?: string;
+    pathPrefix?: string;
+}
+
+// @public
+export interface WeaverseNextLoaderData {
+    [key: string]: unknown;
+    configs?: Record<string, unknown>;
+    page: WeaverseNextPageData;
+    pageAssignment?: WeaverseNextPageAssignment;
+    project?: Record<string, unknown>;
+}
+
+// @public
+export interface WeaverseNextLoadPageInput {
+    [key: string]: unknown;
+    handle?: string;
+    locale?: string;
+    type?: PageType;
+}
+
+// @public
+export interface WeaverseNextPageAssignment {
+    handle: string;
+    locale: string;
+    meta?: {
+        depth?: number;
+        inherited?: boolean;
+        sourceProjectId?: string;
+        [key: string]: unknown;
+    };
+    projectId: string;
+    type: PageType | string;
+}
+
+// @public
+export interface WeaverseNextPageData {
+    [key: string]: unknown;
+    id: string;
+    items: WeaverseNextComponentData[];
+    name?: string;
+    rootId?: string;
+    seo?: PageSEOData | null;
 }
 
 // @public
 export type WeaverseNextProjectId = string | ((context?: WeaverseNextRequestContext) => string | Promise<string> | undefined);
 
-// @public (undocumented)
+// @public
+export interface WeaverseNextRequestContext {
+    [key: string]: unknown;
+    handle?: string;
+    headers?: Headers;
+    i18n?: WeaverseNextI18n;
+    isDesignMode?: boolean;
+    isPreviewMode?: boolean;
+    isRevisionPreview?: boolean;
+    pageType?: PageType;
+    pathname?: string;
+    searchParams?: URLSearchParams;
+    sectionType?: string;
+    url?: URL | string;
+}
+
+// @public
+export interface WeaverseNextRevalidateHandler {
+    POST: (request: Request) => Promise<Response>;
+}
+
+// @public
 export interface WeaverseNextRevalidateHandlerConfig {
     getClient: (request: Request) => Promise<WeaverseNextServerClient> | WeaverseNextServerClient;
 }
 
 // @public
 export interface WeaverseNextRevalidateRequestBody {
-    // (undocumented)
     draftItem: WeaverseNextComponentData;
 }
 
 // @public
+export type WeaverseNextSeoInput = WeaverseNextLoaderData | WeaverseNextPageData | WeaverseNextSeoPageContainer | null | undefined;
+
+// @public
 export interface WeaverseNextSeoMetadata {
-    // (undocumented)
     alternates?: {
         canonical?: string;
     };
-    // (undocumented)
     description?: string;
-    // (undocumented)
     keywords?: string;
-    // (undocumented)
     openGraph?: NextOpenGraph;
-    // (undocumented)
     robots: {
         follow: boolean;
         index: boolean;
     };
-    // (undocumented)
     title?: string;
-    // (undocumented)
     twitter?: NextTwitter;
+}
+
+// @public
+export interface WeaverseNextSeoPageContainer {
+    page?: WeaverseNextPageData | null;
 }
 
 // @public
 export interface WeaverseNextServerClient extends WeaverseNextClient {
     configs: WeaverseNextConfigs;
-    // (undocumented)
     fetchCustomPages: (options?: WeaverseNextFetchCustomPagesOptions) => Promise<WeaverseNextCustomPageEntry[]>;
-    // (undocumented)
     fetchWithCache: <T = unknown>(url: string, options?: WeaverseNextFetchOptions) => Promise<T>;
-    // (undocumented)
     loadPage: (input?: WeaverseNextLoadPageInput) => Promise<WeaverseNextLoaderData | null>;
     loadThemeSettings: (options?: WeaverseNextThemeSettingsOptions | WeaverseNextRequestContext) => Promise<WeaverseNextThemeSettingsResponse>;
     resolveProjectId: () => Promise<string>;
@@ -179,26 +285,18 @@ export interface WeaverseNextServerClient extends WeaverseNextClient {
 
 // @public
 export interface WeaverseNextServerClientConfig {
-    // (undocumented)
     cache?: WeaverseNextCacheConfig;
-    // (undocumented)
     commerce?: WeaverseNextCommerceContext;
-    // (undocumented)
     components: WeaverseNextComponent[];
     env?: Record<string, string | undefined>;
     fetch?: typeof fetch;
     fetchTimeoutMs?: number;
-    // (undocumented)
     projectId?: WeaverseNextProjectId;
-    // (undocumented)
     requestContext?: WeaverseNextRequestContext;
-    // (undocumented)
     themeSchema?: WeaverseNextThemeSchema;
-    // (undocumented)
     themeSettings?: Record<string, unknown>;
     weaverseApiBase?: string;
     weaverseHost?: string;
-    // (undocumented)
     weaverseVersion?: string;
 }
 
@@ -209,29 +307,66 @@ export interface WeaverseNextServerLoadPageInput extends WeaverseNextLoadPageInp
 }
 
 // @public
+export interface WeaverseNextStorefront {
+    [key: string]: unknown;
+    i18n?: WeaverseNextI18n;
+    query: (query: string, options?: unknown) => Promise<unknown>;
+}
+
+// @public
+export interface WeaverseNextThemeSchema {
+    [key: string]: unknown;
+    i18n?: {
+        defaultLocale?: WeaverseNextI18n;
+        shopLocales?: WeaverseNextI18n[];
+        staticContent?: Record<string, unknown>;
+        translation?: boolean;
+        urlStructure?: 'url-path' | 'subdomain' | 'top-level-domain';
+        [key: string]: unknown;
+    };
+    info?: {
+        author?: string;
+        authorProfilePhoto?: string;
+        documentationUrl?: string;
+        name?: string;
+        supportUrl?: string;
+        version?: string;
+        [key: string]: unknown;
+    };
+    // @deprecated
+    inspector?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[];
+    settings?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[];
+}
+
+// @public
+export interface WeaverseNextThemeSchemaGroup {
+    [key: string]: unknown;
+    group?: string;
+    inputs?: WeaverseNextThemeSchemaInput[];
+}
+
+// @public
+export interface WeaverseNextThemeSchemaInput {
+    [key: string]: unknown;
+    condition?: unknown;
+    defaultValue?: unknown;
+    name?: string;
+}
+
+// @public
 export interface WeaverseNextThemeSettingsOptions extends WeaverseNextCacheConfig {
 }
 
 // @public
 export interface WeaverseNextThemeSettingsResponse {
-    // (undocumented)
     [key: string]: unknown;
-    // (undocumented)
     _error?: string;
-    // (undocumented)
     _loadFailed?: boolean;
-    // (undocumented)
     merchantOverrides?: Record<string, unknown>;
-    // (undocumented)
     publicEnv?: Record<string, string | undefined>;
-    // (undocumented)
     schema?: WeaverseNextThemeSchema;
-    // (undocumented)
     staticContent?: Record<string, unknown>;
-    // (undocumented)
     theme?: Record<string, unknown>;
 }
-
-// (No @packageDocumentation comment for this package)
 
 ```

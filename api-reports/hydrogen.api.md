@@ -54,19 +54,22 @@ import type { WeaverseVideo } from '@weaverse/react';
 
 export { BasicInput }
 
-// @public (undocumented)
+// @public
+export type BuilderApiCacheTarget = 'custom-pages' | 'merchant-overrides' | 'project' | 'theme-settings';
+
+// @public
 export type CacheResponseValidator<T = unknown> = (response: WithCacheFetchResponse<T> | T) => boolean;
 
 export { CachingStrategy }
 
 export { ComponentAvailabilityContext }
 
-// @public (undocumented)
+// @public
 export type ComponentDataValue = string | number | boolean | undefined | null;
 
 export { ComponentGroup }
 
-// @public (undocumented)
+// @public
 export type ComponentLoaderArgs<T = any, _E = any> = {
     data: T;
     weaverse: WeaverseClient;
@@ -93,32 +96,32 @@ export type CreateHydrogenSchemaOptions = {
 // @public
 export function createWeaverseDataContext(matches: UIMatch<unknown, unknown>[]): WeaverseDataContext;
 
-// @public (undocumented)
+// @public
 export interface CustomPageEntry {
-    // (undocumented)
     changeFrequency?: 'daily' | 'weekly' | 'monthly';
-    // (undocumented)
     handle: string;
-    // (undocumented)
     lastModified: string;
-    // (undocumented)
     locale: string | null;
-    // (undocumented)
     path: string;
-    // (undocumented)
     priority?: number;
 }
 
-// @public (undocumented)
+// @public
 export let defaultComponents: HydrogenComponent[];
 
-// @public (undocumented)
+// @public
 export type DirectFetchResponse<T = unknown> = {
     data?: T;
     error?: string;
 };
 
-// @public (undocumented)
+// @public
+export interface FetchCustomPagesOptions {
+    limit?: number;
+    locale?: string;
+}
+
+// @public
 export type FetchProjectPayload = {
     page?: HydrogenPageData;
     project?: HydrogenProjectType;
@@ -127,7 +130,7 @@ export type FetchProjectPayload = {
     [key: string]: any;
 };
 
-// @public (undocumented)
+// @public
 export type FetchProjectRequestBody = {
     projectId: string;
     url: string;
@@ -149,81 +152,66 @@ export function generateDataFromSchema(schema: HydrogenComponentSchema | Hydroge
 // @public
 export function getNestedKey(obj: Record<string, unknown>, path: string, fallback?: string): string | undefined;
 
-// @public (undocumented)
+// @public
 export function getPreviewData(type: string, components: HydrogenComponent[], weaverseHost: string): WeaverseLoaderData;
 
 // @public
-export function getRequestQueries<T = Record<string, string | boolean>>(request: Request, options?: {
-    allowedKeys?: string[];
-}): T;
+export function getRequestQueries<T = Record<string, string | boolean>>(request: Request, options?: RequestQueryOptions): T;
 
 // @public
 export function getSelectedProductOptions(request: Request): SelectedOptionInput[];
 
-// @public (undocumented)
+// @public
 export function getWeaverseConfigs(request: Request, env: HydrogenEnv): WeaverseProjectConfigs;
 
 // @public
-export function getWeaverseSeoMeta(data: WeaverseLoaderData | HydrogenPageData | {
-    page?: HydrogenPageData | null;
-} | null | undefined): MetaDescriptor[];
+export function getWeaverseSeoMeta(data: WeaverseSeoInput): MetaDescriptor[];
 
-// @public (undocumented)
-export function hasError(response: unknown): response is {
-    error: string;
-};
+// @public
+export function hasError(response: unknown): response is WeaverseErrorResponse;
 
-// @public (undocumented)
-export function hasWeaverseStudio(window: Window): window is Window & {
-    weaverseStudio: WeaverseStudio;
-};
+// @public
+export function hasWeaverseStudio(window: Window): window is WeaverseStudioWindow;
 
 export { HeadingInput }
 
-// @public (undocumented)
+// @public
+export interface HydrogenChildComponentReference {
+    id: string;
+}
+
+// @public
 export type HydrogenComponent<T extends HydrogenComponentProps = any> = {
     default: ForwardRefExoticComponent<T> | ((props: T) => React_2.JSX.Element);
     schema: HydrogenComponentSchema;
     loader?: (args: ComponentLoaderArgs) => Promise<unknown>;
 };
 
-// @public (undocumented)
+// @public
 export interface HydrogenComponentData extends ElementData {
-    // (undocumented)
-    children?: {
-        id: string;
-    }[];
-    // (undocumented)
+    children?: HydrogenChildComponentReference[];
     createdAt?: string;
-    // (undocumented)
     data?: Record<string, ComponentDataValue | Record<string, unknown>>;
-    // (undocumented)
     deletedAt?: string;
-    // (undocumented)
     id: string;
-    // (undocumented)
     type: string;
-    // (undocumented)
     updatedAt?: string;
 }
 
 // @public
 export type HydrogenComponentPresets = ComponentPresets;
 
-// @public (undocumented)
+// @public
 export interface HydrogenComponentProps<L = any> extends WeaverseElement {
-    // (undocumented)
     children?: React_2.JSX.Element[];
-    // (undocumented)
     className?: string;
-    // (undocumented)
     loaderData?: L;
 }
 
 // @public
 export type HydrogenComponentSchema = SchemaType;
 
-// @public (undocumented)
+// @public
 export type HydrogenElement = {
     Component: ForwardRefExoticComponent<HydrogenComponentProps> | ((props: HydrogenComponentProps) => React_2.JSX.Element);
     type: string;
@@ -231,7 +219,7 @@ export type HydrogenElement = {
     loader?: (args: ComponentLoaderArgs) => Promise<unknown>;
 };
 
-// @public (undocumented)
+// @public
 export type HydrogenPageAssignment = {
     projectId: string;
     type: PageType;
@@ -244,22 +232,17 @@ export type HydrogenPageAssignment = {
     };
 };
 
-// @public (undocumented)
+// @public
 export interface HydrogenPageData extends WeaverseProjectDataType {
-    // (undocumented)
     __cacheId?: string;
-    // (undocumented)
     [key: string]: any;
-    // (undocumented)
     id: string;
-    // (undocumented)
     items: HydrogenComponentData[];
-    // (undocumented)
     name: string;
     seo?: PageSEOData | null;
 }
 
-// @public (undocumented)
+// @public
 export type HydrogenProjectType = {
     id: string;
     weaverseShopId: string;
@@ -270,7 +253,7 @@ export type HydrogenProjectType = {
 // @public
 export type HydrogenSchemaValidationResult = SchemaValidationResult<HydrogenComponentSchema>;
 
-// @public (undocumented)
+// @public
 export type HydrogenThemeSchema = {
     info: {
         name: string;
@@ -291,12 +274,12 @@ export type HydrogenThemeSchema = {
     };
 };
 
-// @public (undocumented)
+// @public
 export type HydrogenThemeSettings = {
     [key: string]: any;
 };
 
-// @public (undocumented)
+// @public
 export const IMAGES_PLACEHOLDERS: {
     logo_white: string;
     logo_black: string;
@@ -338,7 +321,7 @@ export function interpolate(template: string, variables?: Record<string, string 
 
 export { isBrowser }
 
-// @public (undocumented)
+// @public
 export function isFetchProjectPayload(payload: unknown): payload is FetchProjectPayload;
 
 export { isIframe }
@@ -346,7 +329,7 @@ export { isIframe }
 // @public
 export function isProjectIdFunction(projectId: ProjectIdValue | undefined): projectId is (() => string) | (() => Promise<string>);
 
-// @public (undocumented)
+// @public
 export function isThemeSettingsResponse(data: unknown): data is ThemeSettingsResponse;
 
 // @public
@@ -377,7 +360,7 @@ export type ProjectIdValidationResult = {
 // @public
 export type ProjectIdValue = string | (() => string) | (() => Promise<string>);
 
-// @public (undocumented)
+// @public
 export type PublicEnv = {
     PUBLIC_STORE_DOMAIN: string;
     PUBLIC_STOREFRONT_API_TOKEN: string;
@@ -386,21 +369,29 @@ export type PublicEnv = {
 // @public
 export function registerComponent(element: HydrogenElement): void;
 
+// @public
+export interface RequestQueryOptions {
+    allowedKeys?: string[];
+}
+
 export { Resolvable }
 
-// @public (undocumented)
+// @public
+export interface RouteKeyedDataContext {
+    [routeKey: `routes/${string}`]: Record<string, unknown>;
+    root?: Record<string, unknown>;
+}
+
+// @public
 export interface RouteLoaderArgs extends LoaderFunctionArgs {
-    // (undocumented)
-    context: AppLoadContext & {
-        weaverse: WeaverseClient;
-    };
+    context: WeaverseRouteAppLoadContext;
 }
 
 export { SchemaValidationIssue }
 
 export { SchemaValidationResult }
 
-// @public (undocumented)
+// @public
 export type ThemeSettingsResponse = {
     theme?: HydrogenThemeSettings;
     schema?: HydrogenThemeSchema;
@@ -411,19 +402,32 @@ export type ThemeSettingsResponse = {
     _loadFailed?: boolean;
 };
 
-// @public @deprecated (undocumented)
+// @public
+export class ThemeSettingsStore {
+    constructor(data: WeaverseThemeData);
+    destroy: () => void;
+    getServerSnapshot: () => HydrogenThemeSettings;
+    getSnapshot: () => HydrogenThemeSettings;
+    publicEnv?: PublicEnv;
+    schema?: HydrogenThemeSchema;
+    settings: HydrogenThemeSettings;
+    subscribe: (callback: () => void) => () => void;
+    updateThemeSettings: (newSettings: HydrogenThemeSettings) => void;
+}
+
+// @public @deprecated
 export const ThemeTextProvider: typeof TranslationProvider;
 
-// @public @deprecated (undocumented)
+// @public @deprecated
 export type ThemeTextProviderProps = TranslationProviderProps;
 
-// @public @deprecated (undocumented)
+// @public @deprecated
 export const ThemeTextStore: typeof TranslationStore;
 
-// @public @deprecated (undocumented)
+// @public @deprecated
 export type ThemeTextStore = TranslationStore;
 
-// @public @deprecated (undocumented)
+// @public @deprecated
 export type ThemeTextValue = TranslationValue;
 
 // @public
@@ -437,15 +441,10 @@ export type TranslationChanges = {
 
 // @public
 export interface TranslationEntry {
-    // (undocumented)
     deleted?: boolean;
-    // (undocumented)
     itemId: string;
-    // (undocumented)
     key: string;
-    // (undocumented)
     originalValue: string;
-    // (undocumented)
     translatedValue: string;
 }
 
@@ -461,16 +460,14 @@ export type TranslationMap = {
 
 // @public
 export interface TranslationMapEntry {
-    // (undocumented)
     originalValue: string;
-    // (undocumented)
     translatedValue: string;
 }
 
 // @public
 export function TranslationProvider(input: TranslationProviderProps): JSX_2.Element;
 
-// @public (undocumented)
+// @public
 export type TranslationProviderProps = {
     staticContent: Record<string, unknown>;
     merchantOverrides?: Record<string, unknown>;
@@ -482,21 +479,15 @@ export type TranslationProviderProps = {
 
 // @public
 export class TranslationStore {
-    // (undocumented)
     getServerSnapshot: () => Record<string, string>;
-    // (undocumented)
     getSnapshot: () => Record<string, string>;
-    // (undocumented)
     overrides: Record<string, string>;
-    // (undocumented)
     setOverrides: (overrides: Record<string, string>) => void;
-    // (undocumented)
     subscribe: (callback: () => void) => () => void;
-    // (undocumented)
     updateOverrides: (newOverrides: Record<string, string>) => void;
 }
 
-// @public (undocumented)
+// @public
 export type TranslationValue = {
     t: TranslateFunction;
     translationStore: TranslationStore | null;
@@ -513,7 +504,7 @@ export { useParentInstance }
 // @public
 export function useThemeSettings<T = HydrogenThemeSettings>(): T;
 
-// @public @deprecated (undocumented)
+// @public @deprecated
 export const useThemeText: typeof useTranslation;
 
 // @public
@@ -524,53 +515,33 @@ export { useWeaverse }
 // @public
 export function useWeaverseDataContext(): WeaverseDataContext;
 
-// @public (undocumented)
+// @public
 export type WeaverseArticle = WeaverseResourcePickerData;
 
-// @public (undocumented)
+// @public
 export type WeaverseBlog = WeaverseResourcePickerData;
 
-// @public (undocumented)
+// @public
 export class WeaverseClient {
     constructor(args: WeaverseClientArgs);
-    // (undocumented)
     API: "v1";
-    // (undocumented)
     basePageConfigs: Omit<WeaverseProjectConfigs, 'requestInfo'>;
-    // (undocumented)
     basePageRequestBody: Omit<FetchProjectRequestBody, 'url'>;
-    // (undocumented)
     cache: WeaverseClientArgs['cache'];
-    // (undocumented)
     components: WeaverseClientArgs['components'];
-    // (undocumented)
     configs: WeaverseProjectConfigs;
-    // (undocumented)
     customerAccount: WeaverseClientArgs['customerAccount'];
-    // (undocumented)
     env: WeaverseClientArgs['env'];
-    // (undocumented)
     execComponentLoader: (item: HydrogenComponentData) => Promise<HydrogenComponentData>;
-    fetchCustomPages(opts?: {
-        locale?: string;
-        limit?: number;
-    }): Promise<CustomPageEntry[]>;
-    fetchWithCache: <T = unknown>(url: string, options?: RequestInit & {
-        cacheTarget?: BuilderApiCacheTarget;
-        strategy?: CachingStrategy;
-    }) => Promise<T>;
+    fetchCustomPages(opts?: FetchCustomPagesOptions): Promise<CustomPageEntry[]>;
+    fetchWithCache: <T = unknown>(url: string, options?: WeaverseFetchWithCacheOptions) => Promise<T>;
     generateFallbackPage: (message: string) => HydrogenPageData;
     loadPage: (params?: LoadPageParams) => Promise<WeaverseLoaderData | null>;
     loadThemeSettings: (strategy?: CachingStrategy) => Promise<ThemeSettingsResponse>;
-    // (undocumented)
     request: WeaverseClientArgs['request'];
-    // (undocumented)
     storefront: WeaverseClientArgs['storefront'];
-    // (undocumented)
     themeSchema: WeaverseClientArgs['themeSchema'];
-    // (undocumented)
     waitUntil: WeaverseClientArgs['waitUntil'];
-    // (undocumented)
     withCache: ReturnType<typeof createWithCache>;
 }
 
@@ -584,123 +555,106 @@ export type WeaverseClientArgs = HydrogenContext & {
     fetchTimeoutMs?: number;
 };
 
-// @public (undocumented)
+// @public
 export type WeaverseCollection = WeaverseResourcePickerData;
 
-// @public (undocumented)
+// @public
 export type WeaverseDataContext = RouteKeyedDataContext & Record<string, unknown>;
 
-// @public (undocumented)
+// @public
+export type WeaverseDataValue = WeaverseLoaderData | Promise<WeaverseLoaderData> | null;
+
+// @public
 export class WeaverseError extends Error {
     constructor(message: string, code?: string, statusCode?: number, context?: Record<string, unknown>);
-    // (undocumented)
     readonly code: string;
-    // (undocumented)
     readonly context?: Record<string, unknown>;
-    // (undocumented)
     readonly statusCode?: number;
 }
 
-// @public (undocumented)
+// @public
+export interface WeaverseErrorResponse {
+    error: string;
+}
+
+// @public
+export interface WeaverseFetchWithCacheOptions extends RequestInit {
+    cacheTarget?: BuilderApiCacheTarget;
+    strategy?: CachingStrategy;
+}
+
+// @public
 export class WeaverseHydrogen extends Weaverse {
     constructor(params: WeaverseHydrogenParams);
-    // (undocumented)
     data: HydrogenPageData;
-    // (undocumented)
     static elementRegistry: Map<string, HydrogenElement>;
     extractTranslationSidecar: () => void;
     getTranslationChanges: () => TranslationChanges | undefined;
-    // (undocumented)
     internal: Partial<WeaverseInternal>;
-    // (undocumented)
     isDesignMode: boolean;
-    // (undocumented)
     isPreviewMode: boolean;
-    // (undocumented)
     isRevisionPreview: boolean;
-    // (undocumented)
     ItemConstructor: typeof WeaverseHydrogenItem;
-    // (undocumented)
     static itemInstances: Map<string, WeaverseHydrogenItem>;
-    // (undocumented)
     pageId: string;
-    // (undocumented)
     projectId: string;
-    // (undocumented)
     requestInfo: WeaverseLoaderRequestInfo;
-    // (undocumented)
     sectionType: string;
     setProjectData: (data: HydrogenPageData) => void;
     setTranslationSidecar: (translationMap: TranslationMap, locale: string, languageId: string) => void;
-    // (undocumented)
     translationLanguageId: string;
-    // (undocumented)
     translationLocale: string;
     translationMap: TranslationMap;
     updateTranslation: (itemId: string, key: string, originalValue: string, translatedValue: string) => void;
-    // (undocumented)
     weaverseApiBase: string;
-    // (undocumented)
     weaverseApiKey: string;
-    // (undocumented)
     weaverseHost: string;
-    // (undocumented)
     weaverseVersion: string;
 }
 
-// @public (undocumented)
+// @public
 export class WeaverseHydrogenItem extends WeaverseItemStore {
     constructor(initialData: HydrogenComponentData, weaverse: WeaverseHydrogen);
-    // (undocumented)
     get Element(): HydrogenElement;
     getSnapShot: () => ElementData;
-    // (undocumented)
     weaverse: WeaverseHydrogen;
 }
 
-// @public (undocumented)
+// @public
 export interface WeaverseHydrogenParams extends Omit<WeaverseCoreParams, 'ItemConstructor'> {
-    // (undocumented)
     data: HydrogenPageData;
-    // (undocumented)
     dataContext?: Record<string, unknown> | null;
-    // (undocumented)
     internal: Partial<WeaverseInternal>;
-    // (undocumented)
     isDesignMode?: boolean;
-    // (undocumented)
     isPreviewMode?: boolean;
-    // (undocumented)
     isRevisionPreview?: boolean;
-    // (undocumented)
     pageId: string;
-    // (undocumented)
     projectId: string;
-    // (undocumented)
     requestInfo: WeaverseLoaderRequestInfo;
-    // (undocumented)
     sectionType?: string;
-    // (undocumented)
     weaverseApiBase: string;
-    // (undocumented)
     weaverseApiKey: string;
-    // (undocumented)
     weaverseHost: string;
     weaversePublicApiBase?: string;
-    // (undocumented)
     weaverseVersion?: string;
 }
 
-// @public (undocumented)
-export const WeaverseHydrogenRoot: MemoExoticComponent<(input: {
-components: HydrogenComponent[];
-data?: WeaverseDataValue;
-errorComponent?: React.FC<{
-error: Error | unknown;
-}>;
-}) => JSX_2.Element | null>;
+// @public
+export const WeaverseHydrogenRoot: MemoExoticComponent<(input: WeaverseHydrogenRootProps) => JSX_2.Element | null>;
 
-// @public (undocumented)
+// @public
+export interface WeaverseHydrogenRootErrorProps {
+    error: Error | unknown;
+}
+
+// @public
+export interface WeaverseHydrogenRootProps {
+    components: HydrogenComponent[];
+    data?: WeaverseDataValue;
+    errorComponent?: React.FC<WeaverseHydrogenRootErrorProps>;
+}
+
+// @public
 export type WeaverseI18n = I18nBase & {
     label?: string;
     pathPrefix?: string;
@@ -709,7 +663,7 @@ export type WeaverseI18n = I18nBase & {
 
 export { WeaverseImage }
 
-// @public (undocumented)
+// @public
 export type WeaverseInternal = {
     pageAssignment: HydrogenPageAssignment;
     project: HydrogenProjectType;
@@ -721,7 +675,7 @@ export type WeaverseInternal = {
     merchantOverrides?: Record<string, unknown> | null;
 };
 
-// @public (undocumented)
+// @public
 export type WeaverseLoaderData = {
     configs: Omit<WeaverseProjectConfigs, 'publicEnv'> & {
         requestInfo: WeaverseLoaderRequestInfo;
@@ -731,7 +685,7 @@ export type WeaverseLoaderData = {
     pageAssignment?: HydrogenPageAssignment;
 };
 
-// @public (undocumented)
+// @public
 export type WeaverseLoaderRequestInfo = {
     search: string;
     pathname: string;
@@ -741,13 +695,13 @@ export type WeaverseLoaderRequestInfo = {
     i18n: WeaverseI18n;
 };
 
-// @public (undocumented)
+// @public
 export type WeaverseMetaObject = WeaverseResourcePickerData;
 
-// @public (undocumented)
+// @public
 export type WeaverseProduct = WeaverseResourcePickerData;
 
-// @public (undocumented)
+// @public
 export type WeaverseProjectConfigs = {
     projectId: string;
     weaverseHost: string;
@@ -762,7 +716,26 @@ export type WeaverseProjectConfigs = {
     publicEnv?: PublicEnv;
 };
 
-// @public (undocumented)
+// @public
+export interface WeaverseRouteAppLoadContext extends AppLoadContext {
+    weaverse: WeaverseClient;
+}
+
+// @public
+export type WeaverseSeoInput = WeaverseLoaderData | HydrogenPageData | WeaverseSeoPageContainer | null | undefined;
+
+// @public
+export interface WeaverseSeoPageContainer {
+    page?: HydrogenPageData | null;
+}
+
+// @public
+export interface WeaverseStudio {
+    init: (weaverse: WeaverseHydrogen) => void;
+    refreshStudio: (params: WeaverseHydrogenParams) => void;
+}
+
+// @public
 export type WeaverseStudioQueries = {
     weaverseProjectId: string;
     weaverseApiKey: string;
@@ -772,6 +745,18 @@ export type WeaverseStudioQueries = {
     isPreviewMode?: boolean;
     sectionType?: string;
 };
+
+// @public
+export interface WeaverseStudioWindow extends Window {
+    weaverseStudio: WeaverseStudio;
+}
+
+// @public
+export interface WeaverseThemeData {
+    publicEnv?: PublicEnv;
+    schema?: HydrogenThemeSchema;
+    theme: HydrogenThemeSettings;
+}
 
 export { WeaverseVideo }
 
@@ -791,7 +776,5 @@ export type WithWeaverseOptions = {
 
 
 export * from "@weaverse/schema";
-
-// (No @packageDocumentation comment for this package)
 
 ```
