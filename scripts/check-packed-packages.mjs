@@ -3,13 +3,15 @@ import {
   existsSync,
   mkdirSync,
   mkdtempSync,
+  readdirSync,
   readFileSync,
   rmSync,
   writeFileSync,
 } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { dirname, join } from 'node:path'
+import { dirname, join, resolve, sep } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import { originalPositionFor, TraceMap } from '@jridgewell/trace-mapping'
 import ts from 'typescript'
 import {
   collectPublishedFiles,
@@ -23,6 +25,8 @@ let PNPM = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm'
 const RUNTIME_JSON_BLOCK = /```json\n([\s\S]*?)\n```/
 // Next's browser entry imports next/navigation, which is resolved by its bundler.
 const NODE_ESM_EXCLUSIONS = new Set(['@weaverse/next'])
+// Schema's Zod-inferred types change consumer strictness when emitted unbundled.
+const DECLARATION_MAP_EXCLUSIONS = new Set(['@weaverse/schema'])
 let publishedPackages = getPublishedPackages(ROOT_DIR)
 let typeEntrypoints = publishedPackages.flatMap((publishedPackage) =>
   publishedPackage.entrypoints
@@ -31,6 +35,13 @@ let typeEntrypoints = publishedPackages.flatMap((publishedPackage) =>
 )
 let scratchDir = mkdtempSync(join(tmpdir(), 'weaverse-packed-packages-'))
 let consumerDir = join(scratchDir, 'consumer')
+
+function walk(directory) {
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    let path = join(directory, entry.name)
+    return entry.isDirectory() ? walk(path) : [path]
+  })
+}
 
 function run(command, args, options = {}) {
   let result = spawnSync(command, args, {
@@ -45,6 +56,25 @@ function run(command, args, options = {}) {
   }
 
   return result.stdout.trim()
+}
+
+function verifyIdentityMap(declarationFile, declarationMap, sourceFile) {
+  let traceMap = new TraceMap(declarationMap)
+  let lines = readFileSync(sourceFile, 'utf8').split('\n')
+
+  for (let [lineIndex, line] of lines.entries()) {
+    for (let column of new Set([0, Math.floor(line.length / 2), line.length])) {
+      let position = originalPositionFor(traceMap, {
+        line: lineIndex + 1,
+        column,
+      })
+      if (position.line !== lineIndex + 1 || position.column !== column) {
+        throw new Error(
+          `Declaration map is not identity-preserving at ${declarationFile}:${lineIndex + 1}:${column}`
+        )
+      }
+    }
+  }
 }
 
 function normalizeEntry(entryFile) {
@@ -148,6 +178,49 @@ try {
         )
       }
     }
+
+    let declarationFolders = DECLARATION_MAP_EXCLUSIONS.has(packageJson.name)
+      ? new Set()
+      : new Set(
+          publishedPackage.entrypoints
+            .filter((entrypoint) => entrypoint.types)
+            .map((entrypoint) =>
+              dirname(join(packedFolder, normalizeEntry(entrypoint.types)))
+            )
+        )
+    let declarationFiles = [...declarationFolders].flatMap((folder) =>
+      walk(folder).filter((file) => file.endsWith('.d.ts'))
+    )
+    let packedPrefix = `${resolve(packedFolder)}${sep}`
+
+    for (let declarationFile of declarationFiles) {
+      let mapFile = `${declarationFile}.map`
+      if (!existsSync(mapFile)) {
+        throw new Error(`${packageJson.name} is missing ${mapFile}`)
+      }
+
+      let declarationMap = JSON.parse(readFileSync(mapFile, 'utf8'))
+      for (let source of declarationMap.sources) {
+        let target = resolve(
+          dirname(mapFile),
+          declarationMap.sourceRoot ?? '',
+          source
+        )
+        if (!(target.startsWith(packedPrefix) && existsSync(target))) {
+          throw new Error(
+            `${packageJson.name} declaration map points outside its tarball: ${source}`
+          )
+        }
+        if (!target.includes(`${sep}src${sep}`)) {
+          throw new Error(
+            `${packageJson.name} declaration map does not target authored source: ${source}`
+          )
+        }
+        if (target.endsWith('.d.ts')) {
+          verifyIdentityMap(declarationFile, declarationMap, target)
+        }
+      }
+    }
   }
 
   for (let packageName of ['@weaverse/hydrogen', '@weaverse/schema']) {
@@ -156,14 +229,15 @@ try {
     )
     let declarationFiles = publishedPackage.entrypoints
       .filter((entrypoint) => entrypoint.types)
-      .map((entrypoint) =>
-        join(
+      .flatMap((entrypoint) => {
+        let entryFile = join(
           consumerDir,
           'node_modules',
           ...packageName.split('/'),
           normalizeEntry(entrypoint.types)
         )
-      )
+        return walk(dirname(entryFile)).filter((file) => file.endsWith('.d.ts'))
+      })
 
     if (!declarationFiles.some(hasDeprecatedEnabledOnProperty)) {
       throw new Error(
@@ -308,6 +382,29 @@ void [modules, componentSchema, hydrogenEnabled]
 `
   )
   writeFileSync(
+    join(consumerDir, 'consumer.cts'),
+    `import { Weaverse } from '@weaverse/core'
+import { assignVariant } from '@weaverse/experiments'
+import { createExposureTracker } from '@weaverse/experiments/react'
+import { getExperiments } from '@weaverse/experiments/server'
+import { WeaverseClient } from '@weaverse/hydrogen'
+import { createWeaverseNextClient } from '@weaverse/next'
+import { getWeaverseNextConfigs } from '@weaverse/next/server'
+import { WeaverseRoot } from '@weaverse/react'
+
+void [
+  Weaverse,
+  assignVariant,
+  createExposureTracker,
+  getExperiments,
+  WeaverseClient,
+  createWeaverseNextClient,
+  getWeaverseNextConfigs,
+  WeaverseRoot,
+]
+`
+  )
+  writeFileSync(
     join(consumerDir, 'strict.ts'),
     `import type { SchemaType } from '@weaverse/schema'
 
@@ -343,7 +440,11 @@ void legacyLooseSchema
             skipLibCheck: true,
             jsx: 'react-jsx',
           },
-          files: ['index.ts', strict ? 'strict.ts' : 'loose.ts'],
+          files: [
+            'index.ts',
+            'consumer.cts',
+            strict ? 'strict.ts' : 'loose.ts',
+          ],
         },
         null,
         2

@@ -4,52 +4,53 @@
 
 ```ts
 
-import { AppLoadContext } from '@shopify/remix-oxygen';
-import { BasicInput } from '@weaverse/schema';
+import type { AppLoadContext } from '@shopify/remix-oxygen';
+import type { BasicInput } from '@weaverse/schema';
 import { CachingStrategy } from '@shopify/hydrogen';
-import { ComponentAvailabilityContext } from '@weaverse/schema';
-import { ComponentGroup } from '@weaverse/schema';
-import { ComponentPresets } from '@weaverse/schema';
+import type { ComponentAvailabilityContext } from '@weaverse/schema';
+import type { ComponentGroup } from '@weaverse/schema';
+import type { ComponentPresets } from '@weaverse/schema';
 import { ComponentType } from 'react';
 import { createWithCache } from '@shopify/hydrogen';
-import { ElementData } from '@weaverse/react';
-import { ForwardRefExoticComponent } from 'react';
-import { HeadingInput } from '@weaverse/schema';
-import { HydrogenContext } from '@shopify/hydrogen';
-import { HydrogenEnv } from '@shopify/hydrogen';
-import { I18nBase } from '@shopify/hydrogen';
-import { InputType } from '@weaverse/schema';
-import { InspectorGroup } from '@weaverse/schema';
+import type { ElementData } from '@weaverse/react';
+import type { ForwardRefExoticComponent } from 'react';
+import type { HeadingInput } from '@weaverse/schema';
+import type { HydrogenContext } from '@shopify/hydrogen';
+import type { HydrogenEnv } from '@shopify/hydrogen';
+import type { I18nBase } from '@shopify/hydrogen';
+import type { InputType } from '@weaverse/schema';
+import type { InspectorGroup } from '@weaverse/schema';
 import { isBrowser } from '@weaverse/react';
 import { isIframe } from '@weaverse/react';
-import { JSX as JSX_2 } from 'react';
-import { LoaderFunctionArgs } from '@shopify/remix-oxygen';
-import { MetaDescriptor } from 'react-router';
-import { NavigateFunction } from 'react-router';
-import { PageSEOData } from '@weaverse/schema';
-import { PageType } from '@weaverse/schema';
-import { PositionInputValue } from '@weaverse/react';
-import * as React$1 from 'react';
-import * as react_jsx_runtime from 'react/jsx-runtime';
+import { JSX as JSX_2 } from 'react/jsx-runtime';
+import { JSX as JSX_3 } from 'react';
+import type { LoaderFunctionArgs } from '@shopify/remix-oxygen';
+import { MemoExoticComponent } from 'react';
+import type { MetaDescriptor } from 'react-router';
+import type { NavigateFunction } from 'react-router';
+import type { PageSEOData } from '@weaverse/schema';
+import type { PageType } from '@weaverse/schema';
+import type { PositionInputValue } from '@weaverse/react';
+import type * as React_2 from 'react';
 import { ReactNode } from 'react';
-import { Resolvable } from '@weaverse/schema';
-import { SchemaType } from '@weaverse/schema';
-import { SchemaValidationIssue } from '@weaverse/schema';
-import { SchemaValidationResult } from '@weaverse/schema';
-import { SelectedOptionInput } from '@shopify/hydrogen/storefront-api-types';
+import type { Resolvable } from '@weaverse/schema';
+import type { SchemaType } from '@weaverse/schema';
+import type { SchemaValidationIssue } from '@weaverse/schema';
+import type { SchemaValidationResult } from '@weaverse/schema';
+import type { SelectedOptionInput } from '@shopify/hydrogen/storefront-api-types';
 import { UIMatch } from 'react-router';
 import { useChildInstances } from '@weaverse/react';
 import { useItemInstance } from '@weaverse/react';
 import { useParentInstance } from '@weaverse/react';
 import { useWeaverse } from '@weaverse/react';
 import { Weaverse } from '@weaverse/react';
-import { WeaverseCoreParams } from '@weaverse/react';
-import { WeaverseElement } from '@weaverse/react';
-import { WeaverseImage } from '@weaverse/react';
+import type { WeaverseCoreParams } from '@weaverse/react';
+import type { WeaverseElement } from '@weaverse/react';
+import type { WeaverseImage } from '@weaverse/react';
 import { WeaverseItemStore } from '@weaverse/react';
-import { WeaverseProjectDataType } from '@weaverse/react';
-import { WeaverseResourcePickerData } from '@weaverse/react';
-import { WeaverseVideo } from '@weaverse/react';
+import type { WeaverseProjectDataType } from '@weaverse/react';
+import type { WeaverseResourcePickerData } from '@weaverse/react';
+import type { WeaverseVideo } from '@weaverse/react';
 
 export { BasicInput }
 
@@ -181,7 +182,7 @@ export { HeadingInput }
 
 // @public (undocumented)
 export type HydrogenComponent<T extends HydrogenComponentProps = any> = {
-    default: ForwardRefExoticComponent<T> | ((props: T) => React$1.JSX.Element);
+    default: ForwardRefExoticComponent<T> | ((props: T) => React_2.JSX.Element);
     schema: HydrogenComponentSchema;
     loader?: (args: ComponentLoaderArgs) => Promise<unknown>;
 };
@@ -212,7 +213,7 @@ export type HydrogenComponentPresets = ComponentPresets;
 // @public (undocumented)
 export interface HydrogenComponentProps<L = any> extends WeaverseElement {
     // (undocumented)
-    children?: React$1.JSX.Element[];
+    children?: React_2.JSX.Element[];
     // (undocumented)
     className?: string;
     // (undocumented)
@@ -224,7 +225,7 @@ export type HydrogenComponentSchema = SchemaType;
 
 // @public (undocumented)
 export type HydrogenElement = {
-    Component: ForwardRefExoticComponent<HydrogenComponentProps> | ((props: HydrogenComponentProps) => React$1.JSX.Element);
+    Component: ForwardRefExoticComponent<HydrogenComponentProps> | ((props: HydrogenComponentProps) => React_2.JSX.Element);
     type: string;
     schema?: HydrogenComponentSchema;
     loader?: (args: ComponentLoaderArgs) => Promise<unknown>;
@@ -467,7 +468,7 @@ export interface TranslationMapEntry {
 }
 
 // @public
-export function TranslationProvider(input: TranslationProviderProps): react_jsx_runtime.JSX.Element;
+export function TranslationProvider(input: TranslationProviderProps): JSX_2.Element;
 
 // @public (undocumented)
 export type TranslationProviderProps = {
@@ -691,13 +692,13 @@ export interface WeaverseHydrogenParams extends Omit<WeaverseCoreParams, 'ItemCo
 }
 
 // @public (undocumented)
-export const WeaverseHydrogenRoot: React$1.MemoExoticComponent<(input: {
-    components: HydrogenComponent[];
-    data?: WeaverseDataValue;
-    errorComponent?: React.FC<{
-        error: Error | unknown;
-    }>;
-}) => react_jsx_runtime.JSX.Element | null>;
+export const WeaverseHydrogenRoot: MemoExoticComponent<(input: {
+components: HydrogenComponent[];
+data?: WeaverseDataValue;
+errorComponent?: React.FC<{
+error: Error | unknown;
+}>;
+}) => JSX_2.Element | null>;
 
 // @public (undocumented)
 export type WeaverseI18n = I18nBase & {
@@ -781,7 +782,7 @@ export type WithCacheFetchResponse<T> = {
 };
 
 // @public
-export function withWeaverse(Component: ComponentType<any>, options?: WithWeaverseOptions): (props: JSX_2.IntrinsicAttributes) => react_jsx_runtime.JSX.Element;
+export function withWeaverse(Component: ComponentType<any>, options?: WithWeaverseOptions): (props: JSX_3.IntrinsicAttributes) => JSX_2.Element;
 
 // @public
 export type WithWeaverseOptions = {

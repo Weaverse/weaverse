@@ -4,8 +4,8 @@
 
 ```ts
 
-import { CSSProperties } from 'react';
-import { ForwardRefExoticComponent } from 'react';
+import type { CSSProperties } from 'react';
+import type { ForwardRefExoticComponent } from 'react';
 import { RefObject } from 'react';
 
 // @public (undocumented)

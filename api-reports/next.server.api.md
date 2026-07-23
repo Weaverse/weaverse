@@ -4,15 +4,15 @@
 
 ```ts
 
-import { ComponentType } from 'react';
-import { ForwardRefExoticComponent } from 'react';
-import { InspectorGroup } from '@weaverse/schema';
-import { Metadata } from 'next';
-import { PageSEOData } from '@weaverse/schema';
-import { PageType } from '@weaverse/schema';
-import { ReactNode } from 'react';
-import { SchemaType } from '@weaverse/schema';
-import { WeaverseElement } from '@weaverse/react';
+import type { ComponentType } from 'react';
+import type { ForwardRefExoticComponent } from 'react';
+import type { InspectorGroup } from '@weaverse/schema';
+import type { Metadata } from 'next';
+import type { PageSEOData } from '@weaverse/schema';
+import type { PageType } from '@weaverse/schema';
+import type { ReactNode } from 'react';
+import type { SchemaType } from '@weaverse/schema';
+import type { WeaverseElement } from '@weaverse/react';
 
 // @public
 export function createWeaverseNextRevalidateHandler(config: WeaverseNextRevalidateHandlerConfig): {

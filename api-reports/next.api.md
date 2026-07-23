@@ -4,27 +4,27 @@
 
 ```ts
 
-import { ComponentType } from 'react';
-import { ElementData } from '@weaverse/react';
-import { ForwardRefExoticComponent } from 'react';
-import { InspectorGroup } from '@weaverse/schema';
+import type { ComponentType } from 'react';
+import type { ElementData } from '@weaverse/react';
+import type { ForwardRefExoticComponent } from 'react';
+import type { InspectorGroup } from '@weaverse/schema';
 import { isBrowser } from '@weaverse/react';
 import { isIframe } from '@weaverse/react';
-import { Metadata } from 'next';
-import { PageSEOData } from '@weaverse/schema';
+import { JSX } from 'react/jsx-runtime';
+import { MemoExoticComponent } from 'react';
+import type { Metadata } from 'next';
+import type { PageSEOData } from '@weaverse/schema';
 import { PageType } from '@weaverse/schema';
-import * as react from 'react';
-import * as react_jsx_runtime from 'react/jsx-runtime';
 import { ReactNode } from 'react';
-import { SchemaType } from '@weaverse/schema';
+import type { SchemaType } from '@weaverse/schema';
 import { useChildInstances } from '@weaverse/react';
 import { useItemInstance } from '@weaverse/react';
 import { useParentInstance } from '@weaverse/react';
 import { useWeaverse } from '@weaverse/react';
 import { Weaverse } from '@weaverse/react';
-import { WeaverseElement } from '@weaverse/react';
+import type { WeaverseElement } from '@weaverse/react';
 import { WeaverseItemStore } from '@weaverse/react';
-import { WeaverseResourcePickerData } from '@weaverse/react';
+import type { WeaverseResourcePickerData } from '@weaverse/react';
 
 // @public (undocumented)
 export function bindWeaverseNextStudioRuntime(runtime: WeaverseNextRuntime): boolean;
@@ -153,7 +153,7 @@ export type ThemeTextValue = TranslationValue;
 export type TranslateFunction = (key: string, variables?: Record<string, string | number>) => string;
 
 // @public
-export function TranslationProvider(input: TranslationProviderProps): react_jsx_runtime.JSX.Element;
+export function TranslationProvider(input: TranslationProviderProps): JSX.Element;
 
 // @public (undocumented)
 export interface TranslationProviderProps {
@@ -439,7 +439,7 @@ export interface WeaverseNextPageData {
 }
 
 // @public
-export function WeaverseNextProvider(props: WeaverseNextProviderProps): react_jsx_runtime.JSX.Element;
+export function WeaverseNextProvider(props: WeaverseNextProviderProps): JSX.Element;
 
 // @public (undocumented)
 export interface WeaverseNextProviderProps {
@@ -457,7 +457,7 @@ export interface WeaverseNextProviderProps {
 }
 
 // @public
-export const WeaverseNextRenderer: react.MemoExoticComponent<(props: WeaverseNextRendererProps) => react_jsx_runtime.JSX.Element | null>;
+export const WeaverseNextRenderer: MemoExoticComponent<(props: WeaverseNextRendererProps) => JSX.Element | null>;
 
 // @public (undocumented)
 export interface WeaverseNextRendererProps {
@@ -516,7 +516,7 @@ export interface WeaverseNextRootContextValue {
 }
 
 // @public
-export function WeaverseNextRootProvider(props: WeaverseNextRootProviderProps): react_jsx_runtime.JSX.Element;
+export function WeaverseNextRootProvider(props: WeaverseNextRootProviderProps): JSX.Element;
 
 // @public (undocumented)
 export interface WeaverseNextRootProviderProps {
@@ -653,7 +653,7 @@ export interface WeaverseNextStorefront {
 }
 
 // @public
-export function WeaverseNextStudio(props: WeaverseNextStudioProps): react_jsx_runtime.JSX.Element;
+export function WeaverseNextStudio(props: WeaverseNextStudioProps): JSX.Element;
 
 // @public
 export function WeaverseNextStudioBridge(props: WeaverseNextStudioBridgeProps): null;

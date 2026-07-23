@@ -4,8 +4,8 @@
 
 ```ts
 
-import * as react_jsx_runtime from 'react/jsx-runtime';
-import { ReactNode } from 'react';
+import { JSX } from 'react/jsx-runtime';
+import type { ReactNode } from 'react';
 
 // @public
 export function createExposureTracker(): ExposureTracker;
@@ -22,7 +22,7 @@ export function useExperiment(experimentId: string): Assignment | undefined;
 export function useExperiments(): Assignment[];
 
 // @public
-export function WeaverseExperiments(input: WeaverseExperimentsProps): react_jsx_runtime.JSX.Element;
+export function WeaverseExperiments(input: WeaverseExperimentsProps): JSX.Element;
 
 // @public (undocumented)
 export interface WeaverseExperimentsProps {

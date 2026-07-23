@@ -4,12 +4,13 @@
 
 ```ts
 
-import { ElementCSS } from '@weaverse/core';
-import * as react from 'react';
-import react__default from 'react';
-import * as react_jsx_runtime from 'react/jsx-runtime';
-import { ReactElement } from 'react';
-import { ReactNode } from 'react';
+import { Context } from 'react';
+import type { ElementCSS } from '@weaverse/core';
+import { JSX } from 'react/jsx-runtime';
+import { Provider } from 'react';
+import { default as React_2 } from 'react';
+import type { ReactElement } from 'react';
+import type { ReactNode } from 'react';
 import { Weaverse } from '@weaverse/core';
 import { WeaverseItemStore } from '@weaverse/core';
 
@@ -40,10 +41,10 @@ export const useSafeExternalStore: (subscribe: any, getSnapshot: any, getServerS
 export function useWeaverse<T = Weaverse>(): T;
 
 // @public (undocumented)
-export let WeaverseContext: react.Context<Weaverse>;
+export let WeaverseContext: Context<Weaverse>;
 
 // @public (undocumented)
-export let WeaverseContextProvider: react.Provider<Weaverse>;
+export let WeaverseContextProvider: Provider<Weaverse>;
 
 // @public (undocumented)
 export interface WeaverseElementProps extends Partial<ReactElement> {
@@ -58,13 +59,13 @@ export interface WeaverseElementProps extends Partial<ReactElement> {
 }
 
 // @public (undocumented)
-export let WeaverseItemContext: react.Context<{
-    id: string;
-    parentId: string;
+export let WeaverseItemContext: Context<    {
+id: string;
+parentId: string;
 }>;
 
 // @public (undocumented)
-export const WeaverseRoot: react__default.MemoExoticComponent<(input: WeaverseRootPropsType) => react_jsx_runtime.JSX.Element | null>;
+export const WeaverseRoot: React_2.MemoExoticComponent<(input: WeaverseRootPropsType) => JSX.Element | null>;
 
 // @public (undocumented)
 export type WeaverseRootPropsType = {

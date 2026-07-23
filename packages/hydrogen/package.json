@@ -5,7 +5,7 @@
   "version": "5.17.1",
   "license": "MIT",
   "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "typings": "dist/types/index.d.ts",
   "module": "dist/index.mjs",
   "publishConfig": {
     "access": "public",
@@ -16,14 +16,15 @@
     "directory": "packages/hydrogen"
   },
   "files": [
-    "dist/*"
+    "dist",
+    "src"
   ],
   "engines": {
     "node": ">=20"
   },
   "scripts": {
     "dev": "tsup --watch",
-    "build": "tsup",
+    "build": "tsup && node ../../scripts/build-declarations.mjs",
     "clean": "rimraf dist",
     "test": "vp test --run",
     "typecheck": "tsc --noEmit"

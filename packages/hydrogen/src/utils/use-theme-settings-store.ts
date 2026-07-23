@@ -5,7 +5,7 @@ import type {
   HydrogenThemeSchema,
   HydrogenThemeSettings,
   PublicEnv,
-} from '~/types'
+} from '../types'
 
 type WeaverseThemeData = {
   theme: HydrogenThemeSettings

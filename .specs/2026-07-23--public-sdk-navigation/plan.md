@@ -22,12 +22,13 @@
 - Packed artifacts, not source imports, prove the package interface.
 - Existing permissive schema authoring behavior has compatibility fixtures.
 
-## Phase 2 — Restore authored-source navigation
+## Phase 2 — Restore authored-source navigation (in progress)
 
 1. Prototype source-preserving declaration output on `@weaverse/schema`.
-2. Emit declaration maps and include every mapped source in the tarball.
-3. Verify all map targets after packing.
-4. Roll the proven configuration through Core, React, Hydrogen, Experiments, and Next.
+   - Result: unbundled Zod inference changed strict/non-strict consumer behavior, so Schema remains bundled until Phase 3 introduces equivalent explicit contracts.
+2. Emit source-preserving declarations and declaration maps for Core, React, Hydrogen, Experiments, and Next.
+3. Include every mapped source in each tarball and verify map targets after packing.
+4. Complete Schema navigation after its compatibility boundary is removed.
 
 ### Exit criteria
 

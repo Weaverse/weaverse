@@ -6,9 +6,9 @@ import {
   useNavigation,
   useRevalidator,
 } from 'react-router'
-import type { WeaverseHydrogen } from '~/index'
-import { hasWeaverseStudio } from '~/types'
 import { useTranslation } from '../hooks/translation-context'
+import type { WeaverseHydrogen } from '../index'
+import { hasWeaverseStudio } from '../types'
 import {
   observeNavigation,
   registerPixelInstance,

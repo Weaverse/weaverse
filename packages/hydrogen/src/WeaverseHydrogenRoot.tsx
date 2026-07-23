@@ -21,7 +21,7 @@ import {
   useMatches,
   useRouteLoaderData,
 } from 'react-router'
-import { defaultComponents } from '~/components'
+import { defaultComponents } from './components'
 import {
   type TranslateFunction,
   TranslationProvider,
