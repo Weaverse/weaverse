@@ -113,7 +113,9 @@ the expected failure, then make the minimum implementation pass.
 4. Exercise localized Product, Collection, and Custom routes in Studio.
 5. Change a real product and collection resource on the smoke section.
 6. Inspect the revalidation response/visible QA snapshot for exact pathname,
-   locale, page type/handle, and ordinary query params.
+   locale, page type/handle, and the harmless allowlisted QA queries. Verify
+   full ordinary query preservation in the server-side contract tests rather
+   than reflecting arbitrary query values into public loader data.
 7. Confirm no page remount, scroll reset, stale draft, secret-bearing body field,
    or unexpected full-route refresh.
 8. Remove the endpoint temporarily or mock a non-OK response and confirm Builder

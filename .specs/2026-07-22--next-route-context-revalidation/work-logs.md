@@ -139,7 +139,7 @@ All changes left uncommitted for Hermes review.
 - Packed the local SDK candidate and overlaid the tarball into the POC's
   `node_modules`; no workspace-only resolution or package manifest change was
   used for behavioral verification.
-- POC gates against the packed candidate passed: `npm test` (`15/15`),
+- POC gates against the packed candidate passed: `npm test` (`19/19`),
   `npm run typecheck`, `npm run lint` (zero errors; five pre-existing image
   warnings), and `npm run build`.
 - Local Builder + POC runtime returned `200` for a localized Product,
@@ -160,15 +160,36 @@ All changes left uncommitted for Hermes review.
   so no in-frame edit, no-remount, scroll-continuity, or stale-draft claim is
   made. Those checks remain required after the POC consumes the new prerelease.
 
-### Final review and PR dependency
+### Delayed independent review corrections
 
-- A synchronous source-aware Claude review inspected both frozen repo diffs,
-  adjacent source, the merged spec, and the executed evidence. Verdict:
-  **APPROVE**, no blockers.
-- The SDK branch is ready for a normal PR.
+- A synchronous source-aware review initially returned `APPROVE`, but two
+  delayed independent source reviews subsequently returned `BLOCK`. The later
+  findings superseded the earlier verdict and were resolved before PR creation.
+- SDK correction: unknown own i18n keys (nested or string) now fail closed before
+  client creation; the package README's server and client examples preserve
+  `pageType` / `handle` end to end. Canonical SDK gates pass `153/153` tests,
+  typecheck, build, and Biome.
+- POC correction: static Hydrogen clients are cached by country/language, the
+  real resource query declares market variables with `@inContext`, and a fetch
+  capture proves FR route context reaches Shopify as FR/FR rather than US/EN.
+  Cache keys are restricted to configured app markets; unsupported untrusted
+  pairs fall back to US/EN instead of creating unbounded clients.
+- POC correction: the public QA snapshot strictly allowlists only `variant` and
+  `sort_by`; OAuth-like `code`, `token`, `access_token`, arbitrary values, and
+  server-owned controls are not reflected into loader data. The underlying
+  validated request context remains unchanged for real loaders.
+- An actual packed-candidate API-route probe verified valid Product/FR callback
+  propagation, public snapshot redaction, and `400 invalid-route-context` for an
+  unknown nested i18n key.
+- Two final synchronous, read-only source reviews inspected the corrected live
+  diffs independently and returned `APPROVE` / `APPROVE` with no blockers. Hermes
+  separately executed the canonical SDK, registry POC, packed POC, and actual
+  route probe gates recorded above.
+- The SDK branch is ready for a normal PR after these corrections.
 - The POC branch must open as draft and remain blocked until the SDK PR merges,
   a new prerelease is published, and `package.json` / `package-lock.json` are
   bumped to that real registry version. Packed tarball contents must never be
   committed as the dependency source.
 - After packed verification, `npm ci` restored the POC to the real registry
-  alpha.13; registry-mode tests (`15/15`) and typecheck passed.
+  alpha.13; registry-mode tests (`19/19`) passed, and package manifests remained
+  unchanged.

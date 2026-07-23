@@ -170,15 +170,25 @@ Main exports:
 
 Example helper for a Next route/server component boundary:
 
+This helper is app-level (not exported by `@weaverse/next`); it plays the role
+of Hydrogen's global load context, but the app owns route identity explicitly.
+The App Router boundary supplies `pathname`, `pageType`, and `handle`, so the
+same identity reaches page loads and per-item revalidation loaders. It uses the
+exported `PageType` and `WeaverseNextRequestContext` types:
+
 ```ts
 import { createWeaverseNextServerClient } from '@weaverse/next/server'
+import type { PageType, WeaverseNextRequestContext } from '@weaverse/next'
 import { headers } from 'next/headers'
 import { serverComponents } from './server-components'
 import { getStaticStorefrontClient } from './storefront'
 
 export async function getWeaverseServerClient(
   searchParamsPromise: Promise<Record<string, string | string[] | undefined>>,
-  pathname = '/'
+  pathname = '/',
+  // Route identity the App Router segment owns. Seeding it here means loaders
+  // resolve the same page type / handle during SSR and per-item revalidation.
+  identity: { pageType?: PageType; handle?: string } = {}
 ) {
   let [headersList, rawSearchParams] = await Promise.all([
     headers(),
@@ -204,6 +214,16 @@ export async function getWeaverseServerClient(
 
   let storefront = getStaticStorefrontClient()
 
+  let requestContext: WeaverseNextRequestContext = {
+    url,
+    headers: requestHeaders,
+    searchParams,
+    pathname,
+    pageType: identity.pageType,
+    handle: identity.handle,
+    i18n: { country: 'US', language: 'EN', locale: 'en-US' },
+  }
+
   return createWeaverseNextServerClient({
     components: serverComponents,
     projectId: process.env.WEAVERSE_PROJECT_ID,
@@ -220,24 +240,34 @@ export async function getWeaverseServerClient(
           },
         }
       : undefined,
-    requestContext: {
-      url,
-      headers: requestHeaders,
-      searchParams,
-      pathname,
-      i18n: { country: 'US', language: 'EN', locale: 'en-US' },
-    },
+    requestContext,
     cache: { revalidate: 60, tags: ['weaverse'] },
   })
 }
 ```
 
-Then each route can stay close to the Hydrogen mental model:
+Then each route stays close to the Hydrogen mental model while supplying the
+route identity the segment owns — an `INDEX` home route and a handle-bearing
+`PRODUCT` route:
 
 ```ts
-let weaverse = await getWeaverseServerClient(props.searchParams, '/')
+// app/page.tsx — the INDEX segment owns the page type.
+let weaverse = await getWeaverseServerClient(props.searchParams, '/', {
+  pageType: 'INDEX',
+})
 let data = await weaverse.loadPage({ type: 'INDEX' })
 let theme = await weaverse.loadThemeSettings()
+```
+
+```ts
+// app/products/[handle]/page.tsx — the PRODUCT segment supplies the handle.
+let { handle } = await props.params
+let weaverse = await getWeaverseServerClient(
+  props.searchParams,
+  `/products/${handle}`,
+  { pageType: 'PRODUCT', handle }
+)
+let data = await weaverse.loadPage({ type: 'PRODUCT', handle })
 ```
 
 ### Server client members
@@ -349,16 +379,18 @@ import {
   WeaverseNextProvider,
   WeaverseNextRenderer,
 } from '@weaverse/next'
-import type { WeaverseNextLoaderData } from '@weaverse/next'
+import type {
+  WeaverseNextLoaderData,
+  WeaverseNextRequestInfo,
+} from '@weaverse/next'
 import { components } from './components'
 
 export function WeaversePage({ data }: { data: WeaverseNextLoaderData }) {
+  // The server client returns `requestInfo` in the exported shape, so restore
+  // the full route identity — including `pageType` and `handle` — into the
+  // client request context instead of a narrow inline subset.
   let requestInfo = data.configs?.requestInfo as
-    | {
-        i18n?: { country?: string; language?: string; locale?: string }
-        pathname?: string
-        search?: string
-      }
+    | WeaverseNextRequestInfo
     | undefined
   let projectId =
     (data.configs?.projectId as string | undefined) ?? data.project?.id
@@ -374,6 +406,8 @@ export function WeaversePage({ data }: { data: WeaverseNextLoaderData }) {
       isPreviewMode: Boolean(data.configs?.isPreviewMode),
       isRevisionPreview: Boolean(data.configs?.isRevisionPreview),
       i18n: requestInfo?.i18n,
+      pageType: requestInfo?.pageType,
+      handle: requestInfo?.handle,
     },
   })
 
