@@ -153,7 +153,7 @@ export class SchemaBuilder {
 
   /**
    * Sets legacy page and placement restrictions.
-   * @deprecated Use {@link enabled} instead.
+   * @deprecated Use `enabled` instead.
    */
   enabledOn(enabledOn: SchemaType['enabledOn']): SchemaBuilder {
     this.schema.enabledOn = enabledOn

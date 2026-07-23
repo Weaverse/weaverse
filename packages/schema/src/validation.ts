@@ -475,9 +475,9 @@ export interface SchemaType {
   enabled?: Resolvable<boolean, ComponentAvailabilityContext>
   /**
    * Legacy page and placement availability restrictions.
-   * @deprecated Use {@link enabled} for both static and context-aware
-   * availability. Existing schemas remain supported, and both rules must pass
-   * when both properties are present.
+   * @deprecated Use `enabled` for both static and context-aware availability.
+   * Existing schemas remain supported, and both rules must pass when both
+   * properties are present.
    */
   enabledOn?: {
     /** Page types where the component can be inserted. */
@@ -487,7 +487,7 @@ export interface SchemaType {
   }
   /**
    * Legacy setting groups shown in Studio.
-   * @deprecated Use {@link settings} instead.
+   * @deprecated Use `settings` instead.
    */
   inspector?: InspectorGroup[]
   /** Maximum number of instances allowed under the same parent. */

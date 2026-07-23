@@ -2,6 +2,7 @@ import { Weaverse, type WeaverseItemStore } from '@weaverse/core'
 import { useContext } from 'react'
 import { WeaverseContext, WeaverseItemContext } from './context'
 
+export type { DataContext } from './utils/data-connector'
 // Re-export the data connector utilities
 export {
   replaceContentDataConnectors,

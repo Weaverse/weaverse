@@ -15,6 +15,9 @@ import { Weaverse } from '@weaverse/core';
 import { WeaverseItemStore } from '@weaverse/core';
 
 // @public
+export type DataContext = Record<string, unknown>;
+
+// @public
 export type ItemComponentProps = {
     instance: InstanceType<typeof WeaverseItemStore>;
 };
