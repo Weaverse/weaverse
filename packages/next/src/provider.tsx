@@ -58,8 +58,11 @@ export interface WeaverseNextContextValue {
 export const WeaverseNextContext =
   createContext<WeaverseNextContextValue | null>(null)
 
+/** Explicit page, commerce, theme, and translation data for Next components. */
 export interface WeaverseNextProviderProps {
+  /** React subtree that consumes the Weaverse Next contexts. */
   children: ReactNode
+  /** Client used by the renderer and component-loader compatibility hooks. */
   client?: WeaverseNextClient
   /** App-provided commerce context (storefront/cart/customer). */
   commerce?: WeaverseNextCommerceContext

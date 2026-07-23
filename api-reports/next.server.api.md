@@ -22,13 +22,13 @@ export function createWeaverseNextRevalidateHandler(config: WeaverseNextRevalida
 // @public
 export function createWeaverseNextServerClient(config: WeaverseNextServerClientConfig): WeaverseNextServerClient;
 
-// @public (undocumented)
+// @public
 export function formatWeaverseNextSeoMetadata(seo: PageSEOData | null | undefined): WeaverseNextSeoMetadata;
 
 // @public
 export function getWeaverseNextConfigs(context?: WeaverseNextRequestContext, options?: ResolveConfigsOptions): WeaverseNextBaseConfigs;
 
-// @public (undocumented)
+// @public
 export function getWeaverseNextSeoMetadata(data: WeaverseNextLoaderData | WeaverseNextPageData | {
     page?: WeaverseNextPageData | null;
 } | null | undefined): WeaverseNextSeoMetadata;
@@ -41,27 +41,16 @@ export function resolveRequestUrl(context?: WeaverseNextRequestContext): string;
 
 // @public
 export interface WeaverseNextBaseConfigs {
-    // (undocumented)
     envProjectId: string;
-    // (undocumented)
     isDesignMode: boolean;
-    // (undocumented)
     isPreviewMode: boolean;
-    // (undocumented)
     isRevisionPreview: boolean;
-    // (undocumented)
     publicEnv: Record<string, string | undefined>;
-    // (undocumented)
     queryProjectId: string;
-    // (undocumented)
     sectionType: string;
-    // (undocumented)
     weaverseApiBase: string;
-    // (undocumented)
     weaverseApiKey: string;
-    // (undocumented)
     weaverseHost: string;
-    // (undocumented)
     weaverseVersion: string;
 }
 
@@ -73,105 +62,74 @@ export interface WeaverseNextCacheConfig {
 
 // @public
 export interface WeaverseNextConfigs {
-    // (undocumented)
     isDesignMode: boolean;
-    // (undocumented)
     isPreviewMode: boolean;
-    // (undocumented)
     isRevisionPreview: boolean;
-    // (undocumented)
     projectId: string;
-    // (undocumented)
     publicEnv: Record<string, string | undefined>;
-    // (undocumented)
     sectionType: string;
-    // (undocumented)
     weaverseApiBase: string;
-    // (undocumented)
     weaverseHost: string;
-    // (undocumented)
     weaversePublicApiBase: string;
-    // (undocumented)
     weaverseVersion: string;
 }
 
-// @public (undocumented)
+// @public
 export interface WeaverseNextCustomPageEntry {
-    // (undocumented)
     changeFrequency?: 'daily' | 'weekly' | 'monthly';
-    // (undocumented)
     handle: string;
-    // (undocumented)
     lastModified: string;
-    // (undocumented)
     locale: string | null;
-    // (undocumented)
     path: string;
-    // (undocumented)
     priority?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface WeaverseNextFetchCustomPagesOptions extends WeaverseNextCacheConfig {
-    // (undocumented)
     limit?: number;
-    // (undocumented)
     locale?: string;
 }
 
 // @public
 export interface WeaverseNextFetchOptions extends RequestInit {
-    // (undocumented)
     revalidate?: number | false;
-    // (undocumented)
     tags?: string[];
 }
 
 // @public
 export type WeaverseNextProjectId = string | ((context?: WeaverseNextRequestContext) => string | Promise<string> | undefined);
 
-// @public (undocumented)
+// @public
 export interface WeaverseNextRevalidateHandlerConfig {
     getClient: (request: Request) => Promise<WeaverseNextServerClient> | WeaverseNextServerClient;
 }
 
 // @public
 export interface WeaverseNextRevalidateRequestBody {
-    // (undocumented)
     draftItem: WeaverseNextComponentData;
 }
 
 // @public
 export interface WeaverseNextSeoMetadata {
-    // (undocumented)
     alternates?: {
         canonical?: string;
     };
-    // (undocumented)
     description?: string;
-    // (undocumented)
     keywords?: string;
-    // (undocumented)
     openGraph?: NextOpenGraph;
-    // (undocumented)
     robots: {
         follow: boolean;
         index: boolean;
     };
-    // (undocumented)
     title?: string;
-    // (undocumented)
     twitter?: NextTwitter;
 }
 
 // @public
 export interface WeaverseNextServerClient extends WeaverseNextClient {
     configs: WeaverseNextConfigs;
-    // (undocumented)
     fetchCustomPages: (options?: WeaverseNextFetchCustomPagesOptions) => Promise<WeaverseNextCustomPageEntry[]>;
-    // (undocumented)
     fetchWithCache: <T = unknown>(url: string, options?: WeaverseNextFetchOptions) => Promise<T>;
-    // (undocumented)
     loadPage: (input?: WeaverseNextLoadPageInput) => Promise<WeaverseNextLoaderData | null>;
     loadThemeSettings: (options?: WeaverseNextThemeSettingsOptions | WeaverseNextRequestContext) => Promise<WeaverseNextThemeSettingsResponse>;
     resolveProjectId: () => Promise<string>;
@@ -179,26 +137,18 @@ export interface WeaverseNextServerClient extends WeaverseNextClient {
 
 // @public
 export interface WeaverseNextServerClientConfig {
-    // (undocumented)
     cache?: WeaverseNextCacheConfig;
-    // (undocumented)
     commerce?: WeaverseNextCommerceContext;
-    // (undocumented)
     components: WeaverseNextComponent[];
     env?: Record<string, string | undefined>;
     fetch?: typeof fetch;
     fetchTimeoutMs?: number;
-    // (undocumented)
     projectId?: WeaverseNextProjectId;
-    // (undocumented)
     requestContext?: WeaverseNextRequestContext;
-    // (undocumented)
     themeSchema?: WeaverseNextThemeSchema;
-    // (undocumented)
     themeSettings?: Record<string, unknown>;
     weaverseApiBase?: string;
     weaverseHost?: string;
-    // (undocumented)
     weaverseVersion?: string;
 }
 
@@ -214,24 +164,14 @@ export interface WeaverseNextThemeSettingsOptions extends WeaverseNextCacheConfi
 
 // @public
 export interface WeaverseNextThemeSettingsResponse {
-    // (undocumented)
     [key: string]: unknown;
-    // (undocumented)
     _error?: string;
-    // (undocumented)
     _loadFailed?: boolean;
-    // (undocumented)
     merchantOverrides?: Record<string, unknown>;
-    // (undocumented)
     publicEnv?: Record<string, string | undefined>;
-    // (undocumented)
     schema?: WeaverseNextThemeSchema;
-    // (undocumented)
     staticContent?: Record<string, unknown>;
-    // (undocumented)
     theme?: Record<string, unknown>;
 }
-
-// (No @packageDocumentation comment for this package)
 
 ```

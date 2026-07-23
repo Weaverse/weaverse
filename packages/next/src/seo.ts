@@ -12,15 +12,22 @@ type NextTwitter = NonNullable<Metadata['twitter']>
  * `Metadata` as-is: `const metadata: Metadata = getWeaverseNextSeoMetadata(data)`.
  */
 export interface WeaverseNextSeoMetadata {
+  /** Canonical URL settings for Next's metadata API. */
   alternates?: { canonical?: string }
+  /** Page meta description. */
   description?: string
+  /** Page meta keywords. */
   keywords?: string
+  /** Open Graph metadata normalized to Next's supported union. */
   openGraph?: NextOpenGraph
+  /** Search crawler indexing and link-following directives. */
   robots: {
     follow: boolean
     index: boolean
   }
+  /** Page title. */
   title?: string
+  /** Twitter card metadata normalized for Next's metadata API. */
   twitter?: NextTwitter
 }
 
@@ -53,6 +60,12 @@ function normalizeOpenGraphType(
   return 'website'
 }
 
+/**
+ * Convert Builder SEO fields into metadata accepted by Next.js.
+ *
+ * Unsupported Open Graph product types and incomplete Twitter app/player
+ * cards are safely downgraded to renderable Next.js variants.
+ */
 export function formatWeaverseNextSeoMetadata(
   seo: PageSEOData | null | undefined
 ): WeaverseNextSeoMetadata {
@@ -106,6 +119,10 @@ export function formatWeaverseNextSeoMetadata(
   return metadata
 }
 
+/**
+ * Read page SEO from loader data or a page payload and format it for Next.js
+ * `generateMetadata`. Missing data returns indexable/followable robot defaults.
+ */
 export function getWeaverseNextSeoMetadata(
   data:
     | WeaverseNextLoaderData

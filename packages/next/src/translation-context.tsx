@@ -66,6 +66,7 @@ export type TranslateFunction = (
   variables?: Record<string, string | number>
 ) => string
 
+/** Translation function and live override stores exposed by `useTranslation`. */
 export interface TranslationValue {
   /** Active-locale translated keys loaded from the storefront API. */
   merchantOverrides: Record<string, unknown> | null
@@ -85,8 +86,10 @@ export interface TranslationValue {
    */
   t: TranslateFunction
   /**
-   * @deprecated Use {@link TranslationValue.translationStore} instead. Kept as a
-   * backward-compatible alias pointing at the same store instance.
+   * Legacy name for the live design-mode translation store.
+   *
+   * @deprecated Migrate to {@link TranslationValue.translationStore}. This
+   * alias points at the same store instance.
    */
   themeTextStore: TranslationStore | null
   /** Exposed so the runtime/Studio bridge can attach it to `internal`. */
@@ -96,9 +99,13 @@ export interface TranslationValue {
 const TranslationContext = createContext<TranslationValue | null>(null)
 TranslationContext.displayName = 'WeaverseNextTranslationContext'
 
+/** Sources and content rendered by {@link TranslationProvider}. */
 export interface TranslationProviderProps {
+  /** React subtree that can call `useTranslation`. */
   children: ReactNode
+  /** Active-locale static-text overrides loaded from Weaverse. */
   merchantOverrides?: Record<string, unknown>
+  /** Default-locale static content from the theme schema. */
   staticContent: Record<string, unknown>
   /**
    * Optional external translation function.
@@ -108,7 +115,9 @@ export interface TranslationProviderProps {
    */
   t?: TranslateFunction
   /**
-   * @deprecated Use {@link TranslationProviderProps.translationStore} instead.
+   * Legacy prop name for the live translation store.
+   *
+   * @deprecated Migrate to {@link TranslationProviderProps.translationStore}.
    * Still accepted for backward compatibility; ignored when `translationStore`
    * is also provided.
    */
@@ -254,18 +263,28 @@ export function useTranslation(): TranslationValue {
 // ---------------------------------------------------------------------------
 
 /**
- * @deprecated Use {@link TranslationProvider} instead.
+ * Legacy name for {@link TranslationProvider}.
+ *
+ * @deprecated Replace `ThemeTextProvider` with {@link TranslationProvider};
+ * the props and runtime behavior are unchanged.
  */
 export const ThemeTextProvider = TranslationProvider
 /**
- * @deprecated Use {@link useTranslation} instead.
+ * Legacy name for {@link useTranslation}.
+ *
+ * @deprecated Replace `useThemeText` with {@link useTranslation}; the return
+ * value is unchanged.
  */
 export const useThemeText = useTranslation
 /**
- * @deprecated Use {@link TranslationValue} instead.
+ * Legacy name for {@link TranslationValue}.
+ *
+ * @deprecated Import {@link TranslationValue} instead.
  */
 export type ThemeTextValue = TranslationValue
 /**
- * @deprecated Use {@link TranslationProviderProps} instead.
+ * Legacy name for {@link TranslationProviderProps}.
+ *
+ * @deprecated Import {@link TranslationProviderProps} instead.
  */
 export type ThemeTextProviderProps = TranslationProviderProps

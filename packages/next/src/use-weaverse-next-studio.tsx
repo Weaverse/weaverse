@@ -47,6 +47,7 @@ export function useWeaverseNextStudioInternals(
   return ref.current.internals
 }
 
+/** Props for the page-level Next App Router Studio binder. */
 export interface WeaverseNextStudioProps
   extends CreateWeaverseNextStudioInternalsOptions {
   /**
@@ -54,6 +55,7 @@ export interface WeaverseNextStudioProps
    * Defaults to `/api/weaverse/revalidate`.
    */
   revalidateEndpoint?: string
+  /** Browser runtime to bind to Builder Studio. */
   runtime: WeaverseNextRuntime
 }
 

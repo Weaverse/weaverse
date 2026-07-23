@@ -30,6 +30,7 @@ function getRenderablePage(
   return { ...page, rootId }
 }
 
+/** Page payload, client, and connector data accepted by the Next renderer. */
 export interface WeaverseNextRendererProps {
   /** Client to render from. Defaults to the provider's client. */
   client?: WeaverseNextClient

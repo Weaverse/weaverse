@@ -26,7 +26,7 @@ import type { WeaverseElement } from '@weaverse/react';
 import { WeaverseItemStore } from '@weaverse/react';
 import type { WeaverseResourcePickerData } from '@weaverse/react';
 
-// @public (undocumented)
+// @public
 export function bindWeaverseNextStudioRuntime(runtime: WeaverseNextRuntime): boolean;
 
 // @public
@@ -43,13 +43,13 @@ export function createTranslate(sources: {
 // @public
 export function createWeaverseNextClient(config: WeaverseNextClientConfig): WeaverseNextClient;
 
-// @public (undocumented)
+// @public
 export function createWeaverseNextRuntime(config: WeaverseNextRuntimeConfig): WeaverseNextRuntime;
 
 // @public
 export function createWeaverseNextStudioInternals(router: WeaverseNextRouterLike, options?: CreateWeaverseNextStudioInternalsOptions): WeaverseNextStudioInternals;
 
-// @public (undocumented)
+// @public
 export interface CreateWeaverseNextStudioInternalsOptions {
     replace?: boolean;
 }
@@ -57,20 +57,17 @@ export interface CreateWeaverseNextStudioInternalsOptions {
 // @public
 export function createWeaverseNextThemeSettingsStore(options?: CreateWeaverseNextThemeSettingsStoreOptions): WeaverseNextThemeSettingsStore;
 
-// @public (undocumented)
+// @public
 export interface CreateWeaverseNextThemeSettingsStoreOptions {
-    // (undocumented)
     publicEnv?: Record<string, string | undefined>;
-    // (undocumented)
     schema?: WeaverseNextThemeSchema;
-    // (undocumented)
     settings?: Record<string, unknown>;
 }
 
-// @public (undocumented)
+// @public
 export const DEFAULT_REVALIDATE_ENDPOINT = "/api/weaverse/revalidate";
 
-// @public (undocumented)
+// @public
 export function formatWeaverseNextSeoMetadata(seo: PageSEOData | null | undefined): WeaverseNextSeoMetadata;
 
 // @public
@@ -79,7 +76,7 @@ export function generateDataFromSchema(schema: SchemaType | WeaverseNextThemeSch
 // @public
 export function getNestedKey(obj: Record<string, unknown>, path: string, fallback?: string): string | undefined;
 
-// @public (undocumented)
+// @public
 export function getWeaverseNextSeoMetadata(data: WeaverseNextLoaderData | WeaverseNextPageData | {
     page?: WeaverseNextPageData | null;
 } | null | undefined): WeaverseNextSeoMetadata;
@@ -94,24 +91,21 @@ export { isIframe }
 // @public
 export function loadWeaverseNextStudioScript(context?: WeaverseNextRequestContext, options?: LoadWeaverseNextStudioScriptOptions): void;
 
-// @public (undocumented)
+// @public
 export interface LoadWeaverseNextStudioScriptOptions {
-    // (undocumented)
     storefrontHostname?: string;
 }
 
 // @public
 export function resolveWeaverseNextStudioScriptSrc(context?: WeaverseNextRequestContext, options?: ResolveWeaverseNextStudioScriptSrcOptions): string | null;
 
-// @public (undocumented)
+// @public
 export interface ResolveWeaverseNextStudioScriptSrcOptions {
-    // (undocumented)
     storefrontHostname?: string;
 }
 
 // @public
 export interface RevalidateItemRuntimeLike {
-    // (undocumented)
     itemInstances: Map<string, {
         setData: (update: Record<string, unknown>) => unknown;
     }>;
@@ -120,13 +114,10 @@ export interface RevalidateItemRuntimeLike {
 // @public
 export function revalidateWeaverseNextItem(runtime: RevalidateItemRuntimeLike, draftItem: WeaverseNextComponentData, endpoint?: string): Promise<void>;
 
-// @public (undocumented)
+// @public
 export interface RunComponentLoadersArgs {
-    // (undocumented)
     client: WeaverseNextClient;
-    // (undocumented)
     commerce?: WeaverseNextCommerceContext;
-    // (undocumented)
     context?: WeaverseNextRequestContext;
     data?: WeaverseNextLoaderData | null;
 }
@@ -134,19 +125,19 @@ export interface RunComponentLoadersArgs {
 // @public
 export function runWeaverseComponentLoaders(args: RunComponentLoadersArgs): Promise<WeaverseNextLoaderData | null>;
 
-// @public @deprecated (undocumented)
+// @public @deprecated
 export const ThemeTextProvider: typeof TranslationProvider;
 
-// @public @deprecated (undocumented)
+// @public @deprecated
 export type ThemeTextProviderProps = TranslationProviderProps;
 
-// @public @deprecated (undocumented)
+// @public @deprecated
 export const ThemeTextStore: typeof TranslationStore;
 
-// @public @deprecated (undocumented)
+// @public @deprecated
 export type ThemeTextStore = TranslationStore;
 
-// @public @deprecated (undocumented)
+// @public @deprecated
 export type ThemeTextValue = TranslationValue;
 
 // @public
@@ -155,41 +146,32 @@ export type TranslateFunction = (key: string, variables?: Record<string, string 
 // @public
 export function TranslationProvider(input: TranslationProviderProps): JSX.Element;
 
-// @public (undocumented)
+// @public
 export interface TranslationProviderProps {
-    // (undocumented)
     children: ReactNode;
-    // (undocumented)
     merchantOverrides?: Record<string, unknown>;
-    // (undocumented)
     staticContent: Record<string, unknown>;
     t?: TranslateFunction;
-    // @deprecated (undocumented)
+    // @deprecated
     themeTextStore?: TranslationStore | null;
     translationStore?: TranslationStore | null;
 }
 
 // @public
 export class TranslationStore {
-    // (undocumented)
     getServerSnapshot: () => Record<string, string>;
-    // (undocumented)
     getSnapshot: () => Record<string, string>;
-    // (undocumented)
     overrides: Record<string, string>;
-    // (undocumented)
     setOverrides: (overrides: Record<string, string>) => void;
-    // (undocumented)
     subscribe: (callback: () => void) => () => void;
-    // (undocumented)
     updateOverrides: (newOverrides: Record<string, string>) => void;
 }
 
-// @public (undocumented)
+// @public
 export interface TranslationValue {
     merchantOverrides: Record<string, unknown> | null;
     t: TranslateFunction;
-    // @deprecated (undocumented)
+    // @deprecated
     themeTextStore: TranslationStore | null;
     translationStore: TranslationStore | null;
 }
@@ -203,7 +185,7 @@ export { useParentInstance }
 // @public
 export function useThemeSettings<T = Record<string, unknown>>(): T;
 
-// @public @deprecated (undocumented)
+// @public @deprecated
 export const useThemeText: typeof useTranslation;
 
 // @public
@@ -223,193 +205,134 @@ export function useWeaversePageData<T = unknown>(): T;
 // @public
 export function useWeaverseRootData<T = unknown>(): T;
 
-// @public (undocumented)
+// @public
 export type WeaverseArticle = WeaverseResourcePickerData;
 
-// @public (undocumented)
+// @public
 export type WeaverseBlog = WeaverseResourcePickerData;
 
-// @public (undocumented)
+// @public
 export type WeaverseCollection = WeaverseResourcePickerData;
 
-// @public (undocumented)
+// @public
 export type WeaverseMetaObject = WeaverseResourcePickerData;
 
 // @public
 export interface WeaverseNextClient {
-    // (undocumented)
     commerce?: WeaverseNextCommerceContext;
-    // (undocumented)
     components: WeaverseNextComponent[];
     data: WeaverseNextLoaderData | null;
     dataContext: Record<string, unknown>;
-    // (undocumented)
     loadPage: (input?: WeaverseNextLoadPageInput) => Promise<WeaverseNextLoaderData | null>;
-    // (undocumented)
     loadThemeSettings: (context?: WeaverseNextRequestContext) => Promise<unknown>;
-    // (undocumented)
     projectId: string;
-    // (undocumented)
     requestContext?: WeaverseNextRequestContext;
     storefront?: WeaverseNextStorefront;
-    // (undocumented)
     themeSchema?: WeaverseNextThemeSchema;
-    // (undocumented)
     themeSettings: Record<string, unknown>;
 }
 
-// @public (undocumented)
+// @public
 export interface WeaverseNextClientConfig {
-    // (undocumented)
     commerce?: WeaverseNextCommerceContext;
-    // (undocumented)
     components: WeaverseNextComponent[];
     fetchPage?: (input: WeaverseNextLoadPageInput) => Promise<WeaverseNextLoaderData | null>;
     fetchThemeSettings?: (context?: WeaverseNextRequestContext) => Promise<unknown>;
-    // (undocumented)
     projectId: string;
-    // (undocumented)
     requestContext?: WeaverseNextRequestContext;
-    // (undocumented)
     themeSchema?: WeaverseNextThemeSchema;
-    // (undocumented)
     themeSettings?: Record<string, unknown>;
 }
 
 // @public
 export interface WeaverseNextCommerceContext {
-    // (undocumented)
     [key: string]: unknown;
-    // (undocumented)
     cart?: unknown;
-    // (undocumented)
     customerAccount?: unknown;
-    // (undocumented)
     storefront?: WeaverseNextStorefront;
 }
 
 // @public
 export interface WeaverseNextComponent<TProps extends WeaverseNextComponentProps = WeaverseNextComponentProps> {
-    // (undocumented)
     default: ComponentType<TProps> | ForwardRefExoticComponent<TProps>;
-    // (undocumented)
     loader?: (args: WeaverseNextComponentLoaderArgs) => Promise<unknown>;
-    // (undocumented)
     schema: SchemaType;
 }
 
 // @public
 export interface WeaverseNextComponentData {
-    // (undocumented)
     [key: string]: unknown;
-    // (undocumented)
     children?: WeaverseNextComponentData[] | {
         id: string;
     }[];
-    // (undocumented)
     data?: Record<string, unknown>;
-    // (undocumented)
     id: string;
     loaderData?: unknown;
-    // (undocumented)
     type: string;
 }
 
 // @public
 export interface WeaverseNextComponentLoaderArgs<TData = unknown> {
-    // (undocumented)
     commerce?: WeaverseNextCommerceContext;
-    // (undocumented)
     context?: WeaverseNextRequestContext;
-    // (undocumented)
     data: TData;
-    // (undocumented)
     weaverse: WeaverseNextClient;
 }
 
 // @public
 export interface WeaverseNextComponentProps<L = unknown> extends Partial<WeaverseElement> {
-    // (undocumented)
     [key: string]: unknown;
-    // (undocumented)
     children?: ReactNode;
-    // (undocumented)
     className?: string;
-    // (undocumented)
     loaderData?: L;
 }
 
-// @public (undocumented)
+// @public
 export interface WeaverseNextCustomPageEntry {
-    // (undocumented)
     changeFrequency?: 'daily' | 'weekly' | 'monthly';
-    // (undocumented)
     handle: string;
-    // (undocumented)
     lastModified: string;
-    // (undocumented)
     locale: string | null;
-    // (undocumented)
     path: string;
-    // (undocumented)
     priority?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface WeaverseNextFetchCustomPagesOptions extends WeaverseNextCacheConfig {
-    // (undocumented)
     limit?: number;
-    // (undocumented)
     locale?: string;
 }
 
 // @public
 export interface WeaverseNextI18n {
-    // (undocumented)
     [key: string]: unknown;
-    // (undocumented)
     country?: string;
-    // (undocumented)
     label?: string;
-    // (undocumented)
     language?: string;
-    // (undocumented)
     locale?: string;
-    // (undocumented)
     pathPrefix?: string;
 }
 
 // @public
 export interface WeaverseNextLoaderData {
-    // (undocumented)
     [key: string]: unknown;
-    // (undocumented)
     configs?: Record<string, unknown>;
-    // (undocumented)
     page: WeaverseNextPageData;
-    // (undocumented)
     pageAssignment?: WeaverseNextPageAssignment;
-    // (undocumented)
     project?: Record<string, unknown>;
 }
 
 // @public
 export interface WeaverseNextLoadPageInput {
-    // (undocumented)
     [key: string]: unknown;
-    // (undocumented)
     handle?: string;
-    // (undocumented)
     locale?: string;
-    // (undocumented)
     type?: PageType;
 }
 
 // @public
 export interface WeaverseNextPageAssignment {
-    // (undocumented)
     handle: string;
-    // (undocumented)
     locale: string;
     meta?: {
         depth?: number;
@@ -417,23 +340,16 @@ export interface WeaverseNextPageAssignment {
         sourceProjectId?: string;
         [key: string]: unknown;
     };
-    // (undocumented)
     projectId: string;
-    // (undocumented)
     type: PageType | string;
 }
 
 // @public
 export interface WeaverseNextPageData {
-    // (undocumented)
     [key: string]: unknown;
-    // (undocumented)
     id: string;
-    // (undocumented)
     items: WeaverseNextComponentData[];
-    // (undocumented)
     name?: string;
-    // (undocumented)
     rootId?: string;
     seo?: PageSEOData | null;
 }
@@ -441,11 +357,9 @@ export interface WeaverseNextPageData {
 // @public
 export function WeaverseNextProvider(props: WeaverseNextProviderProps): JSX.Element;
 
-// @public (undocumented)
+// @public
 export interface WeaverseNextProviderProps {
-    // (undocumented)
     children: ReactNode;
-    // (undocumented)
     client?: WeaverseNextClient;
     commerce?: WeaverseNextCommerceContext;
     merchantOverrides?: Record<string, unknown>;
@@ -459,7 +373,7 @@ export interface WeaverseNextProviderProps {
 // @public
 export const WeaverseNextRenderer: MemoExoticComponent<(props: WeaverseNextRendererProps) => JSX.Element | null>;
 
-// @public (undocumented)
+// @public
 export interface WeaverseNextRendererProps {
     client?: WeaverseNextClient;
     data?: WeaverseNextLoaderData | null;
@@ -468,49 +382,32 @@ export interface WeaverseNextRendererProps {
 
 // @public
 export interface WeaverseNextRequestContext {
-    // (undocumented)
     [key: string]: unknown;
-    // (undocumented)
     handle?: string;
-    // (undocumented)
     headers?: Headers;
-    // (undocumented)
     i18n?: WeaverseNextI18n;
-    // (undocumented)
     isDesignMode?: boolean;
-    // (undocumented)
     isPreviewMode?: boolean;
-    // (undocumented)
     isRevisionPreview?: boolean;
-    // (undocumented)
     pageType?: PageType;
-    // (undocumented)
     pathname?: string;
-    // (undocumented)
     searchParams?: URLSearchParams;
-    // (undocumented)
     sectionType?: string;
-    // (undocumented)
     url?: URL | string;
 }
 
-// @public (undocumented)
+// @public
 export interface WeaverseNextRequestInfo {
-    // (undocumented)
     i18n?: WeaverseNextI18n;
-    // (undocumented)
     pathname: string;
-    // (undocumented)
     queries: Record<string, string | boolean>;
-    // (undocumented)
     search: string;
 }
 
-// @public (undocumented)
+// @public
 export interface WeaverseNextRootContextValue {
     merchantOverrides?: Record<string, unknown>;
     staticContent: Record<string, unknown>;
-    // (undocumented)
     themeSettingsStore: WeaverseNextThemeSettingsStore;
     translationStore: TranslationStore;
 }
@@ -518,137 +415,102 @@ export interface WeaverseNextRootContextValue {
 // @public
 export function WeaverseNextRootProvider(props: WeaverseNextRootProviderProps): JSX.Element;
 
-// @public (undocumented)
+// @public
 export interface WeaverseNextRootProviderProps {
-    // (undocumented)
     children: ReactNode;
     initialThemeSettings?: Record<string, unknown>;
     merchantOverrides?: Record<string, unknown>;
-    // (undocumented)
     publicEnv?: Record<string, string | undefined>;
     staticContent?: Record<string, unknown>;
     t?: TranslateFunction;
-    // (undocumented)
     themeSchema?: WeaverseNextThemeSchema;
 }
 
 // @public
 export interface WeaverseNextRouterLike {
-    // (undocumented)
     push: (href: string, options?: {
         scroll?: boolean;
     }) => void;
-    // (undocumented)
     refresh: () => void;
-    // (undocumented)
     replace: (href: string, options?: {
         scroll?: boolean;
     }) => void;
 }
 
-// @public (undocumented)
+// @public
 export class WeaverseNextRuntime extends Weaverse {
     constructor(config: WeaverseNextRuntimeConfig);
     extractTranslationSidecar: () => void;
     flushRenderPhaseUpdates: () => void;
     getTranslationChanges: () => WeaverseNextTranslationChanges | undefined;
-    // (undocumented)
     internal: WeaverseNextRuntimeInternal;
-    // (undocumented)
     isPreviewMode: boolean;
-    // (undocumented)
     isRevisionPreview: boolean;
-    // (undocumented)
     pageId: string;
     pendingItemUpdates: WeaverseNextItem[];
     pendingProjectData?: WeaverseNextPageData & {
         rootId: string;
     };
-    // (undocumented)
     requestInfo: WeaverseNextRequestInfo;
-    // (undocumented)
     sectionType?: string;
     setProjectData: (data: WeaverseNextPageData & {
         rootId: string;
     }) => void;
     setTranslationSidecar: (map?: WeaverseNextTranslationMap, locale?: string, languageId?: string) => void;
-    // (undocumented)
     translationLanguageId: string;
-    // (undocumented)
     translationLocale: string;
     translationMap: WeaverseNextTranslationMap;
     updateTranslation: (itemId: string, key: string, originalValue: string, translatedValue: string) => void;
 }
 
-// @public (undocumented)
+// @public
 export interface WeaverseNextRuntimeConfig {
-    // (undocumented)
     client?: WeaverseNextClient;
-    // (undocumented)
     data: WeaverseNextLoaderData;
-    // (undocumented)
     dataContext?: Record<string, unknown>;
     merchantOverrides?: Record<string, unknown>;
-    // (undocumented)
     navigate?: WeaverseNextRuntimeInternal['navigate'];
-    // (undocumented)
     revalidate?: WeaverseNextRuntimeInternal['revalidate'];
-    // (undocumented)
     themeSettingsStore?: WeaverseNextThemeSettingsStore;
     translationStore?: TranslationStore;
 }
 
-// @public (undocumented)
+// @public
 export interface WeaverseNextRuntimeInternal {
     merchantOverrides?: Record<string, unknown>;
-    // (undocumented)
     navigate?: (to: string, options?: {
         preventScrollReset?: boolean;
     } | Record<string, unknown>) => void;
-    // (undocumented)
     pageAssignment?: WeaverseNextPageAssignment;
-    // (undocumented)
     project?: unknown;
-    // (undocumented)
     revalidate?: (options?: unknown) => Promise<void> | void;
     revalidateItem?: (draftItem: WeaverseNextComponentData) => Promise<void>;
-    // (undocumented)
     themeSettingsStore?: WeaverseNextThemeSettingsStore;
-    // @deprecated (undocumented)
+    // @deprecated
     themeTextStore?: TranslationStore;
     translationStore?: TranslationStore;
 }
 
 // @public
 export interface WeaverseNextSeoMetadata {
-    // (undocumented)
     alternates?: {
         canonical?: string;
     };
-    // (undocumented)
     description?: string;
-    // (undocumented)
     keywords?: string;
-    // (undocumented)
     openGraph?: NextOpenGraph;
-    // (undocumented)
     robots: {
         follow: boolean;
         index: boolean;
     };
-    // (undocumented)
     title?: string;
-    // (undocumented)
     twitter?: NextTwitter;
 }
 
 // @public
 export interface WeaverseNextStorefront {
-    // (undocumented)
     [key: string]: unknown;
-    // (undocumented)
     i18n?: WeaverseNextI18n;
-    // (undocumented)
     query: (query: string, options?: unknown) => Promise<unknown>;
 }
 
@@ -658,49 +520,38 @@ export function WeaverseNextStudio(props: WeaverseNextStudioProps): JSX.Element;
 // @public
 export function WeaverseNextStudioBridge(props: WeaverseNextStudioBridgeProps): null;
 
-// @public (undocumented)
+// @public
 export interface WeaverseNextStudioBridgeProps {
-    // (undocumented)
     navigate?: WeaverseNextRuntimeInternal['navigate'];
-    // (undocumented)
     revalidate?: WeaverseNextRuntimeInternal['revalidate'];
-    // (undocumented)
     revalidateItem?: WeaverseNextRuntimeInternal['revalidateItem'];
-    // (undocumented)
     runtime: WeaverseNextRuntime;
 }
 
 // @public
 export function WeaverseNextStudioConnect(props: WeaverseNextStudioConnectProps): null;
 
-// @public (undocumented)
+// @public
 export interface WeaverseNextStudioConnectProps {
-    // (undocumented)
     context?: WeaverseNextRequestContext;
-    // (undocumented)
     storefrontHostname?: string;
 }
 
 // @public
 export interface WeaverseNextStudioInternals {
-    // (undocumented)
     navigate: NonNullable<WeaverseNextRuntimeInternal['navigate']>;
-    // (undocumented)
     revalidate: NonNullable<WeaverseNextRuntimeInternal['revalidate']>;
 }
 
-// @public (undocumented)
+// @public
 export interface WeaverseNextStudioProps extends CreateWeaverseNextStudioInternalsOptions {
     revalidateEndpoint?: string;
-    // (undocumented)
     runtime: WeaverseNextRuntime;
 }
 
-// @public (undocumented)
+// @public
 export interface WeaverseNextThemeSchema {
-    // (undocumented)
     [key: string]: unknown;
-    // (undocumented)
     i18n?: {
         defaultLocale?: WeaverseNextI18n;
         shopLocales?: WeaverseNextI18n[];
@@ -709,7 +560,6 @@ export interface WeaverseNextThemeSchema {
         urlStructure?: 'url-path' | 'subdomain' | 'top-level-domain';
         [key: string]: unknown;
     };
-    // (undocumented)
     info?: {
         author?: string;
         authorProfilePhoto?: string;
@@ -719,78 +569,57 @@ export interface WeaverseNextThemeSchema {
         version?: string;
         [key: string]: unknown;
     };
-    // @deprecated (undocumented)
+    // @deprecated
     inspector?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[];
-    // (undocumented)
     settings?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[];
 }
 
-// @public (undocumented)
+// @public
 export interface WeaverseNextThemeSettingsStore {
-    // (undocumented)
     getServerSnapshot: () => Record<string, unknown>;
-    // (undocumented)
     getSnapshot: () => Record<string, unknown>;
-    // (undocumented)
     publicEnv?: Record<string, string | undefined>;
-    // (undocumented)
     schema?: WeaverseNextThemeSchema;
-    // (undocumented)
     settings: Record<string, unknown>;
-    // (undocumented)
     subscribe: (listener: () => void) => () => void;
-    // (undocumented)
     updateThemeSettings: (next: Record<string, unknown>) => void;
 }
 
 // @public
 export interface WeaverseNextTranslationChanges {
-    // (undocumented)
     entries: WeaverseNextTranslationEntry[];
-    // (undocumented)
     languageId: string;
 }
 
 // @public
 export interface WeaverseNextTranslationEntry {
-    // (undocumented)
     deleted?: boolean;
-    // (undocumented)
     itemId: string;
-    // (undocumented)
     key: string;
-    // (undocumented)
     originalValue: string;
-    // (undocumented)
     translatedValue: string;
 }
 
 // @public
 export interface WeaverseNextTranslationItemEntry {
-    // (undocumented)
     [key: string]: WeaverseNextTranslationMapEntry;
 }
 
 // @public
 export interface WeaverseNextTranslationMap {
-    // (undocumented)
     [itemId: string]: WeaverseNextTranslationItemEntry;
 }
 
 // @public
 export interface WeaverseNextTranslationMapEntry {
-    // (undocumented)
     originalValue: string;
-    // (undocumented)
     translatedValue: string;
 }
 
-// @public (undocumented)
+// @public
 export type WeaverseProduct = WeaverseResourcePickerData;
 
 
 export * from "@weaverse/schema";
-
-// (No @packageDocumentation comment for this package)
 
 ```

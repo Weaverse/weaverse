@@ -138,12 +138,22 @@ function rebindPageItemsToRuntime(runtime: WeaverseNextRuntime) {
   }
 }
 
+/**
+ * Browser runtime that adapts a Next.js loader payload to `@weaverse/react`
+ * and exposes the navigation, settings, and translation state used by Studio.
+ */
 export class WeaverseNextRuntime extends Weaverse {
+  /** Stable ID of the page owned by this runtime. */
   pageId: string
+  /** Mutable callbacks and stores consumed by the Studio bridge. */
   internal: WeaverseNextRuntimeInternal
+  /** Path, query, and locale metadata for Studio navigation. */
   requestInfo: WeaverseNextRequestInfo
+  /** Whether this runtime renders a component preview. */
   isPreviewMode: boolean
+  /** Whether this runtime renders a saved revision. */
   isRevisionPreview: boolean
+  /** Component type rendered in section preview mode. */
   sectionType?: string
 
   // ─── Item-level translation sidecar (design mode only) ─────────────
@@ -153,7 +163,9 @@ export class WeaverseNextRuntime extends Weaverse {
    * components, so translations render without mutating the base `_store`.
    */
   translationMap: WeaverseNextTranslationMap = {}
+  /** Locale associated with the item-level translation sidecar. */
   translationLocale = String()
+  /** Weaverse language ID used when saving translation changes. */
   translationLanguageId = String()
 
   /**
@@ -355,6 +367,10 @@ export class WeaverseNextRuntime extends Weaverse {
   }
 }
 
+/**
+ * Create a browser runtime or reuse the runtime already registered for the
+ * same page and request. Reuse preserves unsaved Studio state in design mode.
+ */
 export function createWeaverseNextRuntime(
   config: WeaverseNextRuntimeConfig
 ): WeaverseNextRuntime {
@@ -450,6 +466,11 @@ export function createWeaverseNextRuntime(
   return runtime
 }
 
+/**
+ * Bind a design-mode runtime to the global Builder Studio bridge.
+ *
+ * @returns `true` when Studio was initialized or refreshed, otherwise `false`.
+ */
 export function bindWeaverseNextStudioRuntime(runtime: WeaverseNextRuntime) {
   if (!runtime.isDesignMode) {
     return false

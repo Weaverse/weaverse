@@ -81,7 +81,9 @@ function last(searchParams: URLSearchParams, key: string): string | null {
   return values.length ? (values.at(-1) ?? null) : null
 }
 
+/** Trust context used when resolving a Studio bridge script URL. */
 export interface ResolveWeaverseNextStudioScriptSrcOptions {
+  /** Storefront hostname; required to permit loopback Studio origins. */
   storefrontHostname?: string
 }
 

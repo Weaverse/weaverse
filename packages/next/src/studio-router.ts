@@ -8,17 +8,23 @@ import type { WeaverseNextRuntimeInternal } from './types'
  * `next/navigation` into the test graph.
  */
 export interface WeaverseNextRouterLike {
+  /** Add a route to browser history. */
   push: (href: string, options?: { scroll?: boolean }) => void
+  /** Refresh the current App Router route and server data. */
   refresh: () => void
+  /** Replace the current browser-history entry. */
   replace: (href: string, options?: { scroll?: boolean }) => void
 }
 
 /** Resolved Studio navigation/revalidation callbacks for a Next runtime. */
 export interface WeaverseNextStudioInternals {
+  /** Navigate Studio's preview with React Router-compatible options. */
   navigate: NonNullable<WeaverseNextRuntimeInternal['navigate']>
+  /** Refresh the current App Router route. */
   revalidate: NonNullable<WeaverseNextRuntimeInternal['revalidate']>
 }
 
+/** Controls how Studio navigation maps to the Next App Router. */
 export interface CreateWeaverseNextStudioInternalsOptions {
   /** Use `router.replace` instead of `router.push` for navigation. */
   replace?: boolean
