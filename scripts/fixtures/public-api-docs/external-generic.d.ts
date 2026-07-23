@@ -1,9 +1,9 @@
-/** External schema instance. */
-export declare const ComponentSchema: z.ZodObject<{
-  undocumentedZodShapeMember: z.ZodString
+/** Generated namespaced Zod schema declaration. */
+export declare const NamespacedSchema: z.ZodObject<{
+  undocumentedNamespacedZodMember: z.ZodString
 }>
 
-/** External generic alias. */
-export type ExternalResult = ExternalGeneric<{
-  undocumentedTypeArgumentMember: string
+/** Generated bare Zod schema declaration. */
+export declare const BareSchema: ZodType<{
+  undocumentedBareZodMember: string
 }>

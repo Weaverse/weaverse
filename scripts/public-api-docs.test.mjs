@@ -46,7 +46,24 @@ describe('getUndocumentedMembers', () => {
     assert.deepEqual(gaps, [])
   })
 
-  test('should_not_traverse_external_generic_type_arguments', () => {
+  test('should_detect_members_through_wrapped_variable_types', () => {
+    let gaps = getUndocumentedMembers(fixture('wrapped-variable-types'))
+
+    assert.deepEqual(
+      gaps.map((gap) => gap.replace(LINE_SUFFIX, '')),
+      [
+        'unionValue.undocumentedUnionMember',
+        'intersectionValue.undocumentedIntersectionMember',
+        'InlineComponent.undocumentedReactProp',
+        'inlineArray.undocumentedArrayElement',
+        'genericValue.undocumentedGenericMember',
+        'promisedValue.undocumentedPromiseMember',
+        'zodiacValue.undocumentedZodiacMember',
+      ]
+    )
+  })
+
+  test('should_skip_generated_zod_generic_internals', () => {
     let gaps = getUndocumentedMembers(fixture('external-generic'))
 
     assert.deepEqual(gaps, [])

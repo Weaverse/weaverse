@@ -640,13 +640,19 @@ export interface WeaverseHydrogenParams extends Omit<WeaverseCoreParams, 'ItemCo
 }
 
 // @public
-export const WeaverseHydrogenRoot: MemoExoticComponent<(input: {
-components: HydrogenComponent[];
-data?: WeaverseDataValue;
-errorComponent?: React.FC<{
-error: Error | unknown;
-}>;
-}) => JSX_2.Element | null>;
+export const WeaverseHydrogenRoot: MemoExoticComponent<(input: WeaverseHydrogenRootProps) => JSX_2.Element | null>;
+
+// @public
+export interface WeaverseHydrogenRootErrorProps {
+    error: Error | unknown;
+}
+
+// @public
+export interface WeaverseHydrogenRootProps {
+    components: HydrogenComponent[];
+    data?: WeaverseDataValue;
+    errorComponent?: React.FC<WeaverseHydrogenRootErrorProps>;
+}
 
 // @public
 export type WeaverseI18n = I18nBase & {

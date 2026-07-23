@@ -431,6 +431,30 @@ export function registerComponent(element: HydrogenElement) {
   WeaverseHydrogen.registerElement(element)
 }
 
+/** Props passed to a custom Weaverse page error component. */
+export interface WeaverseHydrogenRootErrorProps {
+  /** Error raised while resolving or rendering the Weaverse page. */
+  error: Error | unknown
+}
+
+/** Props accepted by {@link WeaverseHydrogenRoot}. */
+export interface WeaverseHydrogenRootProps {
+  /** Theme components available to the page renderer. */
+  components: HydrogenComponent[]
+  /**
+   * Optional explicit `weaverseData` payload. When provided, bypasses the
+   * automatic route-scoped resolution. Accepts a resolved value, a
+   * `Promise` (handled via `<Await>`), or `null` to suppress rendering.
+   *
+   * Recommended for nested layout + child route compositions where two
+   * `<WeaverseHydrogenRoot>` instances need to render different Weaverse
+   * pages on the same URL. See issue #451.
+   */
+  data?: WeaverseDataValue
+  /** Component rendered when page data cannot be resolved or awaited. */
+  errorComponent?: React.FC<WeaverseHydrogenRootErrorProps>
+}
+
 /**
  * Renders the Weaverse page for the current React Router route.
  *
@@ -448,22 +472,7 @@ export const WeaverseHydrogenRoot = memo(
           : 'An unexpected error occurred'}
       </div>
     ),
-  }: {
-    /** Theme components available to the page renderer. */
-    components: HydrogenComponent[]
-    /**
-     * Optional explicit `weaverseData` payload. When provided, bypasses the
-     * automatic route-scoped resolution. Accepts a resolved value, a
-     * `Promise` (handled via `<Await>`), or `null` to suppress rendering.
-     *
-     * Recommended for nested layout + child route compositions where two
-     * `<WeaverseHydrogenRoot>` instances need to render different Weaverse
-     * pages on the same URL. See issue #451.
-     */
-    data?: WeaverseDataValue
-    /** Component rendered when page data cannot be resolved or awaited. */
-    errorComponent?: React.FC<{ error: Error | unknown }>
-  }) => {
+  }: WeaverseHydrogenRootProps) => {
     const matches = useMatches()
 
     // Flat route-keyed data context for data-connector template resolution

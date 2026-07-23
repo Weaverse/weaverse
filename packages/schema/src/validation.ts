@@ -353,15 +353,18 @@ export type InputType =
   | 'map-autocomplete'
   | 'toggle-group'
 
+/** A choice shown in a select input. */
+export interface SelectInputOption {
+  /** Merchant-facing option label. */
+  label: string
+  /** Value stored in component data. */
+  value: string
+}
+
 /** Configuration for a select input. */
 export interface SelectInputConfigs {
   /** Choices shown in the select menu. */
-  options?: Array<{
-    /** Merchant-facing option label. */
-    label: string
-    /** Value stored in component data. */
-    value: string
-  }>
+  options?: SelectInputOption[]
 }
 
 /** Configuration for a toggle-group input. */

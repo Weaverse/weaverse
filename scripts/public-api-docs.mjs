@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs'
 import ts from 'typescript'
 
+const ZOD_TYPE_NAME = /^(?:Zod|\$Zod)(?:$|[A-Z])/
+
 const MEMBER_KINDS = new Set([
   ts.SyntaxKind.CallSignature,
   ts.SyntaxKind.ConstructSignature,
@@ -52,10 +54,23 @@ function isPublicMember(node) {
   )
 }
 
+function isZodImplementationReference(node, sourceFile) {
+  if (!ts.isTypeReferenceNode(node)) {
+    return false
+  }
+
+  let typeName = node.typeName.getText(sourceFile)
+  let nameParts = typeName.split('.')
+  let zodTypeName = nameParts.at(-1) ?? ''
+  let isZodType = ZOD_TYPE_NAME.test(zodTypeName)
+
+  return isZodType && (nameParts.length === 1 || nameParts[0] === 'z')
+}
+
 function createPublicTypeVisitor(sourceFile, gaps) {
   function visitPublicType(node, owner) {
     if (
-      ts.isTypeReferenceNode(node) ||
+      isZodImplementationReference(node, sourceFile) ||
       (ts.canHaveModifiers(node) && !isPublicMember(node))
     ) {
       return
@@ -90,11 +105,7 @@ function visitFunctionDeclaration(statement, sourceFile, visitPublicType) {
 
 function visitVariableStatement(statement, sourceFile, visitPublicType) {
   for (let declaration of statement.declarationList.declarations) {
-    if (
-      declaration.type &&
-      (ts.isTypeLiteralNode(declaration.type) ||
-        ts.isFunctionTypeNode(declaration.type))
-    ) {
+    if (declaration.type) {
       visitPublicType(declaration.type, declaration.name.getText(sourceFile))
     }
   }
@@ -130,9 +141,9 @@ function visitExportedStatement(statement, sourceFile, visitPublicType) {
 /**
  * Finds undocumented members in a rolled-up public declaration file.
  *
- * External generic type arguments are intentionally opaque: their members
- * describe another library's implementation rather than this package's public
- * object shape.
+ * Inline object shapes are checked through unions, intersections, arrays, and
+ * generic wrappers. Generated Zod implementation references remain opaque so
+ * validator internals are not treated as authored API properties.
  */
 export function getUndocumentedMembers(declarationFile) {
   let sourceFile = ts.createSourceFile(

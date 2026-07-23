@@ -221,10 +221,7 @@ export const inputHelpers: {
     textarea: (name: string, label?: string, options?: Partial<BasicInput>) => BasicInput;
     switch: (name: string, label?: string, defaultValue?: boolean, options?: Partial<BasicInput>) => BasicInput;
     range: (name: string, label?: string, configs?: RangeInputConfigs, options?: Partial<BasicInput>) => BasicInput;
-    select: (name: string, label: string, options: Array<{
-        label: string;
-        value: string;
-    }>, inputOptions?: Partial<BasicInput>) => BasicInput;
+    select: (name: string, label: string, options: SelectInputOption[], inputOptions?: Partial<BasicInput>) => BasicInput;
     image: (name: string, label?: string, options?: Partial<BasicInput>) => BasicInput;
     heading: (label: string, options?: Omit<HeadingInput, "type" | "label">) => HeadingInput;
 };
@@ -523,10 +520,7 @@ export type SchemaValidationSuccess<T> = {
 
 // @public
 export interface SelectInputConfigs {
-    options?: Array<{
-        label: string;
-        value: string;
-    }>;
+    options?: SelectInputOption[];
 }
 
 // @public
@@ -536,6 +530,12 @@ export const SelectInputConfigsSchema: z.ZodObject<{
         value: z.ZodString;
     }, z.core.$strip>>>;
 }, z.core.$strip>;
+
+// @public
+export interface SelectInputOption {
+    label: string;
+    value: string;
+}
 
 // @public
 export interface SimpleValidationResult<T = any> {

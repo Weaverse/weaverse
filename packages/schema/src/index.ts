@@ -12,6 +12,7 @@ import type {
   RangeInputConfigs,
   SchemaType,
   SchemaValidationIssue,
+  SelectInputOption,
 } from './validation.js'
 
 // `process` is statically replaced by the consuming bundler (Vite/Hydrogen)
@@ -299,7 +300,7 @@ export const inputHelpers = {
   select: (
     name: string,
     label: string,
-    options: Array<{ label: string; value: string }>,
+    options: SelectInputOption[],
     inputOptions?: Partial<BasicInput>
   ): BasicInput => ({
     type: 'select',
@@ -413,6 +414,7 @@ export type {
   SchemaValidationResult,
   SchemaValidationSuccess,
   SelectInputConfigs,
+  SelectInputOption,
   SimpleValidationResult,
   ToggleGroupConfigs,
   VersionedSchema,
