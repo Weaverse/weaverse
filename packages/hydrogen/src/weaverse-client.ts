@@ -98,7 +98,8 @@ const DEFAULT_CACHE_STRATEGY: CachingStrategy = {
   staleIfError: CACHE_DURATIONS.LONG,
 } as const
 
-type BuilderApiCacheTarget =
+/** Builder API resource whose freshness policy should be used for a request. */
+export type BuilderApiCacheTarget =
   | 'custom-pages'
   | 'merchant-overrides'
   | 'project'
@@ -119,8 +120,9 @@ const SMART_CACHE_STRATEGIES: Record<BuilderApiCacheTarget, CachingStrategy> = {
 /**
  * Request-scoped client for loading Weaverse pages and theme settings in Hydrogen.
  *
- * Create one client from the Hydrogen app context, then call {@link loadPage}
- * from route loaders and {@link loadThemeSettings} from the root loader.
+ * Create one client from the Hydrogen app context, then call
+ * {@link WeaverseClient.loadPage} from route loaders and
+ * {@link WeaverseClient.loadThemeSettings} from the root loader.
  */
 export class WeaverseClient {
   /** Builder API version used by this client. */

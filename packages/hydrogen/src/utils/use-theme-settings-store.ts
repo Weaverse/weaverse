@@ -7,10 +7,14 @@ import type {
   PublicEnv,
 } from '../types'
 
-type WeaverseThemeData = {
-  theme: HydrogenThemeSettings
-  schema?: HydrogenThemeSchema
+/** Root-loader theme data used to initialize a {@link ThemeSettingsStore}. */
+export interface WeaverseThemeData {
+  /** Storefront-safe environment values, when available. */
   publicEnv?: PublicEnv
+  /** Theme schema exposed to Studio, when available. */
+  schema?: HydrogenThemeSchema
+  /** Published theme setting values. */
+  theme: HydrogenThemeSettings
 }
 
 /** Mutable, subscribable store for theme settings received from the root loader. */

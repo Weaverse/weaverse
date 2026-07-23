@@ -810,9 +810,11 @@ declare global {
   }
 }
 
-// Separate interface for weaverseStudio to avoid conflicts with core package
-interface WeaverseStudio {
+/** Browser bridge exposed by Weaverse Studio in design and preview modes. */
+export interface WeaverseStudio {
+  /** Connects Studio to a newly created Hydrogen runtime. */
   init: (weaverse: WeaverseHydrogen) => void
+  /** Refreshes Studio after the active runtime configuration changes. */
   refreshStudio: (params: WeaverseHydrogenParams) => void
 }
 

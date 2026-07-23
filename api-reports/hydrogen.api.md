@@ -55,6 +55,9 @@ import type { WeaverseVideo } from '@weaverse/react';
 export { BasicInput }
 
 // @public
+export type BuilderApiCacheTarget = 'custom-pages' | 'merchant-overrides' | 'project' | 'theme-settings';
+
+// @public
 export type CacheResponseValidator<T = unknown> = (response: WithCacheFetchResponse<T> | T) => boolean;
 
 export { CachingStrategy }
@@ -368,6 +371,12 @@ export function registerComponent(element: HydrogenElement): void;
 export { Resolvable }
 
 // @public
+export interface RouteKeyedDataContext {
+    [routeKey: `routes/${string}`]: Record<string, unknown>;
+    root?: Record<string, unknown>;
+}
+
+// @public
 export interface RouteLoaderArgs extends LoaderFunctionArgs {
     context: AppLoadContext & {
         weaverse: WeaverseClient;
@@ -388,6 +397,19 @@ export type ThemeSettingsResponse = {
     _error?: string;
     _loadFailed?: boolean;
 };
+
+// @public
+export class ThemeSettingsStore {
+    constructor(data: WeaverseThemeData);
+    destroy: () => void;
+    getServerSnapshot: () => HydrogenThemeSettings;
+    getSnapshot: () => HydrogenThemeSettings;
+    publicEnv?: PublicEnv;
+    schema?: HydrogenThemeSchema;
+    settings: HydrogenThemeSettings;
+    subscribe: (callback: () => void) => () => void;
+    updateThemeSettings: (newSettings: HydrogenThemeSettings) => void;
+}
 
 // @public @deprecated
 export const ThemeTextProvider: typeof TranslationProvider;
@@ -542,6 +564,9 @@ export type WeaverseCollection = WeaverseResourcePickerData;
 export type WeaverseDataContext = RouteKeyedDataContext & Record<string, unknown>;
 
 // @public
+export type WeaverseDataValue = WeaverseLoaderData | Promise<WeaverseLoaderData> | null;
+
+// @public
 export class WeaverseError extends Error {
     constructor(message: string, code?: string, statusCode?: number, context?: Record<string, unknown>);
     readonly code: string;
@@ -677,6 +702,12 @@ export type WeaverseProjectConfigs = {
 };
 
 // @public
+export interface WeaverseStudio {
+    init: (weaverse: WeaverseHydrogen) => void;
+    refreshStudio: (params: WeaverseHydrogenParams) => void;
+}
+
+// @public
 export type WeaverseStudioQueries = {
     weaverseProjectId: string;
     weaverseApiKey: string;
@@ -686,6 +717,13 @@ export type WeaverseStudioQueries = {
     isPreviewMode?: boolean;
     sectionType?: string;
 };
+
+// @public
+export interface WeaverseThemeData {
+    publicEnv?: PublicEnv;
+    schema?: HydrogenThemeSchema;
+    theme: HydrogenThemeSettings;
+}
 
 export { WeaverseVideo }
 

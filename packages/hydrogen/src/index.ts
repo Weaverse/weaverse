@@ -123,6 +123,7 @@ export {
 // Export Hydrogen-specific hooks
 export {
   createWeaverseDataContext,
+  type RouteKeyedDataContext,
   useWeaverseDataContext,
   type WeaverseDataContext,
 } from './hooks/use-weaverse-data-context'
@@ -130,7 +131,12 @@ export {
 export * from './seo'
 export * from './types'
 export * from './utils'
+export type { WeaverseDataValue } from './utils/pick-weaverse-data'
 export { ThemeTextStore, TranslationStore } from './utils/translation-store'
+export type {
+  ThemeSettingsStore,
+  WeaverseThemeData,
+} from './utils/use-theme-settings-store'
 export * from './WeaverseHydrogenRoot'
 export * from './weaverse-client'
 // Re-export utilities from @weaverse/react
