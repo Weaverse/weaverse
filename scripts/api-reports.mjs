@@ -59,12 +59,12 @@ for (let { publishedPackage, entrypoint } of typeEntrypoints) {
         },
         extractorMessageReporting: {
           default: { logLevel: 'error' },
-          'ae-forgotten-export': { logLevel: 'none' },
+          'ae-forgotten-export': { logLevel: 'error' },
           'ae-missing-release-tag': { logLevel: 'none' },
           'ae-undocumented': {
             logLevel: DOCUMENTED_PACKAGES.has(folderName) ? 'error' : 'none',
           },
-          'ae-unresolved-link': { logLevel: 'none' },
+          'ae-unresolved-link': { logLevel: 'error' },
         },
         tsdocMessageReporting: {
           default: { logLevel: 'none' },
