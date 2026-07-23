@@ -1,4 +1,5 @@
-type AnyFunction = (...args: any[]) => any
+/** A callback accepted by the Core runtime event system. */
+export type AnyFunction = (...args: any[]) => any
 
 /** Provides synchronous subscription and notification for runtime updates. */
 export class EventEmitter {

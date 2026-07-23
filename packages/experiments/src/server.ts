@@ -14,6 +14,8 @@
 import type { Assignment, Experiment } from './index.js'
 import { resolveExperiments } from './index.js'
 
+export type { Assignment, Experiment, ExperimentVariant } from './index.js'
+
 const DEFAULT_SEED_COOKIE = '_wv_vid'
 const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365
 

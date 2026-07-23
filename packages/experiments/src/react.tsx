@@ -12,6 +12,8 @@ import type { ReactNode } from 'react'
 import { createContext, useContext, useEffect, useRef } from 'react'
 import type { Assignment } from './index.js'
 
+export type { Assignment, ExperimentVariant } from './index.js'
+
 /** Tracks which experiment assignments have emitted exposure events. */
 export interface ExposureTracker {
   /**

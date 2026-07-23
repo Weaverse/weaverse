@@ -8,7 +8,20 @@ import { JSX } from 'react/jsx-runtime';
 import type { ReactNode } from 'react';
 
 // @public
+export interface Assignment {
+    experimentId: string;
+    variant: ExperimentVariant;
+}
+
+// @public
 export function createExposureTracker(): ExposureTracker;
+
+// @public
+export interface ExperimentVariant {
+    id: string;
+    projectId?: string;
+    weight?: number;
+}
 
 // @public
 export interface ExposureTracker {

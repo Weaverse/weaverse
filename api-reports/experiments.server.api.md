@@ -5,6 +5,19 @@
 ```ts
 
 // @public
+export interface Assignment {
+    experimentId: string;
+    variant: ExperimentVariant;
+}
+
+// @public
+export interface Experiment {
+    id: string;
+    seed?: string;
+    variants: ExperimentVariant[];
+}
+
+// @public
 export interface ExperimentsResult {
     assignments: Assignment[];
     headers: Headers;
@@ -20,6 +33,13 @@ export interface ExperimentsServerConfig {
     maxAge?: number;
     projectIdFrom?: string;
     seed?: string;
+}
+
+// @public
+export interface ExperimentVariant {
+    id: string;
+    projectId?: string;
+    weight?: number;
 }
 
 // @public
