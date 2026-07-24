@@ -31,3 +31,6 @@
 - Codex found that an arbitrary nested object whose `type` matched a component could replace inherited sensitivity and reveal a parent-classified field.
 - Added a failing collision regression and changed nested component sensitivity to add registered names without dropping inherited names.
 - Fifth follow-up verification passed focused Biome, Schema typecheck, all 61 Schema tests, and packed/API validation for eight packages and ten TypeScript entrypoints.
+- Codex found that the exported runtime and JSON Schema validators still accepted `sensitive: true` together with `defaultValue`, bypassing generator-only redaction.
+- Added a red validator regression and encoded sensitive/non-sensitive inputs as a structural union so Zod, generated JSON Schema, and TypeScript all enforce the invariant.
+- Sixth follow-up verification passed focused Biome, Schema typecheck, all 62 Schema tests, refreshed API reports, and packed/API validation for eight packages and ten TypeScript entrypoints.

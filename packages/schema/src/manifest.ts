@@ -90,13 +90,11 @@ export interface ComponentManifestAvailability {
 }
 
 /** Serializable configurable input in a component manifest. */
-export interface ComponentManifestBasicInput {
+export type ComponentManifestBasicInput = {
   /** Condition controlling whether Studio displays the input. */
   condition?: ComponentManifestCondition
   /** Control-specific options and constraints. */
   configs?: ComponentManifestJsonValue
-  /** Initial value, omitted for sensitive or server-only inputs. */
-  defaultValue?: ComponentManifestJsonValue
   /** Supporting guidance shown below the control. */
   helpText?: string
   /** Merchant-facing field label. */
@@ -105,13 +103,24 @@ export interface ComponentManifestBasicInput {
   name: string
   /** Placeholder shown by text-like controls. */
   placeholder?: string
-  /** Whether this sensitive or server-only setting is omitted from agent-facing data. */
-  sensitive?: boolean
   /** Whether changing this value reruns the component loader. */
   shouldRevalidate?: boolean
   /** Studio control used to edit the property. */
   type: InputType
-}
+} & (
+  | {
+      /** Sensitive inputs never expose an initial value. */
+      defaultValue?: never
+      /** Marks a sensitive or server-only setting omitted from agent-facing data. */
+      sensitive: true
+    }
+  | {
+      /** Initial value for a non-sensitive input. */
+      defaultValue?: ComponentManifestJsonValue
+      /** Non-sensitive inputs may expose their initial value. */
+      sensitive?: false
+    }
+)
 
 /** Serializable organizational heading in a component manifest. */
 export interface ComponentManifestHeadingInput {
@@ -174,18 +183,28 @@ let componentManifestConditionSchema = z.union([
   z.string(),
   componentManifestDynamicRuleSchema,
 ])
-let componentManifestBasicInputSchema = z.strictObject({
+let componentManifestBasicInputShape = {
   type: inputTypeSchema,
   name: z.string(),
   label: z.string().optional(),
   helpText: z.string().optional(),
   placeholder: z.string().optional(),
   configs: componentManifestJsonValueSchema.optional(),
-  defaultValue: componentManifestJsonValueSchema.optional(),
   condition: componentManifestConditionSchema.optional(),
-  sensitive: z.boolean().optional(),
   shouldRevalidate: z.boolean().optional(),
-})
+}
+let componentManifestBasicInputSchema = z.union([
+  z.strictObject({
+    ...componentManifestBasicInputShape,
+    sensitive: z.literal(true),
+    defaultValue: z.never().optional(),
+  }),
+  z.strictObject({
+    ...componentManifestBasicInputShape,
+    sensitive: z.literal(false).optional(),
+    defaultValue: componentManifestJsonValueSchema.optional(),
+  }),
+])
 let componentManifestHeadingInputSchema = z.strictObject({
   type: z.literal('heading'),
   label: z.string(),
@@ -462,7 +481,10 @@ function toManifestInput(
 
   let basicInput = input as BasicInput
   let sensitive = basicInput.sensitive || sensitiveNames.has(basicInput.name)
-  return {
+  let manifestInput: Omit<
+    ComponentManifestBasicInput,
+    'defaultValue' | 'sensitive'
+  > = {
     type: basicInput.type,
     name: basicInput.name,
     ...optional('label', basicInput.label),
@@ -474,22 +496,25 @@ function toManifestInput(
         ? undefined
         : toJsonValue(basicInput.configs, `${path}.configs`)
     ),
-    ...(sensitive
-      ? {}
-      : optional(
-          'defaultValue',
-          basicInput.defaultValue === undefined
-            ? undefined
-            : toJsonValue(basicInput.defaultValue, `${path}.defaultValue`)
-        )),
     ...optional(
       'condition',
       typeof basicInput.condition === 'function'
         ? { dynamic: true }
         : basicInput.condition
     ),
-    ...(sensitive ? { sensitive: true } : {}),
     ...optional('shouldRevalidate', basicInput.shouldRevalidate),
+  }
+  if (sensitive) {
+    return { ...manifestInput, sensitive: true }
+  }
+  return {
+    ...manifestInput,
+    ...optional(
+      'defaultValue',
+      basicInput.defaultValue === undefined
+        ? undefined
+        : toJsonValue(basicInput.defaultValue, `${path}.defaultValue`)
+    ),
   }
 }
 

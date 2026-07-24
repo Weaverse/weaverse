@@ -31,18 +31,22 @@ export interface ComponentManifestAvailability {
 }
 
 // @public
-export interface ComponentManifestBasicInput {
+export type ComponentManifestBasicInput = {
     condition?: ComponentManifestCondition;
     configs?: ComponentManifestJsonValue;
-    defaultValue?: ComponentManifestJsonValue;
     helpText?: string;
     label?: string;
     name: string;
     placeholder?: string;
-    sensitive?: boolean;
     shouldRevalidate?: boolean;
     type: InputType;
-}
+} & ({
+    defaultValue?: never;
+    sensitive: true;
+} | {
+    defaultValue?: ComponentManifestJsonValue;
+    sensitive?: false;
+});
 
 // @public
 export type ComponentManifestCondition = string | ComponentManifestDynamicRule;
@@ -124,20 +128,33 @@ export const ComponentManifestSchema: z.ZodObject<{
         }, z.core.$strict>>;
         settings: z.ZodOptional<z.ZodArray<z.ZodObject<{
             group: z.ZodString;
-            inputs: z.ZodArray<z.ZodUnion<readonly [z.ZodObject<{
+            inputs: z.ZodArray<z.ZodUnion<readonly [z.ZodUnion<readonly [z.ZodObject<{
+                sensitive: z.ZodLiteral<true>;
+                defaultValue: z.ZodOptional<z.ZodNever>;
                 type: z.ZodUnion<readonly [z.ZodLiteral<"heading">, z.ZodLiteral<"text">, z.ZodLiteral<"richtext">, z.ZodLiteral<"textarea">, z.ZodLiteral<"url">, z.ZodLiteral<"image">, z.ZodLiteral<"video">, z.ZodLiteral<"switch">, z.ZodLiteral<"range">, z.ZodLiteral<"select">, z.ZodLiteral<"position">, z.ZodLiteral<"product">, z.ZodLiteral<"product-list">, z.ZodLiteral<"collection">, z.ZodLiteral<"collection-list">, z.ZodLiteral<"blog">, z.ZodLiteral<"metaobject">, z.ZodLiteral<"color">, z.ZodLiteral<"datepicker">, z.ZodLiteral<"map-autocomplete">, z.ZodLiteral<"toggle-group">]>;
                 name: z.ZodString;
                 label: z.ZodOptional<z.ZodString>;
                 helpText: z.ZodOptional<z.ZodString>;
                 placeholder: z.ZodOptional<z.ZodString>;
                 configs: z.ZodOptional<z.ZodJSONSchema>;
-                defaultValue: z.ZodOptional<z.ZodJSONSchema>;
                 condition: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodObject<{
                     dynamic: z.ZodLiteral<true>;
                 }, z.core.$strict>]>>;
-                sensitive: z.ZodOptional<z.ZodBoolean>;
                 shouldRevalidate: z.ZodOptional<z.ZodBoolean>;
             }, z.core.$strict>, z.ZodObject<{
+                sensitive: z.ZodOptional<z.ZodLiteral<false>>;
+                defaultValue: z.ZodOptional<z.ZodJSONSchema>;
+                type: z.ZodUnion<readonly [z.ZodLiteral<"heading">, z.ZodLiteral<"text">, z.ZodLiteral<"richtext">, z.ZodLiteral<"textarea">, z.ZodLiteral<"url">, z.ZodLiteral<"image">, z.ZodLiteral<"video">, z.ZodLiteral<"switch">, z.ZodLiteral<"range">, z.ZodLiteral<"select">, z.ZodLiteral<"position">, z.ZodLiteral<"product">, z.ZodLiteral<"product-list">, z.ZodLiteral<"collection">, z.ZodLiteral<"collection-list">, z.ZodLiteral<"blog">, z.ZodLiteral<"metaobject">, z.ZodLiteral<"color">, z.ZodLiteral<"datepicker">, z.ZodLiteral<"map-autocomplete">, z.ZodLiteral<"toggle-group">]>;
+                name: z.ZodString;
+                label: z.ZodOptional<z.ZodString>;
+                helpText: z.ZodOptional<z.ZodString>;
+                placeholder: z.ZodOptional<z.ZodString>;
+                configs: z.ZodOptional<z.ZodJSONSchema>;
+                condition: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodObject<{
+                    dynamic: z.ZodLiteral<true>;
+                }, z.core.$strict>]>>;
+                shouldRevalidate: z.ZodOptional<z.ZodBoolean>;
+            }, z.core.$strict>]>, z.ZodObject<{
                 type: z.ZodLiteral<"heading">;
                 label: z.ZodString;
             }, z.core.$strict>]>>;

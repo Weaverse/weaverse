@@ -627,6 +627,48 @@ describe('component manifest', () => {
     })
   })
 
+  it('should_reject_default_on_sensitive_manifest_input', () => {
+    // Arrange
+    let manifest = {
+      version: 1,
+      source: { name: 'pilot', revision: 'abc123' },
+      components: [
+        {
+          type: 'integration',
+          title: 'Integration',
+          hasLoader: false,
+          settings: [
+            {
+              group: 'Integration',
+              inputs: [
+                {
+                  type: 'text',
+                  name: 'apiKey',
+                  sensitive: true,
+                  defaultValue: 'secret',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    }
+
+    // Act
+    let result = ComponentManifestSchema.safeParse(manifest)
+
+    // Assert
+    expect({
+      runtimeValid: result.success,
+      jsonSchemaForbidsDefault: JSON.stringify(
+        componentManifestJsonSchema
+      ).includes('"defaultValue":{"not":{}}'),
+    }).toEqual({
+      runtimeValid: false,
+      jsonSchemaForbidsDefault: true,
+    })
+  })
+
   it('should_reject_unknown_root_manifest_property', () => {
     // Arrange
     let manifest = {
