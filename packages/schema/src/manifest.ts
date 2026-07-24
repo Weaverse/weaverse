@@ -390,9 +390,12 @@ function omitSensitiveSettings(
     let valueType = 'type' in value ? value.type : undefined
     let registeredSchema =
       typeof valueType === 'string' ? schemasByType.get(valueType) : undefined
-    let scopedNames = registeredSchema
-      ? getSensitiveSettingNames(registeredSchema)
-      : names
+    let scopedNames = new Set(names)
+    if (registeredSchema) {
+      for (let name of getSensitiveSettingNames(registeredSchema)) {
+        scopedNames.add(name)
+      }
+    }
     let result: Record<string, unknown> = {}
     for (let [key, item] of Object.entries(value)) {
       if (scopedNames.has(key)) {

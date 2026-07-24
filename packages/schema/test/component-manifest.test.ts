@@ -456,6 +456,44 @@ describe('component manifest', () => {
     ])
   })
 
+  it('should_preserve_inherited_sensitivity_for_typed_objects', async () => {
+    // Arrange
+    let components = [
+      {
+        schema: {
+          type: 'parent',
+          title: 'Parent',
+          settings: [
+            {
+              group: 'Integration',
+              inputs: [{ type: 'text', name: 'apiKey', sensitive: true }],
+            },
+          ],
+        },
+        examples: [
+          {
+            payload: {
+              type: 'child',
+              apiKey: 'secret',
+              heading: 'Payload heading',
+            },
+          },
+        ],
+      },
+      { schema: { type: 'child', title: 'Child' } },
+    ]
+
+    // Act
+    let { manifest } = await generateComponentManifest(components, {
+      source: { name: 'pilot', revision: 'abc123' },
+    })
+
+    // Assert
+    expect(manifest.components[1]?.examples).toEqual([
+      { payload: { type: 'child', heading: 'Payload heading' } },
+    ])
+  })
+
   it('should_omit_child_sensitive_values_from_typed_examples', async () => {
     // Arrange
     let components = [

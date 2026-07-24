@@ -28,3 +28,6 @@
 - Codex then found a valid duplicate-name edge case: a modern sensitive definition could coexist with an unflagged legacy duplicate whose default was still emitted.
 - Added a failing duplicate-definition regression and applied effective sensitivity by setting name across all merged definitions.
 - Fourth follow-up verification passed focused Biome, Schema typecheck, all 60 Schema tests, and packed/API validation for eight packages and ten TypeScript entrypoints.
+- Codex found that an arbitrary nested object whose `type` matched a component could replace inherited sensitivity and reveal a parent-classified field.
+- Added a failing collision regression and changed nested component sensitivity to add registered names without dropping inherited names.
+- Fifth follow-up verification passed focused Biome, Schema typecheck, all 61 Schema tests, and packed/API validation for eight packages and ten TypeScript entrypoints.
