@@ -376,6 +376,49 @@ describe('component manifest', () => {
     })
   })
 
+  it('should_redact_duplicate_legacy_default_by_sensitive_name', async () => {
+    // Arrange
+    let components = [
+      {
+        schema: {
+          type: 'integration',
+          title: 'Integration',
+          settings: [
+            {
+              group: 'Integration',
+              inputs: [{ type: 'text', name: 'apiKey', sensitive: true }],
+            },
+          ],
+          inspector: [
+            {
+              group: 'Legacy integration',
+              inputs: [
+                { type: 'text', name: 'apiKey', defaultValue: 'secret' },
+              ],
+            },
+          ],
+        },
+      },
+    ]
+
+    // Act
+    let { manifest } = await generateComponentManifest(components, {
+      source: { name: 'pilot', revision: 'abc123' },
+    })
+
+    // Assert
+    expect(manifest.components[0]?.settings).toEqual([
+      {
+        group: 'Integration',
+        inputs: [{ type: 'text', name: 'apiKey', sensitive: true }],
+      },
+      {
+        group: 'Legacy integration',
+        inputs: [{ type: 'text', name: 'apiKey', sensitive: true }],
+      },
+    ])
+  })
+
   it('should_recursively_omit_sensitive_values_from_examples', async () => {
     // Arrange
     let components = [

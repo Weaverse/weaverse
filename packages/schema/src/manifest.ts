@@ -447,13 +447,18 @@ function omitSensitiveSettings(
   }
 }
 
-function toManifestInput(input: Input, path: string): ComponentManifestInput {
+function toManifestInput(
+  input: Input,
+  path: string,
+  sensitiveNames: Set<string>
+): ComponentManifestInput {
   if (input.type === 'heading') {
     let headingInput = input as HeadingInput
     return { type: headingInput.type, label: headingInput.label }
   }
 
   let basicInput = input as BasicInput
+  let sensitive = basicInput.sensitive || sensitiveNames.has(basicInput.name)
   return {
     type: basicInput.type,
     name: basicInput.name,
@@ -466,7 +471,7 @@ function toManifestInput(input: Input, path: string): ComponentManifestInput {
         ? undefined
         : toJsonValue(basicInput.configs, `${path}.configs`)
     ),
-    ...(basicInput.sensitive
+    ...(sensitive
       ? {}
       : optional(
           'defaultValue',
@@ -480,7 +485,7 @@ function toManifestInput(input: Input, path: string): ComponentManifestInput {
         ? { dynamic: true }
         : basicInput.condition
     ),
-    ...(basicInput.sensitive ? { sensitive: true } : {}),
+    ...(sensitive ? { sensitive: true } : {}),
     ...optional('shouldRevalidate', basicInput.shouldRevalidate),
   }
 }
@@ -562,7 +567,8 @@ export async function generateComponentManifest(
                   inputs: inputs.map((input, inputIndex) =>
                     toManifestInput(
                       input,
-                      `components[${componentIndex}].settings[${groupIndex}].inputs[${inputIndex}]`
+                      `components[${componentIndex}].settings[${groupIndex}].inputs[${inputIndex}]`,
+                      sensitiveSettings
                     )
                   ),
                 }))

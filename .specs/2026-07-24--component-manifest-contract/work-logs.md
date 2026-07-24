@@ -25,3 +25,6 @@
 - Duplicate fresh Codex reviews identified two valid compatibility blockers: mixed `settings`/`inspector` schemas could miss legacy sensitive inputs, and arbitrary nested preset fields named `children` were misclassified as component preset nodes.
 - Added red regressions for both cases, merged modern and legacy setting groups using Hydrogen's compatibility ordering, and restricted child-type validation to root/typed preset nodes.
 - Third follow-up verification passed focused Biome, Schema typecheck, all 59 Schema tests, and packed/API validation for eight packages and ten TypeScript entrypoints.
+- Codex then found a valid duplicate-name edge case: a modern sensitive definition could coexist with an unflagged legacy duplicate whose default was still emitted.
+- Added a failing duplicate-definition regression and applied effective sensitivity by setting name across all merged definitions.
+- Fourth follow-up verification passed focused Biome, Schema typecheck, all 60 Schema tests, and packed/API validation for eight packages and ten TypeScript entrypoints.
