@@ -332,9 +332,13 @@ function toJsonValue(
   }
 }
 
+function getSchemaSettingGroups(schema: SchemaType) {
+  return [...(schema.settings ?? []), ...(schema.inspector ?? [])]
+}
+
 function getSensitiveSettingNames(schema: SchemaType): Set<string> {
   let names = new Set<string>()
-  for (let { inputs } of schema.settings ?? schema.inspector ?? []) {
+  for (let { inputs } of getSchemaSettingGroups(schema)) {
     for (let input of inputs) {
       if (input.type !== 'heading' && input.sensitive) {
         names.add(input.name)
@@ -377,7 +381,7 @@ function omitSensitiveSettings(
           ancestors,
           names,
           path: `${path}[${index}]`,
-          resolvePresetChildren,
+          resolvePresetChildren: false,
           schemasByType,
         })
       )
@@ -426,7 +430,7 @@ function omitSensitiveSettings(
           ancestors,
           names: scopedNames,
           path: `${path}.${key}`,
-          resolvePresetChildren,
+          resolvePresetChildren: false,
           schemasByType,
         })
       }
@@ -524,6 +528,7 @@ export async function generateComponentManifest(
         compareUtf16CodeUnits(left.schema.type, right.schema.type)
       )
       .map(({ examples, loader, schema }, componentIndex) => {
+        let settingGroups = getSchemaSettingGroups(schema)
         let sensitiveSettings = getSensitiveSettingNames(schema)
         return {
           type: schema.type,
@@ -551,17 +556,17 @@ export async function generateComponentManifest(
           ),
           ...optional(
             'settings',
-            (schema.settings ?? schema.inspector)?.map(
-              ({ group, inputs }, groupIndex) => ({
-                group,
-                inputs: inputs.map((input, inputIndex) =>
-                  toManifestInput(
-                    input,
-                    `components[${componentIndex}].settings[${groupIndex}].inputs[${inputIndex}]`
-                  )
-                ),
-              })
-            )
+            schema.settings !== undefined || schema.inspector !== undefined
+              ? settingGroups.map(({ group, inputs }, groupIndex) => ({
+                  group,
+                  inputs: inputs.map((input, inputIndex) =>
+                    toManifestInput(
+                      input,
+                      `components[${componentIndex}].settings[${groupIndex}].inputs[${inputIndex}]`
+                    )
+                  ),
+                }))
+              : undefined
           ),
           ...optional(
             'presets',

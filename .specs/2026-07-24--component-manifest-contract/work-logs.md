@@ -22,3 +22,6 @@
 - A fresh Codex review found that typed child data inside examples still used only the parent schema's sensitive-name set; independently reproduced the leak with a failing parent/child example regression.
 - Scoped recursive redaction to each nested registered component `type`, preserving unrelated example objects and existing preset behavior.
 - Second follow-up verification passed focused Biome, Schema typecheck, all 57 Schema tests, and packed/API validation for eight packages and ten TypeScript entrypoints.
+- Duplicate fresh Codex reviews identified two valid compatibility blockers: mixed `settings`/`inspector` schemas could miss legacy sensitive inputs, and arbitrary nested preset fields named `children` were misclassified as component preset nodes.
+- Added red regressions for both cases, merged modern and legacy setting groups using Hydrogen's compatibility ordering, and restricted child-type validation to root/typed preset nodes.
+- Third follow-up verification passed focused Biome, Schema typecheck, all 59 Schema tests, and packed/API validation for eight packages and ten TypeScript entrypoints.

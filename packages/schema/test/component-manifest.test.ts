@@ -328,6 +328,54 @@ describe('component manifest', () => {
     })
   })
 
+  it('should_merge_settings_and_inspector_when_redacting', async () => {
+    // Arrange
+    let components = [
+      {
+        schema: {
+          type: 'integration',
+          title: 'Integration',
+          settings: [
+            {
+              group: 'Content',
+              inputs: [{ type: 'text', name: 'heading' }],
+            },
+          ],
+          inspector: [
+            {
+              group: 'Legacy integration',
+              inputs: [{ type: 'text', name: 'apiKey', sensitive: true }],
+            },
+          ],
+          presets: { apiKey: 'secret', heading: 'Preset heading' },
+        },
+      },
+    ]
+
+    // Act
+    let { manifest } = await generateComponentManifest(components, {
+      source: { name: 'pilot', revision: 'abc123' },
+    })
+
+    // Assert
+    expect({
+      presets: manifest.components[0]?.presets,
+      settings: manifest.components[0]?.settings,
+    }).toEqual({
+      presets: { heading: 'Preset heading' },
+      settings: [
+        {
+          group: 'Content',
+          inputs: [{ type: 'text', name: 'heading' }],
+        },
+        {
+          group: 'Legacy integration',
+          inputs: [{ type: 'text', name: 'apiKey', sensitive: true }],
+        },
+      ],
+    })
+  })
+
   it('should_recursively_omit_sensitive_values_from_examples', async () => {
     // Arrange
     let components = [
@@ -539,6 +587,29 @@ describe('component manifest', () => {
 
     // Assert
     expect(result.success).toBe(false)
+  })
+
+  it('should_preserve_arbitrary_nested_children_in_presets', async () => {
+    // Arrange
+    let components = [
+      {
+        schema: {
+          type: 'layout',
+          title: 'Layout',
+          presets: { layout: { children: [{ id: 'column' }] } },
+        },
+      },
+    ]
+
+    // Act
+    let { manifest } = await generateComponentManifest(components, {
+      source: { name: 'pilot', revision: 'abc123' },
+    })
+
+    // Assert
+    expect(manifest.components[0]?.presets).toEqual({
+      layout: { children: [{ id: 'column' }] },
+    })
   })
 
   it('should_reject_unregistered_nested_preset_type', async () => {
