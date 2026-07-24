@@ -383,9 +383,15 @@ function omitSensitiveSettings(
       )
     }
 
+    let valueType = 'type' in value ? value.type : undefined
+    let registeredSchema =
+      typeof valueType === 'string' ? schemasByType.get(valueType) : undefined
+    let scopedNames = registeredSchema
+      ? getSensitiveSettingNames(registeredSchema)
+      : names
     let result: Record<string, unknown> = {}
     for (let [key, item] of Object.entries(value)) {
-      if (names.has(key)) {
+      if (scopedNames.has(key)) {
         continue
       }
 
@@ -418,7 +424,7 @@ function omitSensitiveSettings(
       } else {
         redactedItem = omitSensitiveSettings(item, {
           ancestors,
-          names,
+          names: scopedNames,
           path: `${path}.${key}`,
           resolvePresetChildren,
           schemasByType,

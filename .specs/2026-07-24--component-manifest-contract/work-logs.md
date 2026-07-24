@@ -19,3 +19,6 @@
 - Independently validated Codex's P1 review finding that structured examples could retain sensitive keys below `data` or inside arrays.
 - Added a failing regression for nested object/array examples, then made example redaction recursive while retaining schema-aware preset child redaction.
 - Follow-up verification passed focused Biome, Schema typecheck, all 56 Schema tests, and packed/API validation for eight packages and ten TypeScript entrypoints.
+- A fresh Codex review found that typed child data inside examples still used only the parent schema's sensitive-name set; independently reproduced the leak with a failing parent/child example regression.
+- Scoped recursive redaction to each nested registered component `type`, preserving unrelated example objects and existing preset behavior.
+- Second follow-up verification passed focused Biome, Schema typecheck, all 57 Schema tests, and packed/API validation for eight packages and ten TypeScript entrypoints.

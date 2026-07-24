@@ -365,6 +365,49 @@ describe('component manifest', () => {
     ])
   })
 
+  it('should_omit_child_sensitive_values_from_typed_examples', async () => {
+    // Arrange
+    let components = [
+      {
+        schema: { type: 'parent', title: 'Parent' },
+        examples: [
+          {
+            children: [
+              {
+                type: 'child',
+                data: { apiKey: 'secret', heading: 'Child heading' },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        schema: {
+          type: 'child',
+          title: 'Child',
+          settings: [
+            {
+              group: 'Integration',
+              inputs: [{ type: 'text', name: 'apiKey', sensitive: true }],
+            },
+          ],
+        },
+      },
+    ]
+
+    // Act
+    let { manifest } = await generateComponentManifest(components, {
+      source: { name: 'pilot', revision: 'abc123' },
+    })
+
+    // Assert
+    expect(manifest.components[1]?.examples).toEqual([
+      {
+        children: [{ type: 'child', data: { heading: 'Child heading' } }],
+      },
+    ])
+  })
+
   it('should_omit_sensitive_values_from_nested_child_presets', async () => {
     // Arrange
     let components = [
