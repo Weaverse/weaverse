@@ -18,6 +18,7 @@ export interface BasicInput {
     label?: string;
     name: string;
     placeholder?: string;
+    sensitive?: boolean;
     shouldRevalidate?: boolean;
     type: InputType;
 }
@@ -31,6 +32,7 @@ export const BasicInputSchema: z.ZodObject<{
     helpText: z.ZodOptional<z.ZodString>;
     configs: z.ZodOptional<z.ZodCustom<ConfigsProps | undefined, ConfigsProps | undefined>>;
     shouldRevalidate: z.ZodOptional<z.ZodBoolean>;
+    sensitive: z.ZodOptional<z.ZodBoolean>;
     condition: z.ZodOptional<z.ZodUnknown> & z.ZodType<string | Function | undefined, unknown, z.core.$ZodTypeInternals<string | Function | undefined, unknown>>;
     defaultValue: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodRecord<z.ZodString, z.ZodUnknown>, z.ZodUnknown]>>;
 }, z.core.$strip>;
@@ -152,6 +154,7 @@ export const ElementSchema: z.ZodObject<{
             helpText: z.ZodOptional<z.ZodString>;
             configs: z.ZodOptional<z.ZodCustom<ConfigsProps | undefined, ConfigsProps | undefined>>;
             shouldRevalidate: z.ZodOptional<z.ZodBoolean>;
+            sensitive: z.ZodOptional<z.ZodBoolean>;
             condition: z.ZodOptional<z.ZodUnknown> & z.ZodType<string | Function | undefined, unknown, z.core.$ZodTypeInternals<string | Function | undefined, unknown>>;
             defaultValue: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodRecord<z.ZodString, z.ZodUnknown>, z.ZodUnknown]>>;
         }, z.core.$strip>, z.ZodObject<{
@@ -169,6 +172,7 @@ export const ElementSchema: z.ZodObject<{
             helpText: z.ZodOptional<z.ZodString>;
             configs: z.ZodOptional<z.ZodCustom<ConfigsProps | undefined, ConfigsProps | undefined>>;
             shouldRevalidate: z.ZodOptional<z.ZodBoolean>;
+            sensitive: z.ZodOptional<z.ZodBoolean>;
             condition: z.ZodOptional<z.ZodUnknown> & z.ZodType<string | Function | undefined, unknown, z.core.$ZodTypeInternals<string | Function | undefined, unknown>>;
             defaultValue: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodRecord<z.ZodString, z.ZodUnknown>, z.ZodUnknown]>>;
         }, z.core.$strip>, z.ZodObject<{
@@ -235,6 +239,7 @@ export const InputSchema: z.ZodUnion<readonly [z.ZodObject<{
     helpText: z.ZodOptional<z.ZodString>;
     configs: z.ZodOptional<z.ZodCustom<ConfigsProps | undefined, ConfigsProps | undefined>>;
     shouldRevalidate: z.ZodOptional<z.ZodBoolean>;
+    sensitive: z.ZodOptional<z.ZodBoolean>;
     condition: z.ZodOptional<z.ZodUnknown> & z.ZodType<string | Function | undefined, unknown, z.core.$ZodTypeInternals<string | Function | undefined, unknown>>;
     defaultValue: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodRecord<z.ZodString, z.ZodUnknown>, z.ZodUnknown]>>;
 }, z.core.$strip>, z.ZodObject<{
@@ -265,6 +270,7 @@ export const InspectorGroupSchema: z.ZodObject<{
         helpText: z.ZodOptional<z.ZodString>;
         configs: z.ZodOptional<z.ZodCustom<ConfigsProps | undefined, ConfigsProps | undefined>>;
         shouldRevalidate: z.ZodOptional<z.ZodBoolean>;
+        sensitive: z.ZodOptional<z.ZodBoolean>;
         condition: z.ZodOptional<z.ZodUnknown> & z.ZodType<string | Function | undefined, unknown, z.core.$ZodTypeInternals<string | Function | undefined, unknown>>;
         defaultValue: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodRecord<z.ZodString, z.ZodUnknown>, z.ZodUnknown]>>;
     }, z.core.$strip>, z.ZodObject<{
@@ -402,6 +408,7 @@ export const SchemaList: z.ZodRecord<z.ZodString, z.ZodObject<{
             helpText: z.ZodOptional<z.ZodString>;
             configs: z.ZodOptional<z.ZodCustom<ConfigsProps | undefined, ConfigsProps | undefined>>;
             shouldRevalidate: z.ZodOptional<z.ZodBoolean>;
+            sensitive: z.ZodOptional<z.ZodBoolean>;
             condition: z.ZodOptional<z.ZodUnknown> & z.ZodType<string | Function | undefined, unknown, z.core.$ZodTypeInternals<string | Function | undefined, unknown>>;
             defaultValue: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodRecord<z.ZodString, z.ZodUnknown>, z.ZodUnknown]>>;
         }, z.core.$strip>, z.ZodObject<{
@@ -419,6 +426,7 @@ export const SchemaList: z.ZodRecord<z.ZodString, z.ZodObject<{
             helpText: z.ZodOptional<z.ZodString>;
             configs: z.ZodOptional<z.ZodCustom<ConfigsProps | undefined, ConfigsProps | undefined>>;
             shouldRevalidate: z.ZodOptional<z.ZodBoolean>;
+            sensitive: z.ZodOptional<z.ZodBoolean>;
             condition: z.ZodOptional<z.ZodUnknown> & z.ZodType<string | Function | undefined, unknown, z.core.$ZodTypeInternals<string | Function | undefined, unknown>>;
             defaultValue: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodRecord<z.ZodString, z.ZodUnknown>, z.ZodUnknown]>>;
         }, z.core.$strip>, z.ZodObject<{
