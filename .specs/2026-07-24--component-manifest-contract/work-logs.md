@@ -40,3 +40,6 @@
 - Codex found that redaction cloned non-plain objects before JSON validation, allowing values such as `Date` to become `{}` instead of failing generation.
 - Added a failing non-plain example regression and moved the prototype guard ahead of redaction cloning.
 - Eighth follow-up verification passed focused Biome, Schema typecheck, all 64 Schema tests, and packed/API validation for eight packages and ten TypeScript entrypoints.
+- Codex found that sensitivity collection still excluded named basic inputs using the `heading` discriminator, leaving their values in presets/examples.
+- Added a failing sensitive named-heading regression and aligned sensitivity classification with serialization by requiring a string `name` rather than excluding the discriminator.
+- Ninth follow-up verification passed focused Biome, Schema typecheck, all 65 Schema tests, and packed/API validation for eight packages and ten TypeScript entrypoints.

@@ -359,7 +359,11 @@ function getSensitiveSettingNames(schema: SchemaType): Set<string> {
   let names = new Set<string>()
   for (let { inputs } of getSchemaSettingGroups(schema)) {
     for (let input of inputs) {
-      if (input.type !== 'heading' && input.sensitive) {
+      if (
+        'name' in input &&
+        typeof input.name === 'string' &&
+        input.sensitive
+      ) {
         names.add(input.name)
       }
     }

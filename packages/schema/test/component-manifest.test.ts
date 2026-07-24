@@ -288,6 +288,54 @@ describe('component manifest', () => {
     ])
   })
 
+  it('should_redact_sensitive_named_heading_values', async () => {
+    // Arrange
+    let components = [
+      {
+        schema: {
+          type: 'content',
+          title: 'Content',
+          settings: [
+            {
+              group: 'Content',
+              inputs: [
+                {
+                  type: 'heading',
+                  name: 'section',
+                  defaultValue: 'secret',
+                  sensitive: true,
+                },
+              ],
+            },
+          ],
+          presets: { section: 'secret' },
+        },
+        examples: [{ section: 'secret' }],
+      },
+    ]
+
+    // Act
+    let { manifest } = await generateComponentManifest(components, {
+      source: { name: 'pilot', revision: 'abc123' },
+    })
+
+    // Assert
+    expect({
+      settings: manifest.components[0]?.settings,
+      presets: manifest.components[0]?.presets,
+      examples: manifest.components[0]?.examples,
+    }).toEqual({
+      settings: [
+        {
+          group: 'Content',
+          inputs: [{ type: 'heading', name: 'section', sensitive: true }],
+        },
+      ],
+      presets: {},
+      examples: [{}],
+    })
+  })
+
   it('should_reject_non_json_setting_default_with_path', async () => {
     // Arrange
     let components = [
