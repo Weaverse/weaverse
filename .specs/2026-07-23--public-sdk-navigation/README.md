@@ -2,10 +2,10 @@
 
 | Field | Value |
 | --- | --- |
-| **Status** | in-progress |
+| **Status** | completed |
 | **Owner** | @paul | 
 | **Issue** | [#500](https://github.com/Weaverse/weaverse/issues/500) |
-| **Branch** | `update/public-sdk-navigation` |
+| **Branch** | `main` |
 | **Created** | 2026-07-23 |
 | **Last Updated** | 2026-07-23 |
 

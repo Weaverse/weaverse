@@ -52,3 +52,12 @@
 - Added tested declaration-rollup traversal for public properties, inline function shapes, generic wrappers, accessors, and exported variables.
 - Scoped generated Zod implementation exemptions by actual `zod` import provenance, with lookalike regression fixtures.
 - Revalidated all builds, typechecks, 481 tests, API reports, and eight packed packages across nine TypeScript entrypoints.
+
+## 2026-07-23 — @paul (Phase 4: release)
+
+- Published `@weaverse/schema@0.12.0` with source-preserving declarations, declaration maps, and explicit documented contracts.
+- Published the fixed group `@weaverse/core@5.18.0`, `@weaverse/react@5.18.0`, and `@weaverse/hydrogen@5.18.0`; Hydrogen pins React 5.18.0 and Schema 0.12.0.
+- Published `@weaverse/experiments@0.2.0` with documented root, React, and server entrypoints.
+- Created and verified all npm tags and GitHub releases, then synchronized `dev` with `main`.
+- Confirmed npm registry versions and reran packed-package checks after publication.
+- Kept `@weaverse/next` unreleased per the repository release policy; its source and CI contracts are complete on `main`.

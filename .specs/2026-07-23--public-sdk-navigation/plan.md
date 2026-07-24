@@ -48,12 +48,12 @@
 - Every public symbol/property has useful hover documentation.
 - Intentional type tightening is split into a separately versioned migration.
 
-## Phase 4 — Enforcement and rollout (in progress)
+## Phase 4 — Enforcement and rollout (completed)
 
 1. Add CI checks for undocumented public declarations and broken map targets. (Completed.)
 2. Review API reports for every active TypeScript package. (Completed.)
 3. Build, typecheck, test, and inspect packed tarballs. (Completed.)
-4. Release packages in dependency order.
+4. Release packages in dependency order. (Completed: Schema 0.12.0 → fixed group 5.18.0 → Experiments 0.2.0.)
 
 ## Files and folders in scope
 
