@@ -322,6 +322,26 @@ describe('component manifest', () => {
     )
   })
 
+  it('should_reject_non_plain_example_object_before_redaction', async () => {
+    // Arrange
+    let components = [
+      {
+        schema: { type: 'integration', title: 'Integration' },
+        examples: [new Date('2026-07-24T00:00:00.000Z')],
+      },
+    ]
+
+    // Act
+    let result = generateComponentManifest(components, {
+      source: { name: 'pilot', revision: 'abc123' },
+    })
+
+    // Assert
+    await expect(result).rejects.toThrow(
+      'Non-JSON value at components[0].examples[0]'
+    )
+  })
+
   it('should_omit_sensitive_values_from_presets_and_examples', async () => {
     // Arrange
     let components = [

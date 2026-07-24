@@ -405,6 +405,12 @@ function omitSensitiveSettings(
         })
       )
     }
+    if (
+      Object.getPrototypeOf(value) !== Object.prototype &&
+      Object.getPrototypeOf(value) !== null
+    ) {
+      throw new TypeError(`Non-JSON value at ${path}`)
+    }
 
     let valueType = 'type' in value ? value.type : undefined
     let registeredSchema =

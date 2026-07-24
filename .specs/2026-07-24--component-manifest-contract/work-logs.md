@@ -37,3 +37,6 @@
 - Codex found that source validation accepts named basic inputs using `type: 'heading'`, while serialization treated every heading discriminator as an organizational heading and generated an invalid manifest.
 - Added a failing named-heading regression and classified organizational headings by both discriminator and the absence of `name`.
 - Seventh follow-up verification passed focused Biome, Schema typecheck, all 63 Schema tests, and packed/API validation for eight packages and ten TypeScript entrypoints.
+- Codex found that redaction cloned non-plain objects before JSON validation, allowing values such as `Date` to become `{}` instead of failing generation.
+- Added a failing non-plain example regression and moved the prototype guard ahead of redaction cloning.
+- Eighth follow-up verification passed focused Biome, Schema typecheck, all 64 Schema tests, and packed/API validation for eight packages and ten TypeScript entrypoints.
