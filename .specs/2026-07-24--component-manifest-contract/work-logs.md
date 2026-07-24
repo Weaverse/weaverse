@@ -16,3 +16,6 @@
 - Final blocker review found runtime Zod objects accepted unknown properties while the JSON Schema rejected them; switched all structured manifest validators to `z.strictObject` and added root/nested parity regressions.
 - Corrected the plan's touched-file inventory and completed a final re-review with no blockers.
 - Final verification passed Biome, six typecheck tasks, 498 passing tests with one skipped, and packed/API validation for eight packages and ten TypeScript entrypoints.
+- Independently validated Codex's P1 review finding that structured examples could retain sensitive keys below `data` or inside arrays.
+- Added a failing regression for nested object/array examples, then made example redaction recursive while retaining schema-aware preset child redaction.
+- Follow-up verification passed focused Biome, Schema typecheck, all 56 Schema tests, and packed/API validation for eight packages and ten TypeScript entrypoints.

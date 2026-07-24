@@ -328,6 +328,43 @@ describe('component manifest', () => {
     })
   })
 
+  it('should_recursively_omit_sensitive_values_from_examples', async () => {
+    // Arrange
+    let components = [
+      {
+        schema: {
+          type: 'integration',
+          title: 'Integration',
+          settings: [
+            {
+              group: 'Integration',
+              inputs: [{ type: 'text', name: 'apiKey', sensitive: true }],
+            },
+          ],
+        },
+        examples: [
+          {
+            data: { apiKey: 'secret', heading: 'Example heading' },
+            blocks: [{ apiKey: 'nested-secret', heading: 'Nested heading' }],
+          },
+        ],
+      },
+    ]
+
+    // Act
+    let { manifest } = await generateComponentManifest(components, {
+      source: { name: 'pilot', revision: 'abc123' },
+    })
+
+    // Assert
+    expect(manifest.components[0]?.examples).toEqual([
+      {
+        data: { heading: 'Example heading' },
+        blocks: [{ heading: 'Nested heading' }],
+      },
+    ])
+  })
+
   it('should_omit_sensitive_values_from_nested_child_presets', async () => {
     // Arrange
     let components = [

@@ -344,14 +344,25 @@ function getSensitiveSettingNames(schema: SchemaType): Set<string> {
   return names
 }
 
+interface OmitSensitiveSettingsOptions {
+  ancestors?: WeakSet<object>
+  names: Set<string>
+  path: string
+  resolvePresetChildren?: boolean
+  schemasByType: Map<string, SchemaType>
+}
+
 function omitSensitiveSettings(
   value: unknown,
-  names: Set<string>,
-  schemasByType: Map<string, SchemaType>,
-  path: string,
-  ancestors = new WeakSet<object>()
+  {
+    ancestors = new WeakSet<object>(),
+    names,
+    path,
+    resolvePresetChildren = false,
+    schemasByType,
+  }: OmitSensitiveSettingsOptions
 ): unknown {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+  if (!value || typeof value !== 'object') {
     return value
   }
   if (ancestors.has(value)) {
@@ -360,33 +371,64 @@ function omitSensitiveSettings(
 
   ancestors.add(value)
   try {
-    let result = Object.fromEntries(
-      Object.entries(value).filter(([key]) => !names.has(key))
-    )
-    if (Array.isArray(result.children)) {
-      result.children = result.children.map((child, index) => {
-        let childType =
-          child && typeof child === 'object' && 'type' in child
-            ? child.type
-            : undefined
-        if (typeof childType !== 'string') {
-          throw new TypeError(
-            `Invalid preset child at ${path}.children[${index}]`
-          )
-        }
-        let childSchema = schemasByType.get(childType)
-        if (!childSchema) {
-          throw new TypeError(
-            `Unknown preset child type at ${path}.children[${index}]: ${childType}`
-          )
-        }
-        return omitSensitiveSettings(
-          child,
-          getSensitiveSettingNames(childSchema),
+    if (Array.isArray(value)) {
+      return value.map((item, index) =>
+        omitSensitiveSettings(item, {
+          ancestors,
+          names,
+          path: `${path}[${index}]`,
+          resolvePresetChildren,
           schemasByType,
-          `${path}.children[${index}]`,
-          ancestors
-        )
+        })
+      )
+    }
+
+    let result: Record<string, unknown> = {}
+    for (let [key, item] of Object.entries(value)) {
+      if (names.has(key)) {
+        continue
+      }
+
+      let redactedItem: unknown
+      if (resolvePresetChildren && key === 'children' && Array.isArray(item)) {
+        redactedItem = item.map((child, index) => {
+          let childType =
+            child && typeof child === 'object' && 'type' in child
+              ? child.type
+              : undefined
+          if (typeof childType !== 'string') {
+            throw new TypeError(
+              `Invalid preset child at ${path}.children[${index}]`
+            )
+          }
+          let childSchema = schemasByType.get(childType)
+          if (!childSchema) {
+            throw new TypeError(
+              `Unknown preset child type at ${path}.children[${index}]: ${childType}`
+            )
+          }
+          return omitSensitiveSettings(child, {
+            ancestors,
+            names: getSensitiveSettingNames(childSchema),
+            path: `${path}.children[${index}]`,
+            resolvePresetChildren,
+            schemasByType,
+          })
+        })
+      } else {
+        redactedItem = omitSensitiveSettings(item, {
+          ancestors,
+          names,
+          path: `${path}.${key}`,
+          resolvePresetChildren,
+          schemasByType,
+        })
+      }
+      Object.defineProperty(result, key, {
+        value: redactedItem,
+        enumerable: true,
+        configurable: true,
+        writable: true,
       })
     }
     return result
@@ -520,12 +562,12 @@ export async function generateComponentManifest(
             schema.presets === undefined
               ? undefined
               : (toJsonValue(
-                  omitSensitiveSettings(
-                    schema.presets,
-                    sensitiveSettings,
+                  omitSensitiveSettings(schema.presets, {
+                    names: sensitiveSettings,
+                    path: `components[${componentIndex}].presets`,
+                    resolvePresetChildren: true,
                     schemasByType,
-                    `components[${componentIndex}].presets`
-                  ),
+                  }),
                   `components[${componentIndex}].presets`
                 ) as ComponentManifestJsonObject)
           ),
@@ -533,12 +575,11 @@ export async function generateComponentManifest(
             'examples',
             examples?.map((example, exampleIndex) =>
               toJsonValue(
-                omitSensitiveSettings(
-                  example,
-                  sensitiveSettings,
+                omitSensitiveSettings(example, {
+                  names: sensitiveSettings,
+                  path: `components[${componentIndex}].examples[${exampleIndex}]`,
                   schemasByType,
-                  `components[${componentIndex}].examples[${exampleIndex}]`
-                ),
+                }),
                 `components[${componentIndex}].examples[${exampleIndex}]`
               )
             )
