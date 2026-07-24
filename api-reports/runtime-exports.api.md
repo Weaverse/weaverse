@@ -246,6 +246,11 @@
     "useParentInstance",
     "useSafeExternalStore",
     "useWeaverse"
+  ],
+  "@weaverse/schema/manifest": [
+    "ComponentManifestSchema",
+    "componentManifestJsonSchema",
+    "generateComponentManifest"
   ]
 }
 ```

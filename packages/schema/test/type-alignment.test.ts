@@ -25,6 +25,10 @@ import type {
   ToggleGroupConfigs,
   ToggleGroupConfigsSchema,
 } from '../src'
+import type {
+  ComponentManifest,
+  ComponentManifestSchema,
+} from '../src/manifest'
 
 type MutuallyAssignable<Left, Right> = [Left] extends [Right]
   ? [Right] extends [Left]
@@ -79,12 +83,19 @@ export type AssertComponentPresets = Assert<
 export type AssertSchemaType = Assert<
   MutuallyAssignable<SchemaType, z.output<typeof ElementSchema>>
 >
+export type AssertComponentManifest = Assert<
+  MutuallyAssignable<
+    ComponentManifest,
+    z.output<typeof ComponentManifestSchema>
+  >
+>
 
 let basicInput: BasicInput = {
   type: 'text',
   name: 'title',
   condition: (data: { showTitle?: boolean }) => data.showTitle ?? true,
   defaultValue: Symbol('legacy value'),
+  sensitive: true,
 }
 let headingInput: HeadingInput = {
   type: 'heading',
