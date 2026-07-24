@@ -474,7 +474,7 @@ function toManifestInput(
   path: string,
   sensitiveNames: Set<string>
 ): ComponentManifestInput {
-  if (input.type === 'heading') {
+  if (input.type === 'heading' && !('name' in input)) {
     let headingInput = input as HeadingInput
     return { type: headingInput.type, label: headingInput.label }
   }

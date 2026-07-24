@@ -257,6 +257,37 @@ describe('component manifest', () => {
     })
   })
 
+  it('should_serialize_named_heading_as_basic_input', async () => {
+    // Arrange
+    let components = [
+      {
+        schema: {
+          type: 'content',
+          title: 'Content',
+          settings: [
+            {
+              group: 'Content',
+              inputs: [{ type: 'heading', name: 'section' }],
+            },
+          ],
+        },
+      },
+    ]
+
+    // Act
+    let { manifest } = await generateComponentManifest(components, {
+      source: { name: 'pilot', revision: 'abc123' },
+    })
+
+    // Assert
+    expect(manifest.components[0]?.settings).toEqual([
+      {
+        group: 'Content',
+        inputs: [{ type: 'heading', name: 'section' }],
+      },
+    ])
+  })
+
   it('should_reject_non_json_setting_default_with_path', async () => {
     // Arrange
     let components = [
