@@ -5,6 +5,24 @@
   "main": "dist/index.js",
   "types": "dist/types/index.d.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./manifest": {
+      "types": "./dist/types/manifest.d.ts",
+      "import": "./dist/manifest.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "manifest": [
+        "dist/types/manifest.d.ts"
+      ]
+    }
+  },
   "sideEffects": false,
   "files": [
     "dist",
@@ -19,7 +37,8 @@
   },
   "tsup": {
     "entry": [
-      "src/index.ts"
+      "src/index.ts",
+      "src/manifest.ts"
     ],
     "format": [
       "esm"

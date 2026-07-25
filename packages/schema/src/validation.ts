@@ -94,6 +94,12 @@ export const BasicInputSchema = z
       .describe(
         'Whether to revalidate the prop when the value changes, use for product, product-list, collection, collection-list, blog, metaobject'
       ),
+    sensitive: z
+      .boolean()
+      .optional()
+      .describe(
+        'Whether agent-facing exports must omit this sensitive or server-only setting value'
+      ),
     condition: z
       .unknown()
       .optional()
@@ -418,6 +424,8 @@ export interface BasicInput {
   name: string
   /** Placeholder shown by text-like controls. */
   placeholder?: string
+  /** Whether agent-facing exports must omit this sensitive or server-only setting value. */
+  sensitive?: boolean
   /** Whether changing this value reruns the component loader. */
   shouldRevalidate?: boolean
   /** Studio control used to edit the property. */

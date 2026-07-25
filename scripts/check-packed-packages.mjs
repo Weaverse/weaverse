@@ -79,6 +79,35 @@ function normalizeEntry(entryFile) {
   return entryFile.startsWith('./') ? entryFile.slice(2) : entryFile
 }
 
+function hasInterfaceProperty(declarationFile, interfaceName, propertyName) {
+  let sourceFile = ts.createSourceFile(
+    declarationFile,
+    readFileSync(declarationFile, 'utf8'),
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TS
+  )
+  let found = false
+
+  function visit(node) {
+    if (
+      ts.isInterfaceDeclaration(node) &&
+      node.name.text === interfaceName &&
+      node.members.some(
+        (member) =>
+          ts.isPropertySignature(member) &&
+          member.name?.getText(sourceFile) === propertyName
+      )
+    ) {
+      found = true
+    }
+    ts.forEachChild(node, visit)
+  }
+
+  visit(sourceFile)
+  return found
+}
+
 function hasDeprecatedMember(
   declarationFile,
   memberName,
@@ -225,6 +254,22 @@ try {
         }
       }
     }
+
+    if (packageJson.name === '@weaverse/schema') {
+      let validationDeclaration = declarationFiles.find((file) =>
+        file.endsWith(`${sep}validation.d.ts`)
+      )
+      if (
+        !(
+          validationDeclaration &&
+          hasInterfaceProperty(validationDeclaration, 'BasicInput', 'sensitive')
+        )
+      ) {
+        throw new Error(
+          '@weaverse/schema packed declarations are missing BasicInput.sensitive'
+        )
+      }
+    }
   }
 
   let deprecationRequirements = {
@@ -274,6 +319,13 @@ try {
     throw new Error('Runtime export report does not contain a JSON block')
   }
   let runtimeExports = JSON.parse(runtimeJson)
+  if (
+    runtimeExports['@weaverse/schema'].includes('generateComponentManifest')
+  ) {
+    throw new Error(
+      '@weaverse/schema must not expose the build-only manifest generator'
+    )
+  }
   let esmEntrypoints = typeEntrypoints.filter(
     ({ entrypoint }) => entrypoint.import
   )
@@ -353,6 +405,23 @@ function verify(specifier, runtimeModule) {
   )
   run(process.execPath, ['runtime.mjs'], { cwd: consumerDir })
   run(process.execPath, ['runtime.cjs'], { cwd: consumerDir })
+  writeFileSync(
+    join(consumerDir, 'manifest-runtime.mjs'),
+    `import { generateComponentManifest } from '@weaverse/schema/manifest'
+
+let artifact = await generateComponentManifest(
+  [{ schema: { type: 'hero', title: 'Hero' } }],
+  { source: { name: 'packed-consumer', revision: 'abc123' } }
+)
+if (
+  artifact.hash !==
+  'sha256:03c8db23865fd426237481016f5f7f24f6b6ead22a4420e8ba374a537400902b'
+) {
+  throw new Error(\`Unexpected component manifest hash: \${artifact.hash}\`)
+}
+`
+  )
+  run(process.execPath, ['manifest-runtime.mjs'], { cwd: consumerDir })
 
   writeFileSync(
     join(consumerDir, 'index.ts'),
@@ -373,6 +442,10 @@ import type {
   Resolvable,
   SchemaType,
 } from '@weaverse/schema'
+import {
+  type ComponentManifestArtifact,
+  generateComponentManifest,
+} from '@weaverse/schema/manifest'
 
 let modules = [${typeEntrypoints.map((_, index) => `api${index}`).join(', ')}]
 let heading: HeadingInput = {
@@ -398,8 +471,13 @@ let hydrogenEnabled: HydrogenResolvable<
   boolean,
   HydrogenAvailabilityContext
 > = enabled
+let manifestArtifact: Promise<ComponentManifestArtifact> =
+  generateComponentManifest(
+    [{ schema: componentSchema }],
+    { source: { name: 'consumer', revision: 'abc123' } }
+  )
 
-void [modules, componentSchema, hydrogenEnabled]
+void [modules, componentSchema, hydrogenEnabled, manifestArtifact]
 `
   )
   writeFileSync(
@@ -483,15 +561,71 @@ void legacyLooseSchema
   }
 
   writeFileSync(
+    join(consumerDir, 'legacy-resolution.ts'),
+    `import {
+  type ComponentManifestArtifact,
+  generateComponentManifest,
+} from '@weaverse/schema/manifest'
+
+let artifact: Promise<ComponentManifestArtifact> = generateComponentManifest(
+  [{ schema: { type: 'hero', title: 'Hero' } }],
+  { source: { name: 'legacy-consumer', revision: 'abc123' } }
+)
+void artifact
+`
+  )
+  let legacyResolutionConfig = join(
+    consumerDir,
+    'tsconfig.legacy-resolution.json'
+  )
+  writeFileSync(
+    legacyResolutionConfig,
+    `${JSON.stringify(
+      {
+        compilerOptions: {
+          target: 'ES2022',
+          module: 'ESNext',
+          moduleResolution: 'Node10',
+          ignoreDeprecations: '6.0',
+          strict: true,
+          noEmit: true,
+          skipLibCheck: true,
+        },
+        files: ['legacy-resolution.ts'],
+      },
+      null,
+      2
+    )}\n`
+  )
+  run(
+    process.execPath,
+    [
+      join(ROOT_DIR, 'node_modules', 'typescript', 'bin', 'tsc'),
+      '--project',
+      legacyResolutionConfig,
+    ],
+    { cwd: consumerDir }
+  )
+
+  writeFileSync(
     join(consumerDir, 'declaration-check.ts'),
     `import * as core from '@weaverse/core'
 import * as react from '@weaverse/react'
 import * as schema from '@weaverse/schema'
+import * as schemaManifest from '@weaverse/schema/manifest'
 import * as experiments from '@weaverse/experiments'
 import * as experimentReact from '@weaverse/experiments/react'
 import * as experimentServer from '@weaverse/experiments/server'
 
-void [core, react, schema, experiments, experimentReact, experimentServer]
+void [
+  core,
+  react,
+  schema,
+  schemaManifest,
+  experiments,
+  experimentReact,
+  experimentServer,
+]
 `
   )
   let declarationConfig = join(consumerDir, 'tsconfig.declarations.json')

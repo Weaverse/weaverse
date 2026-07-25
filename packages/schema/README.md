@@ -363,6 +363,58 @@ console.log(tsInterface)
 // }
 ```
 
+## Build-time component manifests
+
+Use the build-only `@weaverse/schema/manifest` entrypoint to turn registered
+component modules into a deterministic artifact. This subpath is not re-exported
+by the normal Schema or Hydrogen runtime entries, so storefront bundles do not
+load the generator or its JSON Schema.
+
+```typescript
+import { generateComponentManifest } from '@weaverse/schema/manifest'
+
+let artifact = await generateComponentManifest(components, {
+  source: {
+    name: 'pilot',
+    revision: process.env.GIT_SHA,
+    version: '1.0.0',
+  },
+})
+
+await writeFile('.weaverse/component-manifest.json', artifact.json)
+console.log(artifact.hash) // sha256:...
+```
+
+The generator validates component schemas, rejects duplicate types, sorts
+components and free-form non-index object keys by deterministic UTF-16 code-unit
+order, preserves author-defined array order, uses ECMAScript's numeric ordering
+for array-index object keys, writes two-space JSON with one trailing newline,
+and hashes those exact UTF-8 bytes. It records loader presence but never runs
+loaders or schema callbacks. Function-based availability and setting conditions
+are represented as `{ dynamic: true }` for later exact-runtime validation.
+
+Mark sensitive or server-only settings whose values must not reach agent-facing
+artifacts:
+
+```typescript
+{
+  type: 'text',
+  name: 'apiKey',
+  label: 'API key',
+  sensitive: true,
+  defaultValue: '',
+}
+```
+
+`sensitive: true` covers both secret values and server-only configuration.
+Those defaults are omitted from settings, presets, nested child presets, and
+representative examples. Generated artifacts contain schema contracts only;
+they never contain merchant values.
+
+The version-one runtime validator and JSON Schema are exported as
+`ComponentManifestSchema` and `componentManifestJsonSchema`. Contract changes
+that would invalidate existing manifests require a new manifest version.
+
 ## Type Safety
 
 All types are inferred from Zod schemas, ensuring:
