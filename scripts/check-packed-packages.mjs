@@ -25,6 +25,9 @@ let PNPM = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm'
 const RUNTIME_JSON_BLOCK = /```json\n([\s\S]*?)\n```/
 // Next's browser entry imports next/navigation, which is resolved by its bundler.
 const NODE_ESM_EXCLUSIONS = new Set(['@weaverse/next'])
+// @weaverse/cli is an ESM-only executable and @weaverse/biome only ships JSON,
+// so neither participates in the dual ESM/CJS runtime contract.
+const CJS_CONTRACT_EXCLUSIONS = new Set(['@weaverse/cli', '@weaverse/biome'])
 let publishedPackages = getPublishedPackages(ROOT_DIR)
 let typeEntrypoints = publishedPackages.flatMap((publishedPackage) =>
   publishedPackage.entrypoints
@@ -77,6 +80,28 @@ function verifyIdentityMap(declarationFile, declarationMap, sourceFile) {
 
 function normalizeEntry(entryFile) {
   return entryFile.startsWith('./') ? entryFile.slice(2) : entryFile
+}
+
+function assertCommonJsArtifact(specifier, artifactFile) {
+  let sourceFile = ts.createSourceFile(
+    artifactFile,
+    readFileSync(artifactFile, 'utf8'),
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.JS
+  )
+  let esmStatement = sourceFile.statements.find(
+    (statement) =>
+      ts.isImportDeclaration(statement) ||
+      ts.isExportDeclaration(statement) ||
+      ts.isExportAssignment(statement)
+  )
+
+  if (esmStatement) {
+    throw new Error(
+      `${specifier} points its require condition at the ES module ${artifactFile}`
+    )
+  }
 }
 
 function hasInterfaceProperty(declarationFile, interfaceName, propertyName) {
@@ -155,6 +180,11 @@ try {
     packedDependencies[packageJson.name] = `file:${tarball}`
   }
 
+  // Transitive @weaverse/* dependencies must resolve to the packed tarballs too,
+  // otherwise the registry copies mask packaging regressions such as a missing
+  // `require` condition reached through the @weaverse/hydrogen CJS build.
+  let packedOverrides = { ...packedDependencies }
+
   let rootPackageJson = JSON.parse(
     readFileSync(join(ROOT_DIR, 'package.json'), 'utf8')
   )
@@ -175,6 +205,12 @@ try {
       null,
       2
     )}\n`
+  )
+  writeFileSync(
+    join(consumerDir, 'pnpm-workspace.yaml'),
+    `overrides:\n${Object.entries(packedOverrides)
+      .map(([name, specifier]) => `  '${name}': '${specifier}'`)
+      .join('\n')}\n`
   )
   run(
     PNPM,
@@ -210,6 +246,20 @@ try {
       if (!existsSync(join(packedFolder, normalizeEntry(entryFile)))) {
         throw new Error(
           `${packageJson.name} is missing packed entry ${entryFile}`
+        )
+      }
+    }
+
+    if (!CJS_CONTRACT_EXCLUSIONS.has(packageJson.name)) {
+      for (let entrypoint of publishedPackage.entrypoints) {
+        if (!entrypoint.require) {
+          throw new Error(
+            `${entrypoint.specifier} has no require condition, so CommonJS consumers fail with ERR_PACKAGE_PATH_NOT_EXPORTED`
+          )
+        }
+        assertCommonJsArtifact(
+          entrypoint.specifier,
+          join(packedFolder, normalizeEntry(entrypoint.require))
         )
       }
     }
@@ -422,6 +472,32 @@ if (
 `
   )
   run(process.execPath, ['manifest-runtime.mjs'], { cwd: consumerDir })
+  writeFileSync(
+    join(consumerDir, 'manifest-runtime.cjs'),
+    `let { createSchema } = require('@weaverse/schema')
+let { generateComponentManifest } = require('@weaverse/schema/manifest')
+
+let schema = createSchema({ type: 'hero', title: 'Hero' })
+
+async function main() {
+  let artifact = await generateComponentManifest([{ schema }], {
+    source: { name: 'packed-consumer', revision: 'abc123' },
+  })
+  if (
+    artifact.hash !==
+    'sha256:03c8db23865fd426237481016f5f7f24f6b6ead22a4420e8ba374a537400902b'
+  ) {
+    throw new Error(\`Unexpected component manifest hash: \${artifact.hash}\`)
+  }
+}
+
+main().catch((error) => {
+  console.error(error)
+  process.exit(1)
+})
+`
+  )
+  run(process.execPath, ['manifest-runtime.cjs'], { cwd: consumerDir })
 
   writeFileSync(
     join(consumerDir, 'index.ts'),
@@ -490,6 +566,8 @@ import { WeaverseClient } from '@weaverse/hydrogen'
 import { createWeaverseNextClient } from '@weaverse/next'
 import { getWeaverseNextConfigs } from '@weaverse/next/server'
 import { WeaverseRoot } from '@weaverse/react'
+import { createSchema } from '@weaverse/schema'
+import { generateComponentManifest } from '@weaverse/schema/manifest'
 
 void [
   Weaverse,
@@ -500,6 +578,8 @@ void [
   createWeaverseNextClient,
   getWeaverseNextConfigs,
   WeaverseRoot,
+  createSchema,
+  generateComponentManifest,
 ]
 `
   )
