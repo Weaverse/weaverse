@@ -25,6 +25,9 @@ let PNPM = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm'
 const RUNTIME_JSON_BLOCK = /```json\n([\s\S]*?)\n```/
 // Next's browser entry imports next/navigation, which is resolved by its bundler.
 const NODE_ESM_EXCLUSIONS = new Set(['@weaverse/next'])
+// @weaverse/cli is an ESM-only executable and @weaverse/biome only ships JSON,
+// so neither participates in the dual ESM/CJS runtime contract.
+const CJS_CONTRACT_EXCLUSIONS = new Set(['@weaverse/cli', '@weaverse/biome'])
 let publishedPackages = getPublishedPackages(ROOT_DIR)
 let typeEntrypoints = publishedPackages.flatMap((publishedPackage) =>
   publishedPackage.entrypoints
@@ -77,6 +80,74 @@ function verifyIdentityMap(declarationFile, declarationMap, sourceFile) {
 
 function normalizeEntry(entryFile) {
   return entryFile.startsWith('./') ? entryFile.slice(2) : entryFile
+}
+
+/**
+ * Internal @weaverse/* dependencies are always pinned to exact versions, so an
+ * exact match is the only range shape that has to be understood here. Anything
+ * else is treated as incompatible and left un-overridden rather than silently
+ * redirected to a version the declaring package never asked for.
+ */
+function acceptsPackedVersion(range, packedVersion) {
+  return range === packedVersion
+}
+
+/**
+ * Node decides a file's module format from its extension and the nearest
+ * package.json `type`, not from its syntax. Classify the same way so a `.js`
+ * require target inside a `type: "module"` package is rejected even when it
+ * happens to contain no import/export statement.
+ */
+function getNodeModuleFormat(artifactFile, packedPackageJson) {
+  if (artifactFile.endsWith('.cjs')) {
+    return 'commonjs'
+  }
+  if (artifactFile.endsWith('.mjs')) {
+    return 'module'
+  }
+  return packedPackageJson.type === 'module' ? 'module' : 'commonjs'
+}
+
+function hasEsmSyntax(sourceFile) {
+  return sourceFile.statements.some((statement) => {
+    if (
+      ts.isImportDeclaration(statement) ||
+      ts.isExportDeclaration(statement) ||
+      ts.isExportAssignment(statement)
+    ) {
+      return true
+    }
+    let modifiers = ts.canHaveModifiers(statement)
+      ? ts.getModifiers(statement)
+      : undefined
+    return Boolean(
+      modifiers?.some(
+        (modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword
+      )
+    )
+  })
+}
+
+function assertCommonJsArtifact(specifier, artifactFile, packedPackageJson) {
+  if (getNodeModuleFormat(artifactFile, packedPackageJson) !== 'commonjs') {
+    throw new Error(
+      `${specifier} points its require condition at the ES module ${artifactFile}`
+    )
+  }
+
+  let sourceFile = ts.createSourceFile(
+    artifactFile,
+    readFileSync(artifactFile, 'utf8'),
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.JS
+  )
+
+  if (hasEsmSyntax(sourceFile)) {
+    throw new Error(
+      `${specifier} points its require condition at ${artifactFile}, which contains ES module syntax`
+    )
+  }
 }
 
 function hasInterfaceProperty(declarationFile, interfaceName, propertyName) {
@@ -155,6 +226,40 @@ try {
     packedDependencies[packageJson.name] = `file:${tarball}`
   }
 
+  // Transitive @weaverse/* dependencies must resolve to the packed tarballs too,
+  // otherwise the registry copies mask packaging regressions such as a missing
+  // `require` condition reached through the @weaverse/hydrogen CJS build.
+  // Overriding a declared range would also hide incompatible internal pins, so
+  // only redirect edges whose declared range still accepts the packed version.
+  let packedVersions = new Map(
+    publishedPackages.map((publishedPackage) => [
+      publishedPackage.packageJson.name,
+      publishedPackage.packageJson.version,
+    ])
+  )
+  let packedOverrides = {}
+  let skippedOverrides = []
+
+  for (let publishedPackage of publishedPackages) {
+    for (let [dependency, range] of Object.entries(
+      publishedPackage.packageJson.dependencies ?? {}
+    )) {
+      let packedVersion = packedVersions.get(dependency)
+      if (!packedVersion) {
+        continue
+      }
+
+      let edge = `${publishedPackage.packageJson.name}>${dependency}`
+      if (acceptsPackedVersion(range, packedVersion)) {
+        packedOverrides[edge] = packedDependencies[dependency]
+      } else {
+        skippedOverrides.push(
+          `${edge}@${range} does not accept packed ${packedVersion}`
+        )
+      }
+    }
+  }
+
   let rootPackageJson = JSON.parse(
     readFileSync(join(ROOT_DIR, 'package.json'), 'utf8')
   )
@@ -175,6 +280,17 @@ try {
       null,
       2
     )}\n`
+  )
+  if (skippedOverrides.length > 0) {
+    console.log(
+      `Leaving registry resolution in place for incompatible internal pins:\n  ${skippedOverrides.join('\n  ')}`
+    )
+  }
+  writeFileSync(
+    join(consumerDir, 'pnpm-workspace.yaml'),
+    `overrides:\n${Object.entries(packedOverrides)
+      .map(([edge, specifier]) => `  '${edge}': '${specifier}'`)
+      .join('\n')}\n`
   )
   run(
     PNPM,
@@ -211,6 +327,47 @@ try {
         throw new Error(
           `${packageJson.name} is missing packed entry ${entryFile}`
         )
+      }
+    }
+
+    if (!CJS_CONTRACT_EXCLUSIONS.has(packageJson.name)) {
+      for (let entrypoint of publishedPackage.entrypoints) {
+        if (!entrypoint.require) {
+          throw new Error(
+            `${entrypoint.specifier} has no require condition, so CommonJS consumers fail with ERR_PACKAGE_PATH_NOT_EXPORTED`
+          )
+        }
+        assertCommonJsArtifact(
+          entrypoint.specifier,
+          join(packedFolder, normalizeEntry(entrypoint.require)),
+          packedPackageJson
+        )
+
+        // A `type: "module"` package must ship CommonJS declarations for its
+        // require branch. Reusing the ESM `.d.ts` makes TypeScript reject
+        // CommonJS consumers with TS1479 under `module: node16`/`node18`.
+        if (
+          packedPackageJson.type === 'module' &&
+          entrypoint.requireTypes &&
+          !entrypoint.requireTypes.endsWith('.d.cts')
+        ) {
+          throw new Error(
+            `${entrypoint.specifier} resolves require-condition types to ${entrypoint.requireTypes}, which TypeScript reads as ESM`
+          )
+        }
+      }
+    }
+
+    for (let entrypoint of publishedPackage.entrypoints) {
+      for (let declaration of [entrypoint.types, entrypoint.requireTypes]) {
+        if (
+          declaration &&
+          !existsSync(join(packedFolder, normalizeEntry(declaration)))
+        ) {
+          throw new Error(
+            `${entrypoint.specifier} is missing packed declaration ${declaration}`
+          )
+        }
       }
     }
 
@@ -422,6 +579,32 @@ if (
 `
   )
   run(process.execPath, ['manifest-runtime.mjs'], { cwd: consumerDir })
+  writeFileSync(
+    join(consumerDir, 'manifest-runtime.cjs'),
+    `let { createSchema } = require('@weaverse/schema')
+let { generateComponentManifest } = require('@weaverse/schema/manifest')
+
+let schema = createSchema({ type: 'hero', title: 'Hero' })
+
+async function main() {
+  let artifact = await generateComponentManifest([{ schema }], {
+    source: { name: 'packed-consumer', revision: 'abc123' },
+  })
+  if (
+    artifact.hash !==
+    'sha256:03c8db23865fd426237481016f5f7f24f6b6ead22a4420e8ba374a537400902b'
+  ) {
+    throw new Error(\`Unexpected component manifest hash: \${artifact.hash}\`)
+  }
+}
+
+main().catch((error) => {
+  console.error(error)
+  process.exit(1)
+})
+`
+  )
+  run(process.execPath, ['manifest-runtime.cjs'], { cwd: consumerDir })
 
   writeFileSync(
     join(consumerDir, 'index.ts'),
@@ -490,6 +673,8 @@ import { WeaverseClient } from '@weaverse/hydrogen'
 import { createWeaverseNextClient } from '@weaverse/next'
 import { getWeaverseNextConfigs } from '@weaverse/next/server'
 import { WeaverseRoot } from '@weaverse/react'
+import { createSchema } from '@weaverse/schema'
+import { generateComponentManifest } from '@weaverse/schema/manifest'
 
 void [
   Weaverse,
@@ -500,6 +685,8 @@ void [
   createWeaverseNextClient,
   getWeaverseNextConfigs,
   WeaverseRoot,
+  createSchema,
+  generateComponentManifest,
 ]
 `
   )
@@ -559,6 +746,62 @@ void legacyLooseSchema
       { cwd: consumerDir }
     )
   }
+
+  // `module: node16` is the stable CommonJS mode most consumers pin. Unlike
+  // NodeNext it refuses to require an ESM declaration file, so this is the mode
+  // that proves each require condition ships real CommonJS types. Only the
+  // dual-format Weaverse packages are covered here; third-party declarations
+  // are out of this contract's scope, so `skipLibCheck` stays on.
+  writeFileSync(
+    join(consumerDir, 'node16-consumer.cts'),
+    `import { Weaverse } from '@weaverse/core'
+import { assignVariant } from '@weaverse/experiments'
+import { createExposureTracker } from '@weaverse/experiments/react'
+import { getExperiments } from '@weaverse/experiments/server'
+import { WeaverseRoot } from '@weaverse/react'
+import { createSchema } from '@weaverse/schema'
+import { generateComponentManifest } from '@weaverse/schema/manifest'
+
+void [
+  Weaverse,
+  assignVariant,
+  createExposureTracker,
+  getExperiments,
+  WeaverseRoot,
+  createSchema,
+  generateComponentManifest,
+]
+`
+  )
+  let node16Config = join(consumerDir, 'tsconfig.node16.json')
+  writeFileSync(
+    node16Config,
+    `${JSON.stringify(
+      {
+        compilerOptions: {
+          target: 'ES2022',
+          module: 'node16',
+          moduleResolution: 'node16',
+          strict: true,
+          noEmit: true,
+          skipLibCheck: true,
+          jsx: 'react-jsx',
+        },
+        files: ['node16-consumer.cts'],
+      },
+      null,
+      2
+    )}\n`
+  )
+  run(
+    process.execPath,
+    [
+      join(ROOT_DIR, 'node_modules', 'typescript', 'bin', 'tsc'),
+      '--project',
+      node16Config,
+    ],
+    { cwd: consumerDir }
+  )
 
   writeFileSync(
     join(consumerDir, 'legacy-resolution.ts'),

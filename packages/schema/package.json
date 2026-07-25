@@ -2,17 +2,30 @@
   "name": "@weaverse/schema",
   "version": "0.13.0",
   "description": "Schema definitions for Weaverse",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "types": "dist/types/index.d.ts",
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/index.js"
+      "import": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/types/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./manifest": {
-      "types": "./dist/types/manifest.d.ts",
-      "import": "./dist/manifest.js"
+      "import": {
+        "types": "./dist/types/manifest.d.ts",
+        "default": "./dist/manifest.js"
+      },
+      "require": {
+        "types": "./dist/types/manifest.d.cts",
+        "default": "./dist/manifest.cjs"
+      }
     },
     "./package.json": "./package.json"
   },
@@ -41,7 +54,8 @@
       "src/manifest.ts"
     ],
     "format": [
-      "esm"
+      "esm",
+      "cjs"
     ],
     "dts": true,
     "sourcemap": true,

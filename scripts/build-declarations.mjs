@@ -12,10 +12,14 @@ import ts from 'typescript'
 
 const DECLARATION_SUFFIX = /\.d\.ts$/
 const BUNDLED_DECLARATION = /\.d\.(?:ts|mts|cts)(?:\.map)?$/
+const SOURCE_MAPPING_COMMENT = /\n?\/\/# sourceMappingURL=.*\n?$/
 let packageDir = process.cwd()
 let sourceDir = join(packageDir, 'src')
 let outputDir = join(packageDir, 'dist', 'types')
 let configPath = join(packageDir, 'tsconfig.json')
+let packageType = JSON.parse(
+  readFileSync(join(packageDir, 'package.json'), 'utf8')
+).type
 function walk(directory) {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     let path = join(directory, entry.name)
@@ -66,6 +70,78 @@ function copyAuthoredDeclarations() {
   }
 }
 
+function collectModuleSpecifiers(sourceFile) {
+  let specifiers = []
+
+  function visit(node) {
+    if (
+      (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) &&
+      node.moduleSpecifier &&
+      ts.isStringLiteral(node.moduleSpecifier)
+    ) {
+      specifiers.push(node.moduleSpecifier)
+    }
+    if (
+      ts.isImportTypeNode(node) &&
+      ts.isLiteralTypeNode(node.argument) &&
+      ts.isStringLiteral(node.argument.literal)
+    ) {
+      specifiers.push(node.argument.literal)
+    }
+    ts.forEachChild(node, visit)
+  }
+
+  visit(sourceFile)
+  return specifiers
+}
+
+/**
+ * `type: "module"` packages need CommonJS declarations for their `require`
+ * conditions. Without them TypeScript reads the shared `.d.ts` as ESM and
+ * rejects CommonJS consumers with TS1479 under `module: node16`/`node18`.
+ * Relative specifiers are rewritten to `.cjs` so the CommonJS declaration graph
+ * stays internally consistent under `skipLibCheck: false`.
+ */
+function emitCommonJsDeclarations() {
+  if (packageType !== 'module') {
+    return
+  }
+
+  for (let declarationFile of walk(outputDir).filter((file) =>
+    DECLARATION_SUFFIX.test(file)
+  )) {
+    let source = readFileSync(declarationFile, 'utf8').replace(
+      SOURCE_MAPPING_COMMENT,
+      '\n'
+    )
+    let sourceFile = ts.createSourceFile(
+      declarationFile,
+      source,
+      ts.ScriptTarget.Latest,
+      true,
+      ts.ScriptKind.TS
+    )
+    let edits = collectModuleSpecifiers(sourceFile)
+      .filter(
+        (specifier) =>
+          specifier.text.startsWith('.') && specifier.text.endsWith('.js')
+      )
+      .map((specifier) => ({
+        start: specifier.getStart(sourceFile) + 1,
+        end: specifier.getEnd() - 1,
+        text: `${specifier.text.slice(0, -'.js'.length)}.cjs`,
+      }))
+      .sort((left, right) => right.start - left.start)
+    let output = source
+
+    for (let edit of edits) {
+      output = output.slice(0, edit.start) + edit.text + output.slice(edit.end)
+    }
+
+    writeFileSync(declarationFile.replace(DECLARATION_SUFFIX, '.d.cts'), output)
+  }
+}
+
 let formatHost = {
   getCanonicalFileName: (file) => file,
   getCurrentDirectory: () => packageDir,
@@ -107,4 +183,5 @@ if (diagnostics.length > 0) {
 }
 
 copyAuthoredDeclarations()
+emitCommonJsDeclarations()
 removeBundledDeclarations()
