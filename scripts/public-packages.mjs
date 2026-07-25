@@ -2,23 +2,27 @@ import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import ts from 'typescript'
 
-function findCondition(value, condition) {
+/**
+ * Resolve a conditional exports value the way Node and TypeScript do: walk keys
+ * in declaration order and follow the first key that is active or `default`.
+ * A naive search cannot be used here because `types` legally appears inside
+ * both the `import` and `require` branches with different targets.
+ */
+function findCondition(value, conditions) {
   if (typeof value === 'string') {
-    return condition === 'default' ? value : undefined
+    return value
   }
 
   if (!(value && typeof value === 'object')) {
     return
   }
 
-  if (typeof value[condition] === 'string') {
-    return value[condition]
-  }
-
-  for (let child of Object.values(value)) {
-    let match = findCondition(child, condition)
-    if (match) {
-      return match
+  for (let [key, child] of Object.entries(value)) {
+    if (key === 'default' || conditions.includes(key)) {
+      let match = findCondition(child, conditions)
+      if (match) {
+        return match
+      }
     }
   }
 
@@ -39,9 +43,10 @@ function getEntrypoints(packageJson) {
           subpath === '.'
             ? packageJson.name
             : `${packageJson.name}/${subpath.slice(2)}`,
-        types: findCondition(value, 'types'),
-        import: findCondition(value, 'import'),
-        require: findCondition(value, 'require'),
+        types: findCondition(value, ['types', 'import']),
+        requireTypes: findCondition(value, ['types', 'require']),
+        import: findCondition(value, ['import']),
+        require: findCondition(value, ['require']),
       }))
   }
 
@@ -50,6 +55,7 @@ function getEntrypoints(packageJson) {
       subpath: '.',
       specifier: packageJson.name,
       types: packageJson.types ?? packageJson.typings,
+      requireTypes: packageJson.types ?? packageJson.typings,
       import:
         packageJson.module ??
         (packageJson.type === 'module' ? packageJson.main : undefined),

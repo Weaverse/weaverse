@@ -8,14 +8,24 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/types/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./manifest": {
-      "types": "./dist/types/manifest.d.ts",
-      "import": "./dist/manifest.js",
-      "require": "./dist/manifest.cjs"
+      "import": {
+        "types": "./dist/types/manifest.d.ts",
+        "default": "./dist/manifest.js"
+      },
+      "require": {
+        "types": "./dist/types/manifest.d.cts",
+        "default": "./dist/manifest.cjs"
+      }
     },
     "./package.json": "./package.json"
   },
