@@ -617,6 +617,7 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
     constructor(initialData: HydrogenComponentData, weaverse: WeaverseHydrogen);
     get Element(): HydrogenElement;
     getSnapShot: () => ElementData;
+    setData: (update: Omit<ElementData, "id" | "type">) => ElementData;
     weaverse: WeaverseHydrogen;
 }
 

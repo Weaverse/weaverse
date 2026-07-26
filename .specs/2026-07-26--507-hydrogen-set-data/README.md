@@ -2,7 +2,7 @@
 
 | Field            | Value                                                            |
 | ---------------- | ---------------------------------------------------------------- |
-| **Status**       | in-progress                                                      |
+| **Status**       | completed                                                        |
 | **Owner**        | @hta218                                                          |
 | **Issue**        | [#507](https://github.com/Weaverse/weaverse/issues/507)          |
 | **Branch**       | `fix/507-hydrogen-set-data`                                      |

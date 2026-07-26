@@ -108,6 +108,54 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
   }
 
   /**
+   * Override setData to flatten serialized `data` the same way the constructor
+   * does. Core's `initProject()` reuses item stores keyed by item id (identical
+   * ids across locales), and the inherited setData only shallow-merges the raw
+   * item — fresh settings would land under `_store.data` while the stale
+   * flattened values keep rendering.
+   *
+   * Schema defaults are re-applied ahead of incoming settings because a
+   * serialized payload can omit fields — or the optional `data` object itself —
+   * when values equal schema defaults. The stored nested `data` is also replaced
+   * so the public serialized state does not retain the previous locale payload.
+   *
+   * An empty update is the context-only refresh from `syncReusedInstance`: swap
+   * the store reference so memoized subscribers re-render, and leave the
+   * settings untouched.
+   */
+  setData = (update: Omit<ElementData, 'id' | 'type'>) => {
+    let source = update ?? {}
+    let { data, ...rest } = source
+    let isEmptyUpdate = Object.keys(source).length === 0
+
+    if (isEmptyUpdate) {
+      this._store = { ...this._store }
+    } else {
+      let type = source.type ?? this._store.type
+      let schema = this.weaverse.elementRegistry.get(type)?.schema
+      let isSerializedItem = 'id' in source && 'type' in source
+      let shouldNormalize = data !== undefined || isSerializedItem
+
+      if (schema && shouldNormalize) {
+        let { data: _previousData, ...store } = this._store
+        let schemaData = generateDataFromSchema(schema)
+        this._store = {
+          ...store,
+          ...(data === undefined ? {} : { data }),
+          ...schemaData,
+          ...data,
+          ...rest,
+        }
+      } else {
+        this._store = { ...this._store, ...source }
+      }
+    }
+
+    this.triggerUpdate()
+    return this.data
+  }
+
+  /**
    * Override getSnapShot to merge translation data when in translation mode.
    * Memoizes the result: returns the same object reference as long as
    * both `_store` and the translation entry haven't changed.
