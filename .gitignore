@@ -14,3 +14,4 @@ package-lock.json
 .user/
 .claude/settings.local.json
 packages/i18n/dist/
+.pi-subagents/

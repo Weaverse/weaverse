@@ -32,6 +32,7 @@ const MAX_I18N_FIELD_LENGTH = 256
 // biome-ignore lint/suspicious/noControlCharactersInRegex: rejecting control chars in untrusted pathnames is the intent.
 const CONTROL_CHAR_PATTERN = /[\u0000-\u001F\u007F]/
 
+/** Configuration for the App Router item-revalidation handler. */
 export interface WeaverseNextRevalidateHandlerConfig {
   /**
    * Reuse the app's server-client factory so the loader runs with the same
@@ -52,7 +53,9 @@ export interface WeaverseNextRevalidateHandlerConfig {
 
 /** POST body accepted by the revalidate route. */
 export interface WeaverseNextRevalidateRequestBody {
+  /** Unsaved Studio item settings to pass to the registered component loader. */
   draftItem: WeaverseNextComponentData
+  /** Public route identity used to reconstruct the loader request context. */
   routeContext?: WeaverseNextRevalidateRouteContext
 }
 
@@ -250,6 +253,12 @@ function parseDraftItem(payload: unknown): WeaverseNextComponentData | null {
   return draftItem as WeaverseNextComponentData
 }
 
+/** App Router handler returned for Studio item revalidation requests. */
+export interface WeaverseNextRevalidateHandler {
+  /** Handle a Studio request to rerun one registered component loader. */
+  POST: (request: Request) => Promise<Response>
+}
+
 /**
  * Create the Studio per-item revalidation route handler.
  *
@@ -276,7 +285,7 @@ function parseDraftItem(payload: unknown): WeaverseNextComponentData | null {
  */
 export function createWeaverseNextRevalidateHandler(
   config: WeaverseNextRevalidateHandlerConfig
-): { POST: (request: Request) => Promise<Response> } {
+): WeaverseNextRevalidateHandler {
   return {
     POST: async (request: Request) => {
       let payload: unknown

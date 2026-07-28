@@ -3,9 +3,13 @@ import type {
   WeaverseNextThemeSettingsStore,
 } from './types'
 
+/** Initial values for a root-scoped theme-settings store. */
 export interface CreateWeaverseNextThemeSettingsStoreOptions {
+  /** Public environment values exposed alongside the store. */
   publicEnv?: Record<string, string | undefined>
+  /** Theme schema associated with the settings. */
   schema?: WeaverseNextThemeSchema
+  /** Initial setting values. */
   settings?: Record<string, unknown>
 }
 

@@ -10,10 +10,15 @@ import type { WeaverseNextRuntimeInternal } from './types'
 const STUDIO_BIND_RETRY_INTERVAL_MS = 50
 const STUDIO_BIND_MAX_ATTEMPTS = 100
 
+/** Runtime and host callbacks attached to the Builder Studio bridge. */
 export interface WeaverseNextStudioBridgeProps {
+  /** Preview navigation callback. */
   navigate?: WeaverseNextRuntimeInternal['navigate']
+  /** Whole-route refresh callback used as a legacy fallback. */
   revalidate?: WeaverseNextRuntimeInternal['revalidate']
+  /** Preferred per-item loader revalidation callback. */
   revalidateItem?: WeaverseNextRuntimeInternal['revalidateItem']
+  /** Browser runtime to initialize or refresh in Studio. */
   runtime: WeaverseNextRuntime
 }
 

@@ -1,5 +1,6 @@
 // Data connector utilities for replacing placeholders with real data
-// Generic data context type for flexible usage
+
+/** Route-keyed or flat data available when resolving content placeholders. */
 export type DataContext = Record<string, unknown>
 
 // Cached regex pattern for better performance

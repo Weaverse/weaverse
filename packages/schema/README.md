@@ -62,10 +62,12 @@ export type ElementSchema = {
   inspector?: InspectorGroup[] // @deprecated Use settings instead
   settings?: InspectorGroup[]
   childTypes?: string[]
+  /** @deprecated Use enabled instead. */
   enabledOn?: {
     pages?: ('*' | PageType)[]
     groups?: ('*' | 'header' | 'footer' | 'body')[]
   }
+  enabled?: Resolvable<boolean, ComponentAvailabilityContext>
   presets?: {
     children?: Array<{ type: string; [key: string]: any }>
     [key: string]: any
@@ -144,6 +146,46 @@ if (isValidSchema(data)) {
 }
 ```
 
+### Context-aware component availability
+
+Use `enabled` when availability depends on the current page or placement group:
+
+```typescript
+import { createSchema } from '@weaverse/schema'
+
+const schema = createSchema({
+  title: 'Freebies',
+  type: 'freebies',
+  enabled: ({ page, group }) =>
+    page.type === 'CUSTOM' &&
+    page.handle === 'freebies/essential' &&
+    group === 'body',
+})
+```
+
+`enabled` accepts a boolean or a synchronous callback. The callback receives
+`page` (`id`, `type`, `handle`, and `locale`) and `group` (`body`, `header`, or
+`footer`). The SDK preserves callbacks without executing them; the Weaverse preview bridge
+evaluates them against its current page context.
+
+`enabledOn` is deprecated. Move its page and group checks into `enabled`:
+
+```typescript
+// Before
+const legacy = createSchema({
+  title: 'Product recommendations',
+  type: 'product-recommendations',
+  enabledOn: { pages: ['PRODUCT'], groups: ['body'] },
+})
+
+// After
+const current = createSchema({
+  title: 'Product recommendations',
+  type: 'product-recommendations',
+  enabled: ({ page, group }) => page.type === 'PRODUCT' && group === 'body',
+})
+```
+
 ### Schema Builder Pattern
 
 Create schemas fluently with the builder pattern:
@@ -171,10 +213,9 @@ const schema = schemaBuilder()
       inputHelpers.switch('showPrice', 'Show Price', true)
     ])
   )
-  .enabledOn({
-    pages: ['PRODUCT', 'COLLECTION'],
-    groups: ['body']
-  })
+  .enabled(({ page, group }) =>
+    ['PRODUCT', 'COLLECTION'].includes(page.type) && group === 'body'
+  )
   .build()
 ```
 
@@ -322,25 +363,77 @@ console.log(tsInterface)
 // }
 ```
 
+## Build-time component manifests
+
+Use the build-only `@weaverse/schema/manifest` entrypoint to turn registered
+component modules into a deterministic artifact. This subpath is not re-exported
+by the normal Schema or Hydrogen runtime entries, so storefront bundles do not
+load the generator or its JSON Schema.
+
+```typescript
+import { generateComponentManifest } from '@weaverse/schema/manifest'
+
+let artifact = await generateComponentManifest(components, {
+  source: {
+    name: 'pilot',
+    revision: process.env.GIT_SHA,
+    version: '1.0.0',
+  },
+})
+
+await writeFile('.weaverse/component-manifest.json', artifact.json)
+console.log(artifact.hash) // sha256:...
+```
+
+The generator validates component schemas, rejects duplicate types, sorts
+components and free-form non-index object keys by deterministic UTF-16 code-unit
+order, preserves author-defined array order, uses ECMAScript's numeric ordering
+for array-index object keys, writes two-space JSON with one trailing newline,
+and hashes those exact UTF-8 bytes. It records loader presence but never runs
+loaders or schema callbacks. Function-based availability and setting conditions
+are represented as `{ dynamic: true }` for later exact-runtime validation.
+
+Mark sensitive or server-only settings whose values must not reach agent-facing
+artifacts:
+
+```typescript
+{
+  type: 'text',
+  name: 'apiKey',
+  label: 'API key',
+  sensitive: true,
+  defaultValue: '',
+}
+```
+
+`sensitive: true` covers both secret values and server-only configuration.
+Those defaults are omitted from settings, presets, nested child presets, and
+representative examples. Generated artifacts contain schema contracts only;
+they never contain merchant values.
+
+The version-one runtime validator and JSON Schema are exported as
+`ComponentManifestSchema` and `componentManifestJsonSchema`. Contract changes
+that would invalidate existing manifests require a new manifest version.
+
 ## Type Safety
 
 All types are inferred from Zod schemas, ensuring:
 - Runtime validation matches TypeScript types
 - Single source of truth for type definitions
 - Automatic type generation from schema changes
-- Proper serialization support (no function types in schemas)
+- Context-aware component availability callbacks are preserved for preview-side evaluation
 
 ## Development
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Build the package
-npm run build
+pnpm run build
 
 # Type check
-npm run typecheck
+pnpm run typecheck
 ```
 
 ## Type Safety and Required Fields
@@ -351,19 +444,15 @@ The `title` and `type` fields are **required** at runtime (enforced by Zod valid
 
 #### Runtime Validation
 
-The schema always enforces required fields at runtime:
+`createSchema()` returns the original schema and reports validation issues in development. Use `parseSchema()` when invalid input must throw:
 
 ```typescript
-// ✅ This works
-const validSchema = createSchema({
+const schema = createSchema({
   title: 'My Component',
   type: 'my-component',
 })
 
-// ❌ This throws a ZodError at runtime
-const invalidSchema = createSchema({
-  // Missing required fields
-})
+const validatedSchema = parseSchema(unknownSchema) // Throws on invalid input
 ```
 
 #### TypeScript Type Safety
@@ -424,7 +513,7 @@ const schema = createSchema({
 
 ### Functions
 
-- `createSchema(schema: SchemaType)` - Validates and returns a schema
+- `createSchema(schema: SchemaType)` - Returns a schema and schedules development-only validation
 - `createSchemaTypeSafe(schema: SchemaTypeStrict)` - Type-safe schema creation with enforced required fields
 
 ### Schemas
@@ -441,6 +530,7 @@ The schema package is now the source of truth for all component schema types. Th
 ### Deprecated Fields
 
 - `inspector` is deprecated in favor of `settings` (both have the same structure)
+- `enabledOn` is deprecated in favor of `enabled`; move page and group checks into the callback
 
 ## Type System Architecture
 

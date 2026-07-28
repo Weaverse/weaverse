@@ -1,3 +1,14 @@
+/**
+ * Next.js App Router rendering, provider, Studio, translation, and schema APIs.
+ *
+ * When migrating from `@weaverse/hydrogen`, replace route-loader context with
+ * {@link WeaverseNextProvider} props and render page data with
+ * {@link WeaverseNextRenderer}. Import server-only fetching and route-handler
+ * helpers from `@weaverse/next/server`.
+ *
+ * @packageDocumentation
+ */
+
 // Re-export schema authoring + runtime hooks for migration ergonomics.
 
 // Runtime hooks from @weaverse/react (item store + editor instance).
@@ -17,6 +28,7 @@ export {
   useWeaversePageData,
   useWeaverseRootData,
 } from './hooks'
+export type { WeaverseNextItem } from './item'
 export {
   type RunComponentLoadersArgs,
   runWeaverseComponentLoaders,
@@ -45,12 +57,17 @@ export {
 export {
   bindWeaverseNextStudioRuntime,
   createWeaverseNextRuntime,
+  type WeaverseNextRenderablePage,
   WeaverseNextRuntime,
 } from './runtime'
 export {
   formatWeaverseNextSeoMetadata,
   getWeaverseNextSeoMetadata,
+  type NextOpenGraph,
+  type NextTwitter,
+  type WeaverseNextSeoInput,
   type WeaverseNextSeoMetadata,
+  type WeaverseNextSeoPageContainer,
 } from './seo'
 export {
   WeaverseNextStudioBridge,
@@ -77,6 +94,7 @@ export {
   createWeaverseNextThemeSettingsStore,
 } from './theme-settings-store'
 export {
+  type CreateTranslateSources,
   createTranslate,
   getNestedKey,
   interpolate,
@@ -96,6 +114,7 @@ export type {
   WeaverseBlog,
   WeaverseCollection,
   WeaverseMetaObject,
+  WeaverseNextCacheConfig,
   WeaverseNextClient,
   WeaverseNextClientConfig,
   WeaverseNextCommerceContext,
@@ -116,6 +135,8 @@ export type {
   WeaverseNextRuntimeInternal,
   WeaverseNextStorefront,
   WeaverseNextThemeSchema,
+  WeaverseNextThemeSchemaGroup,
+  WeaverseNextThemeSchemaInput,
   WeaverseNextThemeSettingsStore,
   WeaverseNextTranslationChanges,
   WeaverseNextTranslationEntry,

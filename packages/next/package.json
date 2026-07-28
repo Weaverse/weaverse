@@ -5,16 +5,16 @@
   "version": "0.1.0-alpha.13",
   "license": "MIT",
   "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "typings": "dist/types/index.d.ts",
   "module": "dist/index.mjs",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },
     "./server": {
-      "types": "./dist/server.d.ts",
+      "types": "./dist/types/server.d.ts",
       "import": "./dist/server.mjs",
       "require": "./dist/server.js"
     },
@@ -29,14 +29,15 @@
     "directory": "packages/next"
   },
   "files": [
-    "dist/*"
+    "dist",
+    "src"
   ],
   "engines": {
     "node": ">=20"
   },
   "scripts": {
     "dev": "tsup --watch",
-    "build": "tsup",
+    "build": "tsup && node ../../scripts/build-declarations.mjs",
     "clean": "rimraf dist",
     "test": "vp test --run --config vitest.config.ts",
     "typecheck": "tsc --noEmit"

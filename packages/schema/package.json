@@ -1,26 +1,61 @@
 {
   "name": "@weaverse/schema",
-  "version": "0.10.0",
+  "version": "0.13.1",
   "description": "Schema definitions for Weaverse",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/types/index.d.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/types/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./manifest": {
+      "import": {
+        "types": "./dist/types/manifest.d.ts",
+        "default": "./dist/manifest.js"
+      },
+      "require": {
+        "types": "./dist/types/manifest.d.cts",
+        "default": "./dist/manifest.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "manifest": [
+        "dist/types/manifest.d.ts"
+      ]
+    }
+  },
   "sideEffects": false,
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "scripts": {
     "dev": "tsup --watch",
-    "build": "tsup",
+    "build": "tsup && node ../../scripts/build-declarations.mjs",
     "clean": "rimraf dist",
-    "test": "vp test --run"
+    "test": "vp test --run",
+    "typecheck": "tsc --noEmit"
   },
   "tsup": {
     "entry": [
-      "src/index.ts"
+      "src/index.ts",
+      "src/manifest.ts"
     ],
     "format": [
-      "esm"
+      "esm",
+      "cjs"
     ],
     "dts": true,
     "sourcemap": true,

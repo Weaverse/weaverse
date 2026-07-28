@@ -2,10 +2,10 @@
   "name": "@weaverse/hydrogen",
   "author": "Weaverse Team",
   "description": "Components, hooks, and utilities for building Shopify Hydrogen websites with Weaverse",
-  "version": "5.16.4",
+  "version": "5.19.2",
   "license": "MIT",
   "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "typings": "dist/types/index.d.ts",
   "module": "dist/index.mjs",
   "publishConfig": {
     "access": "public",
@@ -16,14 +16,15 @@
     "directory": "packages/hydrogen"
   },
   "files": [
-    "dist/*"
+    "dist",
+    "src"
   ],
   "engines": {
     "node": ">=20"
   },
   "scripts": {
     "dev": "tsup --watch",
-    "build": "tsup",
+    "build": "tsup && node ../../scripts/build-declarations.mjs",
     "clean": "rimraf dist",
     "test": "vp test --run",
     "typecheck": "tsc --noEmit"
@@ -45,8 +46,8 @@
   "dependencies": {
     "@shopify/hydrogen": ">=2025.5",
     "@shopify/remix-oxygen": "3",
-    "@weaverse/react": "5.16.4",
-    "@weaverse/schema": "0.10.0",
+    "@weaverse/react": "5.19.2",
+    "@weaverse/schema": "0.13.1",
     "react": ">=19",
     "react-dom": ">=19",
     "react-error-boundary": "^6",

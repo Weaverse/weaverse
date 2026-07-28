@@ -23,11 +23,13 @@ import type {
   WeaverseNextThemeSettingsStore,
 } from './types'
 
+/** Root-scoped theme and translation stores adopted by route providers. */
 export interface WeaverseNextRootContextValue {
   /** Active-locale static-text overrides shared with route-level providers. */
   merchantOverrides?: Record<string, unknown>
   /** Theme default locale JSON shared with route-level providers. */
   staticContent: Record<string, unknown>
+  /** Root-scoped external store shared with route-level providers. */
   themeSettingsStore: WeaverseNextThemeSettingsStore
   /** Single live design-mode static-text override store for the whole session. */
   translationStore: TranslationStore
@@ -40,12 +42,15 @@ export interface WeaverseNextRootContextValue {
 export const WeaverseNextRootContext =
   createContext<WeaverseNextRootContextValue | null>(null)
 
+/** Root theme and translation data shared across the App Router tree. */
 export interface WeaverseNextRootProviderProps {
+  /** Application subtree, including global and route-level components. */
   children: ReactNode
   /** Root-loaded theme settings (published-mode fetch, no design-mode context). */
   initialThemeSettings?: Record<string, unknown>
   /** Active-locale static-text overrides from `loadThemeSettings().merchantOverrides`. */
   merchantOverrides?: Record<string, unknown>
+  /** Public environment values exposed to the theme-settings store. */
   publicEnv?: Record<string, string | undefined>
   /**
    * Theme default locale JSON (`loadThemeSettings().staticContent`). Falls back
@@ -54,6 +59,7 @@ export interface WeaverseNextRootProviderProps {
   staticContent?: Record<string, unknown>
   /** Optional external translation function (host i18n); highest priority in `t()`. */
   t?: TranslateFunction
+  /** Theme schema associated with the initial settings. */
   themeSchema?: WeaverseNextThemeSchema
 }
 

@@ -43,6 +43,12 @@ function mergeInspectorSettings(
   return deepMergeArrays(settings, inspector)
 }
 
+/** Options for extracting query parameters from a request URL. */
+export interface RequestQueryOptions {
+  /** Query parameter names to include; all parameters are included when omitted. */
+  allowedKeys?: string[]
+}
+
 /**
  * Extract and parse query parameters from a request URL.
  * Supports optional allowlist for security-sensitive applications.
@@ -65,7 +71,7 @@ function mergeInspectorSettings(
  */
 export function getRequestQueries<T = Record<string, string | boolean>>(
   request: Request,
-  options?: { allowedKeys?: string[] }
+  options?: RequestQueryOptions
 ): T {
   let url = new URL(request.url)
   let queries: Record<string, unknown> = {}
@@ -89,6 +95,10 @@ export function getRequestQueries<T = Record<string, string | boolean>>(
   return queries as T
 }
 
+/**
+ * Resolves project, endpoint, and Studio mode configuration for a request.
+ * URL-provided Studio values take precedence over environment defaults.
+ */
 export function getWeaverseConfigs(
   request: Request,
   env: HydrogenEnv
@@ -296,6 +306,7 @@ function recursivelyAddDataItem(
   return id
 }
 
+/** Creates synthetic loader data for previewing one registered component type. */
 export function getPreviewData(
   type: string,
   components: HydrogenComponent[],

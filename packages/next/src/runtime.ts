@@ -29,7 +29,7 @@ declare global {
 type StudioBoundRuntime = WeaverseNextRuntime & {
   __weaverseNextStudioBound?: boolean
   __weaverseNextRequestKey?: string
-  __weaverseNextLatestData?: WeaverseNextPageData & { rootId: string }
+  __weaverseNextLatestData?: WeaverseNextRenderablePage
 }
 
 function getRuntimeWindow(): Window | undefined {
@@ -38,7 +38,7 @@ function getRuntimeWindow(): Window | undefined {
 
 function getRenderablePage(
   data: WeaverseNextLoaderData
-): WeaverseNextPageData & { rootId: string } {
+): WeaverseNextRenderablePage {
   let page = data.page
   let rootId =
     page.rootId ??
@@ -138,12 +138,28 @@ function rebindPageItemsToRuntime(runtime: WeaverseNextRuntime) {
   }
 }
 
+/** Weaverse page data with the root component resolved for rendering. */
+export interface WeaverseNextRenderablePage extends WeaverseNextPageData {
+  /** Component item ID used as the root of the rendered page tree. */
+  rootId: string
+}
+
+/**
+ * Browser runtime that adapts a Next.js loader payload to `@weaverse/react`
+ * and exposes the navigation, settings, and translation state used by Studio.
+ */
 export class WeaverseNextRuntime extends Weaverse {
+  /** Stable ID of the page owned by this runtime. */
   pageId: string
+  /** Mutable callbacks and stores consumed by the Studio bridge. */
   internal: WeaverseNextRuntimeInternal
+  /** Path, query, and locale metadata for Studio navigation. */
   requestInfo: WeaverseNextRequestInfo
+  /** Whether this runtime renders a component preview. */
   isPreviewMode: boolean
+  /** Whether this runtime renders a saved revision. */
   isRevisionPreview: boolean
+  /** Component type rendered in section preview mode. */
   sectionType?: string
 
   // ─── Item-level translation sidecar (design mode only) ─────────────
@@ -153,7 +169,9 @@ export class WeaverseNextRuntime extends Weaverse {
    * components, so translations render without mutating the base `_store`.
    */
   translationMap: WeaverseNextTranslationMap = {}
+  /** Locale associated with the item-level translation sidecar. */
   translationLocale = String()
+  /** Weaverse language ID used when saving translation changes. */
   translationLanguageId = String()
 
   /**
@@ -164,7 +182,7 @@ export class WeaverseNextRuntime extends Weaverse {
    * `flushRenderPhaseUpdates()`. Never set on design-mode runtimes — the live
    * Studio tree owns the page data there.
    */
-  pendingProjectData?: WeaverseNextPageData & { rootId: string }
+  pendingProjectData?: WeaverseNextRenderablePage
 
   /**
    * Reused item instances whose data was refreshed while this runtime was
@@ -174,6 +192,7 @@ export class WeaverseNextRuntime extends Weaverse {
    */
   pendingItemUpdates: WeaverseNextItem[] = []
 
+  /** Create a browser runtime from a loaded page and its request context. */
   constructor(config: WeaverseNextRuntimeConfig) {
     let { client, data } = config
     let page = getRenderablePage(data)
@@ -325,7 +344,7 @@ export class WeaverseNextRuntime extends Weaverse {
    * renderable page shape (`rootId` resolved) that `getRenderablePage()` and
    * the reuse branch pass in.
    */
-  setProjectData = (data: WeaverseNextPageData & { rootId: string }) => {
+  setProjectData = (data: WeaverseNextRenderablePage) => {
     this.data = data
     this.extractTranslationSidecar()
     this.initProject()
@@ -355,6 +374,10 @@ export class WeaverseNextRuntime extends Weaverse {
   }
 }
 
+/**
+ * Create a browser runtime or reuse the runtime already registered for the
+ * same page and request. Reuse preserves unsaved Studio state in design mode.
+ */
 export function createWeaverseNextRuntime(
   config: WeaverseNextRuntimeConfig
 ): WeaverseNextRuntime {
@@ -450,6 +473,11 @@ export function createWeaverseNextRuntime(
   return runtime
 }
 
+/**
+ * Bind a design-mode runtime to the global Builder Studio bridge.
+ *
+ * @returns `true` when Studio was initialized or refreshed, otherwise `false`.
+ */
 export function bindWeaverseNextStudioRuntime(runtime: WeaverseNextRuntime) {
   if (!runtime.isDesignMode) {
     return false

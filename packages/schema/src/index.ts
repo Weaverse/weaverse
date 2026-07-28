@@ -1,13 +1,19 @@
+/**
+ * Authoring contracts, builders, and development-time validation for Weaverse
+ * component schemas.
+ *
+ * @packageDocumentation
+ */
+
 import type {
   BasicInput,
-  ComponentPresets,
   HeadingInput,
   InspectorGroup,
-  PageType,
   RangeInputConfigs,
   SchemaType,
   SchemaValidationIssue,
-} from './validation'
+  SelectInputOption,
+} from './validation.js'
 
 // `process` is statically replaced by the consuming bundler (Vite/Hydrogen)
 // at build time; this ambient declaration only satisfies the type checker in a
@@ -18,31 +24,14 @@ export type {
   OpenGraphType,
   PageSEOData,
   TwitterCardType,
-} from './page-seo'
+} from './page-seo.js'
 
-/**
- * Type-safe schema type with enforced required fields.
- * Use this when you need strict TypeScript checking for required fields.
- *
- * Note: The inferred SchemaType may show 'title' and 'type' as optional
- * in TypeScript when strict mode is disabled, but they are required at runtime.
- * This type explicitly enforces them as required.
- */
-export type SchemaTypeStrict = {
+/** Schema type with required title and type fields in non-strict projects. */
+export type SchemaTypeStrict = SchemaType & {
+  /** Short component title displayed in Studio. */
   title: string
+  /** Stable kebab-case component identifier. */
   type: string
-  limit?: number
-  inspector?: InspectorGroup[]
-  settings?: InspectorGroup[]
-  childTypes?: string[]
-  enabledOn?: {
-    pages?: PageType[]
-    groups?: ('*' | 'header' | 'footer' | 'body')[]
-  }
-  presets?: {
-    children?: ComponentPresets[]
-    [key: string]: any
-  }
 }
 
 function reportSchemaIssues(issues: readonly SchemaValidationIssue[]): void {
@@ -90,22 +79,7 @@ export function createSchema(schema: SchemaType): SchemaType {
  * when the consumer's TypeScript `strict` mode is disabled. Validation is
  * dev-only, exactly as in {@link createSchema}.
  */
-export function createSchemaTypeSafe(schema: {
-  title: string
-  type: string
-  limit?: number
-  inspector?: InspectorGroup[]
-  settings?: InspectorGroup[]
-  childTypes?: string[]
-  enabledOn?: {
-    pages?: PageType[]
-    groups?: ('*' | 'header' | 'footer' | 'body')[]
-  }
-  presets?: {
-    children?: ComponentPresets[]
-    [key: string]: any
-  }
-}): SchemaType {
+export function createSchemaTypeSafe(schema: SchemaTypeStrict): SchemaType {
   if (process.env.NODE_ENV !== 'production') {
     void import('./validation')
       .then(({ validateSchema }) => {
@@ -125,30 +99,36 @@ export function createSchemaTypeSafe(schema: {
 export class SchemaBuilder {
   private readonly schema: Partial<SchemaType>
 
+  /** Creates a builder initialized with an optional partial schema. */
   constructor(initial?: Partial<SchemaType>) {
     this.schema = { ...initial }
   }
 
+  /** Sets the merchant-facing component title. */
   title(title: string): SchemaBuilder {
     this.schema.title = title
     return this
   }
 
+  /** Sets the stable component type identifier. */
   type(type: string): SchemaBuilder {
     this.schema.type = type
     return this
   }
 
+  /** Sets the maximum number of allowed sibling instances. */
   limit(limit: number): SchemaBuilder {
     this.schema.limit = limit
     return this
   }
 
+  /** Replaces all Studio setting groups. */
   settings(settings: InspectorGroup[]): SchemaBuilder {
     this.schema.settings = settings
     return this
   }
 
+  /** Appends one Studio setting group. */
   addSetting(group: InspectorGroup): SchemaBuilder {
     if (!this.schema.settings) {
       this.schema.settings = []
@@ -157,11 +137,13 @@ export class SchemaBuilder {
     return this
   }
 
+  /** Replaces the allowed direct child component types. */
   childTypes(childTypes: string[]): SchemaBuilder {
     this.schema.childTypes = childTypes
     return this
   }
 
+  /** Appends one allowed direct child component type. */
   addChildType(childType: string): SchemaBuilder {
     if (!this.schema.childTypes) {
       this.schema.childTypes = []
@@ -170,11 +152,22 @@ export class SchemaBuilder {
     return this
   }
 
+  /**
+   * Sets legacy page and placement restrictions.
+   * @deprecated Use `enabled` instead.
+   */
   enabledOn(enabledOn: SchemaType['enabledOn']): SchemaBuilder {
     this.schema.enabledOn = enabledOn
     return this
   }
 
+  /** Sets static or context-aware component availability. */
+  enabled(enabled: SchemaType['enabled']): SchemaBuilder {
+    this.schema.enabled = enabled
+    return this
+  }
+
+  /** Sets initial component data and optional child presets. */
   presets(presets: SchemaType['presets']): SchemaBuilder {
     this.schema.presets = presets
     return this
@@ -307,7 +300,7 @@ export const inputHelpers = {
   select: (
     name: string,
     label: string,
-    options: Array<{ label: string; value: string }>,
+    options: SelectInputOption[],
     inputOptions?: Partial<BasicInput>
   ): BasicInput => ({
     type: 'select',
@@ -394,15 +387,26 @@ export const groupHelpers = {
 
 export type {
   BasicInput,
+  ComponentAvailabilityContext,
+  ComponentGroup,
   ComponentPresets,
+  ComponentRegistryAnalysis,
+  ComponentRegistryDetail,
+  ComponentRegistrySummary,
+  ComponentsValidationResult,
   ComponentValidationOptions,
   ConfigsProps,
   HeadingInput,
   Input,
   InputType,
   InspectorGroup,
+  InvalidComponentResult,
   PageType,
   RangeInputConfigs,
+  Resolvable,
+  SchemaAnalysisResult,
+  SchemaAnalysisStats,
+  SchemaDevTools,
   SchemaMigration,
   SchemaType,
   SchemaValidationFailure,
@@ -410,10 +414,11 @@ export type {
   SchemaValidationResult,
   SchemaValidationSuccess,
   SelectInputConfigs,
+  SelectInputOption,
   SimpleValidationResult,
   ToggleGroupConfigs,
   VersionedSchema,
-} from './validation'
+} from './validation.js'
 // Re-export the schema definitions and validation runtime. These are
 // tree-shakeable: storefront bundles that only call `createSchema` never
 // reference them, so `./validation` (and zod) is dropped from production builds.
@@ -444,4 +449,4 @@ export {
   validateComponentsSimple,
   validateSchema,
   z,
-} from './validation'
+} from './validation.js'

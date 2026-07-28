@@ -14,6 +14,8 @@ Monorepo of SDKs for integrating React/JamStack frameworks (Shopify Hydrogen, Re
 | Run all tests | `pnpm run test` |
 | Run single test file | `pnpm exec vp test --run path/to/file.test.ts` |
 | Typecheck all packages | `pnpm run typecheck` |
+| Check packed public APIs | `pnpm run package:check` |
+| Accept intentional API report changes | `pnpm run api:report` |
 | Lint/format check | `pnpm run biome` |
 | Lint/format fix | `pnpm run biome:fix` |
 | Format only | `pnpm run format` |

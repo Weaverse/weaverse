@@ -6,6 +6,7 @@ import type {
   WeaverseNextRequestInfo,
 } from './types'
 
+/** Default App Router endpoint used for Studio item-loader revalidation. */
 export const DEFAULT_REVALIDATE_ENDPOINT = '/api/weaverse/revalidate'
 
 const MAX_ROUTE_CONTEXT_HANDLE_LENGTH = 512
@@ -50,13 +51,18 @@ export const ROUTE_CONTEXT_I18N_KEYS = [
  * `queries` record is intentionally omitted.
  */
 export interface WeaverseNextRevalidateRouteContext {
+  /** Route handle used for page assignment. */
   handle?: string
+  /** Public locale and market identity allowed across the browser boundary. */
   i18n?: Pick<
     WeaverseNextI18n,
     'country' | 'label' | 'language' | 'locale' | 'pathPrefix'
   >
+  /** Weaverse page type resolved by the active route. */
   pageType?: PageType
+  /** Canonical same-origin route pathname. */
   pathname: string
+  /** Sanitized serialized query string, including the leading `?` when set. */
   search: string
 }
 
@@ -68,12 +74,15 @@ export interface WeaverseNextRevalidateRouteContext {
  * legacy `{ draftItem }` request is preserved.
  */
 export interface RevalidateItemRuntimeLike {
+  /** Live item stores keyed by Weaverse item ID. */
   itemInstances: Map<
     string,
     {
+      /** Merge refreshed loader data into the live item store. */
       setData: (update: Record<string, unknown>) => unknown
     }
   >
+  /** Active route identity used to construct the optional revalidation payload. */
   requestInfo?: WeaverseNextRequestInfo
 }
 
