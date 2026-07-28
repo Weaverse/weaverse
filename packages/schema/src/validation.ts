@@ -160,22 +160,40 @@ export const HeadingInputSchema = z
 
 export const InputSchema = z.union([BasicInputSchema, HeadingInputSchema])
 
-export const InspectorGroupSchema = z.object({
-  group: z
-    .string()
-    .min(1, 'Group name is required')
-    .describe("The group of the prop, it's the title of the group"),
-  inputs: z
-    .array(InputSchema)
-    .min(1, 'At least one input is required')
-    .describe('The inputs of the group'),
-  outlineGroup: z
-    .enum(['header', 'footer', 'popup'])
-    .optional()
-    .describe(
-      'Surfaces this settings group as a pinned entry in the Page Outline, grouped by role'
-    ),
-})
+export const InspectorGroupSchema = z
+  .object({
+    group: z
+      .string()
+      .min(1, 'Group name is required')
+      .describe("The group of the prop, it's the title of the group"),
+    inputs: z
+      .array(InputSchema)
+      .min(1, 'At least one input is required')
+      .describe('The inputs of the group'),
+    outlineGroup: z
+      .enum(['header', 'footer', 'popup'])
+      .optional()
+      .describe(
+        'Surfaces this settings group as a pinned entry in the Page Outline, grouped by role'
+      ),
+    outlineId: z
+      .string()
+      .trim()
+      .min(1, 'Outline ID is required')
+      .optional()
+      .describe(
+        'Stable identity shared by this settings group and its rendered theme element'
+      ),
+  })
+  .superRefine(({ outlineGroup, outlineId }, ctx) => {
+    if (Boolean(outlineGroup) !== Boolean(outlineId)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: outlineGroup ? ['outlineId'] : ['outlineGroup'],
+        message: 'outlineGroup and outlineId must be provided together',
+      })
+    }
+  })
 
 export const PageTypeSchema = z.union([
   z.literal('*'),
