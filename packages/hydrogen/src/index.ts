@@ -112,6 +112,16 @@ export {
   useThemeText,
   useTranslation,
 } from './hooks/translation-context'
+export {
+  createThemeElementRevealEvent,
+  getThemeElementProps,
+  subscribeThemeElementReveal,
+  THEME_ELEMENT_REVEAL_EVENT,
+  type ThemeElementProps,
+  type ThemeElementRevealDetail,
+  type UseThemeElementOptions,
+  useThemeElement,
+} from './hooks/use-theme-element'
 // Export Hydrogen-specific hooks
 export {
   createWeaverseDataContext,
