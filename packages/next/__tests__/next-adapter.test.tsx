@@ -878,6 +878,45 @@ describe('Studio runtime contract', () => {
     })
   })
 
+  it('should_preserve_page_type_and_handle_in_request_info_when_present', () => {
+    // Arrange
+    let context = {
+      handle: 'classic-kicks',
+      i18n: { country: 'FR', language: 'FR', locale: 'fr-FR' },
+      pageType: 'PRODUCT' as const,
+      pathname: '/fr-fr/products/classic-kicks',
+      searchParams: new URLSearchParams('variant=123'),
+    }
+
+    // Act
+    let requestInfo = buildWeaverseNextRequestInfo(context)
+
+    // Assert
+    expect(requestInfo).toEqual({
+      handle: 'classic-kicks',
+      i18n: { country: 'FR', language: 'FR', locale: 'fr-FR' },
+      pageType: 'PRODUCT',
+      pathname: '/fr-fr/products/classic-kicks',
+      search: '?variant=123',
+      queries: { variant: '123' },
+    })
+  })
+
+  it('should_omit_page_type_and_handle_from_request_info_when_absent', () => {
+    // Arrange
+    let context = {
+      pathname: '/collections/sale',
+      searchParams: new URLSearchParams(''),
+    }
+
+    // Act
+    let requestInfo = buildWeaverseNextRequestInfo(context)
+
+    // Assert
+    expect(requestInfo).not.toHaveProperty('pageType')
+    expect(requestInfo).not.toHaveProperty('handle')
+  })
+
   it('should_expose_theme_settings_store_with_live_update_method', () => {
     // Arrange
     let listener = vi.fn()

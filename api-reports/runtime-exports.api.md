@@ -170,6 +170,7 @@
     "analyzeComponentRegistry",
     "bindWeaverseNextStudioRuntime",
     "buildWeaverseNextRequestInfo",
+    "buildWeaverseNextRevalidateRouteContext",
     "createSchema",
     "createSchemaTypeSafe",
     "createTranslate",

@@ -241,12 +241,22 @@ export interface WeaverseNextRevalidateHandler {
 
 // @public
 export interface WeaverseNextRevalidateHandlerConfig {
-    getClient: (request: Request) => Promise<WeaverseNextServerClient> | WeaverseNextServerClient;
+    getClient: (request: Request, requestContext?: WeaverseNextRequestContext) => Promise<WeaverseNextServerClient> | WeaverseNextServerClient;
 }
 
 // @public
 export interface WeaverseNextRevalidateRequestBody {
     draftItem: WeaverseNextComponentData;
+    routeContext?: WeaverseNextRevalidateRouteContext;
+}
+
+// @public
+export interface WeaverseNextRevalidateRouteContext {
+    handle?: string;
+    i18n?: Pick<WeaverseNextI18n, 'country' | 'label' | 'language' | 'locale' | 'pathPrefix'>;
+    pageType?: PageType;
+    pathname: string;
+    search: string;
 }
 
 // @public

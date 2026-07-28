@@ -10,6 +10,7 @@
  * @packageDocumentation
  */
 
+export type { WeaverseNextRevalidateRouteContext } from './revalidate-item'
 export {
   formatWeaverseNextSeoMetadata,
   getWeaverseNextSeoMetadata,

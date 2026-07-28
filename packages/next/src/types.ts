@@ -13,8 +13,12 @@ import type { TranslationStore } from './translation-store'
 
 /** Request metadata exposed to the Studio runtime. */
 export interface WeaverseNextRequestInfo {
+  /** Route handle used for page assignment. */
+  handle?: string
   /** Locale and market information for the current request. */
   i18n?: WeaverseNextI18n
+  /** Weaverse page type resolved by the route. */
+  pageType?: PageType
   /** URL pathname without the query string. */
   pathname: string
   /** Query parameters, with `true` and `false` converted to booleans. */

@@ -33,6 +33,9 @@ export function bindWeaverseNextStudioRuntime(runtime: WeaverseNextRuntime): boo
 export function buildWeaverseNextRequestInfo(context?: WeaverseNextRequestContext): WeaverseNextRequestInfo;
 
 // @public
+export function buildWeaverseNextRevalidateRouteContext(requestInfo?: WeaverseNextRequestInfo): WeaverseNextRevalidateRouteContext | undefined;
+
+// @public
 export function createTranslate(sources: CreateTranslateSources): TranslateFunction;
 
 // @public
@@ -116,6 +119,7 @@ export interface RevalidateItemRuntimeLike {
     itemInstances: Map<string, {
         setData: (update: Record<string, unknown>) => unknown;
     }>;
+    requestInfo?: WeaverseNextRequestInfo;
 }
 
 // @public
@@ -424,9 +428,20 @@ export interface WeaverseNextRequestContext {
 
 // @public
 export interface WeaverseNextRequestInfo {
+    handle?: string;
     i18n?: WeaverseNextI18n;
+    pageType?: PageType;
     pathname: string;
     queries: Record<string, string | boolean>;
+    search: string;
+}
+
+// @public
+export interface WeaverseNextRevalidateRouteContext {
+    handle?: string;
+    i18n?: Pick<WeaverseNextI18n, 'country' | 'label' | 'language' | 'locale' | 'pathPrefix'>;
+    pageType?: PageType;
+    pathname: string;
     search: string;
 }
 

@@ -58,7 +58,10 @@ semantics: `isDesignMode`, `isPreviewMode`, `__revisionId`, and `sectionType`.
 - `pageType`: optional value accepted by `PageTypeSchema`; arbitrary strings are
   invalid.
 - Each allowed i18n field: optional string, maximum 256 characters.
-- `i18n`: plain object only; arrays and nested values are invalid.
+- `i18n`: plain object only; arrays and non-plain objects are invalid. Only the
+  allowed keys (`country`, `label`, `language`, `locale`, `pathPrefix`) may be
+  present — any unknown own key (nested object or extra string) fails closed
+  rather than being silently dropped.
 
 A malformed present context returns HTTP 400 with
 `{ "error": "invalid-route-context" }` before `getClient` runs. A completely
@@ -152,6 +155,8 @@ Existing endpoint protections remain mandatory:
 - Backslash, control character, query-in-path, fragment-in-path, and oversized
   values fail before client construction.
 - Malformed i18n, `PageTypeSchema` values, handle, and search fail closed.
+- i18n with an unknown own key (nested object or extra string) fails closed
+  before client construction; unknown keys are never silently dropped.
 - Every denied key is removed even when client-side sanitization is bypassed.
 - Duplicate ordinary queries and encoded Unicode survive.
 - Duplicate `isDesignMode`, `isPreviewMode`, and `sectionType` controls use the

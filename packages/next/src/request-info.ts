@@ -89,5 +89,7 @@ export function buildWeaverseNextRequestInfo(
     search: search ? `?${search}` : '',
     queries: toQueryRecord(searchParams),
     ...(context?.i18n ? { i18n: context.i18n } : {}),
+    ...(context?.pageType ? { pageType: context.pageType } : {}),
+    ...(context?.handle ? { handle: context.handle } : {}),
   }
 }
