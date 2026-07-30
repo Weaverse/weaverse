@@ -994,6 +994,41 @@ describe('Studio runtime contract', () => {
     )
   })
 
+  it('should_resolve_preview_script_when_design_and_preview_modes_are_both_active', () => {
+    // Arrange — Builder section-preview URLs carry both flags; the preview
+    // iframe waits for `preview-size`, which only preview.js emits.
+    let searchParams = new URLSearchParams(
+      'isDesignMode=true&isPreviewMode=true&weaverseHost=https%3A%2F%2Fstudio.weaverse.io&weaverseVersion=2026.8.6'
+    )
+
+    // Act
+    let src = resolveWeaverseNextStudioScriptSrc(
+      { searchParams },
+      { storefrontHostname: 'shop.example' }
+    )
+
+    // Assert
+    expect(src).toBe(
+      'https://studio.weaverse.io/static/studio/next/preview.js?v=2026.8.6'
+    )
+  })
+
+  it('should_resolve_preview_script_when_design_mode_and_revision_preview_are_both_active', () => {
+    // Arrange
+    let searchParams = new URLSearchParams(
+      'isDesignMode=true&__revisionId=rev-1&weaverseHost=https%3A%2F%2Fstudio.weaverse.io'
+    )
+
+    // Act
+    let src = resolveWeaverseNextStudioScriptSrc(
+      { searchParams },
+      { storefrontHostname: 'shop.example' }
+    )
+
+    // Assert
+    expect(src).toBe('https://studio.weaverse.io/static/studio/next/preview.js')
+  })
+
   it('should_accept_studio_connect_without_framework_prop', () => {
     // Arrange
     let context = {

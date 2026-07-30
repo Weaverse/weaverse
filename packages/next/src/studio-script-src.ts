@@ -118,7 +118,10 @@ export function resolveWeaverseNextStudioScriptSrc(
     return null
   }
 
-  let bundle = isDesignMode ? 'index.js' : 'preview.js'
+  // Builder section-preview URLs carry both isDesignMode and isPreviewMode;
+  // the preview iframe waits for `preview-size`, which only preview.js emits,
+  // so preview/revision mode takes precedence (matching Hydrogen).
+  let bundle = isPreviewMode || isRevisionPreview ? 'preview.js' : 'index.js'
   let version = last(searchParams, 'weaverseVersion')
   let url = `${origin}/static/studio/next/${bundle}`
   return version ? `${url}?v=${encodeURIComponent(version)}` : url
