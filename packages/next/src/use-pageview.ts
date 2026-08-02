@@ -25,6 +25,7 @@ interface SearchParamsValue {
 }
 
 let pageviewCoordinator = createPageviewCoordinator()
+let pageviewSequence = 0
 
 export function getPageviewNavigationIdentity(
   pathname: string | null,
@@ -66,6 +67,7 @@ export function sendPageview(payload: PageviewPayload): void {
     let url = new URL('/api/public/px', payload.host)
     url.searchParams.set('projectId', payload.projectId)
     url.searchParams.set('pageId', payload.pageId)
+    url.searchParams.set('cacheBust', `${Date.now()}-${pageviewSequence++}`)
 
     let image = new Image()
     let cleanup = () => {
@@ -91,14 +93,28 @@ export function usePageview(runtime: PageviewRuntime | null): void {
   let projectId = payload?.projectId
 
   useEffect(() => {
-    pageviewCoordinator.observeNavigation(navigationIdentity)
-    if (
-      host &&
-      pageId &&
-      projectId &&
-      pageviewCoordinator.shouldFire(navigationIdentity, pageId)
-    ) {
-      sendPageview({ host, pageId, projectId })
+    let fire = () => {
+      if (
+        host &&
+        pageId &&
+        projectId &&
+        pageviewCoordinator.shouldFire(navigationIdentity, pageId)
+      ) {
+        sendPageview({ host, pageId, projectId })
+      }
     }
+
+    pageviewCoordinator.observeNavigation(navigationIdentity)
+    fire()
+
+    let handlePageShow = (event: PageTransitionEvent) => {
+      if (!event.persisted) {
+        return
+      }
+      pageviewCoordinator.observePageShow(event)
+      fire()
+    }
+    window.addEventListener('pageshow', handlePageShow)
+    return () => window.removeEventListener('pageshow', handlePageShow)
   }, [host, navigationIdentity, pageId, projectId])
 }

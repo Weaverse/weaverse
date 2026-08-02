@@ -56,6 +56,17 @@ function getConfigString(
   return typeof value === 'string' ? value : undefined
 }
 
+function resolveModeFlag(
+  config: WeaverseNextRuntimeConfig,
+  key: 'isDesignMode' | 'isPreviewMode' | 'isRevisionPreview'
+): boolean {
+  let configValue = config.data.configs?.[key]
+  return (
+    config.client?.requestContext?.[key] ??
+    (typeof configValue === 'boolean' ? configValue : false)
+  )
+}
+
 function getRecordString(
   record: Record<string, unknown> | undefined,
   key: string
@@ -198,13 +209,18 @@ export class WeaverseNextRuntime extends Weaverse {
     let page = getRenderablePage(data)
     let configs = data.configs
     let requestContext = client?.requestContext
+    let isDesignMode = resolveModeFlag(config, 'isDesignMode')
+    let isPreviewMode = resolveModeFlag(config, 'isPreviewMode')
+    let isRevisionPreview = resolveModeFlag(config, 'isRevisionPreview')
+    let sectionType =
+      requestContext?.sectionType ?? getConfigString(configs, 'sectionType')
     let projectId = resolveProjectId(client, data, page.id)
 
     ensureNextItemConstructor()
     super({
       projectId,
       data: page,
-      isDesignMode: requestContext?.isDesignMode ?? false,
+      isDesignMode,
       weaverseHost: getConfigString(configs, 'weaverseHost'),
       weaverseVersion: getConfigString(configs, 'weaverseVersion'),
     })
@@ -212,10 +228,10 @@ export class WeaverseNextRuntime extends Weaverse {
     this.pageId = page.id
     this.dataContext = resolveDataContext(config)
     this.requestInfo = buildWeaverseNextRequestInfo(requestContext)
-    this.isDesignMode = requestContext?.isDesignMode ?? false
-    this.isPreviewMode = requestContext?.isPreviewMode ?? false
-    this.isRevisionPreview = requestContext?.isRevisionPreview ?? false
-    this.sectionType = requestContext?.sectionType
+    this.isDesignMode = isDesignMode
+    this.isPreviewMode = isPreviewMode
+    this.isRevisionPreview = isRevisionPreview
+    this.sectionType = sectionType
 
     // One store instance backs both the canonical `translationStore` and the
     // deprecated `themeTextStore` alias, so Builder's `updateStaticText()` RPC
@@ -390,7 +406,13 @@ export function createWeaverseNextRuntime(
   let requestKey = getRuntimeKey(page.id, requestInfo)
 
   if (existing?.__weaverseNextRequestKey === requestKey) {
-    let nextIsDesignMode = config.client?.requestContext?.isDesignMode ?? false
+    let configs = config.data.configs
+    let requestContext = config.client?.requestContext
+    let nextIsDesignMode = resolveModeFlag(config, 'isDesignMode')
+    let nextIsPreviewMode = resolveModeFlag(config, 'isPreviewMode')
+    let nextIsRevisionPreview = resolveModeFlag(config, 'isRevisionPreview')
+    let nextSectionType =
+      requestContext?.sectionType ?? getConfigString(configs, 'sectionType')
     // In design mode the live Studio runtime owns the page tree, including
     // unsaved drafts. Reapplying loader `page` data here would clobber those
     // edits, so leave the project data untouched and let
@@ -418,17 +440,13 @@ export function createWeaverseNextRuntime(
     existing.requestInfo = requestInfo
     existing.projectId = resolveProjectId(config.client, config.data, page.id)
     existing.isDesignMode = nextIsDesignMode
-    existing.isPreviewMode =
-      config.client?.requestContext?.isPreviewMode ?? false
-    existing.isRevisionPreview =
-      config.client?.requestContext?.isRevisionPreview ?? false
-    existing.sectionType = config.client?.requestContext?.sectionType
+    existing.isPreviewMode = nextIsPreviewMode
+    existing.isRevisionPreview = nextIsRevisionPreview
+    existing.sectionType = nextSectionType
     existing.weaverseHost =
-      getConfigString(config.data.configs, 'weaverseHost') ??
-      existing.weaverseHost
+      getConfigString(configs, 'weaverseHost') ?? existing.weaverseHost
     existing.weaverseVersion =
-      getConfigString(config.data.configs, 'weaverseVersion') ??
-      existing.weaverseVersion
+      getConfigString(configs, 'weaverseVersion') ?? existing.weaverseVersion
     existing.internal.pageAssignment = config.data.pageAssignment
     existing.internal.project = config.data.project
     if (config.navigate) {

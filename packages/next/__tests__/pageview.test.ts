@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { createWeaverseNextClient } from '../src/client'
 import { createPageviewCoordinator } from '../src/pageview'
+import { createWeaverseNextRuntime } from '../src/runtime'
 import {
   getPageviewNavigationIdentity,
   getPageviewPayload,
@@ -95,6 +97,35 @@ describe('pageview coordinator', () => {
 
     // Assert
     expect(fired).toBe(false)
+  })
+
+  it('should_fire_once_when_persisted_pageshow_starts_a_new_visit', () => {
+    // Arrange
+    let coordinator = createPageviewCoordinator()
+    coordinator.shouldFire('/products/one', 'page-one')
+    let initialPageShow = { persisted: false }
+    let restoredPageShow = { persisted: true }
+
+    // Act
+    coordinator.observePageShow(initialPageShow)
+    let afterInitialPageShow = coordinator.shouldFire(
+      '/products/one',
+      'page-one'
+    )
+    coordinator.observePageShow(restoredPageShow)
+    let afterRestore = coordinator.shouldFire('/products/one', 'page-one')
+    coordinator.observePageShow(restoredPageShow)
+    let afterDuplicateDelivery = coordinator.shouldFire(
+      '/products/one',
+      'page-one'
+    )
+
+    // Assert
+    expect([
+      afterInitialPageShow,
+      afterRestore,
+      afterDuplicateDelivery,
+    ]).toEqual([false, true, false])
   })
 
   it('should_allow_revisit_after_observing_a_non_weaverse_route_detour', () => {
@@ -196,6 +227,85 @@ describe('pageview hook inputs', () => {
   })
 })
 
+describe('hydrated pageview eligibility', () => {
+  it.each([
+    ['serialized design', { isDesignMode: true }, {}, { isDesignMode: true }],
+    [
+      'explicit design',
+      { isDesignMode: false },
+      { isDesignMode: true },
+      { isDesignMode: true },
+    ],
+    [
+      'serialized preview',
+      { isPreviewMode: true },
+      {},
+      { isPreviewMode: true },
+    ],
+    [
+      'explicit preview',
+      { isPreviewMode: false },
+      { isPreviewMode: true },
+      { isPreviewMode: true },
+    ],
+    [
+      'serialized revision preview',
+      { isRevisionPreview: true },
+      {},
+      { isRevisionPreview: true },
+    ],
+    [
+      'explicit revision preview',
+      { isRevisionPreview: false },
+      { isRevisionPreview: true },
+      { isRevisionPreview: true },
+    ],
+    [
+      'serialized section preview',
+      { sectionType: 'main' },
+      {},
+      { sectionType: 'main' },
+    ],
+    [
+      'explicit section preview',
+      { sectionType: '' },
+      { sectionType: 'main' },
+      { sectionType: 'main' },
+    ],
+  ])('should_honor_%s_state_during_hydration_and_reuse', (mode, modeConfig, requestContext, expectedMode) => {
+    // Arrange
+    vi.stubGlobal('window', {})
+    let client = createWeaverseNextClient({
+      components: [],
+      projectId: `project-${mode}`,
+      requestContext: {
+        pathname: '/products/one',
+        ...requestContext,
+      },
+    })
+    let data = {
+      configs: {
+        ...modeConfig,
+        weaverseHost: 'https://studio.weaverse.io',
+      },
+      page: {
+        id: `page-${mode}`,
+        items: [],
+      },
+    }
+
+    // Act
+    let runtime = createWeaverseNextRuntime({ client, data })
+    let reusedRuntime = createWeaverseNextRuntime({ client, data })
+    let payload = getPageviewPayload(reusedRuntime)
+
+    // Assert
+    expect(reusedRuntime).toBe(runtime)
+    expect(reusedRuntime).toMatchObject(expectedMode)
+    expect(payload).toBeNull()
+  })
+})
+
 describe('sendPageview', () => {
   it('should_encode_transport_query_parameters', () => {
     // Arrange
@@ -209,9 +319,29 @@ describe('sendPageview', () => {
     })
 
     // Assert
-    expect(images[0]?.src).toBe(
+    let url = new URL(images[0]?.src ?? '')
+    expect(url.searchParams.has('cacheBust')).toBe(true)
+    url.searchParams.delete('cacheBust')
+    expect(url.toString()).toBe(
       'https://studio.weaverse.io/api/public/px?projectId=project+%2B+one&pageId=page+%2F+one'
     )
+  })
+
+  it('should_use_distinct_urls_for_repeated_pageviews', () => {
+    // Arrange
+    let images = stubImageConstructor()
+    let payload = {
+      host: 'https://studio.weaverse.io',
+      pageId: 'page-one',
+      projectId: 'project-one',
+    }
+
+    // Act
+    sendPageview(payload)
+    sendPageview(payload)
+
+    // Assert
+    expect(images[0]?.src).not.toBe(images[1]?.src)
   })
 
   it('should_remove_transport_image_when_network_errors', () => {
