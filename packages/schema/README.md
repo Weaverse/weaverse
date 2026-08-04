@@ -24,6 +24,9 @@ The package supports the following input types:
 - `select`, `toggle-group` - Choice inputs
 - `product`, `product-list`, `collection`, `collection-list`, `blog`, `metaobject` - Shopify resources
 - `color`, `datepicker`, `map-autocomplete`, `position` - Specialized inputs
+- `translation-key`, `translation-image` - Theme-settings i18n inputs. `name` is a
+  dot-notation key into the theme's `i18n.staticContent` (e.g. `cart.title`), not a
+  component prop; values are stored per locale and read back with `t('cart.title')`.
 
 ### Core Schemas
 

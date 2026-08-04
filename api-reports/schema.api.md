@@ -25,7 +25,7 @@ export interface BasicInput {
 
 // @public
 export const BasicInputSchema: z.ZodObject<{
-    type: z.ZodUnion<readonly [z.ZodLiteral<"heading">, z.ZodLiteral<"text">, z.ZodLiteral<"richtext">, z.ZodLiteral<"textarea">, z.ZodLiteral<"url">, z.ZodLiteral<"image">, z.ZodLiteral<"video">, z.ZodLiteral<"switch">, z.ZodLiteral<"range">, z.ZodLiteral<"select">, z.ZodLiteral<"position">, z.ZodLiteral<"product">, z.ZodLiteral<"product-list">, z.ZodLiteral<"collection">, z.ZodLiteral<"collection-list">, z.ZodLiteral<"blog">, z.ZodLiteral<"metaobject">, z.ZodLiteral<"color">, z.ZodLiteral<"datepicker">, z.ZodLiteral<"map-autocomplete">, z.ZodLiteral<"toggle-group">]>;
+    type: z.ZodUnion<readonly [z.ZodLiteral<"heading">, z.ZodLiteral<"text">, z.ZodLiteral<"richtext">, z.ZodLiteral<"textarea">, z.ZodLiteral<"url">, z.ZodLiteral<"image">, z.ZodLiteral<"video">, z.ZodLiteral<"switch">, z.ZodLiteral<"range">, z.ZodLiteral<"select">, z.ZodLiteral<"position">, z.ZodLiteral<"product">, z.ZodLiteral<"product-list">, z.ZodLiteral<"collection">, z.ZodLiteral<"collection-list">, z.ZodLiteral<"blog">, z.ZodLiteral<"metaobject">, z.ZodLiteral<"color">, z.ZodLiteral<"datepicker">, z.ZodLiteral<"map-autocomplete">, z.ZodLiteral<"toggle-group">, z.ZodLiteral<"translation-key">, z.ZodLiteral<"translation-image">]>;
     name: z.ZodString;
     label: z.ZodOptional<z.ZodString>;
     placeholder: z.ZodOptional<z.ZodString>;
@@ -147,7 +147,7 @@ export const ElementSchema: z.ZodObject<{
     inspector: z.ZodOptional<z.ZodArray<z.ZodObject<{
         group: z.ZodString;
         inputs: z.ZodArray<z.ZodUnion<readonly [z.ZodObject<{
-            type: z.ZodUnion<readonly [z.ZodLiteral<"heading">, z.ZodLiteral<"text">, z.ZodLiteral<"richtext">, z.ZodLiteral<"textarea">, z.ZodLiteral<"url">, z.ZodLiteral<"image">, z.ZodLiteral<"video">, z.ZodLiteral<"switch">, z.ZodLiteral<"range">, z.ZodLiteral<"select">, z.ZodLiteral<"position">, z.ZodLiteral<"product">, z.ZodLiteral<"product-list">, z.ZodLiteral<"collection">, z.ZodLiteral<"collection-list">, z.ZodLiteral<"blog">, z.ZodLiteral<"metaobject">, z.ZodLiteral<"color">, z.ZodLiteral<"datepicker">, z.ZodLiteral<"map-autocomplete">, z.ZodLiteral<"toggle-group">]>;
+            type: z.ZodUnion<readonly [z.ZodLiteral<"heading">, z.ZodLiteral<"text">, z.ZodLiteral<"richtext">, z.ZodLiteral<"textarea">, z.ZodLiteral<"url">, z.ZodLiteral<"image">, z.ZodLiteral<"video">, z.ZodLiteral<"switch">, z.ZodLiteral<"range">, z.ZodLiteral<"select">, z.ZodLiteral<"position">, z.ZodLiteral<"product">, z.ZodLiteral<"product-list">, z.ZodLiteral<"collection">, z.ZodLiteral<"collection-list">, z.ZodLiteral<"blog">, z.ZodLiteral<"metaobject">, z.ZodLiteral<"color">, z.ZodLiteral<"datepicker">, z.ZodLiteral<"map-autocomplete">, z.ZodLiteral<"toggle-group">, z.ZodLiteral<"translation-key">, z.ZodLiteral<"translation-image">]>;
             name: z.ZodString;
             label: z.ZodOptional<z.ZodString>;
             placeholder: z.ZodOptional<z.ZodString>;
@@ -165,7 +165,7 @@ export const ElementSchema: z.ZodObject<{
     settings: z.ZodOptional<z.ZodArray<z.ZodObject<{
         group: z.ZodString;
         inputs: z.ZodArray<z.ZodUnion<readonly [z.ZodObject<{
-            type: z.ZodUnion<readonly [z.ZodLiteral<"heading">, z.ZodLiteral<"text">, z.ZodLiteral<"richtext">, z.ZodLiteral<"textarea">, z.ZodLiteral<"url">, z.ZodLiteral<"image">, z.ZodLiteral<"video">, z.ZodLiteral<"switch">, z.ZodLiteral<"range">, z.ZodLiteral<"select">, z.ZodLiteral<"position">, z.ZodLiteral<"product">, z.ZodLiteral<"product-list">, z.ZodLiteral<"collection">, z.ZodLiteral<"collection-list">, z.ZodLiteral<"blog">, z.ZodLiteral<"metaobject">, z.ZodLiteral<"color">, z.ZodLiteral<"datepicker">, z.ZodLiteral<"map-autocomplete">, z.ZodLiteral<"toggle-group">]>;
+            type: z.ZodUnion<readonly [z.ZodLiteral<"heading">, z.ZodLiteral<"text">, z.ZodLiteral<"richtext">, z.ZodLiteral<"textarea">, z.ZodLiteral<"url">, z.ZodLiteral<"image">, z.ZodLiteral<"video">, z.ZodLiteral<"switch">, z.ZodLiteral<"range">, z.ZodLiteral<"select">, z.ZodLiteral<"position">, z.ZodLiteral<"product">, z.ZodLiteral<"product-list">, z.ZodLiteral<"collection">, z.ZodLiteral<"collection-list">, z.ZodLiteral<"blog">, z.ZodLiteral<"metaobject">, z.ZodLiteral<"color">, z.ZodLiteral<"datepicker">, z.ZodLiteral<"map-autocomplete">, z.ZodLiteral<"toggle-group">, z.ZodLiteral<"translation-key">, z.ZodLiteral<"translation-image">]>;
             name: z.ZodString;
             label: z.ZodOptional<z.ZodString>;
             placeholder: z.ZodOptional<z.ZodString>;
@@ -232,7 +232,7 @@ export const inputHelpers: {
 
 // @public
 export const InputSchema: z.ZodUnion<readonly [z.ZodObject<{
-    type: z.ZodUnion<readonly [z.ZodLiteral<"heading">, z.ZodLiteral<"text">, z.ZodLiteral<"richtext">, z.ZodLiteral<"textarea">, z.ZodLiteral<"url">, z.ZodLiteral<"image">, z.ZodLiteral<"video">, z.ZodLiteral<"switch">, z.ZodLiteral<"range">, z.ZodLiteral<"select">, z.ZodLiteral<"position">, z.ZodLiteral<"product">, z.ZodLiteral<"product-list">, z.ZodLiteral<"collection">, z.ZodLiteral<"collection-list">, z.ZodLiteral<"blog">, z.ZodLiteral<"metaobject">, z.ZodLiteral<"color">, z.ZodLiteral<"datepicker">, z.ZodLiteral<"map-autocomplete">, z.ZodLiteral<"toggle-group">]>;
+    type: z.ZodUnion<readonly [z.ZodLiteral<"heading">, z.ZodLiteral<"text">, z.ZodLiteral<"richtext">, z.ZodLiteral<"textarea">, z.ZodLiteral<"url">, z.ZodLiteral<"image">, z.ZodLiteral<"video">, z.ZodLiteral<"switch">, z.ZodLiteral<"range">, z.ZodLiteral<"select">, z.ZodLiteral<"position">, z.ZodLiteral<"product">, z.ZodLiteral<"product-list">, z.ZodLiteral<"collection">, z.ZodLiteral<"collection-list">, z.ZodLiteral<"blog">, z.ZodLiteral<"metaobject">, z.ZodLiteral<"color">, z.ZodLiteral<"datepicker">, z.ZodLiteral<"map-autocomplete">, z.ZodLiteral<"toggle-group">, z.ZodLiteral<"translation-key">, z.ZodLiteral<"translation-image">]>;
     name: z.ZodString;
     label: z.ZodOptional<z.ZodString>;
     placeholder: z.ZodOptional<z.ZodString>;
@@ -248,10 +248,10 @@ export const InputSchema: z.ZodUnion<readonly [z.ZodObject<{
 }, z.core.$loose>]>;
 
 // @public
-export type InputType = 'heading' | 'text' | 'richtext' | 'textarea' | 'url' | 'image' | 'video' | 'switch' | 'range' | 'select' | 'position' | 'product' | 'product-list' | 'collection' | 'collection-list' | 'blog' | 'metaobject' | 'color' | 'datepicker' | 'map-autocomplete' | 'toggle-group';
+export type InputType = 'heading' | 'text' | 'richtext' | 'textarea' | 'url' | 'image' | 'video' | 'switch' | 'range' | 'select' | 'position' | 'product' | 'product-list' | 'collection' | 'collection-list' | 'blog' | 'metaobject' | 'color' | 'datepicker' | 'map-autocomplete' | 'toggle-group' | 'translation-key' | 'translation-image';
 
 // @public
-export const inputTypeSchema: z.ZodUnion<readonly [z.ZodLiteral<"heading">, z.ZodLiteral<"text">, z.ZodLiteral<"richtext">, z.ZodLiteral<"textarea">, z.ZodLiteral<"url">, z.ZodLiteral<"image">, z.ZodLiteral<"video">, z.ZodLiteral<"switch">, z.ZodLiteral<"range">, z.ZodLiteral<"select">, z.ZodLiteral<"position">, z.ZodLiteral<"product">, z.ZodLiteral<"product-list">, z.ZodLiteral<"collection">, z.ZodLiteral<"collection-list">, z.ZodLiteral<"blog">, z.ZodLiteral<"metaobject">, z.ZodLiteral<"color">, z.ZodLiteral<"datepicker">, z.ZodLiteral<"map-autocomplete">, z.ZodLiteral<"toggle-group">]>;
+export const inputTypeSchema: z.ZodUnion<readonly [z.ZodLiteral<"heading">, z.ZodLiteral<"text">, z.ZodLiteral<"richtext">, z.ZodLiteral<"textarea">, z.ZodLiteral<"url">, z.ZodLiteral<"image">, z.ZodLiteral<"video">, z.ZodLiteral<"switch">, z.ZodLiteral<"range">, z.ZodLiteral<"select">, z.ZodLiteral<"position">, z.ZodLiteral<"product">, z.ZodLiteral<"product-list">, z.ZodLiteral<"collection">, z.ZodLiteral<"collection-list">, z.ZodLiteral<"blog">, z.ZodLiteral<"metaobject">, z.ZodLiteral<"color">, z.ZodLiteral<"datepicker">, z.ZodLiteral<"map-autocomplete">, z.ZodLiteral<"toggle-group">, z.ZodLiteral<"translation-key">, z.ZodLiteral<"translation-image">]>;
 
 // @public
 export interface InspectorGroup {
@@ -263,7 +263,7 @@ export interface InspectorGroup {
 export const InspectorGroupSchema: z.ZodObject<{
     group: z.ZodString;
     inputs: z.ZodArray<z.ZodUnion<readonly [z.ZodObject<{
-        type: z.ZodUnion<readonly [z.ZodLiteral<"heading">, z.ZodLiteral<"text">, z.ZodLiteral<"richtext">, z.ZodLiteral<"textarea">, z.ZodLiteral<"url">, z.ZodLiteral<"image">, z.ZodLiteral<"video">, z.ZodLiteral<"switch">, z.ZodLiteral<"range">, z.ZodLiteral<"select">, z.ZodLiteral<"position">, z.ZodLiteral<"product">, z.ZodLiteral<"product-list">, z.ZodLiteral<"collection">, z.ZodLiteral<"collection-list">, z.ZodLiteral<"blog">, z.ZodLiteral<"metaobject">, z.ZodLiteral<"color">, z.ZodLiteral<"datepicker">, z.ZodLiteral<"map-autocomplete">, z.ZodLiteral<"toggle-group">]>;
+        type: z.ZodUnion<readonly [z.ZodLiteral<"heading">, z.ZodLiteral<"text">, z.ZodLiteral<"richtext">, z.ZodLiteral<"textarea">, z.ZodLiteral<"url">, z.ZodLiteral<"image">, z.ZodLiteral<"video">, z.ZodLiteral<"switch">, z.ZodLiteral<"range">, z.ZodLiteral<"select">, z.ZodLiteral<"position">, z.ZodLiteral<"product">, z.ZodLiteral<"product-list">, z.ZodLiteral<"collection">, z.ZodLiteral<"collection-list">, z.ZodLiteral<"blog">, z.ZodLiteral<"metaobject">, z.ZodLiteral<"color">, z.ZodLiteral<"datepicker">, z.ZodLiteral<"map-autocomplete">, z.ZodLiteral<"toggle-group">, z.ZodLiteral<"translation-key">, z.ZodLiteral<"translation-image">]>;
         name: z.ZodString;
         label: z.ZodOptional<z.ZodString>;
         placeholder: z.ZodOptional<z.ZodString>;
@@ -401,7 +401,7 @@ export const SchemaList: z.ZodRecord<z.ZodString, z.ZodObject<{
     inspector: z.ZodOptional<z.ZodArray<z.ZodObject<{
         group: z.ZodString;
         inputs: z.ZodArray<z.ZodUnion<readonly [z.ZodObject<{
-            type: z.ZodUnion<readonly [z.ZodLiteral<"heading">, z.ZodLiteral<"text">, z.ZodLiteral<"richtext">, z.ZodLiteral<"textarea">, z.ZodLiteral<"url">, z.ZodLiteral<"image">, z.ZodLiteral<"video">, z.ZodLiteral<"switch">, z.ZodLiteral<"range">, z.ZodLiteral<"select">, z.ZodLiteral<"position">, z.ZodLiteral<"product">, z.ZodLiteral<"product-list">, z.ZodLiteral<"collection">, z.ZodLiteral<"collection-list">, z.ZodLiteral<"blog">, z.ZodLiteral<"metaobject">, z.ZodLiteral<"color">, z.ZodLiteral<"datepicker">, z.ZodLiteral<"map-autocomplete">, z.ZodLiteral<"toggle-group">]>;
+            type: z.ZodUnion<readonly [z.ZodLiteral<"heading">, z.ZodLiteral<"text">, z.ZodLiteral<"richtext">, z.ZodLiteral<"textarea">, z.ZodLiteral<"url">, z.ZodLiteral<"image">, z.ZodLiteral<"video">, z.ZodLiteral<"switch">, z.ZodLiteral<"range">, z.ZodLiteral<"select">, z.ZodLiteral<"position">, z.ZodLiteral<"product">, z.ZodLiteral<"product-list">, z.ZodLiteral<"collection">, z.ZodLiteral<"collection-list">, z.ZodLiteral<"blog">, z.ZodLiteral<"metaobject">, z.ZodLiteral<"color">, z.ZodLiteral<"datepicker">, z.ZodLiteral<"map-autocomplete">, z.ZodLiteral<"toggle-group">, z.ZodLiteral<"translation-key">, z.ZodLiteral<"translation-image">]>;
             name: z.ZodString;
             label: z.ZodOptional<z.ZodString>;
             placeholder: z.ZodOptional<z.ZodString>;
@@ -419,7 +419,7 @@ export const SchemaList: z.ZodRecord<z.ZodString, z.ZodObject<{
     settings: z.ZodOptional<z.ZodArray<z.ZodObject<{
         group: z.ZodString;
         inputs: z.ZodArray<z.ZodUnion<readonly [z.ZodObject<{
-            type: z.ZodUnion<readonly [z.ZodLiteral<"heading">, z.ZodLiteral<"text">, z.ZodLiteral<"richtext">, z.ZodLiteral<"textarea">, z.ZodLiteral<"url">, z.ZodLiteral<"image">, z.ZodLiteral<"video">, z.ZodLiteral<"switch">, z.ZodLiteral<"range">, z.ZodLiteral<"select">, z.ZodLiteral<"position">, z.ZodLiteral<"product">, z.ZodLiteral<"product-list">, z.ZodLiteral<"collection">, z.ZodLiteral<"collection-list">, z.ZodLiteral<"blog">, z.ZodLiteral<"metaobject">, z.ZodLiteral<"color">, z.ZodLiteral<"datepicker">, z.ZodLiteral<"map-autocomplete">, z.ZodLiteral<"toggle-group">]>;
+            type: z.ZodUnion<readonly [z.ZodLiteral<"heading">, z.ZodLiteral<"text">, z.ZodLiteral<"richtext">, z.ZodLiteral<"textarea">, z.ZodLiteral<"url">, z.ZodLiteral<"image">, z.ZodLiteral<"video">, z.ZodLiteral<"switch">, z.ZodLiteral<"range">, z.ZodLiteral<"select">, z.ZodLiteral<"position">, z.ZodLiteral<"product">, z.ZodLiteral<"product-list">, z.ZodLiteral<"collection">, z.ZodLiteral<"collection-list">, z.ZodLiteral<"blog">, z.ZodLiteral<"metaobject">, z.ZodLiteral<"color">, z.ZodLiteral<"datepicker">, z.ZodLiteral<"map-autocomplete">, z.ZodLiteral<"toggle-group">, z.ZodLiteral<"translation-key">, z.ZodLiteral<"translation-image">]>;
             name: z.ZodString;
             label: z.ZodOptional<z.ZodString>;
             placeholder: z.ZodOptional<z.ZodString>;
