@@ -2,7 +2,7 @@
 
 Zod v4-based type system for Weaverse component definitions. Independently versioned (v0.8.2).
 
-## Input Types (21)
+## Input Types (23)
 
 | Category | Types |
 |----------|-------|
@@ -12,6 +12,12 @@ Zod v4-based type system for Weaverse component definitions. Independently versi
 | Numeric | `range` |
 | Specialized | `heading`, `position`, `color`, `datepicker`, `map-autocomplete` |
 | Shopify | `product`, `product-list`, `collection`, `collection-list`, `blog`, `metaobject` |
+| i18n | `translation-key`, `translation-image` |
+
+`translation-key` / `translation-image` are the odd ones out: `name` is a dot-notation key
+into the theme's `i18n.staticContent` (`cart.title`), not a component prop. Values are stored
+per locale by Studio and read back with `t('cart.title')`, so they never reach theme settings
+or component data. Intended for theme `settings`.
 
 ## Where to Look
 
