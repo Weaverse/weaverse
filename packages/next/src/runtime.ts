@@ -56,14 +56,34 @@ function getConfigString(
   return typeof value === 'string' ? value : undefined
 }
 
+/**
+ * Resolve a non-published mode flag from the request context OR the serialized
+ * loader configs.
+ *
+ * These flags only ever suppress behaviour (Studio rendering, pageview
+ * reporting), so the two sources are OR-ed rather than nullish-coalesced. A
+ * client-supplied `requestContext` that explicitly sets `false` must not shadow
+ * a `true` the server resolved for this request — that would report preview
+ * traffic as a published, billable pageview.
+ */
 function resolveModeFlag(
   config: WeaverseNextRuntimeConfig,
   key: 'isDesignMode' | 'isPreviewMode' | 'isRevisionPreview'
 ): boolean {
-  let configValue = config.data.configs?.[key]
   return (
-    config.client?.requestContext?.[key] ??
-    (typeof configValue === 'boolean' ? configValue : false)
+    config.client?.requestContext?.[key] === true ||
+    config.data.configs?.[key] === true
+  )
+}
+
+/** Section preview type from either source; see {@link resolveModeFlag}. */
+function resolveSectionType(
+  config: WeaverseNextRuntimeConfig
+): string | undefined {
+  return (
+    config.client?.requestContext?.sectionType ||
+    getConfigString(config.data.configs, 'sectionType') ||
+    undefined
   )
 }
 
@@ -212,8 +232,7 @@ export class WeaverseNextRuntime extends Weaverse {
     let isDesignMode = resolveModeFlag(config, 'isDesignMode')
     let isPreviewMode = resolveModeFlag(config, 'isPreviewMode')
     let isRevisionPreview = resolveModeFlag(config, 'isRevisionPreview')
-    let sectionType =
-      requestContext?.sectionType ?? getConfigString(configs, 'sectionType')
+    let sectionType = resolveSectionType(config)
     let projectId = resolveProjectId(client, data, page.id)
 
     ensureNextItemConstructor()
@@ -407,12 +426,10 @@ export function createWeaverseNextRuntime(
 
   if (existing?.__weaverseNextRequestKey === requestKey) {
     let configs = config.data.configs
-    let requestContext = config.client?.requestContext
     let nextIsDesignMode = resolveModeFlag(config, 'isDesignMode')
     let nextIsPreviewMode = resolveModeFlag(config, 'isPreviewMode')
     let nextIsRevisionPreview = resolveModeFlag(config, 'isRevisionPreview')
-    let nextSectionType =
-      requestContext?.sectionType ?? getConfigString(configs, 'sectionType')
+    let nextSectionType = resolveSectionType(config)
     // In design mode the live Studio runtime owns the page tree, including
     // unsaved drafts. Reapplying loader `page` data here would clobber those
     // edits, so leave the project data untouched and let

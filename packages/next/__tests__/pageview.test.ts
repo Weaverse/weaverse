@@ -272,6 +272,33 @@ describe('hydrated pageview eligibility', () => {
       { sectionType: 'main' },
       { sectionType: 'main' },
     ],
+    // A client-supplied request context must never downgrade a mode the server
+    // already resolved for this request — that would bill preview traffic as a
+    // published pageview.
+    [
+      'serialized design over explicit published',
+      { isDesignMode: true },
+      { isDesignMode: false },
+      { isDesignMode: true },
+    ],
+    [
+      'serialized preview over explicit published',
+      { isPreviewMode: true },
+      { isPreviewMode: false },
+      { isPreviewMode: true },
+    ],
+    [
+      'serialized revision preview over explicit published',
+      { isRevisionPreview: true },
+      { isRevisionPreview: false },
+      { isRevisionPreview: true },
+    ],
+    [
+      'serialized section preview over explicit published',
+      { sectionType: 'main' },
+      { sectionType: '' },
+      { sectionType: 'main' },
+    ],
   ])('should_honor_%s_state_during_hydration_and_reuse', (mode, modeConfig, requestContext, expectedMode) => {
     // Arrange
     vi.stubGlobal('window', {})
