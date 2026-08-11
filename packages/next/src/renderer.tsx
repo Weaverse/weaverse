@@ -2,6 +2,8 @@
 
 import { WeaverseRoot } from '@weaverse/react'
 import { memo, useContext, useEffect, useLayoutEffect, useMemo } from 'react'
+import type { JSX } from 'react/jsx-runtime'
+import { WeaverseNextPageviewTracker } from './pageview-tracker'
 import { WeaverseNextContext } from './provider'
 import { createWeaverseNextRuntime } from './runtime'
 import type {
@@ -50,7 +52,7 @@ export interface WeaverseNextRendererProps {
  */
 export const WeaverseNextRenderer = memo(function WeaverseNextRendererComponent(
   props: WeaverseNextRendererProps
-) {
+): JSX.Element | null {
   let context = useContext(WeaverseNextContext)
   let client = props.client ?? context?.client
   let data = props.data ?? client?.data ?? null
@@ -82,16 +84,19 @@ export const WeaverseNextRenderer = memo(function WeaverseNextRendererComponent(
     context?.translationStore,
   ])
 
+  let pageview = <WeaverseNextPageviewTracker runtime={weaverse} />
+
   useIsomorphicLayoutEffect(() => {
     weaverse?.flushRenderPhaseUpdates()
   }, [weaverse])
 
   if (!weaverse) {
-    return null
+    return pageview
   }
 
   return (
     <>
+      {pageview}
       <WeaverseRoot context={weaverse} />
       <WeaverseNextStudio runtime={weaverse} />
     </>

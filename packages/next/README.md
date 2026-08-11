@@ -482,6 +482,32 @@ behavior change: `WeaverseNextProvider` falls back to creating its own store
 and still renders `themeSettings`/`client.themeSettings` synchronously on
 SSR, same as before.
 
+## Pageview analytics
+
+`WeaverseNextRenderer` reports one Weaverse pageview per published page per
+navigation, matching `@weaverse/hydrogen`. There is no setup and no public
+API: the renderer sends a `GET` to `{weaverseHost}/api/public/px` from the
+browser via an off-screen `Image`, and never blocks or fails rendering.
+
+Nothing is sent when the runtime is in design, section-preview, or revision
+mode, or when project ID, page ID, or `weaverseHost` is missing. Co-located
+runtimes on the same URL are deduplicated per page ID, so a nested
+composition counts once while two distinct pages on one URL count separately.
+
+A navigation is identified by `usePathname()` plus order-normalized
+`useSearchParams()`, so a filter or sort that pushes new search params counts
+as a new pageview — same as Hydrogen, where those pushes change
+`location.key`. Because `useSearchParams()` opts a subtree into client
+rendering, the SDK wraps only its own invisible tracker in a `Suspense`
+boundary; storefront content stays statically prerenderable and consumers do
+not add a boundary of their own.
+
+> **Mount `WeaverseNextRootProvider` in your root layout if you rely on these
+> numbers.** The root provider observes navigations on routes that render no
+> Weaverse page (cart, search, account). Without it, leaving a Weaverse page
+> for such a route and coming back is indistinguishable from an in-place
+> remount, and the return visit is not counted.
+
 ## Studio setup
 
 Studio has two separate pieces.

@@ -56,6 +56,37 @@ function getConfigString(
   return typeof value === 'string' ? value : undefined
 }
 
+/**
+ * Resolve a non-published mode flag from the request context OR the serialized
+ * loader configs.
+ *
+ * These flags only ever suppress behaviour (Studio rendering, pageview
+ * reporting), so the two sources are OR-ed rather than nullish-coalesced. A
+ * client-supplied `requestContext` that explicitly sets `false` must not shadow
+ * a `true` the server resolved for this request — that would report preview
+ * traffic as a published, billable pageview.
+ */
+function resolveModeFlag(
+  config: WeaverseNextRuntimeConfig,
+  key: 'isDesignMode' | 'isPreviewMode' | 'isRevisionPreview'
+): boolean {
+  return (
+    config.client?.requestContext?.[key] === true ||
+    config.data.configs?.[key] === true
+  )
+}
+
+/** Section preview type from either source; see {@link resolveModeFlag}. */
+function resolveSectionType(
+  config: WeaverseNextRuntimeConfig
+): string | undefined {
+  return (
+    config.client?.requestContext?.sectionType ||
+    getConfigString(config.data.configs, 'sectionType') ||
+    undefined
+  )
+}
+
 function getRecordString(
   record: Record<string, unknown> | undefined,
   key: string
@@ -198,13 +229,17 @@ export class WeaverseNextRuntime extends Weaverse {
     let page = getRenderablePage(data)
     let configs = data.configs
     let requestContext = client?.requestContext
+    let isDesignMode = resolveModeFlag(config, 'isDesignMode')
+    let isPreviewMode = resolveModeFlag(config, 'isPreviewMode')
+    let isRevisionPreview = resolveModeFlag(config, 'isRevisionPreview')
+    let sectionType = resolveSectionType(config)
     let projectId = resolveProjectId(client, data, page.id)
 
     ensureNextItemConstructor()
     super({
       projectId,
       data: page,
-      isDesignMode: requestContext?.isDesignMode ?? false,
+      isDesignMode,
       weaverseHost: getConfigString(configs, 'weaverseHost'),
       weaverseVersion: getConfigString(configs, 'weaverseVersion'),
     })
@@ -212,10 +247,10 @@ export class WeaverseNextRuntime extends Weaverse {
     this.pageId = page.id
     this.dataContext = resolveDataContext(config)
     this.requestInfo = buildWeaverseNextRequestInfo(requestContext)
-    this.isDesignMode = requestContext?.isDesignMode ?? false
-    this.isPreviewMode = requestContext?.isPreviewMode ?? false
-    this.isRevisionPreview = requestContext?.isRevisionPreview ?? false
-    this.sectionType = requestContext?.sectionType
+    this.isDesignMode = isDesignMode
+    this.isPreviewMode = isPreviewMode
+    this.isRevisionPreview = isRevisionPreview
+    this.sectionType = sectionType
 
     // One store instance backs both the canonical `translationStore` and the
     // deprecated `themeTextStore` alias, so Builder's `updateStaticText()` RPC
@@ -390,7 +425,11 @@ export function createWeaverseNextRuntime(
   let requestKey = getRuntimeKey(page.id, requestInfo)
 
   if (existing?.__weaverseNextRequestKey === requestKey) {
-    let nextIsDesignMode = config.client?.requestContext?.isDesignMode ?? false
+    let configs = config.data.configs
+    let nextIsDesignMode = resolveModeFlag(config, 'isDesignMode')
+    let nextIsPreviewMode = resolveModeFlag(config, 'isPreviewMode')
+    let nextIsRevisionPreview = resolveModeFlag(config, 'isRevisionPreview')
+    let nextSectionType = resolveSectionType(config)
     // In design mode the live Studio runtime owns the page tree, including
     // unsaved drafts. Reapplying loader `page` data here would clobber those
     // edits, so leave the project data untouched and let
@@ -418,17 +457,13 @@ export function createWeaverseNextRuntime(
     existing.requestInfo = requestInfo
     existing.projectId = resolveProjectId(config.client, config.data, page.id)
     existing.isDesignMode = nextIsDesignMode
-    existing.isPreviewMode =
-      config.client?.requestContext?.isPreviewMode ?? false
-    existing.isRevisionPreview =
-      config.client?.requestContext?.isRevisionPreview ?? false
-    existing.sectionType = config.client?.requestContext?.sectionType
+    existing.isPreviewMode = nextIsPreviewMode
+    existing.isRevisionPreview = nextIsRevisionPreview
+    existing.sectionType = nextSectionType
     existing.weaverseHost =
-      getConfigString(config.data.configs, 'weaverseHost') ??
-      existing.weaverseHost
+      getConfigString(configs, 'weaverseHost') ?? existing.weaverseHost
     existing.weaverseVersion =
-      getConfigString(config.data.configs, 'weaverseVersion') ??
-      existing.weaverseVersion
+      getConfigString(configs, 'weaverseVersion') ?? existing.weaverseVersion
     existing.internal.pageAssignment = config.data.pageAssignment
     existing.internal.project = config.data.project
     if (config.navigate) {
