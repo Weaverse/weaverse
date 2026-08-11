@@ -4,7 +4,7 @@ import { usePathname, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 import { createPageviewCoordinator } from './pageview'
 
-interface PageviewRuntime {
+export interface PageviewRuntime {
   isDesignMode?: boolean
   isPreviewMode?: boolean
   isRevisionPreview?: boolean
@@ -62,6 +62,15 @@ export function getPageviewPayload(
   }
 }
 
+/**
+ * Send one pageview via an off-screen `Image`, so the request survives an
+ * immediate navigation and can never reject into React.
+ *
+ * `cacheBust` keeps every fire a distinct URL. Without it the browser serves
+ * the previous pixel from its own cache on a revisit or BFCache restore and the
+ * view never reaches the server. `@weaverse/hydrogen` still omits it and
+ * undercounts those repeats — worth aligning there separately.
+ */
 export function sendPageview(payload: PageviewPayload): void {
   try {
     let url = new URL('/api/public/px', payload.host)

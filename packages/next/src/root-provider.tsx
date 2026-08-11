@@ -3,11 +3,11 @@
 import {
   createContext,
   type ReactNode,
-  Suspense,
   useEffect,
   useMemo,
   useRef,
 } from 'react'
+import { WeaverseNextPageviewTracker } from './pageview-tracker'
 import {
   getSchemaStaticContent,
   WeaverseNextContext,
@@ -23,7 +23,6 @@ import type {
   WeaverseNextThemeSchema,
   WeaverseNextThemeSettingsStore,
 } from './types'
-import { usePageview } from './use-pageview'
 
 /** Root-scoped theme and translation stores adopted by route providers. */
 export interface WeaverseNextRootContextValue {
@@ -43,11 +42,6 @@ export interface WeaverseNextRootContextValue {
  */
 export const WeaverseNextRootContext =
   createContext<WeaverseNextRootContextValue | null>(null)
-
-function WeaverseNextNavigationObserver() {
-  usePageview(null)
-  return null
-}
 
 /** Root theme and translation data shared across the App Router tree. */
 export interface WeaverseNextRootProviderProps {
@@ -174,9 +168,9 @@ export function WeaverseNextRootProvider(props: WeaverseNextRootProviderProps) {
   return (
     <WeaverseNextRootContext.Provider value={rootContextValue}>
       <WeaverseNextContext.Provider value={contextValue}>
-        <Suspense fallback={null}>
-          <WeaverseNextNavigationObserver />
-        </Suspense>
+        {/* Observes navigations on routes that render no Weaverse page, so a
+            detour (cart, search, account) and back counts as a real revisit. */}
+        <WeaverseNextPageviewTracker runtime={null} />
         <TranslationProvider
           merchantOverrides={merchantOverrides}
           staticContent={resolvedStaticContent}

@@ -1,33 +1,17 @@
 'use client'
 
 import { WeaverseRoot } from '@weaverse/react'
-import {
-  memo,
-  Suspense,
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-} from 'react'
+import { memo, useContext, useEffect, useLayoutEffect, useMemo } from 'react'
 import type { JSX } from 'react/jsx-runtime'
+import { WeaverseNextPageviewTracker } from './pageview-tracker'
 import { WeaverseNextContext } from './provider'
-import { createWeaverseNextRuntime, type WeaverseNextRuntime } from './runtime'
+import { createWeaverseNextRuntime } from './runtime'
 import type {
   WeaverseNextClient,
   WeaverseNextLoaderData,
   WeaverseNextPageData,
 } from './types'
-import { usePageview } from './use-pageview'
 import { WeaverseNextStudio } from './use-weaverse-next-studio'
-
-function WeaverseNextPageview({
-  runtime,
-}: {
-  runtime: WeaverseNextRuntime | null
-}) {
-  usePageview(runtime)
-  return null
-}
 
 const EMPTY_DATA_CONTEXT: Record<string, unknown> = {}
 const useIsomorphicLayoutEffect =
@@ -100,11 +84,7 @@ export const WeaverseNextRenderer = memo(function WeaverseNextRendererComponent(
     context?.translationStore,
   ])
 
-  let pageview = (
-    <Suspense fallback={null}>
-      <WeaverseNextPageview runtime={weaverse} />
-    </Suspense>
-  )
+  let pageview = <WeaverseNextPageviewTracker runtime={weaverse} />
 
   useIsomorphicLayoutEffect(() => {
     weaverse?.flushRenderPhaseUpdates()
