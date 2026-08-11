@@ -3,7 +3,11 @@
 import { Suspense } from 'react'
 import { type PageviewRuntime, usePageview } from './use-pageview'
 
-function PageviewTracker({ runtime }: { runtime: PageviewRuntime | null }) {
+interface PageviewTrackerProps {
+  runtime: PageviewRuntime | null
+}
+
+function PageviewTracker({ runtime }: PageviewTrackerProps) {
   usePageview(runtime)
   return null
 }
@@ -20,11 +24,7 @@ function PageviewTracker({ runtime }: { runtime: PageviewRuntime | null }) {
  * `WeaverseNextRootProvider`, which only needs to observe navigations on routes
  * that render no Weaverse page.
  */
-export function WeaverseNextPageviewTracker({
-  runtime,
-}: {
-  runtime: PageviewRuntime | null
-}) {
+export function WeaverseNextPageviewTracker({ runtime }: PageviewTrackerProps) {
   return (
     <Suspense fallback={null}>
       <PageviewTracker runtime={runtime} />

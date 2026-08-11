@@ -20,16 +20,12 @@ interface PageviewPayload {
   projectId: string
 }
 
-interface SearchParamsValue {
-  toString: () => string
-}
-
 let pageviewCoordinator = createPageviewCoordinator()
 let pageviewSequence = 0
 
 export function getPageviewNavigationIdentity(
   pathname: string | null,
-  searchParams: SearchParamsValue | null
+  searchParams: URLSearchParams | null
 ): string {
   let normalizedSearchParams = new URLSearchParams(
     searchParams ? searchParams.toString() : ''
@@ -96,10 +92,9 @@ export function usePageview(runtime: PageviewRuntime | null): void {
   let pathname = usePathname()
   let searchParams = useSearchParams()
   let navigationIdentity = getPageviewNavigationIdentity(pathname, searchParams)
-  let payload = getPageviewPayload(runtime)
-  let host = payload?.host
-  let pageId = payload?.pageId
-  let projectId = payload?.projectId
+  // Unpacked into primitives so the effect below can depend on the values
+  // rather than a payload object rebuilt on every render.
+  let { host, pageId, projectId } = getPageviewPayload(runtime) ?? {}
 
   useEffect(() => {
     let fire = () => {

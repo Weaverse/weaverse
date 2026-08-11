@@ -2,12 +2,6 @@ interface PageShowEvent {
   readonly persisted: boolean
 }
 
-export interface PageviewCoordinator {
-  observeNavigation: (navigationIdentity: string) => void
-  observePageShow: (event: PageShowEvent) => void
-  shouldFire: (navigationIdentity: string, pageId: string) => boolean
-}
-
 /**
  * Coordinate pageview deduplication across co-located runtime instances and
  * renderer remounts. A page can fire once per observed Next navigation.
@@ -18,7 +12,7 @@ export interface PageviewCoordinator {
  * identity or persisted `pageshow` event starts a fresh pageview set; a hard
  * reload naturally creates a new module instance.
  */
-export function createPageviewCoordinator(): PageviewCoordinator {
+export function createPageviewCoordinator() {
   let currentNavigationIdentity: string | null = null
   let firedPageIds = new Set<string>()
   let currentPageShowEvent: PageShowEvent | null = null
@@ -42,7 +36,7 @@ export function createPageviewCoordinator(): PageviewCoordinator {
   return {
     observeNavigation,
     observePageShow,
-    shouldFire(navigationIdentity, pageId) {
+    shouldFire(navigationIdentity: string, pageId: string) {
       observeNavigation(navigationIdentity)
       if (firedPageIds.has(pageId)) {
         return false
