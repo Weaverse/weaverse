@@ -1043,6 +1043,11 @@ export class WeaverseClient {
           Accept: 'application/json',
           'Accept-Encoding': 'gzip, deflate, br',
           'X-Visitor-UA': request.headers.get('user-agent') || '',
+          ...(this.configs.isDesignMode ||
+          this.configs.isPreviewMode ||
+          this.configs.isRevisionPreview
+            ? {}
+            : { 'X-Weaverse-Usage-Source': 'project-request-v1' }),
         },
       }
       const url = this.getApiUrl('project')

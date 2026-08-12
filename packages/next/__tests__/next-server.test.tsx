@@ -138,6 +138,9 @@ describe('createWeaverseNextServerClient loadPage', () => {
     let [calledUrl, init] = fetchMock.mock.calls[0] as [string, RequestInit]
     expect(calledUrl).toBe('https://api.weaverse.io/api/public/project')
     expect(init.method).toBe('POST')
+    expect(new Headers(init.headers).get('x-weaverse-usage-source')).toBe(
+      'project-request-v1'
+    )
 
     // Body: tracking params stripped from url; params forwarded; projectId set.
     let body = JSON.parse(init.body as string)
@@ -286,6 +289,24 @@ describe('createWeaverseNextServerClient loadPage', () => {
     expect(init.cache).toBe('no-store')
     expect(init.next).toBeUndefined()
     expect(JSON.parse(init.body as string).isDesignMode).toBe(true)
+  })
+
+  it.each([
+    { url: 'https://shop.example/', isDesignMode: true },
+    { url: 'https://shop.example/?__revisionId=revision-1' },
+  ])('should_not_mark_Studio_project_requests_%#', async (requestContext) => {
+    let fetchMock = makeFetch(makePagePayload())
+    let client = createWeaverseNextServerClient({
+      components: [heroComponent],
+      projectId: 'proj-123',
+      fetch: fetchMock,
+      requestContext,
+    })
+
+    await client.loadPage()
+
+    let [, init] = fetchMock.mock.calls[0] as [string, RequestInit]
+    expect(new Headers(init.headers).has('x-weaverse-usage-source')).toBe(false)
   })
 
   it('should_use_configured_next_revalidate_and_tags_in_published_mode', async () => {

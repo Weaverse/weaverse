@@ -44,3 +44,17 @@
 - Final independent review verdict: `APPROVE`, with no blocking findings. Its only non-blocking note was the stale registration sentence in `plan.md`; that sentence was corrected to match navigation-owned dedupe.
 - Final gates pass on the lifecycle redesign: repository tests (Next 7 files / 170 tests), repository typecheck, repository Biome (149 files), `package:check` (8 packed packages / 10 TypeScript entrypoints), Next pack dry-run, npm alpha publish dry-run, and `git diff --check`.
 - The exact final tarball was installed into the disposable Next 16.2.9 fixture. Production build prerendered `/` as `○ (Static)` with build ID `psMm77dCB2G7hSzHL96c8`; the installed bundle contains `/api/public/px`.
+
+## 2026-08-12 — Superseded
+
+- Billing ownership moved to successful Builder server API requests.
+- Removed the private Hydrogen and Next `/api/public/px` emitters and their lifecycle-only helpers.
+- Added package-level source invariants so browser billing transport cannot return unnoticed.
+
+## 2026-08-12 — Corrected server-meter contract
+
+- Restored the frozen compatibility boundary: legacy SDK releases keep `/px`; only the new release removes it.
+- New Hydrogen and Next page-project requests send `X-Weaverse-Usage-Source: project-request-v1` only outside design, preview, and revision modes.
+- Replaced source-text invariants with behavioral request-header regressions.
+- Coordinated release order is Builder, Queue resources/consumer, API worker producer, then SDK packages.
+- Reliability review replaced the proposed Durable Object flush with awaited Cloudflare Queue delivery, an edge usage worker consumer, and transactional Builder receipts. SDK marker behavior is unchanged.

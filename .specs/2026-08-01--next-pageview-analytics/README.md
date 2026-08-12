@@ -2,13 +2,13 @@
 
 | Field            | Value |
 | ---------------- | ----- |
-| **Status**       | in progress |
+| **Status**       | in-progress |
 | **Owner**        | @hta218 |
 | **Tracker**      | [Builder #2738](https://github.com/Weaverse/builder/issues/2738) |
-| **Branch**       | `feat/next-pageview-analytics` |
+| **Branch**       | `fix/remove-usage-pixel` |
 | **Base**         | `1a695920c3872bc9be0f7ffb81485a7d7bf5d089` |
 | **Created**      | 2026-08-01 |
-| **Last Updated** | 2026-08-01 |
+| **Last Updated** | 2026-08-12 |
 
 ## Original prompt
 
@@ -16,4 +16,4 @@
 
 ## Summary
 
-`@weaverse/hydrogen` automatically sends one Weaverse pageview pixel per page per real navigation, but `@weaverse/next` has no equivalent. This slice makes the Next renderer own the same Weaverse-internal pageview protocol while adapting deduplication to App Router navigation and React Strict Mode. It does not add a generic analytics API, third-party vendor integrations, consent management, Builder changes, or starter-owned tracking.
+Corrected on 2026-08-12: new Hydrogen and Next releases remove browser `/api/public/px` calls and mark only live public project requests with `X-Weaverse-Usage-Source: project-request-v1`. Legacy releases remain unchanged; the API worker and Builder own durable, non-duplicated metering for the new marker.

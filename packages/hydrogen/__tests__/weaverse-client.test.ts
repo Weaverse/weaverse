@@ -602,6 +602,39 @@ describe('loadPage X-Visitor-UA header forwarding', () => {
 
     expect(capturedHeaders?.get('x-visitor-ua')).toBe('')
   })
+
+  it('marks live public project requests for server usage metering', async () => {
+    let weaverse = new WeaverseClient({
+      ...createMockContext({
+        request: new Request('https://mystore.com/products/foo'),
+      }),
+      components: mockComponents,
+      themeSchema: mockThemeSchema,
+      projectId: 'test-project-123',
+    })
+
+    await weaverse.loadPage().catch(() => {})
+
+    expect(capturedHeaders?.get('x-weaverse-usage-source')).toBe(
+      'project-request-v1'
+    )
+  })
+
+  it.each([
+    'https://mystore.com/?isDesignMode=true',
+    'https://mystore.com/?__revisionId=revision-1',
+  ])('does not mark Studio request %s', async (url) => {
+    let weaverse = new WeaverseClient({
+      ...createMockContext({ request: new Request(url) }),
+      components: mockComponents,
+      themeSchema: mockThemeSchema,
+      projectId: 'test-project-123',
+    })
+
+    await weaverse.loadPage().catch(() => {})
+
+    expect(capturedHeaders?.has('x-weaverse-usage-source')).toBe(false)
+  })
 })
 
 describe('directFetch transient retry', () => {

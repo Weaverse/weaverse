@@ -60,11 +60,10 @@ function getConfigString(
  * Resolve a non-published mode flag from the request context OR the serialized
  * loader configs.
  *
- * These flags only ever suppress behaviour (Studio rendering, pageview
- * reporting), so the two sources are OR-ed rather than nullish-coalesced. A
+ * These flags only ever suppress Studio rendering, so the two sources are
+ * OR-ed rather than nullish-coalesced. A
  * client-supplied `requestContext` that explicitly sets `false` must not shadow
- * a `true` the server resolved for this request — that would report preview
- * traffic as a published, billable pageview.
+ * a `true` the server resolved for this request.
  */
 function resolveModeFlag(
   config: WeaverseNextRuntimeConfig,
