@@ -144,7 +144,7 @@ export class WeaverseClient {
   /** Builder API version used by this client. */
   API = API_PATH
   /** Stable project configuration shared by page requests. */
-  basePageConfigs: Omit<WeaverseProjectConfigs, 'requestInfo' | 'usageApiKey'>
+  basePageConfigs: Omit<WeaverseProjectConfigs, 'requestInfo'>
   /** Stable request body fields shared by page requests. */
   basePageRequestBody: Omit<FetchProjectRequestBody, 'url'>
   /** Resolved project and rendering-mode configuration. */
@@ -1035,23 +1035,6 @@ export class WeaverseClient {
         url: normalizePageUrl(request.url),
       }
 
-      // Only live storefront reads are billable, and the marker is only
-      // trusted when signed with the environment credential. The event ID is
-      // minted once per load, so a transient retry reuses it and bills once.
-      const isMeteredRequest =
-        !(
-          this.configs.isDesignMode ||
-          this.configs.isPreviewMode ||
-          this.configs.isRevisionPreview
-        ) && Boolean(this.configs.usageApiKey)
-      const usageHeaders: Record<string, string> = isMeteredRequest
-        ? {
-            'X-Weaverse-Usage-Source': 'project-request-v1',
-            'X-Weaverse-Usage-Event-ID': crypto.randomUUID(),
-            Authorization: `Bearer ${this.configs.usageApiKey}`,
-          }
-        : {}
-
       const reqInit: RequestInit = {
         method: 'POST',
         body: JSON.stringify(body),
@@ -1060,7 +1043,11 @@ export class WeaverseClient {
           Accept: 'application/json',
           'Accept-Encoding': 'gzip, deflate, br',
           'X-Visitor-UA': request.headers.get('user-agent') || '',
-          ...usageHeaders,
+          ...(this.configs.isDesignMode ||
+          this.configs.isPreviewMode ||
+          this.configs.isRevisionPreview
+            ? {}
+            : { 'X-Weaverse-SDK-Version': 'project-request-v1' }),
         },
       }
       const url = this.getApiUrl('project')

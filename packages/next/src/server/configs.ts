@@ -155,17 +155,15 @@ export function getWeaverseNextConfigs(
     context?.isPreviewMode ??
     coerceBool(lastParam(searchParams, 'isPreviewMode'))
 
-  // Environment-only credential: never sourced from the request URL, so a
-  // query-supplied Studio key can't authenticate metered storefront traffic.
-  let envApiKey = readEnv(env, 'WEAVERSE_API_KEY') || ''
-
   return {
     queryProjectId: lastParam(searchParams, 'weaverseProjectId') || '',
     envProjectId: readEnv(env, 'WEAVERSE_PROJECT_ID') || '',
     weaverseHost,
     weaverseApiBase,
-    weaverseApiKey: lastParam(searchParams, 'weaverseApiKey') || envApiKey,
-    usageApiKey: envApiKey,
+    weaverseApiKey:
+      lastParam(searchParams, 'weaverseApiKey') ||
+      readEnv(env, 'WEAVERSE_API_KEY') ||
+      '',
     weaverseVersion:
       lastParam(searchParams, 'weaverseVersion') ||
       options.weaverseVersion ||

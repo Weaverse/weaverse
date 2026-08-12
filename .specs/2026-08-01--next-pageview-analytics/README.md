@@ -16,4 +16,4 @@
 
 ## Summary
 
-Corrected on 2026-08-12: new Hydrogen and Next releases remove browser `/api/public/px` calls and mark only live public project requests with `X-Weaverse-Usage-Source: project-request-v1`. Legacy releases remain unchanged; the API worker and Builder own durable, non-duplicated metering for the new marker.
+Corrected on 2026-08-12: new Hydrogen and Next releases remove browser `/api/public/px` calls and mark only live public project requests with `X-Weaverse-SDK-Version: project-request-v1`. Legacy releases remain unchanged. Builder counts successful marked origin project API executions; API-worker cache hits are not counted.

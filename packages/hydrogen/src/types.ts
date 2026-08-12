@@ -290,8 +290,6 @@ export type WeaverseProjectConfigs = {
    * supplied by Studio requests while editing and previewing.
    */
   weaverseApiKey: string
-  /** Environment-only credential used to authenticate live usage requests. */
-  usageApiKey: string
   /** Optional Studio asset version. */
   weaverseVersion?: string
   /** Whether the request is running inside the visual editor. */
@@ -330,7 +328,7 @@ export type HydrogenPageAssignment = {
 /** Complete payload returned by {@link WeaverseClient.loadPage}. */
 export type WeaverseLoaderData = {
   /** Resolved runtime configuration and normalized request details. */
-  configs: Omit<WeaverseProjectConfigs, 'publicEnv' | 'usageApiKey'> & {
+  configs: Omit<WeaverseProjectConfigs, 'publicEnv'> & {
     /** Normalized URL and locale information for the request. */
     requestInfo: WeaverseLoaderRequestInfo
   }

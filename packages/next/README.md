@@ -629,12 +629,7 @@ Server config resolution intentionally mirrors Hydrogen where possible:
 - API base: trusted request host → `WEAVERSE_PUBLIC_API_BASE` → non-production `WEAVERSE_HOST` → `https://api.weaverse.io`.
 - public env: `PUBLIC_STORE_DOMAIN`, `PUBLIC_STOREFRONT_API_TOKEN`.
 
-`WEAVERSE_API_KEY` is server-only and must be configured before deploying an
-SDK release that removes the legacy `/px` request. Live page requests use it to
-send the paired `X-Weaverse-Usage-Source` marker and `Authorization` header. If
-the key is missing, the request remains functional but sends neither header and
-is not billed. Query-provided Studio keys cannot authorize metering, and the
-key is never serialized into client-facing loader data.
+`WEAVERSE_API_KEY` may be read into internal base configs but is not attached to page/theme API requests and is never serialized into client-facing loader data.
 
 ## POC reference
 

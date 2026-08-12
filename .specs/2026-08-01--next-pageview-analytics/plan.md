@@ -4,10 +4,10 @@
 
 - Legacy SDK/site releases keep their existing `/api/public/px` behavior.
 - The new Hydrogen and Next releases remove browser pixel transport.
-- Each live public project request carries `X-Weaverse-Usage-Source: project-request-v1`.
+- Each live public project request carries `X-Weaverse-SDK-Version: project-request-v1`.
 - Design mode, section preview, and revision preview requests carry no marker.
 - Project configs and Content API requests carry no marker.
-- The API worker strips the marker before an origin miss reaches Builder.
+- Builder counts successful marked origin project API executions. API-worker cache hits do not reach Builder and are not counted.
 
 ## Implementation
 
@@ -36,13 +36,11 @@
 
 ## Coordinated release order
 
-1. Builder receipt schema, transactional ingestion, and direct fallback.
-2. Cloudflare Queue/DLQ resources and edge usage worker consumer.
-3. API worker producer binding, awaited enqueue, and marker stripping.
-4. Hydrogen and Next package release.
+1. Builder shared-handler increment.
+2. Hydrogen and Next package release.
 
 ## Verification
 
 - focused Hydrogen and Next request tests, RED then GREEN;
 - package tests, typecheck, build, Biome, and packed public API checks;
-- cross-repository marker/strip/direct-fallback contract verification.
+- cross-repository SDK-marker and Builder-origin contract verification.

@@ -120,12 +120,11 @@ describe('createWeaverseNextServerClient projectId resolution', () => {
 // ─── 2. loadPage request + response shape ─────────────────────────────
 
 describe('createWeaverseNextServerClient loadPage', () => {
-  it('should_authenticate_live_usage_with_the_environment_API_key', async () => {
+  it('should_post_expected_url_body_and_return_configs_requestInfo', async () => {
     let fetchMock = makeFetch(makePagePayload())
     let client = createWeaverseNextServerClient({
       components: [heroComponent],
       projectId: 'proj-123',
-      env: { WEAVERSE_API_KEY: 'env-usage-key' },
       fetch: fetchMock,
       requestContext: {
         url: 'https://shop.example/products/hat?utm_source=x',
@@ -139,14 +138,9 @@ describe('createWeaverseNextServerClient loadPage', () => {
     let [calledUrl, init] = fetchMock.mock.calls[0] as [string, RequestInit]
     expect(calledUrl).toBe('https://api.weaverse.io/api/public/project')
     expect(init.method).toBe('POST')
-    let requestHeaders = new Headers(init.headers)
-    expect(requestHeaders.get('x-weaverse-usage-source')).toBe(
+    expect(new Headers(init.headers).get('x-weaverse-sdk-version')).toBe(
       'project-request-v1'
     )
-    expect(requestHeaders.get('x-weaverse-usage-event-id')).toMatch(
-      /^[0-9a-f-]{36}$/
-    )
-    expect(requestHeaders.get('authorization')).toBe('Bearer env-usage-key')
 
     // Body: tracking params stripped from url; params forwarded; projectId set.
     let body = JSON.parse(init.body as string)
@@ -175,45 +169,6 @@ describe('createWeaverseNextServerClient loadPage', () => {
     })
     // Server secret must never appear in client-facing configs.
     expect(configs.weaverseApiKey).toBeUndefined()
-  })
-
-  it('should_keep_live_requests_unmarked_when_the_environment_API_key_is_missing', async () => {
-    let fetchMock = makeFetch(makePagePayload())
-    let client = createWeaverseNextServerClient({
-      components: [heroComponent],
-      projectId: 'proj-123',
-      env: {},
-      fetch: fetchMock,
-      requestContext: { url: 'https://shop.example/products/hat' },
-    })
-
-    let data = await client.loadPage()
-
-    let [, init] = fetchMock.mock.calls[0] as [string, RequestInit]
-    let requestHeaders = new Headers(init.headers)
-    expect(data?.page.id).toBe('page-1')
-    expect(requestHeaders.has('x-weaverse-usage-source')).toBe(false)
-    expect(requestHeaders.has('authorization')).toBe(false)
-  })
-
-  it('should_not_authorize_live_usage_with_a_query_Studio_key', async () => {
-    let fetchMock = makeFetch(makePagePayload())
-    let client = createWeaverseNextServerClient({
-      components: [heroComponent],
-      projectId: 'proj-123',
-      env: {},
-      fetch: fetchMock,
-      requestContext: {
-        url: 'https://shop.example/?weaverseApiKey=query-studio-key',
-      },
-    })
-
-    await client.loadPage()
-
-    let [, init] = fetchMock.mock.calls[0] as [string, RequestInit]
-    let requestHeaders = new Headers(init.headers)
-    expect(requestHeaders.has('x-weaverse-usage-source')).toBe(false)
-    expect(requestHeaders.has('authorization')).toBe(false)
   })
 
   it('should_preserve_design_mode_draft_item_param_for_loader_revalidation', async () => {
@@ -351,7 +306,7 @@ describe('createWeaverseNextServerClient loadPage', () => {
     await client.loadPage()
 
     let [, init] = fetchMock.mock.calls[0] as [string, RequestInit]
-    expect(new Headers(init.headers).has('x-weaverse-usage-source')).toBe(false)
+    expect(new Headers(init.headers).has('x-weaverse-sdk-version')).toBe(false)
   })
 
   it('should_use_configured_next_revalidate_and_tags_in_published_mode', async () => {

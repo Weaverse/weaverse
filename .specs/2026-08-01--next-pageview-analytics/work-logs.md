@@ -58,3 +58,10 @@
 - Replaced source-text invariants with behavioral request-header regressions.
 - Coordinated release order is Builder, Queue resources/consumer, API worker producer, then SDK packages.
 - Reliability review replaced the proposed Durable Object flush with awaited Cloudflare Queue delivery, an edge usage worker consumer, and transactional Builder receipts. SDK marker behavior is unchanged.
+
+## 2026-08-12 — Simplified origin-execution contract
+
+- Replaced the new usage-source header with the existing `X-Weaverse-SDK-Version` header as a credential-free SDK-generation marker.
+- Removed Queue, receipt, authentication, and schema dependencies from the release contract.
+- Builder counts successful marked origin project API executions. API-worker cache hits count zero; retries that execute Builder more than once count each execution, so the metric is not described as unique visitors.
+- Final coordinated release order is Builder, then the Hydrogen and Next packages.
