@@ -464,14 +464,7 @@ class NextServerClient implements WeaverseNextServerClient {
         params,
         isDesignMode: this._baseConfigs.isDesignMode,
       }),
-      headers: {
-        ...JSON_HEADERS,
-        'X-Visitor-UA': userAgent,
-        ...(this._baseConfigs.isDesignMode ||
-        this._baseConfigs.isRevisionPreview
-          ? {}
-          : { 'X-Weaverse-SDK-Version': 'project-request-v1' }),
-      },
+      headers: { ...JSON_HEADERS, 'X-Visitor-UA': userAgent },
       ...(cache ?? {}),
     })
   }

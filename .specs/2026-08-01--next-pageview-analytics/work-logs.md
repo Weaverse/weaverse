@@ -65,3 +65,11 @@
 - Removed Queue, receipt, authentication, and schema dependencies from the release contract.
 - Builder counts successful marked origin project API executions. API-worker cache hits count zero; retries that execute Builder more than once count each execution, so the metric is not described as unique visitors.
 - Final coordinated release order is Builder, then the Hydrogen and Next packages.
+
+## 2026-08-12 — Final count-all contract
+
+- Removed SDK request-header metering changes; project API requests keep their established headers.
+- Builder counts every successful non-design origin project response against its resolved page ID.
+- `/api/public/px` remains response-compatible but no longer writes usage, so already-deployed SDKs cannot double-count.
+- New Hydrogen and Next releases still remove browser pixel transport.
+- Final coordinated release order remains Builder, then the Hydrogen and Next packages.

@@ -16,4 +16,4 @@
 
 ## Summary
 
-Corrected on 2026-08-12: new Hydrogen and Next releases remove browser `/api/public/px` calls and mark only live public project requests with `X-Weaverse-SDK-Version: project-request-v1`. Legacy releases remain unchanged. Builder counts successful marked origin project API executions; API-worker cache hits are not counted.
+Corrected on 2026-08-12: new Hydrogen and Next releases remove browser `/api/public/px` calls without changing the project API request contract. Builder counts every successful non-design origin project response, including requests from already-deployed SDKs, and the compatibility pixel endpoint no longer writes usage. API-worker cache hits remain unmetered because they do not reach Builder. Existing daily billing remains $1 per 5,000 requests.
