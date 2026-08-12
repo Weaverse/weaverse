@@ -525,7 +525,7 @@ export type WeaverseBlog = WeaverseResourcePickerData;
 export class WeaverseClient {
     constructor(args: WeaverseClientArgs);
     API: "v1";
-    basePageConfigs: Omit<WeaverseProjectConfigs, 'requestInfo'>;
+    basePageConfigs: Omit<WeaverseProjectConfigs, 'requestInfo' | 'usageApiKey'>;
     basePageRequestBody: Omit<FetchProjectRequestBody, 'url'>;
     cache: WeaverseClientArgs['cache'];
     components: WeaverseClientArgs['components'];
@@ -678,7 +678,7 @@ export type WeaverseInternal = {
 
 // @public
 export type WeaverseLoaderData = {
-    configs: Omit<WeaverseProjectConfigs, 'publicEnv'> & {
+    configs: Omit<WeaverseProjectConfigs, 'publicEnv' | 'usageApiKey'> & {
         requestInfo: WeaverseLoaderRequestInfo;
     };
     page: HydrogenPageData;
@@ -709,6 +709,7 @@ export type WeaverseProjectConfigs = {
     weaverseApiBase: string;
     weaversePublicApiBase?: string;
     weaverseApiKey: string;
+    usageApiKey: string;
     weaverseVersion?: string;
     isDesignMode?: boolean;
     isPreviewMode?: boolean;

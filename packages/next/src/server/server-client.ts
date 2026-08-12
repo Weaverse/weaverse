@@ -455,6 +455,23 @@ class NextServerClient implements WeaverseNextServerClient {
     let url = normalizeNextPageUrl(resolveRequestUrl(this.requestContext))
     let apiUrl = `${this._baseConfigs.weaverseApiBase}/api/public/project`
     let userAgent = this.requestContext?.headers?.get('user-agent') ?? ''
+    // Only live storefront reads are billable, and the marker is only trusted
+    // when signed with the environment credential. The event ID is minted once
+    // per load, so a transient retry reuses it and bills once.
+    let isMeteredRequest =
+      !(
+        this._baseConfigs.isDesignMode ||
+        this._baseConfigs.isPreviewMode ||
+        this._baseConfigs.isRevisionPreview
+      ) && Boolean(this._baseConfigs.usageApiKey)
+    let usageHeaders: Record<string, string> = isMeteredRequest
+      ? {
+          'X-Weaverse-Usage-Source': 'project-request-v1',
+          'X-Weaverse-Usage-Event-ID': crypto.randomUUID(),
+          Authorization: `Bearer ${this._baseConfigs.usageApiKey}`,
+        }
+      : {}
+
     return this.fetchWithCache<Record<string, unknown>>(apiUrl, {
       method: 'POST',
       body: JSON.stringify({
@@ -467,10 +484,7 @@ class NextServerClient implements WeaverseNextServerClient {
       headers: {
         ...JSON_HEADERS,
         'X-Visitor-UA': userAgent,
-        ...(this._baseConfigs.isDesignMode ||
-        this._baseConfigs.isRevisionPreview
-          ? {}
-          : { 'X-Weaverse-Usage-Source': 'project-request-v1' }),
+        ...usageHeaders,
       },
       ...(cache ?? {}),
     })

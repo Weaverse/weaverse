@@ -177,9 +177,15 @@ Dynamically route different requests to different Weaverse projects based on dom
 
 ```bash
 WEAVERSE_PROJECT_ID=default-project-abc123           # Fallback project
+WEAVERSE_API_KEY=shop-scoped-api-key                 # Required before enabling project-request-v1 metering
 WEAVERSE_PROJECT_SWEDEN=sweden-project-def456
 WEAVERSE_PROJECT_FRANCE=france-project-ghi789
 ```
+
+`WEAVERSE_API_KEY` is a rollout prerequisite for server-side project-request
+metering. Without it, live project requests remain functional but are sent
+without usage headers and are therefore not billed. Configure the shop-scoped
+key before deploying an SDK release that removes the legacy `/px` request.
 
 #### Use Case 1: Domain-Based Routing (Multi-Market)
 

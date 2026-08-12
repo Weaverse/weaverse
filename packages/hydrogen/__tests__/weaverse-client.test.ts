@@ -603,10 +603,14 @@ describe('loadPage X-Visitor-UA header forwarding', () => {
     expect(capturedHeaders?.get('x-visitor-ua')).toBe('')
   })
 
-  it('marks live public project requests for server usage metering', async () => {
+  it('authenticates live usage metering with the environment API key', async () => {
     let weaverse = new WeaverseClient({
       ...createMockContext({
         request: new Request('https://mystore.com/products/foo'),
+        env: {
+          WEAVERSE_PROJECT_ID: 'env-project-default',
+          WEAVERSE_API_KEY: 'env-usage-key',
+        },
       }),
       components: mockComponents,
       themeSchema: mockThemeSchema,
@@ -618,6 +622,100 @@ describe('loadPage X-Visitor-UA header forwarding', () => {
     expect(capturedHeaders?.get('x-weaverse-usage-source')).toBe(
       'project-request-v1'
     )
+    expect(capturedHeaders?.get('x-weaverse-usage-event-id')).toMatch(
+      /^[0-9a-f-]{36}$/
+    )
+    expect(capturedHeaders?.get('authorization')).toBe('Bearer env-usage-key')
+  })
+
+  it('reuses one usage event ID across a transient request retry', async () => {
+    let requestHeaders: Headers[] = []
+    fetchSpy.mockReset()
+    fetchSpy.mockImplementation(
+      async (_input: RequestInfo | URL, init?: RequestInit) => {
+        requestHeaders.push(new Headers(init?.headers as HeadersInit))
+        // First attempt fails transiently; the retry must carry the same event ID.
+        return requestHeaders.length === 1
+          ? new Response('upstream', { status: 503 })
+          : Response.json({
+              project: { id: 'p1', name: 'Test' },
+              page: null,
+              pageAssignment: null,
+            })
+      }
+    )
+    let weaverse = new WeaverseClient({
+      ...createMockContext({
+        request: new Request('https://mystore.com/products/foo'),
+        env: {
+          WEAVERSE_PROJECT_ID: 'env-project-default',
+          WEAVERSE_API_KEY: 'env-usage-key',
+          WEAVERSE_PUBLIC_API_BASE: 'https://api.weaverse.io',
+        },
+      }),
+      components: mockComponents,
+      themeSchema: mockThemeSchema,
+      projectId: 'test-project-123',
+    })
+
+    await weaverse.loadPage()
+
+    expect(requestHeaders).toHaveLength(2)
+    expect(requestHeaders[0]?.get('x-weaverse-usage-event-id')).toBe(
+      requestHeaders[1]?.get('x-weaverse-usage-event-id')
+    )
+  })
+
+  it('keeps live project requests unmarked when the environment API key is missing', async () => {
+    fetchSpy.mockImplementationOnce(
+      async (_input: RequestInfo | URL, init?: RequestInit) => {
+        capturedHeaders = new Headers(init?.headers as HeadersInit)
+        return Response.json({
+          project: { id: 'p1', name: 'Test' },
+          page: {
+            id: 'page-1',
+            rootId: 'root-1',
+            name: 'Home',
+            items: [],
+          },
+          pageAssignment: {},
+        })
+      }
+    )
+    let weaverse = new WeaverseClient({
+      ...createMockContext({
+        request: new Request('https://mystore.com/products/foo'),
+        env: { WEAVERSE_PROJECT_ID: 'env-project-default' },
+      }),
+      components: mockComponents,
+      themeSchema: mockThemeSchema,
+      projectId: 'test-project-123',
+    })
+
+    let data = await weaverse.loadPage()
+
+    expect(data?.project.id).toBe('p1')
+    expect(capturedHeaders?.has('x-weaverse-usage-source')).toBe(false)
+    expect(capturedHeaders?.has('authorization')).toBe(false)
+  })
+
+  it('does not authorize live usage with a query-supplied Studio key', async () => {
+    let weaverse = new WeaverseClient({
+      ...createMockContext({
+        request: new Request(
+          'https://mystore.com/products/foo?weaverseApiKey=query-studio-key'
+        ),
+        env: { WEAVERSE_PROJECT_ID: 'env-project-default' },
+      }),
+      components: mockComponents,
+      themeSchema: mockThemeSchema,
+      projectId: 'test-project-123',
+    })
+
+    await weaverse.loadPage().catch(() => {})
+
+    expect(capturedHeaders?.has('x-weaverse-usage-source')).toBe(false)
+    expect(capturedHeaders?.has('authorization')).toBe(false)
   })
 
   it.each([

@@ -125,6 +125,9 @@ export function getWeaverseConfigs(
 
   let url = new URL(request.url)
   let isRevisionPreview = url.searchParams.has('__revisionId')
+  // Environment-only credential: never sourced from the request URL, so a
+  // query-supplied Studio key can't authenticate metered storefront traffic.
+  let envApiKey = WEAVERSE_API_KEY || envFromProcess.WEAVERSE_API_KEY || ''
   let configuredWeaverseHost = WEAVERSE_HOST || envFromProcess.WEAVERSE_HOST
   // `weaverseHost` arrives from the request URL (Studio drives the preview
   // iframe with it), so it is attacker-controllable; only honor it when it is a
@@ -158,11 +161,8 @@ export function getWeaverseConfigs(
     weaverseHost: resolvedWeaverseHost,
     weaverseApiBase: resolvedWeaverseApiBase,
     weaversePublicApiBase: resolvedWeaverseApiBase,
-    weaverseApiKey:
-      weaverseApiKey ||
-      WEAVERSE_API_KEY ||
-      envFromProcess.WEAVERSE_API_KEY ||
-      '',
+    weaverseApiKey: weaverseApiKey || envApiKey,
+    usageApiKey: envApiKey,
     weaverseVersion: weaverseVersion || '',
     isDesignMode,
     isPreviewMode,

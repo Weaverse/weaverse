@@ -603,6 +603,8 @@ export interface WeaverseNextBaseConfigs {
   queryProjectId: string
   /** Component type requested for section preview mode. */
   sectionType: string
+  /** Environment-only credential used to authenticate live usage requests. */
+  usageApiKey: string
   /** Base URL used for public Weaverse data requests. */
   weaverseApiBase: string
   /** Server-only API key read from the request or environment. */
