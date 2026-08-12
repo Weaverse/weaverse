@@ -7,7 +7,6 @@ import {
   useMemo,
   useRef,
 } from 'react'
-import { WeaverseNextPageviewTracker } from './pageview-tracker'
 import {
   getSchemaStaticContent,
   WeaverseNextContext,
@@ -168,9 +167,6 @@ export function WeaverseNextRootProvider(props: WeaverseNextRootProviderProps) {
   return (
     <WeaverseNextRootContext.Provider value={rootContextValue}>
       <WeaverseNextContext.Provider value={contextValue}>
-        {/* Observes navigations on routes that render no Weaverse page, so a
-            detour (cart, search, account) and back counts as a real revisit. */}
-        <WeaverseNextPageviewTracker runtime={null} />
         <TranslationProvider
           merchantOverrides={merchantOverrides}
           staticContent={resolvedStaticContent}
