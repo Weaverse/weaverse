@@ -1,5 +1,7 @@
 # AGENTS.md - Weaverse SDKs Development Guide
 
+> **Canonical agent instructions:** `AGENTS.md` is the source of truth and may always be updated. Root `CLAUDE.md` is a relative symlink to it and must never become a separate copy. Push completed instruction changes to the repository's default branch.
+
 ## Project Overview
 
 Monorepo of SDKs for integrating React/JamStack frameworks (Shopify Hydrogen, React Router, Next.js) with the Weaverse Headless CMS. Provides visual page building, theme customization, and content management through a drag-and-drop editor.
