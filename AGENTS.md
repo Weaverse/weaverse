@@ -357,9 +357,11 @@ All features MUST have a spec folder in `.specs/` at the repo root:
 ```
 
 **Rules**:
-1. New feature? Create spec folder before writing code
-2. Existing feature? Read spec first; update if scope changes
-3. Plans live **only** in `.specs/<feature>/plan.md` — do NOT put them in `.plan/`, `docs/plans/`, or any other location
+1. Search existing specs and issue links before creating anything
+2. Update the closest existing spec; merge specs that share one user outcome and implementation boundary
+3. Create a new spec only for genuinely independent work
+4. On update or merge, move the folder to the current date, preserve `Created`, refresh `Last Updated`, and update repository-wide backlinks
+5. Plans live **only** in `.specs/<feature>/plan.md` — do NOT put them in `.plan/`, `docs/plans/`, or any other location
 
 ## Common Pitfalls
 

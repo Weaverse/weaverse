@@ -21,7 +21,7 @@ All specs live in a specs folder. The path can be configured in your project's `
 Specs are located at: `docs/specs/`
 ```
 
-Each feature gets its own subfolder inside the specs directory.
+Each feature has one canonical subfolder inside the specs directory.
 
 ### Folder Naming Pattern
 
@@ -29,9 +29,10 @@ Each feature gets its own subfolder inside the specs directory.
 {YYYY-MM-DD}--{kebab-case-title}
 ```
 
-- `YYYY-MM-DD`: creation date (ISO format), fixed at the time the spec was created
-- `title`: kebab-case feature name
+- `YYYY-MM-DD`: latest update date (ISO format); refresh it whenever the spec is updated or merged
+- `title`: stable kebab-case feature name; broaden it only when merged scope makes the old title misleading
 - Separators: double dashes `--`
+- Rename with `git mv`, then update every repository backlink in the same change
 
 Examples:
 
@@ -68,9 +69,10 @@ MUST contain:
 
 - **Status**: one of `draft`, `in-progress`, `completed`, `on-hold`, `deprecated`
 - **Owner**: who is responsible for this feature
-- **Created**: creation date (same as folder name)
-- **Last Updated**: date of last modification
+- **Created**: original creation date; preserve it when the folder date changes
+- **Last Updated**: date of the latest update; MUST match the date in the current folder name
 - **Original prompt/requirement**: the exact prompt or requirement that initiated this feature. This is the most important field in the entire spec. It preserves original intent. MUST NOT be edited or paraphrased. **It MUST be written in English** — if the prompt was given in another language (e.g. Vietnamese), translate it faithfully to English without changing the meaning, intent, or scope.
+- **Merged prompts/requirements**: preserve each additional exact prompt in a dated `Scope Updates` section; never replace the original prompt
 - **Summary**: 2-3 sentences max describing what this feature does and why it exists
 
 Template:
@@ -157,5 +159,7 @@ Append-only format:
 
 ## Rules
 
-1. **New feature?** Create a spec folder following the convention above before writing any code.
-2. **Existing feature?** Read the spec first. Update it if your changes affect the plan, status, or scope.
+1. **Search before creating.** Check spec content, issue links, the user outcome, and the affected package or system boundary.
+2. **Existing or overlapping work?** Update the closest canonical spec. Merge specs when they describe the same user outcome and implementation boundary, preserving every original prompt, unique decision, and work-log entry.
+3. **Create only when independent.** A new folder is justified only when no existing spec can absorb the work without mixing separate outcomes.
+4. **Refresh the path on update.** Move the canonical folder to `.specs/<current-YYYY-MM-DD>--<title>/`, preserve `Created`, set `Last Updated`, and update repository-wide backlinks.
