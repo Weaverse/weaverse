@@ -390,6 +390,24 @@ export type HydrogenThemeSchema = {
   }
   /** @deprecated Use settings instead. */
   inspector?: InspectorGroup[]
+  /**
+   * Store-wide defaults for the Media Manager gallery.
+   *
+   * Deliberately a sibling of `settings` rather than an entry inside it:
+   * `settings` renders as merchant-editable controls in Studio, and these
+   * rules are meant to be fixed by the theme author. An individual `image` or
+   * `video` input can still override them through its own `configs`.
+   */
+  media?: {
+    /** Filename prefixes hidden from the Media Manager gallery. */
+    excludeFilenamePrefixes?: string[]
+    /**
+     * Hide files currently used in products. Matches on usage rather than
+     * origin, so a file uploaded to Files and later attached to a product is
+     * hidden too.
+     */
+    excludeProductFiles?: boolean
+  }
   /** Groups of global theme settings exposed in Studio. */
   settings?: InspectorGroup[]
   /** Theme localization configuration. */
