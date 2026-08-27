@@ -106,7 +106,7 @@ export interface ComponentValidationOptions {
 }
 
 // @public
-export type ConfigsProps = SelectInputConfigs | ToggleGroupConfigs | RangeInputConfigs;
+export type ConfigsProps = SelectInputConfigs | ToggleGroupConfigs | RangeInputConfigs | MediaInputConfigs;
 
 // @public
 export const ConfigsPropsSchema: z.ZodUnion<readonly [z.ZodObject<{
@@ -125,6 +125,9 @@ export const ConfigsPropsSchema: z.ZodUnion<readonly [z.ZodObject<{
     max: z.ZodOptional<z.ZodNumber>;
     step: z.ZodOptional<z.ZodNumber>;
     unit: z.ZodOptional<z.ZodString>;
+}, z.core.$strip>, z.ZodObject<{
+    excludeFilenamePrefixes: z.ZodOptional<z.ZodArray<z.ZodString>>;
+    excludeProductFiles: z.ZodOptional<z.ZodBoolean>;
 }, z.core.$strip>]>;
 
 // @public
@@ -303,6 +306,18 @@ export interface InvalidComponentResult {
 
 // @public
 export function isValidSchema(schema: unknown): schema is SchemaType;
+
+// @public
+export interface MediaInputConfigs {
+    excludeFilenamePrefixes?: string[];
+    excludeProductFiles?: boolean;
+}
+
+// @public
+export const MediaInputConfigsSchema: z.ZodObject<{
+    excludeFilenamePrefixes: z.ZodOptional<z.ZodArray<z.ZodString>>;
+    excludeProductFiles: z.ZodOptional<z.ZodBoolean>;
+}, z.core.$strip>;
 
 // @public
 export function mergeSchemas(base: SchemaType, ...overrides: Partial<SchemaType>[]): SchemaType;
