@@ -470,6 +470,25 @@ describe('WeaverseClient Multi-Project Architecture', () => {
     })
   })
 
+  it('should not log request query when page loading fails', async () => {
+    let weaverse = new WeaverseClient({
+      ...mockContext,
+      request: new Request(
+        'https://test-store.myshopify.com?weaverseDraftToken=must-not-log'
+      ),
+      components: mockComponents,
+      themeSchema: mockThemeSchema,
+      projectId: 'test-project',
+    })
+    spyOn(weaverse, 'fetchWithCache').mockRejectedValue(new Error('failed'))
+
+    await weaverse.loadPage()
+
+    expect(JSON.stringify(consoleErrorSpy.mock.calls)).not.toContain(
+      'must-not-log'
+    )
+  })
+
   describe('T033: Handle Empty Items', () => {
     it('should add default main component when items array is empty', async () => {
       let weaverse = new WeaverseClient({
