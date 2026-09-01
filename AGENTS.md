@@ -353,10 +353,11 @@ Uses a Claude Code skill (`.claude/skills/releasing-weaverse-sdks/SKILL.md`) for
 All features MUST have a spec folder in `.specs/` at the repo root:
 ```
 .specs/YYYY-MM-DD--feature-name/
-├── README.md      # Status, owner, issue, git-branch, original prompt, summary
+├── README.md      # Status, owner, issue, git branch, initiating requirement, summary
 ├── plan.md        # Under 500 lines, includes touched files/packages list
 └── work-logs.md   # Optional, append-only
 ```
+The README's `Initiating Requirement` MUST be a concise, self-contained, professionally revised account of the substantive requirement, not raw chat. Read any local brief, attachment, or file path and inline its requirement; a machine-local path alone is never requirement content. Remove conversational scaffolding, agent orchestration chatter, machine-specific paths, credentials, and irrelevant prose while preserving all substantive constraints, identifiers, commands, literal values, acceptance conditions, and externally meaningful branch, base, and head identifiers exactly. Add later user intent as dated, similarly revised `Scope Updates`. A contributor MUST be able to understand the spec without the original chat, private file, or author's machine. Apply this convention to new and touched specs; do not bulk-migrate historical specs.
 
 **Rules**:
 1. Search existing specs and issue links before creating anything
