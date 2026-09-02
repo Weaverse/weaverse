@@ -71,11 +71,18 @@ export const RangeInputConfigsSchema = z.object({
   unit: z.string().optional(),
 })
 
+/** Runtime validator for media picker configuration. */
+export const MediaInputConfigsSchema = z.object({
+  excludeFilenamePrefixes: z.array(z.string()).optional(),
+  excludeProductFiles: z.boolean().optional(),
+})
+
 /** Runtime validator for input-specific configuration. */
 export const ConfigsPropsSchema = z.union([
   SelectInputConfigsSchema,
   ToggleGroupConfigsSchema,
   RangeInputConfigsSchema,
+  MediaInputConfigsSchema,
 ])
 
 /** Runtime validator for configurable Studio inputs. */
@@ -145,6 +152,13 @@ export const BasicInputSchema = z
           break
         case 'range':
           configsSchema = RangeInputConfigsSchema
+          break
+        // Validated so a mistyped exclusion (a bare string instead of an
+        // array) surfaces here rather than silently disabling filtering in
+        // Studio, where the theme author has no UI to discover the mistake.
+        case 'image':
+        case 'video':
+          configsSchema = MediaInputConfigsSchema
           break
         default:
           // For other input types, configs should be undefined or allow any structure
@@ -417,11 +431,31 @@ export interface RangeInputConfigs {
   unit?: string
 }
 
+/**
+ * Configuration for the `image` and `video` media pickers.
+ *
+ * Also accepted as `media` on `HydrogenThemeSchema`, where it sets the
+ * store-wide default. A value declared here overrides the theme's value for
+ * this input only, field by field: an omitted field inherits the theme's,
+ * while `excludeFilenamePrefixes: []` deliberately shows every file.
+ */
+export interface MediaInputConfigs {
+  /** Filename prefixes hidden from the Media Manager gallery. */
+  excludeFilenamePrefixes?: string[]
+  /**
+   * Hide files currently used in products. Matches on usage rather than
+   * origin, so a file uploaded to Files and later attached to a product is
+   * hidden too.
+   */
+  excludeProductFiles?: boolean
+}
+
 /** Input-specific configuration accepted by Studio controls. */
 export type ConfigsProps =
   | SelectInputConfigs
   | ToggleGroupConfigs
   | RangeInputConfigs
+  | MediaInputConfigs
 
 /** A configurable component property shown in Weaverse Studio. */
 export interface BasicInput {

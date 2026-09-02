@@ -28,6 +28,31 @@ The package supports the following input types:
   dot-notation key into the theme's `i18n.staticContent` (e.g. `cart.title`), not a
   component prop; values are stored per locale and read back with `t('cart.title')`.
 
+### Media picker configuration
+
+`image` and `video` inputs accept `MediaInputConfigs` to filter what the Media
+Manager gallery shows:
+
+```typescript
+{
+  type: 'image',
+  name: 'heroImage',
+  label: 'Hero image',
+  configs: {
+    excludeFilenamePrefixes: ['thumb_v'],
+    excludeProductFiles: true,
+  },
+}
+```
+
+The same shape is accepted as `media` on `HydrogenThemeSchema`, where it applies
+to every picker in the theme. An input's `configs` overrides the theme value
+field by field: an omitted field inherits the theme's, while
+`excludeFilenamePrefixes: []` deliberately shows every file.
+
+`excludeProductFiles` matches on usage rather than origin — a file uploaded to
+Shopify Files and later attached to a product is hidden too.
+
 ### Core Schemas
 
 ```typescript
