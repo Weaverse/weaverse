@@ -442,11 +442,7 @@ export interface RangeInputConfigs {
 export interface MediaInputConfigs {
   /** Filename prefixes hidden from the Media Manager gallery. */
   excludeFilenamePrefixes?: string[]
-  /**
-   * Hide files currently used in products. Matches on usage rather than
-   * origin, so a file uploaded to Files and later attached to a product is
-   * hidden too.
-   */
+  /** Hide files used in products. Matches usage, not origin. */
   excludeProductFiles?: boolean
 }
 
