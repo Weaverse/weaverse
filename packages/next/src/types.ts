@@ -557,8 +557,8 @@ export interface WeaverseNextFetchOptions extends RequestInit {
 
 /**
  * Public, client-safe Weaverse config bundle. Mirrors Hydrogen's
- * `WeaverseProjectConfigs` minus server secrets — `weaverseApiKey` is never
- * included so it cannot leak into serialized loader data.
+ * `WeaverseProjectConfigs`, restricted to the fields that are safe to serialize
+ * into loader data.
  */
 export interface WeaverseNextConfigs {
   /** Whether the request is rendered inside Builder Studio. */
@@ -584,9 +584,9 @@ export interface WeaverseNextConfigs {
 }
 
 /**
- * Resolved base configs derived from request context + env. Includes the
- * server-only `weaverseApiKey`, so this stays internal to the server client and
- * is never serialized into loader data.
+ * Resolved base configs derived from request context + env. Internal to the
+ * server client; the client-facing subset is built explicitly by
+ * `_buildPublicConfigs` and never includes anything beyond it.
  */
 export interface WeaverseNextBaseConfigs {
   /** Project ID read from `WEAVERSE_PROJECT_ID`. */
@@ -605,8 +605,6 @@ export interface WeaverseNextBaseConfigs {
   sectionType: string
   /** Base URL used for public Weaverse data requests. */
   weaverseApiBase: string
-  /** Server-only API key read from the request or environment. */
-  weaverseApiKey: string
   /** Trusted Studio origin. */
   weaverseHost: string
   /** Studio asset version requested by Builder. */

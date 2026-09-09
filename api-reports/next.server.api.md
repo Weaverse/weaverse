@@ -59,7 +59,6 @@ export interface WeaverseNextBaseConfigs {
     queryProjectId: string;
     sectionType: string;
     weaverseApiBase: string;
-    weaverseApiKey: string;
     weaverseHost: string;
     weaverseVersion: string;
 }

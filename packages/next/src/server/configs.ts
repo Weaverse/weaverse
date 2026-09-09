@@ -160,10 +160,6 @@ export function getWeaverseNextConfigs(
     envProjectId: readEnv(env, 'WEAVERSE_PROJECT_ID') || '',
     weaverseHost,
     weaverseApiBase,
-    weaverseApiKey:
-      lastParam(searchParams, 'weaverseApiKey') ||
-      readEnv(env, 'WEAVERSE_API_KEY') ||
-      '',
     weaverseVersion:
       lastParam(searchParams, 'weaverseVersion') ||
       options.weaverseVersion ||
