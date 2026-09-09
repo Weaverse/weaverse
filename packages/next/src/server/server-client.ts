@@ -1,3 +1,4 @@
+import type { SchemaType } from '@weaverse/schema'
 import { runWeaverseComponentLoaders } from '../loader'
 import { buildWeaverseNextRequestInfo } from '../request-info'
 import type {
@@ -105,7 +106,7 @@ class NextServerClient implements WeaverseNextServerClient {
   components: WeaverseNextComponent[]
   commerce?: WeaverseNextCommerceContext
   requestContext?: WeaverseNextRequestContext
-  themeSchema?: WeaverseNextThemeSchema
+  themeSchema?: SchemaType | WeaverseNextThemeSchema
   themeSettings: Record<string, unknown>
   data: WeaverseNextLoaderData | null = null
   dataContext: Record<string, unknown> = {}

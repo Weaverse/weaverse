@@ -1,5 +1,6 @@
 'use client'
 
+import type { SchemaType } from '@weaverse/schema'
 import {
   createContext,
   type ReactNode,
@@ -60,7 +61,7 @@ export interface WeaverseNextRootProviderProps {
   /** Optional external translation function (host i18n); highest priority in `t()`. */
   t?: TranslateFunction
   /** Theme schema associated with the initial settings. */
-  themeSchema?: WeaverseNextThemeSchema
+  themeSchema?: SchemaType | WeaverseNextThemeSchema
 }
 
 /**
