@@ -66,7 +66,7 @@ export function createWeaverseNextThemeSettingsStore(options?: CreateWeaverseNex
 // @public
 export interface CreateWeaverseNextThemeSettingsStoreOptions {
     publicEnv?: Record<string, string | undefined>;
-    schema?: WeaverseNextThemeSchema;
+    schema?: SchemaType | WeaverseNextThemeSchema;
     settings?: Record<string, unknown>;
 }
 
@@ -245,7 +245,7 @@ export interface WeaverseNextClient {
     projectId: string;
     requestContext?: WeaverseNextRequestContext;
     storefront?: WeaverseNextStorefront;
-    themeSchema?: WeaverseNextThemeSchema;
+    themeSchema?: SchemaType | WeaverseNextThemeSchema;
     themeSettings: Record<string, unknown>;
 }
 
@@ -257,7 +257,7 @@ export interface WeaverseNextClientConfig {
     fetchThemeSettings?: (context?: WeaverseNextRequestContext) => Promise<unknown>;
     projectId: string;
     requestContext?: WeaverseNextRequestContext;
-    themeSchema?: WeaverseNextThemeSchema;
+    themeSchema?: SchemaType | WeaverseNextThemeSchema;
     themeSettings?: Record<string, unknown>;
 }
 
@@ -464,7 +464,7 @@ export interface WeaverseNextRootProviderProps {
     publicEnv?: Record<string, string | undefined>;
     staticContent?: Record<string, unknown>;
     t?: TranslateFunction;
-    themeSchema?: WeaverseNextThemeSchema;
+    themeSchema?: SchemaType | WeaverseNextThemeSchema;
 }
 
 // @public
@@ -639,7 +639,7 @@ export interface WeaverseNextThemeSettingsStore {
     getServerSnapshot: () => Record<string, unknown>;
     getSnapshot: () => Record<string, unknown>;
     publicEnv?: Record<string, string | undefined>;
-    schema?: WeaverseNextThemeSchema;
+    schema?: SchemaType | WeaverseNextThemeSchema;
     settings: Record<string, unknown>;
     subscribe: (listener: () => void) => () => void;
     updateThemeSettings: (next: Record<string, unknown>) => void;

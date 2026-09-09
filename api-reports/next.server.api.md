@@ -80,7 +80,7 @@ export interface WeaverseNextClient {
     projectId: string;
     requestContext?: WeaverseNextRequestContext;
     storefront?: WeaverseNextStorefront;
-    themeSchema?: WeaverseNextThemeSchema;
+    themeSchema?: SchemaType | WeaverseNextThemeSchema;
     themeSettings: Record<string, unknown>;
 }
 
@@ -302,7 +302,7 @@ export interface WeaverseNextServerClientConfig {
     fetchTimeoutMs?: number;
     projectId?: WeaverseNextProjectId;
     requestContext?: WeaverseNextRequestContext;
-    themeSchema?: WeaverseNextThemeSchema;
+    themeSchema?: SchemaType | WeaverseNextThemeSchema;
     themeSettings?: Record<string, unknown>;
     weaverseApiBase?: string;
     weaverseHost?: string;
@@ -373,7 +373,7 @@ export interface WeaverseNextThemeSettingsResponse {
     _loadFailed?: boolean;
     merchantOverrides?: Record<string, unknown>;
     publicEnv?: Record<string, string | undefined>;
-    schema?: WeaverseNextThemeSchema;
+    schema?: SchemaType | WeaverseNextThemeSchema;
     staticContent?: Record<string, unknown>;
     theme?: Record<string, unknown>;
 }
