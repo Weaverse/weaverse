@@ -45,30 +45,7 @@ Implementation lives in [`src/server/server-client.ts`](./src/server/server-clie
 - forces `no-store` for design/revision preview reads;
 - returns safe client-facing configs including `requestInfo`.
 
-### 3. Is the POC bootstrapped from Shopify's Hydrogen preview docs?
-
-Yes. The POC started as a Next App Router app plus Shopify Hydrogen preview setup:
-
-```bash
-npx create-next-app@latest weaverse-hydrogen-next-poc --ts --app --eslint --tailwind --no-src-dir --import-alias "@/*" --use-npm --yes
-npx @shopify/hydrogen@preview setup
-```
-
-See the POC findings doc:
-
-- https://github.com/Weaverse/weaverse-hydrogen-next-poc/blob/main/findings.md
-
-### 4. Where does the POC load page + Weaverse data?
-
-Reference POC files:
-
-- Server client helper: https://github.com/Weaverse/weaverse-hydrogen-next-poc/blob/main/app/weaverse-next/server.ts
-- Home route load: https://github.com/Weaverse/weaverse-hydrogen-next-poc/blob/main/app/page.tsx
-- Product route load: https://github.com/Weaverse/weaverse-hydrogen-next-poc/blob/main/app/products/%5Bhandle%5D/page.tsx
-- Collection route load: https://github.com/Weaverse/weaverse-hydrogen-next-poc/blob/main/app/collections/%5Bhandle%5D/page.tsx
-- Client wrapper/renderer: https://github.com/Weaverse/weaverse-hydrogen-next-poc/blob/main/app/weaverse-next/wrapper.tsx
-- Studio script connector: https://github.com/Weaverse/weaverse-hydrogen-next-poc/blob/main/app/weaverse-next/studio-connect.tsx
-- Per-item revalidation route: https://github.com/Weaverse/weaverse-hydrogen-next-poc/blob/main/app/api/weaverse/revalidate/route.ts
+### 3. Where does a route load page + Weaverse data?
 
 The route pattern is:
 
@@ -85,13 +62,13 @@ export default async function Home(props: {
 }
 ```
 
-### 5. Is there a global app load context like Hydrogen/Pilot?
+### 4. Is there a global app load context like Hydrogen/Pilot?
 
 Not automatically from the framework.
 
 Hydrogen/React Router injects `context.weaverse` into route loaders. Next App Router does not have that loader-context mechanism. The Next equivalent is a small app-owned server helper that creates the request-scoped Weaverse server client at the route boundary.
 
-In the POC that helper is `getWeaverseServerClient(...)` in `app/weaverse-next/server.ts`. It plays the same role as Hydrogen's global load context, but explicitly:
+Name it whatever you like — `getWeaverseServerClient(...)` in `app/weaverse-next/server.ts` below. It plays the same role as Hydrogen's global load context, but explicitly:
 
 ```ts
 let weaverse = await getWeaverseServerClient(searchParams, pathname)
@@ -628,28 +605,6 @@ Server config resolution intentionally mirrors Hydrogen where possible:
 - `weaverseHost`: trusted `?weaverseHost=` over `https://*.weaverse.io` / `https://*.weaverse.dev` → `WEAVERSE_HOST` → `https://studio.weaverse.io`.
 - API base: trusted request host → `WEAVERSE_PUBLIC_API_BASE` → non-production `WEAVERSE_HOST` → `https://api.weaverse.io`.
 - public env: `PUBLIC_STORE_DOMAIN`, `PUBLIC_STOREFRONT_API_TOKEN`.
-
-## POC reference
-
-Live POC:
-
-- https://weaverse-hydrogen-next-poc.vercel.app
-
-Repo:
-
-- https://github.com/Weaverse/weaverse-hydrogen-next-poc
-
-Important POC paths:
-
-```text
-app/weaverse-next/server.ts                  # explicit Next server context helper
-app/weaverse-next/wrapper.tsx                # client provider + renderer
-app/weaverse-next/studio-connect.tsx         # root Studio script connector
-app/api/weaverse/revalidate/route.ts         # per-item loader revalidation route
-app/page.tsx                                 # home page Weaverse load
-app/products/[handle]/page.tsx               # product route Weaverse load
-app/collections/[handle]/page.tsx            # collection route Weaverse load
-```
 
 ## Alpha migration notes
 
