@@ -16,7 +16,7 @@ Release ritual for the `@weaverse/*` npm packages monorepo. Covers version bump,
 - **Publish command:** `npm publish` (from individual package directories)
 - **Fixed version group:** core, react, hydrogen (always same version)
 - **Independent packages:** schema, cli, biome, i18n, next (each has own version)
-- **Next prereleases:** use exact prerelease versions, publish with npm dist-tag `alpha`, create `@weaverse/next@{VERSION}` tags and GitHub prereleases, and never move `latest`
+- **Next prereleases:** use exact prerelease versions, publish with npm dist-tag `alpha`, move `latest` to the version just published, and create `@weaverse/next@{VERSION}` tags and GitHub prereleases
 - **Never release:** remix (placeholder), shopify (archived)
 - **Tag format:** `v{VERSION}` for fixed group, `@weaverse/{pkg}@{VERSION}` for independents
 - **Internal deps use exact version pins** (e.g., `"@weaverse/core": "5.9.3"`)
@@ -68,7 +68,10 @@ A Next prerelease is version-only and does not use the bootstrap-publish orderin
    git commit -m "Release @weaverse/next $NEW_VERSION"
    git push origin main
    ```
-5. Publish with `npm publish --tag alpha`. Do not move `latest`.
+5. Publish with `npm publish --tag alpha`, then point `latest` at the same version:
+   ```bash
+   npm dist-tag add @weaverse/next@$NEW_VERSION latest
+   ```
 6. Create and push an annotated `@weaverse/next@$NEW_VERSION` tag, then create a GitHub prerelease from that tag.
 7. Verify npm dist-tags, the registry tarball/package version, tag target, GitHub prerelease metadata, and release CI.
 
@@ -188,9 +191,12 @@ For independent packages other than Next:
 cd packages/$PKG && npm publish && cd ../..
 ```
 
-For a Next prerelease, keep `latest` unchanged:
+For a Next prerelease, publish under `alpha` and move `latest` to it, so
+`npm i @weaverse/next` resolves to the newest release rather than a stale one:
 ```bash
-cd packages/next && npm publish --tag alpha && cd ../..
+cd packages/next && npm publish --tag alpha
+npm dist-tag add @weaverse/next@$NEW_VERSION latest
+cd ../..
 ```
 
 Verify each publish succeeds before continuing to the next. If one fails,
