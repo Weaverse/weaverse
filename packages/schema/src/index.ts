@@ -436,7 +436,6 @@ export {
   InspectorGroupSchema,
   inputTypeSchema,
   isValidSchema,
-  MediaInputConfigsSchema,
   PageTypeSchema,
   parseSchema,
   RangeInputConfigsSchema,

@@ -314,12 +314,6 @@ export interface MediaInputConfigs {
 }
 
 // @public
-export const MediaInputConfigsSchema: z.ZodObject<{
-    excludeFilenamePrefixes: z.ZodOptional<z.ZodArray<z.ZodString>>;
-    excludeProductFiles: z.ZodOptional<z.ZodBoolean>;
-}, z.core.$strip>;
-
-// @public
 export function mergeSchemas(base: SchemaType, ...overrides: Partial<SchemaType>[]): SchemaType;
 
 // @public

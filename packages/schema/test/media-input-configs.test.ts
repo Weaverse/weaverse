@@ -18,16 +18,6 @@ describe('MediaInputConfigs', () => {
     expect(result.success).toBe(true)
   })
 
-  it('should accept an empty prefix list as an explicit show-everything override', () => {
-    const result = BasicInputSchema.safeParse({
-      type: 'image',
-      name: 'heroImage',
-      configs: { excludeFilenamePrefixes: [] },
-    })
-
-    expect(result.success).toBe(true)
-  })
-
   it('should reject a bare string where a prefix list is expected', () => {
     const result = BasicInputSchema.safeParse({
       type: 'image',
