@@ -1,3 +1,4 @@
+import type { SchemaType } from '@weaverse/schema'
 import type {
   WeaverseNextThemeSchema,
   WeaverseNextThemeSettingsStore,
@@ -8,7 +9,7 @@ export interface CreateWeaverseNextThemeSettingsStoreOptions {
   /** Public environment values exposed alongside the store. */
   publicEnv?: Record<string, string | undefined>
   /** Theme schema associated with the settings. */
-  schema?: WeaverseNextThemeSchema
+  schema?: SchemaType | WeaverseNextThemeSchema
   /** Initial setting values. */
   settings?: Record<string, unknown>
 }
