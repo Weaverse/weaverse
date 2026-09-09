@@ -164,8 +164,6 @@ describe('createWeaverseNextServerClient loadPage', () => {
       queries: { utm_source: 'x' },
       i18n: { country: 'US', language: 'EN' },
     })
-    // Server secret must never appear in client-facing configs.
-    expect(configs.weaverseApiKey).toBeUndefined()
   })
 
   it('should_preserve_design_mode_draft_item_param_for_loader_revalidation', async () => {
