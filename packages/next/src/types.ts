@@ -36,7 +36,7 @@ export interface WeaverseNextThemeSettingsStore {
   /** Public environment values exposed with the theme settings. */
   publicEnv?: Record<string, string | undefined>
   /** Theme schema associated with this store. */
-  schema?: WeaverseNextThemeSchema
+  schema?: SchemaType | WeaverseNextThemeSchema
   /** Current merged theme-setting values. */
   settings: Record<string, unknown>
   /** Subscribe to setting changes and return an unsubscribe function. */
@@ -474,7 +474,7 @@ export interface WeaverseNextClientConfig {
   /** Request metadata passed to component loaders and the runtime. */
   requestContext?: WeaverseNextRequestContext
   /** Theme schema used to derive default settings. */
-  themeSchema?: WeaverseNextThemeSchema
+  themeSchema?: SchemaType | WeaverseNextThemeSchema
   /** Merchant theme settings merged over schema defaults. */
   themeSettings?: Record<string, unknown>
 }
@@ -506,7 +506,7 @@ export interface WeaverseNextClient {
   /** Compatibility alias for `commerce.storefront`. */
   storefront?: WeaverseNextStorefront
   /** Theme schema used by the current project. */
-  themeSchema?: WeaverseNextThemeSchema
+  themeSchema?: SchemaType | WeaverseNextThemeSchema
   /** Theme settings with schema defaults applied. */
   themeSettings: Record<string, unknown>
 }
@@ -557,8 +557,8 @@ export interface WeaverseNextFetchOptions extends RequestInit {
 
 /**
  * Public, client-safe Weaverse config bundle. Mirrors Hydrogen's
- * `WeaverseProjectConfigs` minus server secrets — `weaverseApiKey` is never
- * included so it cannot leak into serialized loader data.
+ * `WeaverseProjectConfigs`, restricted to the fields that are safe to serialize
+ * into loader data.
  */
 export interface WeaverseNextConfigs {
   /** Whether the request is rendered inside Builder Studio. */
@@ -584,9 +584,9 @@ export interface WeaverseNextConfigs {
 }
 
 /**
- * Resolved base configs derived from request context + env. Includes the
- * server-only `weaverseApiKey`, so this stays internal to the server client and
- * is never serialized into loader data.
+ * Resolved base configs derived from request context + env. Internal to the
+ * server client; the client-facing subset is built explicitly by
+ * `_buildPublicConfigs` and never includes anything beyond it.
  */
 export interface WeaverseNextBaseConfigs {
   /** Project ID read from `WEAVERSE_PROJECT_ID`. */
@@ -605,8 +605,6 @@ export interface WeaverseNextBaseConfigs {
   sectionType: string
   /** Base URL used for public Weaverse data requests. */
   weaverseApiBase: string
-  /** Server-only API key read from the request or environment. */
-  weaverseApiKey: string
   /** Trusted Studio origin. */
   weaverseHost: string
   /** Studio asset version requested by Builder. */
@@ -624,7 +622,7 @@ export interface WeaverseNextThemeSettingsResponse {
   /** Environment values safe to expose to the browser in design mode. */
   publicEnv?: Record<string, string | undefined>
   /** Serializable theme schema returned in design mode. */
-  schema?: WeaverseNextThemeSchema
+  schema?: SchemaType | WeaverseNextThemeSchema
   /** Default-locale static content from the theme schema. */
   staticContent?: Record<string, unknown>
   /** Theme-setting values with schema defaults applied. */
@@ -690,7 +688,7 @@ export interface WeaverseNextServerClientConfig {
   /** Explicit request metadata used for config and page resolution. */
   requestContext?: WeaverseNextRequestContext
   /** Theme schema used to derive default settings and preview data. */
-  themeSchema?: WeaverseNextThemeSchema
+  themeSchema?: SchemaType | WeaverseNextThemeSchema
   /** Merchant theme settings merged over schema defaults. */
   themeSettings?: Record<string, unknown>
   /** Optional override for the resolved Weaverse public API base. */

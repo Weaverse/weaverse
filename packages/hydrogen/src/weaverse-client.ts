@@ -1125,7 +1125,6 @@ export class WeaverseClient {
     } catch (error) {
       const errorMessage = '❌ Page load failed'
       const errorContext: Record<string, unknown> = {
-        url: this.request.url,
         projectId: params.projectId || this.configs.projectId,
       }
 

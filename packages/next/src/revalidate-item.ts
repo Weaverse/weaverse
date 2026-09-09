@@ -17,8 +17,9 @@ const MAX_ROUTE_CONTEXT_HANDLE_LENGTH = 512
  * every entry is stored lowercased. Client sanitization keeps normal traffic
  * clean; the route handler repeats this deny-list as the security boundary.
  *
- * - Server-owned: a crafted `?weaverseProjectId=`/`?weaverseHost=`/`?weaverseApiKey=`
- *   must never influence server config resolution (see `getWeaverseNextConfigs`).
+ * - Server-owned: a crafted `?weaverseProjectId=`/`?weaverseHost=` must never
+ *   influence server config resolution (see `getWeaverseNextConfigs`), and
+ *   credential-shaped params never ride along in route context.
  * - Transient: draft-item and RSC transport params never describe route identity.
  */
 export const DENIED_ROUTE_CONTEXT_PARAMS = [
