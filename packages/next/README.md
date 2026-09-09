@@ -555,7 +555,7 @@ import {
 
 export const { POST } = createWeaverseNextRevalidateHandler({
   // `requestContext` is validated browser input for route identity only.
-  // Project ID, Studio host, API base/key, and env must still come from
+  // Project ID, Studio host, API base, and env must still come from
   // server config — never from this context — and it is `undefined` for
   // legacy request bodies that carry no route context.
   getClient: (_request, requestContext) =>
@@ -602,13 +602,13 @@ handler is the security boundary and re-validates independently:
 
 - Only `pathname`, sanitized `search`, a narrow i18n subset, a
   `PageTypeSchema`-valid `pageType`, and a bounded `handle` cross the boundary.
-  Headers, cookies, auth, env, project ID, Studio host, API base/key, commerce
+  Headers, cookies, auth, env, project ID, Studio host, API base, commerce
   clients, the runtime, and the client are never serialized.
-- Server-owned controls (`weaverseProjectId`, `weaverseHost`, `weaverseApiKey`,
-  `weaverseApiBase`, `weaversePublicApiBase`, `weaverseVersion`, `projectId`) and
-  transient transport controls (`weaverseDraftItem`, `__weaverseDraftItem`,
-  `_rsc`) are stripped case-insensitively on both sides, so a crafted body cannot
-  influence server config resolution.
+- Server-owned controls (`weaverseProjectId`, `weaverseHost`, `weaverseApiBase`,
+  `weaversePublicApiBase`, `weaverseVersion`, `projectId`) and transient transport
+  controls (`weaverseDraftItem`, `__weaverseDraftItem`, `_rsc`) are stripped
+  case-insensitively on both sides, so a crafted body cannot influence server
+  config resolution.
 - The origin is fixed from the endpoint request before assigning any
   browser-provided pathname/search, so input cannot change protocol, host, port,
   or credentials. `pathname` and `url.pathname` share one URL-canonicalized value.
@@ -628,8 +628,6 @@ Server config resolution intentionally mirrors Hydrogen where possible:
 - `weaverseHost`: trusted `?weaverseHost=` over `https://*.weaverse.io` / `https://*.weaverse.dev` → `WEAVERSE_HOST` → `https://studio.weaverse.io`.
 - API base: trusted request host → `WEAVERSE_PUBLIC_API_BASE` → non-production `WEAVERSE_HOST` → `https://api.weaverse.io`.
 - public env: `PUBLIC_STORE_DOMAIN`, `PUBLIC_STOREFRONT_API_TOKEN`.
-
-`WEAVERSE_API_KEY` may be read into internal base configs but is not attached to page/theme API requests and is never serialized into client-facing loader data.
 
 ## POC reference
 
