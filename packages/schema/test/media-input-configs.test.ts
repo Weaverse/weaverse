@@ -4,7 +4,7 @@ import { BasicInputSchema } from '../src'
 // `image` and `video` share one branch in BasicInputSchema, so exercising the
 // branch through `image` covers both.
 describe('MediaInputConfigs', () => {
-  it('should accept both exclusion fields on a media input', () => {
+  it('should_accept_both_exclusion_fields_when_declared_on_a_media_input', () => {
     const result = BasicInputSchema.safeParse({
       type: 'image',
       name: 'heroImage',
@@ -18,7 +18,7 @@ describe('MediaInputConfigs', () => {
     expect(result.success).toBe(true)
   })
 
-  it('should reject a bare string where a prefix list is expected', () => {
+  it('should_reject_configs_when_prefix_list_is_a_bare_string', () => {
     const result = BasicInputSchema.safeParse({
       type: 'image',
       name: 'heroImage',
@@ -32,7 +32,7 @@ describe('MediaInputConfigs', () => {
     ])
   })
 
-  it('should reject a non-boolean product-file exclusion', () => {
+  it('should_reject_configs_when_product_file_exclusion_is_not_boolean', () => {
     const result = BasicInputSchema.safeParse({
       type: 'image',
       name: 'heroImage',
@@ -42,7 +42,7 @@ describe('MediaInputConfigs', () => {
     expect(result.success).toBe(false)
   })
 
-  it('should still accept an image input with no configs', () => {
+  it('should_accept_the_input_when_configs_are_absent', () => {
     const result = BasicInputSchema.safeParse({
       type: 'image',
       name: 'heroImage',
