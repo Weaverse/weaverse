@@ -399,8 +399,8 @@ export type HydrogenThemeSchema = {
    * rules are meant to be fixed by the theme author. An individual `image` or
    * `video` input can still override them through its own `configs`.
    *
-   * ponytail: duplicated instead of imported because this package pins the
-   * published @weaverse/schema, which does not export the type yet. Replace
+   * Note: duplicated instead of imported because this package pins the
+   * published `@weaverse/schema`, which does not export the type yet. Replace
    * with the shared type once schema ships it.
    */
   media?: {
