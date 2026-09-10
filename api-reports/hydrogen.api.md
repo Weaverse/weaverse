@@ -264,6 +264,10 @@ export type HydrogenThemeSchema = {
         supportUrl: string;
     };
     inspector?: InspectorGroup[];
+    media?: {
+        excludeFilenamePrefixes?: string[];
+        excludeProductFiles?: boolean;
+    };
     settings?: InspectorGroup[];
     i18n?: {
         urlStructure: 'url-path' | 'subdomain' | 'top-level-domain';

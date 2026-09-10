@@ -401,6 +401,7 @@ export type {
   InputType,
   InspectorGroup,
   InvalidComponentResult,
+  MediaInputConfigs,
   PageType,
   RangeInputConfigs,
   Resolvable,
