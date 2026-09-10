@@ -146,8 +146,8 @@ importers:
         specifier: '3'
         version: 3.0.3(@shopify/oxygen-workers-types@4.2.0)(react-router@7.14.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
       '@weaverse/react':
-        specifier: 5.20.3
-        version: 5.20.3
+        specifier: 5.21.0
+        version: 5.21.0
       '@weaverse/schema':
         specifier: 0.14.0
         version: 0.14.0
@@ -186,8 +186,8 @@ importers:
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: 5.20.3
-        version: 5.20.3
+        specifier: 5.21.0
+        version: 5.21.0
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -1625,15 +1625,23 @@ packages:
     os: [win32]
 
   '@weaverse/core@5.20.3':
-    resolution: {integrity: sha512-fPF8D/MAeLvWh2k2JaINdSHKVZSuOKiQtjLhy58c4YBkg8LWRi2nZaEebUNiQuLLCpHfXoZbGTroyY6l4YVNwQ==, tarball: https://registry.npmjs.org/@weaverse/core/-/core-5.20.3.tgz}
+    resolution: {integrity: sha512-fPF8D/MAeLvWh2k2JaINdSHKVZSuOKiQtjLhy58c4YBkg8LWRi2nZaEebUNiQuLLCpHfXoZbGTroyY6l4YVNwQ==}
+    engines: {node: '>=18'}
+
+  '@weaverse/core@5.21.0':
+    resolution: {integrity: sha512-628i/jda/quLNy3Ju+ewuDmwh4vq1pdiWdxtYyJYAV7mD/0j3kL08Ti00Xbx2EA1gGz6rGt48DGhtRXyMPRN+w==}
     engines: {node: '>=18'}
 
   '@weaverse/react@5.20.3':
-    resolution: {integrity: sha512-6J/Gd6npD1gG/Gf461TudJ3erXl2YQEzWqjHXHuPZVVEBGb+laArDov0MOgb9blWvgU37KPEfU3gQcDfqI0B+A==, tarball: https://registry.npmjs.org/@weaverse/react/-/react-5.20.3.tgz}
+    resolution: {integrity: sha512-6J/Gd6npD1gG/Gf461TudJ3erXl2YQEzWqjHXHuPZVVEBGb+laArDov0MOgb9blWvgU37KPEfU3gQcDfqI0B+A==}
+    engines: {node: '>=18'}
+
+  '@weaverse/react@5.21.0':
+    resolution: {integrity: sha512-WTVDxbjqN7mt8t+gmWNhPUFQFGOJA3Pv3wAzSQbJss11G2LI5B6s1C7JZ7j/JE8LUosSwZ6xDzJrnbEdXMXpkw==}
     engines: {node: '>=18'}
 
   '@weaverse/schema@0.14.0':
-    resolution: {integrity: sha512-Hd455lviz/jsJ54mwdqF0LL5OKamnAh0I7BZnuGhsdUXz3vjLN7E1wg/08JiBm8b45eRRWdV2SJ51B170bkWuQ==, tarball: https://registry.npmjs.org/@weaverse/schema/-/schema-0.14.0.tgz}
+    resolution: {integrity: sha512-Hd455lviz/jsJ54mwdqF0LL5OKamnAh0I7BZnuGhsdUXz3vjLN7E1wg/08JiBm8b45eRRWdV2SJ51B170bkWuQ==}
 
   '@xstate/fsm@2.0.0':
     resolution: {integrity: sha512-p/zcvBMoU2ap5byMefLkR+AM+Eh99CU/SDEQeccgKlmFNOMDwphaRGqdk+emvel/SaGZ7Rf9sDvzAplLzLdEVQ==}
@@ -2807,11 +2815,6 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  semver@7.8.4:
-    resolution: {integrity: sha512-rUCObTnP32Q08R2uuIrt7r9PlEonuTmtuXYcW6s5kjdlj3xbnwe+21yXptAUYcMAABLkYYTtnmzb3w3EDZfueA==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   semver@7.8.5:
     resolution: {integrity: sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==}
     engines: {node: '>=10'}
@@ -3895,7 +3898,7 @@ snapshots:
       prettier: 3.8.4
       react-refresh: 0.14.2
       react-router: 7.14.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
-      semver: 7.8.4
+      semver: 7.8.5
       tinyglobby: 0.2.17
       valibot: 1.4.1(typescript@5.9.3)
       vite: '@voidzero-dev/vite-plus-core@0.1.24(@types/node@25.5.2)(esbuild@0.27.7)(typescript@5.9.3)(yaml@2.9.0)'
@@ -4264,9 +4267,18 @@ snapshots:
 
   '@weaverse/core@5.20.3': {}
 
+  '@weaverse/core@5.21.0': {}
+
   '@weaverse/react@5.20.3':
     dependencies:
       '@weaverse/core': 5.20.3
+      clsx: 2.1.1
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
+
+  '@weaverse/react@5.21.0':
+    dependencies:
+      '@weaverse/core': 5.21.0
       clsx: 2.1.1
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
@@ -5387,10 +5399,7 @@ snapshots:
 
   semver@7.7.4: {}
 
-  semver@7.8.4: {}
-
-  semver@7.8.5:
-    optional: true
+  semver@7.8.5: {}
 
   set-cookie-parser@2.7.2: {}
 
