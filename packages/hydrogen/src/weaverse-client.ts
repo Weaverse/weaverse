@@ -134,16 +134,18 @@ const SMART_CACHE_STRATEGIES: Record<BuilderApiCacheTarget, CachingStrategy> = {
 } as const
 
 /**
- * Resources whose subrequest cache identity deliberately excludes the request
- * body. Theme settings carry the storefront origin so Builder can attribute
- * hostnames, but the response does not vary by storefront: hashing the body
- * would give every domain of one project its own entry. `url`, the method,
- * `projectId` and the target still identify the response, and design/revision
- * modes never reach this cache at all.
+ * Options objects created by the internal `project_configs` request whose
+ * subrequest cache identity deliberately excludes the body. Theme settings
+ * carry the storefront origin so Builder can attribute hostnames, but the
+ * response does not vary by storefront: hashing the body would give every
+ * domain of one project its own entry.
+ *
+ * Keyed on the exact options object, NOT on `cacheTarget`: `fetchWithCache`
+ * is public API, so gating on the target would silently collapse the cache of
+ * any consumer who selects `theme-settings` with varying bodies. An outside
+ * caller's options object is never in this set and keeps a body-derived key.
  */
-const BODY_FREE_CACHE_TARGETS: Record<string, true> = {
-  'theme-settings': true,
-}
+const bodyFreeCacheRequests = new WeakSet<object>()
 
 /**
  * Request-scoped client for loading Weaverse pages and theme settings in Hydrogen.
@@ -651,26 +653,23 @@ export class WeaverseClient {
     // Update cache key to include method, body content, and projectId for multi-project isolation
     // Prefix for easier debugging in cache systems
     //
-    // A body-free target (see BODY_FREE_CACHE_TARGETS) drops the body from the
-    // identity: theme settings must send the storefront origin for hostname
-    // attribution, but two domains of one project have to share one entry.
+    // The body is omitted only for options objects marked internally (see
+    // `bodyFreeCacheRequests`): the storefront origin must reach Builder for
+    // hostname attribution, but two domains of one project have to share one
+    // entry. Every other caller keeps a body-derived key.
     const cacheKey = [
       'weaverse-fetch',
       url,
       options.method || 'GET',
-      cacheTarget && BODY_FREE_CACHE_TARGETS[cacheTarget]
-        ? undefined
-        : fetchOptions.body,
+      bodyFreeCacheRequests.has(options) ? undefined : fetchOptions.body,
       this.configs.projectId,
       cacheTarget || 'default',
     ]
-
     let result: WithCacheFetchResponse<T>
 
     // Bypass the shared Hydrogen subrequest cache for design/revision modes
     // and for the Cloudflare public API proxy. The proxy owns freshness with
     // versioned cache keys; keeping Hydrogen's URL/body cache in front would
-    // keep serving a stale response even after Builder bumps api.weaverse.io's
     // project version.
     if (
       this.configs.isDesignMode ||
@@ -753,19 +752,25 @@ export class WeaverseClient {
         storefrontUrl: this.safeStorefrontOrigin(),
       })
 
-      // Fetch theme settings and merchant overrides in parallel
+      // Fetch theme settings and merchant overrides in parallel. The options
+      // object is registered in `bodyFreeCacheRequests` so `fetchWithCache`
+      // keeps the storefront origin out of the subrequest cache identity for
+      // exactly this internal request — see the marker's doc comment.
+      const themeSettingsOptions: WeaverseFetchWithCacheOptions = {
+        method: 'POST',
+        cacheTarget: 'theme-settings',
+        strategy,
+        body,
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          'Accept-Encoding': 'gzip, deflate, br',
+        },
+      }
+      bodyFreeCacheRequests.add(themeSettingsOptions)
+
       const [data, merchantOverrides] = await Promise.all([
-        this.fetchWithCache<ThemeSettingsResponse>(url, {
-          method: 'POST',
-          cacheTarget: 'theme-settings',
-          strategy,
-          body,
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            'Accept-Encoding': 'gzip, deflate, br',
-          },
-        }),
+        this.fetchWithCache<ThemeSettingsResponse>(url, themeSettingsOptions),
         this.fetchMerchantOverrides(strategy),
       ])
 

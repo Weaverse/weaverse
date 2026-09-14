@@ -9,17 +9,17 @@
 2. `loadThemeSettings` adds `storefrontUrl: this.safeStorefrontOrigin()` to the
    `project_configs` request body. `JSON.stringify` drops it when undefined, so
    the wire shape is unchanged for non-http(s) contexts.
-3. The module-private `BODY_FREE_CACHE_TARGETS` table marks `theme-settings` as
-   a target whose subrequest cache identity omits the request body, so the
-   cache key stays `['weaverse-fetch', url, method, undefined, projectId,
-   'theme-settings']` while the request itself carries the origin. Nothing else
-   in that body varies the response: `projectId` is already in the key, and
-   design/revision modes bypass `withCache` entirely. Without this,
-   `weaverseApiBase === weaverseHost` (staging or self-hosted `WEAVERSE_HOST`)
-   routes through `withCache` and every domain of one project would get its own
-   theme-settings entry. No public API was added — the exported
-   `WeaverseFetchWithCacheOptions` is unchanged, so `api-reports/hydrogen.api.md`
-   needs no new entry.
+3. The module-private `bodyFreeCacheRequests` WeakSet marks the exact options
+   object built by `loadThemeSettings`, and `fetchWithCache` omits the body from
+   the subrequest cache key only for marked objects: the key stays
+   `['weaverse-fetch', url, method, undefined, projectId, 'theme-settings']`
+   while the request itself carries the origin. Nothing else in that body varies
+   the response: `projectId` is already in the key, and design/revision modes
+   bypass `withCache` entirely. The gate is deliberately the internal options
+   object rather than the public `cacheTarget` value — an earlier revision keyed
+   on the target and silently collapsed the cache of any consumer selecting
+   `theme-settings` with varying bodies. No public API was added or changed, so
+   `api-reports/hydrogen.api.md` needs no new entry.
 
 Not changed: page requests (already carry `url`), `fetchCustomPages`,
 merchant overrides, design/revision bypass, cache strategies, and every public

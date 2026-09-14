@@ -28,10 +28,12 @@ gap:
   leaves the storefront. A non-http(s) request omits the field.
 - The response does not vary by storefront, so the origin must not fragment any
   cache. It is excluded from the edge's cache selectors, and the internal
-  `BODY_FREE_CACHE_TARGETS` table makes the `theme-settings` target omit the
-  request body from Hydrogen's subrequest cache key — two domains of one
-  project keep sharing one theme-settings entry. No public API was added: the
-  exported `WeaverseFetchWithCacheOptions` is unchanged.
+  `project_configs` request is marked (module-private WeakSet) so its subrequest
+  cache key omits the body — two domains of one project keep sharing one
+  theme-settings entry. The gate is the exact internal options object, NOT the
+  public `cacheTarget` value: `fetchWithCache` is public API, and keying on the
+  target let an outside caller selecting `theme-settings` with varying bodies
+  collapse into one entry. No public API was added or changed.
 - Older Builder deployments ignore the extra field, and older SDKs simply omit
   it and remain unattributable. No new credential and no required configuration
   for SDK consumers. Adoption is a rollout prerequisite for theme/config
