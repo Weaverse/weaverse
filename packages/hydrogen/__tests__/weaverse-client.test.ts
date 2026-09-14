@@ -904,6 +904,44 @@ describe('loadThemeSettings storefront context', () => {
     ])
   })
 
+  it('should_not_share_the_internal_cache_identity_when_an_external_caller_sends_no_body', async () => {
+    // The marked request used `undefined` in the body slot; an external call
+    // with no body also lands `undefined` there, so the two identities
+    // collided and a cached theme-settings payload could satisfy the external
+    // request. A private sentinel now occupies the marked slot.
+    let client = new WeaverseClient({
+      ...createMockContext({
+        request: new Request('https://shop.example/'),
+        env: {
+          WEAVERSE_HOST: 'https://staging.self-hosted.example.com',
+          WEAVERSE_PROJECT_ID: 'proj-123',
+        },
+      }),
+      components: [],
+      themeSchema: baseSchema,
+    })
+    let keys: unknown[] = []
+    client.withCache = {
+      fetch: (
+        _url: string,
+        _fetchOptions: RequestInit,
+        options: { cacheKey: unknown[] }
+      ) => {
+        keys.push(options.cacheKey)
+        return Promise.resolve({ data: { theme: {} } })
+      },
+    } as any
+
+    await client.loadThemeSettings()
+    await client.fetchWithCache(
+      'https://staging.self-hosted.example.com/api/public/project_configs',
+      { method: 'POST', cacheTarget: 'theme-settings' }
+    )
+
+    expect(keys).toHaveLength(2)
+    expect(keys[0]).not.toEqual(keys[1])
+  })
+
   it('should_keep_a_body_derived_cache_key_when_an_external_caller_selects_the_theme_settings_target', async () => {
     // `fetchWithCache` is public API: dropping the body from the cache key for
     // ANY caller selecting `theme-settings` collapsed their varying bodies

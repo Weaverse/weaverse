@@ -144,8 +144,15 @@ const SMART_CACHE_STRATEGIES: Record<BuilderApiCacheTarget, CachingStrategy> = {
  * is public API, so gating on the target would silently collapse the cache of
  * any consumer who selects `theme-settings` with varying bodies. An outside
  * caller's options object is never in this set and keeps a body-derived key.
+ *
+ * The marked identity uses `BODY_FREE_CACHE_SENTINEL` in the body slot, never
+ * `undefined`: an external no-body call also lands `undefined` there, and the
+ * two identities would collide — a cached theme-settings payload could then
+ * satisfy that external request. The NUL prefix makes the sentinel
+ * unconstructible from any real request body.
  */
 const bodyFreeCacheRequests = new WeakSet<object>()
+const BODY_FREE_CACHE_SENTINEL = '\u0000weaverse:body-free'
 
 /**
  * Request-scoped client for loading Weaverse pages and theme settings in Hydrogen.
@@ -661,7 +668,9 @@ export class WeaverseClient {
       'weaverse-fetch',
       url,
       options.method || 'GET',
-      bodyFreeCacheRequests.has(options) ? undefined : fetchOptions.body,
+      bodyFreeCacheRequests.has(options)
+        ? BODY_FREE_CACHE_SENTINEL
+        : fetchOptions.body,
       this.configs.projectId,
       cacheTarget || 'default',
     ]

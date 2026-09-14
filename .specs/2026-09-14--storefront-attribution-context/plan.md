@@ -18,7 +18,9 @@
    bypass `withCache` entirely. The gate is deliberately the internal options
    object rather than the public `cacheTarget` value — an earlier revision keyed
    on the target and silently collapsed the cache of any consumer selecting
-   `theme-settings` with varying bodies. No public API was added or changed, so
+   `theme-settings` with varying bodies — and the marked slot holds the private
+   `BODY_FREE_CACHE_SENTINEL` string rather than `undefined`, so an external
+   no-body call cannot collide with the marked identity. No public API was added or changed, so
    `api-reports/hydrogen.api.md` needs no new entry.
 
 Not changed: page requests (already carry `url`), `fetchCustomPages`,
