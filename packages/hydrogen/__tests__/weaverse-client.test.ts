@@ -798,7 +798,7 @@ describe('loadThemeSettings storefront context', () => {
     vi.restoreAllMocks()
   })
 
-  async function configsBody(requestUrl: string): Promise<any> {
+  async function configsCall(requestUrl: string): Promise<any> {
     let client = new WeaverseClient({
       ...createMockContext({ request: new Request(requestUrl) }),
       components: [],
@@ -814,10 +814,15 @@ describe('loadThemeSettings storefront context', () => {
     let call = fetchSpy.mock.calls.find(
       (entry: any) => entry[1]?.cacheTarget === 'theme-settings'
     )
-    return JSON.parse((call as any)[1].body as string)
+    return (call as any)[1]
   }
 
-  it('sends only the safe origin of the storefront request', async () => {
+  async function configsBody(requestUrl: string): Promise<any> {
+    let options = await configsCall(requestUrl)
+    return JSON.parse(options.body as string)
+  }
+
+  it('should_send_only_the_safe_origin_when_a_storefront_requests_theme_settings', async () => {
     let body = await configsBody(
       'https://shop.example:8443/collections/all?token=secret#frag'
     )
@@ -833,11 +838,26 @@ describe('loadThemeSettings storefront context', () => {
   // A storefront request cannot carry userinfo — `new Request()` rejects
   // credentials in the URL — so userinfo stripping is enforced (and tested)
   // server-side. What can vary here is the locale-prefixed deep route.
-  it('keeps the origin identical across storefront routes', async () => {
+  it('should_keep_the_origin_identical_when_routes_differ', async () => {
     let home = await configsBody('https://shop.example/')
     let deep = await configsBody('https://shop.example/de-de/products/x?y=1')
 
     expect(deep.storefrontUrl).toBe(home.storefrontUrl)
     expect(deep.storefrontUrl).toBe('https://shop.example')
+  })
+
+  it('should_share_one_cache_identity_when_two_domains_serve_one_project', async () => {
+    // `fetchWithCache` hashes the whole body into the subrequest cache key, so
+    // the origin must be excluded from the cache identity or every domain of
+    // one project would get its own theme-settings entry.
+    let first = await configsCall('https://shop-a.example/')
+    let second = await configsCall('https://shop-b.example/')
+
+    expect(first.cacheIdentityBody).toBe(second.cacheIdentityBody)
+    expect(first.cacheIdentityBody).not.toContain('shop-a.example')
+    expect(JSON.parse(first.cacheIdentityBody as string)).toEqual({
+      projectId: 'proj-123',
+    })
+    expect(first.body).not.toBe(second.body)
   })
 })
