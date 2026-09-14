@@ -670,6 +670,7 @@ export class WeaverseClient {
     // Bypass the shared Hydrogen subrequest cache for design/revision modes
     // and for the Cloudflare public API proxy. The proxy owns freshness with
     // versioned cache keys; keeping Hydrogen's URL/body cache in front would
+    // keep serving a stale response even after Builder bumps the proxy's
     // project version.
     if (
       this.configs.isDesignMode ||
@@ -742,10 +743,9 @@ export class WeaverseClient {
       // customer-visible URL data. Older Builder deployments ignore the extra
       // field. The response does not vary by storefront, so the origin stays
       // out of BOTH cache identities: the edge excludes it from its selectors,
-      // and the `theme-settings` target is body-free in Hydrogen's own
-      // subrequest cache key (see BODY_FREE_CACHE_TARGETS), which otherwise
-      // hashes the whole body and would give every domain of one project its
-      // own entry.
+      // and this request is marked in `bodyFreeCacheRequests` so Hydrogen's
+      // own subrequest cache key omits the body — hashing it would otherwise
+      // give every domain of one project its own entry.
       const body = JSON.stringify({
         isDesignMode,
         projectId,
