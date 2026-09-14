@@ -679,6 +679,20 @@ export class WeaverseClient {
   }
 
   /**
+   * Safe origin of the incoming storefront request: scheme, host and explicit
+   * port. Userinfo, path, query and fragment are dropped, so no customer
+   * route or credential-bearing value leaves the storefront. Returns undefined
+   * for a non-http(s) request so the field is simply omitted.
+   */
+  private safeStorefrontOrigin(): string | undefined {
+    const { protocol, host } = this.parsedUrl
+    if (protocol !== 'http:' && protocol !== 'https:') {
+      return
+    }
+    return host ? `${protocol}//${host}` : undefined
+  }
+
+  /**
    * Load theme settings from Weaverse API with fallback to schema defaults.
    * Merges remote settings with local theme schema and handles design mode serialization.
    *
@@ -704,7 +718,18 @@ export class WeaverseClient {
 
       const url = this.getApiUrl('project_configs')
 
-      const body = JSON.stringify({ isDesignMode, projectId })
+      // Theme/config reads carry no route, so Builder could not tell which
+      // storefront asked. `storefrontUrl` is the request's safe origin only —
+      // scheme, host and explicit port, never a path, query, fragment or
+      // userinfo — so hosted-content attribution works without sending
+      // customer-visible URL data. Older Builder deployments ignore the extra
+      // field, and the response does not vary by storefront, so the edge keeps
+      // one cache entry per project.
+      const body = JSON.stringify({
+        isDesignMode,
+        projectId,
+        storefrontUrl: this.safeStorefrontOrigin(),
+      })
 
       // Fetch theme settings and merchant overrides in parallel
       const [data, merchantOverrides] = await Promise.all([

@@ -770,3 +770,74 @@ describe('loadThemeSettings merchant-overrides gating (issue #2291)', () => {
     expect(cacheTargets(fetchSpy)).toContain('merchant-overrides')
   })
 })
+
+describe('loadThemeSettings storefront context', () => {
+  /**
+   * Builder attributes theme/config reads to a storefront hostname (project
+   * hostname controls). The body must carry the request's ORIGIN and nothing
+   * else from the URL: a path, query or userinfo would put customer route data
+   * — and possibly credentials — into a cached API request.
+   */
+  let baseSchema: HydrogenThemeSchema
+
+  beforeEach(() => {
+    baseSchema = {
+      info: {
+        name: 'T',
+        author: 'A',
+        version: '1.0.0',
+        authorProfilePhoto: '',
+        documentationUrl: '',
+        supportUrl: '',
+      },
+      settings: [],
+    }
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  async function configsBody(requestUrl: string): Promise<any> {
+    let client = new WeaverseClient({
+      ...createMockContext({ request: new Request(requestUrl) }),
+      components: [],
+      themeSchema: baseSchema,
+      projectId: 'proj-123',
+    })
+    let fetchSpy = spyOn(client, 'fetchWithCache').mockResolvedValue({
+      theme: {},
+    } as any)
+
+    await client.loadThemeSettings()
+
+    let call = fetchSpy.mock.calls.find(
+      (entry: any) => entry[1]?.cacheTarget === 'theme-settings'
+    )
+    return JSON.parse((call as any)[1].body as string)
+  }
+
+  it('sends only the safe origin of the storefront request', async () => {
+    let body = await configsBody(
+      'https://shop.example:8443/collections/all?token=secret#frag'
+    )
+
+    // `isDesignMode` is false here, and JSON.stringify drops the undefined
+    // live-mode value — unchanged by this addition.
+    expect(body).toEqual({
+      projectId: 'proj-123',
+      storefrontUrl: 'https://shop.example:8443',
+    })
+  })
+
+  // A storefront request cannot carry userinfo — `new Request()` rejects
+  // credentials in the URL — so userinfo stripping is enforced (and tested)
+  // server-side. What can vary here is the locale-prefixed deep route.
+  it('keeps the origin identical across storefront routes', async () => {
+    let home = await configsBody('https://shop.example/')
+    let deep = await configsBody('https://shop.example/de-de/products/x?y=1')
+
+    expect(deep.storefrontUrl).toBe(home.storefrontUrl)
+    expect(deep.storefrontUrl).toBe('https://shop.example')
+  })
+})
