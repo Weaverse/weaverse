@@ -9,7 +9,7 @@
 | **Created** | 2026-09-14 |
 | **Last Updated** | 2026-09-14 |
 
-## Requirement
+## Initiating Requirement
 
 Builder gained user-managed per-project hostname controls: a merchant sees the
 hostnames observed requesting their project's content in **Manage previews** and
@@ -27,10 +27,11 @@ gap:
   userinfo are dropped, so no customer route and no credential-bearing value
   leaves the storefront. A non-http(s) request omits the field.
 - The response does not vary by storefront, so the origin must not fragment any
-  cache. It is excluded from the edge's cache selectors, and
-  `fetchWithCache` accepts `cacheIdentityBody` so the field is also excluded
-  from Hydrogen's subrequest cache key — two domains of one project keep sharing
-  one theme-settings entry.
+  cache. It is excluded from the edge's cache selectors, and the internal
+  `BODY_FREE_CACHE_TARGETS` table makes the `theme-settings` target omit the
+  request body from Hydrogen's subrequest cache key — two domains of one
+  project keep sharing one theme-settings entry. No public API was added: the
+  exported `WeaverseFetchWithCacheOptions` is unchanged.
 - Older Builder deployments ignore the extra field, and older SDKs simply omit
   it and remain unattributable. No new credential and no required configuration
   for SDK consumers. Adoption is a rollout prerequisite for theme/config

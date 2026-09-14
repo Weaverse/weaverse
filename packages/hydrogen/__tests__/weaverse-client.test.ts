@@ -846,49 +846,61 @@ describe('loadThemeSettings storefront context', () => {
     expect(deep.storefrontUrl).toBe('https://shop.example')
   })
 
-  it('should_share_one_cache_identity_when_two_domains_serve_one_project', async () => {
-    // `fetchWithCache` hashes the whole body into the subrequest cache key, so
-    // the theme-settings target must drop the body — otherwise every domain of
-    // one project gets its own entry. Exercised through the REAL
-    // `fetchWithCache` on a self-hosted `WEAVERSE_HOST`, which is the
-    // configuration that routes through Hydrogen's `withCache` instead of the
-    // external-proxy bypass.
-    async function cacheKeyAndBody(requestUrl: string) {
-      let client = new WeaverseClient({
-        ...createMockContext({
-          request: new Request(requestUrl),
-          env: {
-            WEAVERSE_HOST: 'https://staging.self-hosted.example.com',
-            WEAVERSE_PROJECT_ID: 'proj-123',
-          },
-        }),
-        components: [],
-        themeSchema: baseSchema,
-      })
-      let captured: { cacheKey?: unknown[]; body?: unknown } = {}
-      client.withCache = {
-        fetch: async (
-          _url: string,
-          fetchOptions: RequestInit,
-          options: { cacheKey: unknown[] }
-        ) => {
-          captured = { cacheKey: options.cacheKey, body: fetchOptions.body }
-          return { data: { theme: {} } }
+  // `fetchWithCache` hashes the whole body into the subrequest cache key, so
+  // the theme-settings target must drop the body — otherwise every domain of
+  // one project gets its own entry. Exercised through the REAL
+  // `fetchWithCache` on a self-hosted `WEAVERSE_HOST`, which is the
+  // configuration that routes through Hydrogen's `withCache` instead of the
+  // external-proxy bypass.
+  async function cacheKeyAndBody(requestUrl: string) {
+    let client = new WeaverseClient({
+      ...createMockContext({
+        request: new Request(requestUrl),
+        env: {
+          WEAVERSE_HOST: 'https://staging.self-hosted.example.com',
+          WEAVERSE_PROJECT_ID: 'proj-123',
         },
-      } as any
+      }),
+      components: [],
+      themeSchema: baseSchema,
+    })
+    let captured: { cacheKey?: unknown[]; body?: unknown } = {}
+    client.withCache = {
+      fetch: (
+        _url: string,
+        fetchOptions: RequestInit,
+        options: { cacheKey: unknown[] }
+      ) => {
+        captured = { cacheKey: options.cacheKey, body: fetchOptions.body }
+        return Promise.resolve({ data: { theme: {} } })
+      },
+    } as any
 
-      await client.loadThemeSettings()
+    await client.loadThemeSettings()
 
-      return captured
-    }
+    return captured
+  }
 
+  it('should_share_one_cache_identity_when_two_domains_serve_one_project', async () => {
     let first = await cacheKeyAndBody('https://shop-a.example/')
     let second = await cacheKeyAndBody('https://shop-b.example/')
 
     expect(first.cacheKey).toEqual(second.cacheKey)
-    expect(JSON.stringify(first.cacheKey)).not.toContain('shop-a.example')
-    // The request itself still carries the origin for attribution.
-    expect(first.body).toContain('shop-a.example')
-    expect(second.body).toContain('shop-b.example')
+  })
+
+  it('should_keep_the_origin_out_of_the_cache_key_when_a_domain_requests_theme_settings', async () => {
+    let captured = await cacheKeyAndBody('https://shop-a.example/')
+
+    expect(JSON.stringify(captured.cacheKey)).not.toContain('shop-a.example')
+  })
+
+  it('should_still_send_each_storefront_origin_when_two_domains_serve_one_project', async () => {
+    let first = await cacheKeyAndBody('https://shop-a.example/')
+    let second = await cacheKeyAndBody('https://shop-b.example/')
+
+    expect([first.body, second.body]).toEqual([
+      expect.stringContaining('shop-a.example'),
+      expect.stringContaining('shop-b.example'),
+    ])
   })
 })

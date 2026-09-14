@@ -9,13 +9,17 @@
 2. `loadThemeSettings` adds `storefrontUrl: this.safeStorefrontOrigin()` to the
    `project_configs` request body. `JSON.stringify` drops it when undefined, so
    the wire shape is unchanged for non-http(s) contexts.
-3. `WeaverseFetchWithCacheOptions.cacheIdentityBody` lets a caller supply the
-   body used for the subrequest cache key. `fetchWithCache` hashes
-   `cacheIdentityBody ?? body`, so theme settings keep a host-free cache
-   identity (`{ isDesignMode, projectId }`) while the request itself carries the
-   origin. Without it, `weaverseApiBase === weaverseHost` (staging or
-   self-hosted `WEAVERSE_HOST`) routes through `withCache` and every domain of
-   one project would get its own theme-settings entry.
+3. The module-private `BODY_FREE_CACHE_TARGETS` table marks `theme-settings` as
+   a target whose subrequest cache identity omits the request body, so the
+   cache key stays `['weaverse-fetch', url, method, undefined, projectId,
+   'theme-settings']` while the request itself carries the origin. Nothing else
+   in that body varies the response: `projectId` is already in the key, and
+   design/revision modes bypass `withCache` entirely. Without this,
+   `weaverseApiBase === weaverseHost` (staging or self-hosted `WEAVERSE_HOST`)
+   routes through `withCache` and every domain of one project would get its own
+   theme-settings entry. No public API was added — the exported
+   `WeaverseFetchWithCacheOptions` is unchanged, so `api-reports/hydrogen.api.md`
+   needs no new entry.
 
 Not changed: page requests (already carry `url`), `fetchCustomPages`,
 merchant overrides, design/revision bypass, cache strategies, and every public
@@ -32,8 +36,10 @@ type consumers depend on. No new dependency, no configuration, no credential.
 - `should_keep_the_origin_identical_when_routes_differ` — home and a
   locale-prefixed product route produce the same origin.
 - `should_share_one_cache_identity_when_two_domains_serve_one_project` — two
-  domains produce different request bodies but one identical, host-free
-  `cacheIdentityBody`.
+  domains produce one identical, host-free subrequest cache key through the
+  real `fetchWithCache`.
+- `should_still_send_each_storefront_origin_when_two_domains_serve_one_project`
+  — while the outbound bodies still carry each domain's own origin.
 
 Gates: `biome check --diagnostic-level=error`, `tsc --noEmit` in
 `packages/hydrogen`, and `vp test --run packages/hydrogen`.
