@@ -33,10 +33,11 @@ gap:
   theme-settings entry. The gate is the exact internal options object, NOT the
   public `cacheTarget` value: `fetchWithCache` is public API, and keying on the
   target let an outside caller selecting `theme-settings` with varying bodies
-  collapse into one entry. The marked slot holds a module-private
-  NUL-prefixed string sentinel, never `undefined` — an external no-body call
-  also lands `undefined` there and would otherwise collide with the marked
-  identity. No public API was added or changed.
+  collapse into one entry. The marked body slot holds a module-private
+  string sentinel (never `undefined`, so an external no-body call cannot
+  collide), and an adjacent `has(options)` slot derived from the WeakSet is the
+  actual discriminator — no caller-supplied shape can reach it, not even a body
+  containing the sentinel bytes. No public API was added or changed.
 - Older Builder deployments ignore the extra field, and older SDKs simply omit
   it and remain unattributable. No new credential and no required configuration
   for SDK consumers. Adoption is a rollout prerequisite for theme/config

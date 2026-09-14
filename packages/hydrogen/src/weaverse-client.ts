@@ -145,11 +145,11 @@ const SMART_CACHE_STRATEGIES: Record<BuilderApiCacheTarget, CachingStrategy> = {
  * any consumer who selects `theme-settings` with varying bodies. An outside
  * caller's options object is never in this set and keeps a body-derived key.
  *
- * The marked identity uses `BODY_FREE_CACHE_SENTINEL` in the body slot, never
- * `undefined`: an external no-body call also lands `undefined` there, and the
- * two identities would collide — a cached theme-settings payload could then
- * satisfy that external request. The NUL prefix makes the sentinel
- * unconstructible from any real request body.
+ * The marked identity is disambiguated by an adjacent WeakSet-membership slot
+ * in the cache key (`has(options)`), which no caller-supplied value can
+ * reach: a sentinel string alone in the body slot would be forgeable, since
+ * `body` is public caller input. The sentinel merely keeps the marked slot
+ * distinct from `undefined`-bodied external calls.
  */
 const bodyFreeCacheRequests = new WeakSet<object>()
 const BODY_FREE_CACHE_SENTINEL = '\u0000weaverse:body-free'
@@ -671,6 +671,11 @@ export class WeaverseClient {
       bodyFreeCacheRequests.has(options)
         ? BODY_FREE_CACHE_SENTINEL
         : fetchOptions.body,
+      // WeakSet-derived discriminator: this slot cannot be produced by any
+      // caller-supplied shape, so no external call can reach the marked
+      // identity — even one that happens to send the sentinel string as its
+      // body.
+      bodyFreeCacheRequests.has(options),
       this.configs.projectId,
       cacheTarget || 'default',
     ]
