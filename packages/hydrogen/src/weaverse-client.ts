@@ -107,12 +107,6 @@ export type BuilderApiCacheTarget =
 
 /** Fetch options accepted by {@link WeaverseClient.fetchWithCache}. */
 export interface WeaverseFetchWithCacheOptions extends RequestInit {
-  /**
-   * Body used for the subrequest cache key instead of `body`. Set it when a
-   * request field must reach the server but must not fragment the cache — the
-   * storefront origin sent with theme settings is the only current case.
-   */
-  cacheIdentityBody?: string
   /** Builder API resource whose default freshness policy should be used. */
   cacheTarget?: BuilderApiCacheTarget
   /** Explicit Hydrogen caching strategy overriding the resource default. */
@@ -138,6 +132,18 @@ const SMART_CACHE_STRATEGIES: Record<BuilderApiCacheTarget, CachingStrategy> = {
     staleIfError: CACHE_DURATIONS.LONG,
   },
 } as const
+
+/**
+ * Resources whose subrequest cache identity deliberately excludes the request
+ * body. Theme settings carry the storefront origin so Builder can attribute
+ * hostnames, but the response does not vary by storefront: hashing the body
+ * would give every domain of one project its own entry. `url`, the method,
+ * `projectId` and the target still identify the response, and design/revision
+ * modes never reach this cache at all.
+ */
+const BODY_FREE_CACHE_TARGETS: Record<string, true> = {
+  'theme-settings': true,
+}
 
 /**
  * Request-scoped client for loading Weaverse pages and theme settings in Hydrogen.
@@ -633,12 +639,7 @@ export class WeaverseClient {
     url: string,
     options: WeaverseFetchWithCacheOptions = {}
   ): Promise<T> => {
-    const {
-      cacheTarget,
-      strategy: strategyOverride,
-      cacheIdentityBody,
-      ...fetchOptions
-    } = options
+    const { cacheTarget, strategy: strategyOverride, ...fetchOptions } = options
     const strategy =
       strategyOverride ||
       CacheCustom(
@@ -650,17 +651,16 @@ export class WeaverseClient {
     // Update cache key to include method, body content, and projectId for multi-project isolation
     // Prefix for easier debugging in cache systems
     //
-    // `cacheIdentityBody` lets a caller keep a request field out of the cache
-    // key when the response does not vary by it. Theme settings use it for the
-    // storefront origin: the origin must reach Builder for hostname
-    // attribution, but two domains of one project must still share one
-    // subrequest cache entry (and the edge likewise excludes it from its
-    // selectors).
+    // A body-free target (see BODY_FREE_CACHE_TARGETS) drops the body from the
+    // identity: theme settings must send the storefront origin for hostname
+    // attribution, but two domains of one project have to share one entry.
     const cacheKey = [
       'weaverse-fetch',
       url,
       options.method || 'GET',
-      cacheIdentityBody ?? fetchOptions.body,
+      cacheTarget && BODY_FREE_CACHE_TARGETS[cacheTarget]
+        ? undefined
+        : fetchOptions.body,
       this.configs.projectId,
       cacheTarget || 'default',
     ]
@@ -741,12 +741,12 @@ export class WeaverseClient {
       // scheme, host and explicit port, never a path, query, fragment or
       // userinfo — so hosted-content attribution works without sending
       // customer-visible URL data. Older Builder deployments ignore the extra
-      // field. The response does not vary by storefront, so the origin is kept
+      // field. The response does not vary by storefront, so the origin stays
       // out of BOTH cache identities: the edge excludes it from its selectors,
-      // and `cacheIdentityBody` keeps it out of Hydrogen's own subrequest cache
-      // key here (`fetchWithCache` would otherwise hash the whole body and give
-      // every domain of one project its own theme-settings entry).
-      const cacheIdentityBody = JSON.stringify({ isDesignMode, projectId })
+      // and the `theme-settings` target is body-free in Hydrogen's own
+      // subrequest cache key (see BODY_FREE_CACHE_TARGETS), which otherwise
+      // hashes the whole body and would give every domain of one project its
+      // own entry.
       const body = JSON.stringify({
         isDesignMode,
         projectId,
@@ -760,7 +760,6 @@ export class WeaverseClient {
           cacheTarget: 'theme-settings',
           strategy,
           body,
-          cacheIdentityBody,
           headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',

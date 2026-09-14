@@ -848,16 +848,47 @@ describe('loadThemeSettings storefront context', () => {
 
   it('should_share_one_cache_identity_when_two_domains_serve_one_project', async () => {
     // `fetchWithCache` hashes the whole body into the subrequest cache key, so
-    // the origin must be excluded from the cache identity or every domain of
-    // one project would get its own theme-settings entry.
-    let first = await configsCall('https://shop-a.example/')
-    let second = await configsCall('https://shop-b.example/')
+    // the theme-settings target must drop the body — otherwise every domain of
+    // one project gets its own entry. Exercised through the REAL
+    // `fetchWithCache` on a self-hosted `WEAVERSE_HOST`, which is the
+    // configuration that routes through Hydrogen's `withCache` instead of the
+    // external-proxy bypass.
+    async function cacheKeyAndBody(requestUrl: string) {
+      let client = new WeaverseClient({
+        ...createMockContext({
+          request: new Request(requestUrl),
+          env: {
+            WEAVERSE_HOST: 'https://staging.self-hosted.example.com',
+            WEAVERSE_PROJECT_ID: 'proj-123',
+          },
+        }),
+        components: [],
+        themeSchema: baseSchema,
+      })
+      let captured: { cacheKey?: unknown[]; body?: unknown } = {}
+      client.withCache = {
+        fetch: async (
+          _url: string,
+          fetchOptions: RequestInit,
+          options: { cacheKey: unknown[] }
+        ) => {
+          captured = { cacheKey: options.cacheKey, body: fetchOptions.body }
+          return { data: { theme: {} } }
+        },
+      } as any
 
-    expect(first.cacheIdentityBody).toBe(second.cacheIdentityBody)
-    expect(first.cacheIdentityBody).not.toContain('shop-a.example')
-    expect(JSON.parse(first.cacheIdentityBody as string)).toEqual({
-      projectId: 'proj-123',
-    })
-    expect(first.body).not.toBe(second.body)
+      await client.loadThemeSettings()
+
+      return captured
+    }
+
+    let first = await cacheKeyAndBody('https://shop-a.example/')
+    let second = await cacheKeyAndBody('https://shop-b.example/')
+
+    expect(first.cacheKey).toEqual(second.cacheKey)
+    expect(JSON.stringify(first.cacheKey)).not.toContain('shop-a.example')
+    // The request itself still carries the origin for attribution.
+    expect(first.body).toContain('shop-a.example')
+    expect(second.body).toContain('shop-b.example')
   })
 })
