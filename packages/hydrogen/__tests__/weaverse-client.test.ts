@@ -770,3 +770,298 @@ describe('loadThemeSettings merchant-overrides gating (issue #2291)', () => {
     expect(cacheTargets(fetchSpy)).toContain('merchant-overrides')
   })
 })
+
+describe('loadThemeSettings storefront context', () => {
+  /**
+   * Builder attributes theme/config reads to a storefront hostname (project
+   * hostname controls). The body must carry the request's ORIGIN and nothing
+   * else from the URL: a path, query or userinfo would put customer route data
+   * — and possibly credentials — into a cached API request.
+   */
+  let baseSchema: HydrogenThemeSchema
+
+  beforeEach(() => {
+    baseSchema = {
+      info: {
+        name: 'T',
+        author: 'A',
+        version: '1.0.0',
+        authorProfilePhoto: '',
+        documentationUrl: '',
+        supportUrl: '',
+      },
+      settings: [],
+    }
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  async function configsCall(requestUrl: string): Promise<any> {
+    let client = new WeaverseClient({
+      ...createMockContext({ request: new Request(requestUrl) }),
+      components: [],
+      themeSchema: baseSchema,
+      projectId: 'proj-123',
+    })
+    let fetchSpy = spyOn(client, 'fetchWithCache').mockResolvedValue({
+      theme: {},
+    } as any)
+
+    await client.loadThemeSettings()
+
+    let call = fetchSpy.mock.calls.find(
+      (entry: any) => entry[1]?.cacheTarget === 'theme-settings'
+    )
+    return (call as any)[1]
+  }
+
+  async function configsBody(requestUrl: string): Promise<any> {
+    let options = await configsCall(requestUrl)
+    return JSON.parse(options.body as string)
+  }
+
+  it('should_send_only_the_safe_origin_when_a_storefront_requests_theme_settings', async () => {
+    let body = await configsBody(
+      'https://shop.example:8443/collections/all?token=secret#frag'
+    )
+
+    // `isDesignMode` is false here, and JSON.stringify drops the undefined
+    // live-mode value — unchanged by this addition.
+    expect(body).toEqual({
+      projectId: 'proj-123',
+      storefrontUrl: 'https://shop.example:8443',
+    })
+  })
+
+  // A storefront request cannot carry userinfo — `new Request()` rejects
+  // credentials in the URL — so userinfo stripping is enforced (and tested)
+  // server-side. What can vary here is the locale-prefixed deep route.
+  it('should_keep_the_origin_identical_when_routes_differ', async () => {
+    let home = await configsBody('https://shop.example/')
+    let deep = await configsBody('https://shop.example/de-de/products/x?y=1')
+
+    expect(deep.storefrontUrl).toBe(home.storefrontUrl)
+    expect(deep.storefrontUrl).toBe('https://shop.example')
+  })
+
+  // `fetchWithCache` hashes the whole body into the subrequest cache key, so
+  // the theme-settings target must drop the body — otherwise every domain of
+  // one project gets its own entry. Exercised through the REAL
+  // `fetchWithCache` on a self-hosted `WEAVERSE_HOST`, which is the
+  // configuration that routes through Hydrogen's `withCache` instead of the
+  // external-proxy bypass.
+  async function cacheKeyAndBody(requestUrl: string) {
+    let client = new WeaverseClient({
+      ...createMockContext({
+        request: new Request(requestUrl),
+        env: {
+          WEAVERSE_HOST: 'https://staging.self-hosted.example.com',
+          WEAVERSE_PROJECT_ID: 'proj-123',
+        },
+      }),
+      components: [],
+      themeSchema: baseSchema,
+    })
+    let captured: { cacheKey?: unknown[]; body?: unknown } = {}
+    client.withCache = {
+      fetch: (
+        _url: string,
+        fetchOptions: RequestInit,
+        options: { cacheKey: unknown[] }
+      ) => {
+        captured = { cacheKey: options.cacheKey, body: fetchOptions.body }
+        return Promise.resolve({ data: { theme: {} } })
+      },
+    } as any
+
+    await client.loadThemeSettings()
+
+    return captured
+  }
+
+  it('should_share_one_cache_identity_when_two_domains_serve_one_project', async () => {
+    let first = await cacheKeyAndBody('https://shop-a.example/')
+    let second = await cacheKeyAndBody('https://shop-b.example/')
+
+    expect(first.cacheKey).toEqual(second.cacheKey)
+  })
+
+  it('should_keep_the_origin_out_of_the_cache_key_when_a_domain_requests_theme_settings', async () => {
+    let captured = await cacheKeyAndBody('https://shop-a.example/')
+
+    expect(JSON.stringify(captured.cacheKey)).not.toContain('shop-a.example')
+  })
+
+  it('should_still_send_each_storefront_origin_when_two_domains_serve_one_project', async () => {
+    let first = await cacheKeyAndBody('https://shop-a.example/')
+    let second = await cacheKeyAndBody('https://shop-b.example/')
+
+    expect([first.body, second.body]).toEqual([
+      expect.stringContaining('shop-a.example'),
+      expect.stringContaining('shop-b.example'),
+    ])
+  })
+
+  it('should_not_share_the_internal_cache_identity_when_an_external_caller_sends_no_body', async () => {
+    // The marked request used `undefined` in the body slot; an external call
+    // with no body also lands `undefined` there, so the two identities
+    // collided and a cached theme-settings payload could satisfy the external
+    // request. A private sentinel now occupies the marked slot.
+    let client = new WeaverseClient({
+      ...createMockContext({
+        request: new Request('https://shop.example/'),
+        env: {
+          WEAVERSE_HOST: 'https://staging.self-hosted.example.com',
+          WEAVERSE_PROJECT_ID: 'proj-123',
+        },
+      }),
+      components: [],
+      themeSchema: baseSchema,
+    })
+    let keys: unknown[] = []
+    client.withCache = {
+      fetch: (
+        _url: string,
+        _fetchOptions: RequestInit,
+        options: { cacheKey: unknown[] }
+      ) => {
+        keys.push(options.cacheKey)
+        return Promise.resolve({ data: { theme: {} } })
+      },
+    } as any
+
+    await client.loadThemeSettings()
+    await client.fetchWithCache(
+      'https://staging.self-hosted.example.com/api/public/project_configs',
+      { method: 'POST', cacheTarget: 'theme-settings' }
+    )
+
+    expect(keys).toHaveLength(2)
+    expect(keys[0]).not.toEqual(keys[1])
+  })
+
+  it('should_not_share_the_internal_cache_identity_when_a_caller_sends_the_sentinel_as_its_body', async () => {
+    // A sentinel string in a caller-writable slot is forgeable: body is
+    // public input, so an external call sending the exact sentinel bytes used
+    // to produce a byte-identical key. The identity now also carries a
+    // WeakSet-membership slot no caller input can reach.
+    let client = new WeaverseClient({
+      ...createMockContext({
+        request: new Request('https://shop.example/'),
+        env: {
+          WEAVERSE_HOST: 'https://staging.self-hosted.example.com',
+          WEAVERSE_PROJECT_ID: 'proj-123',
+        },
+      }),
+      components: [],
+      themeSchema: baseSchema,
+    })
+    let keys: unknown[] = []
+    client.withCache = {
+      fetch: (
+        _url: string,
+        _fetchOptions: RequestInit,
+        options: { cacheKey: unknown[] }
+      ) => {
+        keys.push(options.cacheKey)
+        return Promise.resolve({ data: { theme: {} } })
+      },
+    } as any
+
+    await client.loadThemeSettings()
+    await client.fetchWithCache(
+      'https://staging.self-hosted.example.com/api/public/project_configs',
+      {
+        method: 'POST',
+        cacheTarget: 'theme-settings',
+        body: '\u0000weaverse:body-free',
+      }
+    )
+
+    expect(keys).toHaveLength(2)
+    expect(keys[0]).not.toEqual(keys[1])
+  })
+
+  it('should_keep_a_body_derived_cache_key_when_an_external_caller_selects_the_theme_settings_target', async () => {
+    // `fetchWithCache` is public API: dropping the body from the cache key for
+    // ANY caller selecting `theme-settings` collapsed their varying bodies
+    // into one entry, serving data generated for a different body. Only the
+    // internal project_configs request is body-free.
+    let client = new WeaverseClient({
+      ...createMockContext({
+        request: new Request('https://shop.example/'),
+        env: {
+          WEAVERSE_HOST: 'https://staging.self-hosted.example.com',
+          WEAVERSE_PROJECT_ID: 'proj-123',
+        },
+      }),
+      components: [],
+      themeSchema: baseSchema,
+    })
+    let keys: unknown[] = []
+    client.withCache = {
+      fetch: (
+        _url: string,
+        _fetchOptions: RequestInit,
+        options: { cacheKey: unknown[] }
+      ) => {
+        keys.push(options.cacheKey)
+        return Promise.resolve({ data: {} })
+      },
+    } as any
+
+    const url =
+      'https://staging.self-hosted.example.com/api/public/project_configs'
+    await client.fetchWithCache(url, {
+      method: 'POST',
+      cacheTarget: 'theme-settings',
+      body: '{"a":1}',
+    })
+    await client.fetchWithCache(url, {
+      method: 'POST',
+      cacheTarget: 'theme-settings',
+      body: '{"b":2}',
+    })
+
+    expect(keys).toHaveLength(2)
+    expect(keys[0]).not.toEqual(keys[1])
+  })
+  it('should_refuse_to_cache_a_refusal_under_the_shared_body_free_identity', async () => {
+    // Dropping the storefront origin from the cache key is only safe while
+    // every cacheable response is host-independent. Builder answers a blocked
+    // hostname with a 403 `{ error }` body, which MUST NOT be stored under the
+    // entry every other domain of the project reads.
+    let client = new WeaverseClient({
+      ...createMockContext({
+        request: new Request('https://blocked.example/'),
+        env: {
+          WEAVERSE_HOST: 'https://staging.self-hosted.example.com',
+          WEAVERSE_PROJECT_ID: 'proj-123',
+        },
+      }),
+      components: [],
+      themeSchema: baseSchema,
+    })
+    let shouldCacheResponse: ((response: unknown) => boolean) | undefined
+    // The stub only needs the two fields `fetchWithCache` reads back; the real
+    // `withCache` signature is far wider, so narrow through `unknown`.
+    client.withCache = {
+      fetch: (
+        _url: string,
+        _fetchOptions: RequestInit,
+        options: { shouldCacheResponse: (response: unknown) => boolean }
+      ) => {
+        shouldCacheResponse = options.shouldCacheResponse
+        return Promise.resolve({ data: { error: 'Forbidden' } })
+      },
+    } as unknown as typeof client.withCache
+
+    await client.loadThemeSettings()
+
+    expect(shouldCacheResponse).toBeTypeOf('function')
+    expect(shouldCacheResponse?.({ error: 'Forbidden' })).toBe(false)
+    expect(shouldCacheResponse?.({ theme: {} })).toBe(true)
+  })
+})

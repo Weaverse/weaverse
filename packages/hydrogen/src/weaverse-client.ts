@@ -134,6 +134,33 @@ const SMART_CACHE_STRATEGIES: Record<BuilderApiCacheTarget, CachingStrategy> = {
 } as const
 
 /**
+ * Options objects created by the internal `project_configs` request whose
+ * subrequest cache identity deliberately excludes the body. Theme settings
+ * carry the storefront origin so Builder can attribute hostnames; hashing the
+ * body would give every domain of one project its own entry.
+ *
+ * The SUCCESSFUL theme payload is the same for every storefront of a project,
+ * which is what makes one shared entry correct. This is not a claim that
+ * Builder can never answer differently per host: a hostname-blocked request
+ * returns a 403 `{ error }` body, and `shouldCacheResponse` rejects anything
+ * `hasError()` matches, so a refusal is never stored under (or served from)
+ * the shared entry. If a future response shape ever varies by host WITHOUT an
+ * `error` field, this exclusion has to be revisited.
+ *
+ * Keyed on the exact options object, NOT on `cacheTarget`: `fetchWithCache`
+ * is public API, so gating on the target would silently collapse the cache of
+ * any consumer who selects `theme-settings` with varying bodies. An outside
+ * caller's options object is never in this set and keeps a body-derived key.
+ *
+ * The WeakSet-membership slot in the cache key (`has(options)`) is the actual
+ * discriminator — no caller-supplied value can reach it. The sentinel is not
+ * load-bearing for that; it only keeps the omitted body legible in cache
+ * debugging instead of a bare `undefined`.
+ */
+const bodyFreeCacheRequests = new WeakSet<object>()
+const BODY_FREE_CACHE_SENTINEL = '\u0000weaverse:body-free'
+
+/**
  * Request-scoped client for loading Weaverse pages and theme settings in Hydrogen.
  *
  * Create one client from the Hydrogen app context, then call
@@ -638,21 +665,32 @@ export class WeaverseClient {
 
     // Update cache key to include method, body content, and projectId for multi-project isolation
     // Prefix for easier debugging in cache systems
+    //
+    // The body is omitted only for options objects marked internally (see
+    // `bodyFreeCacheRequests`): the storefront origin must reach Builder for
+    // hostname attribution, but two domains of one project have to share one
+    // entry. Every other caller keeps a body-derived key.
     const cacheKey = [
       'weaverse-fetch',
       url,
       options.method || 'GET',
-      fetchOptions.body,
+      bodyFreeCacheRequests.has(options)
+        ? BODY_FREE_CACHE_SENTINEL
+        : fetchOptions.body,
+      // WeakSet-derived discriminator: this slot cannot be produced by any
+      // caller-supplied shape, so no external call can reach the marked
+      // identity — even one that happens to send the sentinel string as its
+      // body.
+      bodyFreeCacheRequests.has(options),
       this.configs.projectId,
       cacheTarget || 'default',
     ]
-
     let result: WithCacheFetchResponse<T>
 
     // Bypass the shared Hydrogen subrequest cache for design/revision modes
     // and for the Cloudflare public API proxy. The proxy owns freshness with
     // versioned cache keys; keeping Hydrogen's URL/body cache in front would
-    // keep serving a stale response even after Builder bumps api.weaverse.io's
+    // keep serving a stale response even after Builder bumps the proxy's
     // project version.
     if (
       this.configs.isDesignMode ||
@@ -676,6 +714,20 @@ export class WeaverseClient {
     }
 
     return result.data
+  }
+
+  /**
+   * Safe origin of the incoming storefront request: scheme, host and explicit
+   * port. Userinfo, path, query and fragment are dropped, so no customer
+   * route or credential-bearing value leaves the storefront. Returns undefined
+   * for a non-http(s) request so the field is simply omitted.
+   */
+  private safeStorefrontOrigin(): string | undefined {
+    const { protocol, host } = this.parsedUrl
+    if (protocol !== 'http:' && protocol !== 'https:') {
+      return
+    }
+    return host ? `${protocol}//${host}` : undefined
   }
 
   /**
@@ -704,21 +756,41 @@ export class WeaverseClient {
 
       const url = this.getApiUrl('project_configs')
 
-      const body = JSON.stringify({ isDesignMode, projectId })
+      // Theme/config reads carry no route, so Builder could not tell which
+      // storefront asked. `storefrontUrl` is the request's safe origin only —
+      // scheme, host and explicit port, never a path, query, fragment or
+      // userinfo — so hosted-content attribution works without sending
+      // customer-visible URL data. Older Builder deployments ignore the extra
+      // field. The response does not vary by storefront, so the origin stays
+      // out of BOTH cache identities: the edge excludes it from its selectors,
+      // and this request is marked in `bodyFreeCacheRequests` so Hydrogen's
+      // own subrequest cache key omits the body — hashing it would otherwise
+      // give every domain of one project its own entry.
+      const body = JSON.stringify({
+        isDesignMode,
+        projectId,
+        storefrontUrl: this.safeStorefrontOrigin(),
+      })
 
-      // Fetch theme settings and merchant overrides in parallel
+      // Fetch theme settings and merchant overrides in parallel. The options
+      // object is registered in `bodyFreeCacheRequests` so `fetchWithCache`
+      // keeps the storefront origin out of the subrequest cache identity for
+      // exactly this internal request — see the marker's doc comment.
+      const themeSettingsOptions: WeaverseFetchWithCacheOptions = {
+        method: 'POST',
+        cacheTarget: 'theme-settings',
+        strategy,
+        body,
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          'Accept-Encoding': 'gzip, deflate, br',
+        },
+      }
+      bodyFreeCacheRequests.add(themeSettingsOptions)
+
       const [data, merchantOverrides] = await Promise.all([
-        this.fetchWithCache<ThemeSettingsResponse>(url, {
-          method: 'POST',
-          cacheTarget: 'theme-settings',
-          strategy,
-          body,
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            'Accept-Encoding': 'gzip, deflate, br',
-          },
-        }),
+        this.fetchWithCache<ThemeSettingsResponse>(url, themeSettingsOptions),
         this.fetchMerchantOverrides(strategy),
       ])
 
