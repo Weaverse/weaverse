@@ -1028,4 +1028,40 @@ describe('loadThemeSettings storefront context', () => {
     expect(keys).toHaveLength(2)
     expect(keys[0]).not.toEqual(keys[1])
   })
+  it('should_refuse_to_cache_a_refusal_under_the_shared_body_free_identity', async () => {
+    // Dropping the storefront origin from the cache key is only safe while
+    // every cacheable response is host-independent. Builder answers a blocked
+    // hostname with a 403 `{ error }` body, which MUST NOT be stored under the
+    // entry every other domain of the project reads.
+    let client = new WeaverseClient({
+      ...createMockContext({
+        request: new Request('https://blocked.example/'),
+        env: {
+          WEAVERSE_HOST: 'https://staging.self-hosted.example.com',
+          WEAVERSE_PROJECT_ID: 'proj-123',
+        },
+      }),
+      components: [],
+      themeSchema: baseSchema,
+    })
+    let shouldCacheResponse: ((response: unknown) => boolean) | undefined
+    // The stub only needs the two fields `fetchWithCache` reads back; the real
+    // `withCache` signature is far wider, so narrow through `unknown`.
+    client.withCache = {
+      fetch: (
+        _url: string,
+        _fetchOptions: RequestInit,
+        options: { shouldCacheResponse: (response: unknown) => boolean }
+      ) => {
+        shouldCacheResponse = options.shouldCacheResponse
+        return Promise.resolve({ data: { error: 'Forbidden' } })
+      },
+    } as unknown as typeof client.withCache
+
+    await client.loadThemeSettings()
+
+    expect(shouldCacheResponse).toBeTypeOf('function')
+    expect(shouldCacheResponse?.({ error: 'Forbidden' })).toBe(false)
+    expect(shouldCacheResponse?.({ theme: {} })).toBe(true)
+  })
 })

@@ -136,20 +136,26 @@ const SMART_CACHE_STRATEGIES: Record<BuilderApiCacheTarget, CachingStrategy> = {
 /**
  * Options objects created by the internal `project_configs` request whose
  * subrequest cache identity deliberately excludes the body. Theme settings
- * carry the storefront origin so Builder can attribute hostnames, but the
- * response does not vary by storefront: hashing the body would give every
- * domain of one project its own entry.
+ * carry the storefront origin so Builder can attribute hostnames; hashing the
+ * body would give every domain of one project its own entry.
+ *
+ * The SUCCESSFUL theme payload is the same for every storefront of a project,
+ * which is what makes one shared entry correct. This is not a claim that
+ * Builder can never answer differently per host: a hostname-blocked request
+ * returns a 403 `{ error }` body, and `shouldCacheResponse` rejects anything
+ * `hasError()` matches, so a refusal is never stored under (or served from)
+ * the shared entry. If a future response shape ever varies by host WITHOUT an
+ * `error` field, this exclusion has to be revisited.
  *
  * Keyed on the exact options object, NOT on `cacheTarget`: `fetchWithCache`
  * is public API, so gating on the target would silently collapse the cache of
  * any consumer who selects `theme-settings` with varying bodies. An outside
  * caller's options object is never in this set and keeps a body-derived key.
  *
- * The marked identity is disambiguated by an adjacent WeakSet-membership slot
- * in the cache key (`has(options)`), which no caller-supplied value can
- * reach: a sentinel string alone in the body slot would be forgeable, since
- * `body` is public caller input. The sentinel merely keeps the marked slot
- * distinct from `undefined`-bodied external calls.
+ * The WeakSet-membership slot in the cache key (`has(options)`) is the actual
+ * discriminator — no caller-supplied value can reach it. The sentinel is not
+ * load-bearing for that; it only keeps the omitted body legible in cache
+ * debugging instead of a bare `undefined`.
  */
 const bodyFreeCacheRequests = new WeakSet<object>()
 const BODY_FREE_CACHE_SENTINEL = '\u0000weaverse:body-free'
