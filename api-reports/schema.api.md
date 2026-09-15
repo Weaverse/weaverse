@@ -220,6 +220,39 @@ export const HeadingInputSchema: z.ZodObject<{
 }, z.core.$loose>;
 
 // @public
+export const IMAGES_PLACEHOLDERS: {
+    logo_white: string;
+    logo_black: string;
+    image: string;
+    banner_1: string;
+    banner_2: string;
+    collection_1: string;
+    collection_2: string;
+    collection_3: string;
+    collection_4: string;
+    collection_5: string;
+    collection_6: string;
+    product_1: string;
+    product_2: string;
+    product_3: string;
+    product_4: string;
+    product_5: string;
+    product_6: string;
+    product_7: string;
+    product_8: string;
+    product_9: string;
+    product_10: string;
+    product_11: string;
+    product_12: string;
+    product_13: string;
+    product_14: string;
+    product_15: string;
+    product_16: string;
+    product_17: string;
+    product_18: string;
+};
+
+// @public
 export type Input = BasicInput | HeadingInput;
 
 // @public
