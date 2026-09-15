@@ -385,6 +385,7 @@ export const groupHelpers = {
   }),
 }
 
+export { IMAGES_PLACEHOLDERS } from './images-placeholders.js'
 export type {
   BasicInput,
   ComponentAvailabilityContext,
