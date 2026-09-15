@@ -146,11 +146,11 @@ importers:
         specifier: '3'
         version: 3.0.3(@shopify/oxygen-workers-types@4.2.0)(react-router@7.14.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
       '@weaverse/react':
-        specifier: 5.21.0
-        version: 5.21.0
+        specifier: 5.21.1
+        version: 5.21.1
       '@weaverse/schema':
-        specifier: 0.15.0
-        version: 0.15.0
+        specifier: 0.16.0
+        version: 0.16.0
       react:
         specifier: '>=19'
         version: 19.2.5
@@ -186,8 +186,8 @@ importers:
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: 5.21.0
-        version: 5.21.0
+        specifier: 5.21.1
+        version: 5.21.1
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -1628,20 +1628,23 @@ packages:
     resolution: {integrity: sha512-fPF8D/MAeLvWh2k2JaINdSHKVZSuOKiQtjLhy58c4YBkg8LWRi2nZaEebUNiQuLLCpHfXoZbGTroyY6l4YVNwQ==}
     engines: {node: '>=18'}
 
-  '@weaverse/core@5.21.0':
-    resolution: {integrity: sha512-628i/jda/quLNy3Ju+ewuDmwh4vq1pdiWdxtYyJYAV7mD/0j3kL08Ti00Xbx2EA1gGz6rGt48DGhtRXyMPRN+w==}
+  '@weaverse/core@5.21.1':
+    resolution: {integrity: sha512-gfTssBagh9/NVtBSiKOLr06Ma1BULyD9/7HNbTsoHpaqtT126qDz7b8+KEs5IDzbimG/nA6QxztQYE0DHKTu4A==}
     engines: {node: '>=18'}
 
   '@weaverse/react@5.20.3':
     resolution: {integrity: sha512-6J/Gd6npD1gG/Gf461TudJ3erXl2YQEzWqjHXHuPZVVEBGb+laArDov0MOgb9blWvgU37KPEfU3gQcDfqI0B+A==}
     engines: {node: '>=18'}
 
-  '@weaverse/react@5.21.0':
-    resolution: {integrity: sha512-WTVDxbjqN7mt8t+gmWNhPUFQFGOJA3Pv3wAzSQbJss11G2LI5B6s1C7JZ7j/JE8LUosSwZ6xDzJrnbEdXMXpkw==}
+  '@weaverse/react@5.21.1':
+    resolution: {integrity: sha512-emBp2jdHxWlVWoLPTriu8ZrfLnOGzG0UdJyI53qLccBkEYz/PLQ+CiZMukeAAFkR2o+ZqnlsK4B1LANzOJ9dhA==}
     engines: {node: '>=18'}
 
   '@weaverse/schema@0.15.0':
     resolution: {integrity: sha512-FoJYFBrKaPCeYKVasBa/ne6bS5l/ng7Pv7M9M2dSCWQLSrHDeVFiRdE7DHUhgWdIonfzbslLWqwJUVcYxuvktg==}
+
+  '@weaverse/schema@0.16.0':
+    resolution: {integrity: sha512-fLdYD10vPa79JgRH6e28lM3QlZnaMzBS2WA3MiHmlaBTavflCOIDbdReysxeN1LC33v4+ur9n1sJhT6PNxMj8w==}
 
   '@xstate/fsm@2.0.0':
     resolution: {integrity: sha512-p/zcvBMoU2ap5byMefLkR+AM+Eh99CU/SDEQeccgKlmFNOMDwphaRGqdk+emvel/SaGZ7Rf9sDvzAplLzLdEVQ==}
@@ -4267,7 +4270,7 @@ snapshots:
 
   '@weaverse/core@5.20.3': {}
 
-  '@weaverse/core@5.21.0': {}
+  '@weaverse/core@5.21.1': {}
 
   '@weaverse/react@5.20.3':
     dependencies:
@@ -4276,14 +4279,18 @@ snapshots:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
 
-  '@weaverse/react@5.21.0':
+  '@weaverse/react@5.21.1':
     dependencies:
-      '@weaverse/core': 5.21.0
+      '@weaverse/core': 5.21.1
       clsx: 2.1.1
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
 
   '@weaverse/schema@0.15.0':
+    dependencies:
+      zod: 4.4.3
+
+  '@weaverse/schema@0.16.0':
     dependencies:
       zod: 4.4.3
 
