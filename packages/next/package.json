@@ -2,7 +2,7 @@
   "name": "@weaverse/next",
   "author": "Weaverse Team",
   "description": "Next.js App Router integration for building Weaverse-powered storefronts",
-  "version": "0.1.0-alpha.17",
+  "version": "0.1.0-alpha.18",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",
@@ -63,7 +63,7 @@
   },
   "dependencies": {
     "@weaverse/react": "5.20.3",
-    "@weaverse/schema": "0.15.0"
+    "@weaverse/schema": "0.16.0"
   },
   "devDependencies": {
     "next": "16.3.4"
