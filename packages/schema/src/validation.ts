@@ -85,6 +85,13 @@ export const ConfigsPropsSchema = z.union([
   MediaInputConfigsSchema,
 ])
 
+const FOCAL_POINT_SCHEMA = z
+  .object({
+    x: z.number().min(0).max(1),
+    y: z.number().min(0).max(1),
+  })
+  .optional()
+
 /** Runtime validator for configurable Studio inputs. */
 export const BasicInputSchema = z
   .object({
@@ -175,6 +182,27 @@ export const BasicInputSchema = z
               message: issue.message,
               input: ctx.value,
             })
+          })
+        }
+      }
+    }
+  })
+  .check((ctx) => {
+    let { type, defaultValue } = ctx.value
+    if (
+      type === 'image' &&
+      defaultValue !== null &&
+      typeof defaultValue === 'object' &&
+      'focalPoint' in defaultValue
+    ) {
+      let result = FOCAL_POINT_SCHEMA.safeParse(defaultValue.focalPoint)
+      if (!result.success) {
+        for (let issue of result.error.issues) {
+          ctx.issues.push({
+            code: z.ZodIssueCode.custom,
+            path: ['defaultValue', 'focalPoint', ...issue.path],
+            message: issue.message,
+            input: defaultValue.focalPoint,
           })
         }
       }

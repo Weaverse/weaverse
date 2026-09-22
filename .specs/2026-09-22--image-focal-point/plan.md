@@ -52,8 +52,9 @@ Keep crop UI and theme rendering implementation in the companion issues.
 - `packages/core/src/types.ts`
 - `packages/schema/src/validation.ts`
 - `packages/schema/test/image-focal-point.test.ts`
-- `packages/hydrogen/__tests__/image-focal-point.test.tsx`
-- `packages/hydrogen/README.md`
+- `packages/hydrogen/__tests__/theme-settings-store.test.ts`
+- `scripts/fixtures/image-focal-point.mjs` (packed runtime data-flow check)
+- `packages/hydrogen/readme.md`
 - `scripts/check-packed-packages.mjs`
 - Generated affected files in `api-reports/`
 
