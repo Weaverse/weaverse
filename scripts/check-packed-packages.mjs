@@ -563,6 +563,14 @@ function verify(specifier, runtimeModule) {
   run(process.execPath, ['runtime.mjs'], { cwd: consumerDir })
   run(process.execPath, ['runtime.cjs'], { cwd: consumerDir })
   writeFileSync(
+    join(consumerDir, 'image-focal-point.mjs'),
+    readFileSync(
+      join(ROOT_DIR, 'scripts/fixtures/image-focal-point.mjs'),
+      'utf8'
+    )
+  )
+  run(process.execPath, ['image-focal-point.mjs'], { cwd: consumerDir })
+  writeFileSync(
     join(consumerDir, 'manifest-runtime.mjs'),
     `import { generateComponentManifest } from '@weaverse/schema/manifest'
 
@@ -618,6 +626,9 @@ import type {
   ComponentAvailabilityContext as HydrogenAvailabilityContext,
   Resolvable as HydrogenResolvable,
 } from '@weaverse/hydrogen'
+import type { WeaverseImage as CoreImage } from '@weaverse/core'
+import type { WeaverseImage as ReactImage } from '@weaverse/react'
+import type { WeaverseImage as HydrogenImage } from '@weaverse/hydrogen'
 import type {
   BasicInput,
   ComponentAvailabilityContext,
@@ -631,6 +642,19 @@ import {
 } from '@weaverse/schema/manifest'
 
 let modules = [${typeEntrypoints.map((_, index) => `api${index}`).join(', ')}]
+let legacyImage: CoreImage = {
+  id: 'image-1', url: '/image.jpg', altText: '',
+  width: 1200, height: 800, previewSrc: '/preview.jpg',
+}
+let coreImage: CoreImage = { ...legacyImage, focalPoint: { x: 0.8, y: 0.3 } }
+let reactImage: ReactImage = { ...legacyImage, focalPoint: { x: 0, y: 1 } }
+let hydrogenImage: HydrogenImage = { ...legacyImage, focalPoint: { x: 1, y: 0 } }
+let compatibleImages: HydrogenImage[] = [legacyImage, coreImage, reactImage, hydrogenImage]
+// @ts-expect-error Both coordinates are required when a focal point is present.
+let incompletePoint: CoreImage['focalPoint'] = { x: 0.5 }
+// @ts-expect-error Coordinates are numbers, not percentage strings.
+let stringPoint: HydrogenImage['focalPoint'] = { x: '80%', y: 0.3 }
+void [compatibleImages, incompletePoint, stringPoint]
 let heading: HeadingInput = {
   type: 'heading',
   label: 'Compatibility heading',
