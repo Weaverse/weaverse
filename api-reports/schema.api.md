@@ -405,6 +405,9 @@ export const RangeInputConfigsSchema: z.ZodObject<{
 export type Resolvable<T, Context> = T | ((context: Context) => T);
 
 // @public
+export function resolveThemeRoute(pattern: string, params: Record<string, string | undefined>): string | null;
+
+// @public
 export interface SchemaAnalysisResult {
     issues: readonly SchemaValidationIssue[];
     stats: SchemaAnalysisStats;
@@ -609,6 +612,12 @@ export interface SimpleValidationResult<T = any> {
     error?: string;
     success: boolean;
 }
+
+// @public
+export type ThemeRoutePageType = Exclude<PageType, '*' | 'CUSTOM'>;
+
+// @public
+export type ThemeRoutes = Partial<Record<ThemeRoutePageType, string>>;
 
 // @public
 export const titleSchema: z.ZodString;
