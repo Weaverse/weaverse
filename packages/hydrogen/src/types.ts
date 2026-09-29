@@ -827,6 +827,12 @@ export type CreateHydrogenSchemaOptions = {
   }
   /** Static or context-aware component availability rule. */
   enabled?: Resolvable<boolean, ComponentAvailabilityContext>
+  /** Per-instance Studio label callback; falls back to `title`. */
+  // Mirrors `SchemaType['label']`. Inlined because Hydrogen's declaration
+  // build compiles against its pinned published `@weaverse/schema`, which
+  // predates `label`; switch to `SchemaType['label']` once that pin includes it.
+  // biome-ignore lint/suspicious/noExplicitAny: instance settings are schema-defined
+  label?: (data: Record<string, any>) => string | null | undefined
   /** Default component data and optional nested component presets. */
   presets?: {
     /** Components inserted as children by the preset. */

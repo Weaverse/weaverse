@@ -167,6 +167,12 @@ export class SchemaBuilder {
     return this
   }
 
+  /** Sets the per-instance Studio label callback. */
+  label(label: SchemaType['label']): SchemaBuilder {
+    this.schema.label = label
+    return this
+  }
+
   /** Sets initial component data and optional child presets. */
   presets(presets: SchemaType['presets']): SchemaBuilder {
     this.schema.presets = presets

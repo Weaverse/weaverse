@@ -189,6 +189,7 @@ export const ElementSchema: z.ZodObject<{
         groups: z.ZodOptional<z.ZodArray<z.ZodUnion<readonly [z.ZodLiteral<"*">, z.ZodLiteral<"header">, z.ZodLiteral<"footer">, z.ZodLiteral<"body">]>>>;
     }, z.core.$strip>>;
     enabled: z.ZodOptional<z.ZodCustom<Resolvable<boolean, ComponentAvailabilityContext>, Resolvable<boolean, ComponentAvailabilityContext>>>;
+    label: z.ZodOptional<z.ZodCustom<((data: Record<string, any>) => string | null | undefined) | undefined, ((data: Record<string, any>) => string | null | undefined) | undefined>>;
     presets: z.ZodOptional<z.ZodObject<{
         children: z.ZodOptional<z.ZodArray<z.ZodObject<{
             type: z.ZodString;
@@ -433,6 +434,7 @@ export class SchemaBuilder {
     enabled(enabled: SchemaType['enabled']): SchemaBuilder;
     // @deprecated
     enabledOn(enabledOn: SchemaType['enabledOn']): SchemaBuilder;
+    label(label: SchemaType['label']): SchemaBuilder;
     limit(limit: number): SchemaBuilder;
     presets(presets: SchemaType['presets']): SchemaBuilder;
     settings(settings: InspectorGroup[]): SchemaBuilder;
@@ -497,6 +499,7 @@ export const SchemaList: z.ZodRecord<z.ZodString, z.ZodObject<{
         groups: z.ZodOptional<z.ZodArray<z.ZodUnion<readonly [z.ZodLiteral<"*">, z.ZodLiteral<"header">, z.ZodLiteral<"footer">, z.ZodLiteral<"body">]>>>;
     }, z.core.$strip>>;
     enabled: z.ZodOptional<z.ZodCustom<Resolvable<boolean, ComponentAvailabilityContext>, Resolvable<boolean, ComponentAvailabilityContext>>>;
+    label: z.ZodOptional<z.ZodCustom<((data: Record<string, any>) => string | null | undefined) | undefined, ((data: Record<string, any>) => string | null | undefined) | undefined>>;
     presets: z.ZodOptional<z.ZodObject<{
         children: z.ZodOptional<z.ZodArray<z.ZodObject<{
             type: z.ZodString;
@@ -541,6 +544,7 @@ export interface SchemaType {
     };
     // @deprecated
     inspector?: InspectorGroup[];
+    label?: (data: Record<string, any>) => string | null | undefined;
     limit?: number;
     presets?: {
         children?: ComponentPresets[];

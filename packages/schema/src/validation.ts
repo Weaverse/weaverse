@@ -312,6 +312,13 @@ export const ElementSchema = z
       )
       .optional()
       .describe('Whether this element is available in the current context'),
+    label: z
+      .custom<SchemaType['label']>(
+        (value) => typeof value === 'function',
+        'Label must be a synchronous function returning plain text'
+      )
+      .optional()
+      .describe('Per-instance Studio label resolved from instance settings'),
     presets: z
       .object({
         children: z
@@ -550,6 +557,18 @@ export interface SchemaType {
    * @deprecated Use `settings` instead.
    */
   inspector?: InspectorGroup[]
+  /**
+   * Synchronous callback returning a plain-text Studio label for one instance
+   * from its current settings. Studio falls back to `title` when it is absent,
+   * throws, or returns empty or non-string output.
+   *
+   * @example
+   * ```ts
+   * label: (data) => data.heading
+   * ```
+   */
+  // biome-ignore lint/suspicious/noExplicitAny: instance settings are schema-defined
+  label?: (data: Record<string, any>) => string | null | undefined
   /** Maximum number of instances allowed under the same parent. */
   limit?: number
   /** Initial component data and optional child presets. */
