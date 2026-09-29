@@ -1,5 +1,6 @@
 import type { ElementData } from '@weaverse/react'
 import { Weaverse, WeaverseItemStore } from '@weaverse/react'
+import type { SchemaType } from '@weaverse/schema'
 import type { WeaverseNextRuntime } from './runtime'
 import type {
   WeaverseNextComponentData,
@@ -20,6 +21,25 @@ function flattenItemData(update: Omit<ElementData, 'id' | 'type'>) {
     return rest
   }
   return { ...data, ...rest }
+}
+
+/**
+ * Names of every setting a component schema declares, through `settings` or
+ * the legacy `inspector` key, with or without a default value.
+ */
+function getSchemaSettingNames(schema: SchemaType | undefined): string[] {
+  let names: string[] = []
+  for (let group of [
+    ...(schema?.settings ?? []),
+    ...(schema?.inspector ?? []),
+  ]) {
+    for (let input of group.inputs ?? []) {
+      if (typeof input.name === 'string') {
+        names.push(input.name)
+      }
+    }
+  }
+  return names
 }
 
 /**
@@ -88,7 +108,29 @@ export class WeaverseNextItem extends WeaverseItemStore {
    * `collectDeferredItemUpdates`).
    */
   setData = (update: Omit<ElementData, 'id' | 'type'>) => {
-    this.data = flattenItemData(update)
+    let source = update ?? {}
+    // A full serialized item (core `initProject()` on reuse) replaces the
+    // settings: drop every schema-declared setting, then apply defaults and the
+    // payload, so omitted settings match a freshly constructed store. Partial
+    // edits, loader-data updates and empty context refreshes carry no
+    // `id`/`type` and keep merging.
+    if ('id' in source && 'type' in source) {
+      let schema = this.Element?.schema
+      // The constructor keeps the payload's nested `data` on the store too;
+      // replace it rather than keep the previous payload's copy.
+      let { data: _previousData, ...store } = this._store
+      for (let name of getSchemaSettingNames(schema)) {
+        delete store[name]
+      }
+      this._store = {
+        ...store,
+        ...(source.data === undefined ? {} : { data: source.data }),
+        ...generateDataFromSchema(schema),
+        ...flattenItemData(source),
+      }
+    } else {
+      this.data = flattenItemData(source)
+    }
     if (deferredItemUpdates) {
       deferredItemUpdates.add(this)
     } else {
