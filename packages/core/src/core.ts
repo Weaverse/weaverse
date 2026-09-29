@@ -97,6 +97,36 @@ export class WeaverseItemStore extends EventEmitter {
   /** Returns the element's current serialized data. */
   getSnapShot = () => this.data
 
+  /**
+   * Instance label for Studio, computed on read from the schema's optional
+   * `label(data)` callback and the current snapshot. Falls back to the schema
+   * title (then the type) when the callback is absent, throws, or returns no
+   * text. Never persisted and never evaluated during normal rendering.
+   */
+  get label(): string {
+    let schema = this.Element?.schema
+    let fallback: string = schema?.title || this._store.type
+    if (typeof schema?.label !== 'function') {
+      return fallback
+    }
+    try {
+      let label = schema.label(this.getSnapShot())
+      if (typeof label?.then === 'function') {
+        // Async results are invalid and never applied later; only observe
+        // them so a rejection doesn't surface as an unhandled rejection.
+        Promise.resolve(label).catch(() => undefined)
+        return fallback
+      }
+      return (typeof label === 'string' && label.trim()) || fallback
+    } catch (error) {
+      console.warn(
+        `[Weaverse] label() failed for "${this._store.type}" (${this._id}):`,
+        error
+      )
+      return fallback
+    }
+  }
+
   /** Notifies subscribers with the element's current data. */
   triggerUpdate = () => {
     this.emit(this._store)
@@ -194,6 +224,11 @@ export class Weaverse extends EventEmitter {
   /** Item stores keyed by element identifier. */
   get itemInstances() {
     return Weaverse.itemInstances
+  }
+
+  /** Resolved instance label for an item ID, or `undefined` if no store exists. */
+  getItemLabel(id: string): string | undefined {
+    return Weaverse.itemInstances.get(id)?.label
   }
 
   /** Creates an item store for serialized element data. */
