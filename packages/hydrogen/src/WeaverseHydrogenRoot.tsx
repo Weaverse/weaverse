@@ -29,7 +29,6 @@ import {
 import { createWeaverseDataContext } from './hooks/use-weaverse-data-context'
 import type {
   HydrogenComponentData,
-  HydrogenComponentSchema,
   HydrogenElement,
   HydrogenPageData,
   HydrogenThemeSettings,
@@ -77,22 +76,6 @@ the pilot template because it tried to access the component registry before comp
 The fix was to defer that work until the component is actually rendered.
 ====================================
 */
-
-/**
- * Names of every setting a component schema declares, through `settings` or
- * the legacy `inspector` key, with or without a default value.
- */
-function getSchemaSettingNames(schema: HydrogenComponentSchema): string[] {
-  let names: string[] = []
-  for (let group of [...(schema.settings ?? []), ...(schema.inspector ?? [])]) {
-    for (let input of group.inputs ?? []) {
-      if (typeof input.name === 'string') {
-        names.push(input.name)
-      }
-    }
-  }
-  return names
-}
 
 /** Runtime store for one rendered Hydrogen component instance. */
 export class WeaverseHydrogenItem extends WeaverseItemStore {
@@ -155,14 +138,6 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
 
       if (schema && shouldNormalize) {
         let { data: _previousData, ...store } = this._store
-        if (isSerializedItem) {
-          // A full serialized item replaces the settings: drop every
-          // schema-declared setting so omitted ones (including settings
-          // without a default) match a freshly constructed store.
-          for (let name of getSchemaSettingNames(schema)) {
-            delete store[name]
-          }
-        }
         let schemaData = generateDataFromSchema(schema)
         this._store = {
           ...store,
@@ -295,37 +270,20 @@ export class WeaverseHydrogen extends Weaverse {
 
     // Extract translation sidecar from page data if present (design mode)
     this.extractTranslationSidecar()
-    this.rebindPageItems()
-  }
-
-  /**
-   * Point this page's reused item stores at this runtime. Core keeps item
-   * stores process-wide by ID, so a new runtime for the same page (e.g. a
-   * locale switch) reuses stores still bound to the previous runtime, and
-   * their snapshots would keep reading its translation sidecar. Only this
-   * page's items are touched, and no subscriber is notified.
-   */
-  private rebindPageItems() {
-    for (let { id } of this.data?.items ?? []) {
-      let instance = this.itemInstances.get(id)
-      if (instance && instance.weaverse !== this) {
-        instance.weaverse = this
-      }
-    }
   }
 
   /**
    * Extract translation sidecar data from `this.data` (the page data).
    * The builder attaches `translationMap`, `translationLocale`, and
-   * `translationLanguageId` to the page data in design mode. Page data without
-   * a sidecar clears it, so replaced page data never keeps overlaying the
-   * previous locale's translations.
+   * `translationLanguageId` to the page data in design mode.
    */
   extractTranslationSidecar = () => {
     const pageData = this.data as Record<string, any>
-    this.translationMap = pageData?.translationMap ?? {}
-    this.translationLocale = pageData?.translationLocale || ''
-    this.translationLanguageId = pageData?.translationLanguageId || ''
+    if (pageData?.translationMap) {
+      this.translationMap = pageData.translationMap
+      this.translationLocale = pageData.translationLocale || ''
+      this.translationLanguageId = pageData.translationLanguageId || ''
+    }
   }
 
   /**

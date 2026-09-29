@@ -434,7 +434,6 @@ export class SchemaBuilder {
     enabled(enabled: SchemaType['enabled']): SchemaBuilder;
     // @deprecated
     enabledOn(enabledOn: SchemaType['enabledOn']): SchemaBuilder;
-    label(label: SchemaType['label']): SchemaBuilder;
     limit(limit: number): SchemaBuilder;
     presets(presets: SchemaType['presets']): SchemaBuilder;
     settings(settings: InspectorGroup[]): SchemaBuilder;

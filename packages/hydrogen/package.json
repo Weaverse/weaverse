@@ -26,7 +26,7 @@
     "dev": "tsup --watch",
     "build": "tsup && node ../../scripts/build-declarations.mjs",
     "clean": "rimraf dist",
-    "test": "vp test --run --config vitest.config.ts",
+    "test": "vp test --run",
     "typecheck": "tsc --noEmit"
   },
   "tsup": {

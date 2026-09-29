@@ -1,5 +1,13 @@
 # Work Logs
 
+> **Superseded (2026-09-30):** the 2026-09-29 entries below record a runtime
+> design (core `item.label` / `getItemLabel`, Hydrogen and Next store and
+> translation-sidecar changes, adapter test harnesses, report-script changes,
+> and a `schemaBuilder().label()` helper). That design was rejected and fully
+> removed. The current scope is the schema declaration only; see the
+> 2026-09-30 entry, `README.md`, and `plan.md`. Test counts and checks below
+> describe the removed design and are not evidence for the current diff.
+
 ## 2026-09-29 — Initial implementation
 
 ### Context
@@ -223,3 +231,46 @@ replaces it, as Hydrogen already did.
   New test warnings concern intentional invalid numeric/async fixtures and a
   no-op warning spy; optional runtime guards preserve defensive behavior for
   JavaScript callers. Existing type-style warnings remain out of scope.
+
+## 2026-09-30 — Scope correction
+
+- Scope reduced to the `@weaverse/schema` declaration. Evaluation, `title`
+  fallback, error and async handling, and locale/draft data selection move to
+  a later Builder/Studio bridge issue; Studio renders the result.
+- Restored every non-schema file to the merge-base `143227a3`:
+  `packages/core/src/core.ts`, `packages/hydrogen/{package.json,tsconfig.json}`,
+  `packages/hydrogen/src/{WeaverseHydrogenRoot.tsx,types.ts}`,
+  `packages/next/src/item.ts`, `packages/next/tsconfig.json`,
+  `scripts/api-reports.mjs`, `api-reports/{core,hydrogen}.api.md`.
+- Deleted the runtime tests and harness:
+  `packages/{core,hydrogen,next}/__tests__/item-label.test.ts`,
+  `packages/hydrogen/vitest.config.ts`.
+- Removed `SchemaBuilder.label()`; `packages/schema/src/index.ts` now equals
+  the merge-base. Reworded `SchemaType.label` JSDoc and the package README as a
+  declaration consumed by the future Studio bridge.
+- Tests: replaced the builder test with "schema without `label` is unchanged";
+  added compile-time coverage in `test/type-alignment.test.ts` (sync callback
+  accepted, async callback is a type error).
+- Spec folder moved from `2026-09-29--` to `2026-09-30--`.
+
+### Results (current diff)
+
+| Command | Result |
+| --- | --- |
+| `pnpm exec vp test --run packages/schema/test/component-label.test.ts` | 3 passed |
+| `pnpm exec vp test --run` (in `packages/schema`) | 6 files, 72 passed |
+| `pnpm exec tsc --noEmit` (in `packages/schema`) | exit 0 |
+| `pnpm run build` (in `packages/schema`) | exit 0 |
+| `node scripts/api-reports.mjs --update` | only `schema.api.md` kept; other reports restored to merge-base |
+| `pnpm exec biome check` on touched schema source/tests | 0 errors (warnings only) |
+| `git diff 143227a3 -- packages/core packages/react packages/hydrogen packages/next scripts` | empty |
+
+### Final verification of the corrected scope
+
+- `pnpm exec turbo test --force`: 575 passed, one existing React test skipped.
+- `pnpm exec turbo typecheck --filter='./packages/*' --force`: all six tasks passed without cache.
+- `pnpm exec turbo build --filter='./packages/*' --force`: all six tasks passed without cache.
+- `pnpm exec biome ci . --diagnostic-level=error`: passed.
+- `pnpm run package:check`: verified eight packed packages and ten TypeScript entrypoints. The existing Next registry-pin warning is unrelated to this schema-only change.
+- The final source diff was reviewed: only `SchemaType.label` and matching non-invoking validation are added. No callback evaluator, adapter data update, translation lifecycle, dependency mapping or shared-tooling changes remain.
+- SDK and Builder issue descriptions now reflect schema-only SDK ownership and bridge-owned evaluation using effective preview-language data. Global configuration and automatic field detection remain excluded.

@@ -356,7 +356,6 @@ export class Weaverse extends EventEmitter {
     dataContext: Record<string, unknown> | null;
     static elementRegistry: Map<any, any>;
     get elementRegistry(): Map<any, any>;
-    getItemLabel(id: string): string | undefined;
     getSnapShot: () => WeaverseProjectDataType;
     initProject: () => void;
     isDesignMode: boolean;
@@ -417,7 +416,6 @@ export class WeaverseItemStore extends EventEmitter {
     getDefaultCss: () => ElementCSS;
     getSnapShot: () => ElementData;
     get _id(): string;
-    get label(): string;
     ref: RefObject<HTMLElement | null>;
     setData: (update: Omit<ElementData, "id" | "type">) => ElementData;
     _store: ElementData;

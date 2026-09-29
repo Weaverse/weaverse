@@ -217,31 +217,28 @@ const current = createSchema({
 
 ### Dynamic instance labels
 
-> **Status:** SDK groundwork. Schemas can declare `label` and the preview
-> runtime can resolve it, but Weaverse Studio does not display these labels
-> yet. Until it does, Studio keeps showing `title`.
+> **Status:** schema declaration only. Studio does not display these labels
+> yet; until the Studio preview bridge supports them, Studio keeps showing
+> `title`.
 
-Use `label` to derive a per-instance name from its settings, for example a
-tile's heading:
+Opt a component in to a per-instance name derived from its settings, for
+example a tile's heading:
 
 ```typescript
 const schema = createSchema({
-  title: 'Tile',
   type: 'tile',
+  title: 'Tile',
   label: (data) => data.heading,
 })
 ```
 
-`label` is an optional synchronous callback that receives the instance's
-current settings and returns plain text. `title` stays required: it names the
-component in Add menus and is the fallback whenever `label` is absent, throws,
-or returns an empty, whitespace-only, or non-string value. Async callbacks and
-JSX also fall back to `title`; an async result is never applied later.
+`label` is an optional synchronous callback that receives an instance's
+settings and returns plain text (`null`/`undefined` mean "no label"). `title`
+stays required: it names the component in Add menus and is the fallback label.
 
-Storefront rendering never calls the callback, and its result is never saved
-to page data. The runtime resolves it only on request, from the item's current
-data, via `item.label` or `weaverse.getItemLabel(itemId)` (`@weaverse/core`),
-so a resolved label reflects the latest edits and page or locale data.
+The SDK only validates and preserves the callback; it never calls it and
+never saves its result to page data. Evaluating it, including fallback to
+`title`, is the job of the Studio preview bridge.
 
 ### Schema Builder Pattern
 

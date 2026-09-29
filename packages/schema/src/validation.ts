@@ -318,7 +318,7 @@ export const ElementSchema = z
         'Label must be a synchronous function returning plain text'
       )
       .optional()
-      .describe('Per-instance Studio label resolved from instance settings'),
+      .describe('Per-instance label callback, evaluated by the Studio bridge'),
     presets: z
       .object({
         children: z
@@ -558,9 +558,9 @@ export interface SchemaType {
    */
   inspector?: InspectorGroup[]
   /**
-   * Synchronous callback returning a plain-text Studio label for one instance
-   * from its current settings. Studio falls back to `title` when it is absent,
-   * throws, or returns empty or non-string output.
+   * Synchronous callback deriving a plain-text label for one instance from its
+   * settings. Declaration only: the SDK never calls it; the Studio preview
+   * bridge evaluates it and falls back to `title`.
    *
    * @example
    * ```ts

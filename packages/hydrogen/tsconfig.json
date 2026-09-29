@@ -3,14 +3,11 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@weaverse/core": ["../core/src/index.ts"],
-      "@weaverse/react": ["../react/src/index.ts"],
-      "@weaverse/schema": ["../schema/src/index.ts"],
       "~/*": ["./src/*"]
     },
     "verbatimModuleSyntax": true,
     "types": ["node"]
   },
-  "include": ["src/**/*", "__tests__/item-label.test.ts"],
+  "include": ["src/**/*"],
   "exclude": ["dist", "node_modules"]
 }

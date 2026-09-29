@@ -87,7 +87,6 @@ export type CreateHydrogenSchemaOptions = {
         groups?: ('*' | 'header' | 'footer' | 'body')[];
     };
     enabled?: Resolvable<boolean, ComponentAvailabilityContext>;
-    label?: (data: Record<string, any>) => string | null | undefined;
     presets?: {
         children?: ComponentPresets[];
         [key: string]: any;

@@ -17,26 +17,6 @@ let typeEntrypoints = publishedPackages.flatMap((publishedPackage) =>
     .map((entrypoint) => ({ publishedPackage, entrypoint }))
 )
 
-/**
- * Package tsconfigs map `@weaverse/*` to workspace sources so typecheck and
- * tests cover cross-package changes before release. Reports describe the
- * packed package, so drop those mappings and resolve sibling packages through
- * their installed pins, as `build-declarations.mjs` does.
- */
-function getReportTsconfig(folder) {
-  let tsconfigPath = join(folder, 'tsconfig.json')
-  let paths =
-    JSON.parse(readFileSync(tsconfigPath, 'utf8')).compilerOptions?.paths ?? {}
-  return {
-    extends: tsconfigPath,
-    compilerOptions: {
-      paths: Object.fromEntries(
-        Object.entries(paths).filter(([key]) => !key.startsWith('@weaverse/'))
-      ),
-    },
-  }
-}
-
 mkdirSync(REPORT_DIR, { recursive: true })
 mkdirSync(TEMP_DIR, { recursive: true })
 
@@ -54,7 +34,7 @@ for (let { publishedPackage, entrypoint } of typeEntrypoints) {
       projectFolder: folder,
       mainEntryPointFilePath: join(folder, entrypoint.types),
       compiler: {
-        overrideTsconfig: getReportTsconfig(folder),
+        tsconfigFilePath: join(folder, 'tsconfig.json'),
         skipLibCheck: true,
       },
       apiReport: {

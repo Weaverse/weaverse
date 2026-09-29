@@ -116,6 +116,14 @@ let schema: SchemaType = {
   settings: [inspectorGroup],
   presets: { children: [legacyPreset] },
   enabled: ({ page }) => page.type === 'PRODUCT',
+  label: (data) => data.heading,
+}
+let asyncLabelSchema: SchemaType = {
+  title: 'Async label',
+  type: 'async-label',
+  // @ts-expect-error label must return plain text synchronously
+  label: async (data) => data.heading,
 }
 
 void schema
+void asyncLabelSchema

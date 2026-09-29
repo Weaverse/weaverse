@@ -4,9 +4,6 @@
     "baseUrl": ".",
     "types": ["node"],
     "paths": {
-      "@weaverse/core": ["../core/src/index.ts"],
-      "@weaverse/react": ["../react/src/index.ts"],
-      "@weaverse/schema": ["../schema/src/index.ts"],
       "~/*": ["./src/*"],
       "next/navigation": ["./__tests__/__mocks__/next-navigation.ts"]
     }

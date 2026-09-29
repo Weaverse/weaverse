@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { type SchemaType, schemaBuilder, validateSchema } from '../src'
+import { type SchemaType, validateSchema } from '../src'
 
 describe('component label', () => {
   it('should_preserve_label_callback_without_executing_it', () => {
@@ -22,13 +22,11 @@ describe('component label', () => {
     expect(result.success).toBe(false)
   })
 
-  it('should_set_label_when_using_schema_builder', () => {
-    let label = (data: Record<string, unknown>) => String(data.heading)
+  it('should_keep_schema_unchanged_when_label_is_absent', () => {
+    let componentSchema: SchemaType = { title: 'Tile', type: 'tile' }
 
-    let result = schemaBuilder({ title: 'Tile', type: 'tile' })
-      .label(label)
-      .buildUnsafe()
+    let result = validateSchema(componentSchema)
 
-    expect(result.label).toBe(label)
+    expect(result.success ? result.data : undefined).toEqual(componentSchema)
   })
 })
