@@ -96,6 +96,7 @@ export type ElementSchema = {
     groups?: ('*' | 'header' | 'footer' | 'body')[]
   }
   enabled?: Resolvable<boolean, ComponentAvailabilityContext>
+  label?: (data: Record<string, any>) => string | null | undefined
   presets?: {
     children?: Array<{ type: string; [key: string]: any }>
     [key: string]: any
@@ -213,6 +214,34 @@ const current = createSchema({
   enabled: ({ page, group }) => page.type === 'PRODUCT' && group === 'body',
 })
 ```
+
+### Dynamic instance labels
+
+> **Status:** SDK groundwork. Schemas can declare `label` and the preview
+> runtime can resolve it, but Weaverse Studio does not display these labels
+> yet. Until it does, Studio keeps showing `title`.
+
+Use `label` to derive a per-instance name from its settings, for example a
+tile's heading:
+
+```typescript
+const schema = createSchema({
+  title: 'Tile',
+  type: 'tile',
+  label: (data) => data.heading,
+})
+```
+
+`label` is an optional synchronous callback that receives the instance's
+current settings and returns plain text. `title` stays required: it names the
+component in Add menus and is the fallback whenever `label` is absent, throws,
+or returns an empty, whitespace-only, or non-string value. Async callbacks and
+JSX also fall back to `title`; an async result is never applied later.
+
+Storefront rendering never calls the callback, and its result is never saved
+to page data. The runtime resolves it only on request, from the item's current
+data, via `item.label` or `weaverse.getItemLabel(itemId)` (`@weaverse/core`),
+so a resolved label reflects the latest edits and page or locale data.
 
 ### Schema Builder Pattern
 
