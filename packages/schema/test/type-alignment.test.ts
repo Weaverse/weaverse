@@ -25,6 +25,7 @@ import type {
   ToggleGroupConfigs,
   ToggleGroupConfigsSchema,
 } from '../src'
+import { createSchema } from '../src'
 import type {
   ComponentManifest,
   ComponentManifestSchema,
@@ -125,5 +126,39 @@ let asyncLabelSchema: SchemaType = {
   label: async (data) => data.heading,
 }
 
+interface HeadingProps {
+  content: string
+}
+let annotatedLabelSchema = createSchema({
+  title: 'Heading',
+  type: 'heading',
+  label: (data: HeadingProps) => data.content,
+})
+createSchema({
+  title: 'Heading',
+  type: 'heading',
+  // @ts-expect-error label callback cannot read undeclared props
+  label: (data: HeadingProps) => data.heading,
+})
+createSchema({
+  title: 'Heading',
+  type: 'heading',
+  // @ts-expect-error label must not return a Promise
+  label: async (data: HeadingProps) => data.content,
+})
+createSchema({
+  title: 'Heading',
+  type: 'heading',
+  // @ts-expect-error label must return text, not a number
+  label: (data: HeadingProps) => data.content.length,
+})
+createSchema({
+  title: 'Heading',
+  type: 'heading',
+  // @ts-expect-error label must return text, not an object
+  label: (data: HeadingProps) => ({ text: data.content }),
+})
+
 void schema
 void asyncLabelSchema
+void annotatedLabelSchema

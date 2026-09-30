@@ -315,7 +315,7 @@ export const ElementSchema = z
     label: z
       .custom<SchemaType['label']>(
         (value) => typeof value === 'function',
-        'Label must be a synchronous function returning plain text'
+        'Label must be a function'
       )
       .optional()
       .describe('Per-instance label callback, evaluated by the Studio bridge'),
@@ -564,11 +564,13 @@ export interface SchemaType {
    *
    * @example
    * ```ts
-   * label: (data) => data.heading
+   * label: (data: HeadingProps) => data.content
    * ```
    */
+  // Method syntax (bivariant params) lets authors annotate `data` with their
+  // own props type while unannotated callbacks still get Record<string, any>.
   // biome-ignore lint/suspicious/noExplicitAny: instance settings are schema-defined
-  label?: (data: Record<string, any>) => string | null | undefined
+  label?(data: Record<string, any>): string | null | undefined
   /** Maximum number of instances allowed under the same parent. */
   limit?: number
   /** Initial component data and optional child presets. */

@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { type SchemaType, validateSchema } from '../src'
 
 describe('component label', () => {
-  it('should_preserve_label_callback_without_executing_it', () => {
+  it('should_preserve_label_callback_without_executing_it_when_validating', () => {
     let label = vi.fn((data: Record<string, unknown>) => String(data.heading))
     let componentSchema: SchemaType = { title: 'Tile', type: 'tile', label }
 

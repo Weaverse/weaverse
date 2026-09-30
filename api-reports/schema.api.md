@@ -543,7 +543,7 @@ export interface SchemaType {
     };
     // @deprecated
     inspector?: InspectorGroup[];
-    label?: (data: Record<string, any>) => string | null | undefined;
+    label?(data: Record<string, any>): string | null | undefined;
     limit?: number;
     presets?: {
         children?: ComponentPresets[];
