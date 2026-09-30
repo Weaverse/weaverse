@@ -312,6 +312,13 @@ export const ElementSchema = z
       )
       .optional()
       .describe('Whether this element is available in the current context'),
+    label: z
+      .custom<SchemaType['label']>(
+        (value) => typeof value === 'function',
+        'Label must be a function'
+      )
+      .optional()
+      .describe('Per-instance label callback, evaluated by the Studio bridge'),
     presets: z
       .object({
         children: z
@@ -550,6 +557,20 @@ export interface SchemaType {
    * @deprecated Use `settings` instead.
    */
   inspector?: InspectorGroup[]
+  /**
+   * Synchronous callback deriving a plain-text label for one instance from its
+   * settings. Declaration only: the SDK never calls it; the Studio preview
+   * bridge evaluates it and falls back to `title`.
+   *
+   * @example
+   * ```ts
+   * label: (data: HeadingProps) => data.content
+   * ```
+   */
+  // Method syntax (bivariant params) lets authors annotate `data` with their
+  // own props type while unannotated callbacks still get Record<string, any>.
+  // biome-ignore lint/suspicious/noExplicitAny: instance settings are schema-defined
+  label?(data: Record<string, any>): string | null | undefined
   /** Maximum number of instances allowed under the same parent. */
   limit?: number
   /** Initial component data and optional child presets. */

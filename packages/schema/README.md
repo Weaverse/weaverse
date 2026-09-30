@@ -96,6 +96,7 @@ export type ElementSchema = {
     groups?: ('*' | 'header' | 'footer' | 'body')[]
   }
   enabled?: Resolvable<boolean, ComponentAvailabilityContext>
+  label?(data: Record<string, any>): string | null | undefined
   presets?: {
     children?: Array<{ type: string; [key: string]: any }>
     [key: string]: any
@@ -213,6 +214,37 @@ const current = createSchema({
   enabled: ({ page, group }) => page.type === 'PRODUCT' && group === 'body',
 })
 ```
+
+### Dynamic instance labels
+
+> **Status:** schema declaration only. Studio does not display these labels
+> yet; until the Studio preview bridge supports them, Studio keeps showing
+> `title`.
+
+Opt a component in to a per-instance name derived from its settings, for
+example a heading's content:
+
+```typescript
+interface HeadingProps {
+  content: string
+}
+
+const schema = createSchema({
+  type: 'heading',
+  title: 'Heading',
+  label: (data: HeadingProps) => data.content,
+})
+```
+
+`label` is an optional synchronous callback that receives an instance's
+settings and returns plain text (`null`/`undefined` mean "no label"). `title`
+stays required: it names the component in Add menus and is the fallback label.
+Annotate `data` with the component's props type; unannotated callbacks receive
+`Record<string, any>`. Async and non-text returns are type errors.
+
+The SDK only validates and preserves the callback; it never calls it and
+never saves its result to page data. Evaluating it, including fallback to
+`title`, is the job of the Studio preview bridge.
 
 ### Schema Builder Pattern
 
