@@ -32,6 +32,13 @@
 > - All evaluation belongs to a later Builder/Studio bridge issue: the bridge obtains the effective element data for the current preview locale (including existing translations and drafts), evaluates the callback locally, handles `title` fallback, errors, and invalid or async results, and sends the string to Studio, which renders it. No translation-engine or data-replacement changes; no global auto-detection or configuration — per-element schema opt-in only.
 > - Only a `@weaverse/schema` release is needed for this PR. Adapter dependency pins and Builder integration are outside scope.
 
+### 2026-09-30 — Typed label callbacks (final decision)
+
+> - Support only normal `createSchema({ label: (data: HeadingProps) => data.content, ... })` authoring: a callback whose `data` parameter is annotated with a props type that has required fields (for example `HeadingProps.content`) must type-check.
+> - Do not add public generics to `createSchema`, `SchemaType`, `InspectorGroup`, or `condition`; no generic-based examples. Do not touch `condition`, Pilot, adapters, core, runtime, translation, configuration, or dependencies.
+> - Unannotated callbacks stay usable. Returns stay `string | null | undefined`; Promise, number, and object returns remain type errors. Do not loosen `label` to `Function`.
+> - The validator only checks that `label` is a function (message `Label must be a function`), preserves its identity, and never invokes it.
+
 ## Summary
 
-Adds an optional `label: (data) => string | null | undefined` field to component schemas in `@weaverse/schema`, validated and preserved but never invoked by the SDK. A follow-up Studio bridge will evaluate it against the current instance data to show instance-specific names, falling back to `title`. Studio does not display these labels yet.
+Adds an optional `label(data): string | null | undefined` callback field to component schemas in `@weaverse/schema`, validated and preserved but never invoked by the SDK. A follow-up Studio bridge will evaluate it against the current instance data to show instance-specific names, falling back to `title`. Studio does not display these labels yet.

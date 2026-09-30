@@ -274,3 +274,15 @@ replaces it, as Hydrogen already did.
 - `pnpm run package:check`: verified eight packed packages and ten TypeScript entrypoints. The existing Next registry-pin warning is unrelated to this schema-only change.
 - The final source diff was reviewed: only `SchemaType.label` and matching non-invoking validation are added. No callback evaluator, adapter data update, translation lifecycle, dependency mapping or shared-tooling changes remain.
 - SDK and Builder issue descriptions now reflect schema-only SDK ownership and bridge-owned evaluation using effective preview-language data. Global configuration and automatic field detection remain excluded.
+
+## 2026-09-30 — @hta218
+
+- Final decision: no generic API. Only plain `createSchema({ label: (data: HeadingProps) => data.content })` authoring is supported.
+- Regression: with `label?: (data: Record<string, any>) => ...`, strict `tsc` rejected `(data: HeadingProps) => data.content` because `content` is required (TS2322, parameter incompatible). Reproduced by a new compile case in `packages/schema/test/type-alignment.test.ts` before the fix.
+- Fix (only `packages/schema/src/validation.ts`): declared `label` with method syntax (`label?(data: Record<string, any>): string | null | undefined`) for bivariant parameters. Unannotated callbacks keep `Record<string, any>`; Promise/number/object returns still fail. Zod `z.custom<SchemaType['label']>` stays aligned. Tradeoff: an annotated props type is not checked against the schema's settings.
+- Review nits: validator message is now `Label must be a function`; non-execution test renamed to `should_preserve_label_callback_without_executing_it_when_validating`.
+- Updated the schema README example to annotate `HeadingProps`.
+- Independent verification: 72 schema tests passed; strict schema `tsc --noEmit --incremental false`, repository Biome CI, and `git diff --check` passed. Import ordering in the type fixture was corrected with Biome.
+- All six package builds passed uncached. `pnpm run package:check` verified eight packed packages and ten TypeScript entrypoints (existing registry-pin/API Extractor warnings remain unrelated).
+- A separate strict compiler probe through the built `@weaverse/schema` package exports accepted annotated/default callbacks and rejected an unknown property, async/number/object returns, and generic `createSchema` usage with the expected diagnostic codes. The initial probe used a non-public declaration path; it was corrected to the actual package exports before drawing conclusions.
+- Built-runtime probe confirmed callback identity was preserved with zero invocations. No adapter, `condition`, factory, or runtime implementation changes were introduced. Verification completed before committing.

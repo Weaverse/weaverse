@@ -22,11 +22,18 @@ The SDK declares, validates, and preserves the callback. It never calls it.
 
 ## Changes
 
-1. `SchemaType.label?: (data: Record<string, any>) => string | null | undefined`
-   with JSDoc stating it is a declaration only.
+1. `SchemaType.label?(data: Record<string, any>): string | null | undefined`
+   with JSDoc stating it is a declaration only. Declared with method syntax so
+   its parameter is bivariant: authors may annotate `data` with their own props
+   type (`(data: HeadingProps) => data.content`), unannotated callbacks are
+   contextually typed as `Record<string, any>`, and the return type is still
+   enforced. No public generics on `createSchema`/`SchemaType` (final
+   decision). Tradeoff: the annotated props type is not checked against the
+   schema's settings.
 2. `ElementSchema.label`: `z.custom` accepting any function, optional. Zod
    preserves the function reference and never invokes it; non-functions fail
-   validation. Schemas without `label` validate exactly as before.
+   validation (`Label must be a function`). Schemas without `label` validate
+   exactly as before.
 3. No `SchemaBuilder.label()` helper.
 4. `packages/schema/README.md`: type listing plus a short "Dynamic instance
    labels" section with the agreed example, stating Studio support is pending.
@@ -39,7 +46,10 @@ The SDK declares, validates, and preserves the callback. It never calls it.
   invoked; non-function rejected; schema without `label` unchanged.
 - `packages/schema/test/type-alignment.test.ts` (compiled by the schema
   `tsc --noEmit`): `label: (data) => data.heading` type-checks, an async
-  callback is a type error, and the existing `SchemaType` ↔ `ElementSchema`
+  callback is a type error, a real `createSchema` call with
+  `(data: HeadingProps) => data.content` (required `content`) type-checks,
+  while reading an undeclared prop or returning a Promise, number, or object
+  is a type error, and the existing `SchemaType` ↔ `ElementSchema`
   alignment assertion covers the new field.
 
 ## Out of Scope
