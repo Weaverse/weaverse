@@ -2,12 +2,12 @@
 
 | Field            | Value                                                                    |
 | ---------------- | ------------------------------------------------------------------------ |
-| **Status**       | completed                                                                |
+| **Status**       | in-progress                                                              |
 | **Owner**        | @leehoang                                                                |
 | **Issue**        | [Weaverse/builder#2673](https://github.com/Weaverse/builder/issues/2673) |
 | **Branch**       | `feat/header-footer-popup-outline`                                       |
 | **Created**      | 2026-07-27                                                               |
-| **Last Updated** | 2026-07-27                                                               |
+| **Last Updated** | 2026-10-02                                                               |
 
 ## Original Prompt
 
@@ -15,4 +15,4 @@
 
 ## Summary
 
-Add stable `outlineId` identity to Outline-enabled inspector groups and expose a Hydrogen theme-element helper for DOM markers and reveal callbacks. The contract does not create page item instances or change theme-settings persistence.
+Add stable `outlineId` identity to Outline-enabled inspector groups and expose a Hydrogen theme-element helper for DOM markers and reveal/hide callbacks. The contract does not create page item instances or change theme-settings persistence.
