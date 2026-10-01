@@ -1,5 +1,7 @@
 # AGENTS.md - Weaverse SDKs Development Guide
 
+> **Canonical agent instructions:** `AGENTS.md` is the source of truth and may always be updated. Root `CLAUDE.md` is a relative symlink to it and must never become a separate copy. Push completed instruction changes to the repository's default branch.
+
 ## Project Overview
 
 Monorepo of SDKs for integrating React/JamStack frameworks (Shopify Hydrogen, React Router, Next.js) with the Weaverse Headless CMS. Provides visual page building, theme customization, and content management through a drag-and-drop editor.
@@ -14,6 +16,8 @@ Monorepo of SDKs for integrating React/JamStack frameworks (Shopify Hydrogen, Re
 | Run all tests | `pnpm run test` |
 | Run single test file | `pnpm exec vp test --run path/to/file.test.ts` |
 | Typecheck all packages | `pnpm run typecheck` |
+| Check packed public APIs | `pnpm run package:check` |
+| Accept intentional API report changes | `pnpm run api:report` |
 | Lint/format check | `pnpm run biome` |
 | Lint/format fix | `pnpm run biome:fix` |
 | Format only | `pnpm run format` |
@@ -349,15 +353,18 @@ Uses a Claude Code skill (`.claude/skills/releasing-weaverse-sdks/SKILL.md`) for
 All features MUST have a spec folder in `.specs/` at the repo root:
 ```
 .specs/YYYY-MM-DD--feature-name/
-├── README.md      # Status, owner, issue, git-branch, original prompt, summary
+├── README.md      # Status, owner, issue, git branch, initiating requirement, summary
 ├── plan.md        # Under 500 lines, includes touched files/packages list
 └── work-logs.md   # Optional, append-only
 ```
+The README's `Initiating Requirement` MUST be a concise, self-contained, professionally revised account of the substantive requirement, not raw chat. Read any local brief, attachment, or file path and inline its requirement; a private source-file location used only to locate that material is never requirement content. Distinguish those private source locations from substantive repository paths, runtime paths, and URLs. Normalize substantive paths to portable forms when possible, such as repo-relative paths, then preserve each normalized path and its meaning exactly. Remove conversational scaffolding, agent orchestration chatter, and irrelevant prose. Credential and secret redaction has higher priority than every preservation rule: remove them even when they also qualify as substantive literal values or identifiers. Preserve every remaining substantive constraint, identifier, command, literal value, acceptance condition, and externally meaningful branch, base, and head identifier exactly. Add later user intent as dated, similarly revised `Scope Updates`. A contributor MUST be able to understand the spec without the original chat, private file, or author's machine. Apply this convention to new and touched specs; do not bulk-migrate historical specs.
 
 **Rules**:
-1. New feature? Create spec folder before writing code
-2. Existing feature? Read spec first; update if scope changes
-3. Plans live **only** in `.specs/<feature>/plan.md` — do NOT put them in `.plan/`, `docs/plans/`, or any other location
+1. Search existing specs and issue links before creating anything
+2. Update the closest existing spec; merge specs that share one user outcome and implementation boundary
+3. Create a new spec only for genuinely independent work
+4. On update or merge, move the folder to the current date, preserve `Created`, refresh `Last Updated`, and update repository-wide backlinks
+5. Plans live **only** in `.specs/<feature>/plan.md` — do NOT put them in `.plan/`, `docs/plans/`, or any other location
 
 ## Common Pitfalls
 

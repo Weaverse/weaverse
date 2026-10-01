@@ -878,6 +878,45 @@ describe('Studio runtime contract', () => {
     })
   })
 
+  it('should_preserve_page_type_and_handle_in_request_info_when_present', () => {
+    // Arrange
+    let context = {
+      handle: 'classic-kicks',
+      i18n: { country: 'FR', language: 'FR', locale: 'fr-FR' },
+      pageType: 'PRODUCT' as const,
+      pathname: '/fr-fr/products/classic-kicks',
+      searchParams: new URLSearchParams('variant=123'),
+    }
+
+    // Act
+    let requestInfo = buildWeaverseNextRequestInfo(context)
+
+    // Assert
+    expect(requestInfo).toEqual({
+      handle: 'classic-kicks',
+      i18n: { country: 'FR', language: 'FR', locale: 'fr-FR' },
+      pageType: 'PRODUCT',
+      pathname: '/fr-fr/products/classic-kicks',
+      search: '?variant=123',
+      queries: { variant: '123' },
+    })
+  })
+
+  it('should_omit_page_type_and_handle_from_request_info_when_absent', () => {
+    // Arrange
+    let context = {
+      pathname: '/collections/sale',
+      searchParams: new URLSearchParams(''),
+    }
+
+    // Act
+    let requestInfo = buildWeaverseNextRequestInfo(context)
+
+    // Assert
+    expect(requestInfo).not.toHaveProperty('pageType')
+    expect(requestInfo).not.toHaveProperty('handle')
+  })
+
   it('should_expose_theme_settings_store_with_live_update_method', () => {
     // Arrange
     let listener = vi.fn()
@@ -953,6 +992,41 @@ describe('Studio runtime contract', () => {
     expect(src).toBe(
       'https://studio.weaverse.io/static/studio/next/preview.js?v=2026.7.18'
     )
+  })
+
+  it('should_resolve_preview_script_when_design_and_preview_modes_are_both_active', () => {
+    // Arrange — Builder section-preview URLs carry both flags; the preview
+    // iframe waits for `preview-size`, which only preview.js emits.
+    let searchParams = new URLSearchParams(
+      'isDesignMode=true&isPreviewMode=true&weaverseHost=https%3A%2F%2Fstudio.weaverse.io&weaverseVersion=2026.8.6'
+    )
+
+    // Act
+    let src = resolveWeaverseNextStudioScriptSrc(
+      { searchParams },
+      { storefrontHostname: 'shop.example' }
+    )
+
+    // Assert
+    expect(src).toBe(
+      'https://studio.weaverse.io/static/studio/next/preview.js?v=2026.8.6'
+    )
+  })
+
+  it('should_resolve_preview_script_when_design_mode_and_revision_preview_are_both_active', () => {
+    // Arrange
+    let searchParams = new URLSearchParams(
+      'isDesignMode=true&__revisionId=rev-1&weaverseHost=https%3A%2F%2Fstudio.weaverse.io'
+    )
+
+    // Act
+    let src = resolveWeaverseNextStudioScriptSrc(
+      { searchParams },
+      { storefrontHostname: 'shop.example' }
+    )
+
+    // Assert
+    expect(src).toBe('https://studio.weaverse.io/static/studio/next/preview.js')
   })
 
   it('should_accept_studio_connect_without_framework_prop', () => {
@@ -1356,6 +1430,84 @@ describe('Studio runtime contract', () => {
     unsubscribe?.()
     vi.stubGlobal('window', previousWindow)
   })
+
+  it('should_rebind_reused_item_instances_to_the_new_runtime_when_locale_navigation_recreates_runtime', () => {
+    // Arrange — same page/item id served under two locales. Core keeps item
+    // stores in the process-wide `Weaverse.itemInstances` map, so the FR
+    // runtime reuses the EN store; without rebinding, `item.weaverse` still
+    // points at the EN runtime and `getSnapShot()` reads the EN translation
+    // sidecar / `requestInfo`.
+    let previousWindow = globalThis.window
+    let fakeWindow = {} as Window &
+      typeof globalThis & { __weaverses?: unknown }
+    vi.stubGlobal('window', fakeWindow)
+    let enData: WeaverseNextLoaderData = {
+      page: {
+        id: 'rebind-page',
+        rootId: 'rebind-item',
+        items: [{ id: 'rebind-item', type: 'hero', data: { text: 'Hello' } }],
+        translationMap: {
+          'rebind-item': {
+            text: { originalValue: 'Hello', translatedValue: 'Hello EN' },
+          },
+        },
+        translationLocale: 'en-us',
+        translationLanguageId: 'lang-en',
+      },
+    }
+    let frData: WeaverseNextLoaderData = {
+      page: {
+        id: 'rebind-page',
+        rootId: 'rebind-item',
+        items: [{ id: 'rebind-item', type: 'hero', data: { text: 'Hello' } }],
+        translationMap: {
+          'rebind-item': {
+            text: { originalValue: 'Hello', translatedValue: 'Bonjour FR' },
+          },
+        },
+        translationLocale: 'fr-fr',
+        translationLanguageId: 'lang-fr',
+      },
+    }
+    let enRuntime = createWeaverseNextRuntime({
+      client: makeClient({
+        requestContext: {
+          isDesignMode: false,
+          pathname: '/',
+          i18n: { country: 'US', language: 'EN', locale: 'en-US' },
+        },
+      }),
+      data: enData,
+    })
+    let enItem = enRuntime.itemInstances.get('rebind-item')
+    expect(enItem?.weaverse).toBe(enRuntime)
+    expect(enItem?.getSnapShot().text).toBe('Hello EN')
+
+    // Act — new pathname → new request key → freshly constructed FR runtime.
+    let frRuntime = createWeaverseNextRuntime({
+      client: makeClient({
+        requestContext: {
+          isDesignMode: false,
+          pathname: '/fr-fr',
+          i18n: { country: 'FR', language: 'FR', locale: 'fr-FR' },
+        },
+      }),
+      data: frData,
+    })
+
+    // Assert — new runtime, same reused item store, but rebound to FR so its
+    // snapshot resolves through the FR sidecar and FR request info.
+    expect(frRuntime).not.toBe(enRuntime)
+    let frItem = frRuntime.itemInstances.get('rebind-item')
+    expect(frItem).toBe(enItem)
+    expect(frItem?.weaverse).toBe(frRuntime)
+    expect(frItem?.weaverse.requestInfo).toMatchObject({
+      pathname: '/fr-fr',
+      i18n: { locale: 'fr-FR' },
+    })
+    expect(frItem?.getSnapShot().text).toBe('Bonjour FR')
+    vi.stubGlobal('window', previousWindow)
+  })
 })
 
 // ─── 7. Multi-runtime / nested instance selection ─────────────────────
@@ -1549,6 +1701,153 @@ describe('multi-runtime / nested instance selection', () => {
     expect(runtimeB.requestInfo.pathname).toBe('/collections/b')
     let registry = fakeWindow.__weaverses as Record<string, unknown>
     expect(registry['mr-url-page']).toBe(runtimeB)
+    vi.stubGlobal('window', previousWindow)
+  })
+
+  it('should_reinit_reused_runtime_when_it_is_not_the_active_studio_page', () => {
+    // Arrange — this mirrors Studio navigation Home -> PDP -> Home. The Home
+    // runtime is already bound when returning to it, but Builder's active bridge
+    // still points at PDP. Calling refreshStudio(Home) would be ignored by
+    // Builder as a cross-page refresh, leaving `beforeNavigate()` stuck in the
+    // disconnected/disabled state. The SDK must reactivate Home via init().
+    let previousWindow = globalThis.window
+    let fakeWindow = {
+      weaverseStudio: {
+        weaverse: undefined,
+        init: vi.fn((runtime) => {
+          fakeWindow.weaverseStudio.weaverse = runtime
+        }),
+        refreshStudio: vi.fn(),
+      },
+    } as unknown as Window &
+      typeof globalThis & {
+        weaverseStudio: {
+          weaverse?: unknown
+          init: ReturnType<typeof vi.fn>
+          refreshStudio: ReturnType<typeof vi.fn>
+        }
+      }
+    vi.stubGlobal('window', fakeWindow)
+    let homeClient = makeClient({
+      requestContext: {
+        isDesignMode: true,
+        pathname: '/',
+        searchParams: new URLSearchParams('isDesignMode=true'),
+      },
+    })
+    let pdpClient = makeClient({
+      requestContext: {
+        isDesignMode: true,
+        pathname: '/products/oxygen-snowboard',
+        searchParams: new URLSearchParams('isDesignMode=true'),
+      },
+    })
+    let homeData = makeMultiRuntimeData({
+      pageId: 'mr-nav-home-page',
+      itemId: 'mr-nav-home-item',
+      projectId: 'proj-home',
+      projectRecordId: 'record-home',
+    })
+    let pdpData = makeMultiRuntimeData({
+      pageId: 'mr-nav-pdp-page',
+      itemId: 'mr-nav-pdp-item',
+      projectId: 'proj-pdp',
+      projectRecordId: 'record-pdp',
+    })
+    let homeRuntime = createWeaverseNextRuntime({
+      client: homeClient,
+      data: homeData,
+    })
+    bindWeaverseNextStudioRuntime(homeRuntime)
+    let pdpRuntime = createWeaverseNextRuntime({
+      client: pdpClient,
+      data: pdpData,
+    })
+    bindWeaverseNextStudioRuntime(pdpRuntime)
+
+    // Act — Next reuses the already-bound Home runtime when navigating back.
+    let reusedHomeRuntime = createWeaverseNextRuntime({
+      client: homeClient,
+      data: homeData,
+    })
+    bindWeaverseNextStudioRuntime(reusedHomeRuntime)
+
+    // Assert
+    expect(reusedHomeRuntime).toBe(homeRuntime)
+    expect(fakeWindow.weaverseStudio.init.mock.calls).toEqual([
+      [homeRuntime],
+      [pdpRuntime],
+      [homeRuntime],
+    ])
+    expect(fakeWindow.weaverseStudio.init).toHaveBeenLastCalledWith(homeRuntime)
+    expect(fakeWindow.weaverseStudio.refreshStudio).not.toHaveBeenCalled()
+    expect(fakeWindow.weaverseStudio.weaverse).toBe(homeRuntime)
+    vi.stubGlobal('window', previousWindow)
+  })
+
+  it('should_not_reinit_an_inactive_co_located_runtime_on_the_same_url', () => {
+    // Arrange — nested/co-located runtimes share one URL. Builder decides which
+    // page is the editable leaf. A background rebind from the sibling must not
+    // steal active Studio ownership by calling init() again.
+    let previousWindow = globalThis.window
+    let fakeWindow = {
+      weaverseStudio: {
+        weaverse: undefined,
+        init: vi.fn((runtime) => {
+          fakeWindow.weaverseStudio.weaverse = runtime
+        }),
+        refreshStudio: vi.fn(),
+      },
+    } as unknown as Window &
+      typeof globalThis & {
+        weaverseStudio: {
+          weaverse?: unknown
+          init: ReturnType<typeof vi.fn>
+          refreshStudio: ReturnType<typeof vi.fn>
+        }
+      }
+    vi.stubGlobal('window', fakeWindow)
+    let client = makeClient({
+      requestContext: {
+        isDesignMode: true,
+        pathname: '/',
+        searchParams: new URLSearchParams('isDesignMode=true'),
+      },
+    })
+    let runtimeA = createWeaverseNextRuntime({
+      client,
+      data: makeMultiRuntimeData({
+        pageId: 'mr-same-url-page-a',
+        itemId: 'mr-same-url-item-a',
+        projectId: 'proj-a',
+        projectRecordId: 'record-a',
+      }),
+    })
+    let runtimeB = createWeaverseNextRuntime({
+      client,
+      data: makeMultiRuntimeData({
+        pageId: 'mr-same-url-page-b',
+        itemId: 'mr-same-url-item-b',
+        projectId: 'proj-b',
+        projectRecordId: 'record-b',
+      }),
+    })
+    bindWeaverseNextStudioRuntime(runtimeA)
+    bindWeaverseNextStudioRuntime(runtimeB)
+
+    // Act — runtime A is already bound but inactive while B is active on the
+    // same URL.
+    bindWeaverseNextStudioRuntime(runtimeA)
+
+    // Assert
+    expect(fakeWindow.weaverseStudio.init.mock.calls).toEqual([
+      [runtimeA],
+      [runtimeB],
+    ])
+    expect(fakeWindow.weaverseStudio.refreshStudio).toHaveBeenCalledWith(
+      expect.objectContaining({ pageId: runtimeA.pageId })
+    )
+    expect(fakeWindow.weaverseStudio.weaverse).toBe(runtimeB)
     vi.stubGlobal('window', previousWindow)
   })
 

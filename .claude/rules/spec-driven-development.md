@@ -21,7 +21,7 @@ All specs live in a specs folder. The path can be configured in your project's `
 Specs are located at: `docs/specs/`
 ```
 
-Each feature gets its own subfolder inside the specs directory.
+Each feature has one canonical subfolder inside the specs directory.
 
 ### Folder Naming Pattern
 
@@ -29,9 +29,10 @@ Each feature gets its own subfolder inside the specs directory.
 {YYYY-MM-DD}--{kebab-case-title}
 ```
 
-- `YYYY-MM-DD`: creation date (ISO format), fixed at the time the spec was created
-- `title`: kebab-case feature name
+- `YYYY-MM-DD`: latest update date (ISO format); refresh it whenever the spec is updated or merged
+- `title`: stable kebab-case feature name; broaden it only when merged scope makes the old title misleading
 - Separators: double dashes `--`
+- Rename with `git mv`, then update every repository backlink in the same change
 
 Examples:
 
@@ -45,7 +46,7 @@ Examples:
 project-root/
 ├── {specs-dir}/               ← Configurable path (default: .specs/)
 │   ├── 2026-03-01--user-authentication/
-│   │   ├── README.md          📋 Status, owner, original prompt
+│   │   ├── README.md          📋 Status, owner, initiating requirement
 │   │   ├── plan.md            🗺️ Agent-generated implementation plan
 │   │   └── work-logs.md       📝 Timeline & change history (optional)
 │   │
@@ -68,9 +69,10 @@ MUST contain:
 
 - **Status**: one of `draft`, `in-progress`, `completed`, `on-hold`, `deprecated`
 - **Owner**: who is responsible for this feature
-- **Created**: creation date (same as folder name)
-- **Last Updated**: date of last modification
-- **Original prompt/requirement**: the exact prompt or requirement that initiated this feature. This is the most important field in the entire spec. It preserves original intent. MUST NOT be edited or paraphrased. **It MUST be written in English** — if the prompt was given in another language (e.g. Vietnamese), translate it faithfully to English without changing the meaning, intent, or scope.
+- **Created**: original creation date; preserve it when the folder date changes
+- **Last Updated**: date of the latest update; MUST match the date in the current folder name
+- **Initiating requirement**: a concise, self-contained, professionally revised account of the requirement that initiated the feature, not raw chat. If work arrives through a local brief, attachment, or file path, read the source and inline its substantive requirement; a private source-file location used only to locate that material is never requirement content. Distinguish those private source locations from substantive repository paths, runtime paths, and URLs. Normalize substantive paths to portable forms when possible, such as repo-relative paths, then preserve each normalized path and its meaning exactly. Remove conversational scaffolding, agent orchestration chatter, and irrelevant prose. Credential and secret redaction has higher priority than every preservation rule: remove them even when they also qualify as substantive literal values or identifiers. Preserve every remaining substantive constraint, identifier, command, literal value, acceptance condition, and externally meaningful branch, base, and head identifier exactly. The result MUST be written in English and understandable to a contributor who cannot access the original chat, private file, or author's machine.
+- **Scope updates**: add later user intent to a dated `Scope Updates` section, revised to the same standard as the initiating requirement
 - **Summary**: 2-3 sentences max describing what this feature does and why it exists
 
 Template:
@@ -87,9 +89,9 @@ Template:
 | **Created**      | YYYY-MM-DD                                               |
 | **Last Updated** | YYYY-MM-DD                                               |
 
-## Original Prompt
+## Initiating Requirement
 
-> [Paste the exact original prompt or requirement here. Do not edit or paraphrase.]
+> [State the concise, self-contained initiating requirement. Preserve every substantive detail, but remove chat and machine-local context.]
 
 ## Summary
 
@@ -157,5 +159,8 @@ Append-only format:
 
 ## Rules
 
-1. **New feature?** Create a spec folder following the convention above before writing any code.
-2. **Existing feature?** Read the spec first. Update it if your changes affect the plan, status, or scope.
+1. **Search before creating.** Check spec content, issue links, the user outcome, and the affected package or system boundary.
+2. **Existing or overlapping work?** Update the closest canonical spec. Merge specs when they describe the same user outcome and implementation boundary, preserving every substantive requirement, unique decision, and work-log entry.
+3. **Create only when independent.** A new folder is justified only when no existing spec can absorb the work without mixing separate outcomes.
+4. **Refresh the path on update.** Move the canonical folder to `.specs/<current-YYYY-MM-DD>--<title>/`, preserve `Created`, set `Last Updated`, and update repository-wide backlinks.
+5. **Keep requirements portable.** Apply the `Initiating Requirement` and dated `Scope Updates` convention to new and touched specs. Do not bulk-migrate historical specs.

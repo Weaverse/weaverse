@@ -28,7 +28,9 @@ function loadScript(src: string) {
   loadedScriptSrcs.add(src)
 }
 
+/** Trust context used while loading the Studio bridge script. */
 export interface LoadWeaverseNextStudioScriptOptions {
+  /** Storefront hostname; required to permit loopback Studio origins. */
   storefrontHostname?: string
 }
 
@@ -60,8 +62,11 @@ export function loadWeaverseNextStudioScript(
   }
 }
 
+/** Props for the root-level Studio script connector. */
 export interface WeaverseNextStudioConnectProps {
+  /** Explicit request context used to resolve Studio mode and host. */
   context?: WeaverseNextRequestContext
+  /** Storefront hostname; required to permit loopback Studio origins. */
   storefrontHostname?: string
 }
 

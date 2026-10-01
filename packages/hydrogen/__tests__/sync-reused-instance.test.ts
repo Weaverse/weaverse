@@ -48,6 +48,26 @@ function sync(instance: InstanceStub, params: WeaverseHydrogenParams) {
   syncReusedInstance(instance as unknown as WeaverseHydrogen, params)
 }
 
+/**
+ * Deferred loader promise as React 19 development builds hand it to us:
+ * `_debugInfo` is enumerable and closes a cycle back onto the promise.
+ */
+function makeReactDeferredPromise(value: unknown): Promise<unknown> {
+  let promise = Promise.resolve(value)
+  let debugEntry: Record<string, unknown> = { awaited: {} }
+  ;(debugEntry.awaited as Record<string, unknown>).value = promise
+  ;(promise as unknown as Record<string, unknown>)._debugInfo = [debugEntry]
+  return promise
+}
+
+/** Route data whose nested objects cross-link back to their parent. */
+function makeCyclicRouteData(shopName: string) {
+  let shop: Record<string, unknown> = { name: shopName }
+  let root: Record<string, unknown> = { shop }
+  shop.parent = root
+  return root
+}
+
 describe('syncReusedInstance', () => {
   it('should_apply_fresh_page_data_and_rerender_when_items_changed', () => {
     let instance = makeInstance()
@@ -106,5 +126,120 @@ describe('syncReusedInstance', () => {
     expect(instance.setProjectData).not.toHaveBeenCalled()
     expect(instance.itemInstances.get('item-1')?.setData).not.toHaveBeenCalled()
     expect(instance.triggerUpdate).not.toHaveBeenCalled()
+  })
+
+  it('should_not_rerender_when_deferred_promise_identity_is_unchanged', () => {
+    let deferred = makeReactDeferredPromise({ colors: [] })
+    let instance = makeInstance()
+    instance.dataContext = { root: { swatchesConfigs: deferred } }
+    let params = makeParams({
+      dataContext: { root: { swatchesConfigs: deferred } },
+    })
+
+    sync(instance, params)
+
+    expect(instance.triggerUpdate).not.toHaveBeenCalled()
+  })
+
+  it('should_assign_fresh_context_when_deferred_promise_identity_changed', () => {
+    let instance = makeInstance()
+    instance.dataContext = {
+      root: { swatchesConfigs: makeReactDeferredPromise({ colors: [] }) },
+    }
+    let params = makeParams({
+      dataContext: {
+        root: { swatchesConfigs: makeReactDeferredPromise({ colors: [] }) },
+      },
+    })
+
+    sync(instance, params)
+
+    expect(instance.dataContext).toBe(params.dataContext)
+  })
+
+  it('should_notify_item_stores_when_deferred_promise_identity_changed', () => {
+    let instance = makeInstance()
+    instance.dataContext = {
+      root: { swatchesConfigs: makeReactDeferredPromise({ colors: [] }) },
+    }
+    let params = makeParams({
+      dataContext: {
+        root: { swatchesConfigs: makeReactDeferredPromise({ colors: [] }) },
+      },
+    })
+
+    sync(instance, params)
+
+    expect(instance.itemInstances.get('item-1')?.setData).toHaveBeenCalledWith(
+      {}
+    )
+    expect(instance.triggerUpdate).toHaveBeenCalledTimes(1)
+  })
+
+  it('should_not_rerender_again_when_synced_twice_with_the_same_params', () => {
+    let instance = makeInstance()
+    instance.dataContext = {
+      root: { swatchesConfigs: makeReactDeferredPromise({ colors: [] }) },
+    }
+    let params = makeParams({
+      dataContext: {
+        root: { swatchesConfigs: makeReactDeferredPromise({ colors: [] }) },
+      },
+    })
+
+    sync(instance, params)
+    sync(instance, params)
+
+    expect(instance.triggerUpdate).toHaveBeenCalledTimes(1)
+  })
+
+  it('should_not_rerender_when_cyclic_context_graphs_are_structurally_equal', () => {
+    let instance = makeInstance()
+    instance.dataContext = makeCyclicRouteData('Weaverse')
+    let params = makeParams({ dataContext: makeCyclicRouteData('Weaverse') })
+
+    sync(instance, params)
+
+    expect(instance.triggerUpdate).not.toHaveBeenCalled()
+  })
+
+  it('should_rerender_when_cyclic_context_graphs_differ_at_a_leaf', () => {
+    let instance = makeInstance()
+    instance.dataContext = makeCyclicRouteData('Weaverse')
+    let params = makeParams({ dataContext: makeCyclicRouteData('Pilot') })
+
+    sync(instance, params)
+
+    expect(instance.triggerUpdate).toHaveBeenCalledTimes(1)
+  })
+
+  it('should_not_rerender_when_absent_context_stays_absent', () => {
+    // `undefined` params context and a stored `null` are the same "no context"
+    // state — normalization must not manufacture a change.
+    let instance = makeInstance()
+    instance.dataContext = null
+    let params = makeParams({})
+    ;(params as { dataContext?: unknown }).dataContext = undefined
+
+    sync(instance, params)
+
+    expect(instance.triggerUpdate).not.toHaveBeenCalled()
+  })
+
+  it('should_not_notify_items_twice_when_data_and_context_both_changed', () => {
+    // `setProjectData` already refreshes every item store; an extra
+    // `setData({})` pass would double-notify subscribers in one render.
+    let instance = makeInstance()
+    let params = makeParams({
+      data: { id: 'page-1', rootId: 'root', items: [{ id: 'item-1' }] },
+      dataContext: { cartCount: 7 },
+    })
+    params.data.items.push({ id: 'item-2' })
+
+    sync(instance, params)
+
+    expect(instance.itemInstances.get('item-1')?.setData).not.toHaveBeenCalled()
+    expect(instance.setProjectData).toHaveBeenCalledTimes(1)
+    expect(instance.triggerUpdate).toHaveBeenCalledTimes(1)
   })
 })

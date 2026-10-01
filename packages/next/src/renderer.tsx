@@ -2,6 +2,7 @@
 
 import { WeaverseRoot } from '@weaverse/react'
 import { memo, useContext, useEffect, useLayoutEffect, useMemo } from 'react'
+import type { JSX } from 'react/jsx-runtime'
 import { WeaverseNextContext } from './provider'
 import { createWeaverseNextRuntime } from './runtime'
 import type {
@@ -30,6 +31,7 @@ function getRenderablePage(
   return { ...page, rootId }
 }
 
+/** Page payload, client, and connector data accepted by the Next renderer. */
 export interface WeaverseNextRendererProps {
   /** Client to render from. Defaults to the provider's client. */
   client?: WeaverseNextClient
@@ -42,14 +44,14 @@ export interface WeaverseNextRendererProps {
 /**
  * Render a serialized Weaverse page tree through `@weaverse/react` primitives.
  *
- * Reads the client/page data from {@link WeaverseNextContext} when no props are
- * passed, or accepts an explicit `client` + `data` for standalone use. Builds a
+ * Reads the client/page data supplied by {@link WeaverseNextProvider} when no
+ * props are passed, or accepts an explicit `client` + `data` for standalone use. Builds a
  * framework-neutral `Weaverse` core instance (no React Router hooks) and hands
  * it to the shared `WeaverseRoot`.
  */
 export const WeaverseNextRenderer = memo(function WeaverseNextRendererComponent(
   props: WeaverseNextRendererProps
-) {
+): JSX.Element | null {
   let context = useContext(WeaverseNextContext)
   let client = props.client ?? context?.client
   let data = props.data ?? client?.data ?? null

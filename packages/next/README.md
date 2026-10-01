@@ -45,30 +45,7 @@ Implementation lives in [`src/server/server-client.ts`](./src/server/server-clie
 - forces `no-store` for design/revision preview reads;
 - returns safe client-facing configs including `requestInfo`.
 
-### 3. Is the POC bootstrapped from Shopify's Hydrogen preview docs?
-
-Yes. The POC started as a Next App Router app plus Shopify Hydrogen preview setup:
-
-```bash
-npx create-next-app@latest weaverse-hydrogen-next-poc --ts --app --eslint --tailwind --no-src-dir --import-alias "@/*" --use-npm --yes
-npx @shopify/hydrogen@preview setup
-```
-
-See the POC findings doc:
-
-- https://github.com/Weaverse/weaverse-hydrogen-next-poc/blob/main/findings.md
-
-### 4. Where does the POC load page + Weaverse data?
-
-Reference POC files:
-
-- Server client helper: https://github.com/Weaverse/weaverse-hydrogen-next-poc/blob/main/app/weaverse-next/server.ts
-- Home route load: https://github.com/Weaverse/weaverse-hydrogen-next-poc/blob/main/app/page.tsx
-- Product route load: https://github.com/Weaverse/weaverse-hydrogen-next-poc/blob/main/app/products/%5Bhandle%5D/page.tsx
-- Collection route load: https://github.com/Weaverse/weaverse-hydrogen-next-poc/blob/main/app/collections/%5Bhandle%5D/page.tsx
-- Client wrapper/renderer: https://github.com/Weaverse/weaverse-hydrogen-next-poc/blob/main/app/weaverse-next/wrapper.tsx
-- Studio script connector: https://github.com/Weaverse/weaverse-hydrogen-next-poc/blob/main/app/weaverse-next/studio-connect.tsx
-- Per-item revalidation route: https://github.com/Weaverse/weaverse-hydrogen-next-poc/blob/main/app/api/weaverse/revalidate/route.ts
+### 3. Where does a route load page + Weaverse data?
 
 The route pattern is:
 
@@ -85,13 +62,13 @@ export default async function Home(props: {
 }
 ```
 
-### 5. Is there a global app load context like Hydrogen/Pilot?
+### 4. Is there a global app load context like Hydrogen/Pilot?
 
 Not automatically from the framework.
 
 Hydrogen/React Router injects `context.weaverse` into route loaders. Next App Router does not have that loader-context mechanism. The Next equivalent is a small app-owned server helper that creates the request-scoped Weaverse server client at the route boundary.
 
-In the POC that helper is `getWeaverseServerClient(...)` in `app/weaverse-next/server.ts`. It plays the same role as Hydrogen's global load context, but explicitly:
+Name it whatever you like — `getWeaverseServerClient(...)` in `app/weaverse-next/server.ts` below. It plays the same role as Hydrogen's global load context, but explicitly:
 
 ```ts
 let weaverse = await getWeaverseServerClient(searchParams, pathname)
@@ -170,15 +147,26 @@ Main exports:
 
 Example helper for a Next route/server component boundary:
 
+This helper is app-level (not exported by `@weaverse/next`); it plays the role
+of Hydrogen's global load context, but the app owns route identity explicitly.
+The App Router boundary supplies `pathname`, `pageType`, and `handle`, so the
+same identity reaches page loads and per-item revalidation loaders. It uses the
+exported `PageType` and `WeaverseNextRequestContext` types. The module defines
+both helpers used by the route-handler example below:
+
 ```ts
 import { createWeaverseNextServerClient } from '@weaverse/next/server'
+import type { PageType, WeaverseNextRequestContext } from '@weaverse/next'
 import { headers } from 'next/headers'
 import { serverComponents } from './server-components'
 import { getStaticStorefrontClient } from './storefront'
 
 export async function getWeaverseServerClient(
   searchParamsPromise: Promise<Record<string, string | string[] | undefined>>,
-  pathname = '/'
+  pathname = '/',
+  // Route identity the App Router segment owns. Seeding it here means loaders
+  // resolve the same page type / handle during SSR and per-item revalidation.
+  identity: { pageType?: PageType; handle?: string } = {}
 ) {
   let [headersList, rawSearchParams] = await Promise.all([
     headers(),
@@ -202,6 +190,27 @@ export async function getWeaverseServerClient(
     }`
   )
 
+  let requestContext: WeaverseNextRequestContext = {
+    url,
+    headers: requestHeaders,
+    searchParams,
+    pathname,
+    pageType: identity.pageType,
+    handle: identity.handle,
+    i18n: { country: 'US', language: 'EN', locale: 'en-US' },
+  }
+
+  return createWeaverseServerClientFromContext(requestContext)
+}
+
+// Explicit-context path used by the revalidation callback. The context has
+// already been validated by the SDK handler; project/host/env remain app-owned.
+export function createWeaverseServerClientFromContext(
+  requestContext: WeaverseNextRequestContext
+) {
+  // A localized app should select/cache this client from its own supported
+  // market allowlist using requestContext.i18n. This compact example uses the
+  // default market configured by the app helper.
   let storefront = getStaticStorefrontClient()
 
   return createWeaverseNextServerClient({
@@ -220,24 +229,34 @@ export async function getWeaverseServerClient(
           },
         }
       : undefined,
-    requestContext: {
-      url,
-      headers: requestHeaders,
-      searchParams,
-      pathname,
-      i18n: { country: 'US', language: 'EN', locale: 'en-US' },
-    },
+    requestContext,
     cache: { revalidate: 60, tags: ['weaverse'] },
   })
 }
 ```
 
-Then each route can stay close to the Hydrogen mental model:
+Then each route stays close to the Hydrogen mental model while supplying the
+route identity the segment owns — an `INDEX` home route and a handle-bearing
+`PRODUCT` route:
 
 ```ts
-let weaverse = await getWeaverseServerClient(props.searchParams, '/')
+// app/page.tsx — the INDEX segment owns the page type.
+let weaverse = await getWeaverseServerClient(props.searchParams, '/', {
+  pageType: 'INDEX',
+})
 let data = await weaverse.loadPage({ type: 'INDEX' })
 let theme = await weaverse.loadThemeSettings()
+```
+
+```ts
+// app/products/[handle]/page.tsx — the PRODUCT segment supplies the handle.
+let { handle } = await props.params
+let weaverse = await getWeaverseServerClient(
+  props.searchParams,
+  `/products/${handle}`,
+  { pageType: 'PRODUCT', handle }
+)
+let data = await weaverse.loadPage({ type: 'PRODUCT', handle })
 ```
 
 ### Server client members
@@ -245,7 +264,7 @@ let theme = await weaverse.loadThemeSettings()
 | Member | Description |
 | --- | --- |
 | `loadPage(input?)` | Fetches the page from `/api/public/project`, builds `WeaverseNextLoaderData`, runs component loaders, and returns page/project/config data. In section preview mode it can synthesize a single-section preview page. |
-| `loadThemeSettings(options?)` | Fetches `/api/public/project_configs`, merges schema defaults under merchant settings, returns theme settings/static content/schema data for design mode. |
+| `loadThemeSettings(options?)` | Fetches `/api/public/project_configs`, merges schema defaults under merchant settings, returns theme settings/static content/schema data for design mode. When the theme schema declares `i18n` and `requestContext.i18n` supplies both `language` and `country`, it also fetches locale static-text overrides from `/api/translation/static` in parallel and returns them as `merchantOverrides`. A failed or skipped overrides fetch never fails theme settings. |
 | `fetchCustomPages(options?)` | Fetches published custom pages from `/api/public/v1/projects/:projectId/custom-pages` for sitemap generation, paginating automatically and returning partial results if a later page fails. |
 | `fetchWithCache<T>(url, options?)` | Next-aware fetch helper. Uses `cache: 'no-store'` in design/revision preview and `next: { revalidate, tags }` in published mode. |
 | `resolveProjectId()` / `projectId` | Resolves project id from Studio query, config function/string, or env. |
@@ -284,12 +303,13 @@ Use the server entry in `generateMetadata()` to map Weaverse `page.seo` into a N
 
 ```ts
 // app/pages/[handle]/page.tsx
+import type { Metadata } from 'next'
 import { getWeaverseNextSeoMetadata } from '@weaverse/next/server'
 
 export async function generateMetadata(props: {
   params: Promise<{ handle: string }>
   searchParams: Promise<Record<string, string | string[] | undefined>>
-}) {
+}): Promise<Metadata> {
   let { handle } = await props.params
   let weaverse = await getWeaverseServerClient(props.searchParams, `/pages/${handle}`)
   let data = await weaverse.loadPage({ type: 'PAGE', handle })
@@ -297,7 +317,17 @@ export async function generateMetadata(props: {
 }
 ```
 
-The helper is pure and does not import `next/*`; its return shape is intentionally structural so the app can type it as `Metadata` if desired.
+The helper is pure and has no runtime dependency on `next`; it only imports the
+`Metadata` type. Its return value is directly assignable to Next `Metadata`.
+
+Two Builder-only SEO values are normalized so Next can always render the result:
+
+- Open Graph type `product` falls back to `website` (Next throws on `product`).
+  The other Builder types — `website`, `article`, `profile`, `video.other` — are
+  passed through unchanged.
+- Twitter card types `app` and `player` fall back to `summary`, because Builder
+  does not collect the extra descriptors those cards need (Next throws without
+  the `app` fields, and a `player` card without a player URL renders empty).
 
 ### Custom pages for sitemap generation
 
@@ -338,16 +368,18 @@ import {
   WeaverseNextProvider,
   WeaverseNextRenderer,
 } from '@weaverse/next'
-import type { WeaverseNextLoaderData } from '@weaverse/next'
+import type {
+  WeaverseNextLoaderData,
+  WeaverseNextRequestInfo,
+} from '@weaverse/next'
 import { components } from './components'
 
 export function WeaversePage({ data }: { data: WeaverseNextLoaderData }) {
+  // The server client returns `requestInfo` in the exported shape, so restore
+  // the full route identity — including `pageType` and `handle` — into the
+  // client request context instead of a narrow inline subset.
   let requestInfo = data.configs?.requestInfo as
-    | {
-        i18n?: { country?: string; language?: string; locale?: string }
-        pathname?: string
-        search?: string
-      }
+    | WeaverseNextRequestInfo
     | undefined
   let projectId =
     (data.configs?.projectId as string | undefined) ?? data.project?.id
@@ -363,6 +395,8 @@ export function WeaversePage({ data }: { data: WeaverseNextLoaderData }) {
       isPreviewMode: Boolean(data.configs?.isPreviewMode),
       isRevisionPreview: Boolean(data.configs?.isRevisionPreview),
       i18n: requestInfo?.i18n,
+      pageType: requestInfo?.pageType,
+      handle: requestInfo?.handle,
     },
   })
 
@@ -481,13 +515,38 @@ The root script connector and page-level renderer are both required for full Stu
 
 Resource-picker edits should refresh only the affected item's server loader data. The happy path should not call `router.refresh()` because refreshing the whole RSC tree can remount the page and reset scroll.
 
-Mount the route handler in the consuming app:
+Mount the route handler in the consuming app. `getClient` receives a second
+argument — the validated, same-origin route context reconstructed from the
+request body — so the revalidated loader runs with the same pathname, locale,
+page type, handle, and ordinary search params as the active storefront route.
+The two server-client helpers below are app-level consumer helpers, not exports
+from `@weaverse/next`:
 
 ```ts
 // app/api/weaverse/revalidate/route.ts
 import { createWeaverseNextRevalidateHandler } from '@weaverse/next/server'
-import { getWeaverseServerClient } from '../../../weaverse-next/server'
+import {
+  createWeaverseServerClientFromContext,
+  getWeaverseServerClient,
+} from '../../../weaverse-next/server'
 
+export const { POST } = createWeaverseNextRevalidateHandler({
+  // `requestContext` is validated browser input for route identity only.
+  // Project ID, Studio host, API base, and env must still come from
+  // server config — never from this context — and it is `undefined` for
+  // legacy request bodies that carry no route context.
+  getClient: (_request, requestContext) =>
+    requestContext
+      ? createWeaverseServerClientFromContext(requestContext)
+      : getWeaverseServerClient(Promise.resolve({})),
+})
+```
+
+The existing one-argument callback still works. A handler mounted with a
+`(request) => client` callback ignores the optional second argument and keeps
+compiling and running, so old wiring needs no change:
+
+```ts
 export const { POST } = createWeaverseNextRevalidateHandler({
   getClient: () => getWeaverseServerClient(Promise.resolve({})),
 })
@@ -497,15 +556,46 @@ Flow:
 
 ```text
 Studio resource picker edit
-  -> Builder calls runtime.internal.revalidateItem(draftItem)
-  -> SDK POSTs { draftItem } to /api/weaverse/revalidate
+  -> Builder calls runtime.internal.revalidateItem(draftItem)   (unchanged)
+  -> SDK snapshots runtime.requestInfo, strips server-owned/transient controls
+  -> SDK POSTs { draftItem, routeContext? } to /api/weaverse/revalidate
+  -> handler validates + sanitizes routeContext at the trust boundary
+  -> handler reconstructs a same-origin WeaverseNextRequestContext
+  -> getClient(request, requestContext) builds the route-aware server client
   -> route handler finds the registered component by draftItem.type
-  -> handler runs that component's loader with draft item data
-  -> response returns { loaderData }
+  -> handler runs that component's loader with draft data + client.requestContext
+  -> response returns { loaderData } with Cache-Control: no-store
   -> SDK applies loaderData to the live item instance in place
 ```
 
-If the route is missing or returns an error, Builder falls back to the older route-refresh path.
+If the route is missing or returns an error, Builder falls back to the older
+route-refresh path.
+
+### Trust boundary
+
+The revalidation endpoint is public and every JSON field is attacker-controlled.
+The SDK sanitizes `routeContext` on the client for clean traffic, but the route
+handler is the security boundary and re-validates independently:
+
+- Only `pathname`, sanitized `search`, a narrow i18n subset, a
+  `PageTypeSchema`-valid `pageType`, and a bounded `handle` cross the boundary.
+  Headers, cookies, auth, env, project ID, Studio host, API base, commerce
+  clients, the runtime, and the client are never serialized.
+- Server-owned controls (`weaverseProjectId`, `weaverseHost`, `weaverseApiBase`,
+  `weaversePublicApiBase`, `weaverseVersion`, `projectId`) and transient transport
+  controls (`weaverseDraftItem`, `__weaverseDraftItem`, `_rsc`) are stripped
+  case-insensitively on both sides, so a crafted body cannot influence server
+  config resolution.
+- The origin is fixed from the endpoint request before assigning any
+  browser-provided pathname/search, so input cannot change protocol, host, port,
+  or credentials. `pathname` and `url.pathname` share one URL-canonicalized value.
+- A malformed present `routeContext` returns `400 { error: 'invalid-route-context' }`
+  before `getClient` runs; a missing `routeContext` is valid legacy input and
+  passes `undefined` to the callback.
+- Route context is routing input, never an authorization decision. A registered
+  loader must not treat pathname, handle, page type, locale, or search as proof
+  of access; customer/private data still requires independent server-side session
+  and authorization checks derived from the actual request.
 
 ## Config resolution
 
@@ -515,30 +605,6 @@ Server config resolution intentionally mirrors Hydrogen where possible:
 - `weaverseHost`: trusted `?weaverseHost=` over `https://*.weaverse.io` / `https://*.weaverse.dev` → `WEAVERSE_HOST` → `https://studio.weaverse.io`.
 - API base: trusted request host → `WEAVERSE_PUBLIC_API_BASE` → non-production `WEAVERSE_HOST` → `https://api.weaverse.io`.
 - public env: `PUBLIC_STORE_DOMAIN`, `PUBLIC_STOREFRONT_API_TOKEN`.
-
-`WEAVERSE_API_KEY` may be read into internal base configs but is not attached to page/theme API requests and is never serialized into client-facing loader data.
-
-## POC reference
-
-Live POC:
-
-- https://weaverse-hydrogen-next-poc.vercel.app
-
-Repo:
-
-- https://github.com/Weaverse/weaverse-hydrogen-next-poc
-
-Important POC paths:
-
-```text
-app/weaverse-next/server.ts                  # explicit Next server context helper
-app/weaverse-next/wrapper.tsx                # client provider + renderer
-app/weaverse-next/studio-connect.tsx         # root Studio script connector
-app/api/weaverse/revalidate/route.ts         # per-item loader revalidation route
-app/page.tsx                                 # home page Weaverse load
-app/products/[handle]/page.tsx               # product route Weaverse load
-app/collections/[handle]/page.tsx            # collection route Weaverse load
-```
 
 ## Alpha migration notes
 

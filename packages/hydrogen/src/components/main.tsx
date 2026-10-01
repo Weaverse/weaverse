@@ -1,6 +1,6 @@
 import { createSchema, type SchemaType } from '@weaverse/schema'
 import type { HTMLAttributes } from 'react'
-import type { HydrogenComponentProps } from '~/types'
+import type { HydrogenComponentProps } from '../types'
 
 /*
   Main is the default Weaverse component that is used to render the main content.

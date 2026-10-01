@@ -1,3 +1,4 @@
+import type { SchemaType } from '@weaverse/schema'
 import { registerWeaverseNextComponents } from './registry'
 import type {
   WeaverseNextClient,
@@ -24,7 +25,7 @@ import { generateDataFromSchema } from './utils'
 class NextClient implements WeaverseNextClient {
   projectId: string
   components: WeaverseNextComponent[]
-  themeSchema?: WeaverseNextThemeSchema
+  themeSchema?: SchemaType | WeaverseNextThemeSchema
   themeSettings: Record<string, unknown>
   requestContext?: WeaverseNextRequestContext
   commerce?: WeaverseNextCommerceContext

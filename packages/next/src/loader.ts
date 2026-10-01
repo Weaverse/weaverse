@@ -8,9 +8,13 @@ import type {
 } from './types'
 import { generateDataFromSchema } from './utils'
 
+/** Inputs for running registered component loaders over a page tree. */
 export interface RunComponentLoadersArgs {
+  /** Weaverse client containing the component registry. */
   client: WeaverseNextClient
+  /** Request-scoped commerce override; defaults to `client.commerce`. */
   commerce?: WeaverseNextCommerceContext
+  /** Request-context override; defaults to `client.requestContext`. */
   context?: WeaverseNextRequestContext
   /** Page payload to walk; defaults to `client.data`. */
   data?: WeaverseNextLoaderData | null

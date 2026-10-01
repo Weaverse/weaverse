@@ -36,10 +36,29 @@ const NOOP_ROUTER: AppRouterInstance = {
 }
 
 let currentRouter: AppRouterInstance = NOOP_ROUTER
+let currentPathname = '/'
+let currentSearchParams = new URLSearchParams()
 
 /** Test helper: swap the router `useRouter()` returns. Not part of Next's API. */
 export function __setMockRouter(router?: Partial<AppRouterInstance> | null) {
   currentRouter = router ? { ...NOOP_ROUTER, ...router } : NOOP_ROUTER
+}
+
+/** Test helper: set the values returned by the navigation observation hooks. */
+export function __setMockNavigation(
+  pathname = '/',
+  searchParams: string | URLSearchParams = ''
+) {
+  currentPathname = pathname
+  currentSearchParams = new URLSearchParams(searchParams)
+}
+
+export function usePathname(): string {
+  return currentPathname
+}
+
+export function useSearchParams(): URLSearchParams {
+  return currentSearchParams
 }
 
 export function useRouter(): AppRouterInstance {

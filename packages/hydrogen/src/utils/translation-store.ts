@@ -10,23 +10,29 @@
  * (e.g. "cart.title" → "Shopping Cart").
  */
 export class TranslationStore {
+  /** Current flat translation overrides keyed by dot-path. */
   overrides: Record<string, string> = {}
   private listeners: Set<() => void> = new Set()
 
+  /** Replaces all overrides and notifies subscribers. */
   setOverrides = (overrides: Record<string, string>) => {
     this.overrides = { ...overrides }
     this.emit()
   }
 
+  /** Merges changed overrides and notifies subscribers. */
   updateOverrides = (newOverrides: Record<string, string>) => {
     this.overrides = { ...this.overrides, ...newOverrides }
     this.emit()
   }
 
+  /** Returns the current client snapshot for `useSyncExternalStore`. */
   getSnapshot = () => this.overrides
 
+  /** Returns the current server snapshot for `useSyncExternalStore`. */
   getServerSnapshot = () => this.overrides
 
+  /** Subscribes to override changes and returns an unsubscribe callback. */
   subscribe = (callback: () => void) => {
     this.listeners.add(callback)
     return () => {
@@ -46,12 +52,14 @@ export class TranslationStore {
 }
 
 /**
- * @deprecated Use {@link TranslationStore} instead. Kept as a backward-compatible
- * alias and will remain exported for existing integrations.
+ * Legacy constructor alias retained for existing theme text integrations.
+ * @deprecated Use {@link TranslationStore} instead. This alias remains available
+ * for backward compatibility.
  */
 export const ThemeTextStore = TranslationStore
 /**
- * @deprecated Use {@link TranslationStore} instead. Kept as a backward-compatible
- * alias and will remain exported for existing integrations.
+ * Legacy type alias retained for existing theme text integrations.
+ * @deprecated Use {@link TranslationStore} instead. This alias remains available
+ * for backward compatibility.
  */
 export type ThemeTextStore = TranslationStore

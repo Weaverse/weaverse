@@ -1,5 +1,6 @@
 import type { WeaverseHydrogenParams } from '../types'
 import type { WeaverseHydrogen } from '../WeaverseHydrogenRoot'
+import { isSameLoaderPayload } from './is-same-loader-payload'
 
 /**
  * Apply a fresh loader payload to a reused Weaverse instance.
@@ -14,9 +15,11 @@ import type { WeaverseHydrogen } from '../WeaverseHydrogenRoot'
  * (unsaved drafts must not be clobbered) and applies updates via
  * `refreshStudio` instead.
  *
- * Change detection uses JSON comparison — loader payloads are
- * wire-serialized, so key order is stable between runs; a false mismatch
- * only costs one extra re-render.
+ * Change detection uses {@link isSameLoaderPayload}: a structural comparison
+ * that treats promises/thenables and other opaque objects as atomic values
+ * compared by identity, and tolerates cyclic graphs. `dataContext` carries
+ * live route loader data — including unresolved deferred promises whose React
+ * development metadata is cyclic — so it cannot be JSON-serialized here.
  */
 export function syncReusedInstance(
   weaverse: WeaverseHydrogen,
@@ -25,11 +28,11 @@ export function syncReusedInstance(
   weaverse.requestInfo = params.requestInfo
   weaverse.internal = params.internal
 
-  let dataChanged =
-    JSON.stringify(weaverse.data) !== JSON.stringify(params.data)
-  let contextChanged =
-    JSON.stringify(weaverse.dataContext ?? null) !==
-    JSON.stringify(params.dataContext ?? null)
+  let dataChanged = !isSameLoaderPayload(weaverse.data, params.data)
+  let contextChanged = !isSameLoaderPayload(
+    weaverse.dataContext ?? null,
+    params.dataContext ?? null
+  )
 
   if (contextChanged) {
     // Assign before notifying any item store: components resolve data

@@ -2,6 +2,20 @@ import type { PageSEOData } from '@weaverse/schema'
 import type { MetaDescriptor } from 'react-router'
 import type { HydrogenPageData, WeaverseLoaderData } from './types'
 
+/** Object containing an optional Weaverse page for SEO extraction. */
+export interface WeaverseSeoPageContainer {
+  /** Page whose published SEO fields should be formatted. */
+  page?: HydrogenPageData | null
+}
+
+/** Input accepted by {@link getWeaverseSeoMeta}. */
+export type WeaverseSeoInput =
+  | WeaverseLoaderData
+  | HydrogenPageData
+  | WeaverseSeoPageContainer
+  | null
+  | undefined
+
 /**
  * Convert a Weaverse page-level SEO payload into React Router
  * `MetaDescriptor[]`. Pure, synchronous, tree-shakeable — does not fetch.
@@ -99,20 +113,13 @@ export function formatMetaDescriptors(
  * }
  * ```
  */
-export function getWeaverseSeoMeta(
-  data:
-    | WeaverseLoaderData
-    | HydrogenPageData
-    | { page?: HydrogenPageData | null }
-    | null
-    | undefined
-): MetaDescriptor[] {
+export function getWeaverseSeoMeta(data: WeaverseSeoInput): MetaDescriptor[] {
   if (!data) {
     return formatMetaDescriptors(null)
   }
   let page =
     'items' in data && 'id' in data
       ? (data as HydrogenPageData)
-      : ((data as { page?: HydrogenPageData | null }).page ?? null)
+      : ((data as WeaverseSeoPageContainer).page ?? null)
   return formatMetaDescriptors(page?.seo ?? null)
 }

@@ -97,10 +97,15 @@ function readEnv(
   return
 }
 
+/** Overrides used while resolving request-scoped Weaverse configuration. */
 export interface ResolveConfigsOptions {
+  /** Environment values; missing keys fall back to `process.env`. */
   env?: Record<string, string | undefined>
+  /** Public data API base override. */
   weaverseApiBase?: string
+  /** Studio origin override. */
   weaverseHost?: string
+  /** Studio asset version override. */
   weaverseVersion?: string
 }
 
@@ -155,10 +160,6 @@ export function getWeaverseNextConfigs(
     envProjectId: readEnv(env, 'WEAVERSE_PROJECT_ID') || '',
     weaverseHost,
     weaverseApiBase,
-    weaverseApiKey:
-      lastParam(searchParams, 'weaverseApiKey') ||
-      readEnv(env, 'WEAVERSE_API_KEY') ||
-      '',
     weaverseVersion:
       lastParam(searchParams, 'weaverseVersion') ||
       options.weaverseVersion ||

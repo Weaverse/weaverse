@@ -1,18 +1,26 @@
 import { useEffect } from 'react'
 
+/** Event contract shared with Studio for revealing conditional theme DOM. */
 export const THEME_ELEMENT_REVEAL_EVENT =
   'weaverse:theme-element-reveal' as const
 
+/** Identifies the theme element that Studio needs to reveal. */
 export interface ThemeElementRevealDetail {
+  /** Must match the settings group outlineId. */
   id: string
 }
 
+/** Registers a DOM identity without creating a page item. */
 export interface UseThemeElementOptions {
+  /** Must match the settings group outlineId. */
   id: string
+  /** Mounts or opens conditional DOM before Studio queries its marker. */
   onReveal?: () => void
 }
 
+/** Props for the real DOM boundary that Studio selects. */
 export interface ThemeElementProps {
+  /** Theme marker, deliberately separate from page-item data-wv-id. */
   'data-wv-theme-id': string
 }
 

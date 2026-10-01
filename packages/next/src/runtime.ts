@@ -29,7 +29,7 @@ declare global {
 type StudioBoundRuntime = WeaverseNextRuntime & {
   __weaverseNextStudioBound?: boolean
   __weaverseNextRequestKey?: string
-  __weaverseNextLatestData?: WeaverseNextPageData & { rootId: string }
+  __weaverseNextLatestData?: WeaverseNextRenderablePage
 }
 
 function getRuntimeWindow(): Window | undefined {
@@ -38,7 +38,7 @@ function getRuntimeWindow(): Window | undefined {
 
 function getRenderablePage(
   data: WeaverseNextLoaderData
-): WeaverseNextPageData & { rootId: string } {
+): WeaverseNextRenderablePage {
   let page = data.page
   let rootId =
     page.rootId ??
@@ -54,6 +54,36 @@ function getConfigString(
 ): string | undefined {
   let value = configs?.[key]
   return typeof value === 'string' ? value : undefined
+}
+
+/**
+ * Resolve a non-published mode flag from the request context OR the serialized
+ * loader configs.
+ *
+ * These flags only ever suppress Studio rendering, so the two sources are
+ * OR-ed rather than nullish-coalesced. A
+ * client-supplied `requestContext` that explicitly sets `false` must not shadow
+ * a `true` the server resolved for this request.
+ */
+function resolveModeFlag(
+  config: WeaverseNextRuntimeConfig,
+  key: 'isDesignMode' | 'isPreviewMode' | 'isRevisionPreview'
+): boolean {
+  return (
+    config.client?.requestContext?.[key] === true ||
+    config.data.configs?.[key] === true
+  )
+}
+
+/** Section preview type from either source; see {@link resolveModeFlag}. */
+function resolveSectionType(
+  config: WeaverseNextRuntimeConfig
+): string | undefined {
+  return (
+    config.client?.requestContext?.sectionType ||
+    getConfigString(config.data.configs, 'sectionType') ||
+    undefined
+  )
 }
 
 function getRecordString(
@@ -107,12 +137,59 @@ function registerRuntime(runtime: WeaverseNextRuntime) {
   runtimeWindow.__weaverse = runtime
 }
 
+/**
+ * Lifecycle invariant: every item store rendered by a runtime must point back
+ * at that same runtime (`item.weaverse === runtime`).
+ *
+ * Core keeps `Weaverse.itemInstances` process-wide and keyed by item id only,
+ * so a client navigation that recreates the runtime under a new request key
+ * (e.g. `/` → `/fr-fr`) reuses the existing stores and merely calls
+ * `setData()` on them — their `weaverse` back-reference is never updated and
+ * keeps pointing at the previous runtime. Anything an item reads through that
+ * reference then stays stale: `WeaverseNextItem.getSnapShot()` reads
+ * `this.weaverse.translationMap` (locale sidecar), and `Element` /
+ * `requestInfo` consumers read the old locale's runtime until a full reload
+ * builds clean instances.
+ *
+ * Rebind only the items belonging to the freshly rendered page — other
+ * runtimes co-located on the same document own their own item ids and must
+ * keep their bindings.
+ */
+function rebindPageItemsToRuntime(runtime: WeaverseNextRuntime) {
+  let items = (runtime.data as WeaverseNextPageData | undefined)?.items
+  if (!items) {
+    return
+  }
+  for (let { id } of items) {
+    let instance = runtime.itemInstances.get(id) as WeaverseNextItem | undefined
+    if (instance && instance.weaverse !== runtime) {
+      instance.weaverse = runtime
+    }
+  }
+}
+
+/** Weaverse page data with the root component resolved for rendering. */
+export interface WeaverseNextRenderablePage extends WeaverseNextPageData {
+  /** Component item ID used as the root of the rendered page tree. */
+  rootId: string
+}
+
+/**
+ * Browser runtime that adapts a Next.js loader payload to `@weaverse/react`
+ * and exposes the navigation, settings, and translation state used by Studio.
+ */
 export class WeaverseNextRuntime extends Weaverse {
+  /** Stable ID of the page owned by this runtime. */
   pageId: string
+  /** Mutable callbacks and stores consumed by the Studio bridge. */
   internal: WeaverseNextRuntimeInternal
+  /** Path, query, and locale metadata for Studio navigation. */
   requestInfo: WeaverseNextRequestInfo
+  /** Whether this runtime renders a component preview. */
   isPreviewMode: boolean
+  /** Whether this runtime renders a saved revision. */
   isRevisionPreview: boolean
+  /** Component type rendered in section preview mode. */
   sectionType?: string
 
   // ─── Item-level translation sidecar (design mode only) ─────────────
@@ -122,7 +199,9 @@ export class WeaverseNextRuntime extends Weaverse {
    * components, so translations render without mutating the base `_store`.
    */
   translationMap: WeaverseNextTranslationMap = {}
+  /** Locale associated with the item-level translation sidecar. */
   translationLocale = String()
+  /** Weaverse language ID used when saving translation changes. */
   translationLanguageId = String()
 
   /**
@@ -133,7 +212,7 @@ export class WeaverseNextRuntime extends Weaverse {
    * `flushRenderPhaseUpdates()`. Never set on design-mode runtimes — the live
    * Studio tree owns the page data there.
    */
-  pendingProjectData?: WeaverseNextPageData & { rootId: string }
+  pendingProjectData?: WeaverseNextRenderablePage
 
   /**
    * Reused item instances whose data was refreshed while this runtime was
@@ -143,18 +222,23 @@ export class WeaverseNextRuntime extends Weaverse {
    */
   pendingItemUpdates: WeaverseNextItem[] = []
 
+  /** Create a browser runtime from a loaded page and its request context. */
   constructor(config: WeaverseNextRuntimeConfig) {
     let { client, data } = config
     let page = getRenderablePage(data)
     let configs = data.configs
     let requestContext = client?.requestContext
+    let isDesignMode = resolveModeFlag(config, 'isDesignMode')
+    let isPreviewMode = resolveModeFlag(config, 'isPreviewMode')
+    let isRevisionPreview = resolveModeFlag(config, 'isRevisionPreview')
+    let sectionType = resolveSectionType(config)
     let projectId = resolveProjectId(client, data, page.id)
 
     ensureNextItemConstructor()
     super({
       projectId,
       data: page,
-      isDesignMode: requestContext?.isDesignMode ?? false,
+      isDesignMode,
       weaverseHost: getConfigString(configs, 'weaverseHost'),
       weaverseVersion: getConfigString(configs, 'weaverseVersion'),
     })
@@ -162,10 +246,10 @@ export class WeaverseNextRuntime extends Weaverse {
     this.pageId = page.id
     this.dataContext = resolveDataContext(config)
     this.requestInfo = buildWeaverseNextRequestInfo(requestContext)
-    this.isDesignMode = requestContext?.isDesignMode ?? false
-    this.isPreviewMode = requestContext?.isPreviewMode ?? false
-    this.isRevisionPreview = requestContext?.isRevisionPreview ?? false
-    this.sectionType = requestContext?.sectionType
+    this.isDesignMode = isDesignMode
+    this.isPreviewMode = isPreviewMode
+    this.isRevisionPreview = isRevisionPreview
+    this.sectionType = sectionType
 
     // One store instance backs both the canonical `translationStore` and the
     // deprecated `themeTextStore` alias, so Builder's `updateStaticText()` RPC
@@ -294,7 +378,7 @@ export class WeaverseNextRuntime extends Weaverse {
    * renderable page shape (`rootId` resolved) that `getRenderablePage()` and
    * the reuse branch pass in.
    */
-  setProjectData = (data: WeaverseNextPageData & { rootId: string }) => {
+  setProjectData = (data: WeaverseNextRenderablePage) => {
     this.data = data
     this.extractTranslationSidecar()
     this.initProject()
@@ -324,6 +408,10 @@ export class WeaverseNextRuntime extends Weaverse {
   }
 }
 
+/**
+ * Create a browser runtime or reuse the runtime already registered for the
+ * same page and request. Reuse preserves unsaved Studio state in design mode.
+ */
 export function createWeaverseNextRuntime(
   config: WeaverseNextRuntimeConfig
 ): WeaverseNextRuntime {
@@ -336,7 +424,11 @@ export function createWeaverseNextRuntime(
   let requestKey = getRuntimeKey(page.id, requestInfo)
 
   if (existing?.__weaverseNextRequestKey === requestKey) {
-    let nextIsDesignMode = config.client?.requestContext?.isDesignMode ?? false
+    let configs = config.data.configs
+    let nextIsDesignMode = resolveModeFlag(config, 'isDesignMode')
+    let nextIsPreviewMode = resolveModeFlag(config, 'isPreviewMode')
+    let nextIsRevisionPreview = resolveModeFlag(config, 'isRevisionPreview')
+    let nextSectionType = resolveSectionType(config)
     // In design mode the live Studio runtime owns the page tree, including
     // unsaved drafts. Reapplying loader `page` data here would clobber those
     // edits, so leave the project data untouched and let
@@ -364,17 +456,13 @@ export function createWeaverseNextRuntime(
     existing.requestInfo = requestInfo
     existing.projectId = resolveProjectId(config.client, config.data, page.id)
     existing.isDesignMode = nextIsDesignMode
-    existing.isPreviewMode =
-      config.client?.requestContext?.isPreviewMode ?? false
-    existing.isRevisionPreview =
-      config.client?.requestContext?.isRevisionPreview ?? false
-    existing.sectionType = config.client?.requestContext?.sectionType
+    existing.isPreviewMode = nextIsPreviewMode
+    existing.isRevisionPreview = nextIsRevisionPreview
+    existing.sectionType = nextSectionType
     existing.weaverseHost =
-      getConfigString(config.data.configs, 'weaverseHost') ??
-      existing.weaverseHost
+      getConfigString(configs, 'weaverseHost') ?? existing.weaverseHost
     existing.weaverseVersion =
-      getConfigString(config.data.configs, 'weaverseVersion') ??
-      existing.weaverseVersion
+      getConfigString(configs, 'weaverseVersion') ?? existing.weaverseVersion
     existing.internal.pageAssignment = config.data.pageAssignment
     existing.internal.project = config.data.project
     if (config.navigate) {
@@ -408,12 +496,22 @@ export function createWeaverseNextRuntime(
     () => new WeaverseNextRuntime(config) as StudioBoundRuntime
   )
   runtime.pendingItemUpdates = refreshedItems
+  // Reused stores are still bound to the runtime that built them; rebind before
+  // returning so consumers read snapshots through this runtime (see
+  // `rebindPageItemsToRuntime`). Rebinding touches no subscriber, so it stays
+  // render-phase safe alongside the deferred item updates above.
+  rebindPageItemsToRuntime(runtime)
   runtime.__weaverseNextRequestKey = requestKey
   runtime.__weaverseNextLatestData = page
   registerRuntime(runtime)
   return runtime
 }
 
+/**
+ * Bind a design-mode runtime to the global Builder Studio bridge.
+ *
+ * @returns `true` when Studio was initialized or refreshed, otherwise `false`.
+ */
 export function bindWeaverseNextStudioRuntime(runtime: WeaverseNextRuntime) {
   if (!runtime.isDesignMode) {
     return false
@@ -425,7 +523,21 @@ export function bindWeaverseNextStudioRuntime(runtime: WeaverseNextRuntime) {
   }
 
   let boundRuntime = runtime as StudioBoundRuntime
-  if (!boundRuntime.__weaverseNextStudioBound) {
+  // Builder's bridge tracks a single active runtime (`studio.weaverse`). When
+  // an already-bound runtime is reused after navigating away and back (Home ->
+  // PDP -> Home), the bridge is still on the other URL, and Builder ignores
+  // `refreshStudio` for a non-active pageId — Studio would stay disconnected
+  // (outline skeleton, publish disabled). Re-init only when the active runtime
+  // belongs to a different URL; same-URL co-located runtimes must stay on the
+  // refresh path so the SDK does not override Builder's editable-instance
+  // choice.
+  let activeRuntime = studio.weaverse as WeaverseNextRuntime | undefined
+  let activeRequestInfo = activeRuntime?.requestInfo
+  let isActiveUrl =
+    !activeRequestInfo ||
+    (activeRequestInfo.pathname === runtime.requestInfo.pathname &&
+      activeRequestInfo.search === runtime.requestInfo.search)
+  if (!(boundRuntime.__weaverseNextStudioBound && isActiveUrl)) {
     studio.init?.(runtime)
     boundRuntime.__weaverseNextStudioBound = true
     return true

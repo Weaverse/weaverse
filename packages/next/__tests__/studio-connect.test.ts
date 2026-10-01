@@ -121,6 +121,28 @@ describe('loadWeaverseNextStudioScript', () => {
     ).not.toThrow()
   })
 
+  it('should_load_preview_bundle_when_design_and_preview_modes_are_both_active', () => {
+    // Arrange — Builder section-preview URLs send both flags together; the
+    // preview iframe waits for `preview-size`, emitted only by preview.js.
+    let { appended, document } = createDocumentStub()
+    vi.stubGlobal('document', document)
+    let context: WeaverseNextRequestContext = {
+      searchParams: new URLSearchParams(
+        'isDesignMode=true&isPreviewMode=true&weaverseHost=https%3A%2F%2Fstudio.weaverse.io&weaverseVersion=section-preview-test'
+      ),
+    }
+
+    // Act
+    loadWeaverseNextStudioScript(context, {
+      storefrontHostname: 'shop.example',
+    })
+
+    // Assert
+    expect(appended[0]?.src).toBe(
+      'https://studio.weaverse.io/static/studio/next/preview.js?v=section-preview-test'
+    )
+  })
+
   it('should_not_append_script_for_untrusted_weaverse_host', () => {
     // Arrange
     let { appended, document } = createDocumentStub()
