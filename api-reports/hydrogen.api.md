@@ -94,6 +94,9 @@ export type CreateHydrogenSchemaOptions = {
 };
 
 // @public
+export function createThemeElementHideEvent(id: string): CustomEvent<ThemeElementRevealDetail>;
+
+// @public
 export function createThemeElementRevealEvent(id: string): CustomEvent<ThemeElementRevealDetail>;
 
 // @public
@@ -369,7 +372,13 @@ export { SchemaValidationIssue }
 export { SchemaValidationResult }
 
 // @public
+export function subscribeThemeElementHide(id: string, onHide: () => void, target?: EventTarget): () => void;
+
+// @public
 export function subscribeThemeElementReveal(id: string, onReveal: () => void, target?: EventTarget): () => void;
+
+// @public
+export const THEME_ELEMENT_HIDE_EVENT: "weaverse:theme-element-hide";
 
 // @public
 export const THEME_ELEMENT_REVEAL_EVENT: "weaverse:theme-element-reveal";
@@ -500,6 +509,7 @@ export function useThemeElement(input: UseThemeElementOptions): ThemeElementProp
 // @public
 export interface UseThemeElementOptions {
     id: string;
+    onHide?: () => void;
     onReveal?: () => void;
 }
 

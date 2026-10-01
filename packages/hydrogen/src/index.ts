@@ -59,9 +59,12 @@ export {
   useTranslation,
 } from './hooks/translation-context'
 export {
+  createThemeElementHideEvent,
   createThemeElementRevealEvent,
   getThemeElementProps,
+  subscribeThemeElementHide,
   subscribeThemeElementReveal,
+  THEME_ELEMENT_HIDE_EVENT,
   THEME_ELEMENT_REVEAL_EVENT,
   type ThemeElementProps,
   type ThemeElementRevealDetail,
