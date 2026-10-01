@@ -1,7 +1,9 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
+  createThemeElementHideEvent,
   createThemeElementRevealEvent,
   getThemeElementProps,
+  subscribeThemeElementHide,
   subscribeThemeElementReveal,
 } from '../src/hooks/use-theme-element'
 
@@ -41,5 +43,27 @@ describe('theme element contract', () => {
     target.dispatchEvent(createThemeElementRevealEvent('header'))
 
     expect(onReveal).not.toHaveBeenCalled()
+  })
+
+  it('should_hide_only_the_matching_theme_element', () => {
+    let target = new EventTarget()
+    let onHide = vi.fn()
+    subscribeThemeElementHide('popup', onHide, target)
+
+    target.dispatchEvent(createThemeElementHideEvent('header'))
+    target.dispatchEvent(createThemeElementHideEvent('popup'))
+
+    expect(onHide).toHaveBeenCalledTimes(1)
+  })
+
+  it('should_stop_hiding_when_unsubscribed', () => {
+    let target = new EventTarget()
+    let onHide = vi.fn()
+    let unsubscribe = subscribeThemeElementHide('popup', onHide, target)
+    unsubscribe()
+
+    target.dispatchEvent(createThemeElementHideEvent('popup'))
+
+    expect(onHide).not.toHaveBeenCalled()
   })
 })
