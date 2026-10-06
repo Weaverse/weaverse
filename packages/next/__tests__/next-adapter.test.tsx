@@ -1495,7 +1495,8 @@ describe('Studio runtime contract', () => {
    */
   function switchLocale(
     enItem: Record<string, unknown>,
-    frItem: Record<string, unknown>
+    frItem: Record<string, unknown>,
+    components = [heroComponent]
   ) {
     let previousWindow = globalThis.window
     vi.stubGlobal('window', {} as Window & typeof globalThis)
@@ -1505,12 +1506,14 @@ describe('Studio runtime contract', () => {
       }) as WeaverseNextLoaderData
     createWeaverseNextRuntime({
       client: makeClient({
+        components,
         requestContext: { isDesignMode: false, pathname: '/' },
       }),
       data: page(enItem),
     })
     let runtime = createWeaverseNextRuntime({
       client: makeClient({
+        components,
         requestContext: { isDesignMode: false, pathname: '/fr-fr' },
       }),
       data: page(frItem),
@@ -1542,6 +1545,41 @@ describe('Studio runtime contract', () => {
 
     // Assert
     expect(snapshot?.heading).toBe('Default Heading')
+  })
+
+  it('should_apply_the_new_type_schema_defaults_when_a_reused_item_changes_type', () => {
+    // Arrange — the Builder replaced the section: same id, different type.
+    let bannerComponent = {
+      default: Hero,
+      schema: createSchema({
+        type: 'banner',
+        title: 'Banner',
+        settings: [
+          {
+            group: 'Content',
+            inputs: [
+              {
+                type: 'text',
+                name: 'title',
+                label: 'Title',
+                defaultValue: 'Banner default',
+              },
+            ],
+          },
+        ],
+      }),
+    }
+    let en = { id: 'item-root', type: 'hero', data: { heading: 'Hallo' } }
+    let fr = { id: 'item-root', type: 'banner', data: {} }
+
+    // Act
+    let snapshot = switchLocale(en, fr, [heroComponent, bannerComponent])
+
+    // Assert
+    expect({ title: snapshot?.title, heading: snapshot?.heading }).toEqual({
+      title: 'Banner default',
+      heading: undefined,
+    })
   })
 
   it('should_drop_a_stale_setting_without_a_default_when_a_reused_item_switches_locale', () => {

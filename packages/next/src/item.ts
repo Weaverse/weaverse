@@ -82,8 +82,10 @@ export class WeaverseNextItem extends WeaverseItemStore {
    * `initProject()` calls `setData(item)` when a new runtime serves a page
    * whose item instances already exist (e.g. locale/client navigation).
    *
-   * A complete serialized item (it carries `id` and `type`) replaces the store
-   * the way the constructor builds it: schema defaults, then the item's own
+   * A complete serialized item (it carries `id` and `type`; core's
+   * `initProject()` always passes one) replaces the store the way the
+   * constructor builds it: the schema defaults of the item's own `type` — the
+   * Builder can replace a section in place, keeping its id — then the item's
    * settings. A payload omits a setting — or the whole optional `data` — when
    * its value equals the schema default, so merging into the previous store
    * would keep the previous locale's value visible. Partial updates still
@@ -93,9 +95,10 @@ export class WeaverseNextItem extends WeaverseItemStore {
    */
   setData = (update: Omit<ElementData, 'id' | 'type'>) => {
     if ('id' in update && 'type' in update) {
-      let { data } = update
+      let { data, type } = update as ElementData
+      let schema = this.weaverse.elementRegistry.get(type)?.schema
       this._store = {
-        ...generateDataFromSchema(this.Element?.schema),
+        ...generateDataFromSchema(schema),
         ...(data === undefined ? {} : { data }),
         ...flattenItemData(update),
       } as ElementData
