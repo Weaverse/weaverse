@@ -8,7 +8,7 @@
 | **Branch**       | `fix/next-locale-fixes`                                                                        |
 | **PR**           | [#537](https://github.com/Weaverse/weaverse/pull/537)                                          |
 | **Created**      | 2026-10-06                                                                                     |
-| **Last Updated** | 2026-10-06                                                                                     |
+| **Last Updated** | 2026-10-07                                                                                     |
 
 ## Initiating Requirement
 
