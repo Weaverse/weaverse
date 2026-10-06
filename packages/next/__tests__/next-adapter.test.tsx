@@ -1431,6 +1431,77 @@ describe('Studio runtime contract', () => {
     vi.stubGlobal('window', previousWindow)
   })
 
+  /**
+   * Serve the same page id first under `/` with `enItem`, then under `/fr-fr`
+   * with `frItem`, so core `initProject()` reuses the item store and only calls
+   * `setData(frItem)`. Returns the reused item's snapshot after the switch.
+   */
+  function switchLocale(
+    enItem: Record<string, unknown>,
+    frItem: Record<string, unknown>
+  ) {
+    let previousWindow = globalThis.window
+    vi.stubGlobal('window', {} as Window & typeof globalThis)
+    let page = (item: Record<string, unknown>) =>
+      ({
+        page: { id: 'page-1', rootId: 'item-root', items: [item] },
+      }) as WeaverseNextLoaderData
+    createWeaverseNextRuntime({
+      client: makeClient({
+        requestContext: { isDesignMode: false, pathname: '/' },
+      }),
+      data: page(enItem),
+    })
+    let runtime = createWeaverseNextRuntime({
+      client: makeClient({
+        requestContext: { isDesignMode: false, pathname: '/fr-fr' },
+      }),
+      data: page(frItem),
+    })
+    let snapshot = runtime.itemInstances.get('item-root')?.getSnapShot()
+    vi.stubGlobal('window', previousWindow)
+    return snapshot
+  }
+
+  it('should_reset_an_omitted_setting_to_its_schema_default_when_a_reused_item_switches_locale', () => {
+    // Arrange — the FR payload omits `heading` because it equals the default.
+    let en = { id: 'item-root', type: 'hero', data: { heading: 'Hallo' } }
+    let fr = { id: 'item-root', type: 'hero', data: {} }
+
+    // Act
+    let snapshot = switchLocale(en, fr)
+
+    // Assert
+    expect(snapshot?.heading).toBe('Default Heading')
+  })
+
+  it('should_reset_to_schema_defaults_when_a_reused_item_payload_omits_data_entirely', () => {
+    // Arrange — every FR value equals its default, so `data` is left out.
+    let en = { id: 'item-root', type: 'hero', data: { heading: 'Hallo' } }
+    let fr = { id: 'item-root', type: 'hero' }
+
+    // Act
+    let snapshot = switchLocale(en, fr)
+
+    // Assert
+    expect(snapshot?.heading).toBe('Default Heading')
+  })
+
+  it('should_drop_a_stale_setting_without_a_default_when_a_reused_item_switches_locale', () => {
+    // Arrange — `text` has no schema default and is absent from the FR payload.
+    let en = { id: 'item-root', type: 'hero', data: { text: 'Hello EN' } }
+    let fr = { id: 'item-root', type: 'hero', data: { heading: 'Bonjour' } }
+
+    // Act
+    let snapshot = switchLocale(en, fr)
+
+    // Assert
+    expect({ text: snapshot?.text, data: snapshot?.data }).toEqual({
+      text: undefined,
+      data: { heading: 'Bonjour' },
+    })
+  })
+
   it('should_rebind_reused_item_instances_to_the_new_runtime_when_locale_navigation_recreates_runtime', () => {
     // Arrange — same page/item id served under two locales. Core keeps item
     // stores in the process-wide `Weaverse.itemInstances` map, so the FR

@@ -80,15 +80,28 @@ export class WeaverseNextItem extends WeaverseItemStore {
   /**
    * Flatten nested `data` on updates exactly like the constructor does. Core's
    * `initProject()` calls `setData(item)` when a new runtime serves a page
-   * whose item instances already exist (e.g. locale/client navigation), and
-   * the inherited shallow merge would leave stale top-level props behind.
-   * Assigning through the inherited `data` setter swaps the `_store` ref,
-   * which invalidates the memoized snapshot below. The subscriber emit is
-   * queued instead of fired when a render-phase deferral is active (see
-   * `collectDeferredItemUpdates`).
+   * whose item instances already exist (e.g. locale/client navigation).
+   *
+   * A complete serialized item (it carries `id` and `type`) replaces the store
+   * the way the constructor builds it: schema defaults, then the item's own
+   * settings. A payload omits a setting — or the whole optional `data` — when
+   * its value equals the schema default, so merging into the previous store
+   * would keep the previous locale's value visible. Partial updates still
+   * merge. Either way the `_store` ref changes, which invalidates the memoized
+   * snapshot below. The subscriber emit is queued instead of fired when a
+   * render-phase deferral is active (see `collectDeferredItemUpdates`).
    */
   setData = (update: Omit<ElementData, 'id' | 'type'>) => {
-    this.data = flattenItemData(update)
+    if ('id' in update && 'type' in update) {
+      let { data } = update
+      this._store = {
+        ...generateDataFromSchema(this.Element?.schema),
+        ...(data === undefined ? {} : { data }),
+        ...flattenItemData(update),
+      } as ElementData
+    } else {
+      this.data = flattenItemData(update)
+    }
     if (deferredItemUpdates) {
       deferredItemUpdates.add(this)
     } else {
