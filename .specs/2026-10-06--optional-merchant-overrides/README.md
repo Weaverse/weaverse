@@ -11,7 +11,9 @@
 
 ## Initiating Requirement
 
-> Not captured — this spec predates the SDD convention's requirement to record the original prompt verbatim. It was migrated from `docs/plans/2026-06-30-gate-merchant-overrides-on-i18n.md` on 2026-07-02.
+> `loadThemeSettings()` must not request merchant overrides (`{weaverseHost}/api/translation/static`) for a theme that declares no `i18n` schema: themes without i18n make zero translation API calls during SSR. Gate the request on `themeSchema.i18n`, the same condition that already guards `staticContent`. Themes that declare `i18n` keep fetching overrides as before. Scope: `@weaverse/hydrogen` only.
+
+History: this spec was migrated on 2026-07-02 from `docs/plans/2026-06-30-gate-merchant-overrides-on-i18n.md`; the requirement above is restated from that plan.
 
 ## Scope Updates
 
