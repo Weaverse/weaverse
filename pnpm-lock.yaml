@@ -146,8 +146,8 @@ importers:
         specifier: '3'
         version: 3.0.3(@shopify/oxygen-workers-types@4.2.0)(react-router@7.14.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
       '@weaverse/react':
-        specifier: 5.22.0
-        version: 5.22.0
+        specifier: 5.22.1
+        version: 5.22.1
       '@weaverse/schema':
         specifier: 0.17.0
         version: 0.17.0
@@ -186,8 +186,8 @@ importers:
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: 5.22.0
-        version: 5.22.0
+        specifier: 5.22.1
+        version: 5.22.1
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -1628,16 +1628,16 @@ packages:
     resolution: {integrity: sha512-fPF8D/MAeLvWh2k2JaINdSHKVZSuOKiQtjLhy58c4YBkg8LWRi2nZaEebUNiQuLLCpHfXoZbGTroyY6l4YVNwQ==}
     engines: {node: '>=18'}
 
-  '@weaverse/core@5.22.0':
-    resolution: {integrity: sha512-PdE0SOfHkki7hWWwMxz7kzhEGipCivLEMXmHe20nXxhawLhKh0LLy3eoBVFQ0f4pfBoYupe8dYzVRWz8upVNtQ==}
+  '@weaverse/core@5.22.1':
+    resolution: {integrity: sha512-nJ2NpIMzXrJ1sIsyCYMV/7NsdFADIH3ffXG3IvOLJA2ryeBEb4ny6Zsm7lQtYI8FxLxaE+aQ5AyhBaaQUbFrJA==}
     engines: {node: '>=18'}
 
   '@weaverse/react@5.20.3':
     resolution: {integrity: sha512-6J/Gd6npD1gG/Gf461TudJ3erXl2YQEzWqjHXHuPZVVEBGb+laArDov0MOgb9blWvgU37KPEfU3gQcDfqI0B+A==}
     engines: {node: '>=18'}
 
-  '@weaverse/react@5.22.0':
-    resolution: {integrity: sha512-clV89tmou//IcUtmZXN2tDlHMMFKr3FPtzeLYUKLcgzVbItWX5HmgGACnQ1HsfCYUyyFP4Zr/RA831eYVA5Rig==}
+  '@weaverse/react@5.22.1':
+    resolution: {integrity: sha512-2jCVzeBjYtdy76LaHBdZEBmbfQPp8bmVvKgBfQx/rBgwq8qDnkdAEAgjO/sC6ZanMYvXbwoobm3XdnLH5SlC2w==}
     engines: {node: '>=18'}
 
   '@weaverse/schema@0.16.0':
@@ -4270,7 +4270,7 @@ snapshots:
 
   '@weaverse/core@5.20.3': {}
 
-  '@weaverse/core@5.22.0': {}
+  '@weaverse/core@5.22.1': {}
 
   '@weaverse/react@5.20.3':
     dependencies:
@@ -4279,9 +4279,9 @@ snapshots:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
 
-  '@weaverse/react@5.22.0':
+  '@weaverse/react@5.22.1':
     dependencies:
-      '@weaverse/core': 5.22.0
+      '@weaverse/core': 5.22.1
       clsx: 2.1.1
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
