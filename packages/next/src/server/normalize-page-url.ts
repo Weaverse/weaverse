@@ -54,8 +54,7 @@ export function resolveRequestUrl(
   context?: WeaverseNextRequestContext
 ): string {
   if (context?.url) {
-    let raw =
-      typeof context.url === 'string' ? context.url : context.url.toString()
+    let raw = String(context.url)
     let url = new URL(raw, 'http://localhost')
     let pathname = withPathPrefix(url.pathname, context.i18n)
     // Unchanged when there is nothing to prefix, so a relative or bare-origin

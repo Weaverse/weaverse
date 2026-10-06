@@ -19,7 +19,7 @@ This matches Hydrogen's #508 semantics and goes further: Hydrogen keeps the prev
 
 ### #534 — market path prefix (`packages/next/src/request-info.ts`, `packages/next/src/server/normalize-page-url.ts`)
 
-- `withPathPrefix(pathname, i18n)` normalizes `i18n.pathPrefix` to `/<segment>` with index scans, not a regex (CodeQL `js/polynomial-redos`).
+- `withPathPrefix(pathname, i18n)` normalizes `i18n.pathPrefix` to `/<segment>` by splitting on `/`, not with a regex (CodeQL `js/polynomial-redos`).
 - It prefixes a path that lacks it, leaves `/de-de` and `/de-de/...` alone, does not treat `/de-defaults` as prefixed, and is a no-op for an empty prefix.
 - It is applied in `getPathnameFromContext` (explicit `pathname` and url-derived) and in `resolveRequestUrl`.
 - `resolveRequestUrl` returns the app's `url` string unchanged when there is nothing to add.

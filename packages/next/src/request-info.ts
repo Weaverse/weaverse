@@ -37,17 +37,10 @@ export function withPathPrefix(
   i18n?: WeaverseNextRequestContext['i18n']
 ): string {
   let raw = typeof i18n?.pathPrefix === 'string' ? i18n.pathPrefix : ''
-  // Trim slashes with index scans rather than a regex: `pathPrefix` is caller
-  // input, and an anchored `/\/+$/` backtracks polynomially on long runs.
-  let start = 0
-  let end = raw.length
-  while (start < end && raw[start] === '/') {
-    start += 1
-  }
-  while (end > start && raw[end - 1] === '/') {
-    end -= 1
-  }
-  let prefix = start === end ? '' : `/${raw.slice(start, end)}`
+  // Split rather than regex-trim: `pathPrefix` is caller input, and an anchored
+  // `/\/+$/` backtracks polynomially on long runs of slashes.
+  let segments = raw.split('/').filter(Boolean)
+  let prefix = segments.length > 0 ? `/${segments.join('/')}` : ''
   if (
     prefix === '' ||
     pathname === prefix ||
