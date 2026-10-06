@@ -902,6 +902,63 @@ describe('Studio runtime contract', () => {
     })
   })
 
+  it('should_prefix_the_market_onto_an_unprefixed_pathname_in_request_info', () => {
+    // Arrange — a Next app builds the context from its unprefixed route path;
+    // Studio's address bar follows `requestInfo.pathname`.
+    let context = {
+      i18n: { country: 'DE', language: 'DE', pathPrefix: '/de-de' },
+      pathname: '/shop',
+    }
+
+    // Act
+    let requestInfo = buildWeaverseNextRequestInfo(context)
+
+    // Assert
+    expect(requestInfo.pathname).toBe('/de-de/shop')
+  })
+
+  it('should_keep_an_already_prefixed_pathname_in_request_info', () => {
+    // Arrange
+    let context = {
+      i18n: { country: 'DE', language: 'DE', pathPrefix: '/de-de' },
+      pathname: '/de-de/shop',
+    }
+
+    // Act
+    let requestInfo = buildWeaverseNextRequestInfo(context)
+
+    // Assert
+    expect(requestInfo.pathname).toBe('/de-de/shop')
+  })
+
+  it('should_leave_the_default_market_pathname_unprefixed_in_request_info', () => {
+    // Arrange — the default market has an empty prefix.
+    let context = {
+      i18n: { country: 'US', language: 'EN', pathPrefix: '' },
+      pathname: '/',
+    }
+
+    // Act
+    let requestInfo = buildWeaverseNextRequestInfo(context)
+
+    // Assert
+    expect(requestInfo.pathname).toBe('/')
+  })
+
+  it('should_prefix_the_market_onto_a_pathname_read_from_the_url_in_request_info', () => {
+    // Arrange — no explicit pathname; the URL carries the unprefixed path.
+    let context = {
+      i18n: { country: 'DE', language: 'DE', pathPrefix: '/de-de' },
+      url: 'https://store.example/',
+    }
+
+    // Act
+    let requestInfo = buildWeaverseNextRequestInfo(context)
+
+    // Assert
+    expect(requestInfo.pathname).toBe('/de-de')
+  })
+
   it('should_omit_page_type_and_handle_from_request_info_when_absent', () => {
     // Arrange
     let context = {

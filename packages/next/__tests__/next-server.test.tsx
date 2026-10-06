@@ -950,6 +950,50 @@ describe('getWeaverseNextConfigs trusted host normalization', () => {
   })
 })
 
+describe('resolveRequestUrl', () => {
+  it('should_prefix_the_market_onto_an_unprefixed_request_url', () => {
+    // Arrange
+    let context = {
+      i18n: { country: 'DE', language: 'DE', pathPrefix: '/de-de' },
+      url: 'https://store.example/shop?sort=name',
+    }
+
+    // Act
+    let url = resolveRequestUrl(context)
+
+    // Assert
+    expect(url).toBe('https://store.example/de-de/shop?sort=name')
+  })
+
+  it('should_keep_an_already_prefixed_request_url', () => {
+    // Arrange
+    let context = {
+      i18n: { country: 'DE', language: 'DE', pathPrefix: '/de-de' },
+      url: 'https://store.example/de-de/shop',
+    }
+
+    // Act
+    let url = resolveRequestUrl(context)
+
+    // Assert
+    expect(url).toBe('https://store.example/de-de/shop')
+  })
+
+  it('should_prefix_the_market_onto_an_unprefixed_pathname_without_a_url', () => {
+    // Arrange
+    let context = {
+      i18n: { country: 'DE', language: 'DE', pathPrefix: '/de-de' },
+      pathname: '/about',
+    }
+
+    // Act
+    let url = resolveRequestUrl(context)
+
+    // Assert
+    expect(url).toBe('http://localhost/de-de/about')
+  })
+})
+
 // ─── 4. Server subpath exports ────────────────────────────────────────
 
 describe('@weaverse/next/server exports', () => {

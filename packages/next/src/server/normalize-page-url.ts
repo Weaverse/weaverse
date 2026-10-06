@@ -1,3 +1,4 @@
+import { withPathPrefix } from '../request-info'
 import type { WeaverseNextRequestContext } from '../types'
 
 // Query params that influence Weaverse page resolution on the Builder:
@@ -53,11 +54,11 @@ export function resolveRequestUrl(
   context?: WeaverseNextRequestContext
 ): string {
   if (context?.url) {
-    return typeof context.url === 'string'
-      ? context.url
-      : context.url.toString()
+    let url = new URL(context.url.toString(), 'http://localhost')
+    url.pathname = withPathPrefix(url.pathname, context.i18n)
+    return url.toString()
   }
-  let pathname = context?.pathname || '/'
+  let pathname = withPathPrefix(context?.pathname || '/', context?.i18n)
   let search = context?.searchParams
     ? new URLSearchParams(context.searchParams).toString()
     : ''
