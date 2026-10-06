@@ -979,6 +979,28 @@ describe('resolveRequestUrl', () => {
     expect(url).toBe('https://store.example/de-de/shop')
   })
 
+  it('should_return_the_request_url_unchanged_when_there_is_no_prefix_to_add', () => {
+    // Arrange — a relative URL and no market prefix.
+    let context = { i18n: { pathPrefix: '' }, url: '/about?x=1' }
+
+    // Act
+    let url = resolveRequestUrl(context)
+
+    // Assert
+    expect(url).toBe('/about?x=1')
+  })
+
+  it('should_normalize_surrounding_slashes_in_the_market_prefix', () => {
+    // Arrange
+    let context = { i18n: { pathPrefix: '//de-de///' }, pathname: '/shop' }
+
+    // Act
+    let url = resolveRequestUrl(context)
+
+    // Assert
+    expect(url).toBe('http://localhost/de-de/shop')
+  })
+
   it('should_prefix_the_market_onto_an_unprefixed_pathname_without_a_url', () => {
     // Arrange
     let context = {
