@@ -29,3 +29,5 @@
 ## Summary
 
 `loadThemeSettings()` fetches locale-specific merchant overrides only for themes that declare an `i18n` schema, so themes without i18n make zero translation API calls during SSR. The overrides request is optional: it is bounded by the client fetch timeout, so a stalled request falls back to theme defaults instead of holding theme loading, and an aborted response is never cached. Scope: `@weaverse/hydrogen` only. See [`plan.md`](./plan.md).
+
+Current phase (2026-10-06): the #535 fix is implemented and under pull-request review; it is not yet released in a published `@weaverse/hydrogen` version.

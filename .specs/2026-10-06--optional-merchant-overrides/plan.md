@@ -79,9 +79,13 @@ are larger, cross-repo (showcase themes + docs), and should land as follow-ups.
 ### Problem
 
 `loadThemeSettings()` awaits the main settings and `fetchMerchantOverrides()`
-together with `Promise.all`. In live mode both go through Hydrogen's
+together with `Promise.all`. In ordinary live mode the optional overrides
+request (`{weaverseHost}/api/translation/static`) goes through Hydrogen's
 `withCache.fetch`, which in `@shopify/hydrogen` 2026.4.2 calls `fetch` and
-reads the body with no deadline. Only `directFetch` (design mode, revision
+reads the body with no deadline. The main settings request uses `directFetch`
+by default, because the public API base is the external proxy; it uses
+`withCache.fetch` too only when the API base equals the Builder host (for
+example a self-hosted `WEAVERSE_HOST`). `directFetch` (design mode, revision
 preview, external public API proxy) has the SDK's abort timeout. On a cold
 cache, an overrides request that stalls before or during its body keeps the
 whole theme load pending, and the `catch` that falls back to theme defaults
