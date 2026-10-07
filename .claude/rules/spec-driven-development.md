@@ -73,8 +73,6 @@ Issue: [#NNNN](https://github.com/Weaverse/weaverse/issues/NNNN)
 
 Do not create `plan.md`, `work-logs.md`, `design.md`, `tasks.md`, or `handoff.md` by default. Merge the useful plan into the spec's **Approach**; put progress and discussion on the issue and evidence on the PR.
 
-The optional `/speckit.*` commands in `.claude/commands/` are opt-in authoring tools with their own artifacts; they are not required by this convention. If you use them, fold the result into the single spec `README.md` rather than keeping parallel files.
-
 ## Legacy specs
 
 Untouched historical folders (with `plan.md`, `work-logs.md`, or Status/Owner tables) stay as they are; do not bulk-migrate. When you substantively edit an existing README/plan pair, consolidate its current unique requirements and approach into `README.md`, update backlinks, and retire the parallel plan as an active document only after its meaningful history/evidence is preserved. Historical evidence may remain, but never as a second maintained contract. Do not move the folder.
