@@ -902,6 +902,63 @@ describe('Studio runtime contract', () => {
     })
   })
 
+  it('should_prefix_the_market_onto_an_unprefixed_pathname_in_request_info', () => {
+    // Arrange — a Next app builds the context from its unprefixed route path;
+    // Studio's address bar follows `requestInfo.pathname`.
+    let context = {
+      i18n: { country: 'DE', language: 'DE', pathPrefix: '/de-de' },
+      pathname: '/shop',
+    }
+
+    // Act
+    let requestInfo = buildWeaverseNextRequestInfo(context)
+
+    // Assert
+    expect(requestInfo.pathname).toBe('/de-de/shop')
+  })
+
+  it('should_keep_an_already_prefixed_pathname_in_request_info', () => {
+    // Arrange
+    let context = {
+      i18n: { country: 'DE', language: 'DE', pathPrefix: '/de-de' },
+      pathname: '/de-de/shop',
+    }
+
+    // Act
+    let requestInfo = buildWeaverseNextRequestInfo(context)
+
+    // Assert
+    expect(requestInfo.pathname).toBe('/de-de/shop')
+  })
+
+  it('should_leave_the_default_market_pathname_unprefixed_in_request_info', () => {
+    // Arrange — the default market has an empty prefix.
+    let context = {
+      i18n: { country: 'US', language: 'EN', pathPrefix: '' },
+      pathname: '/',
+    }
+
+    // Act
+    let requestInfo = buildWeaverseNextRequestInfo(context)
+
+    // Assert
+    expect(requestInfo.pathname).toBe('/')
+  })
+
+  it('should_prefix_the_market_onto_a_pathname_read_from_the_url_in_request_info', () => {
+    // Arrange — no explicit pathname; the URL carries the unprefixed path.
+    let context = {
+      i18n: { country: 'DE', language: 'DE', pathPrefix: '/de-de' },
+      url: 'https://store.example/',
+    }
+
+    // Act
+    let requestInfo = buildWeaverseNextRequestInfo(context)
+
+    // Assert
+    expect(requestInfo.pathname).toBe('/de-de')
+  })
+
   it('should_omit_page_type_and_handle_from_request_info_when_absent', () => {
     // Arrange
     let context = {
@@ -1429,6 +1486,115 @@ describe('Studio runtime contract', () => {
     expect(notify).toHaveBeenCalledTimes(1)
     unsubscribe?.()
     vi.stubGlobal('window', previousWindow)
+  })
+
+  /**
+   * Serve the same page id first under `/` with `enItem`, then under `/fr-fr`
+   * with `frItem`, so core `initProject()` reuses the item store and only calls
+   * `setData(frItem)`. Returns the reused item's snapshot after the switch.
+   */
+  function switchLocale(
+    enItem: Record<string, unknown>,
+    frItem: Record<string, unknown>,
+    components = [heroComponent]
+  ) {
+    let previousWindow = globalThis.window
+    vi.stubGlobal('window', {} as Window & typeof globalThis)
+    let page = (item: Record<string, unknown>) =>
+      ({
+        page: { id: 'page-1', rootId: 'item-root', items: [item] },
+      }) as WeaverseNextLoaderData
+    createWeaverseNextRuntime({
+      client: makeClient({
+        components,
+        requestContext: { isDesignMode: false, pathname: '/' },
+      }),
+      data: page(enItem),
+    })
+    let runtime = createWeaverseNextRuntime({
+      client: makeClient({
+        components,
+        requestContext: { isDesignMode: false, pathname: '/fr-fr' },
+      }),
+      data: page(frItem),
+    })
+    let snapshot = runtime.itemInstances.get('item-root')?.getSnapShot()
+    vi.stubGlobal('window', previousWindow)
+    return snapshot
+  }
+
+  it('should_reset_an_omitted_setting_to_its_schema_default_when_a_reused_item_switches_locale', () => {
+    // Arrange — the FR payload omits `heading` because it equals the default.
+    let en = { id: 'item-root', type: 'hero', data: { heading: 'Hallo' } }
+    let fr = { id: 'item-root', type: 'hero', data: {} }
+
+    // Act
+    let snapshot = switchLocale(en, fr)
+
+    // Assert
+    expect(snapshot?.heading).toBe('Default Heading')
+  })
+
+  it('should_reset_to_schema_defaults_when_a_reused_item_payload_omits_data_entirely', () => {
+    // Arrange — every FR value equals its default, so `data` is left out.
+    let en = { id: 'item-root', type: 'hero', data: { heading: 'Hallo' } }
+    let fr = { id: 'item-root', type: 'hero' }
+
+    // Act
+    let snapshot = switchLocale(en, fr)
+
+    // Assert
+    expect(snapshot?.heading).toBe('Default Heading')
+  })
+
+  it('should_apply_the_new_type_schema_defaults_when_a_reused_item_changes_type', () => {
+    // Arrange — the Builder replaced the section: same id, different type.
+    let bannerComponent = {
+      default: Hero,
+      schema: createSchema({
+        type: 'banner',
+        title: 'Banner',
+        settings: [
+          {
+            group: 'Content',
+            inputs: [
+              {
+                type: 'text',
+                name: 'title',
+                label: 'Title',
+                defaultValue: 'Banner default',
+              },
+            ],
+          },
+        ],
+      }),
+    }
+    let en = { id: 'item-root', type: 'hero', data: { heading: 'Hallo' } }
+    let fr = { id: 'item-root', type: 'banner', data: {} }
+
+    // Act
+    let snapshot = switchLocale(en, fr, [heroComponent, bannerComponent])
+
+    // Assert
+    expect({ title: snapshot?.title, heading: snapshot?.heading }).toEqual({
+      title: 'Banner default',
+      heading: undefined,
+    })
+  })
+
+  it('should_drop_a_stale_setting_without_a_default_when_a_reused_item_switches_locale', () => {
+    // Arrange — `text` has no schema default and is absent from the FR payload.
+    let en = { id: 'item-root', type: 'hero', data: { text: 'Hello EN' } }
+    let fr = { id: 'item-root', type: 'hero', data: { heading: 'Bonjour' } }
+
+    // Act
+    let snapshot = switchLocale(en, fr)
+
+    // Assert
+    expect({ text: snapshot?.text, data: snapshot?.data }).toEqual({
+      text: undefined,
+      data: { heading: 'Bonjour' },
+    })
   })
 
   it('should_rebind_reused_item_instances_to_the_new_runtime_when_locale_navigation_recreates_runtime', () => {

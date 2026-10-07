@@ -22,14 +22,43 @@ function getSearchParamsFromContext(
   return new URLSearchParams()
 }
 
+/**
+ * Put the request's market prefix (`i18n.pathPrefix`, e.g. `/de-de`) on a
+ * pathname that does not carry it yet.
+ *
+ * A Next app builds its request context from the route path, and with
+ * locale-segmented routes that path is usually unprefixed. Studio's address
+ * bar follows `requestInfo.pathname`, so without the prefix it snaps back to
+ * the default market after every navigation. A path that already carries the
+ * prefix, and the default market's empty prefix, pass through unchanged.
+ */
+export function withPathPrefix(
+  pathname: string,
+  i18n?: WeaverseNextRequestContext['i18n']
+): string {
+  let raw = typeof i18n?.pathPrefix === 'string' ? i18n.pathPrefix : ''
+  // Split rather than regex-trim: `pathPrefix` is caller input, and an anchored
+  // `/\/+$/` backtracks polynomially on long runs of slashes.
+  let segments = raw.split('/').filter(Boolean)
+  let prefix = segments.length > 0 ? `/${segments.join('/')}` : ''
+  if (
+    prefix === '' ||
+    pathname === prefix ||
+    pathname.startsWith(`${prefix}/`)
+  ) {
+    return pathname
+  }
+  return pathname === '/' ? prefix : `${prefix}${pathname}`
+}
+
 function getPathnameFromContext(context?: WeaverseNextRequestContext): string {
   if (context?.pathname) {
-    return context.pathname
+    return withPathPrefix(context.pathname, context.i18n)
   }
 
   if (context?.url) {
     let url = toUrl(context.url)
-    return url.pathname || '/'
+    return withPathPrefix(url.pathname || '/', context.i18n)
   }
 
   return '/'

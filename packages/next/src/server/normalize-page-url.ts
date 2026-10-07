@@ -1,3 +1,4 @@
+import { withPathPrefix } from '../request-info'
 import type { WeaverseNextRequestContext } from '../types'
 
 // Query params that influence Weaverse page resolution on the Builder:
@@ -53,11 +54,18 @@ export function resolveRequestUrl(
   context?: WeaverseNextRequestContext
 ): string {
   if (context?.url) {
-    return typeof context.url === 'string'
-      ? context.url
-      : context.url.toString()
+    let raw = String(context.url)
+    let url = new URL(raw, 'http://localhost')
+    let pathname = withPathPrefix(url.pathname, context.i18n)
+    // Unchanged when there is nothing to prefix, so a relative or bare-origin
+    // URL is passed on exactly as the app gave it.
+    if (pathname === url.pathname) {
+      return raw
+    }
+    url.pathname = pathname
+    return url.toString()
   }
-  let pathname = context?.pathname || '/'
+  let pathname = withPathPrefix(context?.pathname || '/', context?.i18n)
   let search = context?.searchParams
     ? new URLSearchParams(context.searchParams).toString()
     : ''
