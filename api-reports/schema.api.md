@@ -406,9 +406,6 @@ export const RangeInputConfigsSchema: z.ZodObject<{
 export type Resolvable<T, Context> = T | ((context: Context) => T);
 
 // @public
-export function resolveThemeRoute(pattern: string, params: Record<string, string | undefined>): string | null;
-
-// @public
 export interface SchemaAnalysisResult {
     issues: readonly SchemaValidationIssue[];
     stats: SchemaAnalysisStats;
