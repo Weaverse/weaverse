@@ -10,7 +10,7 @@
 | **Created**      | 2026-10-06                                                                                     |
 | **Last Updated** | 2026-10-07                                                                                     |
 
-## Initiating Requirement
+## Original Prompt
 
 > Steps 1–2 of the `@weaverse/next` stable release plan (Weaverse/builder#2661), shipped as `@weaverse/next@0.1.0-alpha.19`:
 >
