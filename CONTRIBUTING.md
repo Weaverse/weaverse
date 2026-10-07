@@ -25,7 +25,13 @@ There are several ways you can contribute to Weaverse:
 4. **Test Your Changes**: Ensure your changes do not break any existing functionality.
 
 5. **Open a Pull Request**: Push your branch to your fork and open a pull request against the main Weaverse repository.
-   Provide a clear description of your changes.
+   Provide a clear description of your changes and link the issue it resolves (e.g. `Closes #123`).
+
+### Issues and Specs
+
+Issues track ownership, priority, status, and discussion. Small fixes need only the issue. Substantive changes are
+described in one spec file (`.specs/<date>--<title>/README.md`); see
+[`.claude/rules/spec-driven-development.md`](./.claude/rules/spec-driven-development.md).
 
 ### Code Review
 
