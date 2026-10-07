@@ -38,6 +38,10 @@
 > - Document that a complete serialized item is `initProject()`'s contract.
 > - Add this spec.
 
+### 2026-10-07 — Rebase onto `v5.22.1`
+
+> Rebase onto `main` after the `v5.22.1` release and pin `@weaverse/react` 5.22.1, so `@weaverse/next` stays in line with `@weaverse/hydrogen`.
+
 ## Summary
 
 Two `@weaverse/next` bugs surface once a Next theme serves more than one market (Weaverse/forward#83, #88). Reused item stores now rebuild from the incoming type's schema defaults on a complete update. The request context applies the market path prefix, so Studio keeps the market. The internal dependency pins catch up with `@weaverse/hydrogen`.

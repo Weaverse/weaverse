@@ -27,7 +27,7 @@ This matches Hydrogen's #508 semantics and goes further: Hydrogen keeps the prev
 
 ### Dependencies (`packages/next/package.json`)
 
-`@weaverse/react` 5.20.3 → 5.22.0 and `@weaverse/schema` 0.16.0 → 0.17.0; regenerate `pnpm-lock.yaml`.
+`@weaverse/react` 5.20.3 → 5.22.1 and `@weaverse/schema` 0.16.0 → 0.17.0; regenerate `pnpm-lock.yaml`.
 
 ## Tests
 

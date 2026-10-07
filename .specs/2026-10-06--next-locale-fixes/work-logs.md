@@ -11,8 +11,10 @@
 
 ## 2026-10-07 — @hta218
 
-- Ponytail review (875d906b):
+- Ponytail review (384be672):
   - The prefix trim is now `raw.split('/').filter(Boolean)`, still regex-free.
   - `resolveRequestUrl` coerces with `String(context.url)`.
 - Net −8 lines. All CI checks pass, CodeQL included.
-- Waiting on Leo's review and merge; then step 3 of Weaverse/builder#2661 (release `0.1.0-alpha.19`).
+- Rebased onto `main` after the `v5.22.1` release (core, react, hydrogen); the only conflict was `pnpm-lock.yaml`.
+- Bumped the `@weaverse/react` pin 5.22.0 → 5.22.1 to stay in line with `@weaverse/hydrogen`, and regenerated the lockfile.
+- Needs an approval from a reviewer other than the author; then merge and step 3 of Weaverse/builder#2661 (release `0.1.0-alpha.19`).
