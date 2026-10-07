@@ -47,7 +47,7 @@
     "@shopify/hydrogen": ">=2025.5",
     "@shopify/remix-oxygen": "3",
     "@weaverse/react": "5.22.1",
-    "@weaverse/schema": "0.17.0",
+    "@weaverse/schema": "0.18.0",
     "react": ">=19",
     "react-dom": ">=19",
     "react-error-boundary": "^6",
