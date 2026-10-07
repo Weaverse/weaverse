@@ -32,6 +32,7 @@ import type {
   SchemaType,
   SchemaValidationIssue,
   SchemaValidationResult,
+  ThemeRoutes,
 } from '@weaverse/schema'
 import { isValidSchema } from '@weaverse/schema'
 import type * as React from 'react'
@@ -411,6 +412,12 @@ export type HydrogenThemeSchema = {
   }
   /** Groups of global theme settings exposed in Studio. */
   settings?: InspectorGroup[]
+  /**
+   * URL patterns for the page types whose routes differ from the Shopify
+   * convention, so Studio can navigate to them, e.g.
+   * `{ COLLECTION: '/shop/:handle' }`. See `ThemeRoutes`.
+   */
+  routes?: ThemeRoutes
   /** Theme localization configuration. */
   i18n?: {
     /** Strategy used to encode the locale in storefront URLs. */
