@@ -11,7 +11,7 @@
 
 Types only. Resolution lives in its one consumer, the Builder; a resolver in the SDK would have no other caller and could not reach the Builder until a release anyway.
 
-## Follow-up, after `@weaverse/schema` is released
+## Typed field (after `@weaverse/schema@0.18.0`)
 
 `routes?: ThemeRoutes` on `HydrogenThemeSchema` and `WeaverseNextThemeSchema`. Internal deps resolve from npm, so these cannot compile against an unpublished export. Not blocking: both schemas already accept extra keys and `loadThemeSettings` sends the whole schema to Studio in design mode, so a theme can declare `routes` today.
 
@@ -28,4 +28,8 @@ Types only. Resolution lives in its one consumer, the Builder; a resolver in the
 | `packages/schema/src/index.ts` | Type exports |
 | `packages/schema/test/theme-routes.test.ts` | Type test |
 | `api-reports/schema.api.md` | API report |
+| `packages/{hydrogen,next}/package.json`, `pnpm-lock.yaml` | `@weaverse/schema` 0.18.0 |
+| `packages/hydrogen/src/types.ts`, `packages/next/src/types.ts` | `routes?: ThemeRoutes` |
+| `packages/{hydrogen,next}/__tests__/theme-routes-types.test.ts` | Type tests |
+| `api-reports/{hydrogen,next,next.server}.api.md` | API reports |
 | `.specs/2026-10-07--theme-route-patterns/` | This spec |
