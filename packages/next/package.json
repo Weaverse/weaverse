@@ -63,7 +63,7 @@
   },
   "dependencies": {
     "@weaverse/react": "5.22.1",
-    "@weaverse/schema": "0.17.0"
+    "@weaverse/schema": "0.18.0"
   },
   "devDependencies": {
     "next": "16.3.4"
