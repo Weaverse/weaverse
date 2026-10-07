@@ -9,7 +9,7 @@ Each fact has one owner. Never mirror the same metadata or acceptance checklist 
 | Owner | Holds |
 | --- | --- |
 | **GitHub issue** | Owner, priority, milestone, status, discussion, links |
-| **Spec** (`README.md` in the spec folder) | Requirements, acceptance, technical approach, verification strategy, current important decisions |
+| **Spec** (one `.specs/YYYY-MM-DD-what-update.md` file) | Requirements, acceptance, technical approach, verification strategy, current important decisions |
 | **Pull request** | Implementation and observed verification evidence (CI, smoke runs) |
 | **Git** | History |
 
@@ -29,19 +29,19 @@ Each fact has one owner. Never mirror the same metadata or acceptance checklist 
 
 ## Location and paths
 
-Specs live in `.specs/` at the repository root:
+New specs are single Markdown files directly in `.specs/` at the repository root — no feature folder, no per-spec `README.md`:
 
 ```
-.specs/YYYY-MM-DD--kebab-case-title/README.md
+.specs/YYYY-MM-DD-what-update.md
 ```
 
-- The date is the **creation** date. It is immutable context, not status.
-- **Do not rename or move a spec folder when it is updated.** Paths are stable so links keep working.
-- Do not flatten, re-date, or move existing trees.
+- One hyphen separates the date from the kebab-case slug (`2026-10-07-flat-spec-layout.md`, not `2026-10-07--…`).
+- The date is the **creation** date. It is immutable context, not status. **Do not rename the file when it is updated**; paths are stable so links keep working.
+- Never overwrite an existing spec file with the same name; reuse it only when it describes the same outcome.
 
 ## The spec file
 
-One `README.md` per spec folder. Write in English; keep it portable and self-contained. Minimum sections:
+One file per spec. Write in English; keep it portable and self-contained. Minimum sections:
 
 ```markdown
 # [Title]
@@ -75,7 +75,7 @@ Do not create `plan.md`, `work-logs.md`, `design.md`, `tasks.md`, or `handoff.md
 
 ## Legacy specs
 
-Untouched historical folders (with `plan.md`, `work-logs.md`, or Status/Owner tables) stay as they are; do not bulk-migrate. When you substantively edit an existing README/plan pair, consolidate its current unique requirements and approach into `README.md`, update backlinks, and retire the parallel plan as an active document only after its meaningful history/evidence is preserved. Historical evidence may remain, but never as a second maintained contract. Do not move the folder.
+Existing `.specs/YYYY-MM-DD--title/` folders (`README.md`, possibly with `plan.md`, `work-logs.md`, or Status/Owner tables) stay where they are; do not bulk-migrate, flatten, or re-date them. When you substantively edit one, consolidate that outcome's current unique requirements and approach into one flat `.specs/YYYY-MM-DD-what-update.md` file (keeping the original creation date when known), update backlinks, and retire the old folder as an active contract only after its meaningful history/evidence is preserved. Historical evidence may remain, but never as a second maintained contract.
 
 ## Branch naming
 

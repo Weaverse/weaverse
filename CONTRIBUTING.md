@@ -30,7 +30,7 @@ There are several ways you can contribute to Weaverse:
 ### Issues and Specs
 
 Issues track ownership, priority, status, and discussion. Small fixes need only the issue. Substantive changes are
-described in one spec file (`.specs/<date>--<title>/README.md`); see
+described in one spec file (`.specs/YYYY-MM-DD-what-update.md`); see
 [`.claude/rules/spec-driven-development.md`](./.claude/rules/spec-driven-development.md).
 
 ### Code Review

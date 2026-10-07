@@ -350,10 +350,10 @@ Uses a Claude Code skill (`.claude/skills/releasing-weaverse-sdks/SKILL.md`) for
 
 > **Full convention**: read [`.claude/rules/spec-driven-development.md`](./.claude/rules/spec-driven-development.md) — it is the authoritative reference. Summary only:
 
-- **Issue-first, single-spec**: issues own owner/priority/milestone/status/discussion; one spec `README.md` owns requirements, acceptance, approach, and verification; PRs own evidence. Never mirror the same metadata or checklist in two places.
+- **Issue-first, single-spec**: issues own owner/priority/milestone/status/discussion; one spec file owns requirements, acceptance, approach, and verification; PRs own evidence. Never mirror the same metadata or checklist in two places.
 - Issue-governed work links to its real GitHub issue before implementation. Follow the repo's branch/release policy; resolve both the PR base and the remote default. Default-targeting PRs that fully resolve the issue use a closing keyword; legitimate non-default PRs use GitHub's explicit Development link. Read the link back either way; never retarget a PR just to link it.
-- Small clear bugs/maintenance use the issue as the mini-spec. Substantive work uses one `.specs/YYYY-MM-DD--title/README.md` (Outcome; Scope & contract; Acceptance; Approach; Verification). No new `plan.md`/`work-logs.md`/`design.md`/`tasks.md`/`handoff.md` by default.
-- Search existing specs first and update the closest canonical spec in place. Folder dates are creation dates: never rename or move a folder on update. Leave untouched legacy specs as they are; when substantively editing a README/plan pair, consolidate into `README.md` so only one maintained contract remains.
+- Small clear bugs/maintenance use the issue as the mini-spec. Substantive work uses one flat file `.specs/YYYY-MM-DD-what-update.md` (single hyphen after the date; no feature folder or per-spec `README.md`; sections Outcome; Scope & contract; Acceptance; Approach; Verification). No new `plan.md`/`work-logs.md`/`design.md`/`tasks.md`/`handoff.md` by default.
+- Search existing specs first and update the closest canonical spec in place. The filename date is the creation date: never rename the file on update. Leave untouched legacy `.specs/YYYY-MM-DD--title/` folders as they are; when substantively editing one, consolidate that outcome into one flat spec file so only one maintained contract remains.
 - Requirements are concise, portable, professionally revised (no raw chat or private source paths); always redact secrets and private session material.
 
 ## Common Pitfalls
