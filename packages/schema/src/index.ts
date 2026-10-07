@@ -25,6 +25,7 @@ export type {
   PageSEOData,
   TwitterCardType,
 } from './page-seo.js'
+export type { ThemeRoutePageType, ThemeRoutes } from './theme-routes.js'
 
 /** Schema type with required title and type fields in non-strict projects. */
 export type SchemaTypeStrict = SchemaType & {

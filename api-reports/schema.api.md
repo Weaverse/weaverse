@@ -614,6 +614,12 @@ export interface SimpleValidationResult<T = any> {
 }
 
 // @public
+export type ThemeRoutePageType = Exclude<PageType, '*' | 'CUSTOM'>;
+
+// @public
+export type ThemeRoutes = Partial<Record<ThemeRoutePageType, string>>;
+
+// @public
 export const titleSchema: z.ZodString;
 
 // @public
