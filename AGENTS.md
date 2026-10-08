@@ -99,7 +99,7 @@ All packages use tsup with consistent config:
 | Quotes | Single quotes (`'`) |
 | Semicolons | As needed (not mandatory) |
 | Trailing commas | ES5 style |
-| `const` vs `let` | Prefer `let` (useConst is OFF) — use `const` only for true constants (`ALL_CAPS`) |
+| Variable declarations | Both `let` and `const` are allowed; no keyword preference or `ALL_CAPS` restriction on `const` bindings. |
 | `any` type | Warned — avoid, use proper types |
 | Unused imports | Warned — remove them |
 | Unused variables | Warned — remove them |
@@ -237,8 +237,6 @@ const INVALID_PROJECT_ID_ERROR = /Invalid projectId/
 const TIMEOUT_ERROR = /Request timeout/
 ```
 
-Note: Use `let` for variable declarations in tests (consistent with biome config).
-
 ### Running Tests
 
 ```sh
@@ -359,7 +357,6 @@ Uses a Claude Code skill (`.claude/skills/releasing-weaverse-sdks/SKILL.md`) for
 ## Common Pitfalls
 
 - **Don't use `npm install` / `bun install`** — use `pnpm install` for dependency management
-- **Don't use `const` by default** — this project prefers `let` (biome useConst is OFF)
 - **Don't use double quotes** — biome enforces single quotes
 - **Don't use `inspector` in schemas** — use `settings` (inspector is deprecated)
 - **Don't use namespace imports** — use named imports (`import { x }` not `import * as`)
