@@ -23,6 +23,20 @@ describe('ThemeSettingsStore', () => {
     consoleErrorSpy.mockRestore()
   })
 
+  it('should_replace_image_values_without_leaking_focal_points_between_usages', () => {
+    let image = { id: 'shared-file', url: '/hero.jpg' }
+    let focusedImage = { ...image, focalPoint: { x: 0.8, y: 0.3 } }
+    store.updateThemeSettings({ hero: focusedImage, logo: image })
+
+    store.updateThemeSettings({ hero: image, logo: focusedImage })
+
+    expect(store.getSnapshot()).toMatchObject({
+      hero: image,
+      logo: focusedImage,
+    })
+    expect(store.getSnapshot().hero).not.toHaveProperty('focalPoint')
+  })
+
   describe('subscribe', () => {
     it('should_add_listener_and_return_unsubscribe_function', () => {
       // Arrange
