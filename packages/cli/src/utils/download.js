@@ -6,26 +6,32 @@ import ora from 'ora'
 import { getDownloadFolder, getDownloadURL } from '../constants/templates.js'
 
 /**
- * Removes the .weaverse folder from the output path if it exists
- * @param {string} outputPath - The project output directory
- * @returns {Promise<boolean>} True if folder was removed or didn't exist, false on error
+ * Template folders that only serve the Weaverse team: .weaverse holds internal
+ * specs and docs, .github holds workflows (Oxygen deploy, CI, code review)
+ * that depend on Weaverse secrets and would fail in a new project.
  */
-export async function removeWeaverseFolder(outputPath) {
-  let weaversePath = `${outputPath}/.weaverse`
-  try {
-    let exists = await fs.pathExists(weaversePath)
-    if (exists) {
-      await fs.remove(weaversePath)
-    }
-    return true
-  } catch (error) {
-    console.warn(
-      chalk.yellow(
-        `Warning: Could not remove .weaverse folder: ${error.message}`
+const TEMPLATE_INTERNAL_FOLDERS = ['.weaverse', '.github']
+
+/**
+ * Removes Weaverse-internal folders from the output path if they exist
+ * @param {string} outputPath - The project output directory
+ * @returns {Promise<boolean>} True if all folders were removed or didn't exist, false on error
+ */
+export async function removeTemplateInternalFolders(outputPath) {
+  let ok = true
+  for (let folder of TEMPLATE_INTERNAL_FOLDERS) {
+    try {
+      await fs.remove(`${outputPath}/${folder}`)
+    } catch (error) {
+      console.warn(
+        chalk.yellow(
+          `Warning: Could not remove ${folder} folder: ${error.message}`
+        )
       )
-    )
-    return false
+      ok = false
+    }
   }
+  return ok
 }
 
 /**
@@ -79,7 +85,7 @@ export async function downloadAndExtractTemplate(
     }
     await fs.remove(`${outputPath}/temp`)
 
-    await removeWeaverseFolder(outputPath)
+    await removeTemplateInternalFolders(outputPath)
 
     spinner.succeed('Template downloaded and extracted successfully')
     return true

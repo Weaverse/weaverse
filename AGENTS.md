@@ -99,7 +99,7 @@ All packages use tsup with consistent config:
 | Quotes | Single quotes (`'`) |
 | Semicolons | As needed (not mandatory) |
 | Trailing commas | ES5 style |
-| `const` vs `let` | Prefer `let` (useConst is OFF) — use `const` only for true constants (`ALL_CAPS`) |
+| Variable declarations | Both `let` and `const` are allowed; no keyword preference or `ALL_CAPS` restriction on `const` bindings. |
 | `any` type | Warned — avoid, use proper types |
 | Unused imports | Warned — remove them |
 | Unused variables | Warned — remove them |
@@ -237,8 +237,6 @@ const INVALID_PROJECT_ID_ERROR = /Invalid projectId/
 const TIMEOUT_ERROR = /Request timeout/
 ```
 
-Note: Use `let` for variable declarations in tests (consistent with biome config).
-
 ### Running Tests
 
 ```sh
@@ -348,28 +346,18 @@ Uses a Claude Code skill (`.claude/skills/releasing-weaverse-sdks/SKILL.md`) for
 
 ## Spec-Driven Development (SDD)
 
-> **Full convention**: read [`.claude/rules/spec-driven-development.md`](./.claude/rules/spec-driven-development.md) — it is the authoritative reference. The summary below is for quick orientation only.
+> **Full convention**: read [`.claude/rules/spec-driven-development.md`](./.claude/rules/spec-driven-development.md) — it is the authoritative reference. Summary only:
 
-All features MUST have a spec folder in `.specs/` at the repo root:
-```
-.specs/YYYY-MM-DD--feature-name/
-├── README.md      # Status, owner, issue, git branch, initiating requirement, summary
-├── plan.md        # Under 500 lines, includes touched files/packages list
-└── work-logs.md   # Optional, append-only
-```
-The README's `Initiating Requirement` MUST be a concise, self-contained, professionally revised account of the substantive requirement, not raw chat. Read any local brief, attachment, or file path and inline its requirement; a private source-file location used only to locate that material is never requirement content. Distinguish those private source locations from substantive repository paths, runtime paths, and URLs. Normalize substantive paths to portable forms when possible, such as repo-relative paths, then preserve each normalized path and its meaning exactly. Remove conversational scaffolding, agent orchestration chatter, and irrelevant prose. Credential and secret redaction has higher priority than every preservation rule: remove them even when they also qualify as substantive literal values or identifiers. Preserve every remaining substantive constraint, identifier, command, literal value, acceptance condition, and externally meaningful branch, base, and head identifier exactly. Add later user intent as dated, similarly revised `Scope Updates`. A contributor MUST be able to understand the spec without the original chat, private file, or author's machine. Apply this convention to new and touched specs; do not bulk-migrate historical specs.
-
-**Rules**:
-1. Search existing specs and issue links before creating anything
-2. Update the closest existing spec; merge specs that share one user outcome and implementation boundary
-3. Create a new spec only for genuinely independent work
-4. On update or merge, move the folder to the current date, preserve `Created`, refresh `Last Updated`, and update repository-wide backlinks
-5. Plans live **only** in `.specs/<feature>/plan.md` — do NOT put them in `.plan/`, `docs/plans/`, or any other location
+- **Issue-first, single-spec**: issues own owner/priority/milestone/status/discussion; one spec file owns requirements, acceptance, approach, and verification; PRs own evidence. Never mirror the same metadata or checklist in two places.
+- Issue-governed work links to its real GitHub issue before implementation. Follow the repo's branch/release policy; resolve both the PR base and the remote default. Default-targeting PRs that fully resolve the issue use a closing keyword; legitimate non-default PRs use GitHub's explicit Development link. Read the link back either way; never retarget a PR just to link it.
+- Before creating an issue, search related `Weaverse` issues in all states (open and closed). Reuse a matching one, even if closed; if its scope changed, editing the issue body is an external write that needs approval for that issue and payload (read it first, preserve history/metadata, read back). Create new only when no genuine match exists. Reopen only when work actually resumes within authorization.
+- Small clear bugs/maintenance use the issue as the mini-spec. Substantive work uses one flat file `.specs/YYYY-MM-DD-what-update.md` (single hyphen after the date; no feature folder or per-spec `README.md`; sections Outcome; Scope & contract; Acceptance; Approach; Verification). No new `plan.md`/`work-logs.md`/`design.md`/`tasks.md`/`handoff.md` by default.
+- Search existing specs first and update the closest canonical spec in place. The filename date is the creation date: never rename the file on update. Leave untouched legacy `.specs/YYYY-MM-DD--title/` folders as they are; when substantively editing one, consolidate that outcome into one flat spec file so only one maintained contract remains.
+- Requirements are concise, portable, professionally revised (no raw chat or private source paths); always redact secrets and private session material.
 
 ## Common Pitfalls
 
 - **Don't use `npm install` / `bun install`** — use `pnpm install` for dependency management
-- **Don't use `const` by default** — this project prefers `let` (biome useConst is OFF)
 - **Don't use double quotes** — biome enforces single quotes
 - **Don't use `inspector` in schemas** — use `settings` (inspector is deprecated)
 - **Don't use namespace imports** — use named imports (`import { x }` not `import * as`)

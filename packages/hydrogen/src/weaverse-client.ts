@@ -704,6 +704,11 @@ export class WeaverseClient {
         cacheKey,
         cacheStrategy: strategy,
         shouldCacheResponse: (response: any): boolean => {
+          // An aborted request never caches: Hydrogen turns a body read cut
+          // short by the abort into an empty payload, not an error.
+          if (fetchOptions.signal?.aborted) {
+            return false
+          }
           // Cache any non-error response (for both Weaverse API and third-party APIs)
           return (
             !hasError(response) && response !== null && response !== undefined
@@ -909,6 +914,12 @@ export class WeaverseClient {
 
       const url = `${weaverseHost}/api/translation/static?projectId=${projectId}&locale=${locale}`
 
+      // Overrides are optional, and `loadThemeSettings` awaits them next to
+      // the main settings. Hydrogen's cached fetch adds no deadline of its
+      // own, so bound the request and its body with the client fetch timeout;
+      // on abort the catch below falls back to theme defaults. Design and
+      // revision modes ignore this signal and keep `directFetch`'s own
+      // timeout and retry.
       const overrides = await this.fetchWithCache<Record<string, unknown>>(
         url,
         {
@@ -918,6 +929,7 @@ export class WeaverseClient {
           headers: {
             Accept: 'application/json',
           },
+          signal: AbortSignal.timeout(this.fetchTimeoutMs),
         }
       )
 

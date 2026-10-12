@@ -146,11 +146,11 @@ importers:
         specifier: '3'
         version: 3.0.3(@shopify/oxygen-workers-types@4.2.0)(react-router@7.14.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
       '@weaverse/react':
-        specifier: 5.21.2
-        version: 5.21.2
+        specifier: 5.22.1
+        version: 5.22.1
       '@weaverse/schema':
-        specifier: 0.16.0
-        version: 0.16.0
+        specifier: 0.18.0
+        version: 0.18.0
       react:
         specifier: '>=19'
         version: 19.2.5
@@ -167,11 +167,11 @@ importers:
   packages/next:
     dependencies:
       '@weaverse/react':
-        specifier: 5.20.3
-        version: 5.20.3
+        specifier: 5.22.1
+        version: 5.22.1
       '@weaverse/schema':
-        specifier: 0.16.0
-        version: 0.16.0
+        specifier: 0.18.0
+        version: 0.18.0
       react:
         specifier: '>=19'
         version: 19.2.5
@@ -186,8 +186,8 @@ importers:
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: 5.21.2
-        version: 5.21.2
+        specifier: 5.22.1
+        version: 5.22.1
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -1624,24 +1624,16 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@weaverse/core@5.20.3':
-    resolution: {integrity: sha512-fPF8D/MAeLvWh2k2JaINdSHKVZSuOKiQtjLhy58c4YBkg8LWRi2nZaEebUNiQuLLCpHfXoZbGTroyY6l4YVNwQ==}
+  '@weaverse/core@5.22.1':
+    resolution: {integrity: sha512-nJ2NpIMzXrJ1sIsyCYMV/7NsdFADIH3ffXG3IvOLJA2ryeBEb4ny6Zsm7lQtYI8FxLxaE+aQ5AyhBaaQUbFrJA==}
     engines: {node: '>=18'}
 
-  '@weaverse/core@5.21.2':
-    resolution: {integrity: sha512-6xQAZzQ6ygdbntvVv35mtXBFu4oTXzMb/wT/1xrGf6ASD/cUU3URYrnEeeHPqeJwo4mDR+cqV0WT8Mckv+GhRQ==}
+  '@weaverse/react@5.22.1':
+    resolution: {integrity: sha512-2jCVzeBjYtdy76LaHBdZEBmbfQPp8bmVvKgBfQx/rBgwq8qDnkdAEAgjO/sC6ZanMYvXbwoobm3XdnLH5SlC2w==}
     engines: {node: '>=18'}
 
-  '@weaverse/react@5.20.3':
-    resolution: {integrity: sha512-6J/Gd6npD1gG/Gf461TudJ3erXl2YQEzWqjHXHuPZVVEBGb+laArDov0MOgb9blWvgU37KPEfU3gQcDfqI0B+A==}
-    engines: {node: '>=18'}
-
-  '@weaverse/react@5.21.2':
-    resolution: {integrity: sha512-CWV2JPt7O+cl7dVeW3OnTjMXpjFKg/myP8LGzka6e5ZsGaV/TU5wx3II0D+YDcefpti2nYPFBh0Y1NjX26fVVQ==}
-    engines: {node: '>=18'}
-
-  '@weaverse/schema@0.16.0':
-    resolution: {integrity: sha512-fLdYD10vPa79JgRH6e28lM3QlZnaMzBS2WA3MiHmlaBTavflCOIDbdReysxeN1LC33v4+ur9n1sJhT6PNxMj8w==}
+  '@weaverse/schema@0.18.0':
+    resolution: {integrity: sha512-bmYtuSfoJUrFfgIEyq/j8uSX3I1R5s1k7CCJUYeRPT0DEBonuQcFOk6DCXo0KKi6y+SAL6lyjBeYRloGf3x0Lw==}
 
   '@xstate/fsm@2.0.0':
     resolution: {integrity: sha512-p/zcvBMoU2ap5byMefLkR+AM+Eh99CU/SDEQeccgKlmFNOMDwphaRGqdk+emvel/SaGZ7Rf9sDvzAplLzLdEVQ==}
@@ -4265,25 +4257,16 @@ snapshots:
   '@voidzero-dev/vite-plus-win32-x64-msvc@0.1.24':
     optional: true
 
-  '@weaverse/core@5.20.3': {}
+  '@weaverse/core@5.22.1': {}
 
-  '@weaverse/core@5.21.2': {}
-
-  '@weaverse/react@5.20.3':
+  '@weaverse/react@5.22.1':
     dependencies:
-      '@weaverse/core': 5.20.3
+      '@weaverse/core': 5.22.1
       clsx: 2.1.1
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
 
-  '@weaverse/react@5.21.2':
-    dependencies:
-      '@weaverse/core': 5.21.2
-      clsx: 2.1.1
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
-
-  '@weaverse/schema@0.16.0':
+  '@weaverse/schema@0.18.0':
     dependencies:
       zod: 4.4.3
 

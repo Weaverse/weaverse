@@ -7,6 +7,7 @@ import type {
   PageSEOData,
   PageType,
   SchemaType,
+  ThemeRoutes,
 } from '@weaverse/schema'
 import type { ComponentType, ForwardRefExoticComponent, ReactNode } from 'react'
 import type { TranslationStore } from './translation-store'
@@ -279,6 +280,12 @@ export interface WeaverseNextThemeSchema {
    * @deprecated Migrate the same groups to {@link WeaverseNextThemeSchema.settings}.
    */
   inspector?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[]
+  /**
+   * URL patterns for the page types whose routes differ from the Shopify
+   * convention, so Studio can navigate to them, e.g.
+   * `{ COLLECTION: '/shop/:handle' }`. See `ThemeRoutes`.
+   */
+  routes?: ThemeRoutes
   /** Theme-setting groups displayed in Builder. */
   settings?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[]
   /** Additional schema metadata preserved for forward compatibility. */

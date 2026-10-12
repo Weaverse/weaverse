@@ -1,3 +1,6 @@
+import { createServer, type Server, type ServerResponse } from 'node:http'
+import type { AddressInfo } from 'node:net'
+import { InMemoryCache } from '@shopify/hydrogen'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const spyOn = vi.spyOn
@@ -752,22 +755,130 @@ describe('loadThemeSettings merchant-overrides gating (issue #2291)', () => {
     expect(cacheTargets(fetchSpy)).not.toContain('merchant-overrides')
   })
 
-  it('fetches merchant overrides when the theme declares an i18n schema', async () => {
-    let client = makeClient({
+  describe('through the real Hydrogen cached fetch (issue #535)', () => {
+    // A local origin stands in for a self-hosted WEAVERSE_HOST, which routes
+    // both requests through Hydrogen's `withCache` instead of direct fetch.
+    // With `stallOverrides`, the override response sends its headers and part
+    // of the body, then never finishes.
+    let server: Server
+    let host: string
+    let stallOverrides: boolean
+    let overrideRequests: number
+    let abandonedOverrides: number
+    let stalled: ServerResponse[]
+
+    let i18nSchema = (): HydrogenThemeSchema => ({
       ...baseSchema,
+      settings: [
+        {
+          group: 'Colors',
+          inputs: [
+            {
+              type: 'color',
+              name: 'primary',
+              label: 'Primary',
+              defaultValue: '#000',
+            },
+          ],
+        },
+      ],
       i18n: {
         urlStructure: 'url-path',
-        defaultLocale: { language: 'EN', country: 'US' } as any,
+        defaultLocale: { language: 'EN', country: 'US' },
         shopLocales: [],
       },
     })
-    let fetchSpy = spyOn(client, 'fetchWithCache').mockResolvedValue({
-      theme: {},
-    } as any)
 
-    await client.loadThemeSettings()
+    beforeEach(async () => {
+      stallOverrides = false
+      overrideRequests = 0
+      abandonedOverrides = 0
+      stalled = []
+      server = createServer((req, res) => {
+        res.writeHead(200, { 'Content-Type': 'application/json' })
+        if (!req.url?.startsWith('/api/translation/static')) {
+          res.end('{"theme":{"primary":"#f00"}}')
+          return
+        }
+        overrideRequests++
+        if (!stallOverrides) {
+          res.end('{"hero":{"title":"Bonjour"}}')
+          return
+        }
+        res.on('close', () => {
+          if (!res.writableFinished) {
+            abandonedOverrides++
+          }
+        })
+        res.write('{"hero":')
+        stalled.push(res)
+      })
+      let listening = Promise.withResolvers<void>()
+      server.listen(0, '127.0.0.1', listening.resolve)
+      await listening.promise
+      host = `http://127.0.0.1:${(server.address() as AddressInfo).port}`
+    })
 
-    expect(cacheTargets(fetchSpy)).toContain('merchant-overrides')
+    afterEach(async () => {
+      for (let res of stalled) {
+        res.destroy()
+      }
+      server.closeAllConnections()
+      let closed = Promise.withResolvers<void>()
+      server.close(() => closed.resolve())
+      await closed.promise
+    })
+
+    function makeCachedClient(cache: Cache, pending: Promise<unknown>[]) {
+      return new WeaverseClient({
+        ...createMockContext({
+          env: {
+            WEAVERSE_HOST: host,
+            WEAVERSE_PUBLIC_API_BASE: host,
+            WEAVERSE_PROJECT_ID: 'proj-123',
+          },
+          cache,
+          waitUntil: (promise: Promise<unknown>) => pending.push(promise),
+        }),
+        components: [],
+        themeSchema: i18nSchema(),
+        fetchTimeoutMs: 1000,
+      })
+    }
+
+    it('settles on theme defaults when a cold override request stalls, without caching it', async () => {
+      stallOverrides = true
+      let cache = new InMemoryCache()
+      let pending: Promise<unknown>[] = []
+
+      let result = await makeCachedClient(cache, pending).loadThemeSettings()
+
+      expect(result._loadFailed).toBeUndefined()
+      expect(result.theme).toEqual({ primary: '#f00' })
+      expect(result.merchantOverrides).toBeUndefined()
+      await vi.waitFor(() => expect(abandonedOverrides).toBe(1))
+
+      // The timed-out attempt left nothing cached: the next load asks again.
+      stallOverrides = false
+      await Promise.all(pending)
+      let retried = await makeCachedClient(cache, pending).loadThemeSettings()
+
+      expect(overrideRequests).toBe(2)
+      expect(retried.merchantOverrides).toEqual({ hero: { title: 'Bonjour' } })
+    }, 5000)
+
+    it('merges and caches overrides that arrive in time', async () => {
+      let cache = new InMemoryCache()
+      let pending: Promise<unknown>[] = []
+
+      let first = await makeCachedClient(cache, pending).loadThemeSettings()
+      await Promise.all(pending)
+      let second = await makeCachedClient(cache, pending).loadThemeSettings()
+
+      expect(first.merchantOverrides).toEqual({ hero: { title: 'Bonjour' } })
+      expect(second.merchantOverrides).toEqual({ hero: { title: 'Bonjour' } })
+      expect(overrideRequests).toBe(1)
+    })
   })
 })
 

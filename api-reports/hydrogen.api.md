@@ -38,6 +38,7 @@ import type { SchemaType } from '@weaverse/schema';
 import type { SchemaValidationIssue } from '@weaverse/schema';
 import type { SchemaValidationResult } from '@weaverse/schema';
 import type { SelectedOptionInput } from '@shopify/hydrogen/storefront-api-types';
+import type { ThemeRoutes } from '@weaverse/schema';
 import { UIMatch } from 'react-router';
 import { useChildInstances } from '@weaverse/react';
 import { useItemInstance } from '@weaverse/react';
@@ -269,6 +270,7 @@ export type HydrogenThemeSchema = {
         excludeProductFiles?: boolean;
     };
     settings?: InspectorGroup[];
+    routes?: ThemeRoutes;
     i18n?: {
         urlStructure: 'url-path' | 'subdomain' | 'top-level-domain';
         defaultLocale: WeaverseI18n;
