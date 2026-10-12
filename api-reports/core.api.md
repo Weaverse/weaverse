@@ -404,6 +404,10 @@ export type WeaverseImage = {
     width: number;
     height: number;
     previewSrc: string;
+    focalPoint?: {
+        x: number;
+        y: number;
+    };
 };
 
 // @public

@@ -92,6 +92,17 @@ export type WeaverseImage = {
   height: number
   /** A lightweight URL suitable for previews. */
   previewSrc: string
+  /**
+   * Focus for this image input/usage, independent of the shared source file.
+   * Omit it to retain the theme's existing positioning. Themes must explicitly
+   * apply the point; the SDK does not crop or reposition images.
+   */
+  focalPoint?: {
+    /** Horizontal coordinate from the original image's left edge, finite and in [0, 1]. */
+    x: number
+    /** Vertical coordinate from the original image's top edge, finite and in [0, 1]. */
+    y: number
+  }
 }
 
 /** Video metadata returned by a Weaverse video input. */

@@ -19,6 +19,76 @@ provides a client for easy setup and data fetching from Weaverse CMS.
 - **Customizable Input Settings**: Specify configurations for merchant-customizable component settings in Weaverse
   Studio.
 
+## Image focal points
+
+`WeaverseImage` supports optional metadata for each image input/usage:
+
+```ts
+import type { WeaverseImage } from '@weaverse/hydrogen'
+
+let heroImage: WeaverseImage = {
+  id: 'hero-image',
+  url: '/hero.jpg',
+  altText: 'A person holding a product',
+  width: 1200,
+  height: 800,
+  previewSrc: '/hero-preview.jpg',
+  focalPoint: { x: 0.8, y: 0.3 },
+}
+```
+
+Coordinates are finite numbers from `0` to `1`, measured from the original
+image's top-left corner. The example identifies a point 80% across and 30% down.
+The same file can have different points in separate inputs; this metadata does
+not change the Shopify file or generate a cropped asset. The type is also
+available through `@weaverse/core` and `@weaverse/react`.
+
+Themes must apply the metadata to their image renderer. For an image filling a
+fixed frame with `object-fit: cover`, convert it to CSS percentages:
+
+```tsx
+function HeroImage({ image }: { image: WeaverseImage }) {
+  let point = image.focalPoint
+
+  return (
+    <img
+      src={image.url}
+      alt={image.altText}
+      style={{
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+        objectPosition: point ? `${point.x * 100}% ${point.y * 100}%` : undefined,
+      }}
+    />
+  )
+}
+```
+
+Apply the style to the actual image element, including when using an image
+component wrapper. A valid focal point takes precedence over the existing image
+position; without it, preserve the theme's current position or default. Reset by
+removing `focalPoint`, and discard the old point when selecting a different image.
+The percentage position aligns the chosen image point with the same relative
+position in its frame; it does not necessarily center the point or keep the
+entire subject visible at every aspect ratio.
+
+The SDK preserves image objects through page loading, component props, and theme
+settings. It does not interpret these generic content objects as validated image
+values. Studio must validate finite coordinates within `[0, 1]` before saving
+editor input. `@weaverse/schema` validates an image input's
+`defaultValue.focalPoint` when its authoring validators run; legacy string URLs
+and image defaults without a focal point remain accepted. `createSchema` reports
+authoring problems in development, while `parseSchema` rejects invalid schemas.
+This does not validate arbitrary persisted data or component preset values.
+
+Release the updated Schema package and the Core/React/Hydrogen package group
+before consumers adopt this contract; update the usual dependency pins as part
+of that release. The Studio UI is tracked in
+[builder#3043](https://github.com/Weaverse/builder/issues/3043), and Pilot rendering
+examples in [pilot#176](https://github.com/Weaverse/pilot/issues/176). Upgrading the
+SDK alone does not add editor controls or change theme rendering.
+
 ## Installation
 
 ```bash
