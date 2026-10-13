@@ -279,6 +279,28 @@ gh release create "@weaverse/next@$NEW_VERSION" \
 
 For first-time independent package tags, `--generate-notes` generates notes from all commits. This is expected.
 
+### Step 11b: Open the Public Changelog PR
+
+After each stable GitHub Release from Step 11 is published, run the
+`update-changelogs` skill from the `Weaverse/workspace` checkout
+(`skills/update-changelogs/SKILL.md`) with `repo=Weaverse/weaverse` and
+`tag=` the exact published tag: `v$NEW_VERSION` for the fixed group, or
+`@weaverse/$PKG@$NEW_VERSION` once per independent package released. That
+skill owns every changelog rule (which releases count, labels, dates, dedupe,
+entry copy, and the PR to `Weaverse/docs:main`). Never push the changelog to
+`main` directly.
+
+Skip Next prereleases and drafts; record them as skipped. If the workspace
+checkout is missing, read the skill from `Weaverse/workspace` on GitHub; if it
+still cannot run, record the handoff as not done with the reason. Never report
+a changelog PR that was not opened.
+
+Record one result per tag for the Step 13 summary: the changelog PR link it
+opened, the existing entry or open PR link that already covers the release, or
+the reason it was skipped (for example, no user-facing changes). Do not wait
+for the docs PR review or merge, and a changelog problem never rolls back or
+blocks the npm release: continue to Step 12.
+
 ### Step 12: Sync Dev Branch
 
 ```bash
@@ -309,6 +331,12 @@ Print summary table:
 | @weaverse/react | X.Y.Z | A.B.C | ✅ published |
 | @weaverse/hydrogen | X.Y.Z | A.B.C | ✅ published |
 
+Then report the Step 11b changelog result for each tag:
+
+| Tag | Changelog |
+|-----|-----------|
+| vA.B.C | PR opened: <docs PR link> / already covered: <entry or PR link> / skipped: <reason> |
+
 ## Rollback Guidance
 
 If publish partially succeeds (e.g., core publishes but react fails):
@@ -328,7 +356,8 @@ publishes succeed**, so a mid-publish failure leaves git untouched.
 parse intent → main + latest → npm auth (if not set) → calc versions (confirm) →
 verify (biome+types+tests) → bump versions → build (no install) →
 publish core → react → hydrogen → pnpm install (refresh lockfile) →
-commit → tag → push → gh release → sync dev → verify npm
+commit → tag → push → gh release → changelog per stable tag (update-changelogs) →
+sync dev → verify npm + report changelog results
 ```
 
 ## Common Mistakes
