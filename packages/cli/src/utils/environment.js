@@ -8,10 +8,17 @@ export let generateSessionSecret = () => randomBytes(32).toString('hex')
  * Creates .env file from .env.example template with project-specific values
  * @param {string} path - The project directory path
  * @param {string} projectId - The project ID to inject into environment variables
+ * @param {Object} [options]
+ * @param {boolean} [options.sessionSecret=true] - Generate `SESSION_SECRET`
+ *   (Hydrogen templates need it; Forward has no such key)
  * @returns {Promise<void>} Promise that resolves when .env file is created
  * @throws {Error} If file operations fail
  */
-export let createEnvFile = async (path, projectId) => {
+export let createEnvFile = async (
+  path,
+  projectId,
+  { sessionSecret: withSessionSecret = true } = {}
+) => {
   let spinner = ora('Setting up environment variables...').start()
   try {
     let envExamplePath = `${path}/.env.example`
@@ -31,15 +38,17 @@ export let createEnvFile = async (path, projectId) => {
 
     // Hydrogen requires SESSION_SECRET; generate a real one so the template's
     // placeholder (e.g. "foobar") never ships and users are never asked for it.
-    let sessionSecret = generateSessionSecret()
-    if (envContent.includes('SESSION_SECRET=')) {
-      envContent = envContent.replace(
-        // biome-ignore lint/performance/useTopLevelRegex: the func only run once
-        /^SESSION_SECRET=.*/m,
-        `SESSION_SECRET="${sessionSecret}"`
-      )
-    } else {
-      envContent = `${envContent}\nSESSION_SECRET="${sessionSecret}"`
+    if (withSessionSecret) {
+      let sessionSecret = generateSessionSecret()
+      if (envContent.includes('SESSION_SECRET=')) {
+        envContent = envContent.replace(
+          // biome-ignore lint/performance/useTopLevelRegex: the func only run once
+          /^SESSION_SECRET=.*/m,
+          `SESSION_SECRET="${sessionSecret}"`
+        )
+      } else {
+        envContent = `${envContent}\nSESSION_SECRET="${sessionSecret}"`
+      }
     }
 
     await fs.writeFile(`${path}/.env`, envContent)
