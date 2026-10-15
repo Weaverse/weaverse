@@ -44,7 +44,7 @@
     "treeshake": true
   },
   "dependencies": {
-    "@shopify/hydrogen": ">=2025.5",
+    "@shopify/hydrogen": ">=2025.5 <2026.10.0",
     "@shopify/remix-oxygen": "3",
     "@weaverse/react": "5.23.0",
     "@weaverse/schema": "0.19.0",
