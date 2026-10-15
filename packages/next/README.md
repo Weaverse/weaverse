@@ -86,7 +86,9 @@ So the mental model is still `weaverse.loadPage(...)`; only the injection mechan
 
 The server API lives under `@weaverse/next/server` so client components can safely import the root entry without pulling server-only fetch code into the client bundle.
 
-The root entry is safe to import from Server Components (since `1.0.1`). Its components, hooks and runtime ship as a separate `'use client'` module (`dist/client-boundary.*`), so a Server Component can render `WeaverseNextRootProvider` or `WeaverseNextStudioConnect` directly, and server code gets the real `createSchema`, `generateDataFromSchema`, `runWeaverseComponentLoaders` and SEO helpers instead of client references.
+The root entry is safe to import from Server Components (since `1.0.1`). Its components, hooks and runtime ship as a separate `'use client'` module (`dist/client-boundary.*`), so a Server Component can render `WeaverseNextRootProvider` or `WeaverseNextStudioConnect` directly, and server code gets the real `createSchema`, `generateDataFromSchema`, `runWeaverseComponentLoaders`, SEO helpers, translate helpers (`createTranslate`, `getNestedKey`, `interpolate`) and `isBrowser`/`isIframe` instead of client references.
+
+These are client-only: from a Server Component they are client references you can render or pass down but not call. Components and providers (`WeaverseNextRootProvider`, `WeaverseNextProvider`, `WeaverseNextRenderer`, `WeaverseNextStudio`, `WeaverseNextStudioBridge`, `WeaverseNextStudioConnect`, `TranslationProvider`), hooks (`useThemeSettings`, `useTranslation`, `useWeaverse`, `useItemInstance`, `useParentInstance`, `useChildInstances`, `useWeaversePageData`, `useWeaverseRootData`, `useWeaverseCommerce`, `useWeaverseNextStudioInternals`), and the client runtime (`createWeaverseNextClient`, `createWeaverseNextRuntime`, `bindWeaverseNextStudioRuntime`, `WeaverseNextRuntime`, `loadWeaverseNextStudioScript`).
 
 ## Package structure
 
