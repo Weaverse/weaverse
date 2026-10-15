@@ -84,23 +84,7 @@ export let createProject = async (argv) => {
     // A Bun template cannot install without Bun: check before downloading so
     // a missing Bun fails fast, before anything is downloaded or an existing
     // folder is overwritten.
-    if (template.packageManager === 'bun' && !skipInstall) {
-      await ensureBun({
-        nonInteractive,
-        confirm: async () => {
-          let { installBun } = await inquirer.prompt([
-            {
-              type: 'confirm',
-              name: 'installBun',
-              message:
-                'This template requires Bun, which is not installed. Install it now with `npm install -g bun`?',
-              default: true,
-            },
-          ])
-          return installBun
-        },
-      })
-    }
+    await ensurePackageManager(template, { nonInteractive, skipInstall })
 
     // Validate the name whether it came from a prompt or a CLI flag —
     // prompts validate inline, but `--project-name` reaches here unchecked
@@ -190,6 +174,39 @@ export let createProject = async (argv) => {
     console.error(chalk.red('\n❌ Error:'), error.message)
     process.exit(1)
   }
+}
+
+/**
+ * Makes sure the template's package manager is available before anything is
+ * downloaded. Only Bun can be missing: npm ships with the Node running the CLI.
+ * @param {Object} template - Template configuration object
+ * @param {Object} options
+ * @param {boolean} options.nonInteractive - No one to ask
+ * @param {boolean} options.skipInstall - Dependencies won't be installed
+ * @returns {Promise<void>}
+ */
+let ensurePackageManager = async (
+  template,
+  { nonInteractive, skipInstall }
+) => {
+  if (skipInstall || template.packageManager !== 'bun') {
+    return
+  }
+  await ensureBun({
+    nonInteractive,
+    confirm: async () => {
+      let { installBun } = await inquirer.prompt([
+        {
+          type: 'confirm',
+          name: 'installBun',
+          message:
+            'This template requires Bun, which is not installed. Install it now with `npm install -g bun`?',
+          default: true,
+        },
+      ])
+      return installBun
+    },
+  })
 }
 
 /** Display names for template frameworks. */
