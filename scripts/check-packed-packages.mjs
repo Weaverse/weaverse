@@ -150,6 +150,41 @@ function assertCommonJsArtifact(specifier, artifactFile, packedPackageJson) {
   }
 }
 
+// A Server Component that imports @weaverse/next must never evaluate React
+// client APIs. Only the client boundary may reach them, and it must keep the
+// directive that makes the bundler treat it as client code.
+const NEXT_CLIENT_BOUNDARY = /^client-boundary\.m?js$/
+const NEXT_CLIENT_ONLY_CODE =
+  /\bcreateContext\b|@weaverse\/react|['"]react['"]|['"]react\/jsx-runtime['"]|['"]next\/navigation['"]/
+const USE_CLIENT_FIRST = /^\s*['"]use client['"]/
+const SCRIPT_FILE = /\.m?js$/
+
+function assertNextClientBoundary(packedFolder) {
+  let distDir = join(packedFolder, 'dist')
+  let scripts = readdirSync(distDir).filter((file) => SCRIPT_FILE.test(file))
+  let boundaries = scripts.filter((file) => NEXT_CLIENT_BOUNDARY.test(file))
+
+  if (boundaries.length !== 2) {
+    throw new Error(
+      `@weaverse/next must ship client-boundary.mjs and client-boundary.js, found: ${boundaries.join(', ') || 'none'}`
+    )
+  }
+  for (let file of scripts) {
+    let source = readFileSync(join(distDir, file), 'utf8')
+    if (NEXT_CLIENT_BOUNDARY.test(file)) {
+      if (!USE_CLIENT_FIRST.test(source)) {
+        throw new Error(
+          `@weaverse/next dist/${file} lost its 'use client' directive`
+        )
+      }
+    } else if (NEXT_CLIENT_ONLY_CODE.test(source)) {
+      throw new Error(
+        `@weaverse/next dist/${file} reaches client-only code outside the client boundary`
+      )
+    }
+  }
+}
+
 function hasInterfaceProperty(declarationFile, interfaceName, propertyName) {
   let sourceFile = ts.createSourceFile(
     declarationFile,
@@ -313,6 +348,9 @@ try {
     let packedPackageJson = JSON.parse(
       readFileSync(join(packedFolder, 'package.json'), 'utf8')
     )
+    if (packageJson.name === '@weaverse/next') {
+      assertNextClientBoundary(packedFolder)
+    }
     let entryFiles = collectPublishedFiles(packedPackageJson.exports)
 
     for (let field of ['main', 'module', 'types', 'typings']) {

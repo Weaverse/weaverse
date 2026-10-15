@@ -10,10 +10,8 @@ import {
 } from 'react'
 import { WeaverseNextRootContext } from './root-provider'
 import { createWeaverseNextThemeSettingsStore } from './theme-settings-store'
-import {
-  type TranslateFunction,
-  TranslationProvider,
-} from './translation-context'
+import type { TranslateFunction } from './translate'
+import { TranslationProvider } from './translation-context'
 import { TranslationStore } from './translation-store'
 import type {
   WeaverseNextClient,

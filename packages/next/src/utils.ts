@@ -35,3 +35,15 @@ export function generateDataFromSchema(
 
   return data
 }
+
+/**
+ * Whether the code runs in a browser window.
+ *
+ * Defined here rather than re-exported from `@weaverse/react`, which sits
+ * behind the `'use client'` boundary: there a Server Component would receive a
+ * client reference, a truthy object, instead of `false`.
+ */
+export let isBrowser = typeof window !== 'undefined'
+
+/** Whether the code runs in a browser window embedded in an iframe. */
+export let isIframe = isBrowser && window.top !== window.self

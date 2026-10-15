@@ -81,10 +81,14 @@ So the mental model is still `weaverse.loadPage(...)`; only the injection mechan
 
 | Import | Use in | Purpose |
 | --- | --- | --- |
-| `@weaverse/next` | Client and shared code | Component registry, provider, renderer, hooks, Studio runtime/bind components, schema re-exports. |
+| `@weaverse/next` | Server and Client Components | Component registry, provider, renderer, hooks, Studio runtime/bind components, schema re-exports. |
 | `@weaverse/next/server` | Server only | Real Weaverse API client, config resolution, page URL normalization, per-item revalidation route handler. |
 
 The server API lives under `@weaverse/next/server` so client components can safely import the root entry without pulling server-only fetch code into the client bundle.
+
+The root entry is safe to import from Server Components (since `1.0.1`). Its components, hooks and runtime ship as a separate `'use client'` module (`dist/client-boundary.*`), so a Server Component can render `WeaverseNextRootProvider` or `WeaverseNextStudioConnect` directly, and server code gets the real `createSchema`, `generateDataFromSchema`, `runWeaverseComponentLoaders`, SEO helpers, translate helpers (`createTranslate`, `getNestedKey`, `interpolate`) and `isBrowser`/`isIframe` instead of client references.
+
+These are client-only: from a Server Component they are client references you can render or pass down but not call. Components and providers (`WeaverseNextRootProvider`, `WeaverseNextProvider`, `WeaverseNextRenderer`, `WeaverseNextStudio`, `WeaverseNextStudioBridge`, `WeaverseNextStudioConnect`, `TranslationProvider`), hooks (`useThemeSettings`, `useTranslation`, `useWeaverse`, `useItemInstance`, `useParentInstance`, `useChildInstances`, `useWeaversePageData`, `useWeaverseRootData`, `useWeaverseCommerce`, `useWeaverseNextStudioInternals`), and the client runtime (`createWeaverseNextClient`, `createWeaverseNextRuntime`, `bindWeaverseNextStudioRuntime`, `WeaverseNextRuntime`, `loadWeaverseNextStudioScript`).
 
 ## Package structure
 
@@ -616,6 +620,8 @@ Server config resolution intentionally mirrors Hydrogen where possible:
 - Version bumping still happens in the release flow; do not publish another alpha without bumping `packages/next/package.json` first.
 
 ### Bundle note
+
+The root entry is built as two files: `dist/index.*` (server-safe exports) and `dist/client-boundary.*` (client code under a `'use client'` banner, imported by name from `dist/index.*`). Bundling drops module-level directives, so the banner is applied to the built boundary file; `scripts/check-packed-packages.mjs` fails the package check if the boundary loses it or if any other file reaches React client APIs.
 
 The Next package build keeps `@weaverse/schema` as an external package re-export. It does not inline Zod/schema validators into `@weaverse/next`'s generated `dist/index.*` bundles. App-level bundle size still depends on what a consuming Next app imports and how its bundler tree-shakes `@weaverse/schema`.
 
