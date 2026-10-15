@@ -33,7 +33,9 @@
         "noConsole": "off"
       },
       "correctness": {},
-      "complexity": {},
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "off"
+      },
       "nursery": {}
     }
   }
