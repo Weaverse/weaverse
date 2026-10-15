@@ -1,5 +1,9 @@
 /**
- * Available Weaverse templates with their configurations
+ * Available Weaverse templates with their configurations.
+ *
+ * `framework` decides the environment file and next steps (`hydrogen` or
+ * `nextjs`), `packageManager` the install and run commands (`npm` or `bun`),
+ * and `devPort` where the dev server listens.
  * @type {Array<Object>} Array of template configuration objects
  */
 export const TEMPLATES = [
@@ -10,6 +14,9 @@ export const TEMPLATES = [
     description:
       'A fully-featured Shopify Hydrogen theme crafted to help you launch modern, high-performing headless storefronts in minutes.',
     demoUrl: 'https://pilot.weaverse.dev',
+    framework: 'hydrogen',
+    packageManager: 'npm',
+    devPort: 3456,
   },
   {
     name: 'naturelle',
@@ -18,6 +25,9 @@ export const TEMPLATES = [
     description:
       'Naturelle is a state-of-the-art Shopify theme, crafted specifically for beauty brands.',
     demoUrl: 'https://naturelle.weaverse.dev',
+    framework: 'hydrogen',
+    packageManager: 'npm',
+    devPort: 3456,
   },
   {
     name: 'aspen',
@@ -26,6 +36,9 @@ export const TEMPLATES = [
     description:
       'A sophisticated Shopify Hydrogen theme designed for home furniture and interior design stores.',
     demoUrl: 'https://weaverse-aspen-furniture.fly.dev',
+    framework: 'hydrogen',
+    packageManager: 'npm',
+    devPort: 3456,
   },
   {
     name: 'maison',
@@ -34,6 +47,20 @@ export const TEMPLATES = [
     description:
       'A modern and elegant Shopify Hydrogen B2B theme crafted for furniture wholesalers, distributors, and interior design brands.',
     demoUrl: 'https://maison.weaverse.dev',
+    framework: 'hydrogen',
+    packageManager: 'npm',
+    devPort: 3456,
+  },
+  {
+    name: 'forward',
+    repoURL: 'https://github.com/Weaverse/forward',
+    defaultDownloadFolder: 'forward-main',
+    description:
+      'A Next.js App Router storefront theme for Shopify, built on @weaverse/next.',
+    demoUrl: 'https://forward-sandy.vercel.app',
+    framework: 'nextjs',
+    packageManager: 'bun',
+    devPort: 3333,
   },
 ]
 

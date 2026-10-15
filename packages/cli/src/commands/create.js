@@ -3,9 +3,11 @@ import fs from 'fs-extra'
 import inquirer from 'inquirer'
 import { TEMPLATES } from '../constants/templates.js'
 import { promptForMissingOptions } from '../prompts/createPrompts.js'
+import { ensureBun } from '../utils/bun.js'
 import { downloadAndExtractTemplate } from '../utils/download.js'
 import { createEnvFile, toKebabCase } from '../utils/environment.js'
 import {
+  getDevCommand,
   installDependenciesAndRun,
   runDevServer,
   showManualInstructions,
@@ -40,7 +42,7 @@ export let isNonInteractive = (argv = {}) =>
  * started with `--dev`.
  *
  * @param {Object} argv - Command line arguments object
- * @param {string} [argv.template] - Template name (e.g. 'pilot', 'naturelle', 'aspen', 'maison')
+ * @param {string} [argv.template] - Template name (e.g. 'pilot', 'naturelle', 'aspen', 'maison', 'forward')
  * @param {string} [argv['project-id']] - Weaverse project ID
  * @param {string} [argv['project-name']] - Project folder name
  * @param {string} [argv.commit] - Git commit hash (defaults to main branch)
@@ -73,6 +75,31 @@ export let createProject = async (argv) => {
           (t) => t.name
         ).join(', ')}`
       )
+    }
+
+    // yargs parses `--no-install` as boolean negation (`install: false`), not
+    // as a literal `no-install` key — accept both shapes so the flag works.
+    let skipInstall = options['no-install'] || options.install === false
+
+    // A Bun template cannot install without Bun: check before downloading so
+    // a missing Bun fails fast, before anything is downloaded or an existing
+    // folder is overwritten.
+    if (template.packageManager === 'bun' && !skipInstall) {
+      await ensureBun({
+        nonInteractive,
+        confirm: async () => {
+          let { installBun } = await inquirer.prompt([
+            {
+              type: 'confirm',
+              name: 'installBun',
+              message:
+                'This template requires Bun, which is not installed. Install it now with `npm install -g bun`?',
+              default: true,
+            },
+          ])
+          return installBun
+        },
+      })
     }
 
     // Validate the name whether it came from a prompt or a CLI flag —
@@ -121,16 +148,15 @@ export let createProject = async (argv) => {
 
     // Create project
     await downloadAndExtractTemplate(template, outputPath, options.commit)
-    await createEnvFile(outputPath, options['project-id'])
+    await createEnvFile(outputPath, options['project-id'], {
+      sessionSecret: template.framework === 'hydrogen',
+    })
 
     // Handle installation and dev server.
-    // yargs parses `--no-install` as boolean negation (`install: false`), not
-    // as a literal `no-install` key — accept both shapes so the flag works.
-    let skipInstall = options['no-install'] || options.install === false
     if (skipInstall) {
-      showManualInstructions(projectName)
+      showManualInstructions(projectName, template)
     } else {
-      await installDependenciesAndRun(outputPath, projectName)
+      await installDependenciesAndRun(outputPath, projectName, template)
 
       // Decide whether to start the (long-running, blocking) dev server.
       // Non-interactive only starts it with an explicit --dev, so an agent's
@@ -150,10 +176,12 @@ export let createProject = async (argv) => {
       }
 
       if (startDev) {
-        await runDevServer(outputPath)
+        await runDevServer(outputPath, template)
       } else {
         console.log(chalk.blue('\nTo start the development server, run:'))
-        console.log(chalk.gray(`cd ${projectName} && npm run dev\n`))
+        console.log(
+          chalk.gray(`cd ${projectName} && ${getDevCommand(template)}\n`)
+        )
       }
     }
 
@@ -164,21 +192,29 @@ export let createProject = async (argv) => {
   }
 }
 
+/** Display names for template frameworks. */
+const FRAMEWORK_LABELS = {
+  hydrogen: 'Shopify Hydrogen',
+  nextjs: 'Next.js',
+}
+
 /**
  * Displays the list of available templates with descriptions and usage information
  * @returns {void} Prints template information to console
  */
 export let showTemplateList = () => {
   console.log(
-    chalk.blue(
-      '\nWeaverse CLI - Create a new Weaverse Shopify Hydrogen project\n'
-    )
+    chalk.blue('\nWeaverse CLI - Create a new Weaverse storefront project\n')
   )
   console.log(chalk.gray('Available templates:'))
   for (let template of TEMPLATES) {
     let capitalizedName =
       template.name.charAt(0).toUpperCase() + template.name.slice(1)
-    console.log(chalk.gray(`\n• ${capitalizedName}`))
+    console.log(
+      chalk.gray(
+        `\n• ${capitalizedName} (${FRAMEWORK_LABELS[template.framework]})`
+      )
+    )
     console.log(chalk.gray(`  ${template.description}`))
     console.log(chalk.gray(`  Demo: ${template.demoUrl}`))
   }
