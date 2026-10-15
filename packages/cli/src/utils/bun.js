@@ -63,6 +63,8 @@ export let ensureBun = async ({
   }
   console.log(chalk.blue('\nInstalling Bun with npm install -g bun...\n'))
   if (!(install() && check())) {
-    throw new Error(`Bun could not be installed.\n${BUN_INSTALL_INSTRUCTIONS}`)
+    throw new Error(
+      `Bun could not be installed. If npm needs elevated permissions, or its global bin directory (npm prefix -g) is not on your PATH, install Bun another way.\n${BUN_INSTALL_INSTRUCTIONS}`
+    )
   }
 }
