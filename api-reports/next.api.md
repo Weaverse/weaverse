@@ -8,8 +8,6 @@ import type { ComponentType } from 'react';
 import type { ElementData } from '@weaverse/react';
 import type { ForwardRefExoticComponent } from 'react';
 import type { InspectorGroup } from '@weaverse/schema';
-import { isBrowser } from '@weaverse/react';
-import { isIframe } from '@weaverse/react';
 import { JSX } from 'react/jsx-runtime';
 import { MemoExoticComponent } from 'react';
 import type { Metadata } from 'next';
@@ -89,9 +87,11 @@ export function getWeaverseNextSeoMetadata(data: WeaverseNextSeoInput): Weaverse
 // @public
 export function interpolate(template: string, variables?: Record<string, string | number>): string;
 
-export { isBrowser }
+// @public
+export let isBrowser: boolean;
 
-export { isIframe }
+// @public
+export let isIframe: boolean;
 
 // @public
 export function loadWeaverseNextStudioScript(context?: WeaverseNextRequestContext, options?: LoadWeaverseNextStudioScriptOptions): void;

@@ -17,13 +17,8 @@ export * from '@weaverse/schema'
 // so a Server Component can import this entry.
 export {
   bindWeaverseNextStudioRuntime,
-  createTranslate,
   createWeaverseNextClient,
   createWeaverseNextRuntime,
-  getNestedKey,
-  interpolate,
-  isBrowser,
-  isIframe,
   loadWeaverseNextStudioScript,
   ThemeTextProvider,
   TranslationProvider,
@@ -94,11 +89,16 @@ export {
   type CreateWeaverseNextThemeSettingsStoreOptions,
   createWeaverseNextThemeSettingsStore,
 } from './theme-settings-store'
+export {
+  type CreateTranslateSources,
+  createTranslate,
+  getNestedKey,
+  interpolate,
+  type TranslateFunction,
+} from './translate'
 export type {
-  CreateTranslateSources,
   ThemeTextProviderProps,
   ThemeTextValue,
-  TranslateFunction,
   TranslationProviderProps,
   TranslationValue,
 } from './translation-context'
@@ -140,4 +140,4 @@ export type {
   WeaverseProduct,
 } from './types'
 export type { WeaverseNextStudioProps } from './use-weaverse-next-studio'
-export { generateDataFromSchema } from './utils'
+export { generateDataFromSchema, isBrowser, isIframe } from './utils'

@@ -7,11 +7,12 @@
  * imports `@weaverse/next` gets client references for them instead of
  * evaluating `createContext` on the server. The root entry re-exports them by
  * name next to its server-safe exports.
+ *
+ * Pure helpers stay out, so server code gets real values: the translate
+ * functions live in `./translate`, and `isBrowser`/`isIframe` in `./utils`.
  */
 
 export {
-  isBrowser,
-  isIframe,
   useChildInstances,
   useItemInstance,
   useParentInstance,
@@ -38,9 +39,6 @@ export {
   WeaverseNextStudioConnect,
 } from './studio-connect'
 export {
-  createTranslate,
-  getNestedKey,
-  interpolate,
   ThemeTextProvider,
   TranslationProvider,
   useThemeText,
