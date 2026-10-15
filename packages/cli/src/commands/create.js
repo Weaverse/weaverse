@@ -229,7 +229,7 @@ export let showTemplateList = () => {
       template.name.charAt(0).toUpperCase() + template.name.slice(1)
     console.log(
       chalk.gray(
-        `\n• ${capitalizedName} (${FRAMEWORK_LABELS[template.framework]})`
+        `\n• ${capitalizedName} (${FRAMEWORK_LABELS[template.framework] ?? template.framework})`
       )
     )
     console.log(chalk.gray(`  ${template.description}`))
