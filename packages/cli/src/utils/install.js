@@ -150,8 +150,7 @@ export let runDevServer = (outputPath, template) => {
   console.log(chalk.blue('Starting development server...\n'))
 
   let devCommand = getDevCommand(template)
-  let [command, ...args] = devCommand.split(' ')
-  let runDev = spawn(command, args, {
+  let runDev = spawn(template.packageManager, ['run', 'dev'], {
     cwd: outputPath,
     stdio: 'inherit',
   })
