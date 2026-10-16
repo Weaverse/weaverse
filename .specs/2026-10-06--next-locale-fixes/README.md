@@ -2,13 +2,13 @@
 
 | Field            | Value                                                                                          |
 | ---------------- | ---------------------------------------------------------------------------------------------- |
-| **Status**       | in-progress                                                                                    |
+| **Status**       | completed                                                                                      |
 | **Owner**        | @hta218                                                                                        |
 | **Issue**        | [#511](https://github.com/Weaverse/weaverse/issues/511), [#534](https://github.com/Weaverse/weaverse/issues/534) |
 | **Branch**       | `fix/next-locale-fixes`                                                                        |
 | **PR**           | [#537](https://github.com/Weaverse/weaverse/pull/537)                                          |
 | **Created**      | 2026-10-06                                                                                     |
-| **Last Updated** | 2026-10-07                                                                                     |
+| **Last Updated** | 2026-10-16                                                                                     |
 
 ## Original Prompt
 
