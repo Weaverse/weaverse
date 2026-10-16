@@ -2,12 +2,12 @@
 
 | Field            | Value                                                    |
 | ---------------- | -------------------------------------------------------- |
-| **Status**       | in-progress                                              |
+| **Status**       | completed                                                |
 | **Owner**        | @hta218                                                  |
 | **Issue**        | [#518](https://github.com/Weaverse/weaverse/issues/518)  |
 | **Branch**       | `feat/theme-route-patterns`                              |
 | **Created**      | 2026-10-07                                               |
-| **Last Updated** | 2026-10-07                                               |
+| **Last Updated** | 2026-10-16                                               |
 
 ## Original Prompt
 

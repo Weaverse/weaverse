@@ -2,13 +2,13 @@
 
 | Field            | Value |
 | ---------------- | ----- |
-| **Status**       | in-progress |
+| **Status**       | completed   |
 | **Owner**        | @hta218 |
 | **Tracker**      | [Builder #2738](https://github.com/Weaverse/builder/issues/2738) |
 | **Branch**       | `fix/remove-usage-pixel` |
 | **Base**         | `1a695920c3872bc9be0f7ffb81485a7d7bf5d089` |
 | **Created**      | 2026-08-01 |
-| **Last Updated** | 2026-08-12 |
+| **Last Updated** | 2026-10-16 |
 
 ## Original prompt
 

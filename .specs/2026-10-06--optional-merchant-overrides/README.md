@@ -2,12 +2,12 @@
 
 | Field            | Value                                                    |
 | ---------------- | -------------------------------------------------------- |
-| **Status**       | in-progress                                              |
+| **Status**       | completed                                                |
 | **Owner**        | @ken                                                      |
 | **Issue**        | [Weaverse/builder#2291](https://github.com/Weaverse/builder/issues/2291) (child of #2069 — Full i18n epic); [#535](https://github.com/Weaverse/weaverse/issues/535) |
 | **Branch**       | `fix/optional-merchant-overrides`                         |
 | **Created**      | 2026-06-30                                                |
-| **Last Updated** | 2026-10-06                                                |
+| **Last Updated** | 2026-10-16                                                |
 
 ## Initiating Requirement
 

@@ -2,12 +2,12 @@
 
 | Field            | Value                                                    |
 | ---------------- | -------------------------------------------------------- |
-| **Status**       | in-progress                                              |
+| **Status**       | completed                                                |
 | **Owner**        | @hta218                                                  |
 | **Issue**        | [#532](https://github.com/Weaverse/weaverse/issues/532)  |
 | **Branch**       | `fix/cli-remove-github-folder`                           |
 | **Created**      | 2026-10-04                                               |
-| **Last Updated** | 2026-10-04                                               |
+| **Last Updated** | 2026-10-16                                               |
 
 ## Initiating Requirement
 
