@@ -34,6 +34,8 @@ export type WeaverseSeoInput =
  * - Empty strings / missing fields are filtered before return so empty
  *   descriptors don't override earlier sources (e.g. Hydrogen
  *   `getSeoMeta`).
+ *
+ * @category Utilities
  */
 export function formatMetaDescriptors(
   seo: PageSEOData | null | undefined
@@ -106,6 +108,7 @@ export function formatMetaDescriptors(
  * Convenience accessor: pull `page.seo` out of a `WeaverseLoaderData`
  * (or `HydrogenPageData`) and emit `MetaDescriptor[]`. Null-safe.
  *
+ * @category Utilities
  * @example
  * ```ts
  * export const meta: MetaFunction<typeof loader> = ({ data }) => {

@@ -5,6 +5,7 @@ import type { TranslationStore } from '../utils/translation-store'
 /**
  * Traverse a nested object by dot-path.
  *
+ * @category Utilities
  * @example
  * getNestedKey({ cart: { title: 'Cart' } }, 'cart.title') // => 'Cart'
  * getNestedKey({}, 'cart.title', 'fallback')              // => 'fallback'
@@ -34,6 +35,7 @@ export function getNestedKey(
 /**
  * Replace `{{variable}}` patterns in a string with provided values.
  *
+ * @category Utilities
  * @example
  * interpolate('Hello {{name}}!', { name: 'World' }) // => 'Hello World!'
  * interpolate('-{{percentage}}% Off', { percentage: 15 }) // => '-15% Off'
@@ -184,6 +186,8 @@ const NOOP_SNAPSHOT = () => EMPTY
  * - `merchantOverrides`  – locale-specific overrides fetched from the API
  * - `translationStore`   – optional store for live design-mode text overrides
  *   (the deprecated `themeTextStore` prop is accepted as a fallback)
+ *
+ * @category Components
  */
 export function TranslationProvider({
   staticContent,
@@ -231,6 +235,7 @@ export function TranslationProvider({
  *
  * Must be used inside a component wrapped by `withWeaverse` or `TranslationProvider`.
  *
+ * @category Hooks
  * @example
  * ```tsx
  * function CartTitle() {
@@ -255,11 +260,13 @@ export function useTranslation(): TranslationValue {
 
 /**
  * Legacy name for {@link TranslationProvider}.
+ * @category Components
  * @deprecated Use {@link TranslationProvider} instead.
  */
 export const ThemeTextProvider = TranslationProvider
 /**
  * Legacy name for {@link useTranslation}.
+ * @category Hooks
  * @deprecated Use {@link useTranslation} instead.
  */
 export const useThemeText = useTranslation

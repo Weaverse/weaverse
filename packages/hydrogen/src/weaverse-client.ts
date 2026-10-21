@@ -166,6 +166,32 @@ const BODY_FREE_CACHE_SENTINEL = '\u0000weaverse:body-free'
  * Create one client from the Hydrogen app context, then call
  * {@link WeaverseClient.loadPage} from route loaders and
  * {@link WeaverseClient.loadThemeSettings} from the root loader.
+ *
+ * @remarks
+ * Also runs registered component loaders and routes Builder API requests
+ * through Hydrogen's cache. `API` is the API version segment (`'v1'`), not a
+ * complete endpoint URL.
+ *
+ * @category Utilities
+ *
+ * @example
+ * ```ts
+ * // app/.server/context.ts
+ * import { WeaverseClient } from '@weaverse/hydrogen'
+ *
+ * const hydrogenContext = createHydrogenContext({ env, request, cache, waitUntil, session })
+ *
+ * return {
+ *   ...hydrogenContext,
+ *   weaverse: new WeaverseClient({
+ *     ...hydrogenContext,
+ *     request,
+ *     cache,
+ *     themeSchema,
+ *     components,
+ *   }),
+ * }
+ * ```
  */
 export class WeaverseClient {
   /** Builder API version used by this client. */
@@ -638,16 +664,24 @@ export class WeaverseClient {
    * Uses direct fetch in design mode, Hydrogen's withCache in production.
    * Automatically includes projectId in cache key for multi-project isolation.
    *
+   * @remarks
+   * Pass Hydrogen cache-control options as `strategy`, not the Fetch API
+   * `cache` property.
+   *
    * @param url - The URL to fetch from
    * @param options - Fetch options including optional cache strategy
    * @returns Promise resolving to the fetched data
    *
    * @example
-   * ```typescript
-   * const data = await weaverse.fetchWithCache<MyData>(
-   *   'https://api.example.com/data',
-   *   { method: 'POST', body: JSON.stringify({ key: 'value' }) }
-   * )
+   * ```ts
+   * // Inside a component loader
+   * export async function loader({ weaverse }: ComponentLoaderArgs) {
+   *   const products = await weaverse.fetchWithCache<Product[]>(
+   *     'https://api.example.com/products',
+   *     { strategy: { maxAge: 60, staleWhileRevalidate: 600 } }
+   *   )
+   *   return { products }
+   * }
    * ```
    */
   public fetchWithCache = async <T = unknown>(
@@ -742,10 +776,17 @@ export class WeaverseClient {
    * @param strategy - Optional cache strategy override
    * @returns Promise resolving to theme settings response
    *
+   * @remarks
+   * Return the whole response under `weaverseTheme` from the root loader so
+   * {@link withWeaverse} can initialize the theme settings and translation
+   * stores. Read setting values from `response.theme`.
+   *
    * @example
-   * ```typescript
-   * const settings = await weaverse.loadThemeSettings()
-   * const primaryColor = settings.theme.colors?.primary
+   * ```ts
+   * // app/root.tsx
+   * export async function loader({ context }: Route.LoaderArgs) {
+   *   return { weaverseTheme: await context.weaverse.loadThemeSettings() }
+   * }
    * ```
    */
   loadThemeSettings = async (
@@ -975,6 +1016,11 @@ export class WeaverseClient {
   /**
    * Fetch all published custom pages for sitemap generation.
    * Paginates automatically, never throws, returns accumulated results on partial failure.
+   *
+   * @example
+   * ```ts
+   * const pages = await context.weaverse.fetchCustomPages({ locale: 'en-US', limit: 100 })
+   * ```
    */
   async fetchCustomPages(
     opts?: FetchCustomPagesOptions
@@ -1040,6 +1086,12 @@ export class WeaverseClient {
    * @param params.projectId - Route-level project ID override (for multi-project)
    * @param params.strategy - Custom cache strategy override
    * @returns Promise resolving to page data or null on error
+   *
+   * @remarks
+   * When the response has no page, a fallback page is generated instead, so
+   * `null` means loading or validation failed; do not treat it as a
+   * page-not-found signal. `locale` is forwarded unchanged; when omitted the
+   * request uses `context.storefront.i18n`.
    *
    * @example
    * ```typescript

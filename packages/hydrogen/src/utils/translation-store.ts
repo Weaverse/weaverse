@@ -8,6 +8,8 @@
  *
  * Shape: flat Record<string, string> — dot-notation keys map to values
  * (e.g. "cart.title" → "Shopping Cart").
+ *
+ * @category Utilities
  */
 export class TranslationStore {
   /** Current flat translation overrides keyed by dot-path. */
@@ -53,6 +55,7 @@ export class TranslationStore {
 
 /**
  * Legacy constructor alias retained for existing theme text integrations.
+ * @category Utilities
  * @deprecated Use {@link TranslationStore} instead. This alias remains available
  * for backward compatibility.
  */
