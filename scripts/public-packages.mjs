@@ -1,6 +1,19 @@
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import ts from 'typescript'
+import {
+  isClassDeclaration,
+  isEnumDeclaration,
+  isExportAssignment,
+  isExportDeclaration,
+  isFunctionDeclaration,
+  isIdentifier,
+  isNamedExports,
+  isNamespaceExport,
+  isVariableStatement,
+  ScriptKind,
+  SyntaxKind,
+} from 'tsrs/unstable/ast'
+import { getModifiers, parseSourceFile } from './source-parser.mjs'
 
 /**
  * Resolve a conditional exports value the way Node and TypeScript do: walk keys
@@ -119,40 +132,36 @@ function addExportDeclarationNames({
         names.add(name)
       }
     }
-  } else if (ts.isNamedExports(statement.exportClause)) {
+  } else if (isNamedExports(statement.exportClause)) {
     for (let element of statement.exportClause.elements) {
       names.add(element.name.text)
     }
-  } else if (ts.isNamespaceExport(statement.exportClause)) {
+  } else if (isNamespaceExport(statement.exportClause)) {
     names.add(statement.exportClause.name.text)
   }
 }
 
 function addModifiedDeclarationNames(statement, names) {
-  let modifiers = ts.canHaveModifiers(statement)
-    ? ts.getModifiers(statement)
-    : undefined
+  let modifiers = getModifiers(statement)
   if (
-    !modifiers?.some(
-      (modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword
-    )
+    !modifiers?.some((modifier) => modifier.kind === SyntaxKind.ExportKeyword)
   ) {
     return
   }
   if (
-    modifiers.some((modifier) => modifier.kind === ts.SyntaxKind.DefaultKeyword)
+    modifiers.some((modifier) => modifier.kind === SyntaxKind.DefaultKeyword)
   ) {
     names.add('default')
   } else if (
-    (ts.isClassDeclaration(statement) ||
-      ts.isFunctionDeclaration(statement) ||
-      ts.isEnumDeclaration(statement)) &&
+    (isClassDeclaration(statement) ||
+      isFunctionDeclaration(statement) ||
+      isEnumDeclaration(statement)) &&
     statement.name
   ) {
     names.add(statement.name.text)
-  } else if (ts.isVariableStatement(statement)) {
+  } else if (isVariableStatement(statement)) {
     for (let declaration of statement.declarationList.declarations) {
-      if (ts.isIdentifier(declaration.name)) {
+      if (isIdentifier(declaration.name)) {
         names.add(declaration.name.text)
       }
     }
@@ -160,17 +169,15 @@ function addModifiedDeclarationNames(statement, names) {
 }
 
 export function getEsmExportNames(modulePath, resolveWildcard) {
-  let sourceFile = ts.createSourceFile(
+  let sourceFile = parseSourceFile(
     modulePath,
-    readFileSync(modulePath, 'utf8'),
-    ts.ScriptTarget.Latest,
-    true,
-    ts.ScriptKind.JS
+    ScriptKind.JS,
+    readFileSync(modulePath, 'utf8')
   )
   let names = new Set()
 
   for (let statement of sourceFile.statements) {
-    if (ts.isExportDeclaration(statement)) {
+    if (isExportDeclaration(statement)) {
       addExportDeclarationNames({
         statement,
         sourceFile,
@@ -178,7 +185,7 @@ export function getEsmExportNames(modulePath, resolveWildcard) {
         resolveWildcard,
         modulePath,
       })
-    } else if (ts.isExportAssignment(statement)) {
+    } else if (isExportAssignment(statement)) {
       names.add('default')
     } else {
       addModifiedDeclarationNames(statement, names)

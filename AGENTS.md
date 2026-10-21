@@ -79,15 +79,13 @@ archived/
   shopify/       Archived, do not modify
 ```
 
-### Build Configuration (tsup)
+### Build Configuration (vp pack + tsrs declarations)
 
-All packages use tsup with consistent config:
-- **Entry**: `src/index.ts`
-- **Formats**: ESM + CJS (schema is ESM-only)
-- **Output**: `dist/` directory
-- **DTS**: Generated type declarations
-- **Sourcemaps**: Enabled
-- **Clean**: Builds clear output directory first
+Each package `build` runs `vp pack` (Vite+ / tsdown) for JavaScript, then `scripts/build-declarations.mjs` for types:
+- **Entries**: `src/index.ts` plus package subpath entries (`next`: `src/server.ts`; `schema`: `src/manifest.ts`; `experiments`: `src/server.ts`, `src/react.tsx`)
+- **Formats**: ESM + CJS with sourcemaps; `vp pack` declaration output is off
+- **Declarations**: emitted by the pinned tsrs CLI into `dist/types/` (`.d.ts` and `.d.cts`, with maps)
+- **Config**: CLI flags in the package `build` script, or `packages/<name>/vite.config.ts` (`pack` block) where options need code (`core`, `next`)
 
 ## Code Style
 
@@ -117,7 +115,10 @@ All packages use tsup with consistent config:
 
 ### TypeScript
 
-- Target: `esnext`, JSX: `react-jsx`, Module resolution: `node`
+- Target: `esnext`, JSX: `react-jsx`, Module resolution: `bundler`
+- Compiler: pinned `tsrs` (TypeScript 7 native). Package `typecheck` scripts run `tsrs --noEmit`; `scripts/build-declarations.mjs` emits declarations with the tsrs CLI. Do not add `tsc`/`tsgo` fallbacks.
+- Packed consumer checks cover NodeNext, Node16 and Bundler resolution. TypeScript `moduleResolution: Node10` is not a supported consumer mode.
+- Public API gate: `pnpm run api:check` / `api:report` run `scripts/api-reports.mjs`, which builds each published declaration entrypoint's API model on the tsrs checker (`scripts/public-api-model.mjs`, replacing API Extractor and its bundled TypeScript 5.9). It fails on declaration diagnostics, forgotten (unexported but referenced) declarations, unresolved `{@link}` targets, a missing `@packageDocumentation`, undocumented public members and any drift from the committed `api-reports/*.api.md` and runtime-export report. A non-zero exit is a failed gate; regenerate reports only for intentional API changes.
 - `strict: false` but `strictNullChecks: true`
 - Use `type` keyword for type-only imports: `import type { Foo } from 'bar'`
 - Prefer interfaces over type aliases for object shapes
@@ -333,7 +334,7 @@ Runs automatically on `git commit`:
 ### CI Pipeline (GitHub Actions)
 
 1. `biome ci .` — lint/format check (strict, no auto-fix)
-2. `pnpm run typecheck` — TypeScript type checking
+2. `pnpm run typecheck` — TypeScript type checking (tsrs)
 
 ### Releasing
 

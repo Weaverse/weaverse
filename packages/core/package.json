@@ -23,23 +23,10 @@
     "node": ">=18"
   },
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup && node ../../scripts/build-declarations.mjs",
+    "dev": "vp pack --watch --on-success 'node ../../scripts/build-declarations.mjs'",
+    "build": "vp pack && node ../../scripts/build-declarations.mjs",
     "clean": "rimraf dist",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsrs --noEmit",
     "test": "vp test --run"
-  },
-  "tsup": {
-    "entry": [
-      "src/index.ts"
-    ],
-    "format": [
-      "esm",
-      "cjs"
-    ],
-    "dts": true,
-    "sourcemap": true,
-    "clean": true,
-    "outDir": "dist"
   }
 }

@@ -57,7 +57,7 @@ This monorepo contains the following packages:
 
 ### Prerequisites
 
-- Node.js >= 20
+- Node.js >= 22.13
 - pnpm 11.1.2
 
 ### Installation

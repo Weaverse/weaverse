@@ -1,7 +1,7 @@
 {
   "name": "@weaverse/experiments",
   "version": "0.2.1",
-  "description": "Framework-agnostic A/B testing and experimentation for Weaverse — deterministic, storage-free variant assignment",
+  "description": "Framework-agnostic A/B testing and experimentation for Weaverse \u2014 deterministic, storage-free variant assignment",
   "author": "Weaverse",
   "license": "MIT",
   "type": "module",
@@ -58,27 +58,11 @@
     "node": ">=18"
   },
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup && node ../../scripts/build-declarations.mjs",
+    "dev": "vp pack src/index.ts src/server.ts src/react.tsx --format esm --format cjs --sourcemap --no-fixed-extension --no-dts --watch --on-success 'node ../../scripts/build-declarations.mjs'",
+    "build": "vp pack src/index.ts src/server.ts src/react.tsx --format esm --format cjs --sourcemap --no-fixed-extension --no-dts && node ../../scripts/build-declarations.mjs",
     "clean": "rimraf dist",
     "test": "vp test --run",
-    "typecheck": "tsc --noEmit"
-  },
-  "tsup": {
-    "entry": [
-      "src/index.ts",
-      "src/server.ts",
-      "src/react.tsx"
-    ],
-    "format": [
-      "esm",
-      "cjs"
-    ],
-    "dts": true,
-    "sourcemap": true,
-    "clean": true,
-    "outDir": "dist",
-    "treeshake": true
+    "typecheck": "tsrs --noEmit"
   },
   "peerDependencies": {
     "react": ">=18"

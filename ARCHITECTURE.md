@@ -169,7 +169,7 @@ $ pnpm run build (orchestrated by Turbo)
      ├─→ @weaverse/next (depends on react + schema; publishes `.` and `./server` entrypoints)
      └─→ @weaverse/remix (stub)
 
-Each Package Build (tsup):
+Each Package Build (`vp pack` for JS, tsrs CLI for declarations):
 - Most packages: `src/index.ts` → CJS/ESM/declarations/maps.
 - `@weaverse/next`: `src/index.ts` and `src/server.ts` → root client/shared entrypoint plus server-only entrypoint.
 ```
