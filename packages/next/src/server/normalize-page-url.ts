@@ -21,6 +21,8 @@ const DATA_SUFFIX = '.data'
  *
  * Ported from `@weaverse/hydrogen`'s `normalizePageUrl`, but tolerant of a
  * relative URL (Next route handlers may only know the pathname).
+ *
+ * @category Utilities
  */
 export function normalizeNextPageUrl(url: string): string {
   let parsed: URL
@@ -49,6 +51,8 @@ export function normalizeNextPageUrl(url: string): string {
  * Build an absolute-ish request URL string from the explicit request context,
  * preferring `url`, then `pathname` + `searchParams`. Used as the input to
  * {@link normalizeNextPageUrl}.
+ *
+ * @category Utilities
  */
 export function resolveRequestUrl(
   context?: WeaverseNextRequestContext

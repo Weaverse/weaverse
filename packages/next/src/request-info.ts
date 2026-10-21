@@ -106,6 +106,8 @@ function getRequestInfoSearchParams(
  * Build the Hydrogen-like request info shape consumed by the Studio bridge.
  * Duplicate query keys keep the last value, matching `URLSearchParams` iteration
  * assignment and Hydrogen's practical query-object behavior.
+ *
+ * @category Utilities
  */
 export function buildWeaverseNextRequestInfo(
   context?: WeaverseNextRequestContext

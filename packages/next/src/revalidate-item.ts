@@ -6,7 +6,11 @@ import type {
   WeaverseNextRequestInfo,
 } from './types'
 
-/** Default App Router endpoint used for Studio item-loader revalidation. */
+/**
+ * Default App Router endpoint used for Studio item-loader revalidation.
+ *
+ * @category Utilities
+ */
 export const DEFAULT_REVALIDATE_ENDPOINT = '/api/weaverse/revalidate'
 
 const MAX_ROUTE_CONTEXT_HANDLE_LENGTH = 512
@@ -110,6 +114,8 @@ export function sanitizeRouteContextSearch(search: string): string {
  * active runtime's request info. Returns `undefined` without a usable pathname
  * so the caller omits `routeContext` and keeps the legacy request. This is not
  * the security boundary — the route handler re-validates and re-sanitizes.
+ *
+ * @category Utilities
  */
 export function buildWeaverseNextRevalidateRouteContext(
   requestInfo?: WeaverseNextRequestInfo
@@ -171,6 +177,8 @@ export function buildWeaverseNextRevalidateRouteContext(
  * Throws on any failure (missing route, non-OK response, unknown item) so the
  * Builder Studio bridge can detect the miss and fall back to its legacy
  * refresh-based revalidation for this window.
+ *
+ * @category Utilities
  */
 export async function revalidateWeaverseNextItem(
   runtime: RevalidateItemRuntimeLike,

@@ -80,6 +80,8 @@ export interface WeaverseNextRootProviderProps {
  *   <Footer />
  * </WeaverseNextRootProvider>
  * ```
+ *
+ * @category Components
  */
 export function WeaverseNextRootProvider(props: WeaverseNextRootProviderProps) {
   let {

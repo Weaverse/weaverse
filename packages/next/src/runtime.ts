@@ -177,6 +177,22 @@ export interface WeaverseNextRenderablePage extends WeaverseNextPageData {
 /**
  * Browser runtime that adapts a Next.js loader payload to `@weaverse/react`
  * and exposes the navigation, settings, and translation state used by Studio.
+ *
+ * Pass it as the `useWeaverse` generic to type the Next.js page data.
+ *
+ * @example
+ * ```tsx
+ * 'use client'
+ *
+ * import { useWeaverse, type WeaverseNextRuntime } from '@weaverse/next'
+ *
+ * export function PageInfo() {
+ *   let { data } = useWeaverse<WeaverseNextRuntime>()
+ *   return <h1>{data.name}</h1>
+ * }
+ * ```
+ *
+ * @category Utilities
  */
 export class WeaverseNextRuntime extends Weaverse {
   /** Stable ID of the page owned by this runtime. */
@@ -411,6 +427,8 @@ export class WeaverseNextRuntime extends Weaverse {
 /**
  * Create a browser runtime or reuse the runtime already registered for the
  * same page and request. Reuse preserves unsaved Studio state in design mode.
+ *
+ * @category Utilities
  */
 export function createWeaverseNextRuntime(
   config: WeaverseNextRuntimeConfig
@@ -511,6 +529,8 @@ export function createWeaverseNextRuntime(
  * Bind a design-mode runtime to the global Builder Studio bridge.
  *
  * @returns `true` when Studio was initialized or refreshed, otherwise `false`.
+ *
+ * @category Utilities
  */
 export function bindWeaverseNextStudioRuntime(runtime: WeaverseNextRuntime) {
   if (!runtime.isDesignMode) {

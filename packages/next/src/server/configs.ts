@@ -116,6 +116,20 @@ export interface ResolveConfigsOptions {
  * `projectId` (that priority chain, which may call an async resolver, lives in
  * the server client). Query/env projectId candidates are returned for the
  * client to combine with function/string inputs.
+ *
+ * @remarks
+ * Resolution order:
+ * - Studio host: trusted `?weaverseHost=` (`https://*.weaverse.io`,
+ *   `https://*.weaverse.dev`) → `options.weaverseHost` → `WEAVERSE_HOST` →
+ *   `https://studio.weaverse.io`.
+ * - API base: trusted `?weaverseHost=` → `options.weaverseApiBase` →
+ *   `WEAVERSE_PUBLIC_API_BASE` → a non-default `WEAVERSE_HOST` →
+ *   `https://api.weaverse.io`.
+ * - Public env: `PUBLIC_STORE_DOMAIN` and `PUBLIC_STOREFRONT_API_TOKEN`.
+ *
+ * Env keys are read from `options.env`, then `process.env`.
+ *
+ * @category Utilities
  */
 export function getWeaverseNextConfigs(
   context?: WeaverseNextRequestContext,

@@ -64,6 +64,8 @@ function shouldResetScroll(
  *
  * Pure (no React, no `next/navigation`) so it is unit-testable with a mock
  * router; the {@link WeaverseNextRouterLike} contract is the only coupling.
+ *
+ * @category Utilities
  */
 export function createWeaverseNextStudioInternals(
   router: WeaverseNextRouterLike,

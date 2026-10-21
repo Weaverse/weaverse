@@ -85,6 +85,8 @@ function normalizeOpenGraphType(
  *
  * Unsupported Open Graph product types and incomplete Twitter app/player
  * cards are safely downgraded to renderable Next.js variants.
+ *
+ * @category Utilities
  */
 export function formatWeaverseNextSeoMetadata(
   seo: PageSEOData | null | undefined
@@ -142,6 +144,8 @@ export function formatWeaverseNextSeoMetadata(
 /**
  * Read page SEO from loader data or a page payload and format it for Next.js
  * `generateMetadata`. Missing data returns indexable/followable robot defaults.
+ *
+ * @category Utilities
  */
 export function getWeaverseNextSeoMetadata(
   data: WeaverseNextSeoInput

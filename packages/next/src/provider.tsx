@@ -108,6 +108,8 @@ export interface WeaverseNextProviderProps {
  *   <WeaverseNextRenderer />
  * </WeaverseNextProvider>
  * ```
+ *
+ * @category Components
  */
 export function WeaverseNextProvider(props: WeaverseNextProviderProps) {
   let { children, client, rootData, pageData, commerce, themeSettings } = props
