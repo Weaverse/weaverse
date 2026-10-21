@@ -40,6 +40,8 @@ function createFlatDataContext(
  * Hook to get flat route-keyed data context from matches
  * Returns: {root: {...}, "routes/xxx": {...}}
  * No more useLoaderData dependency - everything comes from matches
+ *
+ * @category Hooks
  */
 export function useWeaverseDataContext(): WeaverseDataContext {
   const matches = useMatches()
@@ -51,6 +53,8 @@ export function useWeaverseDataContext(): WeaverseDataContext {
 /**
  * Helper function to create flat route-keyed data context from useMatches() result
  * Returns: {root: {...}, "routes/xxx": {...}}
+ *
+ * @category Utilities
  */
 export function createWeaverseDataContext(
   matches: UIMatch<unknown, unknown>[]

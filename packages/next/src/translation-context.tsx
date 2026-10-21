@@ -84,6 +84,8 @@ const NOOP_SNAPSHOT = () => EMPTY
  * - `merchantOverrides`  – locale-specific overrides fetched from the API
  * - `translationStore`   – optional store for live design-mode text overrides
  *   (the deprecated `themeTextStore` prop is accepted as a fallback)
+ *
+ * @category Components
  */
 export function TranslationProvider({
   staticContent,
@@ -139,6 +141,8 @@ export function TranslationProvider({
  *   return <h2>{t('cart.title')}</h2>
  * }
  * ```
+ *
+ * @category Hooks
  */
 export function useTranslation(): TranslationValue {
   let ctx = useContext(TranslationContext)
@@ -159,6 +163,8 @@ export function useTranslation(): TranslationValue {
  *
  * @deprecated Replace `ThemeTextProvider` with {@link TranslationProvider};
  * the props and runtime behavior are unchanged.
+ *
+ * @category Components
  */
 export const ThemeTextProvider = TranslationProvider
 /**
@@ -166,6 +172,8 @@ export const ThemeTextProvider = TranslationProvider
  *
  * @deprecated Replace `useThemeText` with {@link useTranslation}; the return
  * value is unchanged.
+ *
+ * @category Hooks
  */
 export const useThemeText = useTranslation
 /**

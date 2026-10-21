@@ -323,6 +323,10 @@ try {
 
 ## CI/CD & Release Process
 
+### SDK Reference (docs.weaverse.io)
+
+The SDK reference on docs.weaverse.io is generated from TSDoc by `pnpm sdk:reference` (TypeDoc JSON for `@weaverse/hydrogen` and `@weaverse/next`, including the core, react and schema re-exports). Write public API docs as TSDoc: a summary, `@param`/`@returns`, `@example` with fenced code, and `@category` on every exported function, class and variable (`Components`, `Hooks`, `Utilities` or `Schema`). Interfaces and type aliases take no category; they are listed under Types. A stable release triggers `.github/workflows/sdk-reference.yml`, which opens the docs PR.
+
 ### Pre-commit (Lefthook)
 
 Runs automatically on `git commit`:

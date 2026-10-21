@@ -17,7 +17,11 @@ export interface WeaverseThemeData {
   theme: HydrogenThemeSettings
 }
 
-/** Mutable, subscribable store for theme settings received from the root loader. */
+/**
+ * Mutable, subscribable store for theme settings received from the root loader.
+ *
+ * @category Utilities
+ */
 export class ThemeSettingsStore {
   /** Current merged theme setting values. */
   settings: HydrogenThemeSettings = {}

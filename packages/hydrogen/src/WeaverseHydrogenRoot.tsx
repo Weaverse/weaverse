@@ -77,7 +77,11 @@ The fix was to defer that work until the component is actually rendered.
 ====================================
 */
 
-/** Runtime store for one rendered Hydrogen component instance. */
+/**
+ * Runtime store for one rendered Hydrogen component instance.
+ *
+ * @category Utilities
+ */
 export class WeaverseHydrogenItem extends WeaverseItemStore {
   /** Owning Hydrogen runtime instance. */
   declare weaverse: WeaverseHydrogen
@@ -199,6 +203,8 @@ Weaverse.ItemConstructor = WeaverseHydrogenItem
 /**
  * Hydrogen-specific Weaverse runtime that owns page data, component stores,
  * Studio state, and translation sidecars for one rendered page.
+ *
+ * @category Utilities
  */
 export class WeaverseHydrogen extends Weaverse {
   /** Identifier of the rendered page. */
@@ -458,6 +464,7 @@ function RenderRoot(props: {
  * Register a Weaverse component with the global element registry.
  * Must be called before rendering components in WeaverseHydrogenRoot.
  *
+ * @category Utilities
  * @param element - Component configuration with schema, Component, and optional loader
  *
  * @example
@@ -508,6 +515,41 @@ export interface WeaverseHydrogenRootProps {
  *
  * Pass `data` to override automatic route-loader resolution. A promise is
  * handled with React Router's `Await`, while explicit `null` suppresses output.
+ *
+ * @remarks
+ * - Without `data`, the closest route's `weaverseData` loader field is used,
+ *   so a layout route and a child route can each render their own root.
+ * - Missing auto-resolved data renders `errorComponent`.
+ * - Registers `components` and creates the page-level Weaverse runtime.
+ *   Theme settings, translations and the Studio connection come from
+ *   {@link withWeaverse} on the root `Layout`.
+ *
+ * @category Components
+ *
+ * @example
+ * ```tsx
+ * import { WeaverseHydrogenRoot } from '@weaverse/hydrogen'
+ * import type { Route } from './+types/$'
+ * import { components } from '~/weaverse/components'
+ *
+ * export async function loader({ context }: Route.LoaderArgs) {
+ *   return { weaverseData: await context.weaverse.loadPage() }
+ * }
+ *
+ * export default function WeaversePage() {
+ *   return <WeaverseHydrogenRoot components={components} />
+ * }
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Pass data explicitly when a layout and a child route render
+ * // different Weaverse pages on the same URL.
+ * export default function WeaversePage() {
+ *   const { weaverseData } = useLoaderData<typeof loader>()
+ *   return <WeaverseHydrogenRoot components={components} data={weaverseData} />
+ * }
+ * ```
  */
 export const WeaverseHydrogenRoot = memo(
   ({
@@ -608,18 +650,44 @@ export type WithWeaverseOptions = {
  * wrapper (`export default withWeaverse(App)`) is replaced by the error
  * boundary on those routes and would drop the bridge.
  *
+ * @remarks
+ * The root loader must return the result of
+ * {@link WeaverseClient.loadThemeSettings} under the `weaverseTheme` key:
+ * the theme store reads `weaverseTheme.theme` and the translation provider
+ * reads `staticContent` and `merchantOverrides`. `withWeaverse` does not
+ * create the page-level Weaverse runtime; {@link WeaverseHydrogenRoot} does.
+ *
+ * @category Components
  * @param Component - The root layout component to wrap
  * @param options   - Optional configuration (e.g. an external `t` function)
  * @returns Wrapped component with theme settings + translation providers
  *
  * @example
- * ```typescript
+ * ```tsx
+ * // app/root.tsx
  * import { withWeaverse } from '@weaverse/hydrogen'
+ * import type { ReactNode } from 'react'
+ * import type { Route } from './+types/root'
  *
- * // Basic usage — export as the root route Layout
+ * export async function loader({ context }: Route.LoaderArgs) {
+ *   return { weaverseTheme: await context.weaverse.loadThemeSettings() }
+ * }
+ *
+ * function RootLayout({ children }: { children: ReactNode }) {
+ *   return (
+ *     <html lang="en">
+ *       <head />
+ *       <body>{children}</body>
+ *     </html>
+ *   )
+ * }
+ *
  * export const Layout = withWeaverse(RootLayout)
+ * ```
  *
- * // With an external translation function
+ * @example
+ * ```tsx
+ * // An external translation function takes the highest priority in `t()`.
  * export const Layout = withWeaverse(RootLayout, { t: myI18nFunction })
  * ```
  */
@@ -672,17 +740,35 @@ function useTranslationData(): {
 
 /**
  * React hook to access Weaverse theme settings from anywhere in your component tree.
- * Must be used within a component wrapped by `withWeaverse` or inside `WeaverseHydrogenRoot`.
  *
+ * @remarks
+ * Subscribes to the theme settings store provided by {@link withWeaverse}, so
+ * components re-render when settings change in Studio. Outside that provider
+ * it falls back to a store built from the root loader's `weaverseTheme` data.
+ *
+ * @category Hooks
+ * @typeParam T - Shape of your theme's settings; defaults to {@link HydrogenThemeSettings}.
  * @returns Current theme settings object
  *
  * @example
- * ```typescript
- * function MyComponent() {
- *   const theme = useThemeSettings()
- *   const primaryColor = theme.colors?.primary
+ * ```tsx
+ * import { useThemeSettings } from '@weaverse/hydrogen'
  *
- *   return <div style={{ color: primaryColor }}>Styled content</div>
+ * type ThemeSettings = {
+ *   colorPrimary: string
+ *   navHeightMobile: number
+ * }
+ *
+ * export function Header() {
+ *   const settings = useThemeSettings<ThemeSettings>()
+ *   return (
+ *     <header
+ *       style={{
+ *         height: `${settings.navHeightMobile}rem`,
+ *         backgroundColor: settings.colorPrimary,
+ *       }}
+ *     />
+ *   )
  * }
  * ```
  */

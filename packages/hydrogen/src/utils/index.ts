@@ -53,6 +53,7 @@ export interface RequestQueryOptions {
  * Extract and parse query parameters from a request URL.
  * Supports optional allowlist for security-sensitive applications.
  *
+ * @category Utilities
  * @param request - The incoming request
  * @param options - Optional configuration
  * @param options.allowedKeys - If provided, only these keys will be extracted
@@ -98,6 +99,8 @@ export function getRequestQueries<T = Record<string, string | boolean>>(
 /**
  * Resolves project, endpoint, and Studio mode configuration for a request.
  * URL-provided Studio values take precedence over environment defaults.
+ *
+ * @category Utilities
  */
 export function getWeaverseConfigs(
   request: Request,
@@ -188,6 +191,7 @@ const schemaDefaultsCache = new WeakMap<
  * Generate default data from component or theme schema.
  * Results are memoized using WeakMap for performance.
  *
+ * @category Utilities
  * @param schema - Component or theme schema
  * @returns Default data object extracted from schema inputs
  */
@@ -306,7 +310,11 @@ function recursivelyAddDataItem(
   return id
 }
 
-/** Creates synthetic loader data for previewing one registered component type. */
+/**
+ * Creates synthetic loader data for previewing one registered component type.
+ *
+ * @category Utilities
+ */
 export function getPreviewData(
   type: string,
   components: HydrogenComponent[],

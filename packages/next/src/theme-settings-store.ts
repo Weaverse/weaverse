@@ -18,6 +18,8 @@ export interface CreateWeaverseNextThemeSettingsStoreOptions {
  * Small external store shape compatible with the Studio bridge and React's
  * `useSyncExternalStore` contract. The bridge calls `updateThemeSettings` during
  * live theme edits, so keep that method name stable.
+ *
+ * @category Utilities
  */
 export function createWeaverseNextThemeSettingsStore(
   options: CreateWeaverseNextThemeSettingsStoreOptions = {}

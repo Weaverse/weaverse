@@ -63,7 +63,21 @@ export type {
   WeaverseVideo,
 }
 
-/** Arguments passed to a component's server-side loader. */
+/**
+ * Arguments passed to a component's server-side loader.
+ *
+ * @example
+ * ```ts
+ * import type { ComponentLoaderArgs } from '@weaverse/hydrogen'
+ *
+ * export async function loader({ weaverse, data }: ComponentLoaderArgs<{ handle: string }>) {
+ *   const { collection } = await weaverse.storefront.query(COLLECTION_QUERY, {
+ *     variables: { handle: data.handle },
+ *   })
+ *   return { collection }
+ * }
+ * ```
+ */
 export type ComponentLoaderArgs<T = any, _E = any> = {
   /** Persisted component data merged with schema defaults. */
   data: T
@@ -111,12 +125,56 @@ export interface HydrogenComponentData extends ElementData {
 }
 
 /**
- * Optimized: Use Zod-inferred SchemaType directly instead of extending
- * This ensures perfect type consistency with the schema validation
+ * Schema exported by a Hydrogen component module. Public alias for `SchemaType`.
+ *
+ * @remarks
+ * The alias itself is not deprecated; only its `inspector` (use `settings`)
+ * and `enabledOn` (use `enabled`) fields are. Author it with `createSchema()`
+ * to type-check the object and get development-time validation warnings.
+ *
+ * @example
+ * ```ts
+ * import { createSchema } from '@weaverse/hydrogen'
+ *
+ * export const schema = createSchema({
+ *   type: 'hero-banner',
+ *   title: 'Hero Banner',
+ *   settings: [
+ *     {
+ *       group: 'Content',
+ *       inputs: [{ type: 'text', name: 'heading', label: 'Heading' }],
+ *     },
+ *   ],
+ * })
+ * ```
  */
 export type HydrogenComponentSchema = SchemaType
 
-/** Props supplied by Weaverse when rendering a registered Hydrogen component. */
+/**
+ * Props supplied by Weaverse when rendering a registered Hydrogen component.
+ *
+ * @typeParam L - Data returned by the component's `loader`.
+ *
+ * @example
+ * ```tsx
+ * import type { HydrogenComponentProps } from '@weaverse/hydrogen'
+ * import type { Ref } from 'react'
+ *
+ * type HeroBannerProps = HydrogenComponentProps<{ products: Product[] }> & {
+ *   heading: string
+ *   ref?: Ref<HTMLElement>
+ * }
+ *
+ * export default function HeroBanner({ heading, loaderData, ref, ...rest }: HeroBannerProps) {
+ *   return (
+ *     <section ref={ref} {...rest}>
+ *       <h1>{heading}</h1>
+ *       {loaderData?.products.map((p) => <div key={p.id}>{p.title}</div>)}
+ *     </section>
+ *   )
+ * }
+ * ```
+ */
 export interface HydrogenComponentProps<L = any> extends WeaverseElement {
   /** Rendered child component instances. */
   children?: React.JSX.Element[]
@@ -240,7 +298,23 @@ export interface WeaverseHydrogenParams
   weaverseVersion?: string
 }
 
-/** Export shape for a renderable component, its schema, and optional loader. */
+/**
+ * Export shape for a renderable component, its schema, and optional loader.
+ *
+ * @remarks
+ * A component module's exports (`default`, `schema`, `loader`) match this
+ * shape, so `import * as Hero from './hero'` can be listed directly in the
+ * `components` array passed to {@link WeaverseClient} and
+ * {@link WeaverseHydrogenRoot}.
+ *
+ * @example
+ * ```ts
+ * import type { HydrogenComponent } from '@weaverse/hydrogen'
+ * import * as HeroBanner from '~/sections/hero-banner'
+ *
+ * export const components: HydrogenComponent[] = [HeroBanner]
+ * ```
+ */
 export type HydrogenComponent<T extends HydrogenComponentProps = any> = {
   /** React renderer exported by the component module. */
   default: ForwardRefExoticComponent<T> | ((props: T) => React.JSX.Element)
@@ -372,7 +446,38 @@ export type WeaverseI18n = I18nBase & {
   [key: string]: any
 }
 
-/** Theme metadata, global settings, and localization configuration. */
+/**
+ * Theme metadata, global settings, and localization configuration.
+ *
+ * @remarks
+ * Pass it as `themeSchema` to {@link WeaverseClient}; its `settings` defaults
+ * seed the values returned by {@link useThemeSettings}. `media` is a sibling
+ * of `settings` because its rules are fixed by the theme author rather than
+ * edited by merchants.
+ *
+ * @example
+ * ```ts
+ * import type { HydrogenThemeSchema } from '@weaverse/hydrogen'
+ *
+ * export const themeSchema: HydrogenThemeSchema = {
+ *   info: {
+ *     name: 'My Theme',
+ *     version: '1.0.0',
+ *     author: 'Acme',
+ *     authorProfilePhoto: 'https://example.com/acme.png',
+ *     documentationUrl: 'https://example.com/docs',
+ *     supportUrl: 'https://example.com/support',
+ *   },
+ *   settings: [
+ *     {
+ *       group: 'Colors',
+ *       inputs: [{ type: 'color', name: 'colorPrimary', label: 'Primary', defaultValue: '#000000' }],
+ *     },
+ *   ],
+ *   routes: { COLLECTION: '/shop/:handle' },
+ * }
+ * ```
+ */
 export type HydrogenThemeSchema = {
   /** Theme identity, author, and support metadata. */
   info: {
@@ -498,6 +603,8 @@ export type ProjectIdValue = string | (() => string) | (() => Promise<string>)
  *
  * Used internally by WeaverseClient constructor to determine
  * if projectId needs evaluation or can be used directly.
+ *
+ * @category Utilities
  */
 export function isProjectIdFunction(
   projectId: ProjectIdValue | undefined
@@ -661,7 +768,11 @@ export type CacheResponseValidator<T = unknown> = (
   response: WithCacheFetchResponse<T> | T
 ) => boolean
 
-/** Error raised by Weaverse requests with a stable code and optional context. */
+/**
+ * Error raised by Weaverse requests with a stable code and optional context.
+ *
+ * @category Utilities
+ */
 export class WeaverseError extends Error {
   /** Machine-readable error code. */
   public readonly code: string
@@ -718,9 +829,10 @@ export interface CustomPageEntry {
 }
 
 /**
- * Type guards for response validation
+ * Checks whether a value is a Hydrogen `withCache.fetch` result with `data` and `response`.
+ *
+ * @category Utilities
  */
-
 export function isWithCacheFetchResponse<T>(
   response: unknown
 ): response is WithCacheFetchResponse<T> {
@@ -732,7 +844,11 @@ export function isWithCacheFetchResponse<T>(
   )
 }
 
-/** Checks whether a value contains the required project response fields. */
+/**
+ * Checks whether a value contains the required project response fields.
+ *
+ * @category Utilities
+ */
 export function isFetchProjectPayload(
   payload: unknown
 ): payload is FetchProjectPayload {
@@ -751,7 +867,11 @@ export interface WeaverseErrorResponse {
   error: string
 }
 
-/** Checks whether a response contains a string error message. */
+/**
+ * Checks whether a response contains a string error message.
+ *
+ * @category Utilities
+ */
 export function hasError(response: unknown): response is WeaverseErrorResponse {
   return (
     typeof response === 'object' &&
@@ -761,7 +881,11 @@ export function hasError(response: unknown): response is WeaverseErrorResponse {
   )
 }
 
-/** Checks whether a value contains a theme settings object. */
+/**
+ * Checks whether a value contains a theme settings object.
+ *
+ * @category Utilities
+ */
 export function isThemeSettingsResponse(
   data: unknown
 ): data is ThemeSettingsResponse {
@@ -788,6 +912,7 @@ export type HydrogenSchemaValidationResult =
  * Leverages validation from @weaverse/schema package which provides
  * comprehensive Zod-based validation with the ElementSchema.
  *
+ * @category Schema
  * @param schema - Unknown value to validate
  * @returns True if schema is a valid HydrogenComponentSchema
  *
@@ -866,7 +991,11 @@ export interface WeaverseStudioWindow extends Window {
   weaverseStudio: WeaverseStudio
 }
 
-/** Checks whether the browser window exposes the Weaverse Studio bridge. */
+/**
+ * Checks whether the browser window exposes the Weaverse Studio bridge.
+ *
+ * @category Utilities
+ */
 export function hasWeaverseStudio(
   window: Window
 ): window is WeaverseStudioWindow {

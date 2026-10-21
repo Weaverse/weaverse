@@ -12,6 +12,8 @@
  * @example
  * getNestedKey({ cart: { title: 'Cart' } }, 'cart.title') // => 'Cart'
  * getNestedKey({}, 'cart.title', 'fallback')              // => 'fallback'
+ *
+ * @category Utilities
  */
 export function getNestedKey(
   obj: Record<string, unknown>,
@@ -41,6 +43,8 @@ export function getNestedKey(
  * @example
  * interpolate('Hello {{name}}!', { name: 'World' }) // => 'Hello World!'
  * interpolate('-{{percentage}}% Off', { percentage: 15 }) // => '-15% Off'
+ *
+ * @category Utilities
  */
 export function interpolate(
   template: string,
@@ -91,6 +95,8 @@ export interface CreateTranslateSources {
  * exactly that leaf without wiping sibling keys (`cart.subtitle`), and a
  * per-key own-property lookup never builds nested objects from
  * merchant-controlled keys, so it cannot pollute `Object.prototype`.
+ *
+ * @category Utilities
  */
 export function createTranslate(
   sources: CreateTranslateSources

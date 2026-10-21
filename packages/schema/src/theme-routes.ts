@@ -17,15 +17,17 @@ export type ThemeRoutePageType = Exclude<PageType, '*' | 'CUSTOM'>
  *   article handle).
  * - `:blog` — the handle of an article's blog; only meaningful for `ARTICLE`.
  *
+ * A theme declares only the routes that differ from the Shopify convention;
+ * Studio falls back to that convention for every key left out, and for a
+ * pattern it cannot fill.
+ *
  * @example
+ * ```ts
  * routes: {
  *   ALL_PRODUCTS: '/shop',
  *   COLLECTION: '/shop/:handle',
  *   ARTICLE: '/journal/:handle', // Shopify convention: '/blogs/:blog/:handle'
  * }
- *
- * A theme declares only the routes that differ from the Shopify convention;
- * Studio falls back to that convention for every key left out, and for a
- * pattern it cannot fill.
+ * ```
  */
 export type ThemeRoutes = Partial<Record<ThemeRoutePageType, string>>

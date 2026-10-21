@@ -301,6 +301,14 @@ the reason it was skipped (for example, no user-facing changes). Do not wait
 for the docs PR review or merge, and a changelog problem never rolls back or
 blocks the npm release: continue to Step 12.
 
+### Step 11c: SDK Reference PR
+
+Publishing a stable release of the fixed group, `@weaverse/next` or
+`@weaverse/schema` triggers `.github/workflows/sdk-reference.yml`, which opens
+a PR on `Weaverse/docs` that regenerates `sdk-artifacts/`. Do not run anything
+for it: record the docs PR link (or the failed run) for the Step 13 summary
+and continue. Like the changelog PR, it never blocks the npm release.
+
 ### Step 12: Sync Dev Branch
 
 ```bash

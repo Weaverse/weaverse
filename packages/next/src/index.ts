@@ -7,6 +7,7 @@
  * helpers from `@weaverse/next/server`.
  *
  * @packageDocumentation
+ * @module main
  */
 
 // Re-export schema authoring for migration ergonomics.

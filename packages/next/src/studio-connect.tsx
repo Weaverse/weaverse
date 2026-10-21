@@ -39,6 +39,8 @@ export interface LoadWeaverseNextStudioScriptOptions {
  * context, deduping by src. SSR-safe (no-op without `document`) so it can run
  * unconditionally from a root layout/error boundary before any page tree or
  * runtime exists — e.g. App Router `not-found.tsx` / `error.tsx` routes.
+ *
+ * @category Utilities
  */
 export function loadWeaverseNextStudioScript(
   context?: WeaverseNextRequestContext,
@@ -74,6 +76,8 @@ export interface WeaverseNextStudioConnectProps {
  * Root-level Studio script connector for Next client boundaries. Mount once
  * near the app root (e.g. root layout) so it also covers routes that never
  * render `WeaverseNextRenderer`, such as `not-found.tsx` / `error.tsx`.
+ *
+ * @category Components
  */
 export function WeaverseNextStudioConnect(
   props: WeaverseNextStudioConnectProps

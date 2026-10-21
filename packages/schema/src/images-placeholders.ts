@@ -1,4 +1,29 @@
-/** Placeholder asset URLs for component schema defaults and theme previews. */
+/**
+ * Placeholder asset URLs for component schema defaults and theme previews.
+ *
+ * @remarks
+ * Keys: `logo_white`, `logo_black`, `image`, `banner_1`–`banner_2`,
+ * `collection_1`–`collection_6` and `product_1`–`product_18`.
+ *
+ * @category Schema
+ *
+ * @example
+ * Use a placeholder as an image input default:
+ * ```ts
+ * {
+ *   type: 'image',
+ *   name: 'image',
+ *   label: 'Image',
+ *   defaultValue: IMAGES_PLACEHOLDERS.banner_1,
+ * }
+ * ```
+ *
+ * @example
+ * Render a placeholder directly:
+ * ```tsx
+ * <img src={IMAGES_PLACEHOLDERS.product_1} alt="Placeholder product" />
+ * ```
+ */
 export const IMAGES_PLACEHOLDERS = {
   /** White Weaverse logo placeholder. */
   logo_white:

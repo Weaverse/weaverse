@@ -20,14 +20,25 @@ import {
  * Filter out Weaverse-specific query parameters from product options.
  * Removes `isDesignMode` and any parameters starting with `weaverse` prefix.
  *
+ * @remarks
+ * Delegates to Shopify Hydrogen's `getSelectedProductOptions`. All other
+ * parameter names are kept exactly as they appear in the URL, so
+ * `?option[Color]=Blue` yields `{ name: 'option[Color]', value: 'Blue' }`.
+ *
+ * @category Utilities
  * @param request - The incoming HTTP request
  * @returns Filtered product options for Shopify Hydrogen
  *
  * @example
- * ```typescript
- * export async function loader({ request }: LoaderFunctionArgs) {
+ * ```ts
+ * // ?Color=Blue&Size=XL&isDesignMode=true
+ * // => [{ name: 'Color', value: 'Blue' }, { name: 'Size', value: 'XL' }]
+ * export async function loader({ request, context, params }: LoaderFunctionArgs) {
  *   const selectedOptions = getSelectedProductOptions(request)
- *   // Use selectedOptions for product queries without Weaverse params
+ *   const { product } = await context.storefront.query(PRODUCT_QUERY, {
+ *     variables: { handle: params.handle, selectedOptions },
+ *   })
+ *   return { product }
  * }
  * ```
  */

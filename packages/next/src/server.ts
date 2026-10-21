@@ -8,6 +8,7 @@
  * the root `@weaverse/next` entrypoint.
  *
  * @packageDocumentation
+ * @module server
  */
 
 export type { WeaverseNextRevalidateRouteContext } from './revalidate-item'

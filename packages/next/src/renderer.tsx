@@ -48,6 +48,8 @@ export interface WeaverseNextRendererProps {
  * props are passed, or accepts an explicit `client` + `data` for standalone use. Builds a
  * framework-neutral `Weaverse` core instance (no React Router hooks) and hands
  * it to the shared `WeaverseRoot`.
+ *
+ * @category Components
  */
 export const WeaverseNextRenderer = memo(function WeaverseNextRendererComponent(
   props: WeaverseNextRendererProps

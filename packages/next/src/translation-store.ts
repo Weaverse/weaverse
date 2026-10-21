@@ -11,6 +11,8 @@
  *
  * Shape: flat `Record<string, string>` — dot-notation keys map to values
  * (e.g. "cart.title" → "Shopping Cart").
+ *
+ * @category Utilities
  */
 export class TranslationStore {
   /** Current flat translation overrides keyed by dot path. */
@@ -59,6 +61,8 @@ export class TranslationStore {
  *
  * @deprecated Replace `ThemeTextStore` with {@link TranslationStore}; the
  * store contract and runtime behavior are unchanged.
+ *
+ * @category Utilities
  */
 export const ThemeTextStore = TranslationStore
 /**

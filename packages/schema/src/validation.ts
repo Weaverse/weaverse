@@ -9,7 +9,11 @@ import { z } from 'zod/v4'
 // Re-export Zod for backward compatibility and convenience
 export { z }
 
-/** Runtime validator for supported Studio input control types. */
+/**
+ * Runtime validator for supported Studio input control types.
+ *
+ * @category Schema
+ */
 export const inputTypeSchema = z.union([
   z.literal('heading'),
   z.literal('text'),
@@ -38,7 +42,11 @@ export const inputTypeSchema = z.union([
   z.literal('translation-image'),
 ])
 
-/** Runtime validator for select input configuration. */
+/**
+ * Runtime validator for select input configuration.
+ *
+ * @category Schema
+ */
 export const SelectInputConfigsSchema = z.object({
   options: z
     .array(
@@ -50,7 +58,11 @@ export const SelectInputConfigsSchema = z.object({
     .optional(),
 })
 
-/** Runtime validator for toggle-group input configuration. */
+/**
+ * Runtime validator for toggle-group input configuration.
+ *
+ * @category Schema
+ */
 export const ToggleGroupConfigsSchema = z.object({
   options: z
     .array(
@@ -63,7 +75,11 @@ export const ToggleGroupConfigsSchema = z.object({
     .optional(),
 })
 
-/** Runtime validator for numeric range input configuration. */
+/**
+ * Runtime validator for numeric range input configuration.
+ *
+ * @category Schema
+ */
 export const RangeInputConfigsSchema = z.object({
   min: z.number().optional(),
   max: z.number().optional(),
@@ -77,7 +93,11 @@ export const MediaInputConfigsSchema = z.object({
   excludeProductFiles: z.boolean().optional(),
 })
 
-/** Runtime validator for input-specific configuration. */
+/**
+ * Runtime validator for input-specific configuration.
+ *
+ * @category Schema
+ */
 export const ConfigsPropsSchema = z.union([
   SelectInputConfigsSchema,
   ToggleGroupConfigsSchema,
@@ -92,7 +112,11 @@ const FOCAL_POINT_SCHEMA = z
   })
   .optional()
 
-/** Runtime validator for configurable Studio inputs. */
+/**
+ * Runtime validator for configurable Studio inputs.
+ *
+ * @category Schema
+ */
 export const BasicInputSchema = z
   .object({
     type: inputTypeSchema,
@@ -209,7 +233,11 @@ export const BasicInputSchema = z
     }
   })
 
-/** Runtime validator for organizational setting headings. */
+/**
+ * Runtime validator for organizational setting headings.
+ *
+ * @category Schema
+ */
 export const HeadingInputSchema = z
   .object({
     type: z.literal('heading'),
@@ -217,10 +245,18 @@ export const HeadingInputSchema = z
   })
   .passthrough() // Allow additional properties with [key: string]: any
 
-/** Runtime validator for settings and organizational headings. */
+/**
+ * Runtime validator for settings and organizational headings.
+ *
+ * @category Schema
+ */
 export const InputSchema = z.union([BasicInputSchema, HeadingInputSchema])
 
-/** Runtime validator for a labeled group of component settings. */
+/**
+ * Runtime validator for a labeled group of component settings.
+ *
+ * @category Schema
+ */
 export const InspectorGroupSchema = z.object({
   group: z
     .string()
@@ -232,7 +268,11 @@ export const InspectorGroupSchema = z.object({
     .describe('The inputs of the group'),
 })
 
-/** Runtime validator for storefront page types. */
+/**
+ * Runtime validator for storefront page types.
+ *
+ * @category Schema
+ */
 export const PageTypeSchema = z.union([
   z.literal('*'),
   z.literal('INDEX'),
@@ -269,7 +309,11 @@ export interface ComponentAvailabilityContext {
   }
 }
 
-/** Runtime validator for nested component presets. */
+/**
+ * Runtime validator for nested component presets.
+ *
+ * @category Schema
+ */
 export const ComponentPresetsSchema = z
   .object({
     type: z.string().describe('The type of the component'),
@@ -281,7 +325,11 @@ export const ComponentPresetsSchema = z
   .catchall(z.any())
   .describe('Component preset configuration')
 
-/** Runtime validator for public component schemas. */
+/**
+ * Runtime validator for public component schemas.
+ *
+ * @category Schema
+ */
 export const ElementSchema = z
   .object({
     title: z
@@ -362,16 +410,28 @@ export const ElementSchema = z
   })
   .describe('The schema of the element')
 
-/** Runtime validator for a component-type-to-schema registry. */
+/**
+ * Runtime validator for a component-type-to-schema registry.
+ *
+ * @category Schema
+ */
 export const SchemaList = z.record(z.string(), ElementSchema)
 
 // section schema
-/** Runtime validator for standalone schema titles. */
+/**
+ * Runtime validator for standalone schema titles.
+ *
+ * @category Schema
+ */
 export const titleSchema = z
   .string()
   .min(3, 'Title must be at least 3 characters')
   .max(50, 'Title must be less than 50 characters')
-/** Runtime validator for standalone schema type identifiers. */
+/**
+ * Runtime validator for standalone schema type identifiers.
+ *
+ * @category Schema
+ */
 export const typeSchema = z
   .string()
   .min(3, 'Type must be at least 3 characters')
@@ -529,7 +589,13 @@ export interface HeadingInput {
 /** A setting input or organizational heading. */
 export type Input = BasicInput | HeadingInput
 
-/** A labeled group of component settings. */
+/**
+ * A labeled group of component settings.
+ *
+ * @remarks
+ * The name keeps "Inspector" for compatibility; new schemas list groups under
+ * `settings`, not the deprecated `inspector`.
+ */
 export interface InspectorGroup {
   /** Group title displayed in Studio. */
   group: string
@@ -562,7 +628,32 @@ export interface ComponentPresets {
   [key: string]: any
 }
 
-/** Public component schema authoring contract. */
+/**
+ * Public component schema authoring contract. `HydrogenComponentSchema` is an
+ * alias of this type.
+ *
+ * @remarks
+ * Only `inspector` (use `settings`) and `enabledOn` (use `enabled`) are
+ * deprecated. `enabled` controls insertion availability only: a type listed in
+ * another component's `childTypes` appears in the root Add Section picker only
+ * when its `enabledOn.groups` contains `'body'` or `'*'`, so keep that field on
+ * components used both as a section and as a child.
+ *
+ * @example
+ * ```ts
+ * export let schema = createSchema({
+ *   type: 'product-details',
+ *   title: 'Product details',
+ *   settings: [
+ *     {
+ *       group: 'Content',
+ *       inputs: [{ type: 'switch', name: 'showPrice', label: 'Show price' }],
+ *     },
+ *   ],
+ *   enabled: ({ page, group }) => page.type === 'PRODUCT' && group === 'body',
+ * })
+ * ```
+ */
 export interface SchemaType {
   /** Component types allowed as direct children. */
   childTypes?: string[]
@@ -660,6 +751,8 @@ export type SchemaValidationResult<T> =
 
 /**
  * Enhanced schema validation with detailed error reporting
+ *
+ * @category Schema
  */
 export function validateSchema(
   schema: unknown
@@ -692,6 +785,8 @@ export function validateSchema(
 /**
  * Parse and validate a schema, throwing on validation errors
  * Useful when you want to fail fast on invalid schemas
+ *
+ * @category Schema
  */
 export function parseSchema(schema: unknown): SchemaType {
   const result = validateSchema(schema)
@@ -712,6 +807,8 @@ export function parseSchema(schema: unknown): SchemaType {
 
 /**
  * Check if a value is a valid schema without throwing
+ *
+ * @category Schema
  */
 export function isValidSchema(schema: unknown): schema is SchemaType {
   const result = validateSchema(schema)
@@ -745,7 +842,11 @@ export interface SchemaMigration {
   to: string
 }
 
-/** In-memory registry for schemas and their migrations. */
+/**
+ * In-memory registry for schemas and their migrations.
+ *
+ * @category Schema
+ */
 export class SchemaRegistry {
   private readonly schemas = new Map<string, SchemaType>()
   private readonly migrations = new Map<string, SchemaMigration[]>()
@@ -838,6 +939,8 @@ export class SchemaRegistry {
 
 /**
  * Global schema registry instance
+ *
+ * @category Schema
  */
 export const schemaRegistry = new SchemaRegistry()
 
@@ -879,7 +982,11 @@ export interface SchemaDevTools {
   prettyPrint(schema: SchemaType): string
 }
 
-/** Schema development utilities. */
+/**
+ * Schema development utilities.
+ *
+ * @category Schema
+ */
 export const devTools: SchemaDevTools = {
   /**
    * Pretty print a schema for debugging
@@ -1020,6 +1127,8 @@ export interface ComponentValidationOptions {
 
 /**
  * Validates a single component using the existing ElementSchema
+ *
+ * @category Schema
  */
 export function validateComponentSimple(
   component: any,
@@ -1075,6 +1184,8 @@ export function validateComponentSimple(
 
 /**
  * Validates multiple components in bulk
+ *
+ * @category Schema
  */
 export function validateComponentsSimple(
   components: Record<string, any>,
@@ -1120,6 +1231,8 @@ export function validateComponentsSimple(
 
 /**
  * Creates a validated component array with optional validation
+ *
+ * @category Schema
  */
 export function createValidatedComponentArray<T extends Record<string, any>>(
   components: T,
@@ -1188,7 +1301,11 @@ export interface ComponentRegistryAnalysis {
   summary: ComponentRegistrySummary
 }
 
-/** Development helper that analyzes a component registry. */
+/**
+ * Development helper that analyzes a component registry.
+ *
+ * @category Schema
+ */
 export function analyzeComponentRegistry(
   components: Record<string, any>
 ): ComponentRegistryAnalysis {
