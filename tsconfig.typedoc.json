@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@weaverse/core": ["./packages/core/src/index.ts"],
+      "@weaverse/react": ["./packages/react/src/index.ts"],
+      "@weaverse/schema": ["./packages/schema/src/index.ts"]
+    }
+  }
+}
