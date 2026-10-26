@@ -1,25 +1,41 @@
 import { readFileSync } from 'node:fs'
-import ts from 'typescript'
+import {
+  getJSDocCommentsAndTags,
+  isClassDeclaration,
+  isFunctionDeclaration,
+  isGetAccessorDeclaration,
+  isImportDeclaration,
+  isInterfaceDeclaration,
+  isNamedImports,
+  isNamespaceImport,
+  isQualifiedName,
+  isSetAccessorDeclaration,
+  isStringLiteral,
+  isTypeAliasDeclaration,
+  isTypeReferenceNode,
+  isVariableStatement,
+  ScriptKind,
+  SyntaxKind,
+} from 'tsrs/unstable/ast'
+import { getModifiers, parseSourceFile } from './source-parser.mjs'
 
 const MEMBER_KINDS = new Set([
-  ts.SyntaxKind.CallSignature,
-  ts.SyntaxKind.ConstructSignature,
-  ts.SyntaxKind.GetAccessor,
-  ts.SyntaxKind.IndexSignature,
-  ts.SyntaxKind.MethodDeclaration,
-  ts.SyntaxKind.MethodSignature,
-  ts.SyntaxKind.PropertyDeclaration,
-  ts.SyntaxKind.PropertySignature,
-  ts.SyntaxKind.SetAccessor,
+  SyntaxKind.CallSignature,
+  SyntaxKind.ConstructSignature,
+  SyntaxKind.GetAccessor,
+  SyntaxKind.IndexSignature,
+  SyntaxKind.MethodDeclaration,
+  SyntaxKind.MethodSignature,
+  SyntaxKind.PropertyDeclaration,
+  SyntaxKind.PropertySignature,
+  SyntaxKind.SetAccessor,
 ])
 
 function hasDocumentation(node, sourceFile) {
-  if (ts.getJSDocCommentsAndTags(node).length > 0) {
+  if (getJSDocCommentsAndTags(node).length > 0) {
     return true
   }
-  if (
-    !(ts.isGetAccessorDeclaration(node) || ts.isSetAccessorDeclaration(node))
-  ) {
+  if (!(isGetAccessorDeclaration(node) || isSetAccessorDeclaration(node))) {
     return false
   }
   let memberName = node.name.getText(sourceFile)
@@ -27,28 +43,28 @@ function hasDocumentation(node, sourceFile) {
     node.parent.members?.some(
       (member) =>
         member !== node &&
-        (ts.isGetAccessorDeclaration(member) ||
-          ts.isSetAccessorDeclaration(member)) &&
+        (isGetAccessorDeclaration(member) ||
+          isSetAccessorDeclaration(member)) &&
         member.name.getText(sourceFile) === memberName &&
-        ts.getJSDocCommentsAndTags(member).length > 0
+        getJSDocCommentsAndTags(member).length > 0
     )
   )
 }
 
 function isExported(node) {
   return Boolean(
-    ts
-      .getModifiers(node)
-      ?.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword)
+    getModifiers(node)?.some(
+      (modifier) => modifier.kind === SyntaxKind.ExportKeyword
+    )
   )
 }
 
 function isPublicMember(node) {
-  let modifiers = ts.getModifiers(node) ?? []
+  let modifiers = getModifiers(node) ?? []
   return !modifiers.some(
     (modifier) =>
-      modifier.kind === ts.SyntaxKind.PrivateKeyword ||
-      modifier.kind === ts.SyntaxKind.ProtectedKeyword
+      modifier.kind === SyntaxKind.PrivateKeyword ||
+      modifier.kind === SyntaxKind.ProtectedKeyword
   )
 }
 
@@ -57,8 +73,8 @@ function getZodImportNames(sourceFile) {
   for (let statement of sourceFile.statements) {
     if (
       !(
-        ts.isImportDeclaration(statement) &&
-        ts.isStringLiteral(statement.moduleSpecifier)
+        isImportDeclaration(statement) &&
+        isStringLiteral(statement.moduleSpecifier)
       )
     ) {
       continue
@@ -72,9 +88,9 @@ function getZodImportNames(sourceFile) {
       names.add(importClause.name.text)
     }
     let bindings = importClause?.namedBindings
-    if (bindings && ts.isNamespaceImport(bindings)) {
+    if (bindings && isNamespaceImport(bindings)) {
       names.add(bindings.name.text)
-    } else if (bindings && ts.isNamedImports(bindings)) {
+    } else if (bindings && isNamedImports(bindings)) {
       for (let element of bindings.elements) {
         names.add(element.name.text)
       }
@@ -85,7 +101,7 @@ function getZodImportNames(sourceFile) {
 
 function getTypeReferenceRootName(typeName) {
   let current = typeName
-  while (ts.isQualifiedName(current)) {
+  while (isQualifiedName(current)) {
     current = current.left
   }
   return current.text
@@ -93,7 +109,7 @@ function getTypeReferenceRootName(typeName) {
 
 function isZodImplementationReference(node, zodImportNames) {
   return (
-    ts.isTypeReferenceNode(node) &&
+    isTypeReferenceNode(node) &&
     zodImportNames.has(getTypeReferenceRootName(node.typeName))
   )
 }
@@ -102,7 +118,7 @@ function createPublicTypeVisitor(sourceFile, gaps, zodImportNames) {
   function visitPublicType(node, owner) {
     if (
       isZodImplementationReference(node, zodImportNames) ||
-      (ts.canHaveModifiers(node) && !isPublicMember(node))
+      (node.modifiers && !isPublicMember(node))
     ) {
       return
     }
@@ -116,7 +132,7 @@ function createPublicTypeVisitor(sourceFile, gaps, zodImportNames) {
       gaps.push(`${owner}.${memberName} (line ${position.line + 1})`)
     }
 
-    ts.forEachChild(node, (child) => visitPublicType(child, owner))
+    node.forEachChild((child) => visitPublicType(child, owner))
   }
 
   return visitPublicType
@@ -143,10 +159,7 @@ function visitVariableStatement(statement, sourceFile, visitPublicType) {
 }
 
 function visitExportedStatement(statement, sourceFile, visitPublicType) {
-  if (
-    ts.isClassDeclaration(statement) ||
-    ts.isInterfaceDeclaration(statement)
-  ) {
+  if (isClassDeclaration(statement) || isInterfaceDeclaration(statement)) {
     let owner = statement.name?.getText(sourceFile) ?? '<anonymous export>'
     for (let member of statement.members) {
       visitPublicType(member, owner)
@@ -154,17 +167,17 @@ function visitExportedStatement(statement, sourceFile, visitPublicType) {
     return
   }
 
-  if (ts.isTypeAliasDeclaration(statement)) {
+  if (isTypeAliasDeclaration(statement)) {
     visitPublicType(statement.type, statement.name.getText(sourceFile))
     return
   }
 
-  if (ts.isFunctionDeclaration(statement)) {
+  if (isFunctionDeclaration(statement)) {
     visitFunctionDeclaration(statement, sourceFile, visitPublicType)
     return
   }
 
-  if (ts.isVariableStatement(statement)) {
+  if (isVariableStatement(statement)) {
     visitVariableStatement(statement, sourceFile, visitPublicType)
   }
 }
@@ -177,12 +190,10 @@ function visitExportedStatement(statement, sourceFile, visitPublicType) {
  * validator internals are not treated as authored API properties.
  */
 export function getUndocumentedMembers(declarationFile) {
-  let sourceFile = ts.createSourceFile(
+  let sourceFile = parseSourceFile(
     declarationFile,
-    readFileSync(declarationFile, 'utf8'),
-    ts.ScriptTarget.Latest,
-    true,
-    ts.ScriptKind.TS
+    ScriptKind.TS,
+    readFileSync(declarationFile, 'utf8')
   )
   let gaps = []
   let zodImportNames = getZodImportNames(sourceFile)

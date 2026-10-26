@@ -1,6 +1,6 @@
 # Public API Reports
 
-These files snapshot the built TypeScript interface for every published TypeScript package entrypoint. They are generated from each package's configured declaration entry with API Extractor and must not be edited manually.
+These files snapshot the built TypeScript interface for every published TypeScript package entrypoint. They are generated from each package's configured declaration entry by `scripts/api-reports.mjs` (an API model built on the pinned tsrs checker) and must not be edited manually.
 
 ```sh
 pnpm run api:report   # build and accept intentional interface changes

@@ -36,11 +36,11 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "rimraf dist && tsup && node ../../scripts/build-declarations.mjs",
+    "dev": "vp pack --watch --on-success 'node ../../scripts/build-declarations.mjs'",
+    "build": "rimraf dist && vp pack && node ../../scripts/build-declarations.mjs",
     "clean": "rimraf dist",
     "test": "vp test --run --config vitest.config.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsrs --noEmit"
   },
   "dependencies": {
     "@weaverse/react": "5.22.1",

@@ -8,20 +8,37 @@ import {
   rmSync,
   writeFileSync,
 } from 'node:fs'
+import { createRequire } from 'node:module'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve, sep } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { originalPositionFor, TraceMap } from '@jridgewell/trace-mapping'
-import ts from 'typescript'
+import {
+  getJSDocTags,
+  isExportAssignment,
+  isExportDeclaration,
+  isImportDeclaration,
+  isInterfaceDeclaration,
+  isMethodDeclaration,
+  isPropertySignatureDeclaration,
+  ScriptKind,
+  SyntaxKind,
+} from 'tsrs/unstable/ast'
 import {
   collectPublishedFiles,
   getEsmExportNames,
   getPublishedPackages,
 } from './public-packages.mjs'
+import { getModifiers, parseSourceFile } from './source-parser.mjs'
 
 let ROOT_DIR = join(dirname(fileURLToPath(import.meta.url)), '..')
 let RUNTIME_REPORT = join(ROOT_DIR, 'api-reports', 'runtime-exports.api.md')
 let PNPM = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm'
+let TSRS = join(
+  dirname(createRequire(import.meta.url).resolve('tsrs/package.json')),
+  'bin',
+  'tsrs'
+)
 const RUNTIME_JSON_BLOCK = /```json\n([\s\S]*?)\n```/
 // Next's browser entry imports next/navigation, which is resolved by its bundler.
 const NODE_ESM_EXCLUSIONS = new Set(['@weaverse/next'])
@@ -111,19 +128,15 @@ function getNodeModuleFormat(artifactFile, packedPackageJson) {
 function hasEsmSyntax(sourceFile) {
   return sourceFile.statements.some((statement) => {
     if (
-      ts.isImportDeclaration(statement) ||
-      ts.isExportDeclaration(statement) ||
-      ts.isExportAssignment(statement)
+      isImportDeclaration(statement) ||
+      isExportDeclaration(statement) ||
+      isExportAssignment(statement)
     ) {
       return true
     }
-    let modifiers = ts.canHaveModifiers(statement)
-      ? ts.getModifiers(statement)
-      : undefined
+    let modifiers = getModifiers(statement)
     return Boolean(
-      modifiers?.some(
-        (modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword
-      )
+      modifiers?.some((modifier) => modifier.kind === SyntaxKind.ExportKeyword)
     )
   })
 }
@@ -135,12 +148,10 @@ function assertCommonJsArtifact(specifier, artifactFile, packedPackageJson) {
     )
   }
 
-  let sourceFile = ts.createSourceFile(
+  let sourceFile = parseSourceFile(
     artifactFile,
-    readFileSync(artifactFile, 'utf8'),
-    ts.ScriptTarget.Latest,
-    true,
-    ts.ScriptKind.JS
+    ScriptKind.JS,
+    readFileSync(artifactFile, 'utf8')
   )
 
   if (hasEsmSyntax(sourceFile)) {
@@ -186,28 +197,26 @@ function assertNextClientBoundary(packedFolder) {
 }
 
 function hasInterfaceProperty(declarationFile, interfaceName, propertyName) {
-  let sourceFile = ts.createSourceFile(
+  let sourceFile = parseSourceFile(
     declarationFile,
-    readFileSync(declarationFile, 'utf8'),
-    ts.ScriptTarget.Latest,
-    true,
-    ts.ScriptKind.TS
+    ScriptKind.TS,
+    readFileSync(declarationFile, 'utf8')
   )
   let found = false
 
   function visit(node) {
     if (
-      ts.isInterfaceDeclaration(node) &&
+      isInterfaceDeclaration(node) &&
       node.name.text === interfaceName &&
       node.members.some(
         (member) =>
-          ts.isPropertySignature(member) &&
+          isPropertySignatureDeclaration(member) &&
           member.name?.getText(sourceFile) === propertyName
       )
     ) {
       found = true
     }
-    ts.forEachChild(node, visit)
+    node.forEachChild(visit)
   }
 
   visit(sourceFile)
@@ -220,29 +229,25 @@ function hasDeprecatedMember(
   memberKind,
   migrationTarget
 ) {
-  let sourceFile = ts.createSourceFile(
+  let sourceFile = parseSourceFile(
     declarationFile,
-    readFileSync(declarationFile, 'utf8'),
-    ts.ScriptTarget.Latest,
-    true,
-    ts.ScriptKind.TS
+    ScriptKind.TS,
+    readFileSync(declarationFile, 'utf8')
   )
   let found = false
 
   function visit(node) {
     let kindMatches =
-      (memberKind === 'property' && ts.isPropertySignature(node)) ||
-      (memberKind === 'method' && ts.isMethodDeclaration(node))
+      (memberKind === 'property' && isPropertySignatureDeclaration(node)) ||
+      (memberKind === 'method' && isMethodDeclaration(node))
     if (kindMatches && node.name?.getText(sourceFile) === memberName) {
-      found = ts
-        .getJSDocTags(node)
-        .some(
-          (tag) =>
-            tag.kind === ts.SyntaxKind.JSDocDeprecatedTag &&
-            tag.getText(sourceFile).includes(migrationTarget)
-        )
+      found = getJSDocTags(node).some(
+        (tag) =>
+          tag.kind === SyntaxKind.JSDocDeprecatedTag &&
+          tag.getText(sourceFile).includes(migrationTarget)
+      )
     }
-    ts.forEachChild(node, visit)
+    node.forEachChild(visit)
   }
 
   visit(sourceFile)
@@ -798,15 +803,7 @@ void legacyLooseSchema
         2
       )}\n`
     )
-    run(
-      process.execPath,
-      [
-        join(ROOT_DIR, 'node_modules', 'typescript', 'bin', 'tsc'),
-        '--project',
-        configPath,
-      ],
-      { cwd: consumerDir }
-    )
+    run(process.execPath, [TSRS, '--project', configPath], { cwd: consumerDir })
   }
 
   // `module: node16` is the stable CommonJS mode most consumers pin. Unlike
@@ -855,18 +852,13 @@ void [
       2
     )}\n`
   )
-  run(
-    process.execPath,
-    [
-      join(ROOT_DIR, 'node_modules', 'typescript', 'bin', 'tsc'),
-      '--project',
-      node16Config,
-    ],
-    { cwd: consumerDir }
-  )
+  run(process.execPath, [TSRS, '--project', node16Config], { cwd: consumerDir })
 
+  // Bundler resolution is the mode Vite, Next.js and React Router consumers
+  // type-check with: it reads `exports` through the `import` condition without
+  // NodeNext's file-extension rules.
   writeFileSync(
-    join(consumerDir, 'legacy-resolution.ts'),
+    join(consumerDir, 'bundler-resolution.ts'),
     `import {
   type ComponentManifestArtifact,
   generateComponentManifest,
@@ -874,43 +866,36 @@ void [
 
 let artifact: Promise<ComponentManifestArtifact> = generateComponentManifest(
   [{ schema: { type: 'hero', title: 'Hero' } }],
-  { source: { name: 'legacy-consumer', revision: 'abc123' } }
+  { source: { name: 'bundler-consumer', revision: 'abc123' } }
 )
 void artifact
 `
   )
-  let legacyResolutionConfig = join(
+  let bundlerResolutionConfig = join(
     consumerDir,
-    'tsconfig.legacy-resolution.json'
+    'tsconfig.bundler-resolution.json'
   )
   writeFileSync(
-    legacyResolutionConfig,
+    bundlerResolutionConfig,
     `${JSON.stringify(
       {
         compilerOptions: {
           target: 'ES2022',
           module: 'ESNext',
-          moduleResolution: 'Node10',
-          ignoreDeprecations: '6.0',
+          moduleResolution: 'Bundler',
           strict: true,
           noEmit: true,
           skipLibCheck: true,
         },
-        files: ['legacy-resolution.ts'],
+        files: ['bundler-resolution.ts'],
       },
       null,
       2
     )}\n`
   )
-  run(
-    process.execPath,
-    [
-      join(ROOT_DIR, 'node_modules', 'typescript', 'bin', 'tsc'),
-      '--project',
-      legacyResolutionConfig,
-    ],
-    { cwd: consumerDir }
-  )
+  run(process.execPath, [TSRS, '--project', bundlerResolutionConfig], {
+    cwd: consumerDir,
+  })
 
   writeFileSync(
     join(consumerDir, 'declaration-check.ts'),
@@ -953,15 +938,9 @@ void [
       2
     )}\n`
   )
-  run(
-    process.execPath,
-    [
-      join(ROOT_DIR, 'node_modules', 'typescript', 'bin', 'tsc'),
-      '--project',
-      declarationConfig,
-    ],
-    { cwd: consumerDir }
-  )
+  run(process.execPath, [TSRS, '--project', declarationConfig], {
+    cwd: consumerDir,
+  })
 
   console.log(
     `Verified ${publishedPackages.length} packed packages and ${typeEntrypoints.length} TypeScript entrypoints`

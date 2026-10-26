@@ -167,8 +167,8 @@ above). The lockfile is regenerated in Step 8 after publish.
 pnpm run build
 ```
 
-Turbo builds in dependency order (core → react → hydrogen). `tsup` transpiles
-local source — no install needed for the build itself. Must succeed.
+Turbo builds in dependency order (core → react → hydrogen). `vp pack` bundles
+local source and the pinned tsrs CLI emits declarations — no install needed for the build itself. Must succeed.
 
 Quick sanity check after build (optional but recommended):
 ```bash

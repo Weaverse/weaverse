@@ -1,3 +1,4 @@
+import { spawnSync } from 'node:child_process'
 import {
   mkdirSync,
   readdirSync,
@@ -6,9 +7,18 @@ import {
   unlinkSync,
   writeFileSync,
 } from 'node:fs'
+import { createRequire } from 'node:module'
 import { basename, dirname, join, relative, resolve, sep } from 'node:path'
 import { addSegment, GenMapping, toEncodedMap } from '@jridgewell/gen-mapping'
-import ts from 'typescript'
+import { ScriptKind } from 'tsrs/unstable/ast'
+import {
+  isExportDeclaration,
+  isImportDeclaration,
+  isImportTypeNode,
+  isLiteralTypeNode,
+  isStringLiteral,
+} from 'tsrs/unstable/ast/is'
+import { parseSourceFile } from './source-parser.mjs'
 
 const DECLARATION_SUFFIX = /\.d\.ts$/
 const BUNDLED_DECLARATION = /\.d\.(?:ts|mts|cts)(?:\.map)?$/
@@ -75,20 +85,20 @@ function collectModuleSpecifiers(sourceFile) {
 
   function visit(node) {
     if (
-      (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) &&
+      (isImportDeclaration(node) || isExportDeclaration(node)) &&
       node.moduleSpecifier &&
-      ts.isStringLiteral(node.moduleSpecifier)
+      isStringLiteral(node.moduleSpecifier)
     ) {
       specifiers.push(node.moduleSpecifier)
     }
     if (
-      ts.isImportTypeNode(node) &&
-      ts.isLiteralTypeNode(node.argument) &&
-      ts.isStringLiteral(node.argument.literal)
+      isImportTypeNode(node) &&
+      isLiteralTypeNode(node.argument) &&
+      isStringLiteral(node.argument.literal)
     ) {
       specifiers.push(node.argument.literal)
     }
-    ts.forEachChild(node, visit)
+    node.forEachChild(visit)
   }
 
   visit(sourceFile)
@@ -114,13 +124,7 @@ function emitCommonJsDeclarations() {
       SOURCE_MAPPING_COMMENT,
       '\n'
     )
-    let sourceFile = ts.createSourceFile(
-      declarationFile,
-      source,
-      ts.ScriptTarget.Latest,
-      true,
-      ts.ScriptKind.TS
-    )
+    let sourceFile = parseSourceFile(declarationFile, ScriptKind.TS, source)
     let edits = collectModuleSpecifiers(sourceFile)
       .filter(
         (specifier) =>
@@ -142,46 +146,59 @@ function emitCommonJsDeclarations() {
   }
 }
 
-let formatHost = {
-  getCanonicalFileName: (file) => file,
-  getCurrentDirectory: () => packageDir,
-  getNewLine: () => '\n',
-}
-let config = ts.readConfigFile(configPath, ts.sys.readFile)
-if (config.error) {
-  console.error(ts.formatDiagnostic(config.error, formatHost))
-  process.exit(1)
-}
-
-let parsed = ts.parseJsonConfigFileContent(config.config, ts.sys, packageDir, {
-  noEmit: false,
-  emitDeclarationOnly: true,
-  declaration: true,
-  declarationMap: true,
-  rootDir: sourceDir,
-  outDir: outputDir,
-  incremental: false,
-  composite: false,
-})
-parsed.options.paths = {}
-let sourcePrefix = `${resolve(sourceDir)}${sep}`
-let rootNames = parsed.fileNames.filter(
-  (file) => file === resolve(sourceDir) || file.startsWith(sourcePrefix)
-)
-rmSync(outputDir, { recursive: true, force: true })
-let program = ts.createProgram({ rootNames, options: parsed.options })
-let emitResult = program.emit()
-let diagnostics = ts
-  .getPreEmitDiagnostics(program)
-  .concat(emitResult.diagnostics)
-
-if (diagnostics.length > 0) {
-  console.error(
-    ts.formatDiagnosticsWithColorAndContext(diagnostics, formatHost)
+/**
+ * Emits declarations with the pinned tsrs CLI. A generated config extends the
+ * package tsconfig, applies the declaration-only overrides, keeps the program
+ * rooted at `src/`, and clears `paths` so emitted declarations never depend on
+ * the package-local `~/*` alias. Any diagnostic fails the build.
+ */
+function emitDeclarations() {
+  let cacheDir = join(
+    packageDir,
+    'node_modules',
+    '.cache',
+    'build-declarations'
   )
-  process.exit(1)
+  let emitConfig = join(cacheDir, 'tsconfig.json')
+  mkdirSync(cacheDir, { recursive: true })
+  writeFileSync(
+    emitConfig,
+    `${JSON.stringify(
+      {
+        extends: configPath,
+        compilerOptions: {
+          noEmit: false,
+          emitDeclarationOnly: true,
+          declaration: true,
+          declarationMap: true,
+          rootDir: sourceDir,
+          outDir: outputDir,
+          incremental: false,
+          composite: false,
+          paths: {},
+        },
+        include: [join(sourceDir, '**', '*')],
+      },
+      null,
+      2
+    )}\n`
+  )
+  rmSync(outputDir, { recursive: true, force: true })
+  let tsrs = join(
+    dirname(createRequire(import.meta.url).resolve('tsrs/package.json')),
+    'bin',
+    'tsrs'
+  )
+  let result = spawnSync(process.execPath, [tsrs, '--project', emitConfig], {
+    cwd: packageDir,
+    stdio: 'inherit',
+  })
+  if (result.status !== 0) {
+    process.exit(result.status ?? 1)
+  }
 }
 
+emitDeclarations()
 copyAuthoredDeclarations()
 emitCommonJsDeclarations()
 removeBundledDeclarations()
