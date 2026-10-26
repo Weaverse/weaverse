@@ -116,7 +116,7 @@ Each package `build` runs `vp pack` (Vite+ / tsdown) for JavaScript, then `scrip
 ### TypeScript
 
 - Target: `esnext`, JSX: `react-jsx`, Module resolution: `bundler`
-- Compiler: pinned `tsrs` (TypeScript 7 native). Package `typecheck` scripts run `tsrs --noEmit`; `scripts/build-declarations.mjs` emits declarations with the tsrs CLI. Do not add `tsc`/`tsgo` fallbacks.
+- Compiler: pinned `tsrs` (TypeScript 7 native). Its published binaries cover macOS arm64 and Linux x64/arm64 (glibc and musl) only, so builds, typecheck and API/package checks need one of those development hosts; Windows and Intel macOS are unsupported for SDK development until a pinned release ships them. Published SDK packages carry no such host restriction. Package `typecheck` scripts run `tsrs --noEmit`; `scripts/build-declarations.mjs` emits declarations with the tsrs CLI. Do not add `tsc`/`tsgo` fallbacks.
 - Packed consumer checks cover NodeNext, Node16 and Bundler resolution. TypeScript `moduleResolution: Node10` is not a supported consumer mode.
 - Public API gate: `pnpm run api:check` / `api:report` run `scripts/api-reports.mjs`, which builds each published declaration entrypoint's API model on the tsrs checker (`scripts/public-api-model.mjs`, replacing API Extractor and its bundled TypeScript 5.9). It fails on declaration diagnostics, forgotten (unexported but referenced) declarations, unresolved `{@link}` targets, a missing `@packageDocumentation`, undocumented public members and any drift from the committed `api-reports/*.api.md` and runtime-export report. A non-zero exit is a failed gate; regenerate reports only for intentional API changes.
 - `strict: false` but `strictNullChecks: true`

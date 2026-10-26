@@ -59,6 +59,7 @@ This monorepo contains the following packages:
 
 - Node.js >= 22.13
 - pnpm 11.1.2
+- macOS arm64 or Linux x64/arm64 (glibc or musl) for repository builds and checks: the pinned `tsrs` compiler ships no Windows or Intel macOS binary. This applies to SDK development only, not to projects that install the published packages.
 
 ### Installation
 
