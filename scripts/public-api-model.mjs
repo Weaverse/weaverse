@@ -16,6 +16,8 @@ import {
 } from 'tsrs/unstable/ast'
 import { formatDiagnostics, SymbolFlags } from 'tsrs/unstable/sync'
 
+const LEADING_SPACE = /^\s*/
+
 const LINK_KINDS = new Set([
   SyntaxKind.JSDocLink,
   SyntaxKind.JSDocLinkCode,
@@ -155,17 +157,34 @@ function signatureText(statement, renames) {
     .join('\n')
 }
 
-/** Statement text including its own and its members' JSDoc. */
-function documentedText(statement, renames) {
+/**
+ * Statement text including its own and its members' JSDoc. A rename's optional
+ * fourth element is the rollup spelling when it differs from the report's.
+ * `dropDefault` removes the `default` modifier of a named declaration the
+ * entrypoint does not export as `default`, which would otherwise make the
+ * rollup default-export it.
+ */
+function documentedText(statement, renames, dropDefault) {
   let sourceFile = statement.getSourceFile()
+  let edits = renames
+  let modifier = statement.modifiers?.find(
+    (node) => node.kind === SyntaxKind.DefaultKeyword
+  )
+  if (dropDefault && modifier && statement.name) {
+    let from = modifier.getStart(sourceFile)
+    let end =
+      modifier.end +
+      LEADING_SPACE.exec(sourceFile.text.slice(modifier.end))[0].length
+    edits = [...renames, [from, end, '']].sort((a, b) => a[0] - b[0])
+  }
   let docs = statement.jsDoc ?? []
   let start = docs.length
     ? docs[0].getStart(sourceFile)
     : statement.getStart(sourceFile)
   let body = ''
   let cursor = statement.getStart(sourceFile)
-  for (let [from, to, replacement] of renames) {
-    body += sourceFile.text.slice(cursor, from) + replacement
+  for (let [from, to, replacement, binding = replacement] of edits) {
+    body += sourceFile.text.slice(cursor, from) + binding
     cursor = to
   }
   body += sourceFile.text.slice(cursor, statement.end)
@@ -340,6 +359,10 @@ export function analyzeEntrypoint(api, { packageDir, entryFile, cacheDir }) {
       let names = exportedNames.get(target.id)
       return names.includes(root.text) ? root.text : [...names].sort()[0]
     }
+    // The name an owned declaration binds in the rollup: neither
+    // `export { A as B }` nor `export default interface A` binds `B`/`default`.
+    let bindingOf = (target) =>
+      target.declarations[0]?.resolve(project)?.name?.text ?? target.name
     // Statement key -> [start, end, exported name] edits of its references.
     let renamesByStatement = new Map()
     let statements = new Map()
@@ -353,7 +376,9 @@ export function analyzeEntrypoint(api, { packageDir, entryFile, cacheDir }) {
       symbol.declarations.every((handle) => isLocal(handle.path))
     let pending = [...exportsByName.values()].filter(isOwned)
     let visited = new Set()
-    let addImport = (alias, target, root) => {
+    // Each distinct external binding, keyed by local name and what it binds;
+    // `refs` are the reference roots to rename if the local name must change.
+    let addImport = (alias, target, root, key) => {
       let declaration = alias.declarations[0]?.resolve(project)
       if (declaration?.kind === SyntaxKind.NamespaceExportDeclaration) {
         // A UMD global such as `React` from `export as namespace React`.
@@ -376,35 +401,35 @@ export function analyzeEntrypoint(api, { packageDir, entryFile, cacheDir }) {
       let typeOnly =
         Boolean(importDeclaration.importClause?.isTypeOnly) ||
         Boolean(declaration.isTypeOnly)
-      let form
+      // `*` is a namespace import, `default` a default import, otherwise the
+      // imported export name.
+      let binding
       if (isNamespaceImport(declaration)) {
-        form = `* as ${root.text}`
+        binding = '*'
       } else if (isImportSpecifier(declaration)) {
-        let imported = isNamespaceImport(declaration)
-          ? root.text
-          : (declaration.propertyName?.text ?? declaration.name.text)
-        if (module !== importDeclaration.moduleSpecifier.text) {
-          imported = target.name
-        }
-        form = `{ ${imported === root.text ? root.text : `${imported} as ${root.text}`} }`
+        binding =
+          module === importDeclaration.moduleSpecifier.text
+            ? (declaration.propertyName?.text ?? declaration.name.text)
+            : target.name
       } else if (isImportClause(declaration)) {
-        form = root.text
+        binding = 'default'
       } else {
         throw new Error(
           `${lineOf(root)}: unsupported import form for '${root.text}'`
         )
       }
-      let existing = imports.get(root.text)
-      if (existing && (existing.form !== form || existing.module !== module)) {
-        errors.push(
-          `'${root.text}' names two different imports: ${existing.form} from '${existing.module}' and ${form} from '${module}'`
-        )
-      }
-      imports.set(root.text, {
-        form,
+      let id = JSON.stringify([root.text, module, binding])
+      let external = imports.get(id) ?? {
+        local: root.text,
         module,
-        typeOnly: (existing?.typeOnly ?? true) && typeOnly,
-      })
+        binding,
+        target,
+        typeOnly: true,
+        refs: [],
+      }
+      external.typeOnly &&= typeOnly
+      external.refs.push([key, root])
+      imports.set(id, external)
     }
 
     while (pending.length > 0) {
@@ -472,15 +497,71 @@ export function analyzeEntrypoint(api, { packageDir, entryFile, cacheDir }) {
               )
               continue
             }
+            // The report spells the exported name; the rollup the binding.
             let name = canonicalName(target, root)
-            if (name !== root.text) {
-              renames.set(root.getStart(), [root.getStart(), root.end, name])
+            let binding = bindingOf(target)
+            if (name !== root.text || binding !== root.text) {
+              renames.set(root.getStart(), [
+                root.getStart(),
+                root.end,
+                name,
+                binding,
+              ])
             }
             continue
           }
           if (hasFlag(referenced, SymbolFlags.Alias)) {
-            addImport(referenced, target, root)
+            addImport(referenced, target, root, key)
           }
+        }
+      }
+    }
+
+    // Modules may use one local name for different external bindings. The
+    // binding sorting first by module keeps the name unless the entrypoint
+    // exports that name for another symbol or the rollup declares it (an
+    // owned declaration keeps its own name even when exported as an alias);
+    // every other one gets the first free `<name><n>` (n >= 2), avoiding every
+    // identifier in the reported statements (declarations, type parameters,
+    // references), every exported name and every other import, and its
+    // references are renamed.
+    let reserved = new Set(exportsByName.keys())
+    for (let statement of statements.values()) {
+      forEachDescendant(statement, (node) => {
+        if (node.kind === SyntaxKind.Identifier) {
+          reserved.add(node.text)
+        }
+      })
+    }
+    let declared = new Set(
+      [...exportsByName.values()].filter(isOwned).map(bindingOf)
+    )
+    let importsByLocal = new Map()
+    for (let external of imports.values()) {
+      reserved.add(external.local)
+      importsByLocal.set(external.local, [
+        ...(importsByLocal.get(external.local) ?? []),
+        external,
+      ])
+    }
+    let order = (external) => `${external.module}\0${external.binding}`
+    for (let [local, externals] of importsByLocal) {
+      externals.sort((a, b) => (order(a) < order(b) ? -1 : 1))
+      let exported = exportsByName.get(local)
+      let keep =
+        !declared.has(local) &&
+        (!exported || exported.id === externals[0].target.id)
+      for (let external of externals.slice(keep ? 1 : 0)) {
+        let n = 2
+        while (reserved.has(`${local}${n}`)) {
+          n += 1
+        }
+        external.local = `${local}${n}`
+        reserved.add(external.local)
+        for (let [key, root] of external.refs) {
+          renamesByStatement
+            .get(key)
+            .set(root.getStart(), [root.getStart(), root.end, external.local])
         }
       }
     }
@@ -596,19 +677,38 @@ export function analyzeEntrypoint(api, { packageDir, entryFile, cacheDir }) {
           (a, b) => a[0] - b[0]
         )
         texts.push(signatureText(statement, renames))
-        documented.push(documentedText(statement, renames))
+        documented.push(
+          documentedText(
+            statement,
+            renames,
+            !exportedNames.get(target.id).includes('default')
+          )
+        )
       }
       if (name !== target.name) {
         texts.push(`export { ${target.name} as ${name} };`)
+      }
+      // `export default interface Options` exported as `Options` still
+      // needs the named export.
+      let binding = bindingOf(target)
+      if (name !== target.name) {
+        documented.push(
+          `export { ${binding === name ? name : `${binding} as ${name}`} };`
+        )
       }
       entries.push({ name, text: texts.join('\n'), documented })
     }
     entries.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0))
     let importLines = [...imports.values()]
-      .map(
-        ({ form, module, typeOnly }) =>
-          `import ${typeOnly ? 'type ' : ''}${form} from '${module}';`
-      )
+      .map(({ local, module, binding, typeOnly }) => {
+        let form = `{ ${binding === local ? local : `${binding} as ${local}`} }`
+        if (binding === '*') {
+          form = `* as ${local}`
+        } else if (binding === 'default') {
+          form = local
+        }
+        return `import ${typeOnly ? 'type ' : ''}${form} from '${module}';`
+      })
       .sort()
 
     let report = `${importLines.join('\n')}${importLines.length ? '\n\n' : ''}${entries
