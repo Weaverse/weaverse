@@ -7,6 +7,7 @@ import React from 'react';
 import type { ElementCSS } from '@weaverse/core';
 import type { ReactElement } from 'react';
 import type { ReactNode } from 'react';
+import type { ThemeElementProps } from '@weaverse/schema';
 import type { WeaverseItemStore } from '@weaverse/core';
 import { Weaverse } from '@weaverse/core';
 
@@ -17,6 +18,12 @@ export type DataContext = Record<string, unknown>;
 export type ItemComponentProps = {
     instance: InstanceType<typeof WeaverseItemStore>;
 };
+
+export interface UseThemeElementOptions {
+    id: string;
+    onHide?: () => void;
+    onReveal?: () => void;
+}
 
 export declare let WeaverseContext: import("react").Context<Weaverse>;
 
@@ -40,6 +47,8 @@ export type WeaverseRootPropsType = {
     context: Weaverse;
 };
 
+export declare function notifyThemeElementHidden(id: string): void;
+
 export declare function replaceContentDataConnectors(content: string, dataContext: DataContext | null | undefined): string;
 
 export declare function replaceContentDataConnectorsDeep<T>(data: T, dataContext: DataContext | null | undefined, visited?: WeakSet<WeakKey>, forceClone?: boolean): T;
@@ -51,6 +60,8 @@ export declare let useItemInstance: (id?: string) => WeaverseItemStore | null;
 export declare let useParentInstance: () => WeaverseItemStore | null;
 
 export declare const useSafeExternalStore: (subscribe: any, getSnapshot: any, getServerSnapshot?: any) => any;
+
+export declare function useThemeElement(input: UseThemeElementOptions): ThemeElementProps;
 
 export declare function useWeaverse<T = Weaverse>(): T;
 ```

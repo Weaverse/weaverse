@@ -27,6 +27,7 @@ import type { SchemaType } from '@weaverse/schema';
 import type { SchemaValidationResult } from '@weaverse/schema';
 import type { SelectedOptionInput } from '@shopify/hydrogen/storefront-api-types';
 import type { ThemeRoutes } from '@weaverse/schema';
+import type { ThemeSettingsGroup } from '@weaverse/schema';
 import type { UIMatch } from 'react-router';
 import type { WeaverseCoreParams } from '@weaverse/react';
 import type { WeaverseElement } from '@weaverse/react';
@@ -190,7 +191,7 @@ export type HydrogenThemeSchema = {
         excludeFilenamePrefixes?: string[];
         excludeProductFiles?: boolean;
     };
-    settings?: InspectorGroup[];
+    settings?: ThemeSettingsGroup[];
     routes?: ThemeRoutes;
     i18n?: {
         urlStructure: 'url-path' | 'subdomain' | 'top-level-domain';
@@ -332,6 +333,8 @@ export type TranslationValue = {
     themeTextStore: TranslationStore | null;
     merchantOverrides: Record<string, unknown> | null;
 };
+
+export { UseThemeElementOptions } from '@weaverse/react';
 
 export type WeaverseArticle = WeaverseResourcePickerData;
 
@@ -599,6 +602,8 @@ export declare function isValidHydrogenSchema(schema: unknown): schema is Hydrog
 
 export declare function isWithCacheFetchResponse<T>(response: unknown): response is WithCacheFetchResponse<T>;
 
+export { notifyThemeElementHidden } from '@weaverse/react';
+
 export declare function registerComponent(element: HydrogenElement): void;
 
 export { useChildInstances } from '@weaverse/react';
@@ -606,6 +611,8 @@ export { useChildInstances } from '@weaverse/react';
 export { useItemInstance } from '@weaverse/react';
 
 export { useParentInstance } from '@weaverse/react';
+
+export { useThemeElement } from '@weaverse/react';
 
 export declare function useThemeSettings<T = HydrogenThemeSettings>(): T;
 

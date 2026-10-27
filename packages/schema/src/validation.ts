@@ -232,6 +232,31 @@ export const InspectorGroupSchema = z.object({
     .describe('The inputs of the group'),
 })
 
+/**
+ * Runtime validator for one theme settings group, including its Page Outline
+ * metadata. Unique `outlineId`s need the whole array; check them with
+ * `validateThemeSettingsGroups`.
+ */
+export const ThemeSettingsGroupSchema = InspectorGroupSchema.extend({
+  outlineGroup: z
+    .enum(['header', 'footer', 'popup'])
+    .optional()
+    .describe('Page Outline area for this settings group'),
+  outlineId: z
+    .string()
+    .refine((value) => value.trim().length > 0, 'outlineId must not be empty')
+    .optional()
+    .describe('Stable id shared by this settings group and its rendered DOM'),
+}).superRefine(({ outlineGroup, outlineId }, ctx) => {
+  if ((outlineGroup === undefined) !== (outlineId === undefined)) {
+    ctx.addIssue({
+      code: 'custom',
+      path: outlineGroup === undefined ? ['outlineGroup'] : ['outlineId'],
+      message: 'outlineGroup and outlineId must be set together',
+    })
+  }
+})
+
 /** Runtime validator for storefront page types. */
 export const PageTypeSchema = z.union([
   z.literal('*'),
