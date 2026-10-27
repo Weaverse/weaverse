@@ -21,12 +21,20 @@ export let hasBun = () => {
 
 /**
  * Installs Bun globally through npm, which every CLI user already has.
+ *
+ * `--allow-scripts=bun` approves Bun's postinstall up front: npm 11 otherwise
+ * prints an install-scripts warning that looks like a failure, and npm 10
+ * accepts the flag silently.
  * @returns {boolean} Whether the install command succeeded
  */
 export let installBun = () => {
-  let result = spawn.sync('npm', ['install', '-g', 'bun'], {
-    stdio: 'inherit',
-  })
+  let result = spawn.sync(
+    'npm',
+    ['install', '-g', '--allow-scripts=bun', 'bun'],
+    {
+      stdio: 'inherit',
+    }
+  )
   return result.status === 0 && !result.error
 }
 
