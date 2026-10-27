@@ -256,6 +256,7 @@ missing rather than hanging.
 Examples:
   npx @weaverse/cli create                                                              # Interactive mode
   npx @weaverse/cli create --template=pilot                                             # Prompt for the rest
+  --version             Show the CLI version
   npx @weaverse/cli create --template=pilot --project-id=my-store --project-name=shop   # Full, non-interactive
   `)
 }

@@ -1,11 +1,19 @@
 #!/usr/bin/env node
 
+import { createRequire } from 'node:module'
 import { hideBin } from 'yargs/helpers'
 import yargs from 'yargs/yargs'
 import { createProject, showTemplateList } from './src/commands/create.js'
 import { TEMPLATES } from './src/constants/templates.js'
 
+// yargs' automatic version lookup can't find package.json from this ESM entry
+// and prints "unknown", so read the version explicitly.
+const { version: CLI_VERSION } = createRequire(import.meta.url)(
+  './package.json'
+)
+
 let argv = yargs(hideBin(process.argv))
+  .version(CLI_VERSION)
   .command('create', 'Create a new project', {
     template: {
       describe: 'Template name',
