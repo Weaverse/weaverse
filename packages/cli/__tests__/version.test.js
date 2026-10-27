@@ -1,5 +1,6 @@
 import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
 describe('--version', () => {
@@ -9,7 +10,7 @@ describe('--version', () => {
     )
     let output = execFileSync(
       process.execPath,
-      [new URL('../index.js', import.meta.url).pathname, '--version'],
+      [fileURLToPath(new URL('../index.js', import.meta.url)), '--version'],
       { encoding: 'utf8' }
     )
 
