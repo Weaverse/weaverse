@@ -3,11 +3,12 @@ import type {
   WeaverseResourcePickerData,
 } from '@weaverse/react'
 import type {
+  InspectorGroup,
   PageSEOData,
   PageType,
   SchemaType,
+  ThemeOutline,
   ThemeRoutes,
-  ThemeSettingsGroup,
 } from '@weaverse/schema'
 import type { ComponentType, ForwardRefExoticComponent, ReactNode } from 'react'
 import type { TranslationStore } from './translation-store'
@@ -279,18 +280,20 @@ export interface WeaverseNextThemeSchema {
    *
    * @deprecated Migrate the same groups to {@link WeaverseNextThemeSchema.settings}.
    */
-  inspector?: (ThemeSettingsGroup | WeaverseNextThemeSchemaGroup)[]
+  inspector?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[]
+  /**
+   * Settings groups listed in the Studio Page Outline, keyed by area. See
+   * `ThemeOutline`.
+   */
+  outline?: ThemeOutline
   /**
    * URL patterns for the page types whose routes differ from the Shopify
    * convention, so Studio can navigate to them, e.g.
    * `{ COLLECTION: '/shop/:handle' }`. See `ThemeRoutes`.
    */
   routes?: ThemeRoutes
-  /**
-   * Theme-setting groups displayed in Builder. A group tagged with
-   * `outlineGroup` and `outlineId` is also listed in the Page Outline.
-   */
-  settings?: (ThemeSettingsGroup | WeaverseNextThemeSchemaGroup)[]
+  /** Theme-setting groups displayed in Builder. */
+  settings?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[]
   /** Additional schema metadata preserved for forward compatibility. */
   [key: string]: unknown
 }

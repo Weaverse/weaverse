@@ -9,7 +9,6 @@
  * @packageDocumentation
  */
 
-export type { UseThemeElementOptions } from '@weaverse/react'
 // Re-export schema authoring for migration ergonomics.
 export * from '@weaverse/schema'
 // Client code (components, hooks, runtime, and the `@weaverse/react`
@@ -21,13 +20,11 @@ export {
   createWeaverseNextClient,
   createWeaverseNextRuntime,
   loadWeaverseNextStudioScript,
-  notifyThemeElementHidden,
   ThemeTextProvider,
   TranslationProvider,
   useChildInstances,
   useItemInstance,
   useParentInstance,
-  useThemeElement,
   useThemeSettings,
   useThemeText,
   useTranslation,

@@ -40,11 +40,6 @@ export function getSelectedProductOptions(
   )
 }
 
-export {
-  notifyThemeElementHidden,
-  type UseThemeElementOptions,
-  useThemeElement,
-} from '@weaverse/react'
 // Re-export all types and utilities from schema package
 export * from '@weaverse/schema'
 export * from './components'

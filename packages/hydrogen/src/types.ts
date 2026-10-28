@@ -32,8 +32,8 @@ import type {
   SchemaType,
   SchemaValidationIssue,
   SchemaValidationResult,
+  ThemeOutline,
   ThemeRoutes,
-  ThemeSettingsGroup,
 } from '@weaverse/schema'
 import { isValidSchema } from '@weaverse/schema'
 import type * as React from 'react'
@@ -411,17 +411,19 @@ export type HydrogenThemeSchema = {
     /** Hide files used in products. Matches usage, not origin. */
     excludeProductFiles?: boolean
   }
-  /**
-   * Groups of global theme settings exposed in Studio. A group tagged with
-   * `outlineGroup` and `outlineId` is also listed in the Page Outline.
-   */
-  settings?: ThemeSettingsGroup[]
+  /** Groups of global theme settings exposed in Studio. */
+  settings?: InspectorGroup[]
   /**
    * URL patterns for the page types whose routes differ from the Shopify
    * convention, so Studio can navigate to them, e.g.
    * `{ COLLECTION: '/shop/:handle' }`. See `ThemeRoutes`.
    */
   routes?: ThemeRoutes
+  /**
+   * Settings groups listed in the Studio Page Outline, keyed by area. See
+   * `ThemeOutline`.
+   */
+  outline?: ThemeOutline
   /** Theme localization configuration. */
   i18n?: {
     /** Strategy used to encode the locale in storefront URLs. */

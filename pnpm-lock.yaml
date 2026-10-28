@@ -158,8 +158,8 @@ importers:
   packages/next:
     dependencies:
       '@weaverse/react':
-        specifier: 5.23.0
-        version: 5.23.0
+        specifier: 5.22.1
+        version: 5.22.1
       '@weaverse/schema':
         specifier: 0.19.0
         version: 0.19.0
@@ -179,9 +179,6 @@ importers:
       '@weaverse/core':
         specifier: 5.23.0
         version: 5.23.0
-      '@weaverse/schema':
-        specifier: 0.19.0
-        version: 0.19.0
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -1270,8 +1267,16 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@weaverse/core@5.22.1':
+    resolution: {integrity: sha512-nJ2NpIMzXrJ1sIsyCYMV/7NsdFADIH3ffXG3IvOLJA2ryeBEb4ny6Zsm7lQtYI8FxLxaE+aQ5AyhBaaQUbFrJA==}
+    engines: {node: '>=18'}
+
   '@weaverse/core@5.23.0':
     resolution: {integrity: sha512-0aGxrS05vUdFInf2o93vS1wG9OXvmdB3mJLLzBn7XZxb+TOZgcGI+M/lLEBhbRoJmS79cg9eCi0CfVXLn0LuGw==}
+    engines: {node: '>=18'}
+
+  '@weaverse/react@5.22.1':
+    resolution: {integrity: sha512-2jCVzeBjYtdy76LaHBdZEBmbfQPp8bmVvKgBfQx/rBgwq8qDnkdAEAgjO/sC6ZanMYvXbwoobm3XdnLH5SlC2w==}
     engines: {node: '>=18'}
 
   '@weaverse/react@5.23.0':
@@ -3404,7 +3409,16 @@ snapshots:
   '@voidzero-dev/vite-plus-win32-x64-msvc@0.1.24':
     optional: true
 
+  '@weaverse/core@5.22.1': {}
+
   '@weaverse/core@5.23.0': {}
+
+  '@weaverse/react@5.22.1':
+    dependencies:
+      '@weaverse/core': 5.22.1
+      clsx: 2.1.1
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
 
   '@weaverse/react@5.23.0':
     dependencies:

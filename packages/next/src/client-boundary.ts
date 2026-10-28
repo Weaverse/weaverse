@@ -13,11 +13,9 @@
  */
 
 export {
-  notifyThemeElementHidden,
   useChildInstances,
   useItemInstance,
   useParentInstance,
-  useThemeElement,
   useWeaverse,
 } from '@weaverse/react'
 export { createWeaverseNextClient } from './client'

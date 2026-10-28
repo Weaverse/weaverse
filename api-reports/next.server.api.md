@@ -5,13 +5,14 @@
 ```ts
 import type { ComponentType } from 'react';
 import type { ForwardRefExoticComponent } from 'react';
+import type { InspectorGroup } from '@weaverse/schema';
 import type { Metadata } from 'next';
 import type { PageSEOData } from '@weaverse/schema';
 import type { PageType } from '@weaverse/schema';
 import type { ReactNode } from 'react';
 import type { SchemaType } from '@weaverse/schema';
+import type { ThemeOutline } from '@weaverse/schema';
 import type { ThemeRoutes } from '@weaverse/schema';
-import type { ThemeSettingsGroup } from '@weaverse/schema';
 import type { WeaverseElement } from '@weaverse/react';
 
 export type NextOpenGraph = NonNullable<Metadata['openGraph']>;
@@ -287,9 +288,10 @@ export interface WeaverseNextThemeSchema {
         [key: string]: unknown;
     };
     // @deprecated
-    inspector?: (ThemeSettingsGroup | WeaverseNextThemeSchemaGroup)[];
+    inspector?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[];
+    outline?: ThemeOutline;
     routes?: ThemeRoutes;
-    settings?: (ThemeSettingsGroup | WeaverseNextThemeSchemaGroup)[];
+    settings?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[];
     [key: string]: unknown;
 }
 

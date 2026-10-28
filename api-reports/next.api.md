@@ -6,14 +6,15 @@
 import type { ComponentType } from 'react';
 import type { ElementData } from '@weaverse/react';
 import type { ForwardRefExoticComponent } from 'react';
+import type { InspectorGroup } from '@weaverse/schema';
 import type { JSX } from 'react/jsx-runtime';
 import type { Metadata } from 'next';
 import type { PageSEOData } from '@weaverse/schema';
 import type { PageType } from '@weaverse/schema';
 import type { ReactNode } from 'react';
 import type { SchemaType } from '@weaverse/schema';
+import type { ThemeOutline } from '@weaverse/schema';
 import type { ThemeRoutes } from '@weaverse/schema';
-import type { ThemeSettingsGroup } from '@weaverse/schema';
 import type { WeaverseElement } from '@weaverse/react';
 import type { WeaverseResourcePickerData } from '@weaverse/react';
 import { Weaverse } from '@weaverse/react';
@@ -110,8 +111,6 @@ export interface TranslationValue {
     themeTextStore: TranslationStore | null;
     translationStore: TranslationStore | null;
 }
-
-export { UseThemeElementOptions } from '@weaverse/react';
 
 export type WeaverseArticle = WeaverseResourcePickerData;
 
@@ -464,9 +463,10 @@ export interface WeaverseNextThemeSchema {
         [key: string]: unknown;
     };
     // @deprecated
-    inspector?: (ThemeSettingsGroup | WeaverseNextThemeSchemaGroup)[];
+    inspector?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[];
+    outline?: ThemeOutline;
     routes?: ThemeRoutes;
-    settings?: (ThemeSettingsGroup | WeaverseNextThemeSchemaGroup)[];
+    settings?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[];
     [key: string]: unknown;
 }
 
@@ -553,8 +553,6 @@ export declare let isIframe: boolean;
 
 export declare function loadWeaverseNextStudioScript(context?: WeaverseNextRequestContext, options?: LoadWeaverseNextStudioScriptOptions): void;
 
-export { notifyThemeElementHidden } from '@weaverse/react';
-
 export declare function resolveWeaverseNextStudioScriptSrc(context?: WeaverseNextRequestContext, options?: ResolveWeaverseNextStudioScriptSrcOptions): string | null;
 
 export declare function revalidateWeaverseNextItem(runtime: RevalidateItemRuntimeLike, draftItem: WeaverseNextComponentData, endpoint?: string): Promise<void>;
@@ -566,8 +564,6 @@ export { useChildInstances } from '@weaverse/react';
 export { useItemInstance } from '@weaverse/react';
 
 export { useParentInstance } from '@weaverse/react';
-
-export { useThemeElement } from '@weaverse/react';
 
 export declare function useThemeSettings<T = Record<string, unknown>>(): T;
 

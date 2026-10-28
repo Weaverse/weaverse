@@ -26,20 +26,12 @@ export type {
   TwitterCardType,
 } from './page-seo.js'
 export {
+  getThemeElementId,
   getThemeElementProps,
   THEME_ELEMENT_ATTRIBUTE,
-  THEME_ELEMENT_HIDDEN_EVENT,
-  THEME_ELEMENT_HIDE_EVENT,
-  THEME_ELEMENT_REVEAL_EVENT,
-  THEME_OUTLINE_GROUPS,
-  type ThemeElementEventDetail,
   type ThemeElementProps,
-  type ThemeOutlineGroup,
-  type ThemeSettingsGroup,
-  type ThemeSettingsGroupIssue,
-  type ThemeSettingsGroupIssueCode,
-  validateThemeSettingsGroups,
-} from './theme-element.js'
+  type ThemeOutline,
+} from './theme-outline.js'
 export type { ThemeRoutePageType, ThemeRoutes } from './theme-routes.js'
 
 /** Schema type with required title and type fields in non-strict projects. */
@@ -460,7 +452,6 @@ export {
   SchemaRegistry,
   SelectInputConfigsSchema,
   schemaRegistry,
-  ThemeSettingsGroupSchema,
   ToggleGroupConfigsSchema,
   titleSchema,
   typeSchema,

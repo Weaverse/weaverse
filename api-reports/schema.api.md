@@ -513,66 +513,19 @@ export interface SimpleValidationResult<T = any> {
 
 export declare const THEME_ELEMENT_ATTRIBUTE = "data-wv-theme-id";
 
-export declare const THEME_ELEMENT_HIDDEN_EVENT = "weaverse:theme-element-hidden";
-
-export declare const THEME_ELEMENT_HIDE_EVENT = "weaverse:theme-element-hide";
-
-export declare const THEME_ELEMENT_REVEAL_EVENT = "weaverse:theme-element-reveal";
-
-export declare const THEME_OUTLINE_GROUPS: readonly ThemeOutlineGroup[];
-
-export interface ThemeElementEventDetail {
-    id: string;
-}
-
 export interface ThemeElementProps {
     'data-wv-theme-id': string;
 }
 
-export type ThemeOutlineGroup = 'header' | 'footer' | 'popup';
+export type ThemeOutline = {
+    header?: string[];
+    aside?: string[];
+    footer?: string[];
+} & Record<string, string[]>;
 
 export type ThemeRoutePageType = Exclude<PageType, '*' | 'CUSTOM'>;
 
 export type ThemeRoutes = Partial<Record<ThemeRoutePageType, string>>;
-
-export interface ThemeSettingsGroup extends InspectorGroup {
-    outlineGroup?: ThemeOutlineGroup;
-    outlineId?: string;
-}
-
-export interface ThemeSettingsGroupIssue {
-    code: ThemeSettingsGroupIssueCode;
-    groupIndexes: number[];
-    message: string;
-    outlineId?: string;
-}
-
-export type ThemeSettingsGroupIssueCode = 'missing-outline-id' | 'missing-outline-group' | 'invalid-outline-group' | 'empty-outline-id' | 'duplicate-outline-id';
-
-export declare const ThemeSettingsGroupSchema: z.ZodObject<{
-    group: z.ZodString;
-    inputs: z.ZodArray<z.ZodUnion<readonly [z.ZodObject<{
-        type: z.ZodUnion<readonly [z.ZodLiteral<"heading">, z.ZodLiteral<"text">, z.ZodLiteral<"richtext">, z.ZodLiteral<"textarea">, z.ZodLiteral<"url">, z.ZodLiteral<"image">, z.ZodLiteral<"video">, z.ZodLiteral<"switch">, z.ZodLiteral<"range">, z.ZodLiteral<"select">, z.ZodLiteral<"position">, z.ZodLiteral<"product">, z.ZodLiteral<"product-list">, z.ZodLiteral<"collection">, z.ZodLiteral<"collection-list">, z.ZodLiteral<"blog">, z.ZodLiteral<"metaobject">, z.ZodLiteral<"color">, z.ZodLiteral<"datepicker">, z.ZodLiteral<"map-autocomplete">, z.ZodLiteral<"toggle-group">, z.ZodLiteral<"translation-key">, z.ZodLiteral<"translation-image">]>;
-        name: z.ZodString;
-        label: z.ZodOptional<z.ZodString>;
-        placeholder: z.ZodOptional<z.ZodString>;
-        helpText: z.ZodOptional<z.ZodString>;
-        configs: z.ZodOptional<z.ZodCustom<ConfigsProps | undefined, ConfigsProps | undefined>>;
-        shouldRevalidate: z.ZodOptional<z.ZodBoolean>;
-        sensitive: z.ZodOptional<z.ZodBoolean>;
-        condition: z.ZodOptional<z.ZodUnknown> & z.ZodType<string | Function | undefined, unknown, z.core.$ZodTypeInternals<string | Function | undefined, unknown>>;
-        defaultValue: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean, z.ZodRecord<z.ZodString, z.ZodUnknown>, z.ZodUnknown]>>;
-    }, z.core.$strip>, z.ZodObject<{
-        type: z.ZodLiteral<"heading">;
-        label: z.ZodString;
-    }, z.core.$loose>]>>;
-    outlineGroup: z.ZodOptional<z.ZodEnum<{
-        footer: "footer";
-        header: "header";
-        popup: "popup";
-    }>>;
-    outlineId: z.ZodOptional<z.ZodString>;
-}, z.core.$strip>;
 
 export interface ToggleGroupConfigs {
     options?: Array<{
@@ -611,7 +564,9 @@ export declare function createValidatedComponentArray<T extends Record<string, a
 
 export declare const devTools: SchemaDevTools;
 
-export declare function getThemeElementProps(outlineId: string): ThemeElementProps;
+export declare function getThemeElementId(groupName: string): string;
+
+export declare function getThemeElementProps(groupName: string): ThemeElementProps;
 
 export declare const groupHelpers: {
     general: (inputs: (BasicInput | HeadingInput)[]) => InspectorGroup;
@@ -652,8 +607,6 @@ export declare function validateComponentSimple(component: any, componentName?: 
 export declare function validateComponentsSimple(components: Record<string, any>, options?: ComponentValidationOptions): ComponentsValidationResult;
 
 export declare function validateSchema(schema: unknown): SchemaValidationResult<SchemaType>;
-
-export declare function validateThemeSettingsGroups(settings: readonly unknown[] | null | undefined): ThemeSettingsGroupIssue[];
 
 export * as z from 'zod/v4/classic/external';
 ```
