@@ -170,6 +170,39 @@ export default function Homepage() {
 }
 ```
 
+### Handling Load Failures
+
+By default `loadPage()` resolves to `null` both when the project does not exist
+and when the Weaverse API could not answer, so a route can only answer 404.
+Create the client with `throwPageLoadFailures: true` to tell them apart:
+
+```typescript
+import { WeaverseLoadError } from '@weaverse/hydrogen'
+
+new WeaverseClient({ ...args, components, themeSchema, throwPageLoadFailures: true })
+
+// In a route loader:
+try {
+  weaverseData = await weaverse.loadPage({ type: 'INDEX' })
+} catch (error) {
+  if (error instanceof WeaverseLoadError && error.kind === 'unavailable') {
+    throw new Response(null, { status: 503, headers: { 'Cache-Control': 'no-store' } })
+  }
+  throw error
+}
+```
+
+`error.kind` is `unavailable` (timeout, network error or transient status after
+the built-in retry), `invalid-response` (a successful response that is not a
+page) or `configuration` (missing or invalid project ID, or a refused request).
+A missing project still resolves to `null`, and a URL with no assigned page
+still resolves to a fallback page, so design mode is unchanged.
+
+`loadThemeSettings()` never throws. When settings cannot be loaded, or the API
+answers without a `theme` field, it returns schema defaults with
+`_loadFailed: true`; check that flag before treating the settings as the
+merchant's.
+
 ### Defining Component Schema
 
 Define your component's schema to control its behavior and interactivity within Weaverse Studio:

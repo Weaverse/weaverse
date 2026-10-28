@@ -1,5 +1,13 @@
 # @weaverse/hydrogen
 
+## Unreleased
+
+### Patch Changes
+
+- `loadPage()` and `loadThemeSettings()` validate successful API responses. A theme response without a `theme` field now returns schema defaults marked `_loadFailed: true` instead of presenting them as the merchant's settings, and invalid page or theme responses are no longer cached.
+- New opt-in `throwPageLoadFailures` client option: `loadPage()` rejects with a `WeaverseLoadError` whose `kind` is `unavailable`, `invalid-response` or `configuration`, so a storefront can answer an outage with a retryable error instead of a 404. A missing project still resolves to `null` and an unassigned page still resolves to a fallback page. Without the option, `loadPage()` behaves as before, except that an error status on the self-hosted cached path now resolves to `null` instead of the "Please add new section to start." placeholder page.
+- The existing single retry for transient failures is unchanged; a successful response whose body is not JSON keeps that retry and is now reported as an invalid response rather than a network error.
+
 ## 5.9.5
 
 ### Patch Changes
