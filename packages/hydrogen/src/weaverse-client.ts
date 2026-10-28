@@ -172,6 +172,36 @@ const builderPayloadValidators = new WeakMap<
 >()
 
 /**
+ * Gives a rejection from Hydrogen's cached fetch the code `fetchOnce` gives
+ * the same failure on the direct path.
+ *
+ * Hydrogen calls the platform `fetch` itself, so a request that never got a
+ * response rejects with the platform's error instead of a `WeaverseError`.
+ * The Fetch standard rejects a network failure with a `TypeError` and an
+ * aborted request with the signal's `AbortError`/`TimeoutError`; those are
+ * outages. Anything else is returned unchanged, so it is not reported as one.
+ */
+function cachedTransportError(error: unknown, url: string): unknown {
+  if (error instanceof WeaverseError || !(error instanceof Error)) {
+    return error
+  }
+  if (error.name === 'AbortError' || error.name === 'TimeoutError') {
+    return new WeaverseError('Request timed out', 'TIMEOUT_ERROR', undefined, {
+      url,
+    })
+  }
+  if (error instanceof TypeError) {
+    return new WeaverseError(
+      'Network error during fetch',
+      'NETWORK_ERROR',
+      undefined,
+      { url, cause: error.message }
+    )
+  }
+  return error
+}
+
+/**
  * Weaverse API version path
  */
 const API_PATH = 'v1' as const
@@ -808,7 +838,7 @@ export class WeaverseClient {
       result = await this.directFetch<T>(url, fetchOptions)
     } else {
       // Use withCache.fetch for better integration with Hydrogen's caching system
-      result = (await this.withCache.fetch(url, fetchOptions, {
+      const cachedFetch = this.withCache.fetch(url, fetchOptions, {
         cacheKey,
         cacheStrategy: strategy,
         shouldCacheResponse: (response: any): boolean => {
@@ -826,7 +856,14 @@ export class WeaverseClient {
           )
         },
         displayName: 'Weaverse API',
-      })) as WithCacheFetchResponse<T>
+      })
+      // Only this client's own Builder requests are normalized; a
+      // third-party `fetchWithCache` caller keeps the platform error.
+      result = (await (validateBuilderPayload
+        ? cachedFetch.catch((error: unknown) => {
+            throw cachedTransportError(error, url)
+          })
+        : cachedFetch)) as WithCacheFetchResponse<T>
 
       // Hydrogen resolves a non-2xx status with a `null` body. For this
       // client's own Builder requests that would read as "nothing published";

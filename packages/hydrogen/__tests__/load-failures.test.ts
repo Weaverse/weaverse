@@ -1,5 +1,3 @@
-import { createServer, type Server } from 'node:http'
-import type { AddressInfo } from 'node:net'
 import { InMemoryCache } from '@shopify/hydrogen'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
@@ -10,13 +8,20 @@ import {
 import { WeaverseClient } from '../src/weaverse-client'
 
 /**
- * Page and theme loads against a real local origin, through both request
- * paths the client chooses between: the direct fetch used for the public API
- * proxy, and Hydrogen's cached fetch used when the API base is the Weaverse
- * host. Each test scripts the origin's answers in order.
+ * Page and theme loads through both request paths the client chooses
+ * between: the direct fetch used for the public API proxy, and Hydrogen's
+ * cached fetch used when the API base is the Weaverse host. Only the
+ * platform `fetch` is replaced; each test scripts its answers in order, and
+ * everything above it — retries, Hydrogen's cache, validation and
+ * classification — runs as shipped.
  */
 
-type Reply = { status: number; body: string }
+/** A response, or the rejection `fetch` gives when no response arrives. */
+type Reply = { status: number; body: string } | { reject: Error }
+
+const ORIGIN = 'https://weaverse.test'
+/** What the Fetch standard rejects with when a connection fails. */
+const CONNECTION_FAILED = { reject: new TypeError('fetch failed') }
 
 const VALID_PAGE = JSON.stringify({
   page: { id: 'page-1', rootId: 'root-1', name: 'Home', items: [] },
@@ -54,34 +59,30 @@ const THEME_SCHEMA: HydrogenThemeSchema = {
   ],
 }
 
-let server: Server
-let origin: string
 let replies: Reply[]
 let requests: number
 
-beforeEach(async () => {
+beforeEach(() => {
   replies = []
   requests = 0
   vi.spyOn(console, 'warn').mockImplementation(() => {})
   vi.spyOn(console, 'error').mockImplementation(() => {})
-  server = createServer((_req, res) => {
+  vi.stubGlobal('fetch', async () => {
     requests++
     let reply = replies.shift() ?? { status: 500, body: '{}' }
-    res.writeHead(reply.status, { 'Content-Type': 'application/json' })
-    res.end(reply.body)
+    if ('reject' in reply) {
+      throw reply.reject
+    }
+    return new Response(reply.body, {
+      status: reply.status,
+      headers: { 'Content-Type': 'application/json' },
+    })
   })
-  let listening = Promise.withResolvers<void>()
-  server.listen(0, '127.0.0.1', listening.resolve)
-  await listening.promise
-  origin = `http://127.0.0.1:${(server.address() as AddressInfo).port}`
 })
 
-afterEach(async () => {
+afterEach(() => {
+  vi.unstubAllGlobals()
   vi.restoreAllMocks()
-  server.closeAllConnections()
-  let closed = Promise.withResolvers<void>()
-  server.close(() => closed.resolve())
-  await closed.promise
 })
 
 function reply(...answers: Reply[]) {
@@ -105,8 +106,8 @@ function makeClient(
     customerAccount: null,
     env: {
       WEAVERSE_PROJECT_ID: 'proj-1',
-      WEAVERSE_HOST: path === 'direct' ? 'https://studio.weaverse.io' : origin,
-      WEAVERSE_PUBLIC_API_BASE: origin,
+      WEAVERSE_HOST: path === 'direct' ? 'https://studio.weaverse.io' : ORIGIN,
+      WEAVERSE_PUBLIC_API_BASE: ORIGIN,
     },
     storefront: { i18n: { language: 'EN', country: 'US' } },
     cache: opts.cache ?? new InMemoryCache(),
@@ -175,6 +176,15 @@ describe('loadPage failure classification (opt-in)', () => {
         expect(result?.page.id).toMatch(/^fallback_page_/)
       })
 
+      it('should_reject_as_unavailable_when_the_api_cannot_be_reached', async () => {
+        reply(CONNECTION_FAILED, CONNECTION_FAILED)
+        let client = makeClient(path, { throwPageLoadFailures: true })
+
+        let error = await loadFailure(client)
+
+        expect((error as WeaverseLoadError)?.kind).toBe('unavailable')
+      })
+
       it('should_resolve_the_page_when_the_retry_succeeds', async () => {
         reply({ status: 503, body: '{}' }, { status: 200, body: VALID_PAGE })
         let client = makeClient('direct', { throwPageLoadFailures: true })
@@ -195,14 +205,47 @@ describe('loadPage failure classification (opt-in)', () => {
     expect(requests).toBe(2)
   })
 
-  it('should_reject_as_unavailable_when_the_api_cannot_be_reached', async () => {
-    let client = makeClient('direct', { throwPageLoadFailures: true })
-    server.closeAllConnections()
-    server.close()
+  it('should_reject_as_invalid_response_when_a_cached_successful_body_is_not_json', async () => {
+    reply({ status: 200, body: '<html>edge</html>' })
+    let client = makeClient('cached', { throwPageLoadFailures: true })
+
+    let error = await loadFailure(client)
+
+    expect((error as WeaverseLoadError)?.kind).toBe('invalid-response')
+  })
+
+  it('should_reject_as_unavailable_when_a_cached_request_times_out', async () => {
+    reply({ reject: new DOMException('signal timed out', 'TimeoutError') })
+    let client = makeClient('cached', { throwPageLoadFailures: true })
 
     let error = await loadFailure(client)
 
     expect((error as WeaverseLoadError)?.kind).toBe('unavailable')
+  })
+
+  it('should_not_report_an_outage_when_the_cache_itself_fails', async () => {
+    let brokenCache = new InMemoryCache()
+    brokenCache.match = () => Promise.reject(new Error('cache read failed'))
+    reply({ status: 200, body: VALID_PAGE })
+    let client = makeClient('cached', {
+      throwPageLoadFailures: true,
+      cache: brokenCache,
+    })
+
+    let error = await loadFailure(client)
+
+    expect((error as WeaverseLoadError)?.kind).toBe('invalid-response')
+  })
+
+  it('should_keep_the_platform_error_when_a_third_party_cached_request_fails', async () => {
+    reply(CONNECTION_FAILED)
+    let client = makeClient('cached', { throwPageLoadFailures: true })
+
+    let error = await client
+      .fetchWithCache(`${ORIGIN}/third-party`)
+      .catch((e: unknown) => e)
+
+    expect(error).toBe(CONNECTION_FAILED.reject)
   })
 
   it('should_reject_as_invalid_response_when_a_successful_body_is_not_json', async () => {
