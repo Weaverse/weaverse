@@ -369,6 +369,7 @@ export type WeaverseClientArgs = HydrogenContext & {
     cache: Cache;
     projectId?: ProjectIdValue;
     fetchTimeoutMs?: number;
+    throwPageLoadFailures?: boolean;
 };
 
 export type WeaverseCollection = WeaverseResourcePickerData;
@@ -478,6 +479,13 @@ export type WeaverseInternal = {
     themeTextStore?: TranslationStore | null;
     merchantOverrides?: Record<string, unknown> | null;
 };
+
+export declare class WeaverseLoadError extends WeaverseError {
+    readonly kind: WeaverseLoadFailureKind;
+    constructor(message: string, kind: WeaverseLoadFailureKind, statusCode?: number, context?: Record<string, unknown>);
+}
+
+export type WeaverseLoadFailureKind = 'unavailable' | 'invalid-response' | 'configuration';
 
 export type WeaverseLoaderData = {
     configs: Omit<WeaverseProjectConfigs, 'publicEnv'> & {

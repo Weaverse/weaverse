@@ -24,9 +24,10 @@ import type {
 } from './types'
 import {
   hasError,
-  isFetchProjectPayload,
   isProjectIdFunction,
   WeaverseError,
+  WeaverseLoadError,
+  type WeaverseLoadFailureKind,
 } from './types'
 import {
   generateDataFromSchema,
@@ -76,10 +77,128 @@ function isRetryableFetchError(error: unknown): boolean {
   if (!(error instanceof WeaverseError)) {
     return false
   }
-  if (error.code === 'TIMEOUT_ERROR' || error.code === 'NETWORK_ERROR') {
+  // A successful status with an unparsable body was classified as a network
+  // error before it got its own code; it keeps the same single retry.
+  if (
+    error.code === 'TIMEOUT_ERROR' ||
+    error.code === 'NETWORK_ERROR' ||
+    error.code === 'INVALID_RESPONSE'
+  ) {
     return true
   }
   return error.code === 'FETCH_ERROR' && (error.statusCode ?? 0) >= 500
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+/**
+ * Whether a successful `/project` body is a page envelope.
+ *
+ * `page: null` is Builder's authoritative "nothing assigned at this URL" and
+ * stays valid; anything without a `page` field, with an `error` field, or with
+ * a page that has no item list is not an answer about this URL at all.
+ */
+function isProjectEnvelope(payload: unknown): boolean {
+  if (!isPlainObject(payload) || hasError(payload) || !('page' in payload)) {
+    return false
+  }
+  const { page, project } = payload
+  const validPage =
+    page === null || (isPlainObject(page) && Array.isArray(page.items))
+  return validPage && (project == null || isPlainObject(project))
+}
+
+/**
+ * Whether a successful `/project_configs` body carries theme settings.
+ *
+ * Builder always sends the `theme` field; `null` means the merchant never
+ * saved settings, so schema defaults are the real configuration.
+ */
+function isThemeConfigsEnvelope(payload: unknown): boolean {
+  return (
+    isPlainObject(payload) &&
+    !hasError(payload) &&
+    'theme' in payload &&
+    (payload.theme === null || isPlainObject(payload.theme))
+  )
+}
+
+/**
+ * Classifies a page-load failure. `'absent'` is Builder's 404 for a project
+ * that does not exist, which keeps resolving to `null` like before.
+ */
+function classifyPageLoadFailure(
+  error: unknown
+): WeaverseLoadFailureKind | 'absent' {
+  if (error instanceof WeaverseLoadError) {
+    return error.kind
+  }
+  if (!(error instanceof WeaverseError)) {
+    // Thrown while turning a response into page data: the body was not
+    // the shape it claimed to be.
+    return 'invalid-response'
+  }
+  if (error.code === 'TIMEOUT_ERROR' || error.code === 'NETWORK_ERROR') {
+    return 'unavailable'
+  }
+  if (error.code === 'INVALID_RESPONSE') {
+    return 'invalid-response'
+  }
+  if (error.code === 'FETCH_ERROR') {
+    const status = error.statusCode ?? 0
+    if (status === 404) {
+      return 'absent'
+    }
+    if (status === 408 || status === 425 || status === 429 || status >= 500) {
+      return 'unavailable'
+    }
+  }
+  // Refusals (400/401/403) and project-ID errors: retrying cannot succeed.
+  return 'configuration'
+}
+
+/**
+ * Validators for Builder requests made by this client itself, keyed on the
+ * exact options object (same reasoning as `bodyFreeCacheRequests`). On the
+ * cached path such a request rejects a non-2xx status instead of resolving
+ * to `null`, and only stores a body its validator accepts. Every other
+ * `fetchWithCache` caller keeps the existing behavior.
+ */
+const builderPayloadValidators = new WeakMap<
+  object,
+  (payload: unknown) => boolean
+>()
+
+/**
+ * Gives a rejection from Hydrogen's cached fetch the code `fetchOnce` gives
+ * the same failure on the direct path.
+ *
+ * Hydrogen calls the platform `fetch` itself, so a request that never got a
+ * response rejects with the platform's error instead of a `WeaverseError`.
+ * The Fetch standard rejects a network failure with a `TypeError` and an
+ * aborted request with the signal's `AbortError`/`TimeoutError`; those are
+ * outages. Anything else is returned unchanged, so it is not reported as one.
+ */
+function cachedTransportError(error: unknown, url: string): unknown {
+  if (error instanceof WeaverseError || !(error instanceof Error)) {
+    return error
+  }
+  if (error.name === 'AbortError' || error.name === 'TimeoutError') {
+    return new WeaverseError('Request timed out', 'TIMEOUT_ERROR', undefined, {
+      url,
+    })
+  }
+  if (error instanceof TypeError) {
+    return new WeaverseError(
+      'Network error during fetch',
+      'NETWORK_ERROR',
+      undefined,
+      { url, cause: error.message }
+    )
+  }
+  return error
 }
 
 /**
@@ -202,6 +321,7 @@ export class WeaverseClient {
 
   // Configuration
   private readonly fetchTimeoutMs: number
+  private readonly throwPageLoadFailures: boolean
 
   /** Creates a request-scoped client from the Hydrogen app context. */
   constructor(args: WeaverseClientArgs) {
@@ -221,6 +341,7 @@ export class WeaverseClient {
 
     // Configuration
     this.fetchTimeoutMs = args.fetchTimeoutMs || DEFAULT_FETCH_TIMEOUT_MS
+    this.throwPageLoadFailures = args.throwPageLoadFailures === true
 
     // Initialize cache and configs
     this.initializeCache(args)
@@ -568,7 +689,22 @@ export class WeaverseClient {
         )
       }
 
-      const data = (await response.json()) as T
+      let data: T
+      try {
+        data = (await response.json()) as T
+      } catch (parseError) {
+        // A cut-short body still times out; anything else is a successful
+        // status whose body is not JSON, which is not a network failure.
+        if (parseError?.name === 'AbortError') {
+          throw parseError
+        }
+        throw new WeaverseError(
+          'Response body is not valid JSON',
+          'INVALID_RESPONSE',
+          response.status,
+          { url }
+        )
+      }
       return { data, response }
     } catch (err) {
       if (err instanceof WeaverseError) {
@@ -692,6 +828,8 @@ export class WeaverseClient {
     // versioned cache keys; keeping Hydrogen's URL/body cache in front would
     // keep serving a stale response even after Builder bumps the proxy's
     // project version.
+    const validateBuilderPayload = builderPayloadValidators.get(options)
+
     if (
       this.configs.isDesignMode ||
       this.configs.isRevisionPreview ||
@@ -700,7 +838,7 @@ export class WeaverseClient {
       result = await this.directFetch<T>(url, fetchOptions)
     } else {
       // Use withCache.fetch for better integration with Hydrogen's caching system
-      result = (await this.withCache.fetch(url, fetchOptions, {
+      const cachedFetch = this.withCache.fetch(url, fetchOptions, {
         cacheKey,
         cacheStrategy: strategy,
         shouldCacheResponse: (response: any): boolean => {
@@ -709,13 +847,36 @@ export class WeaverseClient {
           if (fetchOptions.signal?.aborted) {
             return false
           }
+          if (validateBuilderPayload && !validateBuilderPayload(response)) {
+            return false
+          }
           // Cache any non-error response (for both Weaverse API and third-party APIs)
           return (
             !hasError(response) && response !== null && response !== undefined
           )
         },
         displayName: 'Weaverse API',
-      })) as WithCacheFetchResponse<T>
+      })
+      // Only this client's own Builder requests are normalized; a
+      // third-party `fetchWithCache` caller keeps the platform error.
+      result = (await (validateBuilderPayload
+        ? cachedFetch.catch((error: unknown) => {
+            throw cachedTransportError(error, url)
+          })
+        : cachedFetch)) as WithCacheFetchResponse<T>
+
+      // Hydrogen resolves a non-2xx status with a `null` body. For this
+      // client's own Builder requests that would read as "nothing published";
+      // surface the status the direct path already throws instead.
+      const { response } = result
+      if (validateBuilderPayload && response && !response.ok) {
+        throw new WeaverseError(
+          `HTTP ${response.status}: ${response.statusText}`,
+          'FETCH_ERROR',
+          response.status,
+          { url }
+        )
+      }
     }
 
     return result.data
@@ -793,31 +954,24 @@ export class WeaverseClient {
         },
       }
       bodyFreeCacheRequests.add(themeSettingsOptions)
+      builderPayloadValidators.set(themeSettingsOptions, isThemeConfigsEnvelope)
 
       const [data, merchantOverrides] = await Promise.all([
         this.fetchWithCache<ThemeSettingsResponse>(url, themeSettingsOptions),
         this.fetchMerchantOverrides(strategy),
       ])
 
-      let result = data
-
-      // Validate that data is a proper object, not corrupted/compressed content
-      if (typeof result !== 'object' || result === null) {
-        console.warn(
-          'Invalid theme settings response format, using defaults:',
-          {
-            type: typeof result,
-            isString: typeof result === 'string',
-            length:
-              typeof result === 'string' ? (result as string).length : 'N/A',
-            preview:
-              typeof result === 'string'
-                ? `${(result as string).slice(0, 50)}...`
-                : String(result),
-          }
+      // A body without a `theme` field (corrupted content, an error body, an
+      // empty object) is not the merchant's configuration. Report it like any
+      // other failure so schema defaults are never presented as loaded.
+      if (!isThemeConfigsEnvelope(data)) {
+        throw new WeaverseError(
+          'Invalid theme settings response format',
+          'INVALID_RESPONSE'
         )
-        result = { theme: defaultThemeSettings }
       }
+
+      let result = data
 
       if (this.themeSchema?.settings || this.themeSchema?.inspector) {
         // Ensure result.theme exists and is an object before merging
@@ -1060,6 +1214,24 @@ export class WeaverseClient {
   loadPage = async (
     params: LoadPageParams = {}
   ): Promise<WeaverseLoaderData | null> => {
+    // Validate route-level projectId if provided
+    if (params.projectId !== undefined) {
+      const message =
+        typeof params.projectId === 'string'
+          ? this.validateProjectId(params.projectId).error
+          : `must be a string. Received: ${typeof params.projectId}`
+      if (message) {
+        console.error(`Route-level projectId validation failed: ${message}`)
+        if (this.throwPageLoadFailures) {
+          throw new WeaverseLoadError(
+            'Route-level projectId validation failed',
+            'configuration'
+          )
+        }
+        return null
+      }
+    }
+
     try {
       const { request, storefront, basePageRequestBody, basePageConfigs } = this
       const {
@@ -1069,25 +1241,6 @@ export class WeaverseClient {
         sectionType,
       } = this.configs
 
-      // Validate route-level projectId if provided
-      if (params.projectId !== undefined) {
-        if (typeof params.projectId !== 'string') {
-          console.error(
-            'Route-level projectId validation failed: must be a string. ' +
-              `Received: ${typeof params.projectId}`
-          )
-          return null
-        }
-
-        const validation = this.validateProjectId(params.projectId)
-        if (!validation.valid) {
-          console.error(
-            `Route-level projectId validation failed: ${validation.error}`
-          )
-          return null
-        }
-      }
-
       // Override client-level projectId with route-level projectId if provided
       const effectiveProjectId = params.projectId || clientProjectId
 
@@ -1096,7 +1249,10 @@ export class WeaverseClient {
       }
 
       if (!effectiveProjectId) {
-        throw new Error('Missing Weaverse projectId!')
+        throw new WeaverseLoadError(
+          'Missing Weaverse projectId!',
+          'configuration'
+        )
       }
 
       const { strategy, ...pageLoadParams } = params
@@ -1131,39 +1287,44 @@ export class WeaverseClient {
       }
       const url = this.getApiUrl('project')
 
+      const projectOptions: WeaverseFetchWithCacheOptions = {
+        ...reqInit,
+        cacheTarget: 'project',
+        strategy,
+      }
+      builderPayloadValidators.set(projectOptions, isProjectEnvelope)
       const projectData: FetchProjectPayload =
-        await this.fetchWithCache<FetchProjectPayload>(url, {
-          ...reqInit,
-          cacheTarget: 'project',
-          strategy,
-        })
+        await this.fetchWithCache<FetchProjectPayload>(url, projectOptions)
 
       if (hasError(projectData)) {
-        throw new Error(projectData.error)
+        throw new WeaverseLoadError(
+          'Weaverse API returned an error body',
+          'invalid-response'
+        )
       }
 
-      // Extract what we can from the response using type guard
-      // If validation fails, use fallback data instead of throwing
-      let page: HydrogenPageData | undefined
-      let project: WeaverseLoaderData['project'] | undefined
-      let pageAssignment: WeaverseLoaderData['pageAssignment'] | undefined
-
-      if (isFetchProjectPayload(projectData)) {
-        // Valid response - extract normally
-        page = projectData.page
-        project = projectData.project
-        pageAssignment = projectData.pageAssignment
-      } else {
+      if (!isProjectEnvelope(projectData)) {
+        // A body that does not answer for this URL is not "nothing assigned
+        // here". Without the opt-in, keep the historical fallback page.
+        if (this.throwPageLoadFailures) {
+          throw new WeaverseLoadError(
+            'Invalid project data structure received from API',
+            'invalid-response'
+          )
+        }
         console.warn(
           'Invalid project data structure received from API, using fallback data',
           { projectId: effectiveProjectId }
         )
-        // Try to extract what we can from the malformed response
-        const responseData = projectData as any
-        page = responseData?.page
-        project = responseData?.project
-        pageAssignment = responseData?.pageAssignment
       }
+
+      // Extract what we can; a legacy-mode malformed body may lack any field.
+      const responseData = projectData as Partial<FetchProjectPayload> | null
+      let page: HydrogenPageData | undefined = responseData?.page ?? undefined
+      let project: WeaverseLoaderData['project'] | undefined =
+        responseData?.project
+      const pageAssignment: WeaverseLoaderData['pageAssignment'] | undefined =
+        responseData?.pageAssignment
 
       if (!project) {
         console.warn('Weaverse project not found. Id:', effectiveProjectId)
@@ -1207,6 +1368,7 @@ export class WeaverseClient {
         },
       }
     } catch (error) {
+      const failure = classifyPageLoadFailure(error)
       const errorMessage = '❌ Page load failed'
       const errorContext: Record<string, unknown> = {
         projectId: params.projectId || this.configs.projectId,
@@ -1232,7 +1394,18 @@ export class WeaverseClient {
         })
       }
 
-      return null
+      if (failure === 'absent' || !this.throwPageLoadFailures) {
+        return null
+      }
+      if (error instanceof WeaverseLoadError) {
+        throw error
+      }
+      // Fixed message: the cause can carry request-derived detail.
+      throw new WeaverseLoadError(
+        'Unable to load Weaverse page',
+        failure,
+        error instanceof WeaverseError ? error.statusCode : undefined
+      )
     }
   }
 

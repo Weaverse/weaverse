@@ -610,6 +610,20 @@ export type WeaverseClientArgs = HydrogenContext & {
    * ```
    */
   fetchTimeoutMs?: number
+
+  /**
+   * Reject `loadPage()` with a {@link WeaverseLoadError} when the page cannot
+   * be loaded, instead of resolving to `null`.
+   *
+   * With the default (`false`), an unavailable API, an invalid response and a
+   * configuration failure all resolve to `null`, the same value a missing
+   * project produces, so a route cannot tell an outage from a 404. Enable this
+   * to answer failures with a retryable or configuration error response while
+   * genuine absence keeps resolving to `null` or a fallback page.
+   *
+   * @default false
+   */
+  throwPageLoadFailures?: boolean
 }
 
 /** Product selected through a Weaverse resource-picker setting. */
@@ -693,6 +707,47 @@ export class WeaverseError extends Error {
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, WeaverseError)
     }
+  }
+}
+
+/**
+ * Why a Weaverse page could not be loaded, as distinct from the page being
+ * genuinely absent.
+ *
+ * - `unavailable`: the Weaverse API timed out, could not be reached, or
+ *   answered with a transient status (408, 425, 429 or 5xx) after the built-in
+ *   retry. Retrying later can succeed.
+ * - `invalid-response`: the API answered successfully with a body that is not
+ *   a page/project envelope.
+ * - `configuration`: the request was refused or could not be built (missing or
+ *   invalid project ID, 400/401/403 from the API). Retrying will not help.
+ */
+export type WeaverseLoadFailureKind =
+  | 'unavailable'
+  | 'invalid-response'
+  | 'configuration'
+
+/**
+ * Error thrown by {@link WeaverseClient.loadPage} when the client is created
+ * with `throwPageLoadFailures: true` and the page cannot be loaded.
+ *
+ * Genuine absence is not an error: a missing project still resolves to `null`
+ * and an unassigned page still resolves to a fallback page.
+ */
+export class WeaverseLoadError extends WeaverseError {
+  /** Failure class used to choose a response status or recovery action. */
+  public readonly kind: WeaverseLoadFailureKind
+
+  /** Creates a classified page-load failure. */
+  constructor(
+    message: string,
+    kind: WeaverseLoadFailureKind,
+    statusCode?: number,
+    context?: Record<string, unknown>
+  ) {
+    super(message, 'LOAD_FAILURE', statusCode, context)
+    this.name = 'WeaverseLoadError'
+    this.kind = kind
   }
 }
 

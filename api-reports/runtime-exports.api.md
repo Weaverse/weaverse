@@ -95,6 +95,7 @@
     "WeaverseHydrogen",
     "WeaverseHydrogenItem",
     "WeaverseHydrogenRoot",
+    "WeaverseLoadError",
     "analyzeComponentRegistry",
     "createSchema",
     "createSchemaTypeSafe",
