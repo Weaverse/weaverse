@@ -39,7 +39,7 @@ export function getThemeElementId(groupName: string): string {
   return groupName
     .toLowerCase()
     .replace(/[^\p{L}\p{N}]+/gu, '-')
-    .replace(/^-+|-+$/g, '')
+    .replace(/^-|-$/g, '')
 }
 
 /**

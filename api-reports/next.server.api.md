@@ -11,7 +11,6 @@ import type { PageSEOData } from '@weaverse/schema';
 import type { PageType } from '@weaverse/schema';
 import type { ReactNode } from 'react';
 import type { SchemaType } from '@weaverse/schema';
-import type { ThemeOutline } from '@weaverse/schema';
 import type { ThemeRoutes } from '@weaverse/schema';
 import type { WeaverseElement } from '@weaverse/react';
 
@@ -289,7 +288,6 @@ export interface WeaverseNextThemeSchema {
     };
     // @deprecated
     inspector?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[];
-    outline?: ThemeOutline;
     routes?: ThemeRoutes;
     settings?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[];
     [key: string]: unknown;
