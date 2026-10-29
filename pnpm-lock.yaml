@@ -140,8 +140,8 @@ importers:
         specifier: 5.24.0
         version: 5.24.0
       '@weaverse/schema':
-        specifier: 0.19.0
-        version: 0.19.0
+        specifier: 0.20.0
+        version: 0.20.0
       react:
         specifier: '>=19'
         version: 19.2.5
@@ -161,8 +161,8 @@ importers:
         specifier: 5.22.1
         version: 5.22.1
       '@weaverse/schema':
-        specifier: 0.19.0
-        version: 0.19.0
+        specifier: 0.20.0
+        version: 0.20.0
       react:
         specifier: '>=19'
         version: 19.2.5
@@ -1283,8 +1283,8 @@ packages:
     resolution: {integrity: sha512-xrBY94GzG86D/DMik8eMPOmBa/ubJne5uMNq9Q9YwztyQ5qBzLRVwzEE0PexQgzMgFCzxyHBMGJhterP9XU8eg==}
     engines: {node: '>=18'}
 
-  '@weaverse/schema@0.19.0':
-    resolution: {integrity: sha512-+bDEhb8dl1Oa7jP3UXgTKHMHXr9bmbb+9+Nt1Q//IBb7JYgQKcOu+ugt8uHJZE298+A0a/DxovXiqK1VNIp2/g==}
+  '@weaverse/schema@0.20.0':
+    resolution: {integrity: sha512-lU3PR7AhdqgLOOXlER6SM+DJH/N6x+kj8Pf/TCKdI7MnphnwC04SquWb3qfXq3y8mZMY0Gkgsk7U8jWk2kqXdA==}
 
   '@xstate/fsm@2.0.0':
     resolution: {integrity: sha512-p/zcvBMoU2ap5byMefLkR+AM+Eh99CU/SDEQeccgKlmFNOMDwphaRGqdk+emvel/SaGZ7Rf9sDvzAplLzLdEVQ==}
@@ -3427,7 +3427,7 @@ snapshots:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
 
-  '@weaverse/schema@0.19.0':
+  '@weaverse/schema@0.20.0':
     dependencies:
       zod: 4.4.3
 

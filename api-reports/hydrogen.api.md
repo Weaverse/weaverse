@@ -26,6 +26,7 @@ import type { Resolvable } from '@weaverse/schema';
 import type { SchemaType } from '@weaverse/schema';
 import type { SchemaValidationResult } from '@weaverse/schema';
 import type { SelectedOptionInput } from '@shopify/hydrogen/storefront-api-types';
+import type { ThemeOutline } from '@weaverse/schema';
 import type { ThemeRoutes } from '@weaverse/schema';
 import type { UIMatch } from 'react-router';
 import type { WeaverseCoreParams } from '@weaverse/react';
@@ -192,6 +193,7 @@ export type HydrogenThemeSchema = {
     };
     settings?: InspectorGroup[];
     routes?: ThemeRoutes;
+    outline?: ThemeOutline;
     i18n?: {
         urlStructure: 'url-path' | 'subdomain' | 'top-level-domain';
         defaultLocale: WeaverseI18n;

@@ -7,6 +7,7 @@ import type {
   PageSEOData,
   PageType,
   SchemaType,
+  ThemeOutline,
   ThemeRoutes,
 } from '@weaverse/schema'
 import type { ComponentType, ForwardRefExoticComponent, ReactNode } from 'react'
@@ -280,6 +281,11 @@ export interface WeaverseNextThemeSchema {
    * @deprecated Migrate the same groups to {@link WeaverseNextThemeSchema.settings}.
    */
   inspector?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[]
+  /**
+   * Settings groups listed in the Studio Page Outline, keyed by area. See
+   * `ThemeOutline`.
+   */
+  outline?: ThemeOutline
   /**
    * URL patterns for the page types whose routes differ from the Shopify
    * convention, so Studio can navigate to them, e.g.
