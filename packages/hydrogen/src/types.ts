@@ -29,6 +29,7 @@ import type {
   SchemaType,
   SchemaValidationIssue,
   SchemaValidationResult,
+  ThemeOutline,
   ThemeRoutes,
 } from '@weaverse/schema'
 import { isValidSchema } from '@weaverse/schema'
@@ -419,6 +420,11 @@ export type WeaverseThemeSchema = {
    * `{ COLLECTION: '/shop/:handle' }`. See `ThemeRoutes`.
    */
   routes?: ThemeRoutes
+  /**
+   * Settings groups listed in the Studio Page Outline, keyed by area. See
+   * `ThemeOutline`.
+   */
+  outline?: ThemeOutline
   /** Theme localization configuration. */
   i18n?: {
     /** Strategy used to encode the locale in storefront URLs. */

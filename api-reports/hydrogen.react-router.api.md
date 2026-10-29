@@ -21,6 +21,7 @@ import type { ReactNode } from 'react';
 import type { SchemaType } from '@weaverse/schema';
 import type { SelectedOption } from '@shopify/hydrogen';
 import type { StorefrontClient } from '@shopify/hydrogen';
+import type { ThemeOutline } from '@weaverse/schema';
 import type { ThemeRoutes } from '@weaverse/schema';
 import type { WeaverseElement } from '@weaverse/react';
 import type { WeaverseProjectDataType } from '@weaverse/react';
@@ -337,6 +338,7 @@ export type WeaverseThemeSchema = {
     };
     settings?: InspectorGroup[];
     routes?: ThemeRoutes;
+    outline?: ThemeOutline;
     i18n?: {
         urlStructure: 'url-path' | 'subdomain' | 'top-level-domain';
         defaultLocale: WeaverseI18n;

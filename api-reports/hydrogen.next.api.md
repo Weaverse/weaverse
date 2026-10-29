@@ -10,6 +10,7 @@ import type { InspectorGroup } from '@weaverse/schema';
 import type { PageSEOData } from '@weaverse/schema';
 import type { PageType } from '@weaverse/schema';
 import type { SchemaType } from '@weaverse/schema';
+import type { ThemeOutline } from '@weaverse/schema';
 import type { ThemeRoutes } from '@weaverse/schema';
 import type { WeaverseElement } from '@weaverse/react';
 import type { WeaverseProjectDataType } from '@weaverse/react';
@@ -187,6 +188,7 @@ export type WeaverseThemeSchema = {
     };
     settings?: InspectorGroup[];
     routes?: ThemeRoutes;
+    outline?: ThemeOutline;
     i18n?: {
         urlStructure: 'url-path' | 'subdomain' | 'top-level-domain';
         defaultLocale: WeaverseI18n;
