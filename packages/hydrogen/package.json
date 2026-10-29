@@ -7,6 +7,29 @@
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",
   "module": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/types/react.d.ts",
+      "import": "./dist/react.mjs",
+      "require": "./dist/react.js"
+    },
+    "./react-router": {
+      "types": "./dist/types/react-router.d.ts",
+      "import": "./dist/react-router.mjs",
+      "require": "./dist/react-router.js"
+    },
+    "./internal": {
+      "types": "./dist/types/internal.d.ts",
+      "import": "./dist/internal.mjs",
+      "require": "./dist/internal.js"
+    },
+    "./package.json": "./package.json"
+  },
   "publishConfig": {
     "access": "public",
     "@weaverse:registry": "https://registry.npmjs.org"
@@ -23,8 +46,8 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "vp pack src/index.ts --format esm --format cjs --sourcemap --no-fixed-extension --no-dts --watch --on-success 'node ../../scripts/build-declarations.mjs'",
-    "build": "vp pack src/index.ts --format esm --format cjs --sourcemap --no-fixed-extension --no-dts && node ../../scripts/build-declarations.mjs",
+    "dev": "vp pack src/index.ts src/react.ts src/react-router.ts src/internal.ts --format esm --format cjs --sourcemap --no-fixed-extension --no-dts --watch --on-success 'node ../../scripts/build-declarations.mjs'",
+    "build": "vp pack src/index.ts src/react.ts src/react-router.ts src/internal.ts --format esm --format cjs --sourcemap --no-fixed-extension --no-dts && node ../../scripts/build-declarations.mjs",
     "clean": "rimraf dist",
     "test": "vp test --run",
     "typecheck": "tsrs --noEmit"

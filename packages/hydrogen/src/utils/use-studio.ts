@@ -7,7 +7,7 @@ import {
   useRevalidator,
 } from 'react-router'
 import { useTranslation } from '../hooks/translation-context'
-import type { WeaverseHydrogen } from '../index'
+import type { WeaverseHydrogen } from '../internal'
 import { hasWeaverseStudio } from '../types'
 import { getStudioScriptSrc, resolveStudioScriptSrc } from './studio-script-src'
 import { useThemeSettingsStore } from './use-theme-settings-store'

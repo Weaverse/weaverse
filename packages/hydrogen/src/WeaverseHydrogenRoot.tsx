@@ -38,7 +38,7 @@ import type {
   TranslationMap,
   WeaverseInternal,
   WeaverseLoaderRequestInfo,
-} from './index'
+} from './internal'
 import type {
   HydrogenComponent,
   WeaverseHydrogenParams,
