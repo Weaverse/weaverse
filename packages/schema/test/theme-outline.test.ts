@@ -15,6 +15,9 @@ describe('theme element ids', () => {
     ['Product cards 2', 'product-cards-2'],
     ['Đầu trang', 'đầu-trang'],
     ['ヘッダー', 'ヘッダー'],
+    ['Đầu trang'.normalize('NFD'), 'đầu-trang'],
+    ['हिन्दी शीर्षक', 'हिन्दी-शीर्षक'],
+    ['ส่วนหัว', 'ส่วนหัว'],
     ['---', ''],
   ])('should_slug_%j_to_%j_when_deriving_the_group_id', (name, id) => {
     expect(getThemeElementId(name)).toBe(id)

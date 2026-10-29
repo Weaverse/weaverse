@@ -30,15 +30,17 @@ export interface ThemeElementProps {
 }
 
 /**
- * Stable id of a theme settings group: its name lowercased, every run of
- * characters that are not letters or digits (any script) replaced by `-`, and
- * `-` trimmed from both ends. `Scrolling announcements` becomes
- * `scrolling-announcements`. A name with no letter or digit yields `''`.
+ * Stable id of a theme settings group: its name in NFC form, lowercased, every
+ * run of characters that are not letters, combining marks or digits (any
+ * script) replaced by `-`, and `-` trimmed from both ends. `Scrolling
+ * announcements` becomes `scrolling-announcements`. A name with no letter,
+ * mark or digit yields `''`.
  */
 export function getThemeElementId(groupName: string): string {
   return groupName
+    .normalize('NFC')
     .toLowerCase()
-    .replace(/[^\p{L}\p{N}]+/gu, '-')
+    .replace(/[^\p{L}\p{M}\p{N}]+/gu, '-')
     .replace(/^-|-$/g, '')
 }
 
