@@ -2,9 +2,9 @@ import { isBrowser } from '@weaverse/react'
 import { createContext, useContext, useEffect, useRef } from 'react'
 import { useRouteLoaderData } from 'react-router'
 import type {
-  HydrogenThemeSchema,
-  HydrogenThemeSettings,
   PublicEnv,
+  WeaverseThemeSchema,
+  WeaverseThemeSettings,
 } from '../types'
 
 /** Root-loader theme data used to initialize a {@link ThemeSettingsStore}. */
@@ -12,17 +12,17 @@ export interface WeaverseThemeData {
   /** Storefront-safe environment values, when available. */
   publicEnv?: PublicEnv
   /** Theme schema exposed to Studio, when available. */
-  schema?: HydrogenThemeSchema
+  schema?: WeaverseThemeSchema
   /** Published theme setting values. */
-  theme: HydrogenThemeSettings
+  theme: WeaverseThemeSettings
 }
 
 /** Mutable, subscribable store for theme settings received from the root loader. */
 export class ThemeSettingsStore {
   /** Current merged theme setting values. */
-  settings: HydrogenThemeSettings = {}
+  settings: WeaverseThemeSettings = {}
   /** Theme schema exposed to Studio, when available. */
-  schema?: HydrogenThemeSchema
+  schema?: WeaverseThemeSchema
   /** Storefront-safe environment values, when available. */
   publicEnv?: PublicEnv
   private listeners: Set<() => void> = new Set()
@@ -41,7 +41,7 @@ export class ThemeSettingsStore {
   }
 
   /** Merges setting changes into the current snapshot and notifies subscribers. */
-  updateThemeSettings = (newSettings: HydrogenThemeSettings) => {
+  updateThemeSettings = (newSettings: WeaverseThemeSettings) => {
     if (this.isDestroyed) {
       console.warn('ThemeSettingsStore: Cannot update destroyed store')
       return

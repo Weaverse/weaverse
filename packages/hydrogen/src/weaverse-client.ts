@@ -1,25 +1,22 @@
-import {
-  CacheCustom,
-  createWithCache,
-  type HydrogenEnv,
-  type I18nBase,
-} from '@shopify/hydrogen'
+import { Cache, createFetchWithCache } from '@shopify/hydrogen'
 import type {
   CachingStrategy,
   CustomPageEntry,
   FetchProjectPayload,
   FetchProjectRequestBody,
-  HydrogenComponent,
-  HydrogenComponentData,
-  HydrogenPageData,
   LoadPageParams,
   PageType,
   ProjectIdValidationResult,
-  ThemeSettingsResponse,
   WeaverseClientArgs,
+  WeaverseComponent,
+  WeaverseComponentData,
+  WeaverseEnv,
+  WeaverseI18n,
   WeaverseLoaderData,
+  WeaversePageData,
   WeaverseProjectConfigs,
   WeaverseStudioQueries,
+  WeaverseThemeSettingsResponse,
   WithCacheFetchResponse,
 } from './types'
 import {
@@ -42,14 +39,10 @@ import { normalizePageUrl } from './utils/normalize-page-url'
  * These values optimize CDN hit rates while maintaining fresh content.
  */
 const CACHE_DURATIONS = {
-  /** Short browser freshness for content that can change in Builder */
+  /** Freshness for content that can change in Builder */
   SHORT: 60,
-  /** Shared cache freshness for anonymous storefront traffic */
-  SHARED_SHORT: 300,
   /** Long stale window so slow Builder responses do not block storefront rendering */
   LONG: 86_400,
-  /** Extra freshness for sitemap-like index data */
-  STATIC: 3600,
 } as const
 
 /**
@@ -87,6 +80,18 @@ function isRetryableFetchError(error: unknown): boolean {
     return true
   }
   return error.code === 'FETCH_ERROR' && (error.statusCode ?? 0) >= 500
+}
+
+/** Parses a JSON body, or returns the raw text when it is not JSON. */
+function parseResponseText(text: string): unknown {
+  if (!text) {
+    return text
+  }
+  try {
+    return JSON.parse(text)
+  } catch {
+    return text
+  }
 }
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
@@ -207,15 +212,18 @@ function cachedTransportError(error: unknown, url: string): unknown {
 const API_PATH = 'v1' as const
 
 /**
- * Default cache strategy for Weaverse API requests.
- * Optimized for CDN performance with 23-hour stale content tolerance.
+ * Cache strategy for Weaverse API requests: fresh for a minute, then served
+ * stale for a day while it refreshes or while Builder errors.
+ *
+ * Every Builder resource uses it. Hydrogen 2026.4's subrequest cache only read
+ * `max-age` for freshness, so the old per-resource `sMaxAge` values never
+ * changed how long an entry stayed fresh.
  */
-const DEFAULT_CACHE_STRATEGY: CachingStrategy = {
+const DEFAULT_CACHE_STRATEGY: CachingStrategy = Cache({
   maxAge: CACHE_DURATIONS.SHORT,
-  sMaxAge: CACHE_DURATIONS.SHARED_SHORT,
   staleWhileRevalidate: CACHE_DURATIONS.LONG,
   staleIfError: CACHE_DURATIONS.LONG,
-} as const
+})
 
 /** Builder API resource whose freshness policy should be used for a request. */
 export type BuilderApiCacheTarget =
@@ -226,9 +234,9 @@ export type BuilderApiCacheTarget =
 
 /** Fetch options accepted by {@link WeaverseClient.fetchWithCache}. */
 export interface WeaverseFetchWithCacheOptions extends RequestInit {
-  /** Builder API resource whose default freshness policy should be used. */
+  /** Builder API resource the request reads; part of the cache key. */
   cacheTarget?: BuilderApiCacheTarget
-  /** Explicit Hydrogen caching strategy overriding the resource default. */
+  /** Explicit Hydrogen caching strategy overriding the default. */
   strategy?: CachingStrategy
 }
 
@@ -239,18 +247,6 @@ export interface FetchCustomPagesOptions {
   /** Locale whose published custom pages should be returned. */
   locale?: string
 }
-
-const SMART_CACHE_STRATEGIES: Record<BuilderApiCacheTarget, CachingStrategy> = {
-  project: DEFAULT_CACHE_STRATEGY,
-  'theme-settings': DEFAULT_CACHE_STRATEGY,
-  'merchant-overrides': DEFAULT_CACHE_STRATEGY,
-  'custom-pages': {
-    maxAge: CACHE_DURATIONS.SHORT,
-    sMaxAge: CACHE_DURATIONS.STATIC,
-    staleWhileRevalidate: CACHE_DURATIONS.LONG,
-    staleIfError: CACHE_DURATIONS.LONG,
-  },
-} as const
 
 /**
  * Options objects created by the internal `project_configs` request whose
@@ -295,12 +291,12 @@ export class WeaverseClient {
   basePageRequestBody: Omit<FetchProjectRequestBody, 'url'>
   /** Resolved project and rendering-mode configuration. */
   configs: WeaverseProjectConfigs
-  /** Hydrogen cache wrapper used for Builder API requests. */
-  withCache: ReturnType<typeof createWithCache>
+  /** Hydrogen cached fetch used for Builder API requests. */
+  private cachedFetch: ReturnType<typeof createFetchWithCache>
 
   /** Incoming request associated with this client instance. */
   request: WeaverseClientArgs['request']
-  /** Hydrogen customer-account client, when configured. */
+  /** Customer Account API client, when the storefront passes one. */
   customerAccount: WeaverseClientArgs['customerAccount']
   /** Hydrogen Storefront API client and locale context. */
   storefront: WeaverseClientArgs['storefront']
@@ -308,22 +304,22 @@ export class WeaverseClient {
   components: WeaverseClientArgs['components']
   /** Theme schema used for defaults and Studio editing. */
   themeSchema: WeaverseClientArgs['themeSchema']
-  /** Hydrogen runtime environment variables. */
+  /** Runtime environment variables. */
   env: WeaverseClientArgs['env']
   /** Cache storage supplied by the Hydrogen runtime. */
   cache: WeaverseClientArgs['cache']
-  /** Background execution hook supplied by the Oxygen runtime. */
+  /** Background execution hook supplied by the runtime. */
   waitUntil: WeaverseClientArgs['waitUntil']
 
   // Performance optimizations
   private readonly parsedUrl: URL
-  private readonly componentsByType: Map<string, HydrogenComponent>
+  private readonly componentsByType: Map<string, WeaverseComponent>
 
   // Configuration
   private readonly fetchTimeoutMs: number
   private readonly throwPageLoadFailures: boolean
 
-  /** Creates a request-scoped client from the Hydrogen app context. */
+  /** Creates a request-scoped client from the storefront's request context. */
   constructor(args: WeaverseClientArgs) {
     // Assign required dependencies
     this.request = args.request
@@ -359,10 +355,9 @@ export class WeaverseClient {
       )
     }
 
-    this.withCache = createWithCache({
+    this.cachedFetch = createFetchWithCache({
       cache: args.cache,
-      waitUntil: args.waitUntil || (() => Promise.resolve()),
-      request: args.request,
+      waitUntil: args.waitUntil,
     })
   }
 
@@ -372,16 +367,13 @@ export class WeaverseClient {
    */
   private initializeConfigs(args: WeaverseClientArgs): void {
     // Get base configs once to avoid duplicate calls
-    const baseConfigs = getWeaverseConfigs(
-      args.request,
-      args.env as HydrogenEnv
-    )
+    const baseConfigs = getWeaverseConfigs(args.request, args.env)
 
     // Resolve projectId with multi-project support
     const resolvedProjectId = this.resolveProjectIdSync(
       args.projectId,
       args.request,
-      args.env as HydrogenEnv,
+      args.env,
       baseConfigs
     )
 
@@ -429,8 +421,8 @@ export class WeaverseClient {
    * Significantly improves performance for large component lists.
    */
   private buildComponentLookupMap(
-    components: HydrogenComponent[]
-  ): Map<string, HydrogenComponent> {
+    components: WeaverseComponent[]
+  ): Map<string, WeaverseComponent> {
     return new Map(components.map((comp) => [comp.schema?.type, comp]))
   }
 
@@ -528,7 +520,7 @@ export class WeaverseClient {
   private resolveProjectIdSync(
     projectId: string | (() => string) | (() => Promise<string>) | undefined,
     request: Request,
-    env: HydrogenEnv,
+    env: WeaverseEnv,
     baseConfigs?: WeaverseProjectConfigs
   ): string {
     return (
@@ -646,7 +638,7 @@ export class WeaverseClient {
   private resolveFromEnvironment(
     baseConfigs: WeaverseProjectConfigs | undefined,
     request: Request,
-    env: HydrogenEnv
+    env: WeaverseEnv
   ): string | null {
     const configs = baseConfigs || getWeaverseConfigs(request, env)
 
@@ -659,7 +651,6 @@ export class WeaverseClient {
 
   /**
    * Helper method for direct fetching in design mode.
-   * Returns same format as withCache.fetch for consistency.
    * Includes 10-second timeout to prevent hanging requests.
    */
   private readonly fetchOnce = async <T>(
@@ -771,7 +762,7 @@ export class WeaverseClient {
 
   /**
    * Fetch data with caching support for both design mode and production.
-   * Uses direct fetch in design mode, Hydrogen's withCache in production.
+   * Uses direct fetch in design mode, Hydrogen's cached fetch in production.
    * Automatically includes projectId in cache key for multi-project isolation.
    *
    * @param url - The URL to fetch from
@@ -791,13 +782,8 @@ export class WeaverseClient {
     options: WeaverseFetchWithCacheOptions = {}
   ): Promise<T> => {
     const { cacheTarget, strategy: strategyOverride, ...fetchOptions } = options
-    const strategy =
-      strategyOverride ||
-      CacheCustom(
-        cacheTarget
-          ? SMART_CACHE_STRATEGIES[cacheTarget]
-          : DEFAULT_CACHE_STRATEGY
-      )
+    const strategy = strategyOverride || DEFAULT_CACHE_STRATEGY
+    const { body } = fetchOptions
 
     // Update cache key to include method, body content, and projectId for multi-project isolation
     // Prefix for easier debugging in cache systems
@@ -812,7 +798,9 @@ export class WeaverseClient {
       options.method || 'GET',
       bodyFreeCacheRequests.has(options)
         ? BODY_FREE_CACHE_SENTINEL
-        : fetchOptions.body,
+        : body == null
+          ? null
+          : String(body),
       // WeakSet-derived discriminator: this slot cannot be produced by any
       // caller-supplied shape, so no external call can reach the marked
       // identity — even one that happens to send the sentinel string as its
@@ -821,7 +809,6 @@ export class WeaverseClient {
       this.configs.projectId,
       cacheTarget || 'default',
     ]
-    let result: WithCacheFetchResponse<T>
 
     // Bypass the shared Hydrogen subrequest cache for design/revision modes
     // and for the Cloudflare public API proxy. The proxy owns freshness with
@@ -835,41 +822,42 @@ export class WeaverseClient {
       this.configs.isRevisionPreview ||
       this.isExternalPublicApiUrl(url)
     ) {
-      result = await this.directFetch<T>(url, fetchOptions)
-    } else {
-      // Use withCache.fetch for better integration with Hydrogen's caching system
-      const cachedFetch = this.withCache.fetch(url, fetchOptions, {
-        cacheKey,
-        cacheStrategy: strategy,
-        shouldCacheResponse: (response: any): boolean => {
+      const result = await this.directFetch<T>(url, fetchOptions)
+      return result.data
+    }
+
+    let response: Response
+    let text: string
+    try {
+      response = await this.cachedFetch(url, fetchOptions, {
+        key: cacheKey,
+        strategy,
+        shouldCacheResponse: async ({ text: readText }) => {
           // An aborted request never caches: Hydrogen turns a body read cut
-          // short by the abort into an empty payload, not an error.
+          // short by the abort into an empty body, not an error.
           if (fetchOptions.signal?.aborted) {
             return false
           }
-          if (validateBuilderPayload && !validateBuilderPayload(response)) {
+          const payload = parseResponseText(await readText())
+          if (validateBuilderPayload && !validateBuilderPayload(payload)) {
             return false
           }
           // Cache any non-error response (for both Weaverse API and third-party APIs)
-          return (
-            !hasError(response) && response !== null && response !== undefined
-          )
+          return !hasError(payload) && payload !== null && payload !== ''
         },
-        displayName: 'Weaverse API',
       })
+      text = await response.text()
+    } catch (error) {
       // Only this client's own Builder requests are normalized; a
       // third-party `fetchWithCache` caller keeps the platform error.
-      result = (await (validateBuilderPayload
-        ? cachedFetch.catch((error: unknown) => {
-            throw cachedTransportError(error, url)
-          })
-        : cachedFetch)) as WithCacheFetchResponse<T>
+      throw validateBuilderPayload ? cachedTransportError(error, url) : error
+    }
 
-      // Hydrogen resolves a non-2xx status with a `null` body. For this
-      // client's own Builder requests that would read as "nothing published";
-      // surface the status the direct path already throws instead.
-      const { response } = result
-      if (validateBuilderPayload && response && !response.ok) {
+    if (!response.ok) {
+      // For this client's own Builder requests a non-2xx status must not read
+      // as "nothing published"; surface the status the direct path already
+      // throws instead. Other callers keep the `null` body they always got.
+      if (validateBuilderPayload) {
         throw new WeaverseError(
           `HTTP ${response.status}: ${response.statusText}`,
           'FETCH_ERROR',
@@ -877,9 +865,10 @@ export class WeaverseClient {
           { url }
         )
       }
+      return null as T
     }
 
-    return result.data
+    return parseResponseText(text) as T
   }
 
   /**
@@ -911,7 +900,7 @@ export class WeaverseClient {
    */
   loadThemeSettings = async (
     strategy?: CachingStrategy
-  ): Promise<ThemeSettingsResponse> => {
+  ): Promise<WeaverseThemeSettingsResponse> => {
     const defaultThemeSettings = generateDataFromSchema(this.themeSchema)
     try {
       const { configs } = this
@@ -957,7 +946,10 @@ export class WeaverseClient {
       builderPayloadValidators.set(themeSettingsOptions, isThemeConfigsEnvelope)
 
       const [data, merchantOverrides] = await Promise.all([
-        this.fetchWithCache<ThemeSettingsResponse>(url, themeSettingsOptions),
+        this.fetchWithCache<WeaverseThemeSettingsResponse>(
+          url,
+          themeSettingsOptions
+        ),
         this.fetchMerchantOverrides(strategy),
       ])
 
@@ -1108,9 +1100,9 @@ export class WeaverseClient {
    * Used internally when API returns no page or when page needs default content.
    *
    * @param message - Custom message to display in the fallback page
-   * @returns HydrogenPageData with single main component containing the message
+   * @returns WeaversePageData with single main component containing the message
    */
-  generateFallbackPage = (message: string): HydrogenPageData => {
+  generateFallbackPage = (message: string): WeaversePageData => {
     const rootId = crypto.randomUUID()
     return {
       id: `fallback_page_${Date.now()}`,
@@ -1259,7 +1251,7 @@ export class WeaverseClient {
       const body: {
         projectId: string
         url: string
-        i18n?: I18nBase
+        i18n?: WeaverseI18n
         params?: {
           type?: PageType
           locale?: string
@@ -1320,7 +1312,7 @@ export class WeaverseClient {
 
       // Extract what we can; a legacy-mode malformed body may lack any field.
       const responseData = projectData as Partial<FetchProjectPayload> | null
-      let page: HydrogenPageData | undefined = responseData?.page ?? undefined
+      let page: WeaversePageData | undefined = responseData?.page ?? undefined
       let project: WeaverseLoaderData['project'] | undefined =
         responseData?.project
       const pageAssignment: WeaverseLoaderData['pageAssignment'] | undefined =
@@ -1410,7 +1402,7 @@ export class WeaverseClient {
   }
 
   /** Executes the registered loader for one component and attaches its result. */
-  execComponentLoader = async (item: HydrogenComponentData) => {
+  execComponentLoader = async (item: WeaverseComponentData) => {
     const { data = {}, type, id } = item
     const component = this.componentsByType.get(type)
     const loader = component?.loader

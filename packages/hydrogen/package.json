@@ -2,11 +2,44 @@
   "name": "@weaverse/hydrogen",
   "author": "Weaverse Team",
   "description": "Components, hooks, and utilities for building Shopify Hydrogen websites with Weaverse",
-  "version": "5.24.0",
+  "version": "6.0.0-beta.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",
   "module": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/types/react.d.ts",
+      "import": "./dist/react.mjs",
+      "require": "./dist/react.js"
+    },
+    "./react-router": {
+      "types": "./dist/types/react-router.d.ts",
+      "import": "./dist/react-router.mjs",
+      "require": "./dist/react-router.js"
+    },
+    "./next": {
+      "types": "./dist/types/next.d.ts",
+      "import": "./dist/next.mjs",
+      "require": "./dist/next.js"
+    },
+    "./next/server": {
+      "types": "./dist/types/next-server.d.ts",
+      "import": "./dist/next-server.mjs",
+      "require": "./dist/next-server.js"
+    },
+    "./internal": {
+      "types": "./dist/types/internal.d.ts",
+      "import": "./dist/internal.mjs",
+      "require": "./dist/internal.js"
+    },
+    "./package.json": "./package.json"
+  },
   "publishConfig": {
     "access": "public",
     "@weaverse:registry": "https://registry.npmjs.org"
@@ -23,15 +56,20 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "vp pack src/index.ts --format esm --format cjs --sourcemap --no-fixed-extension --no-dts --watch --on-success 'node ../../scripts/build-declarations.mjs'",
-    "build": "vp pack src/index.ts --format esm --format cjs --sourcemap --no-fixed-extension --no-dts && node ../../scripts/build-declarations.mjs",
+    "dev": "vp pack src/index.ts src/react.ts src/react-router.ts src/next.ts src/next-server.ts src/internal.ts --format esm --format cjs --sourcemap --no-fixed-extension --no-dts --watch --on-success 'node ../../scripts/build-declarations.mjs'",
+    "build": "vp pack src/index.ts src/react.ts src/react-router.ts src/next.ts src/next-server.ts src/internal.ts --format esm --format cjs --sourcemap --no-fixed-extension --no-dts && node ../../scripts/build-declarations.mjs",
     "clean": "rimraf dist",
     "test": "vp test --run",
     "typecheck": "tsrs --noEmit"
   },
+  "peerDependencies": {
+    "@shopify/hydrogen": ">=2026.10.0"
+  },
+  "devDependencies": {
+    "@shopify/hydrogen": "^2026.10.2"
+  },
   "dependencies": {
-    "@shopify/hydrogen": ">=2025.5 <2026.10.0",
-    "@shopify/remix-oxygen": "3",
+    "@weaverse/next": "1.1.0-beta.0",
     "@weaverse/react": "5.24.0",
     "@weaverse/schema": "0.20.0",
     "react": ">=19",

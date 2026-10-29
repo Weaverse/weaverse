@@ -4,6 +4,7 @@ import { createRequire } from 'node:module'
 import { hideBin } from 'yargs/helpers'
 import yargs from 'yargs/yargs'
 import { createProject, showTemplateList } from './src/commands/create.js'
+import { migrateV6 } from './src/commands/migrate.js'
 import { TEMPLATES } from './src/constants/templates.js'
 
 // yargs' automatic version lookup can't find package.json from this ESM entry
@@ -62,12 +63,32 @@ let argv = yargs(hideBin(process.argv))
       type: 'boolean',
     },
   })
+  .command(
+    'migrate <target>',
+    'Rewrite a theme for a new major SDK version (v6: @weaverse/hydrogen 6)',
+    (y) =>
+      y
+        .positional('target', { type: 'string', choices: ['v6'] })
+        .option('dir', {
+          describe: 'Project directory (defaults to the current directory)',
+          type: 'string',
+        })
+        .option('dry-run', {
+          describe: 'List the files that would change without writing them',
+          type: 'boolean',
+        })
+  )
   .option('help', {
     alias: 'h',
     type: 'boolean',
     description: 'Show help',
   })
   .help().argv
+
+if (argv._.includes('migrate')) {
+  await migrateV6({ dir: argv.dir, dryRun: argv.dryRun })
+  process.exit(0)
+}
 
 // Handle help or no command
 if (argv.help || !argv._.includes('create')) {

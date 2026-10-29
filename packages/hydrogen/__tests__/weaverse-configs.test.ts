@@ -1,5 +1,5 @@
-import type { HydrogenEnv } from '@shopify/hydrogen'
 import { describe, expect, it } from 'vitest'
+import type { WeaverseEnv } from '../src/types'
 import { getWeaverseConfigs } from '../src/utils'
 import { WeaverseClient } from '../src/weaverse-client'
 
@@ -16,7 +16,7 @@ describe('getWeaverseConfigs', () => {
   it('should_default_api_base_to_edge_proxy', () => {
     let configs = getWeaverseConfigs(
       new Request('https://example.com/products/blue-shirt'),
-      { WEAVERSE_PROJECT_ID: 'project-1' } as unknown as HydrogenEnv
+      { WEAVERSE_PROJECT_ID: 'project-1' } as unknown as WeaverseEnv
     )
 
     expect(configs.weaverseHost).toBe('https://studio.weaverse.io')
@@ -30,7 +30,7 @@ describe('getWeaverseConfigs', () => {
         WEAVERSE_API_BASE: 'https://legacy-api.example.com',
         WEAVERSE_HOST: 'https://studio.weaverse.io',
         WEAVERSE_PROJECT_ID: 'project-1',
-      } as unknown as HydrogenEnv
+      } as unknown as WeaverseEnv
     )
 
     expect(configs.weaverseHost).toBe('https://studio.weaverse.io')
@@ -44,7 +44,7 @@ describe('getWeaverseConfigs', () => {
         WEAVERSE_HOST: 'https://studio.weaverse.io',
         WEAVERSE_PUBLIC_API_BASE: 'https://api.weaverse.io',
         WEAVERSE_PROJECT_ID: 'project-1',
-      } as unknown as HydrogenEnv
+      } as unknown as WeaverseEnv
     )
 
     expect(configs.weaverseHost).toBe('https://studio.weaverse.io')
@@ -57,7 +57,7 @@ describe('getWeaverseConfigs', () => {
       {
         WEAVERSE_HOST: 'https://staging.self-hosted.example.com',
         WEAVERSE_PROJECT_ID: 'project-1',
-      } as unknown as HydrogenEnv
+      } as unknown as WeaverseEnv
     )
 
     expect(configs.weaverseHost).toBe('https://staging.self-hosted.example.com')
@@ -74,7 +74,7 @@ describe('getWeaverseConfigs', () => {
       WEAVERSE_HOST: 'https://studio.weaverse.io',
       WEAVERSE_PUBLIC_API_BASE: 'https://api.weaverse.io',
       WEAVERSE_PROJECT_ID: 'project-1',
-    } as unknown as HydrogenEnv)
+    } as unknown as WeaverseEnv)
 
     expect(configs.weaverseHost).toBe('https://preview.weaverse.io')
     expect(configs.weaverseApiBase).toBe('https://preview.weaverse.io')
@@ -90,7 +90,7 @@ describe('getWeaverseConfigs', () => {
       WEAVERSE_HOST: 'https://studio.weaverse.io',
       WEAVERSE_PUBLIC_API_BASE: 'https://api.weaverse.io',
       WEAVERSE_PROJECT_ID: 'project-1',
-    } as unknown as HydrogenEnv)
+    } as unknown as WeaverseEnv)
 
     expect(configs.weaverseHost).toBe('https://studio.weaverse.io')
     expect(configs.weaverseApiBase).toBe('https://api.weaverse.io')
@@ -104,7 +104,7 @@ describe('getWeaverseConfigs', () => {
     )
     let configs = getWeaverseConfigs(request, {
       WEAVERSE_PROJECT_ID: 'project-1',
-    } as unknown as HydrogenEnv)
+    } as unknown as WeaverseEnv)
 
     expect(configs.weaverseHost).toBe('https://studio.weaverse.io')
     expect(configs.weaverseApiBase).toBe('https://api.weaverse.io')
@@ -117,7 +117,7 @@ describe('getWeaverseConfigs', () => {
     )
     let configs = getWeaverseConfigs(request, {
       WEAVERSE_PROJECT_ID: 'project-1',
-    } as unknown as HydrogenEnv)
+    } as unknown as WeaverseEnv)
 
     expect(configs.weaverseHost).toBe('https://studio.weaverse.io')
     expect(configs.weaverseApiBase).toBe('https://api.weaverse.io')
