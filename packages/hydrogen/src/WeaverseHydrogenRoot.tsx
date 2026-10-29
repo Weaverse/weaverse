@@ -40,7 +40,7 @@ import type {
   WeaverseLoaderRequestInfo,
 } from './internal'
 import type {
-  HydrogenComponent,
+  WeaverseComponent,
   WeaverseHydrogenParams,
   WeaverseLoaderData,
 } from './types'
@@ -414,11 +414,11 @@ const StudioConnect = memo(() => {
  * allocates and loops on every render — theme component arrays are
  * module-level constants, so register each list identity once.
  */
-const registeredComponentLists = new WeakSet<HydrogenComponent[]>()
+const registeredComponentLists = new WeakSet<WeaverseComponent[]>()
 
 function RenderRoot(props: {
   data: WeaverseLoaderData
-  components: HydrogenComponent[]
+  components: WeaverseComponent[]
   dataContext?: Record<string, any>
 }) {
   const { data, components, dataContext } = props
@@ -488,7 +488,7 @@ export interface WeaverseHydrogenRootErrorProps {
 /** Props accepted by {@link WeaverseHydrogenRoot}. */
 export interface WeaverseHydrogenRootProps {
   /** Theme components available to the page renderer. */
-  components: HydrogenComponent[]
+  components: WeaverseComponent[]
   /**
    * Optional explicit `weaverseData` payload. When provided, bypasses the
    * automatic route-scoped resolution. Accepts a resolved value, a

@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
-  type HydrogenThemeSchema,
   WeaverseError,
   type WeaverseLoadError,
+  type WeaverseThemeSchema,
 } from '../src/types'
 import { WeaverseClient } from '../src/weaverse-client'
 import { createMemoryCache } from './memory-cache'
@@ -35,7 +35,7 @@ const UNASSIGNED_PAGE = JSON.stringify({
 })
 const PROJECT_NOT_FOUND = JSON.stringify({ error: 'Project not found' })
 
-const THEME_SCHEMA: HydrogenThemeSchema = {
+const THEME_SCHEMA: WeaverseThemeSchema = {
   info: {
     name: 'T',
     author: 'A',

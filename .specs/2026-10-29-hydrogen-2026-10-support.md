@@ -16,7 +16,10 @@ Hydrogen themes on `@shopify/hydrogen` 2026.10+ (the framework-agnostic library,
 - `getSelectedProductOptions(request)` keeps its signature and filtering of Weaverse/Studio params, built on the 2026.10 `getSelectedProductOptions({searchParams})`.
 - Env typing no longer augments `HydrogenEnv`; the SDK exports its own `WeaverseEnv` for the variables it reads.
 - Packaging: drop `@shopify/remix-oxygen`; `@shopify/hydrogen` becomes a peer dependency `>=2026.10.0`.
-- Non-goals here: the #547 entry-point split (`/react`, `/react-router`, `/next`), the codemod, and changes to `@weaverse/next` beyond reuse. They land on this branch before 6.0.0 is released, so themes break once.
+- Entry points (#547): `@weaverse/hydrogen` is the framework-independent core; `/react` holds router-free React bindings; `/react-router` is the React Router adapter and re-exports both, so React Router themes import only from it; `/next` and `/next/server` take over `@weaverse/next`, which becomes a deprecated alias; `/internal` exposes the full surface to Weaverse's own tools (Builder, CLI), undocumented and outside semver.
+- Public entries export only what storefronts use. `useThemeSettings`, `useTranslation` and `TranslationProvider` stay on each adapter entry until the React Router and Next implementations are unified; moving them to `/react` later is not breaking because the adapter entries keep re-exporting them.
+- Public renames: `HydrogenComponent` → `WeaverseComponent`, `HydrogenComponentProps` → `WeaverseComponentProps`, `HydrogenComponentSchema` → `WeaverseComponentSchema`, `HydrogenThemeSchema` → `WeaverseThemeSchema`, `ThemeSettingsResponse` → `WeaverseThemeSettingsResponse`, `ComponentLoaderArgs` → `WeaverseComponentLoaderArgs`. Names only on `/internal` keep their current names.
+- `npx @weaverse/cli migrate v6` rewrites import paths and renamed names. Everything lands on this branch before 6.0.0 is released, so themes break once.
 
 ## Acceptance
 
@@ -32,7 +35,9 @@ Hydrogen themes on `@shopify/hydrogen` 2026.10+ (the framework-agnostic library,
 3. `types.ts`: new `WeaverseClientArgs`, `WeaverseStorefront`, `WeaverseEnv`, `WeaverseI18n` on `I18nConfig`; `RouteLoaderArgs` on React Router `LoaderFunctionArgs`; remove `HydrogenEnv`/remix-oxygen augmentations.
 4. `index.ts`: wrap the new `getSelectedProductOptions`.
 5. Tests: replace `InMemoryCache` with a local in-memory Web Cache stub; update fixtures to the new args.
-6. Then the #547 layout, codemod and docs before releasing 6.0.0.
+6. Entry split and public renames (#547).
+7. Move `@weaverse/next` into `/next` and `/next/server`; keep `@weaverse/next` as a re-exporting alias.
+8. CLI codemod `migrate v6`, API reports, docs, then release 6.0.0.
 
 ## Migration
 

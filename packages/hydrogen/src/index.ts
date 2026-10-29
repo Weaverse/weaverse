@@ -19,12 +19,10 @@ export {
 } from '@weaverse/schema'
 export type { TranslateFunction } from './hooks/translation-context'
 export {
-  type ComponentLoaderArgs,
-  type HydrogenComponentSchema,
-  type HydrogenThemeSchema,
-  type ThemeSettingsResponse,
   type WeaverseBlog,
   type WeaverseCollection,
+  type WeaverseComponentLoaderArgs,
+  type WeaverseComponentSchema,
   WeaverseError,
   type WeaverseI18n,
   type WeaverseImage,
@@ -33,6 +31,8 @@ export {
   type WeaverseLoadFailureKind,
   type WeaverseMetaObject,
   type WeaverseProduct,
+  type WeaverseThemeSchema,
+  type WeaverseThemeSettingsResponse,
   type WeaverseVideo,
 } from './types'
 export { generateDataFromSchema } from './utils'

@@ -2,9 +2,9 @@ import { isBrowser } from '@weaverse/react'
 import { createContext, useContext, useEffect, useRef } from 'react'
 import { useRouteLoaderData } from 'react-router'
 import type {
-  HydrogenThemeSchema,
   HydrogenThemeSettings,
   PublicEnv,
+  WeaverseThemeSchema,
 } from '../types'
 
 /** Root-loader theme data used to initialize a {@link ThemeSettingsStore}. */
@@ -12,7 +12,7 @@ export interface WeaverseThemeData {
   /** Storefront-safe environment values, when available. */
   publicEnv?: PublicEnv
   /** Theme schema exposed to Studio, when available. */
-  schema?: HydrogenThemeSchema
+  schema?: WeaverseThemeSchema
   /** Published theme setting values. */
   theme: HydrogenThemeSettings
 }
@@ -22,7 +22,7 @@ export class ThemeSettingsStore {
   /** Current merged theme setting values. */
   settings: HydrogenThemeSettings = {}
   /** Theme schema exposed to Studio, when available. */
-  schema?: HydrogenThemeSchema
+  schema?: WeaverseThemeSchema
   /** Storefront-safe environment values, when available. */
   publicEnv?: PublicEnv
   private listeners: Set<() => void> = new Set()

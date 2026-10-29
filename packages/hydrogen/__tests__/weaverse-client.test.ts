@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 const spyOn = vi.spyOn
 const mock = vi.fn
 
-import type { HydrogenComponent, HydrogenThemeSchema } from '../src/types'
+import type { WeaverseComponent, WeaverseThemeSchema } from '../src/types'
 import { WeaverseClient } from '../src/weaverse-client'
 import { createMemoryCache } from './memory-cache'
 
@@ -18,8 +18,8 @@ const ASYNC_FUNCTION_ERROR = /must be awaited/
 const PROJECT_ID_VALIDATION_FAILED = /projectId validation failed/
 
 describe('WeaverseClient Multi-Project Architecture', () => {
-  let mockComponents: HydrogenComponent[]
-  let mockThemeSchema: HydrogenThemeSchema
+  let mockComponents: WeaverseComponent[]
+  let mockThemeSchema: WeaverseThemeSchema
   let mockContext: any
   let consoleWarnSpy: any
   let consoleErrorSpy: any
@@ -607,7 +607,7 @@ describe('loadPage X-Visitor-UA header forwarding', () => {
 })
 
 describe('directFetch transient retry', () => {
-  let themeSchema: HydrogenThemeSchema
+  let themeSchema: WeaverseThemeSchema
 
   beforeEach(() => {
     themeSchema = {
@@ -685,7 +685,7 @@ describe('directFetch transient retry', () => {
 
 describe('loadThemeSettings merchant-overrides gating (issue #2291)', () => {
   let mockContext: any
-  let baseSchema: HydrogenThemeSchema
+  let baseSchema: WeaverseThemeSchema
   let warnSpy: any
   let errorSpy: any
 
@@ -711,7 +711,7 @@ describe('loadThemeSettings merchant-overrides gating (issue #2291)', () => {
     errorSpy.mockRestore()
   })
 
-  function makeClient(schema: HydrogenThemeSchema) {
+  function makeClient(schema: WeaverseThemeSchema) {
     return new WeaverseClient({
       ...mockContext,
       components: [],
@@ -747,7 +747,7 @@ describe('loadThemeSettings merchant-overrides gating (issue #2291)', () => {
     let abandonedOverrides: number
     let stalled: ServerResponse[]
 
-    let i18nSchema = (): HydrogenThemeSchema => ({
+    let i18nSchema = (): WeaverseThemeSchema => ({
       ...baseSchema,
       settings: [
         {
@@ -869,7 +869,7 @@ describe('loadThemeSettings storefront context', () => {
    * else from the URL: a path, query or userinfo would put customer route data
    * — and possibly credentials — into a cached API request.
    */
-  let baseSchema: HydrogenThemeSchema
+  let baseSchema: WeaverseThemeSchema
 
   beforeEach(() => {
     baseSchema = {

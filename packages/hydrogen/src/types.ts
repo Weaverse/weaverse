@@ -65,7 +65,7 @@ export type {
 }
 
 /** Arguments passed to a component's server-side loader. */
-export type ComponentLoaderArgs<T = any, _E = any> = {
+export type WeaverseComponentLoaderArgs<T = any, _E = any> = {
   /** Persisted component data merged with schema defaults. */
   data: T
   /** Request-scoped client available to the component loader. */
@@ -115,10 +115,10 @@ export interface HydrogenComponentData extends ElementData {
  * Optimized: Use Zod-inferred SchemaType directly instead of extending
  * This ensures perfect type consistency with the schema validation
  */
-export type HydrogenComponentSchema = SchemaType
+export type WeaverseComponentSchema = SchemaType
 
 /** Props supplied by Weaverse when rendering a registered Hydrogen component. */
-export interface HydrogenComponentProps<L = any> extends WeaverseElement {
+export interface WeaverseComponentProps<L = any> extends WeaverseElement {
   /** Rendered child component instances. */
   children?: React.JSX.Element[]
   /** Optional CSS class passed through by the renderer. */
@@ -189,14 +189,14 @@ export type HydrogenComponentPresets = SchemaComponentPresets
 export type HydrogenElement = {
   /** React renderer for this registered component type. */
   Component:
-    | ForwardRefExoticComponent<HydrogenComponentProps>
-    | ((props: HydrogenComponentProps) => React.JSX.Element)
+    | ForwardRefExoticComponent<WeaverseComponentProps>
+    | ((props: WeaverseComponentProps) => React.JSX.Element)
   /** Unique component type matching the component schema. */
   type: string
   /** Component schema used for settings, defaults, and availability. */
-  schema?: HydrogenComponentSchema
+  schema?: WeaverseComponentSchema
   /** Optional data loader function for server-side data fetching. */
-  loader?: (args: ComponentLoaderArgs) => Promise<unknown>
+  loader?: (args: WeaverseComponentLoaderArgs) => Promise<unknown>
 }
 
 /** Initialization parameters for a request-scoped {@link WeaverseHydrogen} runtime. */
@@ -242,13 +242,13 @@ export interface WeaverseHydrogenParams
 }
 
 /** Export shape for a renderable component, its schema, and optional loader. */
-export type HydrogenComponent<T extends HydrogenComponentProps = any> = {
+export type WeaverseComponent<T extends WeaverseComponentProps = any> = {
   /** React renderer exported by the component module. */
   default: ForwardRefExoticComponent<T> | ((props: T) => React.JSX.Element)
   /** Schema exported by the component module. */
-  schema: HydrogenComponentSchema
+  schema: WeaverseComponentSchema
   /** Optional data loader function for server-side data fetching. */
-  loader?: (args: ComponentLoaderArgs) => Promise<unknown>
+  loader?: (args: WeaverseComponentLoaderArgs) => Promise<unknown>
 }
 
 /** Weaverse Studio query parameters recognized by the Hydrogen runtime. */
@@ -374,7 +374,7 @@ export type WeaverseI18n = I18nConfig & {
 }
 
 /** Theme metadata, global settings, and localization configuration. */
-export type HydrogenThemeSchema = {
+export type WeaverseThemeSchema = {
   /** Theme identity, author, and support metadata. */
   info: {
     /** Human-readable theme name. */
@@ -570,13 +570,13 @@ export type WeaverseClientArgs = {
    * React components registered with Weaverse CMS.
    * Each component must have a schema defining its properties and settings.
    */
-  components: HydrogenComponent[]
+  components: WeaverseComponent[]
 
   /**
    * Theme schema defining global theme settings (colors, fonts, layouts).
    * Used to generate default theme configuration and validate theme data.
    */
-  themeSchema: HydrogenThemeSchema
+  themeSchema: WeaverseThemeSchema
 
   /**
    * Incoming HTTP request object from React Router loader.
@@ -680,11 +680,11 @@ export type WithCacheFetchResponse<T> = {
 }
 
 /** Theme configuration returned by the Weaverse project API. */
-export type ThemeSettingsResponse = {
+export type WeaverseThemeSettingsResponse = {
   /** Published theme setting values. */
   theme?: HydrogenThemeSettings
   /** Theme schema included for Studio editing. */
-  schema?: HydrogenThemeSchema
+  schema?: WeaverseThemeSchema
   /** Storefront-safe environment values included in design mode. */
   publicEnv?: PublicEnv
   /** Theme's default locale JSON from `themeSchema.i18n.staticContent`. */
@@ -859,7 +859,7 @@ export function hasError(response: unknown): response is WeaverseErrorResponse {
 /** Checks whether a value contains a theme settings object. */
 export function isThemeSettingsResponse(
   data: unknown
-): data is ThemeSettingsResponse {
+): data is WeaverseThemeSettingsResponse {
   if (typeof data !== 'object' || data === null) {
     return false
   }
@@ -876,7 +876,7 @@ export function isThemeSettingsResponse(
  * Enhanced type utilities for better development experience
  */
 export type HydrogenSchemaValidationResult =
-  SchemaValidationResult<HydrogenComponentSchema>
+  SchemaValidationResult<WeaverseComponentSchema>
 
 /**
  * Type guard to check if a schema is valid.
@@ -884,19 +884,19 @@ export type HydrogenSchemaValidationResult =
  * comprehensive Zod-based validation with the ElementSchema.
  *
  * @param schema - Unknown value to validate
- * @returns True if schema is a valid HydrogenComponentSchema
+ * @returns True if schema is a valid WeaverseComponentSchema
  *
  * @example
  * ```typescript
  * if (isValidHydrogenSchema(userInput)) {
- *   // userInput is now typed as HydrogenComponentSchema
+ *   // userInput is now typed as WeaverseComponentSchema
  *   console.log(userInput.type)
  * }
  * ```
  */
 export function isValidHydrogenSchema(
   schema: unknown
-): schema is HydrogenComponentSchema {
+): schema is WeaverseComponentSchema {
   // Use the comprehensive validation from @weaverse/schema package
   return isValidSchema(schema)
 }

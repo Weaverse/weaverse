@@ -4,19 +4,19 @@ import type {
   CustomPageEntry,
   FetchProjectPayload,
   FetchProjectRequestBody,
-  HydrogenComponent,
   HydrogenComponentData,
   HydrogenPageData,
   LoadPageParams,
   PageType,
   ProjectIdValidationResult,
-  ThemeSettingsResponse,
   WeaverseClientArgs,
+  WeaverseComponent,
   WeaverseEnv,
   WeaverseI18n,
   WeaverseLoaderData,
   WeaverseProjectConfigs,
   WeaverseStudioQueries,
+  WeaverseThemeSettingsResponse,
   WithCacheFetchResponse,
 } from './types'
 import {
@@ -313,7 +313,7 @@ export class WeaverseClient {
 
   // Performance optimizations
   private readonly parsedUrl: URL
-  private readonly componentsByType: Map<string, HydrogenComponent>
+  private readonly componentsByType: Map<string, WeaverseComponent>
 
   // Configuration
   private readonly fetchTimeoutMs: number
@@ -421,8 +421,8 @@ export class WeaverseClient {
    * Significantly improves performance for large component lists.
    */
   private buildComponentLookupMap(
-    components: HydrogenComponent[]
-  ): Map<string, HydrogenComponent> {
+    components: WeaverseComponent[]
+  ): Map<string, WeaverseComponent> {
     return new Map(components.map((comp) => [comp.schema?.type, comp]))
   }
 
@@ -900,7 +900,7 @@ export class WeaverseClient {
    */
   loadThemeSettings = async (
     strategy?: CachingStrategy
-  ): Promise<ThemeSettingsResponse> => {
+  ): Promise<WeaverseThemeSettingsResponse> => {
     const defaultThemeSettings = generateDataFromSchema(this.themeSchema)
     try {
       const { configs } = this
@@ -946,7 +946,10 @@ export class WeaverseClient {
       builderPayloadValidators.set(themeSettingsOptions, isThemeConfigsEnvelope)
 
       const [data, merchantOverrides] = await Promise.all([
-        this.fetchWithCache<ThemeSettingsResponse>(url, themeSettingsOptions),
+        this.fetchWithCache<WeaverseThemeSettingsResponse>(
+          url,
+          themeSettingsOptions
+        ),
         this.fetchMerchantOverrides(strategy),
       ])
 
