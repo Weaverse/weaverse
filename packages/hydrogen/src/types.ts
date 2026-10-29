@@ -1,12 +1,9 @@
 import type {
+  CacheInstance,
   CachingStrategy,
-  HydrogenContext,
-  I18nBase,
+  I18nConfig,
+  StorefrontClient,
 } from '@shopify/hydrogen'
-import type {
-  AppLoadContext,
-  LoaderFunctionArgs as RemixOxygenLoaderArgs,
-} from '@shopify/remix-oxygen'
 import type {
   ElementData,
   PositionInputValue,
@@ -37,7 +34,11 @@ import type {
 import { isValidSchema } from '@weaverse/schema'
 import type * as React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
-import type { NavigateFunction } from 'react-router'
+import type {
+  AppLoadContext,
+  LoaderFunctionArgs,
+  NavigateFunction,
+} from 'react-router'
 import type { TranslationStore } from './utils/translation-store'
 import type { ThemeSettingsStore } from './utils/use-theme-settings-store'
 import type { WeaverseHydrogen } from './WeaverseHydrogenRoot'
@@ -78,7 +79,7 @@ export interface WeaverseRouteAppLoadContext extends AppLoadContext {
 }
 
 /** React Router loader arguments whose app context includes the Weaverse client. */
-export interface RouteLoaderArgs extends RemixOxygenLoaderArgs {
+export interface RouteLoaderArgs extends LoaderFunctionArgs {
   /** Request-scoped application context with the initialized Weaverse client. */
   context: WeaverseRouteAppLoadContext
 }
@@ -363,7 +364,7 @@ export interface HydrogenPageData extends WeaverseProjectDataType {
 }
 
 /** Locale metadata used when requesting localized Weaverse content. */
-export type WeaverseI18n = I18nBase & {
+export type WeaverseI18n = I18nConfig & {
   /** Human-readable locale label displayed in Studio. */
   label?: string
   /** Locale path prefix used by the storefront router. */
@@ -546,7 +547,25 @@ export function isProjectIdFunction(
  * **Request Context Access**:
  * Functions access request via closure from constructor arguments.
  */
-export type WeaverseClientArgs = HydrogenContext & {
+export type WeaverseClientArgs = {
+  /**
+   * Request-scoped Hydrogen Storefront API client. Section loaders reach it
+   * as `weaverse.storefront`; its `i18n` selects the content locale.
+   */
+  storefront: WeaverseStorefront
+
+  /** Runtime environment variables, such as the Oxygen worker `env`. */
+  env: WeaverseEnv
+
+  /** Keeps the runtime alive for background cache writes and refreshes. */
+  waitUntil?: (promise: Promise<unknown>) => void
+
+  /**
+   * Customer Account API client, when the storefront has one. Weaverse only
+   * passes it through to section loaders.
+   */
+  customerAccount?: unknown
+
   /**
    * React components registered with Weaverse CMS.
    * Each component must have a schema defining its properties and settings.
@@ -566,10 +585,10 @@ export type WeaverseClientArgs = HydrogenContext & {
   request: Request
 
   /**
-   * Hydrogen cache instance for content caching.
-   *Supports multi-tenant caching with project-specific cache keys.
+   * Hydrogen cache instance for content caching, such as the worker's
+   * `caches.open('hydrogen-v1')`. Cache keys include the project ID.
    */
-  cache: Cache
+  cache: CacheInstance
 
   /**
    * Project identifier for loading content from Weaverse CMS.
@@ -618,6 +637,27 @@ export type WeaverseClientArgs = HydrogenContext & {
    * @default false
    */
   throwPageLoadFailures?: boolean
+}
+
+/** Storefront API client accepted by {@link WeaverseClient}, with a per-call `cache` option. */
+export type WeaverseStorefront = StorefrontClient<{ cache?: CachingStrategy }>
+
+/** Environment variables read by Weaverse, plus any other storefront variables. */
+export interface WeaverseEnv {
+  /** Shopify store domain exposed to Studio. */
+  PUBLIC_STORE_DOMAIN?: string
+  /** Public Storefront API token exposed to Studio. */
+  PUBLIC_STOREFRONT_API_TOKEN?: string
+  /** Weaverse API key. */
+  WEAVERSE_API_KEY?: string
+  /** Weaverse Studio host, e.g. `https://studio.weaverse.io`. */
+  WEAVERSE_HOST?: string
+  /** Default Weaverse project ID. */
+  WEAVERSE_PROJECT_ID?: string
+  /** Base URL of the Weaverse public content API. */
+  WEAVERSE_PUBLIC_API_BASE?: string
+  /** Any other storefront variable. */
+  [key: string]: string | undefined
 }
 
 /** Product selected through a Weaverse resource-picker setting. */
@@ -928,28 +968,12 @@ export function hasWeaverseStudio(
   return 'weaverseStudio' in window && typeof window.weaverseStudio === 'object'
 }
 
-declare module '@shopify/remix-oxygen' {
+declare module 'react-router' {
   interface AppLoadContext {
     weaverse: WeaverseClient
   }
-}
-
-declare module '@shopify/hydrogen' {
-  interface HydrogenEnv {
-    CUSTOM_COLLECTION_BANNER_METAFIELD: string
-    JUDGEME_PRIVATE_API_TOKEN: string
-    KLAVIYO_PRIVATE_API_TOKEN: string
-    METAOBJECT_COLOR_NAME_KEY: string
-    METAOBJECT_COLOR_VALUE_KEY: string
-    METAOBJECT_COLORS_TYPE: string
-    PUBLIC_GOOGLE_GTM_ID: string
-    PUBLIC_SHOPIFY_INBOX_SHOP_ID: string
-    PUBLIC_STORE_DOMAIN: string
-    PUBLIC_STOREFRONT_API_TOKEN: string
-    WEAVERSE_API_KEY: string
-    WEAVERSE_HOST?: string
-    WEAVERSE_PROJECT_ID: string
-    WEAVERSE_PUBLIC_API_BASE?: string
+  interface RouterContextProvider {
+    weaverse: WeaverseClient
   }
 }
 

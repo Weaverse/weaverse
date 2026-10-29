@@ -1,6 +1,5 @@
 import { createServer, type Server, type ServerResponse } from 'node:http'
 import type { AddressInfo } from 'node:net'
-import { InMemoryCache } from '@shopify/hydrogen'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const spyOn = vi.spyOn
@@ -8,6 +7,7 @@ const mock = vi.fn
 
 import type { HydrogenComponent, HydrogenThemeSchema } from '../src/types'
 import { WeaverseClient } from '../src/weaverse-client'
+import { createMemoryCache } from './memory-cache'
 
 // Test error message patterns
 const INVALID_FORMAT_ERROR = /Invalid format/
@@ -287,11 +287,8 @@ describe('WeaverseClient Multi-Project Architecture', () => {
         themeSchema: mockThemeSchema,
         projectId: 'project-abc',
       })
-      let fetchWithCache = mock(async () => ({
-        data: { ok: true },
-        response: new Response('{}'),
-      }))
-      weaverse.withCache.fetch = fetchWithCache
+      let fetchWithCache = mock(async () => Response.json({ ok: true }))
+      ;(weaverse as any).cachedFetch = fetchWithCache
 
       await weaverse.fetchWithCache(
         'https://studio.weaverse.io/api/public/project',
@@ -302,9 +299,8 @@ describe('WeaverseClient Multi-Project Architecture', () => {
         }
       )
 
-      expect(fetchWithCache.mock.calls[0][2].cacheStrategy).toMatchObject({
+      expect(fetchWithCache.mock.calls[0][2].strategy).toMatchObject({
         maxAge: 60,
-        sMaxAge: 300,
         staleWhileRevalidate: 86_400,
         staleIfError: 86_400,
       })
@@ -319,15 +315,11 @@ describe('WeaverseClient Multi-Project Architecture', () => {
       })
       let explicitStrategy = {
         maxAge: 1,
-        sMaxAge: 2,
         staleWhileRevalidate: 3,
         staleIfError: 4,
       }
-      let fetchWithCache = mock(async () => ({
-        data: { ok: true },
-        response: new Response('{}'),
-      }))
-      weaverse.withCache.fetch = fetchWithCache
+      let fetchWithCache = mock(async () => Response.json({ ok: true }))
+      ;(weaverse as any).cachedFetch = fetchWithCache
 
       await weaverse.fetchWithCache(
         'https://studio.weaverse.io/api/public/project',
@@ -337,9 +329,7 @@ describe('WeaverseClient Multi-Project Architecture', () => {
         }
       )
 
-      expect(fetchWithCache.mock.calls[0][2].cacheStrategy).toBe(
-        explicitStrategy
-      )
+      expect(fetchWithCache.mock.calls[0][2].strategy).toBe(explicitStrategy)
     })
 
     it('should bypass shared cache for revision previews', async () => {
@@ -352,15 +342,12 @@ describe('WeaverseClient Multi-Project Architecture', () => {
         themeSchema: mockThemeSchema,
         projectId: 'project-abc',
       })
-      let fetchWithCache = mock(async () => ({
-        data: { ok: true },
-        response: new Response('{}'),
-      }))
+      let fetchWithCache = mock(async () => Response.json({ ok: true }))
       let directFetch = mock(async () => ({
         data: { ok: true },
         response: new Response('{}'),
       }))
-      weaverse.withCache.fetch = fetchWithCache
+      ;(weaverse as any).cachedFetch = fetchWithCache
       ;(weaverse as any).directFetch = directFetch
 
       await weaverse.fetchWithCache(
@@ -385,15 +372,12 @@ describe('WeaverseClient Multi-Project Architecture', () => {
         components: mockComponents,
         themeSchema: mockThemeSchema,
       })
-      let fetchWithCache = mock(async () => ({
-        data: { ok: true },
-        response: new Response('{}'),
-      }))
+      let fetchWithCache = mock(async () => Response.json({ ok: true }))
       let directFetch = mock(async () => ({
         data: { ok: true },
         response: new Response('{}'),
       }))
-      weaverse.withCache.fetch = fetchWithCache
+      ;(weaverse as any).cachedFetch = fetchWithCache
       ;(weaverse as any).directFetch = directFetch
 
       await weaverse.fetchWithCache(
@@ -536,13 +520,9 @@ function createMockContext(overrides: any = {}): any {
       WEAVERSE_PROJECT_ID: 'env-project-default',
     },
     storefront: {
-      i18n: { language: 'EN', country: 'US' },
-      CacheCustom: (strategy: any) => strategy,
+      i18n: { language: 'EN', country: 'US', pathPrefix: '' },
     },
-    cache: {
-      put: mock(() => {}),
-      match: mock(() => {}),
-    },
+    cache: createMemoryCache(),
     waitUntil: () => {},
     request,
     ...overrides,
@@ -757,7 +737,7 @@ describe('loadThemeSettings merchant-overrides gating (issue #2291)', () => {
 
   describe('through the real Hydrogen cached fetch (issue #535)', () => {
     // A local origin stands in for a self-hosted WEAVERSE_HOST, which routes
-    // both requests through Hydrogen's `withCache` instead of direct fetch.
+    // both requests through Hydrogen's cached fetch instead of direct fetch.
     // With `stallOverrides`, the override response sends its headers and part
     // of the body, then never finishes.
     let server: Server
@@ -848,7 +828,7 @@ describe('loadThemeSettings merchant-overrides gating (issue #2291)', () => {
 
     it('settles on theme defaults when a cold override request stalls, without caching it', async () => {
       stallOverrides = true
-      let cache = new InMemoryCache()
+      let cache = createMemoryCache()
       let pending: Promise<unknown>[] = []
 
       let result = await makeCachedClient(cache, pending).loadThemeSettings()
@@ -868,7 +848,7 @@ describe('loadThemeSettings merchant-overrides gating (issue #2291)', () => {
     }, 5000)
 
     it('merges and caches overrides that arrive in time', async () => {
-      let cache = new InMemoryCache()
+      let cache = createMemoryCache()
       let pending: Promise<unknown>[] = []
 
       let first = await makeCachedClient(cache, pending).loadThemeSettings()
@@ -961,7 +941,7 @@ describe('loadThemeSettings storefront context', () => {
   // the theme-settings target must drop the body — otherwise every domain of
   // one project gets its own entry. Exercised through the REAL
   // `fetchWithCache` on a self-hosted `WEAVERSE_HOST`, which is the
-  // configuration that routes through Hydrogen's `withCache` instead of the
+  // configuration that routes through Hydrogen's cached fetch instead of the
   // external-proxy bypass.
   async function cacheKeyAndBody(requestUrl: string) {
     let client = new WeaverseClient({
@@ -976,16 +956,14 @@ describe('loadThemeSettings storefront context', () => {
       themeSchema: baseSchema,
     })
     let captured: { cacheKey?: unknown[]; body?: unknown } = {}
-    client.withCache = {
-      fetch: (
-        _url: string,
-        fetchOptions: RequestInit,
-        options: { cacheKey: unknown[] }
-      ) => {
-        captured = { cacheKey: options.cacheKey, body: fetchOptions.body }
-        return Promise.resolve({ data: { theme: {} } })
-      },
-    } as any
+    ;(client as any).cachedFetch = (
+      _url: string,
+      fetchOptions: RequestInit,
+      options: { key: unknown[] }
+    ) => {
+      captured = { cacheKey: options.key, body: fetchOptions.body }
+      return Promise.resolve(Response.json({ theme: {} }))
+    }
 
     await client.loadThemeSettings()
 
@@ -1032,16 +1010,14 @@ describe('loadThemeSettings storefront context', () => {
       themeSchema: baseSchema,
     })
     let keys: unknown[] = []
-    client.withCache = {
-      fetch: (
-        _url: string,
-        _fetchOptions: RequestInit,
-        options: { cacheKey: unknown[] }
-      ) => {
-        keys.push(options.cacheKey)
-        return Promise.resolve({ data: { theme: {} } })
-      },
-    } as any
+    ;(client as any).cachedFetch = (
+      _url: string,
+      _fetchOptions: RequestInit,
+      options: { key: unknown[] }
+    ) => {
+      keys.push(options.key)
+      return Promise.resolve(Response.json({ theme: {} }))
+    }
 
     await client.loadThemeSettings()
     await client.fetchWithCache(
@@ -1070,16 +1046,14 @@ describe('loadThemeSettings storefront context', () => {
       themeSchema: baseSchema,
     })
     let keys: unknown[] = []
-    client.withCache = {
-      fetch: (
-        _url: string,
-        _fetchOptions: RequestInit,
-        options: { cacheKey: unknown[] }
-      ) => {
-        keys.push(options.cacheKey)
-        return Promise.resolve({ data: { theme: {} } })
-      },
-    } as any
+    ;(client as any).cachedFetch = (
+      _url: string,
+      _fetchOptions: RequestInit,
+      options: { key: unknown[] }
+    ) => {
+      keys.push(options.key)
+      return Promise.resolve(Response.json({ theme: {} }))
+    }
 
     await client.loadThemeSettings()
     await client.fetchWithCache(
@@ -1112,16 +1086,14 @@ describe('loadThemeSettings storefront context', () => {
       themeSchema: baseSchema,
     })
     let keys: unknown[] = []
-    client.withCache = {
-      fetch: (
-        _url: string,
-        _fetchOptions: RequestInit,
-        options: { cacheKey: unknown[] }
-      ) => {
-        keys.push(options.cacheKey)
-        return Promise.resolve({ data: {} })
-      },
-    } as any
+    ;(client as any).cachedFetch = (
+      _url: string,
+      _fetchOptions: RequestInit,
+      options: { key: unknown[] }
+    ) => {
+      keys.push(options.key)
+      return Promise.resolve(Response.json({}))
+    }
 
     const url =
       'https://staging.self-hosted.example.com/api/public/project_configs'
@@ -1155,24 +1127,28 @@ describe('loadThemeSettings storefront context', () => {
       components: [],
       themeSchema: baseSchema,
     })
-    let shouldCacheResponse: ((response: unknown) => boolean) | undefined
-    // The stub only needs the two fields `fetchWithCache` reads back; the real
-    // `withCache` signature is far wider, so narrow through `unknown`.
-    client.withCache = {
-      fetch: (
-        _url: string,
-        _fetchOptions: RequestInit,
-        options: { shouldCacheResponse: (response: unknown) => boolean }
-      ) => {
-        shouldCacheResponse = options.shouldCacheResponse
-        return Promise.resolve({ data: { error: 'Forbidden' } })
-      },
-    } as unknown as typeof client.withCache
+    type ShouldCache = (context: {
+      text: () => Promise<string>
+    }) => Promise<boolean>
+    let shouldCacheResponse: ShouldCache | undefined
+    ;(client as any).cachedFetch = (
+      _url: string,
+      _fetchOptions: RequestInit,
+      options: { shouldCacheResponse: ShouldCache }
+    ) => {
+      shouldCacheResponse = options.shouldCacheResponse
+      return Promise.resolve(Response.json({ error: 'Forbidden' }))
+    }
+    let bodyOf = (payload: unknown) => ({
+      text: async () => JSON.stringify(payload),
+    })
 
     await client.loadThemeSettings()
 
     expect(shouldCacheResponse).toBeTypeOf('function')
-    expect(shouldCacheResponse?.({ error: 'Forbidden' })).toBe(false)
-    expect(shouldCacheResponse?.({ theme: {} })).toBe(true)
+    expect(await shouldCacheResponse?.(bodyOf({ error: 'Forbidden' }))).toBe(
+      false
+    )
+    expect(await shouldCacheResponse?.(bodyOf({ theme: {} }))).toBe(true)
   })
 })

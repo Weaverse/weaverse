@@ -5,8 +5,10 @@
  * @packageDocumentation
  */
 
-import { getSelectedProductOptions as hydrogen_getSelectedProductOptions } from '@shopify/hydrogen'
-import type { SelectedOptionInput } from '@shopify/hydrogen/storefront-api-types'
+import {
+  getSelectedProductOptions as hydrogen_getSelectedProductOptions,
+  type SelectedOption,
+} from '@shopify/hydrogen'
 import {
   isBrowser,
   isIframe,
@@ -31,10 +33,10 @@ import {
  * }
  * ```
  */
-export function getSelectedProductOptions(
-  request: Request
-): SelectedOptionInput[] {
-  let options = hydrogen_getSelectedProductOptions(request)
+export function getSelectedProductOptions(request: Request): SelectedOption[] {
+  let options = hydrogen_getSelectedProductOptions({
+    searchParams: new URL(request.url).searchParams,
+  })
   return options.filter(
     ({ name }) => name !== 'isDesignMode' && !name.startsWith('weaverse')
   )

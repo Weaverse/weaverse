@@ -1,4 +1,3 @@
-import { InMemoryCache } from '@shopify/hydrogen'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   type HydrogenThemeSchema,
@@ -6,6 +5,7 @@ import {
   type WeaverseLoadError,
 } from '../src/types'
 import { WeaverseClient } from '../src/weaverse-client'
+import { createMemoryCache } from './memory-cache'
 
 /**
  * Page and theme loads through both request paths the client chooses
@@ -99,7 +99,7 @@ function makeClient(
   opts: {
     throwPageLoadFailures?: boolean
     url?: string
-    cache?: Cache
+    cache?: ReturnType<typeof createMemoryCache>
   } = {}
 ) {
   return new WeaverseClient({
@@ -109,8 +109,8 @@ function makeClient(
       WEAVERSE_HOST: path === 'direct' ? 'https://studio.weaverse.io' : ORIGIN,
       WEAVERSE_PUBLIC_API_BASE: ORIGIN,
     },
-    storefront: { i18n: { language: 'EN', country: 'US' } },
-    cache: opts.cache ?? new InMemoryCache(),
+    storefront: { i18n: { language: 'EN', country: 'US', pathPrefix: '' } },
+    cache: opts.cache ?? createMemoryCache(),
     waitUntil: () => {},
     request: new Request(opts.url ?? 'https://shop.test/'),
     components: [],
@@ -224,7 +224,7 @@ describe('loadPage failure classification (opt-in)', () => {
   })
 
   it('should_not_report_an_outage_when_the_cache_itself_fails', async () => {
-    let brokenCache = new InMemoryCache()
+    let brokenCache = createMemoryCache()
     brokenCache.match = () => Promise.reject(new Error('cache read failed'))
     reply({ status: 200, body: VALID_PAGE })
     let client = makeClient('cached', {
@@ -292,7 +292,7 @@ describe('loadPage failure classification (opt-in)', () => {
   })
 
   it('should_not_cache_an_invalid_body_when_requests_go_through_hydrogen', async () => {
-    let cache = new InMemoryCache()
+    let cache = createMemoryCache()
     reply({ status: 200, body: '{}' }, { status: 200, body: VALID_PAGE })
     await loadFailure(
       makeClient('cached', { throwPageLoadFailures: true, cache })
@@ -378,7 +378,7 @@ describe('loadThemeSettings envelope validation', () => {
   })
 
   it('should_not_cache_an_invalid_theme_body_when_requests_go_through_hydrogen', async () => {
-    let cache = new InMemoryCache()
+    let cache = createMemoryCache()
     reply(
       { status: 200, body: '{}' },
       { status: 200, body: '{"theme":{"logoText":"Merchant"}}' }

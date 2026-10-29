@@ -99,28 +99,49 @@ npm install @weaverse/hydrogen
 
 ### Weaverse Client Setup
 
-Initialize the Weaverse Client to establish a connection between your Hydrogen project and Weaverse CMS:
+`@weaverse/hydrogen` 6 requires `@shopify/hydrogen` 2026.10 or later, wired
+through React Router middleware (`future.v8_middleware`). Hydrogen 2026.4 and
+earlier use `@weaverse/hydrogen` 5.
+
+Create one client per request from the request-scoped Storefront API client and
+expose it to loaders as `context.weaverse`:
 
 ```typescript
-// <root>/server.ts
+// <root>/app/root.tsx
 
-import { createWeaverseClient } from '~/weaverse/create-weaverse.server'
+import { WeaverseClient } from '@weaverse/hydrogen'
+import { components } from '~/weaverse/components'
+import { themeSchema } from '~/weaverse/schema.server'
 
-const handleRequest = createRequestHandler({
-  // ...
-  getLoadContext: () => ({
-    // Injecting the Weaverse client into the loader context.
-    weaverse: createWeaverseClient({
-      storefront,
+export const middleware: Route.MiddlewareFunction[] = [
+  async ({ context, request }, next) => {
+    const env = context.get(envContext)
+    const storefront = createRequestStorefrontClient(
       request,
       env,
-      cache,
-      waitUntil,
-    }),
-    // ... more app context properties
-  }),
-})
+      context.cache,
+      context.waitUntil
+    )
+    // ...handleShopifyRoutes, storefront contexts
+
+    context.weaverse = new WeaverseClient({
+      request,
+      storefront,
+      env,
+      cache: context.cache,
+      waitUntil: context.waitUntil,
+      components,
+      themeSchema,
+    })
+
+    return next()
+  },
+]
 ```
+
+`storefront.i18n` selects the content locale, including its `pathPrefix`.
+Section loaders receive the same client as `weaverse`, so they query the
+Storefront API with `weaverse.storefront.graphql(QUERY, { variables, cache })`.
 
 ### Data Fetching and Rendering
 
@@ -129,17 +150,16 @@ Use the Weaverse Client to fetch data such as page content and global theme sett
 ```typescript
 // <root>/app/routes/($locale)._index.tsx
 
-import { json } from '@shopify/remix-oxygen'
 import { type RouteLoaderArgs } from '@weaverse/hydrogen'
 
 export async function loader({ context }: RouteLoaderArgs) {
   let { weaverse } = context
 
-  return json({
+  return {
     // The key prop for a Weaverse page must always be `weaverseData`
     weaverseData: await weaverse.loadPage(),
     // Additional page data...
-  })
+  }
 }
 ```
 
