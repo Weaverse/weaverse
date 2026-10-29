@@ -24,7 +24,7 @@ provides a client for easy setup and data fetching from Weaverse CMS.
 `WeaverseImage` supports optional metadata for each image input/usage:
 
 ```ts
-import type { WeaverseImage } from '@weaverse/hydrogen'
+import type { WeaverseImage } from '@weaverse/hydrogen/react-router'
 
 let heroImage: WeaverseImage = {
   id: 'hero-image',
@@ -109,7 +109,7 @@ expose it to loaders as `context.weaverse`:
 ```typescript
 // <root>/app/root.tsx
 
-import { WeaverseClient } from '@weaverse/hydrogen'
+import { WeaverseClient } from '@weaverse/hydrogen/react-router'
 import { components } from '~/weaverse/components'
 import { themeSchema } from '~/weaverse/schema.server'
 
@@ -150,7 +150,7 @@ Use the Weaverse Client to fetch data such as page content and global theme sett
 ```typescript
 // <root>/app/routes/($locale)._index.tsx
 
-import { type RouteLoaderArgs } from '@weaverse/hydrogen'
+import { type RouteLoaderArgs } from '@weaverse/hydrogen/react-router'
 
 export async function loader({ context }: RouteLoaderArgs) {
   let { weaverse } = context
@@ -168,7 +168,7 @@ Implement the `WeaverseHydrogenRoot` component to render the fetched content:
 ```jsx
 // <root>/app/weaverse/index.tsx
 
-import { WeaverseHydrogenRoot } from '@weaverse/hydrogen'
+import { WeaverseHydrogenRoot } from '@weaverse/hydrogen/react-router'
 import { GenericError } from '~/components/GenericError'
 import { components } from './components'
 
@@ -197,7 +197,7 @@ and when the Weaverse API could not answer, so a route can only answer 404.
 Create the client with `throwPageLoadFailures: true` to tell them apart:
 
 ```typescript
-import { WeaverseLoadError } from '@weaverse/hydrogen'
+import { WeaverseLoadError } from '@weaverse/hydrogen/react-router'
 
 new WeaverseClient({ ...args, components, themeSchema, throwPageLoadFailures: true })
 
@@ -229,7 +229,7 @@ Define your component's schema to control its behavior and interactivity within 
 
 ```tsx
 // app/sections/Hero.tsx
-import { createSchema } from '@weaverse/hydrogen'
+import { createSchema } from '@weaverse/hydrogen/react-router'
 
 export type HeroProps = {
   heading: string
@@ -310,7 +310,7 @@ Serve different content per country domain without changing any route files:
 
 ```typescript
 // app/weaverse/create-weaverse.server.ts
-import { WeaverseClient } from '@weaverse/hydrogen'
+import { WeaverseClient } from '@weaverse/hydrogen/react-router'
 
 const PROJECT_MAP = {
   'mystore.se': process.env.WEAVERSE_PROJECT_SWEDEN!,
