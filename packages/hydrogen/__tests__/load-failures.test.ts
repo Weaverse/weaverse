@@ -223,7 +223,9 @@ describe('loadPage failure classification (opt-in)', () => {
     expect((error as WeaverseLoadError)?.kind).toBe('unavailable')
   })
 
-  it('should_not_report_an_outage_when_the_cache_itself_fails', async () => {
+  it('should_load_the_page_when_the_cache_itself_fails', async () => {
+    // Hydrogen 2026.10 treats a failed cache read as a miss and fetches the
+    // page, so a broken cache is neither an outage nor a failed load.
     let brokenCache = createMemoryCache()
     brokenCache.match = () => Promise.reject(new Error('cache read failed'))
     reply({ status: 200, body: VALID_PAGE })
@@ -232,9 +234,9 @@ describe('loadPage failure classification (opt-in)', () => {
       cache: brokenCache,
     })
 
-    let error = await loadFailure(client)
+    let result = await client.loadPage({ type: 'INDEX' })
 
-    expect((error as WeaverseLoadError)?.kind).toBe('invalid-response')
+    expect(result?.page.id).toBe('page-1')
   })
 
   it('should_keep_the_platform_error_when_a_third_party_cached_request_fails', async () => {

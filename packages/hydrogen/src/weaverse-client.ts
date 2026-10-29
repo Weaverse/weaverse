@@ -4,16 +4,16 @@ import type {
   CustomPageEntry,
   FetchProjectPayload,
   FetchProjectRequestBody,
-  HydrogenComponentData,
-  HydrogenPageData,
   LoadPageParams,
   PageType,
   ProjectIdValidationResult,
   WeaverseClientArgs,
   WeaverseComponent,
+  WeaverseComponentData,
   WeaverseEnv,
   WeaverseI18n,
   WeaverseLoaderData,
+  WeaversePageData,
   WeaverseProjectConfigs,
   WeaverseStudioQueries,
   WeaverseThemeSettingsResponse,
@@ -1100,9 +1100,9 @@ export class WeaverseClient {
    * Used internally when API returns no page or when page needs default content.
    *
    * @param message - Custom message to display in the fallback page
-   * @returns HydrogenPageData with single main component containing the message
+   * @returns WeaversePageData with single main component containing the message
    */
-  generateFallbackPage = (message: string): HydrogenPageData => {
+  generateFallbackPage = (message: string): WeaversePageData => {
     const rootId = crypto.randomUUID()
     return {
       id: `fallback_page_${Date.now()}`,
@@ -1312,7 +1312,7 @@ export class WeaverseClient {
 
       // Extract what we can; a legacy-mode malformed body may lack any field.
       const responseData = projectData as Partial<FetchProjectPayload> | null
-      let page: HydrogenPageData | undefined = responseData?.page ?? undefined
+      let page: WeaversePageData | undefined = responseData?.page ?? undefined
       let project: WeaverseLoaderData['project'] | undefined =
         responseData?.project
       const pageAssignment: WeaverseLoaderData['pageAssignment'] | undefined =
@@ -1402,7 +1402,7 @@ export class WeaverseClient {
   }
 
   /** Executes the registered loader for one component and attaches its result. */
-  execComponentLoader = async (item: HydrogenComponentData) => {
+  execComponentLoader = async (item: WeaverseComponentData) => {
     const { data = {}, type, id } = item
     const component = this.componentsByType.get(type)
     const loader = component?.loader

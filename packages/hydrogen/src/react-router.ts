@@ -15,8 +15,26 @@ export {
 } from './hooks/translation-context'
 export * from './index'
 export * from './react'
-export { getWeaverseSeoMeta, type WeaverseSeoInput } from './seo'
-export type { RouteLoaderArgs } from './types'
+export {
+  getWeaverseSeoMeta,
+  type WeaverseSeoInput,
+  type WeaverseSeoPageContainer,
+} from './seo'
+export type {
+  CustomPageEntry,
+  FetchProjectRequestBody,
+  LoadPageParams,
+  ProjectIdValue,
+  RouteLoaderArgs,
+  WeaverseClientArgs,
+  WeaverseComponent,
+  WeaverseComponentLoaderArgs,
+  WeaverseEnv,
+  WeaverseRouteAppLoadContext,
+  WeaverseStorefront,
+  WeaverseStorefrontCallOptions,
+} from './types'
+export type { WeaverseDataValue } from './utils/pick-weaverse-data'
 export { getSelectedProductOptions } from './utils/product-options'
 export {
   useThemeSettings,

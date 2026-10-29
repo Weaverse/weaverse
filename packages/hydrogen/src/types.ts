@@ -88,15 +88,15 @@ export interface RouteLoaderArgs extends LoaderFunctionArgs {
 export type ComponentDataValue = string | number | boolean | undefined | null
 
 /** Reference to a direct child component instance. */
-export interface HydrogenChildComponentReference {
+export interface WeaverseChildComponentReference {
   /** Unique identifier of the child component instance. */
   id: string
 }
 
 /** Serialized component instance returned in a Weaverse page. */
-export interface HydrogenComponentData extends ElementData {
+export interface WeaverseComponentData extends ElementData {
   /** References to direct child component instances. */
-  children?: HydrogenChildComponentReference[]
+  children?: WeaverseChildComponentReference[]
   /** ISO timestamp recording when the component instance was created. */
   createdAt?: string
   /** Persisted component setting values and structured payloads. */
@@ -143,13 +143,13 @@ export type WeaverseLoaderRequestInfo = {
 }
 
 /** Published theme setting values keyed by schema setting name. */
-export type HydrogenThemeSettings = {
+export type WeaverseThemeSettings = {
   /** Published theme setting value keyed by schema setting name. */
   [key: string]: any
 }
 
 /** Project metadata returned with a Weaverse page payload. */
-export type HydrogenProjectType = {
+export type WeaverseProjectType = {
   /** Unique Weaverse project identifier. */
   id: string
   /** Identifier of the Shopify shop connected to the project. */
@@ -163,9 +163,9 @@ export type HydrogenProjectType = {
 /** Runtime services and project metadata exposed to Weaverse integrations. */
 export type WeaverseInternal = {
   /** Route assignment for the rendered Weaverse page. */
-  pageAssignment: HydrogenPageAssignment
+  pageAssignment: WeaversePageAssignment
   /** Metadata for the active Weaverse project. */
-  project: HydrogenProjectType
+  project: WeaverseProjectType
   /** React Router navigation function, attached in design mode. */
   navigate: NavigateFunction
   /** Revalidates the active React Router data routes. */
@@ -203,7 +203,7 @@ export type HydrogenElement = {
 export interface WeaverseHydrogenParams
   extends Omit<WeaverseCoreParams, 'ItemConstructor'> {
   /** Page content used to initialize component instances. */
-  data: HydrogenPageData
+  data: WeaversePageData
   /** Route loader data made available to component data bindings. */
   dataContext?: Record<string, unknown> | null
   /** Runtime services and metadata available to integrations. */
@@ -307,7 +307,7 @@ export type WeaverseProjectConfigs = {
 }
 
 /** Assignment describing which project page handles a storefront route. */
-export type HydrogenPageAssignment = {
+export type WeaversePageAssignment = {
   /** Project identifier owning the assigned page. */
   projectId: string
   /** Storefront page type matched by the assignment. */
@@ -327,7 +327,7 @@ export type HydrogenPageAssignment = {
   }
 }
 
-/** Complete payload returned by {@link WeaverseClient.loadPage}. */
+/** Complete payload returned by `WeaverseClient.loadPage()`. */
 export type WeaverseLoaderData = {
   /** Resolved runtime configuration and normalized request details. */
   configs: Omit<WeaverseProjectConfigs, 'publicEnv'> & {
@@ -335,21 +335,21 @@ export type WeaverseLoaderData = {
     requestInfo: WeaverseLoaderRequestInfo
   }
   /** Published page content to render. */
-  page: HydrogenPageData
+  page: WeaversePageData
   /** Metadata for the project supplying the page. */
-  project: HydrogenProjectType
+  project: WeaverseProjectType
   /** Route assignment that selected the page, when available. */
-  pageAssignment?: HydrogenPageAssignment
+  pageAssignment?: WeaversePageAssignment
 }
 
 /** Published Weaverse page content consumed by the Hydrogen renderer. */
-export interface HydrogenPageData extends WeaverseProjectDataType {
+export interface WeaversePageData extends WeaverseProjectDataType {
   /** Internal cache identifier attached by the content API when available. */
   __cacheId?: string
   /** Unique page identifier. */
   id: string
   /** Serialized component instances belonging to the page. */
-  items: HydrogenComponentData[]
+  items: WeaverseComponentData[]
   /** Human-readable page name. */
   name: string
   /**
@@ -458,11 +458,11 @@ export type FetchProjectRequestBody = {
 /** Project content response before it is normalized into loader data. */
 export type FetchProjectPayload = {
   /** Published or draft page content; absent when no page matches. */
-  page?: HydrogenPageData
+  page?: WeaversePageData
   /** Project metadata; absent in some error responses. */
-  project?: HydrogenProjectType
+  project?: WeaverseProjectType
   /** Assignment that selected the page, when one matched. */
-  pageAssignment?: HydrogenPageAssignment
+  pageAssignment?: WeaversePageAssignment
   /** API error message, when the request could not be fulfilled. */
   error?: string
   /** Additional fields returned by compatible API versions. */
@@ -639,8 +639,14 @@ export type WeaverseClientArgs = {
   throwPageLoadFailures?: boolean
 }
 
-/** Storefront API client accepted by {@link WeaverseClient}, with a per-call `cache` option. */
-export type WeaverseStorefront = StorefrontClient<{ cache?: CachingStrategy }>
+/** Per-call options the storefront client accepts in addition to Hydrogen's. */
+export type WeaverseStorefrontCallOptions = {
+  /** Caching strategy for this Storefront API request. */
+  cache?: CachingStrategy
+}
+
+/** Storefront API client accepted by `WeaverseClient`, with a per-call `cache` option. */
+export type WeaverseStorefront = StorefrontClient<WeaverseStorefrontCallOptions>
 
 /** Environment variables read by Weaverse, plus any other storefront variables. */
 export interface WeaverseEnv {
@@ -682,7 +688,7 @@ export type WithCacheFetchResponse<T> = {
 /** Theme configuration returned by the Weaverse project API. */
 export type WeaverseThemeSettingsResponse = {
   /** Published theme setting values. */
-  theme?: HydrogenThemeSettings
+  theme?: WeaverseThemeSettings
   /** Theme schema included for Studio editing. */
   schema?: WeaverseThemeSchema
   /** Storefront-safe environment values included in design mode. */
@@ -762,7 +768,7 @@ export type WeaverseLoadFailureKind =
   | 'configuration'
 
 /**
- * Error thrown by {@link WeaverseClient.loadPage} when the client is created
+ * Error thrown by `WeaverseClient.loadPage()` when the client is created
  * with `throwPageLoadFailures: true` and the page cannot be loaded.
  *
  * Genuine absence is not an error: a missing project still resolves to `null`
@@ -939,10 +945,10 @@ export type CreateHydrogenSchemaOptions = {
 }
 
 // Extended window interface for hydrogen-specific globals
+// `__weaverse`/`__weaverses` are typed where they are used: the Next.js
+// adapter declares the same globals with its own runtime type.
 declare global {
   interface Window {
-    __weaverse?: WeaverseHydrogen
-    __weaverses?: Record<string, WeaverseHydrogen>
     __weaverseThemeSettingsStore?: ThemeSettingsStore
   }
 }

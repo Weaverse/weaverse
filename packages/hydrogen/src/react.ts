@@ -13,4 +13,4 @@ export {
   useParentInstance,
   useWeaverse,
 } from '@weaverse/react'
-export type { WeaverseComponent, WeaverseComponentProps } from './types'
+export type { WeaverseComponentProps } from './types'

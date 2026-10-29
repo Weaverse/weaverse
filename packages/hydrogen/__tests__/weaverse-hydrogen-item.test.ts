@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type {
-  HydrogenPageData,
   WeaverseComponentSchema,
   WeaverseHydrogenParams,
+  WeaversePageData,
 } from '../src/types'
 import {
   registerComponent,
@@ -34,7 +34,7 @@ const ROOT_SCHEMA = {
   settings: [],
 } as unknown as WeaverseComponentSchema
 
-function makePageData(itemData?: Record<string, unknown>): HydrogenPageData {
+function makePageData(itemData?: Record<string, unknown>): WeaversePageData {
   return {
     id: 'page-1',
     name: 'Page',
@@ -48,10 +48,10 @@ function makePageData(itemData?: Record<string, unknown>): HydrogenPageData {
         parentId: ROOT_ID,
       },
     ],
-  } as unknown as HydrogenPageData
+  } as unknown as WeaversePageData
 }
 
-function makePageDataWithoutItemData(): HydrogenPageData {
+function makePageDataWithoutItemData(): WeaversePageData {
   return makePageData()
 }
 

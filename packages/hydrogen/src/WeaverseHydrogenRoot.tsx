@@ -28,16 +28,16 @@ import {
 } from './hooks/translation-context'
 import { createWeaverseDataContext } from './hooks/use-weaverse-data-context'
 import type {
-  HydrogenComponentData,
   HydrogenElement,
-  HydrogenPageData,
-  HydrogenThemeSettings,
   TranslationChanges,
   TranslationEntry,
   TranslationItemEntry,
   TranslationMap,
+  WeaverseComponentData,
   WeaverseInternal,
   WeaverseLoaderRequestInfo,
+  WeaversePageData,
+  WeaverseThemeSettings,
 } from './internal'
 import type {
   WeaverseComponent,
@@ -91,7 +91,7 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
   private _snapshotTranslationRef: TranslationItemEntry | null = null
 
   /** Creates an item store from serialized component data and its owner. */
-  constructor(initialData: HydrogenComponentData, weaverse: WeaverseHydrogen) {
+  constructor(initialData: WeaverseComponentData, weaverse: WeaverseHydrogen) {
     super(initialData, weaverse)
     const { data, ...rest } = initialData
     if (!this.Element?.schema) {
@@ -231,7 +231,7 @@ export class WeaverseHydrogen extends Weaverse {
   /** Component item store constructor used by the core runtime. */
   declare ItemConstructor: typeof WeaverseHydrogenItem
   /** Current page content owned by the runtime. */
-  declare data: HydrogenPageData
+  declare data: WeaversePageData
   /** Component item stores indexed by instance ID. */
   declare static itemInstances: Map<string, WeaverseHydrogenItem>
   /** Registered component definitions indexed by component type. */
@@ -359,7 +359,7 @@ export class WeaverseHydrogen extends Weaverse {
   /**
    * Override setProjectData to re-extract translation sidecar from new page data.
    */
-  setProjectData = (data: HydrogenPageData) => {
+  setProjectData = (data: WeaversePageData) => {
     this.data = data
     this.extractTranslationSidecar()
     this.initProject()
@@ -371,8 +371,11 @@ function createWeaverseInstance(
 ): WeaverseHydrogen {
   const normalizedParams = normalizeRequestInfo(params)
   if (isBrowser) {
-    window.__weaverses = window.__weaverses || {}
-    const existing = window.__weaverses[normalizedParams.pageId]
+    const runtimeWindow = window as unknown as {
+      __weaverses?: Record<string, WeaverseHydrogen>
+    }
+    runtimeWindow.__weaverses = runtimeWindow.__weaverses || {}
+    const existing = runtimeWindow.__weaverses[normalizedParams.pageId]
     // Reuse the instance only while the browser stays on the same URL —
     // navigation to a different pathname/search builds a fresh instance.
     const isReused =
@@ -382,7 +385,7 @@ function createWeaverseInstance(
     const weaverse = isReused
       ? existing
       : new WeaverseHydrogen(normalizedParams)
-    window.__weaverses[normalizedParams.pageId] = weaverse
+    runtimeWindow.__weaverses[normalizedParams.pageId] = weaverse
     if (weaverse.isDesignMode) {
       weaverse.requestInfo = normalizedParams.requestInfo
       if (hasWeaverseStudio(window)) {
@@ -686,7 +689,7 @@ function useTranslationData(): {
  * }
  * ```
  */
-export function useThemeSettings<T = HydrogenThemeSettings>() {
+export function useThemeSettings<T = WeaverseThemeSettings>() {
   const themeSettingsStore = useThemeSettingsStore()
   const settings = useSafeExternalStore(
     themeSettingsStore.subscribe,

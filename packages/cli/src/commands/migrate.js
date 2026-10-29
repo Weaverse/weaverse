@@ -28,6 +28,12 @@ const RENAMES = [
   ['HydrogenComponent', 'WeaverseComponent'],
   ['ThemeSettingsResponse', 'WeaverseThemeSettingsResponse'],
   ['ComponentLoaderArgs', 'WeaverseComponentLoaderArgs'],
+  ['HydrogenComponentData', 'WeaverseComponentData'],
+  ['HydrogenPageData', 'WeaversePageData'],
+  ['HydrogenProjectType', 'WeaverseProjectType'],
+  ['HydrogenPageAssignment', 'WeaversePageAssignment'],
+  ['HydrogenThemeSettings', 'WeaverseThemeSettings'],
+  ['HydrogenChildComponentReference', 'WeaverseChildComponentReference'],
 ]
 
 const WEAVERSE_IMPORT_RE = /(['"])@weaverse\/(?:hydrogen|next)(?:\/[\w-]+)*\1/
