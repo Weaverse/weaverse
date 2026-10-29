@@ -112,7 +112,8 @@ export function getWeaverseConfigs(
     PUBLIC_STORE_DOMAIN,
     PUBLIC_STOREFRONT_API_TOKEN,
   } = env || {}
-  let envFromProcess = (typeof process !== 'undefined' && process.env) || {}
+  let envFromProcess: WeaverseEnv =
+    (typeof process !== 'undefined' && process.env) || {}
   let {
     weaverseProjectId,
     weaverseHost,
