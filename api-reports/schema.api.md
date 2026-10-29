@@ -511,6 +511,18 @@ export interface SimpleValidationResult<T = any> {
     success: boolean;
 }
 
+export declare const THEME_ELEMENT_ATTRIBUTE = "data-wv-theme-id";
+
+export interface ThemeElementProps {
+    'data-wv-theme-id': string;
+}
+
+export type ThemeOutline = {
+    header?: string[];
+    aside?: string[];
+    footer?: string[];
+} & Record<string, string[]>;
+
 export type ThemeRoutePageType = Exclude<PageType, '*' | 'CUSTOM'>;
 
 export type ThemeRoutes = Partial<Record<ThemeRoutePageType, string>>;
@@ -551,6 +563,10 @@ export declare function createSchemaTypeSafe(schema: SchemaTypeStrict): SchemaTy
 export declare function createValidatedComponentArray<T extends Record<string, any>>(components: T, options?: ComponentValidationOptions): T[keyof T][];
 
 export declare const devTools: SchemaDevTools;
+
+export declare function getThemeElementId(groupName: string): string;
+
+export declare function getThemeElementProps(groupName: string): ThemeElementProps;
 
 export declare const groupHelpers: {
     general: (inputs: (BasicInput | HeadingInput)[]) => InspectorGroup;
