@@ -106,7 +106,7 @@ export let promptForMissingOptions = async (argv, opts = {}) => {
           .map((opt) => `--${opt}`)
           .join(', ')}.\n` +
           'Pass them explicitly, e.g.:\n' +
-          '  npx @weaverse/cli@latest create --template=pilot --project-id=<your-project-id> --project-name=<folder>'
+          `  npx @weaverse/cli@latest create --template=${argv.template || 'pilot'} --project-id=<your-project-id> --project-name=<folder>`
       )
     }
     return { ...argv, 'project-name': defaultProjectName(argv.template) }

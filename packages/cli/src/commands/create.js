@@ -16,6 +16,7 @@ import {
   checkDirectoryExists,
   validateCommitHash,
   validateProjectName,
+  validateWritableDirectory,
 } from '../utils/validation.js'
 
 /**
@@ -56,6 +57,13 @@ export let createProject = async (argv) => {
   let nonInteractive = isNonInteractive(argv)
 
   try {
+    // The project folder goes in the current directory: fail before any
+    // prompt or Bun install when it can't be created there.
+    let writable = await validateWritableDirectory()
+    if (writable !== true) {
+      throw new Error(writable)
+    }
+
     // Get complete options, prompting only when interactive
     let options = await promptForMissingOptions(argv, { nonInteractive })
 
@@ -248,6 +256,7 @@ Options:
   --yes, -y             Non-interactive: never prompt; fail on missing required options
   --force, -f           Overwrite the target directory if it already exists
   --help                Show this help message
+  --version             Show the CLI version
 
 Non-interactive runs (no TTY, CI, or coding agents) never prompt: pass
 --template and --project-id explicitly, and the run fails fast if they're
