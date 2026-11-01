@@ -35,7 +35,7 @@ export const TEMPLATES = [
     defaultDownloadFolder: 'aspen-main',
     description:
       'A sophisticated Shopify Hydrogen theme designed for home furniture and interior design stores.',
-    demoUrl: 'https://weaverse-aspen-furniture.fly.dev',
+    demoUrl: 'https://aspen-shopify-hydrogen.weaverse.dev/',
     framework: 'hydrogen',
     packageManager: 'npm',
     devPort: 3456,
