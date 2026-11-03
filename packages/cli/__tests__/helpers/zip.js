@@ -13,8 +13,9 @@ const DOS_DATE = 33
 /**
  * Builds a stored (uncompressed) zip in memory, so tests can craft entries no
  * zip tool would write (traversal names, symlinks).
- * @param {Array<{ name: string, data?: string, symlink?: string }>} entries
- *   Names ending in `/` are directories; `symlink` makes a link to that target.
+ * @param {Array<{ name: string, data?: string, symlink?: string, noMode?: boolean }>} entries
+ *   Names ending in `/` are directories; `symlink` makes a link to that target;
+ *   `noMode` writes external attributes 0, as Java's ZipOutputStream does.
  * @returns {Buffer}
  */
 export let buildZip = (entries) => {
@@ -29,6 +30,9 @@ export let buildZip = (entries) => {
     let mode = isDir ? UNIX_DIR : UNIX_FILE
     if (entry.symlink) {
       mode = UNIX_SYMLINK
+    }
+    if (entry.noMode) {
+      mode = 0
     }
     let crc = crc32(data)
 

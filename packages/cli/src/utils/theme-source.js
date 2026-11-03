@@ -3,6 +3,7 @@ import path from 'node:path'
 import decompress from 'decompress'
 import fs from 'fs-extra'
 import nodeFetch from 'node-fetch'
+import yauzl from 'yauzl'
 
 /** Builder origin that serves `/api/public/theme-source`. */
 export const DEFAULT_API_BASE = 'https://studio.weaverse.io'
@@ -33,6 +34,22 @@ const PERMISSION_BITS = 0o777
 const DEFAULT_FILE_MODE = 0o644
 /** Port `shopify hydrogen dev` uses when its `--port` flag isn't set. */
 const HYDROGEN_DEV_PORT = 3000
+/** Bytes in a mebibyte. */
+const MB = 1_048_576
+const MAX_UNPACKED_MB = 500
+const MAX_ENTRIES = 20_000
+
+/**
+ * Caps on what a theme source zip may unpack to, checked from the central
+ * directory before anything is inflated (zip-bomb guard).
+ */
+export const ZIP_LIMITS = {
+  maxBytes: MAX_UNPACKED_MB * MB,
+  maxEntries: MAX_ENTRIES,
+}
+
+/** A zip over {@link ZIP_LIMITS}; its message reads after "too large: ". */
+class LimitError extends Error {}
 
 /**
  * The Builder origin to call: `--api-base`, then `WEAVERSE_BUILDER_URL`, then
@@ -199,7 +216,11 @@ export let planThemeSourceFiles = (entries) => {
     }
   }
 
-  let files = relevant.filter((entry) => entry.type === 'file')
+  // Folder entries written without mode bits (external attributes 0, e.g. by
+  // Java's ZipOutputStream) arrive as `file`; the trailing `/` marks them.
+  let files = relevant.filter(
+    (entry) => entry.type === 'file' && !entry.path.endsWith('/')
+  )
   if (files.length === 0) {
     throw new Error(
       "The theme source is empty or is not a valid zip. Contact the theme's partner."
@@ -226,18 +247,82 @@ export let planThemeSourceFiles = (entries) => {
 }
 
 /**
+ * Reads the zip's central directory and rejects archives that would unpack
+ * past the limits, before any entry is inflated into memory. Declared sizes
+ * are enforced while inflating by yauzl's `validateEntrySizes`.
+ * @param {Buffer} buffer - Zip bytes
+ * @param {{ maxBytes: number, maxEntries: number }} limits
+ * @returns {Promise<void>}
+ * @throws {Error} When the archive is unreadable or over a limit
+ */
+let checkZipLimits = (buffer, { maxBytes, maxEntries }) =>
+  new Promise((resolve, reject) => {
+    yauzl.fromBuffer(
+      buffer,
+      { lazyEntries: true, validateEntrySizes: true },
+      (openError, zip) => {
+        if (openError) {
+          reject(openError)
+          return
+        }
+        let fail = (error) => {
+          zip.close()
+          reject(error)
+        }
+        if (zip.entryCount > maxEntries) {
+          fail(
+            new LimitError(
+              `it has ${zip.entryCount} entries, more than the ${maxEntries} allowed`
+            )
+          )
+          return
+        }
+        let totalBytes = 0
+        zip.on('entry', (entry) => {
+          totalBytes += entry.uncompressedSize
+          if (totalBytes > maxBytes) {
+            fail(
+              new LimitError(
+                `it unpacks to more than ${maxBytes >= MB ? `${maxBytes / MB} MB` : `${maxBytes} bytes`}`
+              )
+            )
+            return
+          }
+          zip.readEntry()
+        })
+        zip.on('end', resolve)
+        zip.on('error', reject)
+        zip.readEntry()
+      }
+    )
+  })
+
+/**
  * Extracts a verified theme source zip into `outputPath`, writing only regular
  * files that resolve inside it. The directory must be empty or absent; if
  * extraction fails, everything written is removed again.
  * @param {Buffer} buffer - Verified zip bytes
  * @param {string} outputPath - Project directory
+ * @param {Object} [options]
+ * @param {{ maxBytes: number, maxEntries: number }} [options.limits] -
+ *   Unpacked size and entry count caps (default {@link ZIP_LIMITS})
  * @returns {Promise<number>} The number of files written
  */
-export let extractThemeSource = async (buffer, outputPath) => {
+export let extractThemeSource = async (
+  buffer,
+  outputPath,
+  { limits = ZIP_LIMITS } = {}
+) => {
   let entries
   try {
+    await checkZipLimits(buffer, limits)
     entries = await decompress(buffer)
   } catch (error) {
+    if (error instanceof LimitError) {
+      throw new Error(
+        `The theme source is too large: ${error.message}. Nothing was extracted. Contact the theme's partner.`
+      )
+    }
     throw new Error(
       `The theme source could not be unpacked: ${error.message}. Nothing was extracted. Contact the theme's partner.`
     )

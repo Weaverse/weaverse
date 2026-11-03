@@ -24,7 +24,8 @@ A shop with a license for a partner theme copies `npx @weaverse/cli@latest creat
     Other statuses and network failures print the HTTP status or the unreachable origin.
 - **Download:** the zip is held in memory and checked against `sha256` before anything is written. A mismatch aborts with nothing on disk.
 - **Extraction:** the whole zip is rejected, with nothing written, when any entry is a symlink or hard link, or has an absolute path, a drive letter, a backslash or a `..` segment. Every write is checked to resolve inside the project folder.
-  - Layout: a root `package.json` means the project is at the zip root. Otherwise, when every nested entry shares one top-level folder, that folder becomes the project root and loose root-level files beside it are skipped. `__MACOSX/` entries are ignored.
+  - Size: before anything is inflated, the central directory is read and the zip is rejected, with nothing written, when it declares more than 20,000 entries or more than 500 MB unpacked in total. Declared sizes are enforced while inflating.
+  - Layout: a root `package.json` means the project is at the zip root. Otherwise, when every nested entry shares one top-level folder, that folder becomes the project root and loose root-level files beside it are skipped. `__MACOSX/` entries are ignored. Any entry whose name ends in `/` is a folder, even when the zip stores no mode bits for it.
   - A failure during extraction removes what was written.
 - **Folder:** `--project-name`, else the theme handle. A non-empty folder needs `--force` (non-interactive) or a confirmation prompt, as in the template flow. A `--project-name` folder is checked before the pass is spent; the handle folder only after, because the handle comes from the response. The folder is emptied only after the download is verified.
 - **Post-steps:** reuse the template flow.
@@ -51,5 +52,5 @@ A shop with a license for a partner theme copies `npx @weaverse/cli@latest creat
 
 ## Verification
 
-- `__tests__/theme-source.test.js` with mocked `fetch` and in-memory zips (`__tests__/helpers/zip.js`): origin precedence, request shape, every error code, malformed success body, network failure, checksum match and mismatch, root and single-folder layout, `__MACOSX` and loose files, unsafe paths, symlinks, extraction cleanup, setup detection, and the end-to-end flow (success, mismatch, flag conflict, non-empty folder).
+- `__tests__/theme-source.test.js` with mocked `fetch` and in-memory zips (`__tests__/helpers/zip.js`): origin precedence, request shape, every error code, malformed success body, network failure, checksum match and mismatch, root and single-folder layout, `__MACOSX` and loose files, folder entries without mode bits, unsafe paths, symlinks, the entry-count and unpacked-size limits (with small injected limits), extraction cleanup, setup detection, and the end-to-end flow (success, mismatch, flag conflict, non-empty folder).
 - A local run of the CLI against a stub Builder server: success with `.env`, a `used_pass` error and the `--template` conflict.

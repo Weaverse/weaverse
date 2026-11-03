@@ -15,6 +15,7 @@ import {
   requestThemeSource,
   resolveApiBase,
   THEME_SOURCE_ERRORS,
+  ZIP_LIMITS,
 } from '../src/utils/theme-source.js'
 import { buildZip } from './helpers/zip.js'
 
@@ -28,6 +29,8 @@ const UNREACHABLE_ERROR = /Could not reach Weaverse at https:\/\/builder\.test/
 const HTTP_500_ERROR = /HTTP 500/
 const COMBINED_FLAGS_ERROR = /cannot be combined with --template/
 const FORCE_HINT_ERROR = /--force/
+const TOO_MANY_ENTRIES_ERROR = /too large: it has 3 entries, more than the 2/
+const TOO_LARGE_ERROR = /too large: it unpacks to more than/
 
 let sha256 = (buffer) => createHash('sha256').update(buffer).digest('hex')
 
@@ -359,6 +362,60 @@ describe('extractThemeSource', () => {
 
     // Assert
     await expect(extraction).rejects.toThrow(UNPACK_ERROR)
+    expect(await fs.readdir(workDir)).toEqual([])
+  })
+
+  it('should_create_folders_when_folder_entries_have_no_mode_bits', async () => {
+    // Arrange
+    let zip = buildZip([
+      { name: 'theme/', noMode: true },
+      { name: 'theme/package.json', data: '{}' },
+      { name: 'theme/app/', noMode: true },
+      { name: 'theme/app/root.tsx', data: 'export {}' },
+    ])
+    let outputPath = path.join(workDir, 'aurora')
+
+    // Act
+    await extractThemeSource(zip, outputPath)
+
+    // Assert
+    expect(
+      await fs.readFile(path.join(outputPath, 'app/root.tsx'), 'utf8')
+    ).toBe('export {}')
+  })
+
+  it('should_write_nothing_when_the_zip_has_too_many_entries', async () => {
+    // Arrange
+    let zip = buildZip([
+      { name: 'package.json', data: '{}' },
+      { name: 'a.txt', data: 'a' },
+      { name: 'b.txt', data: 'b' },
+    ])
+    let outputPath = path.join(workDir, 'aurora')
+    let limits = { maxBytes: ZIP_LIMITS.maxBytes, maxEntries: 2 }
+
+    // Act
+    let extraction = extractThemeSource(zip, outputPath, { limits })
+
+    // Assert
+    await expect(extraction).rejects.toThrow(TOO_MANY_ENTRIES_ERROR)
+    expect(await fs.readdir(workDir)).toEqual([])
+  })
+
+  it('should_write_nothing_when_the_zip_unpacks_past_the_size_limit', async () => {
+    // Arrange
+    let zip = buildZip([
+      { name: 'package.json', data: '{}' },
+      { name: 'big.txt', data: 'x'.repeat(64) },
+    ])
+    let outputPath = path.join(workDir, 'aurora')
+    let limits = { maxBytes: 32, maxEntries: ZIP_LIMITS.maxEntries }
+
+    // Act
+    let extraction = extractThemeSource(zip, outputPath, { limits })
+
+    // Assert
+    await expect(extraction).rejects.toThrow(TOO_LARGE_ERROR)
     expect(await fs.readdir(workDir)).toEqual([])
   })
 })
