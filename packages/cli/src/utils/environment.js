@@ -21,8 +21,11 @@ export let createEnvFile = async (
 ) => {
   let spinner = ora('Setting up environment variables...').start()
   try {
+    // Partner theme sources may ship without an .env.example: start empty.
     let envExamplePath = `${path}/.env.example`
-    let envExampleContent = await fs.readFile(envExamplePath, 'utf-8')
+    let envExampleContent = (await fs.pathExists(envExamplePath))
+      ? await fs.readFile(envExamplePath, 'utf-8')
+      : ''
 
     // Replace existing WEAVERSE_PROJECT_ID or add it if it doesn't exist
     let envContent
