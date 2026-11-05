@@ -28,8 +28,10 @@ A shop with a license for a partner theme copies `npx @weaverse/cli@latest creat
   - Layout: a root `package.json` means the project is at the zip root. Otherwise, when every nested entry shares one top-level folder, that folder becomes the project root and loose root-level files beside it are skipped. `__MACOSX/` entries are ignored. Any entry whose name ends in `/` is a folder, even when the zip stores no mode bits for it.
   - A failure during extraction removes what was written.
 - **Folder:** `--project-name`, else the theme handle. A non-empty folder needs `--force` (non-interactive) or a confirmation prompt, as in the template flow. A `--project-name` folder is checked before the pass is spent; the handle folder only after, because the handle comes from the response. The folder is emptied only after the download is verified.
+- **Project ID:** `--project-id` (validated like the template flow) is checked before the pass is spent. Without it, an interactive run asks for it before the request (an empty answer skips it); a non-interactive run goes on without one. Builder's dashboard command includes `--project-id` when the merchant picked or just created a project.
 - **Post-steps:** reuse the template flow.
-  - `.env`: written from `.env.example` (or from scratch when there is none) with `WEAVERSE_PROJECT_ID` and a generated `SESSION_SECRET`, only when `--project-id` is given. Otherwise the CLI prints how to set it.
+  - `.env`: always written from `.env.example` (or from scratch when there is none) with a generated `SESSION_SECRET`, and `WEAVERSE_PROJECT_ID` when there is a project ID. Without one, `WEAVERSE_PROJECT_ID` stays as `.env.example` has it and the next steps say to set it.
+  - Next steps: a partner theme's `.env.example` may have no demo store, so the steps list connecting the Shopify store (`npx shopify hydrogen env pull` or the Headless channel) before `dev`, instead of the template flow's "the demo store works out of the box".
   - Install and dev: `--no-install`, `--dev`/`--no-dev` and the prompts work as in the template flow. The package manager is Bun when the source ships `bun.lock`/`bun.lockb` (with the same Bun check), npm otherwise. The printed dev port comes from `--port` in the `dev` script, else 3000.
 - **Non-goals:** storing the pass, retries, resuming a spent pass, Page Templates, theme release selection (the pass is bound to the live revision by Builder).
 - **Release:** this must not be published to npm until Builder's `/api/public/theme-source` is live.
@@ -40,7 +42,8 @@ A shop with a license for a partner theme copies `npx @weaverse/cli@latest creat
 - Each error code prints its message and exits 1; a used or expired pass points to the dashboard.
 - A checksum mismatch, a symlink entry or a traversal entry aborts with no project folder left behind and nothing written outside it.
 - Root and single-folder zips both land at the project root.
-- `--pass` with `--template`, or with a non-empty `--project-name` folder and no `--force`, fails without calling Builder.
+- `--pass` with `--template`, an invalid `--project-id`, or a non-empty `--project-name` folder and no `--force`, fails without calling Builder.
+- An interactive run without `--project-id` asks for it before calling Builder and writes the answer to `.env`; a run without any project ID still writes `.env` with a generated `SESSION_SECRET`.
 - Template runs behave exactly as before.
 
 ## Approach
@@ -48,9 +51,10 @@ A shop with a license for a partner theme copies `npx @weaverse/cli@latest creat
 - `src/utils/theme-source.js`: `resolveApiBase`, `requestThemeSource`, `downloadThemeSource` (SHA-256 check), `planThemeSourceFiles` (pure entry validation and layout), `extractThemeSource` (writes the plan via `decompress` without its own writer), `detectThemeSetup`.
 - `src/commands/create-from-pass.js`: the flow above; `create.js` dispatches to it when `--pass` is present.
 - `src/utils/project-setup.js`: the overwrite confirmation, package-manager check and install/dev steps, moved out of `create.js` so both flows share them.
-- `createEnvFile` tolerates a missing `.env.example`.
+- `createEnvFile` tolerates a missing `.env.example` and a missing project ID.
+- `getNextSteps` has a partner-theme branch (`template.partnerTheme`).
 
 ## Verification
 
 - `__tests__/theme-source.test.js` with mocked `fetch` and in-memory zips (`__tests__/helpers/zip.js`): origin precedence, request shape, every error code, malformed success body, network failure, checksum match and mismatch, root and single-folder layout, `__MACOSX` and loose files, folder entries without mode bits, unsafe paths, symlinks, the entry-count and unpacked-size limits (with small injected limits), extraction cleanup, setup detection, and the end-to-end flow (success, mismatch, flag conflict, non-empty folder).
-- A local run of the CLI against a stub Builder server: success with `.env`, a `used_pass` error and the `--template` conflict.
+- A local run of the CLI against a stub Builder server: success with `.env`, a `used_pass` error and the `--template` conflict; an interactive run in a terminal answering the project ID prompt.

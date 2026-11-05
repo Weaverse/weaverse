@@ -23,7 +23,8 @@ export let getDevCommand = (template) => `${template.packageManager} run dev`
 /**
  * The next-step lines printed after a project is created.
  * @param {string} projectName - The project folder name
- * @param {Object} template - Template configuration object
+ * @param {Object} template - Template configuration object; a licensed
+ *   partner theme (`--pass`) carries `partnerTheme: { hasProjectId }`
  * @param {Object} [options]
  * @param {boolean} [options.installed=true] - Whether dependencies are installed
  * @returns {string[]} Lines to print, in order
@@ -36,6 +37,30 @@ export let getNextSteps = (
   let steps = [`cd ${projectName}`]
   if (!installed) {
     steps.push(`${template.packageManager} install`)
+  }
+
+  if (template.partnerTheme) {
+    // A partner theme's .env.example may have no demo store, so connecting a
+    // store comes before the first run, not "later".
+    if (!template.partnerTheme.hasProjectId) {
+      steps.push(
+        'Set WEAVERSE_PROJECT_ID in .env to your Weaverse project ID (Weaverse dashboard → your project)'
+      )
+    }
+    steps.push(
+      'Connect your Shopify store (see below)',
+      getDevCommand(template),
+      `Open http://localhost:${template.devPort} and connect it in Weaverse Studio`
+    )
+    return [
+      ...steps.map((step, index) => `${index + 1}. ${step}`),
+      '',
+      'To connect your Shopify store:',
+      '- Store on a Shopify plan: install the Hydrogen sales channel (https://apps.shopify.com/hydrogen),',
+      '  create a Hydrogen storefront, then run: npx shopify hydrogen env pull',
+      '- Development store: install the Headless sales channel (https://apps.shopify.com/headless)',
+      '  and copy the Storefront API values into .env',
+    ]
   }
 
   if (template.framework === 'nextjs') {

@@ -31,6 +31,10 @@ const COMBINED_FLAGS_ERROR = /cannot be combined with --template/
 const FORCE_HINT_ERROR = /--force/
 const TOO_MANY_ENTRIES_ERROR = /too large: it has 3 entries, more than the 2/
 const TOO_LARGE_ERROR = /too large: it unpacks to more than/
+const PROJECT_ID_ERROR = /only contain lowercase letters/
+const PLACEHOLDER_SECRET = 'SESSION_SECRET="foobar"'
+const EMPTY_PROJECT_ID_LINE = /^WEAVERSE_PROJECT_ID=$/m
+const GENERATED_SECRET_LINE = /^SESSION_SECRET="[0-9a-f]{64}"$/m
 
 let sha256 = (buffer) => createHash('sha256').update(buffer).digest('hex')
 
@@ -495,6 +499,72 @@ describe('createProjectFromPass', () => {
     expect(await fs.readFile('aurora/.env', 'utf8')).toContain(
       'WEAVERSE_PROJECT_ID=proj-1'
     )
+  })
+
+  it('should_ask_for_the_project_id_before_spending_the_pass_when_interactive', async () => {
+    // Arrange
+    let zip = buildZip([
+      { name: 'package.json', data: '{"name":"aurora"}' },
+      { name: '.env.example', data: 'WEAVERSE_PROJECT_ID=\n' },
+    ])
+    let fetch = mockFetch(zip)
+    let fetchCallsWhenAsked = null
+    let prompt = vi.fn(() => {
+      fetchCallsWhenAsked = fetch.mock.calls.length
+      return Promise.resolve({ projectId: 'proj-2' })
+    })
+
+    // Act
+    await createProjectFromPass(
+      { pass: 'p4ss', install: false },
+      { nonInteractive: false, fetch, prompt }
+    )
+
+    // Assert
+    expect({
+      fetchCallsWhenAsked,
+      env: await fs.readFile('aurora/.env', 'utf8'),
+    }).toEqual({
+      fetchCallsWhenAsked: 0,
+      env: expect.stringContaining('WEAVERSE_PROJECT_ID=proj-2'),
+    })
+  })
+
+  it('should_write_a_real_session_secret_when_no_project_id_is_given', async () => {
+    // Arrange
+    let zip = buildZip([
+      { name: 'package.json', data: '{"name":"aurora"}' },
+      {
+        name: '.env.example',
+        data: `WEAVERSE_PROJECT_ID=\n${PLACEHOLDER_SECRET}\n`,
+      },
+    ])
+
+    // Act
+    await createProjectFromPass(
+      { pass: 'p4ss', install: false },
+      { nonInteractive: true, fetch: mockFetch(zip) }
+    )
+
+    // Assert
+    let env = await fs.readFile('aurora/.env', 'utf8')
+    expect(env).toMatch(EMPTY_PROJECT_ID_LINE)
+    expect(env).toMatch(GENERATED_SECRET_LINE)
+  })
+
+  it('should_not_spend_the_pass_when_the_project_id_is_invalid', async () => {
+    // Arrange
+    let fetch = vi.fn()
+
+    // Act
+    let creation = createProjectFromPass(
+      { pass: 'p4ss', 'project-id': 'Not Valid' },
+      { nonInteractive: true, fetch }
+    )
+
+    // Assert
+    await expect(creation).rejects.toThrow(PROJECT_ID_ERROR)
+    expect(fetch).not.toHaveBeenCalled()
   })
 
   it('should_leave_no_folder_when_the_sha256_does_not_match', async () => {

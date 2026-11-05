@@ -1,5 +1,6 @@
 import chalk from 'chalk'
 import fs from 'fs-extra'
+import inquirer from 'inquirer'
 import ora from 'ora'
 import { createEnvFile, toKebabCase } from '../utils/environment.js'
 import {
@@ -14,7 +15,7 @@ import {
   requestThemeSource,
   resolveApiBase,
 } from '../utils/theme-source.js'
-import { validateProjectName } from '../utils/validation.js'
+import { validateProjectId, validateProjectName } from '../utils/validation.js'
 
 /**
  * The project folder for a name from `--project-name` or the theme handle.
@@ -32,13 +33,49 @@ let resolveProjectFolder = (name) => {
 }
 
 /**
+ * The Weaverse project ID for `.env`: `--project-id` when given (validated),
+ * else asked for when someone is there to answer. An empty answer, or a
+ * non-interactive run without the flag, leaves it unset (null).
+ * @param {Object} argv - Command line arguments object
+ * @param {Object} options
+ * @param {boolean} options.nonInteractive - Never prompt
+ * @param {typeof inquirer.prompt} options.prompt
+ * @returns {Promise<string | null>}
+ * @throws {Error} When `--project-id` is not a valid project ID
+ */
+let resolveProjectId = async (argv, { nonInteractive, prompt }) => {
+  if (argv['project-id'] !== undefined) {
+    let projectId = String(argv['project-id']).trim()
+    let validation = validateProjectId(projectId)
+    if (validation !== true) {
+      throw new Error(validation)
+    }
+    return projectId
+  }
+  if (nonInteractive) {
+    return null
+  }
+  let answers = await prompt([
+    {
+      type: 'input',
+      name: 'projectId',
+      message:
+        'What is your Weaverse project ID? (leave empty to set it in .env later)',
+      validate: (input) => !input.trim() || validateProjectId(input),
+    },
+  ])
+  return answers.projectId.trim() || null
+}
+
+/**
  * Creates a project from a licensed partner theme's source, using the one-time
  * install pass from the Weaverse dashboard.
  *
- * The pass is spent by the first request, so everything that can fail locally
- * (flag conflicts, an explicit `--project-name` folder) is checked first. The
- * zip is verified against its SHA-256 before anything is written, and unpacked
- * into the folder named by `--project-name`, or by the theme handle.
+ * The pass is spent by the first request, so everything that can fail or wait
+ * locally (flag conflicts, an explicit `--project-name` folder, the project ID
+ * prompt) happens first; a pass lasts 10 minutes. The zip is verified against
+ * its SHA-256 before anything is written, and unpacked into the folder named
+ * by `--project-name`, or by the theme handle.
  *
  * @param {Object} argv - Command line arguments object
  * @param {string} argv.pass - One-time install pass
@@ -50,10 +87,14 @@ let resolveProjectFolder = (name) => {
  * @param {Object} options
  * @param {boolean} options.nonInteractive - Never prompt
  * @param {typeof fetch} [options.fetch] - HTTP client (tests)
+ * @param {typeof inquirer.prompt} [options.prompt] - Prompt (tests)
  * @returns {Promise<void>}
  * @throws {Error} With a user-facing message on any failure
  */
-export let createProjectFromPass = async (argv, { nonInteractive, fetch }) => {
+export let createProjectFromPass = async (
+  argv,
+  { nonInteractive, fetch, prompt = inquirer.prompt }
+) => {
   if (argv.template !== undefined || argv.commit !== undefined) {
     throw new Error(
       '--pass installs a licensed partner theme, so it cannot be combined with --template or --commit.'
@@ -80,6 +121,7 @@ export let createProjectFromPass = async (argv, { nonInteractive, fetch }) => {
       force: argv.force,
     })
   }
+  let projectId = await resolveProjectId(argv, { nonInteractive, prompt })
 
   let spinner = ora('Checking your install pass...').start()
   let source
@@ -128,19 +170,11 @@ export let createProjectFromPass = async (argv, { nonInteractive, fetch }) => {
     name: source.handle,
     framework: 'hydrogen',
     ...(await detectThemeSetup(outputPath)),
+    partnerTheme: { hasProjectId: projectId !== null },
   }
 
-  if (argv['project-id']) {
-    await createEnvFile(outputPath, argv['project-id'], {
-      sessionSecret: true,
-    })
-  } else {
-    console.log(
-      chalk.yellow(
-        `\nNo --project-id given: create ${projectName}/.env from .env.example and set WEAVERSE_PROJECT_ID to your Weaverse project ID.`
-      )
-    )
-  }
+  // Always: Hydrogen needs SESSION_SECRET even before the project ID is set.
+  await createEnvFile(outputPath, projectId, { sessionSecret: true })
 
   await ensurePackageManager(template, { nonInteractive, skipInstall })
   await finishProject({
