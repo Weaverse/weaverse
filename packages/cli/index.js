@@ -16,10 +16,11 @@ let argv = yargs(hideBin(process.argv))
   .version(CLI_VERSION)
   .command('create', 'Create a new project', {
     template: {
-      describe: 'Template name',
+      // Not restricted to `choices`: a name that is not a Weaverse template
+      // is looked up as a free partner theme handle (create.js).
+      describe: `Template name (${TEMPLATES.map((t) => t.name).join(', ')}) or a free partner theme handle`,
       demandOption: false, // optional so interactive mode can prompt
       type: 'string',
-      choices: TEMPLATES.map((t) => t.name),
     },
     pass: {
       describe:
@@ -29,7 +30,7 @@ let argv = yargs(hideBin(process.argv))
     },
     'api-base': {
       describe:
-        'Weaverse Builder origin for --pass (testing; or WEAVERSE_BUILDER_URL)',
+        'Weaverse Builder origin for --pass and partner themes (testing; or WEAVERSE_BUILDER_URL)',
       type: 'string',
       hidden: true,
     },

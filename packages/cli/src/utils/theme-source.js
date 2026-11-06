@@ -13,7 +13,7 @@ const GET_NEW_COMMAND =
 
 /**
  * What to tell the user for each `error` code the theme-source endpoint
- * returns. Every message ends with the next step to take.
+ * returns for a one-time pass. Every message ends with the next step to take.
  */
 export const THEME_SOURCE_ERRORS = {
   invalid_pass: `This install pass is not valid. Check that you copied the whole command. ${GET_NEW_COMMAND}`,
@@ -25,6 +25,19 @@ export const THEME_SOURCE_ERRORS = {
     'Too many install attempts. Wait a minute, then try again with a new install command.',
   not_found: `The theme source could not be found. ${GET_NEW_COMMAND}`,
 }
+
+/**
+ * The same, for a free partner theme asked for by handle
+ * (`--template=<handle>`), where there is no pass to renew.
+ * @param {string} handle
+ * @param {string[]} templateNames - Weaverse template names, for the hint
+ * @returns {Record<string, string>}
+ */
+export let themeHandleErrors = (handle, templateNames) => ({
+  not_found: `No Weaverse template or free partner theme is named "${handle}". Weaverse templates: ${templateNames.join(', ')}. Browse partner themes at https://weaverse.io/themes`,
+  not_free: `"${handle}" is a paid partner theme. Buy it at https://weaverse.io/themes/${handle}, then create a project from it in your Weaverse dashboard to get its install command.`,
+  rate_limited: 'Too many install attempts. Wait a minute, then try again.',
+})
 
 const SHA256_HEX = /^[0-9a-f]{64}$/i
 const WINDOWS_DRIVE = /^[a-z]:/i
@@ -65,18 +78,21 @@ export let resolveApiBase = (argv = {}, env = process.env) =>
   )
 
 /**
- * Exchanges a one-time install pass for a short-lived download of the theme
- * source. The pass is consumed by this call, whatever happens afterwards.
+ * Exchanges a credential for a short-lived download of a partner theme's
+ * source: a one-time install pass (spent by this call, whatever happens
+ * afterwards), or the handle of a free partner theme.
  * @param {Object} options
  * @param {string} options.apiBase - Builder origin
- * @param {string} options.pass - One-time install pass
+ * @param {{ pass: string } | { handle: string }} options.credential
+ * @param {Record<string, string>} [options.errors] - Message per error code
  * @param {typeof nodeFetch} [options.fetch]
  * @returns {Promise<{ url: string, handle: string, fileName: string, sha256: string, revisionId: string }>}
  * @throws {Error} With a user-facing message for every failure
  */
 export let requestThemeSource = async ({
   apiBase,
-  pass,
+  credential,
+  errors = THEME_SOURCE_ERRORS,
   fetch = nodeFetch,
 }) => {
   let response
@@ -87,7 +103,7 @@ export let requestThemeSource = async ({
         'content-type': 'application/json',
         accept: 'application/json',
       },
-      body: JSON.stringify({ pass }),
+      body: JSON.stringify(credential),
     })
   } catch (error) {
     throw new Error(`Could not reach Weaverse at ${apiBase}: ${error.message}`)
@@ -101,12 +117,14 @@ export let requestThemeSource = async ({
   }
 
   if (!response.ok) {
-    let message = THEME_SOURCE_ERRORS[body?.error]
+    let message = errors[body?.error]
     if (message) {
       throw new Error(message)
     }
     throw new Error(
-      `Weaverse could not provide the theme source (HTTP ${response.status}). ${GET_NEW_COMMAND}`
+      'pass' in credential
+        ? `Weaverse could not provide the theme source (HTTP ${response.status}). ${GET_NEW_COMMAND}`
+        : `Weaverse could not provide the theme source (HTTP ${response.status}). Try again later.`
     )
   }
 
@@ -120,7 +138,7 @@ export let requestThemeSource = async ({
     SHA256_HEX.test(body.sha256)
   if (!valid) {
     throw new Error(
-      'Weaverse returned an unexpected response for the theme source. Update the CLI (npx @weaverse/cli@latest) and try again with a new install command.'
+      'Weaverse returned an unexpected response for the theme source. Update the CLI (npx @weaverse/cli@latest) and try again.'
     )
   }
   return body
