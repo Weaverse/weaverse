@@ -115,6 +115,9 @@ importers:
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
+      yauzl:
+        specifier: ^2.10.0
+        version: 2.10.0
 
   packages/core: {}
 

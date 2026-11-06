@@ -1,23 +1,20 @@
 import chalk from 'chalk'
 import fs from 'fs-extra'
-import inquirer from 'inquirer'
 import { TEMPLATES } from '../constants/templates.js'
 import { promptForMissingOptions } from '../prompts/createPrompts.js'
-import { ensureBun } from '../utils/bun.js'
 import { downloadAndExtractTemplate } from '../utils/download.js'
 import { createEnvFile, toKebabCase } from '../utils/environment.js'
 import {
-  getDevCommand,
-  installDependenciesAndRun,
-  runDevServer,
-  showManualInstructions,
-} from '../utils/install.js'
+  confirmTargetDirectory,
+  ensurePackageManager,
+  finishProject,
+} from '../utils/project-setup.js'
 import {
-  checkDirectoryExists,
   validateCommitHash,
   validateProjectName,
   validateWritableDirectory,
 } from '../utils/validation.js'
+import { createProjectFromPass } from './create-from-pass.js'
 
 /**
  * Whether to run without any interactive prompts. True when stdin isn't a TTY
@@ -34,7 +31,8 @@ export let isNonInteractive = (argv = {}) =>
   process.env.CI === '1'
 
 /**
- * Creates a new Weaverse project from a template.
+ * Creates a new Weaverse project from a template, or, with `--pass`, from a
+ * licensed partner theme's source (see {@link createProjectFromPass}).
  *
  * Runs fully non-interactively when there's no TTY or `--yes` is passed (so
  * coding agents / CI can drive it): missing `--template` or `--project-id`
@@ -44,6 +42,7 @@ export let isNonInteractive = (argv = {}) =>
  *
  * @param {Object} argv - Command line arguments object
  * @param {string} [argv.template] - Template name (e.g. 'pilot', 'naturelle', 'aspen', 'maison', 'forward')
+ * @param {string} [argv.pass] - One-time install pass for a licensed partner theme
  * @param {string} [argv['project-id']] - Weaverse project ID
  * @param {string} [argv['project-name']] - Project folder name
  * @param {string} [argv.commit] - Git commit hash (defaults to main branch)
@@ -62,6 +61,11 @@ export let createProject = async (argv) => {
     let writable = await validateWritableDirectory()
     if (writable !== true) {
       throw new Error(writable)
+    }
+
+    if (argv.pass !== undefined) {
+      await createProjectFromPass(argv, { nonInteractive })
+      return true
     }
 
     // Get complete options, prompting only when interactive
@@ -107,34 +111,15 @@ export let createProject = async (argv) => {
     let projectName = toKebabCase(options['project-name'])
     let outputPath = `./${projectName}`
 
-    // Check if directory already exists
-    let directoryCheck = await checkDirectoryExists(outputPath)
-    if (directoryCheck.exists && !directoryCheck.isEmpty) {
-      if (nonInteractive) {
-        if (!argv.force) {
-          throw new Error(
-            `${directoryCheck.message}. Re-run with --force to overwrite it, or choose a different --project-name.`
-          )
-        }
-      } else {
-        let { overwrite } = await inquirer.prompt([
-          {
-            type: 'confirm',
-            name: 'overwrite',
-            message: `${directoryCheck.message}. Do you want to overwrite it?`,
-            default: false,
-          },
-        ])
-
-        if (!overwrite) {
-          console.log(chalk.yellow('\nProject creation cancelled.'))
-          process.exit(0)
-        }
-      }
-
-      // Overwrite confirmed (via --force or the prompt): clear the directory so
-      // the template extracts cleanly instead of colliding with or leaving
-      // behind stale files from a previous/partial run.
+    // Overwrite confirmed (via --force or the prompt): clear the directory so
+    // the template extracts cleanly instead of colliding with or leaving
+    // behind stale files from a previous/partial run.
+    if (
+      await confirmTargetDirectory(outputPath, {
+        nonInteractive,
+        force: argv.force,
+      })
+    ) {
       await fs.emptyDir(outputPath)
     }
 
@@ -144,77 +129,20 @@ export let createProject = async (argv) => {
       sessionSecret: template.framework === 'hydrogen',
     })
 
-    // Handle installation and dev server.
-    if (skipInstall) {
-      showManualInstructions(projectName, template)
-    } else {
-      await installDependenciesAndRun(outputPath, projectName, template)
-
-      // Decide whether to start the (long-running, blocking) dev server.
-      // Non-interactive only starts it with an explicit --dev, so an agent's
-      // `create` returns instead of hanging on a server it can't background.
-      let startDev
-      if (nonInteractive) {
-        startDev = argv.dev === true
-      } else {
-        ;({ startDev } = await inquirer.prompt([
-          {
-            type: 'confirm',
-            name: 'startDev',
-            message: 'Would you like to start the development server now?',
-            default: argv.dev !== false,
-          },
-        ]))
-      }
-
-      if (startDev) {
-        await runDevServer(outputPath, template)
-      } else {
-        console.log(chalk.blue('\nTo start the development server, run:'))
-        console.log(
-          chalk.gray(`cd ${projectName} && ${getDevCommand(template)}\n`)
-        )
-      }
-    }
+    await finishProject({
+      outputPath,
+      projectName,
+      template,
+      skipInstall,
+      nonInteractive,
+      dev: argv.dev,
+    })
 
     return true
   } catch (error) {
     console.error(chalk.red('\n❌ Error:'), error.message)
     process.exit(1)
   }
-}
-
-/**
- * Makes sure the template's package manager is available before anything is
- * downloaded. Only Bun can be missing: npm ships with the Node running the CLI.
- * @param {Object} template - Template configuration object
- * @param {Object} options
- * @param {boolean} options.nonInteractive - No one to ask
- * @param {boolean} options.skipInstall - Dependencies won't be installed
- * @returns {Promise<void>}
- */
-let ensurePackageManager = async (
-  template,
-  { nonInteractive, skipInstall }
-) => {
-  if (skipInstall || template.packageManager !== 'bun') {
-    return
-  }
-  await ensureBun({
-    nonInteractive,
-    confirm: async () => {
-      let { installBun } = await inquirer.prompt([
-        {
-          type: 'confirm',
-          name: 'installBun',
-          message:
-            'This template requires Bun, which is not installed. Install it now with `npm install -g bun`?',
-          default: true,
-        },
-      ])
-      return installBun
-    },
-  })
 }
 
 /** Display names for template frameworks. */
@@ -248,6 +176,8 @@ Usage: npx @weaverse/cli create [options]
 
 Options:
   --template <name>     Template name (${TEMPLATES.map((t) => t.name).join(', ')})
+  --pass <pass>         Install a licensed partner theme with the one-time pass
+                        from your Weaverse dashboard (instead of --template)
   --project-id <id>     Your Weaverse project ID
   --project-name <name> Project folder name (optional)
   --commit <hash>       Git commit hash to use (optional, defaults to main branch)
@@ -266,5 +196,6 @@ Examples:
   npx @weaverse/cli create                                                              # Interactive mode
   npx @weaverse/cli create --template=pilot                                             # Prompt for the rest
   npx @weaverse/cli create --template=pilot --project-id=my-store --project-name=shop   # Full, non-interactive
+  npx @weaverse/cli create --pass=<pass> --project-id=my-store                          # Licensed partner theme
   `)
 }

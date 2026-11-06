@@ -7,7 +7,8 @@ export let generateSessionSecret = () => randomBytes(32).toString('hex')
 /**
  * Creates .env file from .env.example template with project-specific values
  * @param {string} path - The project directory path
- * @param {string} projectId - The project ID to inject into environment variables
+ * @param {string | null} projectId - The project ID to inject into environment
+ *   variables; without one, `WEAVERSE_PROJECT_ID` is left as `.env.example` has it
  * @param {Object} [options]
  * @param {boolean} [options.sessionSecret=true] - Generate `SESSION_SECRET`
  *   (Hydrogen templates need it; Forward has no such key)
@@ -21,19 +22,21 @@ export let createEnvFile = async (
 ) => {
   let spinner = ora('Setting up environment variables...').start()
   try {
+    // Partner theme sources may ship without an .env.example: start empty.
     let envExamplePath = `${path}/.env.example`
-    let envExampleContent = await fs.readFile(envExamplePath, 'utf-8')
+    let envContent = (await fs.pathExists(envExamplePath))
+      ? await fs.readFile(envExamplePath, 'utf-8')
+      : ''
 
     // Replace existing WEAVERSE_PROJECT_ID or add it if it doesn't exist
-    let envContent
-    if (envExampleContent.includes('WEAVERSE_PROJECT_ID=')) {
-      envContent = envExampleContent.replace(
+    if (projectId && envContent.includes('WEAVERSE_PROJECT_ID=')) {
+      envContent = envContent.replace(
         // biome-ignore lint/performance/useTopLevelRegex: the func only run once
         /WEAVERSE_PROJECT_ID=.*/,
         `WEAVERSE_PROJECT_ID=${projectId}`
       )
-    } else {
-      envContent = `${envExampleContent}\nWEAVERSE_PROJECT_ID=${projectId}`
+    } else if (projectId) {
+      envContent = `${envContent}\nWEAVERSE_PROJECT_ID=${projectId}`
     }
 
     // Hydrogen requires SESSION_SECRET; generate a real one so the template's
