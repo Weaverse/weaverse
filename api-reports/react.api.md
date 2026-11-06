@@ -18,6 +18,20 @@ export type ItemComponentProps = {
     instance: InstanceType<typeof WeaverseItemStore>;
 };
 
+export type StudioSelection = {
+    selectedItemId: string | null;
+    selectedThemeGroup: string | null;
+};
+
+export declare class StudioSelectionStore {
+    getSnapshot: () => StudioSelection;
+    getServerSnapshot: () => StudioSelection;
+    subscribe: (listener: () => void) => () => void;
+    setSelection: (next: StudioSelection) => void;
+}
+
+export declare let StudioSelectionStoreContext: import("react").Context<StudioSelectionStore | null>;
+
 export declare let WeaverseContext: import("react").Context<Weaverse>;
 
 export declare let WeaverseContextProvider: import("react").Provider<Weaverse>;
@@ -51,6 +65,8 @@ export declare let useItemInstance: (id?: string) => WeaverseItemStore | null;
 export declare let useParentInstance: () => WeaverseItemStore | null;
 
 export declare const useSafeExternalStore: (subscribe: any, getSnapshot: any, getServerSnapshot?: any) => any;
+
+export declare function useStudioSelection(): StudioSelection;
 
 export declare function useWeaverse<T = Weaverse>(): T;
 ```

@@ -240,6 +240,8 @@
   ],
   "@weaverse/react": [
     "EventEmitter",
+    "StudioSelectionStore",
+    "StudioSelectionStoreContext",
     "Weaverse",
     "WeaverseContext",
     "WeaverseContextProvider",
@@ -258,6 +260,7 @@
     "useItemInstance",
     "useParentInstance",
     "useSafeExternalStore",
+    "useStudioSelection",
     "useWeaverse"
   ],
   "@weaverse/schema/manifest": [
