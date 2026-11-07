@@ -16,6 +16,7 @@ export {
   useChildInstances,
   useItemInstance,
   useParentInstance,
+  useStudioSelection,
   useWeaverse,
 } from '@weaverse/react'
 export { createWeaverseNextClient } from './client'
