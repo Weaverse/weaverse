@@ -8,9 +8,11 @@
  */
 
 export {
+  type StudioSelection,
   useChildInstances,
   useItemInstance,
   useParentInstance,
+  useStudioSelection,
   useWeaverse,
 } from '@weaverse/react'
 export type { WeaverseComponentProps } from './types'

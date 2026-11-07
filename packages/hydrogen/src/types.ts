@@ -7,6 +7,7 @@ import type {
 import type {
   ElementData,
   PositionInputValue,
+  StudioSelectionStore,
   WeaverseCoreParams,
   WeaverseElement,
   WeaverseImage,
@@ -173,6 +174,8 @@ export type WeaverseInternal = {
   revalidate: () => void
   /** Mutable theme settings store used by Studio. */
   themeSettingsStore: ThemeSettingsStore
+  /** Studio selection store the Studio bridge writes; read by `useStudioSelection`. */
+  studioSelectionStore?: StudioSelectionStore | null
   /** Mutable translation store used by Studio, when translations are enabled. */
   translationStore?: TranslationStore | null
   /** @deprecated Use translationStore instead. */

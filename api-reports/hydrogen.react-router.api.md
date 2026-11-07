@@ -86,6 +86,8 @@ export interface RouteLoaderArgs extends LoaderFunctionArgs {
 
 export { SchemaType } from '@weaverse/schema';
 
+export { StudioSelection } from '@weaverse/react';
+
 export type TranslateFunction = (key: string, variables?: Record<string, string | number>) => string;
 
 export declare function TranslationProvider(input: TranslationProviderProps): import("react/jsx-runtime").JSX.Element;
@@ -388,6 +390,8 @@ export { useChildInstances } from '@weaverse/react';
 export { useItemInstance } from '@weaverse/react';
 
 export { useParentInstance } from '@weaverse/react';
+
+export { useStudioSelection } from '@weaverse/react';
 
 export declare function useThemeSettings<T = WeaverseThemeSettings>(): T;
 
