@@ -71,6 +71,7 @@ export const WeaverseNextRenderer = memo(function WeaverseNextRendererComponent(
       dataContext,
       merchantOverrides: context?.merchantOverrides,
       themeSettingsStore: context?.themeSettingsStore,
+      studioSelectionStore: context?.studioSelectionStore,
       translationStore: context?.translationStore,
     })
   }, [
@@ -80,6 +81,7 @@ export const WeaverseNextRenderer = memo(function WeaverseNextRendererComponent(
     dataContext,
     context?.merchantOverrides,
     context?.themeSettingsStore,
+    context?.studioSelectionStore,
     context?.translationStore,
   ])
 

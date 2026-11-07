@@ -17,6 +17,7 @@ import type { ThemeOutline } from '@weaverse/schema';
 import type { ThemeRoutes } from '@weaverse/schema';
 import type { WeaverseElement } from '@weaverse/react';
 import type { WeaverseResourcePickerData } from '@weaverse/react';
+import { StudioSelectionStore } from '@weaverse/react';
 import { Weaverse } from '@weaverse/react';
 import { WeaverseItemStore } from '@weaverse/react';
 
@@ -66,6 +67,8 @@ export interface RunComponentLoadersArgs {
     context?: WeaverseNextRequestContext;
     data?: WeaverseNextLoaderData | null;
 }
+
+export { StudioSelection } from '@weaverse/react';
 
 // @deprecated
 export declare const ThemeTextProvider: typeof TranslationProvider;
@@ -316,6 +319,7 @@ export interface WeaverseNextRevalidateRouteContext {
 export interface WeaverseNextRootContextValue {
     merchantOverrides?: Record<string, unknown>;
     staticContent: Record<string, unknown>;
+    studioSelectionStore: StudioSelectionStore;
     themeSettingsStore: WeaverseNextThemeSettingsStore;
     translationStore: TranslationStore;
 }
@@ -370,6 +374,7 @@ export interface WeaverseNextRuntimeConfig {
     merchantOverrides?: Record<string, unknown>;
     navigate?: WeaverseNextRuntimeInternal['navigate'];
     revalidate?: WeaverseNextRuntimeInternal['revalidate'];
+    studioSelectionStore?: StudioSelectionStore;
     themeSettingsStore?: WeaverseNextThemeSettingsStore;
     translationStore?: TranslationStore;
 }
@@ -383,6 +388,7 @@ export interface WeaverseNextRuntimeInternal {
     project?: unknown;
     revalidate?: (options?: unknown) => Promise<void> | void;
     revalidateItem?: (draftItem: WeaverseNextComponentData) => Promise<void>;
+    studioSelectionStore?: StudioSelectionStore;
     themeSettingsStore?: WeaverseNextThemeSettingsStore;
     // @deprecated
     themeTextStore?: TranslationStore;
@@ -564,6 +570,8 @@ export { useChildInstances } from '@weaverse/react';
 export { useItemInstance } from '@weaverse/react';
 
 export { useParentInstance } from '@weaverse/react';
+
+export { useStudioSelection } from '@weaverse/react';
 
 export declare function useThemeSettings<T = Record<string, unknown>>(): T;
 

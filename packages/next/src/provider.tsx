@@ -1,6 +1,10 @@
 'use client'
 
 import {
+  StudioSelectionStore,
+  StudioSelectionStoreContext,
+} from '@weaverse/react'
+import {
   createContext,
   type ReactNode,
   useContext,
@@ -47,6 +51,8 @@ export interface WeaverseNextContextValue {
   pageData?: unknown
   /** Root-scoped data exposed to rendered components. */
   rootData?: unknown
+  /** Studio selection store read by `useStudioSelection`, threaded into the runtime. */
+  studioSelectionStore: StudioSelectionStore
   /** Current merged theme-setting values. */
   themeSettings: Record<string, unknown>
   /** External store that publishes live theme-setting updates. */
@@ -130,6 +136,16 @@ export function WeaverseNextProvider(props: WeaverseNextProviderProps) {
     rootContext?.translationStore ??
     (ownTranslationStoreRef.current as TranslationStore)
 
+  // Same adoption rule as the translation store: one selection store per page
+  // load, so the Studio bridge and root-level UI observe the same instance.
+  let ownSelectionStoreRef = useRef<StudioSelectionStore | null>(null)
+  if (!(rootContext || ownSelectionStoreRef.current)) {
+    ownSelectionStoreRef.current = new StudioSelectionStore()
+  }
+  let studioSelectionStore =
+    rootContext?.studioSelectionStore ??
+    (ownSelectionStoreRef.current as StudioSelectionStore)
+
   // Static content / merchant overrides feeding `useTranslation()`. Precedence:
   // explicit prop → ambient root value → (static content only) schema default.
   let staticContent =
@@ -195,6 +211,7 @@ export function WeaverseNextProvider(props: WeaverseNextProviderProps) {
       merchantOverrides,
       themeSettings: themeSettingsStore.getSnapshot(),
       themeSettingsStore,
+      studioSelectionStore,
       translationStore,
     }),
     [
@@ -204,20 +221,23 @@ export function WeaverseNextProvider(props: WeaverseNextProviderProps) {
       commerce,
       merchantOverrides,
       themeSettingsStore,
+      studioSelectionStore,
       translationStore,
     ]
   )
 
   return (
     <WeaverseNextContext.Provider value={value}>
-      <TranslationProvider
-        merchantOverrides={merchantOverrides}
-        staticContent={staticContent}
-        t={props.t}
-        translationStore={translationStore}
-      >
-        {children}
-      </TranslationProvider>
+      <StudioSelectionStoreContext.Provider value={studioSelectionStore}>
+        <TranslationProvider
+          merchantOverrides={merchantOverrides}
+          staticContent={staticContent}
+          t={props.t}
+          translationStore={translationStore}
+        >
+          {children}
+        </TranslationProvider>
+      </StudioSelectionStoreContext.Provider>
     </WeaverseNextContext.Provider>
   )
 }

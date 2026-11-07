@@ -269,6 +269,7 @@ export class WeaverseNextRuntime extends Weaverse {
           schema: client?.themeSchema,
           settings: client?.themeSettings,
         }),
+      studioSelectionStore: config.studioSelectionStore,
       translationStore,
       themeTextStore: translationStore,
     }
@@ -473,6 +474,9 @@ export function createWeaverseNextRuntime(
     }
     if (config.themeSettingsStore) {
       existing.internal.themeSettingsStore = config.themeSettingsStore
+    }
+    if (config.studioSelectionStore) {
+      existing.internal.studioSelectionStore = config.studioSelectionStore
     }
     if (config.translationStore) {
       existing.internal.translationStore = config.translationStore
