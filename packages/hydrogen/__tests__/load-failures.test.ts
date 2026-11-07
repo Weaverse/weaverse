@@ -1,11 +1,11 @@
-import { InMemoryCache } from '@shopify/hydrogen'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
-  type HydrogenThemeSchema,
   WeaverseError,
   type WeaverseLoadError,
+  type WeaverseThemeSchema,
 } from '../src/types'
 import { WeaverseClient } from '../src/weaverse-client'
+import { createMemoryCache } from './memory-cache'
 
 /**
  * Page and theme loads through both request paths the client chooses
@@ -35,7 +35,7 @@ const UNASSIGNED_PAGE = JSON.stringify({
 })
 const PROJECT_NOT_FOUND = JSON.stringify({ error: 'Project not found' })
 
-const THEME_SCHEMA: HydrogenThemeSchema = {
+const THEME_SCHEMA: WeaverseThemeSchema = {
   info: {
     name: 'T',
     author: 'A',
@@ -99,7 +99,7 @@ function makeClient(
   opts: {
     throwPageLoadFailures?: boolean
     url?: string
-    cache?: Cache
+    cache?: ReturnType<typeof createMemoryCache>
   } = {}
 ) {
   return new WeaverseClient({
@@ -109,8 +109,8 @@ function makeClient(
       WEAVERSE_HOST: path === 'direct' ? 'https://studio.weaverse.io' : ORIGIN,
       WEAVERSE_PUBLIC_API_BASE: ORIGIN,
     },
-    storefront: { i18n: { language: 'EN', country: 'US' } },
-    cache: opts.cache ?? new InMemoryCache(),
+    storefront: { i18n: { language: 'EN', country: 'US', pathPrefix: '' } },
+    cache: opts.cache ?? createMemoryCache(),
     waitUntil: () => {},
     request: new Request(opts.url ?? 'https://shop.test/'),
     components: [],
@@ -223,8 +223,10 @@ describe('loadPage failure classification (opt-in)', () => {
     expect((error as WeaverseLoadError)?.kind).toBe('unavailable')
   })
 
-  it('should_not_report_an_outage_when_the_cache_itself_fails', async () => {
-    let brokenCache = new InMemoryCache()
+  it('should_load_the_page_when_the_cache_itself_fails', async () => {
+    // Hydrogen 2026.10 treats a failed cache read as a miss and fetches the
+    // page, so a broken cache is neither an outage nor a failed load.
+    let brokenCache = createMemoryCache()
     brokenCache.match = () => Promise.reject(new Error('cache read failed'))
     reply({ status: 200, body: VALID_PAGE })
     let client = makeClient('cached', {
@@ -232,9 +234,9 @@ describe('loadPage failure classification (opt-in)', () => {
       cache: brokenCache,
     })
 
-    let error = await loadFailure(client)
+    let result = await client.loadPage({ type: 'INDEX' })
 
-    expect((error as WeaverseLoadError)?.kind).toBe('invalid-response')
+    expect(result?.page.id).toBe('page-1')
   })
 
   it('should_keep_the_platform_error_when_a_third_party_cached_request_fails', async () => {
@@ -292,7 +294,7 @@ describe('loadPage failure classification (opt-in)', () => {
   })
 
   it('should_not_cache_an_invalid_body_when_requests_go_through_hydrogen', async () => {
-    let cache = new InMemoryCache()
+    let cache = createMemoryCache()
     reply({ status: 200, body: '{}' }, { status: 200, body: VALID_PAGE })
     await loadFailure(
       makeClient('cached', { throwPageLoadFailures: true, cache })
@@ -378,7 +380,7 @@ describe('loadThemeSettings envelope validation', () => {
   })
 
   it('should_not_cache_an_invalid_theme_body_when_requests_go_through_hydrogen', async () => {
-    let cache = new InMemoryCache()
+    let cache = createMemoryCache()
     reply(
       { status: 200, body: '{}' },
       { status: 200, body: '{"theme":{"logoText":"Merchant"}}' }

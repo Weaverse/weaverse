@@ -30,6 +30,74 @@
     "useExperiment",
     "useExperiments"
   ],
+  "@weaverse/hydrogen": [
+    "IMAGES_PLACEHOLDERS",
+    "TranslationStore",
+    "WeaverseError",
+    "WeaverseLoadError",
+    "createSchema",
+    "generateDataFromSchema",
+    "getNestedKey",
+    "isBrowser",
+    "isIframe"
+  ],
+  "@weaverse/hydrogen/react": [
+    "useChildInstances",
+    "useItemInstance",
+    "useParentInstance",
+    "useWeaverse"
+  ],
+  "@weaverse/hydrogen/react-router": [
+    "IMAGES_PLACEHOLDERS",
+    "TranslationProvider",
+    "TranslationStore",
+    "WeaverseClient",
+    "WeaverseError",
+    "WeaverseHydrogenRoot",
+    "WeaverseLoadError",
+    "createSchema",
+    "generateDataFromSchema",
+    "getNestedKey",
+    "getSelectedProductOptions",
+    "getWeaverseSeoMeta",
+    "isBrowser",
+    "isIframe",
+    "useChildInstances",
+    "useItemInstance",
+    "useParentInstance",
+    "useThemeSettings",
+    "useTranslation",
+    "useWeaverse",
+    "withWeaverse"
+  ],
+  "@weaverse/hydrogen/next": [
+    "IMAGES_PLACEHOLDERS",
+    "TranslationProvider",
+    "TranslationStore",
+    "WeaverseError",
+    "WeaverseLoadError",
+    "WeaverseNextProvider",
+    "WeaverseNextRenderer",
+    "WeaverseNextRootProvider",
+    "WeaverseNextStudioConnect",
+    "buildWeaverseNextRequestInfo",
+    "createSchema",
+    "createWeaverseNextClient",
+    "generateDataFromSchema",
+    "getNestedKey",
+    "isBrowser",
+    "isIframe",
+    "useChildInstances",
+    "useItemInstance",
+    "useParentInstance",
+    "useThemeSettings",
+    "useTranslation",
+    "useWeaverse"
+  ],
+  "@weaverse/hydrogen/next/server": [
+    "createWeaverseNextRevalidateHandler",
+    "createWeaverseNextServerClient"
+  ],
   "@weaverse/schema": [
     "BasicInputSchema",
     "ComponentPresetsSchema",
@@ -69,7 +137,7 @@
     "validateSchema",
     "z"
   ],
-  "@weaverse/hydrogen": [
+  "@weaverse/hydrogen/internal": [
     "BasicInputSchema",
     "ComponentPresetsSchema",
     "ConfigsPropsSchema",

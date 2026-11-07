@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type {
-  HydrogenComponentSchema,
-  HydrogenPageData,
+  WeaverseComponentSchema,
   WeaverseHydrogenParams,
+  WeaversePageData,
 } from '../src/types'
 import {
   registerComponent,
@@ -24,7 +24,7 @@ const SCHEMA = {
       ],
     },
   ],
-} as unknown as HydrogenComponentSchema
+} as unknown as WeaverseComponentSchema
 
 // The page root item needs a registered schema too, otherwise its store logs
 // "Element is missing schema or not found!" and clutters the test output.
@@ -32,9 +32,9 @@ const ROOT_SCHEMA = {
   type: 'main',
   title: 'Main',
   settings: [],
-} as unknown as HydrogenComponentSchema
+} as unknown as WeaverseComponentSchema
 
-function makePageData(itemData?: Record<string, unknown>): HydrogenPageData {
+function makePageData(itemData?: Record<string, unknown>): WeaversePageData {
   return {
     id: 'page-1',
     name: 'Page',
@@ -48,10 +48,10 @@ function makePageData(itemData?: Record<string, unknown>): HydrogenPageData {
         parentId: ROOT_ID,
       },
     ],
-  } as unknown as HydrogenPageData
+  } as unknown as WeaversePageData
 }
 
-function makePageDataWithoutItemData(): HydrogenPageData {
+function makePageDataWithoutItemData(): WeaversePageData {
   return makePageData()
 }
 

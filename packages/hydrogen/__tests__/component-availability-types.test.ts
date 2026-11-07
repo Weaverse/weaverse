@@ -3,8 +3,8 @@ import type {
   ComponentAvailabilityContext,
   ComponentGroup,
   CreateHydrogenSchemaOptions,
-  HydrogenComponentSchema,
   Resolvable,
+  WeaverseComponentSchema,
 } from '../src'
 
 describe('Hydrogen component availability types', () => {
@@ -19,7 +19,7 @@ describe('Hydrogen component availability types', () => {
       type: 'availability-test',
       enabled,
     }
-    let schema: HydrogenComponentSchema = options
+    let schema: WeaverseComponentSchema = options
 
     // Act
     let schemaEnabled = schema.enabled

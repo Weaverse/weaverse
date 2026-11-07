@@ -1,10 +1,10 @@
 import { describe, expectTypeOf, it } from 'vitest'
-import type { HydrogenThemeSchema, ThemeRoutes } from '../src'
+import type { ThemeRoutes, WeaverseThemeSchema } from '../src'
 
-describe('HydrogenThemeSchema routes', () => {
+describe('WeaverseThemeSchema routes', () => {
   it('should_type_routes_as_theme_routes', () => {
     // Arrange
-    let schema: HydrogenThemeSchema = {
+    let schema: WeaverseThemeSchema = {
       info: {
         name: 'Routes test',
         version: '1.0.0',

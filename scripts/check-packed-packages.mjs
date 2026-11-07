@@ -41,7 +41,10 @@ let TSRS = join(
 )
 const RUNTIME_JSON_BLOCK = /```json\n([\s\S]*?)\n```/
 // Next's browser entry imports next/navigation, which is resolved by its bundler.
-const NODE_ESM_EXCLUSIONS = new Set(['@weaverse/next'])
+const NODE_ESM_EXCLUSIONS = new Set([
+  '@weaverse/next',
+  '@weaverse/hydrogen/next',
+])
 // @weaverse/cli is an ESM-only executable and @weaverse/biome only ships JSON,
 // so neither participates in the dual ESM/CJS runtime contract.
 const CJS_CONTRACT_EXCLUSIONS = new Set(['@weaverse/cli', '@weaverse/biome'])
@@ -307,6 +310,11 @@ try {
     rootPackageJson.devDependencies['@types/react']
   packedDependencies['@types/react-dom'] =
     rootPackageJson.devDependencies['@types/react-dom']
+  // `next` is an optional peer of the Next.js adapter; a Next.js storefront
+  // always has it, and the adapter's runtime imports `next/navigation`.
+  packedDependencies.next = JSON.parse(
+    readFileSync(join(ROOT_DIR, 'packages', 'next', 'package.json'), 'utf8')
+  ).devDependencies.next
 
   writeFileSync(
     join(consumerDir, 'package.json'),
@@ -668,7 +676,7 @@ main().catch((error) => {
 import type {
   ComponentAvailabilityContext as HydrogenAvailabilityContext,
   Resolvable as HydrogenResolvable,
-} from '@weaverse/hydrogen'
+} from '@weaverse/hydrogen/internal'
 import type { WeaverseImage as CoreImage } from '@weaverse/core'
 import type { WeaverseImage as ReactImage } from '@weaverse/react'
 import type { WeaverseImage as HydrogenImage } from '@weaverse/hydrogen'
@@ -736,7 +744,7 @@ void [modules, componentSchema, hydrogenEnabled, manifestArtifact]
 import { assignVariant } from '@weaverse/experiments'
 import { createExposureTracker } from '@weaverse/experiments/react'
 import { getExperiments } from '@weaverse/experiments/server'
-import { WeaverseClient } from '@weaverse/hydrogen'
+import { WeaverseClient } from '@weaverse/hydrogen/react-router'
 import { createWeaverseNextClient } from '@weaverse/next'
 import { getWeaverseNextConfigs } from '@weaverse/next/server'
 import { WeaverseRoot } from '@weaverse/react'

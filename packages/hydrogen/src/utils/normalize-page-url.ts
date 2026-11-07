@@ -7,7 +7,7 @@ const KEPT_PARAM_RE = /^(?:__revisionId|isDesignMode|weaverse)/
 /**
  * Normalize the storefront URL sent in the Builder page API request body.
  *
- * The POST body participates in the `withCache` cache key, so a raw
+ * The POST body participates in Hydrogen's cached fetch key, so a raw
  * `request.url` fragments the cache by every marketing/tracking param:
  * each distinct `?utm_…`/`fbclid` URL is a guaranteed Builder round-trip
  * even when the resolved page is identical — precisely the paid/social
