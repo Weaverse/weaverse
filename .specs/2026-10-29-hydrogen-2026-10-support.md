@@ -38,6 +38,7 @@ Hydrogen themes on `@shopify/hydrogen` 2026.10+ (the framework-agnostic library,
 6. Entry split and public renames (#547).
 7. Move `@weaverse/next` into `/next` and `/next/server`; keep `@weaverse/next` as a re-exporting alias.
 8. CLI codemod `migrate v6`, API reports, docs, then release 6.0.0.
+9. Release order: hydrogen pins both `@weaverse/react` and `@weaverse/next`, and `@weaverse/next` pins `@weaverse/react`. All three must agree, or themes install two copies of `@weaverse/react` with separate React contexts. So 6.0.0 is one bootstrap publish: `@weaverse/core@6.0.0` → `@weaverse/react@6.0.0` → `@weaverse/next@1.1.0` (pinning react 6.0.0) → `@weaverse/hydrogen@6.0.0` (pinning react 6.0.0 and next 1.1.0). The release skill now releases `@weaverse/next` with every fixed-group release.
 
 ## Migration
 
