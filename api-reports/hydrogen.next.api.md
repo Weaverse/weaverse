@@ -33,6 +33,8 @@ export type PublicEnv = {
 
 export { SchemaType } from '@weaverse/schema';
 
+export { StudioSelection } from '@weaverse/react';
+
 export type TranslateFunction = (key: string, variables?: Record<string, string | number>) => string;
 
 export { TranslationProvider } from '@weaverse/next';
@@ -233,6 +235,8 @@ export { useChildInstances } from '@weaverse/react';
 export { useItemInstance } from '@weaverse/react';
 
 export { useParentInstance } from '@weaverse/react';
+
+export { useStudioSelection } from '@weaverse/react';
 
 export { useThemeSettings } from '@weaverse/next';
 

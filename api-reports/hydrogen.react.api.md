@@ -6,6 +6,8 @@
 import type * as React from 'react';
 import type { WeaverseElement } from '@weaverse/react';
 
+export { StudioSelection } from '@weaverse/react';
+
 export interface WeaverseComponentProps<L = any> extends WeaverseElement {
     children?: React.JSX.Element[];
     className?: string;
@@ -17,6 +19,8 @@ export { useChildInstances } from '@weaverse/react';
 export { useItemInstance } from '@weaverse/react';
 
 export { useParentInstance } from '@weaverse/react';
+
+export { useStudioSelection } from '@weaverse/react';
 
 export { useWeaverse } from '@weaverse/react';
 ```

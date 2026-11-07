@@ -1,5 +1,5 @@
-import { loadScript } from '@weaverse/react'
-import { useEffect } from 'react'
+import { loadScript, StudioSelectionStoreContext } from '@weaverse/react'
+import { useContext, useEffect } from 'react'
 import {
   useLocation,
   useNavigate,
@@ -85,6 +85,7 @@ export function useStudio(weaverse: WeaverseHydrogen) {
   let { pathname, search } = useLocation()
   let navigate = useNavigate()
   let themeSettingsStore = useThemeSettingsStore()
+  let studioSelectionStore = useContext(StudioSelectionStoreContext)
   let { translationStore, themeTextStore, merchantOverrides } = useTranslation()
   let {
     isDesignMode,
@@ -118,6 +119,7 @@ export function useStudio(weaverse: WeaverseHydrogen) {
         revalidate,
         merchantOverrides,
         themeSettingsStore,
+        studioSelectionStore,
         translationStore,
         // Deprecated alias for existing Studio bridge integrations.
         themeTextStore,
