@@ -14,7 +14,7 @@ import {
   validateProjectName,
   validateWritableDirectory,
 } from '../utils/validation.js'
-import { createProjectFromPass } from './create-from-pass.js'
+import { createPartnerThemeProject } from './create-from-pass.js'
 
 /**
  * Whether to run without any interactive prompts. True when stdin isn't a TTY
@@ -31,9 +31,9 @@ export let isNonInteractive = (argv = {}) =>
   process.env.CI === '1'
 
 /**
- * Creates a new Weaverse project from a template, or, with `--pass`, from a
- * licensed partner theme's source (see {@link createProjectFromPass}).
- *
+ * Creates a new Weaverse project from a template, or from a partner theme's
+ * source (see {@link createPartnerThemeProject}): with `--pass` for a licensed
+ * theme, or `--template=<handle>` naming a free partner theme.
  * Runs fully non-interactively when there's no TTY or `--yes` is passed (so
  * coding agents / CI can drive it): missing `--template` or `--project-id`
  * throws an actionable error instead of hanging, `--project-name` is defaulted,
@@ -63,8 +63,11 @@ export let createProject = async (argv) => {
       throw new Error(writable)
     }
 
-    if (argv.pass !== undefined) {
-      await createProjectFromPass(argv, { nonInteractive })
+    let partnerTemplate =
+      argv.template !== undefined &&
+      !TEMPLATES.some((t) => t.name === argv.template)
+    if (argv.pass !== undefined || partnerTemplate) {
+      await createPartnerThemeProject(argv, { nonInteractive })
       return true
     }
 
@@ -175,7 +178,8 @@ export let showTemplateList = () => {
 Usage: npx @weaverse/cli create [options]
 
 Options:
-  --template <name>     Template name (${TEMPLATES.map((t) => t.name).join(', ')})
+  --template <name>     Template name (${TEMPLATES.map((t) => t.name).join(', ')}),
+                        or the handle of a free partner theme from weaverse.io/themes
   --pass <pass>         Install a licensed partner theme with the one-time pass
                         from your Weaverse dashboard (instead of --template)
   --project-id <id>     Your Weaverse project ID
@@ -197,5 +201,6 @@ Examples:
   npx @weaverse/cli create --template=pilot                                             # Prompt for the rest
   npx @weaverse/cli create --template=pilot --project-id=my-store --project-name=shop   # Full, non-interactive
   npx @weaverse/cli create --pass=<pass> --project-id=my-store                          # Licensed partner theme
+  npx @weaverse/cli create --template=<partner-handle> --project-id=my-store            # Free partner theme
   `)
 }

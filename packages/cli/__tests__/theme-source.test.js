@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import fs from 'fs-extra'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { createProjectFromPass } from '../src/commands/create-from-pass.js'
+import { createPartnerThemeProject } from '../src/commands/create-from-pass.js'
 import {
   DEFAULT_API_BASE,
   detectThemeSetup,
@@ -15,6 +15,7 @@ import {
   requestThemeSource,
   resolveApiBase,
   THEME_SOURCE_ERRORS,
+  themeHandleErrors,
   ZIP_LIMITS,
 } from '../src/utils/theme-source.js'
 import { buildZip } from './helpers/zip.js'
@@ -35,6 +36,8 @@ const PROJECT_ID_ERROR = /only contain lowercase letters/
 const PLACEHOLDER_SECRET = 'SESSION_SECRET="foobar"'
 const EMPTY_PROJECT_ID_LINE = /^WEAVERSE_PROJECT_ID=$/m
 const GENERATED_SECRET_LINE = /^SESSION_SECRET="[0-9a-f]{64}"$/m
+const PASS = { pass: 'p' }
+const UNKNOWN_TEMPLATE_ERROR = /Template 'Not Valid!' not found/
 
 let sha256 = (buffer) => createHash('sha256').update(buffer).digest('hex')
 
@@ -96,7 +99,11 @@ describe('requestThemeSource', () => {
     let fetch = vi.fn(async () => jsonResponse(200, sourceBody()))
 
     // Act
-    await requestThemeSource({ apiBase: API_BASE, pass: 'p4ss', fetch })
+    await requestThemeSource({
+      apiBase: API_BASE,
+      credential: { pass: 'p4ss' },
+      fetch,
+    })
 
     // Assert
     expect(fetch).toHaveBeenCalledWith(
@@ -115,7 +122,7 @@ describe('requestThemeSource', () => {
     // Act
     let result = await requestThemeSource({
       apiBase: API_BASE,
-      pass: 'p',
+      credential: { pass: 'p' },
       fetch,
     })
 
@@ -136,7 +143,11 @@ describe('requestThemeSource', () => {
     let fetch = vi.fn(async () => jsonResponse(status, { error: code }))
 
     // Act
-    let request = requestThemeSource({ apiBase: API_BASE, pass: 'p', fetch })
+    let request = requestThemeSource({
+      apiBase: API_BASE,
+      credential: PASS,
+      fetch,
+    })
 
     // Assert
     await expect(request).rejects.toThrow(THEME_SOURCE_ERRORS[code])
@@ -162,7 +173,11 @@ describe('requestThemeSource', () => {
     let fetch = vi.fn(async () => new Response('oops', { status: 500 }))
 
     // Act
-    let request = requestThemeSource({ apiBase: API_BASE, pass: 'p', fetch })
+    let request = requestThemeSource({
+      apiBase: API_BASE,
+      credential: PASS,
+      fetch,
+    })
 
     // Assert
     await expect(request).rejects.toThrow(HTTP_500_ERROR)
@@ -174,7 +189,11 @@ describe('requestThemeSource', () => {
     let fetch = vi.fn(async () => jsonResponse(200, body))
 
     // Act
-    let request = requestThemeSource({ apiBase: API_BASE, pass: 'p', fetch })
+    let request = requestThemeSource({
+      apiBase: API_BASE,
+      credential: PASS,
+      fetch,
+    })
 
     // Assert
     await expect(request).rejects.toThrow(UNEXPECTED_RESPONSE_ERROR)
@@ -185,10 +204,34 @@ describe('requestThemeSource', () => {
     let fetch = vi.fn(() => Promise.reject(new Error('ECONNREFUSED')))
 
     // Act
-    let request = requestThemeSource({ apiBase: API_BASE, pass: 'p', fetch })
+    let request = requestThemeSource({
+      apiBase: API_BASE,
+      credential: PASS,
+      fetch,
+    })
 
     // Assert
     await expect(request).rejects.toThrow(UNREACHABLE_ERROR)
+  })
+
+  it('should_post_the_handle_and_explain_a_paid_theme_for_a_partner_handle', async () => {
+    // Arrange
+    let fetch = vi.fn(async () => jsonResponse(403, { error: 'not_free' }))
+    let errors = themeHandleErrors('oakline', ['pilot'])
+
+    // Act
+    let request = requestThemeSource({
+      apiBase: API_BASE,
+      credential: { handle: 'oakline' },
+      errors,
+      fetch,
+    })
+
+    // Assert
+    await expect(request).rejects.toThrow(errors.not_free)
+    expect(fetch.mock.calls[0][1].body).toBe(
+      JSON.stringify({ handle: 'oakline' })
+    )
   })
 })
 
@@ -458,7 +501,7 @@ describe('detectThemeSetup', () => {
   })
 })
 
-describe('createProjectFromPass', () => {
+describe('createPartnerThemeProject', () => {
   let workDir
   let originalCwd = process.cwd()
 
@@ -490,7 +533,7 @@ describe('createProjectFromPass', () => {
     let argv = { pass: 'p4ss', 'project-id': 'proj-1', install: false }
 
     // Act
-    await createProjectFromPass(argv, {
+    await createPartnerThemeProject(argv, {
       nonInteractive: true,
       fetch: mockFetch(zip),
     })
@@ -515,7 +558,7 @@ describe('createProjectFromPass', () => {
     })
 
     // Act
-    await createProjectFromPass(
+    await createPartnerThemeProject(
       { pass: 'p4ss', install: false },
       { nonInteractive: false, fetch, prompt }
     )
@@ -541,7 +584,7 @@ describe('createProjectFromPass', () => {
     ])
 
     // Act
-    await createProjectFromPass(
+    await createPartnerThemeProject(
       { pass: 'p4ss', install: false },
       { nonInteractive: true, fetch: mockFetch(zip) }
     )
@@ -557,7 +600,7 @@ describe('createProjectFromPass', () => {
     let fetch = vi.fn()
 
     // Act
-    let creation = createProjectFromPass(
+    let creation = createPartnerThemeProject(
       { pass: 'p4ss', 'project-id': 'Not Valid' },
       { nonInteractive: true, fetch }
     )
@@ -573,7 +616,7 @@ describe('createProjectFromPass', () => {
     let fetch = mockFetch(zip, { sha256: 'c'.repeat(64) })
 
     // Act
-    let creation = createProjectFromPass(
+    let creation = createPartnerThemeProject(
       { pass: 'p4ss', install: false },
       { nonInteractive: true, fetch }
     )
@@ -588,7 +631,7 @@ describe('createProjectFromPass', () => {
     let fetch = vi.fn()
 
     // Act
-    let creation = createProjectFromPass(
+    let creation = createPartnerThemeProject(
       { pass: 'p4ss', template: 'pilot' },
       { nonInteractive: true, fetch }
     )
@@ -604,13 +647,52 @@ describe('createProjectFromPass', () => {
     let fetch = vi.fn()
 
     // Act
-    let creation = createProjectFromPass(
+    let creation = createPartnerThemeProject(
       { pass: 'p4ss', 'project-name': 'shop' },
       { nonInteractive: true, fetch }
     )
 
     // Assert
     await expect(creation).rejects.toThrow(FORCE_HINT_ERROR)
+    expect(fetch).not.toHaveBeenCalled()
+  })
+
+  it('should_create_a_free_partner_theme_project_from_its_handle', async () => {
+    // Arrange
+    let zip = buildZip([
+      { name: 'aurora/package.json', data: '{"name":"aurora"}' },
+      { name: 'aurora/.env.example', data: 'WEAVERSE_PROJECT_ID=\n' },
+    ])
+    let fetch = mockFetch(zip)
+
+    // Act
+    await createPartnerThemeProject(
+      { template: 'aurora', 'project-id': 'proj-3', install: false },
+      { nonInteractive: true, fetch }
+    )
+
+    // Assert
+    expect({
+      body: fetch.mock.calls[0][1].body,
+      env: await fs.readFile('aurora/.env', 'utf8'),
+    }).toEqual({
+      body: JSON.stringify({ handle: 'aurora' }),
+      env: expect.stringContaining('WEAVERSE_PROJECT_ID=proj-3'),
+    })
+  })
+
+  it('should_not_call_weaverse_when_the_template_cannot_be_a_handle', async () => {
+    // Arrange
+    let fetch = vi.fn()
+
+    // Act
+    let creation = createPartnerThemeProject(
+      { template: 'Not Valid!' },
+      { nonInteractive: true, fetch }
+    )
+
+    // Assert
+    await expect(creation).rejects.toThrow(UNKNOWN_TEMPLATE_ERROR)
     expect(fetch).not.toHaveBeenCalled()
   })
 })
