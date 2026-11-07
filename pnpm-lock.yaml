@@ -115,6 +115,9 @@ importers:
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
+      yauzl:
+        specifier: ^2.10.0
+        version: 2.10.0
 
   packages/core: {}
 
@@ -134,8 +137,8 @@ importers:
         specifier: 1.1.0-beta.0
         version: 1.1.0-beta.0(next@16.3.4(@types/node@25.5.2)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@weaverse/react':
-        specifier: 5.24.0
-        version: 5.24.0
+        specifier: 5.25.0
+        version: 5.25.0
       '@weaverse/schema':
         specifier: 0.20.0
         version: 0.20.0
@@ -159,8 +162,8 @@ importers:
   packages/next:
     dependencies:
       '@weaverse/react':
-        specifier: 5.24.0
-        version: 5.24.0
+        specifier: 5.25.0
+        version: 5.25.0
       '@weaverse/schema':
         specifier: 0.20.0
         version: 0.20.0
@@ -178,8 +181,8 @@ importers:
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: 5.24.0
-        version: 5.24.0
+        specifier: 5.25.0
+        version: 5.25.0
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -1098,6 +1101,10 @@ packages:
     resolution: {integrity: sha512-AL517z/AIjh21pRTUjf5AU05JWp1VlkoANHH6LetlriBjm19/qXApV+gzsf8s3LqeJjKSrLU7cVeUo5LegWxIA==}
     engines: {node: '>=18'}
 
+  '@weaverse/core@5.25.0':
+    resolution: {integrity: sha512-yd8MWmnis9xa65EcbJzN3Y9SvGyusXxtzSOaUv0MnYMbjPNBYS4a9RFxczzErfo2SYVIwD+ETn0h8x2Rz1bBEQ==}
+    engines: {node: '>=18'}
+
   '@weaverse/next@1.1.0-beta.0':
     resolution: {integrity: sha512-JSxtYQ/G86/+cZ7V1LhRTq6YpNROphSj7Sat1FHl3lpLOjJ0Yb6QQGjzTo7NDLUyBzF10DIcygJRk8vUs96SZw==}
     engines: {node: '>=20'}
@@ -1111,6 +1118,10 @@ packages:
 
   '@weaverse/react@5.24.0':
     resolution: {integrity: sha512-xrBY94GzG86D/DMik8eMPOmBa/ubJne5uMNq9Q9YwztyQ5qBzLRVwzEE0PexQgzMgFCzxyHBMGJhterP9XU8eg==}
+    engines: {node: '>=18'}
+
+  '@weaverse/react@5.25.0':
+    resolution: {integrity: sha512-hpSYtXrSCKbz+pa0IzNQebxAFyeHSbUCcfZ1LPUFkkzTvf42c6aErTJ5CYqw45G6ORhvFdbAvhzRTsm0tw82/Q==}
     engines: {node: '>=18'}
 
   '@weaverse/schema@0.19.0':
@@ -2741,6 +2752,8 @@ snapshots:
 
   '@weaverse/core@5.24.0': {}
 
+  '@weaverse/core@5.25.0': {}
+
   '@weaverse/next@1.1.0-beta.0(next@16.3.4(@types/node@25.5.2)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)':
     dependencies:
       '@weaverse/react': 5.24.0
@@ -2753,6 +2766,13 @@ snapshots:
   '@weaverse/react@5.24.0':
     dependencies:
       '@weaverse/core': 5.24.0
+      clsx: 2.1.1
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
+
+  '@weaverse/react@5.25.0':
+    dependencies:
+      '@weaverse/core': 5.25.0
       clsx: 2.1.1
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)

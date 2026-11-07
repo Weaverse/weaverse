@@ -43,7 +43,7 @@
     "typecheck": "tsrs --noEmit"
   },
   "dependencies": {
-    "@weaverse/react": "5.24.0",
+    "@weaverse/react": "5.25.0",
     "@weaverse/schema": "0.20.0"
   },
   "devDependencies": {

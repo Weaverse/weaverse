@@ -22,6 +22,18 @@ let argv = yargs(hideBin(process.argv))
       type: 'string',
       choices: TEMPLATES.map((t) => t.name),
     },
+    pass: {
+      describe:
+        'One-time install pass for a licensed partner theme (from your Weaverse dashboard; replaces --template)',
+      demandOption: false,
+      type: 'string',
+    },
+    'api-base': {
+      describe:
+        'Weaverse Builder origin for --pass (testing; or WEAVERSE_BUILDER_URL)',
+      type: 'string',
+      hidden: true,
+    },
     'project-id': {
       describe: 'Project ID',
       demandOption: false, // optional so interactive mode can prompt

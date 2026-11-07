@@ -1,6 +1,6 @@
 {
   "name": "@weaverse/cli",
-  "version": "5.7.1",
+  "version": "5.8.0",
   "description": "CLI for Weaverse projects",
   "type": "module",
   "main": "index.js",
@@ -34,6 +34,7 @@
     "node-fetch": "^3.3.2",
     "ora": "^8.2.0",
     "validate-npm-package-name": "^5.0.1",
-    "yargs": "^17.7.2"
+    "yargs": "^17.7.2",
+    "yauzl": "^2.10.0"
   }
 }
