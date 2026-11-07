@@ -45,6 +45,7 @@
     "useChildInstances",
     "useItemInstance",
     "useParentInstance",
+    "useStudioSelection",
     "useWeaverse"
   ],
   "@weaverse/hydrogen/react-router": [
@@ -65,6 +66,7 @@
     "useChildInstances",
     "useItemInstance",
     "useParentInstance",
+    "useStudioSelection",
     "useThemeSettings",
     "useTranslation",
     "useWeaverse",
@@ -90,6 +92,7 @@
     "useChildInstances",
     "useItemInstance",
     "useParentInstance",
+    "useStudioSelection",
     "useThemeSettings",
     "useTranslation",
     "useWeaverse"
