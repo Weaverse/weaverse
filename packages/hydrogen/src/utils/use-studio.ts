@@ -79,6 +79,18 @@ export function useStudioConnect() {
   }, [search])
 }
 
+let warnedMissingSelectionStore = false
+
+function warnMissingSelectionStore() {
+  if (warnedMissingSelectionStore) {
+    return
+  }
+  warnedMissingSelectionStore = true
+  console.warn(
+    '[Weaverse] useStudioSelection() needs the root Layout wrapped with withWeaverse(); Studio selections will not reach the theme.'
+  )
+}
+
 export function useStudio(weaverse: WeaverseHydrogen) {
   let { revalidate } = useRevalidator()
   let navigation = useNavigation()
@@ -113,12 +125,16 @@ export function useStudio(weaverse: WeaverseHydrogen) {
     if (isRevisionPreview || isPreviewMode) {
       loadScript(src).catch(console.error)
     } else {
+      if (!studioSelectionStore) {
+        warnMissingSelectionStore()
+      }
       weaverse.internal = {
         ...weaverse.internal,
         navigate,
         revalidate,
         merchantOverrides,
         themeSettingsStore,
+        // Must stay one instance per root: the effect deps above exclude it.
         studioSelectionStore,
         translationStore,
         // Deprecated alias for existing Studio bridge integrations.

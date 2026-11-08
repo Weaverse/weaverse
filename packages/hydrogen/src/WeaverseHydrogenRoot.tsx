@@ -15,6 +15,7 @@ import {
   Suspense,
   useMemo,
   useRef,
+  useState,
 } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import {
@@ -639,15 +640,10 @@ export function withWeaverse(
     if (!translationStoreRef.current) {
       translationStoreRef.current = new TranslationStore()
     }
-    const studioSelectionStoreRef = useRef<StudioSelectionStore | null>(null)
-    if (!studioSelectionStoreRef.current) {
-      studioSelectionStoreRef.current = new StudioSelectionStore()
-    }
+    let [studioSelectionStore] = useState(() => new StudioSelectionStore())
     return (
       <ThemeSettingsStoreContext.Provider value={themeSettingsStore}>
-        <StudioSelectionStoreContext.Provider
-          value={studioSelectionStoreRef.current}
-        >
+        <StudioSelectionStoreContext.Provider value={studioSelectionStore}>
           <TranslationProvider
             merchantOverrides={translationData.merchantOverrides}
             staticContent={translationData.staticContent}
