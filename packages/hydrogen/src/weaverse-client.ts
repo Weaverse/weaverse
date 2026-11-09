@@ -316,6 +316,7 @@ export class WeaverseClient {
   private readonly componentsByType: Map<string, WeaverseComponent>
 
   // Configuration
+  private readonly locale: WeaverseI18n
   private readonly fetchTimeoutMs: number
   private readonly throwPageLoadFailures: boolean
 
@@ -336,6 +337,7 @@ export class WeaverseClient {
     this.componentsByType = this.buildComponentLookupMap(args.components)
 
     // Configuration
+    this.locale = args.locale ?? args.storefront.i18n
     this.fetchTimeoutMs = args.fetchTimeoutMs || DEFAULT_FETCH_TIMEOUT_MS
     this.throwPageLoadFailures = args.throwPageLoadFailures === true
 
@@ -406,7 +408,7 @@ export class WeaverseClient {
 
     this.basePageRequestBody = {
       isDesignMode: this.configs.isDesignMode,
-      i18n: args.storefront.i18n,
+      i18n: this.locale,
       projectId: this.configs.projectId,
     }
 
@@ -1038,7 +1040,7 @@ export class WeaverseClient {
   ): Promise<Record<string, unknown> | undefined> => {
     try {
       const { projectId, weaverseHost } = this.configs
-      const i18n = this.storefront.i18n
+      const i18n = this.locale
 
       // Skip entirely when the theme hasn't opted into i18n. Merchant overrides
       // are locale-specific translations; a theme with no `i18n` schema has no
@@ -1053,7 +1055,7 @@ export class WeaverseClient {
         return
       }
 
-      // Build locale code from storefront i18n (e.g. "en-us")
+      // Build locale code from the market's locale (e.g. "en-us")
       const language = (i18n?.language || 'en').toLowerCase()
       const country = (i18n?.country || 'us').toLowerCase()
       const locale = `${language}-${country}`
@@ -1225,7 +1227,7 @@ export class WeaverseClient {
     }
 
     try {
-      const { request, storefront, basePageRequestBody, basePageConfigs } = this
+      const { request, basePageRequestBody, basePageConfigs } = this
       const {
         projectId: clientProjectId,
         weaverseHost,
@@ -1352,7 +1354,7 @@ export class WeaverseClient {
         configs: {
           ...basePageConfigs,
           requestInfo: {
-            i18n: storefront.i18n,
+            i18n: this.locale,
             queries: getRequestQueries<WeaverseStudioQueries>(request),
             pathname: this.parsedUrl.pathname,
             search: this.parsedUrl.search,

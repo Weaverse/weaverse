@@ -264,6 +264,7 @@ export declare class WeaverseClient {
 
 export type WeaverseClientArgs = {
     storefront: WeaverseStorefront;
+    locale?: WeaverseI18n;
     env: WeaverseEnv;
     waitUntil?: (promise: Promise<unknown>) => void;
     customerAccount?: unknown;

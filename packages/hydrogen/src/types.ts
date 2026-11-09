@@ -556,9 +556,22 @@ export function isProjectIdFunction(
 export type WeaverseClientArgs = {
   /**
    * Request-scoped Hydrogen Storefront API client. Section loaders reach it
-   * as `weaverse.storefront`; its `i18n` selects the content locale.
+   * as `weaverse.storefront`; its `i18n` selects the content locale unless
+   * {@link WeaverseClientArgs.locale} is given.
    */
   storefront: WeaverseStorefront
+
+  /**
+   * The market this request serves, as Weaverse identifies it. It selects the
+   * Translation Manager overrides (`${language}-${country}`, lowercased), the
+   * locale sent with page requests and the `requestInfo.i18n` Studio reads,
+   * so include `pathPrefix`. Pass it when the storefront's `i18n.language` is
+   * a Shopify `LanguageCode` that differs from the market's public language,
+   * such as `ZH_TW` for a Traditional Chinese Hong Kong market.
+   *
+   * @defaultValue `storefront.i18n`
+   */
+  locale?: WeaverseI18n
 
   /** Runtime environment variables, such as the Oxygen worker `env`. */
   env: WeaverseEnv
