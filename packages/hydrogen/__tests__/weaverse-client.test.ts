@@ -1152,3 +1152,96 @@ describe('loadThemeSettings storefront context', () => {
     expect(await shouldCacheResponse?.(bodyOf({ theme: {} }))).toBe(true)
   })
 })
+
+describe('WeaverseClient locale option (issue #568)', () => {
+  // A Hong Kong market in Traditional Chinese: Shopify needs `ZH_TW`, while
+  // Weaverse keys the market by its own locale.
+  let storefront = { i18n: { language: 'ZH_TW', country: 'HK' } }
+  let locale = { language: 'ZH', country: 'HK', pathPrefix: '/zh-hk' }
+  let themeSchema: WeaverseThemeSchema = {
+    info: {
+      name: 'T',
+      author: 'A',
+      version: '1.0.0',
+      authorProfilePhoto: '',
+      documentationUrl: '',
+      supportUrl: '',
+    },
+    settings: [],
+    i18n: {
+      urlStructure: 'url-path',
+      defaultLocale: { language: 'EN', country: 'US' },
+      shopLocales: [],
+    },
+  }
+  let projectPayload = {
+    project: { id: 'proj-123', name: 'Test', weaverseShopId: 'shop' },
+    page: null,
+    pageAssignment: null,
+  }
+
+  function makeClient(overrides: Record<string, unknown> = {}) {
+    return new WeaverseClient({
+      ...createMockContext({ storefront }),
+      components: [],
+      themeSchema,
+      projectId: 'proj-123',
+      ...overrides,
+    })
+  }
+
+  function overridesUrl(fetchSpy: any): string | undefined {
+    return fetchSpy.mock.calls.find(
+      (c: any) => c[1]?.cacheTarget === 'merchant-overrides'
+    )?.[0]
+  }
+
+  function projectBody(fetchSpy: any) {
+    let call = fetchSpy.mock.calls.find(
+      (c: any) => c[1]?.cacheTarget === 'project'
+    )
+    return JSON.parse(call[1].body)
+  }
+
+  it('should_key_merchant_overrides_by_locale_when_locale_is_given', async () => {
+    let client = makeClient({ locale })
+    let fetchSpy = spyOn(client, 'fetchWithCache').mockResolvedValue({
+      theme: {},
+    } as any)
+
+    await client.loadThemeSettings()
+
+    expect(overridesUrl(fetchSpy)).toContain('locale=zh-hk')
+  })
+
+  it('should_key_merchant_overrides_by_storefront_i18n_when_locale_is_omitted', async () => {
+    let client = makeClient()
+    let fetchSpy = spyOn(client, 'fetchWithCache').mockResolvedValue({
+      theme: {},
+    } as any)
+
+    await client.loadThemeSettings()
+
+    expect(overridesUrl(fetchSpy)).toContain('locale=zh_tw-hk')
+  })
+
+  it('should_send_locale_to_the_builder_when_locale_is_given', async () => {
+    let client = makeClient({ locale })
+    let fetchSpy = spyOn(client, 'fetchWithCache').mockResolvedValue(
+      projectPayload as any
+    )
+
+    await client.loadPage()
+
+    expect(projectBody(fetchSpy).i18n).toEqual(locale)
+  })
+
+  it('should_report_locale_with_pathPrefix_to_studio_when_locale_is_given', async () => {
+    let client = makeClient({ locale })
+    spyOn(client, 'fetchWithCache').mockResolvedValue(projectPayload as any)
+
+    let result = await client.loadPage()
+
+    expect(result?.configs.requestInfo.i18n).toEqual(locale)
+  })
+})

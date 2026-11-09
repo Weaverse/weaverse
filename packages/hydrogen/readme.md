@@ -140,6 +140,17 @@ export const middleware: Route.MiddlewareFunction[] = [
 ```
 
 `storefront.i18n` selects the content locale, including its `pathPrefix`.
+When a market's Shopify `LanguageCode` differs from the locale Weaverse keys
+its translations by (for example `ZH_TW` for a Traditional Chinese Hong Kong
+market), pass the market as `locale` instead of relabeling the storefront
+client. It sets the Translation Manager locale, the locale sent with page
+requests and the `requestInfo.i18n` Studio reads, while the Storefront API keeps
+its own `i18n`:
+
+```typescript
+new WeaverseClient({ ...args, locale: { language: 'ZH', country: 'HK', pathPrefix: '/zh-hk' } })
+```
+
 Section loaders receive the same client as `weaverse`, so they query the
 Storefront API with `weaverse.storefront.graphql(QUERY, { variables, cache })`.
 
