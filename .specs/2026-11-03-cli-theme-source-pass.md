@@ -8,7 +8,8 @@ A shop with a license for a partner theme copies `npx @weaverse/cli@latest creat
 
 ## Scope & contract
 
-- **Flag:** `create --pass=<pass>` replaces `--template`. `--pass` with `--template` or `--commit` fails before any request. Without `--pass`, the template flow is unchanged.
+- **Flag:** `create --pass=<pass>` replaces `--template`. `--pass` with `--template` or `--commit` fails before any request. Without `--pass`, the template flow is unchanged for Weaverse template names.
+- **Free partner themes (builder#3157):** `--template=<handle>` that is not a Weaverse template is the handle of a free partner theme. A value that cannot be a handle (lowercase letters, digits, single hyphens) fails before any request with the Weaverse template list. Otherwise the same flow as `--pass` runs with request body `{ "handle": "<handle>" }` (no pass to spend); `--commit` is refused. Its errors: `not_found` (no such template or free partner theme, lists the Weaverse templates and `weaverse.io/themes`), `not_free` (paid theme: buy it on `weaverse.io/themes/<handle>` and create a project from it in the dashboard), `rate_limited`. Interactive template choices stay Weaverse-only. Publish only after Builder accepts `{ handle }`.
 - **Builder origin:** `https://studio.weaverse.io`; overridden by the hidden `--api-base` flag, then the `WEAVERSE_BUILDER_URL` env var (testing only).
 - **Request:** `POST {origin}/api/public/theme-source` with JSON `{ "pass": "<pass>" }`. The request spends the pass.
   - 200: `{ url, handle, fileName, sha256, revisionId }`; `url` is a presigned GET valid about 2 minutes, `sha256` the hex SHA-256 of the zip bytes. A body without these fields is an error.

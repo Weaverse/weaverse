@@ -2,6 +2,7 @@ import chalk from 'chalk'
 import fs from 'fs-extra'
 import inquirer from 'inquirer'
 import ora from 'ora'
+import { TEMPLATES } from '../constants/templates.js'
 import { createEnvFile, toKebabCase } from '../utils/environment.js'
 import {
   confirmTargetDirectory,
@@ -14,8 +15,12 @@ import {
   extractThemeSource,
   requestThemeSource,
   resolveApiBase,
+  THEME_SOURCE_ERRORS,
+  themeHandleErrors,
 } from '../utils/theme-source.js'
 import { validateProjectId, validateProjectName } from '../utils/validation.js'
+
+const PARTNER_HANDLE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
 /**
  * The project folder for a name from `--project-name` or the theme handle.
@@ -68,17 +73,69 @@ let resolveProjectId = async (argv, { nonInteractive, prompt }) => {
 }
 
 /**
- * Creates a project from a licensed partner theme's source, using the one-time
- * install pass from the Weaverse dashboard.
+ * What `create` was asked for: a one-time pass (`--pass`, a licensed theme)
+ * or the handle of a free partner theme (`--template=<handle>` that is not a
+ * Weaverse template). Checked before any request.
+ * @param {Object} argv - Command line arguments object
+ * @returns {{ credential: { pass: string } | { handle: string }, errors: Record<string, string>, checking: string, accepted: string, rejected: string }}
+ * @throws {Error} On conflicting flags or a malformed value
+ */
+let resolveCredential = (argv) => {
+  if (argv.commit !== undefined) {
+    throw new Error(
+      '--commit only applies to Weaverse templates, not to partner themes.'
+    )
+  }
+  if (argv.pass !== undefined) {
+    if (argv.template !== undefined) {
+      throw new Error(
+        '--pass installs a licensed partner theme, so it cannot be combined with --template or --commit.'
+      )
+    }
+    let pass = typeof argv.pass === 'string' ? argv.pass.trim() : ''
+    if (!pass) {
+      throw new Error(
+        '--pass needs the one-time pass from your install command. Get the install command from your Weaverse dashboard.'
+      )
+    }
+    return {
+      credential: { pass },
+      errors: THEME_SOURCE_ERRORS,
+      checking: 'Checking your install pass...',
+      accepted: 'Install pass accepted',
+      rejected: 'Install pass not accepted',
+    }
+  }
+  let handle = String(argv.template).trim()
+  let templateNames = TEMPLATES.map((t) => t.name)
+  if (!PARTNER_HANDLE.test(handle)) {
+    throw new Error(
+      `Template '${handle}' not found. Available: ${templateNames.join(', ')}, or the handle of a free partner theme from https://weaverse.io/themes`
+    )
+  }
+  return {
+    credential: { handle },
+    errors: themeHandleErrors(handle, templateNames),
+    checking: `Looking up the partner theme "${handle}"...`,
+    accepted: `Found the partner theme "${handle}"`,
+    rejected: `Partner theme "${handle}" not available`,
+  }
+}
+
+/**
+ * Creates a project from a partner theme's source: a licensed theme with the
+ * one-time install pass from the Weaverse dashboard (`--pass`), or a free
+ * partner theme by its handle (`--template=<handle>`).
  *
- * The pass is spent by the first request, so everything that can fail or wait
+ * A pass is spent by the first request, so everything that can fail or wait
  * locally (flag conflicts, an explicit `--project-name` folder, the project ID
  * prompt) happens first; a pass lasts 10 minutes. The zip is verified against
  * its SHA-256 before anything is written, and unpacked into the folder named
  * by `--project-name`, or by the theme handle.
  *
  * @param {Object} argv - Command line arguments object
- * @param {string} argv.pass - One-time install pass
+ * @param {string} [argv.pass] - One-time install pass
+ * @param {string} [argv.template] - Free partner theme handle (when no pass)
  * @param {string} [argv['api-base']] - Builder origin override (testing)
  * @param {string} [argv['project-id']] - Weaverse project ID for `.env`
  * @param {string} [argv['project-name']] - Project folder name
@@ -91,27 +148,18 @@ let resolveProjectId = async (argv, { nonInteractive, prompt }) => {
  * @returns {Promise<void>}
  * @throws {Error} With a user-facing message on any failure
  */
-export let createProjectFromPass = async (
+export let createPartnerThemeProject = async (
   argv,
   { nonInteractive, fetch, prompt = inquirer.prompt }
 ) => {
-  if (argv.template !== undefined || argv.commit !== undefined) {
-    throw new Error(
-      '--pass installs a licensed partner theme, so it cannot be combined with --template or --commit.'
-    )
-  }
-  let pass = typeof argv.pass === 'string' ? argv.pass.trim() : ''
-  if (!pass) {
-    throw new Error(
-      '--pass needs the one-time pass from your install command. Get the install command from your Weaverse dashboard.'
-    )
-  }
+  let { credential, errors, checking, accepted, rejected } =
+    resolveCredential(argv)
 
   // yargs parses `--no-install` as `install: false`; accept both shapes.
   let skipInstall = argv['no-install'] || argv.install === false
   let apiBase = resolveApiBase(argv)
 
-  // Settle an explicit folder before the pass is spent.
+  // Settle an explicit folder before a pass is spent.
   let folder = null
   let emptyFirst = false
   if (argv['project-name'] !== undefined) {
@@ -123,13 +171,13 @@ export let createProjectFromPass = async (
   }
   let projectId = await resolveProjectId(argv, { nonInteractive, prompt })
 
-  let spinner = ora('Checking your install pass...').start()
+  let spinner = ora(checking).start()
   let source
   try {
-    source = await requestThemeSource({ apiBase, pass, fetch })
-    spinner.succeed('Install pass accepted')
+    source = await requestThemeSource({ apiBase, credential, errors, fetch })
+    spinner.succeed(accepted)
   } catch (error) {
-    spinner.fail('Install pass not accepted')
+    spinner.fail(rejected)
     throw error
   }
 
