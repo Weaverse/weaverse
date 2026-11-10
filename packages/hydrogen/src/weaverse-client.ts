@@ -784,8 +784,18 @@ export class WeaverseClient {
     options: WeaverseFetchWithCacheOptions = {}
   ): Promise<T> => {
     const { cacheTarget, strategy: strategyOverride, ...fetchOptions } = options
-    const strategy = strategyOverride || DEFAULT_CACHE_STRATEGY
     const { body } = fetchOptions
+    // Only a string or `URLSearchParams` body stringifies to its content for
+    // the cache key. Any other body (FormData, Blob, ArrayBuffer, stream)
+    // becomes a constant such as `[object FormData]` and would share one entry
+    // across different bodies, so such requests skip the shared cache.
+    const hasUncacheableBody =
+      body != null &&
+      typeof body !== 'string' &&
+      !(body instanceof URLSearchParams)
+    const strategy = hasUncacheableBody
+      ? Cache.none()
+      : strategyOverride || DEFAULT_CACHE_STRATEGY
 
     // Update cache key to include method, body content, and projectId for multi-project isolation
     // Prefix for easier debugging in cache systems

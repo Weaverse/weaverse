@@ -1245,3 +1245,37 @@ describe('WeaverseClient locale option (issue #568)', () => {
     expect(result?.configs.requestInfo.i18n).toEqual(locale)
   })
 })
+
+describe('fetchWithCache non-string bodies', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('should_return_each_response_when_FormData_bodies_differ', async () => {
+    spyOn(globalThis, 'fetch').mockImplementation(async (_url, init) =>
+      Response.json({ q: (init?.body as FormData).get('q') })
+    )
+    let pending: Promise<unknown>[] = []
+    let weaverse = new WeaverseClient({
+      ...createMockContext({
+        waitUntil: (promise: Promise<unknown>) => pending.push(promise),
+      }),
+      components: [],
+      themeSchema: { info: {}, settings: [] } as any,
+    })
+    let send = (q: string) => {
+      let body = new FormData()
+      body.set('q', q)
+      return weaverse.fetchWithCache('https://api.example.com/search', {
+        method: 'POST',
+        body,
+      })
+    }
+
+    await send('a')
+    await Promise.all(pending)
+    let second = await send('b')
+
+    expect(second).toEqual({ q: 'b' })
+  })
+})
