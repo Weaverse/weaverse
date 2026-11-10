@@ -11,6 +11,7 @@ import {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react'
 import { WeaverseNextRootContext } from './root-provider'
 import { createWeaverseNextThemeSettingsStore } from './theme-settings-store'
@@ -138,13 +139,10 @@ export function WeaverseNextProvider(props: WeaverseNextProviderProps) {
 
   // Same adoption rule as the translation store: one selection store per page
   // load, so the Studio bridge and root-level UI observe the same instance.
-  let ownSelectionStoreRef = useRef<StudioSelectionStore | null>(null)
-  if (!(rootContext || ownSelectionStoreRef.current)) {
-    ownSelectionStoreRef.current = new StudioSelectionStore()
-  }
+  // The route's own store is only used when no root provider is mounted.
+  let [ownSelectionStore] = useState(() => new StudioSelectionStore())
   let studioSelectionStore =
-    rootContext?.studioSelectionStore ??
-    (ownSelectionStoreRef.current as StudioSelectionStore)
+    rootContext?.studioSelectionStore ?? ownSelectionStore
 
   // Static content / merchant overrides feeding `useTranslation()`. Precedence:
   // explicit prop → ambient root value → (static content only) schema default.

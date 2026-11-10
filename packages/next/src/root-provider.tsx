@@ -11,6 +11,7 @@ import {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react'
 import {
   getSchemaStaticContent,
@@ -122,11 +123,7 @@ export function WeaverseNextRootProvider(props: WeaverseNextRootProviderProps) {
 
   // One selection store for the session: the Studio bridge writes it through
   // `runtime.internal.studioSelectionStore`, root UI reads it.
-  let studioSelectionStoreRef = useRef<StudioSelectionStore | null>(null)
-  if (!studioSelectionStoreRef.current) {
-    studioSelectionStoreRef.current = new StudioSelectionStore()
-  }
-  let studioSelectionStore = studioSelectionStoreRef.current
+  let [studioSelectionStore] = useState(() => new StudioSelectionStore())
 
   // If `initialThemeSettings` changes after mount (e.g. root revalidation),
   // update the existing store in place instead of replacing it. This is an

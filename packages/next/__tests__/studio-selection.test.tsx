@@ -5,7 +5,7 @@ import {
 } from '@weaverse/react'
 import { useContext } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { WeaverseNextRuntime } from '../src/index'
 import {
   createSchema,
@@ -59,6 +59,10 @@ function setup() {
 }
 
 describe('Studio selection store in @weaverse/next', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
   it('should_share_one_store_between_root_ui_the_page_and_the_runtime', () => {
     // Arrange
     let { seen, client, RootProbe } = setup()
@@ -97,7 +101,6 @@ describe('Studio selection store in @weaverse/next', () => {
 
   it('should_attach_the_new_store_when_an_existing_runtime_is_reused', () => {
     // Arrange
-    let previousWindow = globalThis.window
     vi.stubGlobal('window', {} as Window & typeof globalThis)
     let { client } = setup()
     let data = client.data as NonNullable<typeof client.data>
@@ -119,6 +122,5 @@ describe('Studio selection store in @weaverse/next', () => {
     // Assert
     expect(reused).toBe(runtime)
     expect(reused.internal.studioSelectionStore).toBe(second)
-    vi.stubGlobal('window', previousWindow)
   })
 })
