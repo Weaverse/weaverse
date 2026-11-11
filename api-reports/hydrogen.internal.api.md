@@ -26,6 +26,7 @@ import type { SchemaType } from '@weaverse/schema';
 import type { SchemaValidationResult } from '@weaverse/schema';
 import type { SelectedOption } from '@shopify/hydrogen';
 import type { StorefrontClient } from '@shopify/hydrogen';
+import type { StudioSelectionStore } from '@weaverse/react';
 import type { ThemeOutline } from '@weaverse/schema';
 import type { ThemeRoutes } from '@weaverse/schema';
 import type { UIMatch } from 'react-router';
@@ -418,6 +419,7 @@ export type WeaverseInternal = {
     navigate: NavigateFunction;
     revalidate: () => void;
     themeSettingsStore: ThemeSettingsStore;
+    studioSelectionStore?: StudioSelectionStore | null;
     translationStore?: TranslationStore | null;
     // @deprecated
     themeTextStore?: TranslationStore | null;

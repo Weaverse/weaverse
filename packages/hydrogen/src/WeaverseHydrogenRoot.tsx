@@ -1,6 +1,8 @@
 import type { ElementData } from '@weaverse/react'
 import {
   isBrowser,
+  StudioSelectionStore,
+  StudioSelectionStoreContext,
   useSafeExternalStore,
   Weaverse,
   WeaverseItemStore,
@@ -13,6 +15,7 @@ import {
   Suspense,
   useMemo,
   useRef,
+  useState,
 } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import {
@@ -637,17 +640,20 @@ export function withWeaverse(
     if (!translationStoreRef.current) {
       translationStoreRef.current = new TranslationStore()
     }
+    let [studioSelectionStore] = useState(() => new StudioSelectionStore())
     return (
       <ThemeSettingsStoreContext.Provider value={themeSettingsStore}>
-        <TranslationProvider
-          merchantOverrides={translationData.merchantOverrides}
-          staticContent={translationData.staticContent}
-          t={options?.t}
-          translationStore={translationStoreRef.current}
-        >
-          <StudioConnect />
-          <Component {...props} />
-        </TranslationProvider>
+        <StudioSelectionStoreContext.Provider value={studioSelectionStore}>
+          <TranslationProvider
+            merchantOverrides={translationData.merchantOverrides}
+            staticContent={translationData.staticContent}
+            t={options?.t}
+            translationStore={translationStoreRef.current}
+          >
+            <StudioConnect />
+            <Component {...props} />
+          </TranslationProvider>
+        </StudioSelectionStoreContext.Provider>
       </ThemeSettingsStoreContext.Provider>
     )
   }
