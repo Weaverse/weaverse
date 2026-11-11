@@ -226,17 +226,15 @@ export declare function generateDataFromSchema(schema: WeaverseComponentSchema |
 
 export declare function getNestedKey(obj: Record<string, unknown>, path: string, fallback?: string): string | undefined;
 
-export { isBrowser } from '@weaverse/core';
+export { isBrowser } from '@weaverse/next';
 
-export { isIframe } from '@weaverse/core';
+export { isIframe } from '@weaverse/next';
 
 export { useChildInstances } from '@weaverse/react';
 
 export { useItemInstance } from '@weaverse/react';
 
 export { useParentInstance } from '@weaverse/react';
-
-export { useStudioSelection } from '@weaverse/react';
 
 export { useThemeSettings } from '@weaverse/next';
 

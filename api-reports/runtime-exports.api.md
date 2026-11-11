@@ -92,7 +92,6 @@
     "useChildInstances",
     "useItemInstance",
     "useParentInstance",
-    "useStudioSelection",
     "useThemeSettings",
     "useTranslation",
     "useWeaverse"

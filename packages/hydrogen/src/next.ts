@@ -7,11 +7,18 @@
  * @packageDocumentation
  */
 
-// Hooks and stores come from the Next adapter itself so they share its React
-// contexts; these named exports take precedence over the star re-exports.
+// Server Components import this entry (root layouts, section schemas), so no
+// runtime value here may load `@weaverse/react`, whose module scope calls
+// `createContext`. Hooks and stores come from the Next adapter itself, which
+// keeps React behind its own 'use client' boundary and shares its contexts;
+// the rest comes from `@weaverse/schema` and React-free local modules, and the
+// core and React entries contribute types only. `useStudioSelection` waits for
+// the `@weaverse/next` release that exports it. `package:check` guards this.
 export {
   buildWeaverseNextRequestInfo,
   createWeaverseNextClient,
+  isBrowser,
+  isIframe,
   TranslationProvider,
   TranslationStore,
   useChildInstances,
@@ -31,5 +38,17 @@ export {
   type WeaverseNextThemeSchema,
   type WeaverseNextThemeSchemaGroup,
 } from '@weaverse/next'
-export * from './index'
-export * from './react'
+export type { StudioSelection } from '@weaverse/react'
+export {
+  type BasicInput,
+  createSchema,
+  IMAGES_PLACEHOLDERS,
+  type InspectorGroup,
+  type PageType,
+  type SchemaType,
+} from '@weaverse/schema'
+export type * from './index'
+export type { WeaverseComponentProps } from './types'
+export { WeaverseError, WeaverseLoadError } from './types'
+export { generateDataFromSchema } from './utils'
+export { getNestedKey } from './utils/nested-key'

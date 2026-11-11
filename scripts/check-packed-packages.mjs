@@ -199,6 +199,43 @@ function assertNextClientBoundary(packedFolder) {
   }
 }
 
+// `@weaverse/hydrogen/next` and `/next/server` are imported by Server
+// Components too (root layouts, section schemas). Their entry files and every
+// local chunk they load must stay free of React client code; client code is
+// reached only through `@weaverse/next`'s own client boundary.
+const HYDROGEN_NEXT_ENTRIES = [
+  'next.mjs',
+  'next.js',
+  'next-server.mjs',
+  'next-server.js',
+]
+const LOCAL_CHUNK_IMPORT =
+  /(?:from|import|require\()\s*['"](\.\/[^'"]+\.m?js)['"]/g
+
+function assertHydrogenNextServerSafe(packedFolder) {
+  let distDir = join(packedFolder, 'dist')
+  for (let entry of HYDROGEN_NEXT_ENTRIES) {
+    let pending = [entry]
+    let seen = new Set()
+    while (pending.length > 0) {
+      let file = pending.pop()
+      if (seen.has(file)) {
+        continue
+      }
+      seen.add(file)
+      let source = readFileSync(join(distDir, file), 'utf8')
+      if (NEXT_CLIENT_ONLY_CODE.test(source)) {
+        throw new Error(
+          `@weaverse/hydrogen dist/${entry} loads client-only code through dist/${file}, which breaks React Server Components`
+        )
+      }
+      for (let match of source.matchAll(LOCAL_CHUNK_IMPORT)) {
+        pending.push(match[1].slice(2))
+      }
+    }
+  }
+}
+
 function hasInterfaceProperty(declarationFile, interfaceName, propertyName) {
   let sourceFile = parseSourceFile(
     declarationFile,
@@ -363,6 +400,9 @@ try {
     )
     if (packageJson.name === '@weaverse/next') {
       assertNextClientBoundary(packedFolder)
+    }
+    if (packageJson.name === '@weaverse/hydrogen') {
+      assertHydrogenNextServerSafe(packedFolder)
     }
     let entryFiles = collectPublishedFiles(packedPackageJson.exports)
 
