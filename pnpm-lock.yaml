@@ -134,11 +134,11 @@ importers:
   packages/hydrogen:
     dependencies:
       '@weaverse/next':
-        specifier: 1.1.2
-        version: 1.1.2(next@16.3.4(@types/node@25.5.2)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+        specifier: 1.1.3
+        version: 1.1.3(next@16.3.4(@types/node@25.5.2)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@weaverse/react':
-        specifier: 6.1.1
-        version: 6.1.1
+        specifier: 6.1.2
+        version: 6.1.2
       '@weaverse/schema':
         specifier: 0.20.0
         version: 0.20.0
@@ -165,8 +165,8 @@ importers:
   packages/next:
     dependencies:
       '@weaverse/react':
-        specifier: 6.1.1
-        version: 6.1.1
+        specifier: 6.1.2
+        version: 6.1.2
       '@weaverse/schema':
         specifier: 0.20.0
         version: 0.20.0
@@ -184,8 +184,8 @@ importers:
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: 6.1.1
-        version: 6.1.1
+        specifier: 6.1.2
+        version: 6.1.2
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -1106,12 +1106,12 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@weaverse/core@6.1.1':
-    resolution: {integrity: sha512-akIRS17Vwjj1P5MsPQrqLs5xjxLuc1iy6cbPH8xPHrZ6Uh5HELmcxiOxGGJVZuvEBQNTaR7SJhOe1OBTwaOgxg==}
+  '@weaverse/core@6.1.2':
+    resolution: {integrity: sha512-nfg7Jwmltwd9xg4EAjscUiMBOx8N+UEVXdsX5vP58mq8Az8QqbnEQHscNYy+qMgE6+uLDzE1A/1bt+BJsG57Rw==}
     engines: {node: '>=18'}
 
-  '@weaverse/next@1.1.2':
-    resolution: {integrity: sha512-y8RvwUJx2TYySD7u4bdEu/TtpY1wSSMg1vEfPAtCMXk7Qlw3i2kC/K6Q77o6yBe+DqNaxfhBCBnHm4Is8WG3bQ==}
+  '@weaverse/next@1.1.3':
+    resolution: {integrity: sha512-lNbUR1upFKO4bRFhVoTNTAt4X/RtzvC0ewT6w5PMVoCRXAB2l+2WNXJHTGNPIDZPKQR485mp7Mvt748aUYbsOQ==}
     engines: {node: '>=20'}
     peerDependencies:
       next: '>=14'
@@ -1121,8 +1121,8 @@ packages:
       next:
         optional: true
 
-  '@weaverse/react@6.1.1':
-    resolution: {integrity: sha512-dHwmyHZrUxMkAEnLgiB+l3OfiENHnA4F0yejqhccrMXfguFfNS4xv78337bDkglHWj1zt0S2PO+dTsT1XnJMVg==}
+  '@weaverse/react@6.1.2':
+    resolution: {integrity: sha512-wfFfeFg66m1NOFpk2sDOssXCerRn4CIWvg2Mhvj/Hy/I88P8FglI+IfEspha0hv1ow9r1SJfPB0J80w8Oqppqg==}
     engines: {node: '>=18'}
 
   '@weaverse/schema@0.20.0':
@@ -2783,20 +2783,20 @@ snapshots:
   '@voidzero-dev/vite-plus-win32-x64-msvc@0.1.24':
     optional: true
 
-  '@weaverse/core@6.1.1': {}
+  '@weaverse/core@6.1.2': {}
 
-  '@weaverse/next@1.1.2(next@16.3.4(@types/node@25.5.2)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)':
+  '@weaverse/next@1.1.3(next@16.3.4(@types/node@25.5.2)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)':
     dependencies:
-      '@weaverse/react': 6.1.1
+      '@weaverse/react': 6.1.2
       '@weaverse/schema': 0.20.0
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
     optionalDependencies:
       next: 16.3.4(@types/node@25.5.2)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
 
-  '@weaverse/react@6.1.1':
+  '@weaverse/react@6.1.2':
     dependencies:
-      '@weaverse/core': 6.1.1
+      '@weaverse/core': 6.1.2
       clsx: 2.1.1
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
