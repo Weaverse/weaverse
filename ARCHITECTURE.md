@@ -16,7 +16,7 @@
 ├────────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                    │
 │  ┌──────────────────────────┐  ┌──────────────────┐  ┌──────────────────┐          │
-│  │  @weaverse/hydrogen      │  │  @weaverse/next  │  │ @weaverse/remix  │          │
+│  │  @weaverse/hydrogen      │  │  hydrogen/next   │  │ @weaverse/remix  │          │
 │  │  (Shopify + RRv7)        │  │  (Next.js App)   │  │ (Remix)          │          │
 │  │                          │  │  [Alpha]         │  │ [Stub]           │          │
 │  │  WeaverseClient          │  │  Server client   │  └──────────────────┘          │
@@ -165,13 +165,12 @@ $ pnpm run build (orchestrated by Turbo)
      ├─→ @weaverse/react (depends on core)
      ├─→ @weaverse/cli (no deps)
      │
-     ├─→ @weaverse/hydrogen (depends on react + schema)
-     ├─→ @weaverse/next (depends on react + schema; publishes `.` and `./server` entrypoints)
+     ├─→ @weaverse/hydrogen (depends on react + schema; React Router and Next.js adapters)
      └─→ @weaverse/remix (stub)
 
 Each Package Build (`vp pack` for JS, tsrs CLI for declarations):
 - Most packages: `src/index.ts` → CJS/ESM/declarations/maps.
-- `@weaverse/next`: `src/index.ts` and `src/server.ts` → root client/shared entrypoint plus server-only entrypoint.
+- `@weaverse/hydrogen`: one entry per subpath (`.`, `/react`, `/react-router`, `/next`, `/next/server`, `/internal`), plus the Next.js adapter's `'use client'` boundary built as its own file (`next-client-boundary`).
 ```
 
 ## Code Quality Checks (Pre-commit & CI)
@@ -259,7 +258,7 @@ Version Groups:
 | Platform | Status | Notes |
 |----------|--------|-------|
 | Shopify Hydrogen (React Router v7) | **Primary** | Full support via `@weaverse/hydrogen` |
-| Next.js App Router | Alpha | `@weaverse/next` server client, renderer/provider, Studio bridge, revalidation, i18n/static-text foundations |
+| Next.js App Router | Alpha | `@weaverse/hydrogen/next` and `/next/server`: server client, renderer/provider, Studio bridge, revalidation, i18n/static-text foundations |
 | Remix | Future/Stub | Server-side rendering |
 | Generic React Router v7 | Supported | Via `@weaverse/react` directly |
 

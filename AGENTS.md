@@ -42,20 +42,19 @@ turbo test --filter=@weaverse/hydrogen
 - **Testing**: Bun's native test runner
 - **Pre-commit hooks**: Lefthook runs `biome check --write` on staged files
 - **CI**: GitHub Actions — `biome ci .` + `pnpm run typecheck` + `pnpm run test`
-- **Releases**: Git tag + `pnpm publish` workflow via `.claude/skills/releasing-weaverse-sdks/` skill (core, react, hydrogen stay in sync; `@weaverse/next` is released with them)
+- **Releases**: Git tag + `pnpm publish` workflow via `.claude/skills/releasing-weaverse-sdks/` skill (core, react, hydrogen stay in sync)
 
 ### Package Dependency Graph
 
 ```
 @weaverse/hydrogen → @weaverse/react → @weaverse/core
-                   → @weaverse/next  → @weaverse/react
                    → @weaverse/schema
+                   (React Router and Next.js adapters; `next` is an optional peer)
 @weaverse/react    → @weaverse/core
 @weaverse/core     ← foundation, no internal deps
 @weaverse/schema (v0.8.2)   ← independent versioning (Zod-based)
 @weaverse/cli               ← CLI tools (JavaScript)
 @weaverse/i18n              ← internationalization
-@weaverse/next              ← Next.js integration
 @weaverse/remix             ← Remix integration
 @weaverse/experiments       ← A/B testing (independent; zero-dep engine + optional react peer)
 ```
@@ -66,27 +65,28 @@ turbo test --filter=@weaverse/hydrogen
 packages/
   core/          Framework-agnostic foundation (event system, types, utilities)
   react/         React bindings (hooks, context, components)
-  hydrogen/      Shopify Hydrogen integration (WeaverseClient, components, hooks)
+  hydrogen/      Shopify Hydrogen integration: React Router adapter, and the
+                 Next.js adapter in src/next (/next, /next/server entries)
   schema/        Zod-based schema definitions for component settings
   cli/           CLI tools
   biome/         Shared Biome configuration
   i18n/          Internationalization utilities
-  next/          Next.js integration
   remix/         Remix integration
   experiments/   Framework-agnostic A/B testing (engine + /server + /react)
 templates/
   pilot/         Example Hydrogen storefront theme
 archived/
+  next/          Archived @weaverse/next (adapter moved to hydrogen), do not modify
   shopify/       Archived, do not modify
 ```
 
 ### Build Configuration (vp pack + tsrs declarations)
 
 Each package `build` runs `vp pack` (Vite+ / tsdown) for JavaScript, then `scripts/build-declarations.mjs` for types:
-- **Entries**: `src/index.ts` plus package subpath entries (`next`: `src/server.ts`; `schema`: `src/manifest.ts`; `experiments`: `src/server.ts`, `src/react.tsx`)
+- **Entries**: `src/index.ts` plus package subpath entries (`hydrogen`: `src/react.ts`, `src/react-router.ts`, `src/next.ts`, `src/next-server.ts`, `src/internal.ts`; `schema`: `src/manifest.ts`; `experiments`: `src/server.ts`, `src/react.tsx`)
 - **Formats**: ESM + CJS with sourcemaps; `vp pack` declaration output is off
 - **Declarations**: emitted by the pinned tsrs CLI into `dist/types/` (`.d.ts` and `.d.cts`, with maps)
-- **Config**: CLI flags in the package `build` script, or `packages/<name>/vite.config.ts` (`pack` block) where options need code (`core`, `next`)
+- **Config**: CLI flags in the package `build` script, or `packages/<name>/vite.config.ts` (`pack` block) where options need code (`core`, `hydrogen`: its Next.js client boundary is built as a separate `'use client'` file)
 
 ## Code Style
 
@@ -342,7 +342,7 @@ Runs automatically on `git commit`:
 Uses a Claude Code skill (`.claude/skills/releasing-weaverse-sdks/SKILL.md`) for releases:
 1. Tell Claude which packages to release and the bump type (e.g., "release the fixed group as minor")
 2. The skill runs: verify → bump → build → publish to npm → tag → GitHub Release → sync dev
-3. Core, React, and Hydrogen versions stay in sync (fixed group), and `@weaverse/next` is released with them because Hydrogen pins it
+3. Core, React, and Hydrogen versions stay in sync (fixed group); the Next.js adapter ships inside Hydrogen
 4. Schema, CLI, Biome, and i18n are versioned independently
 5. See the skill file for the full 13-step ritual
 
