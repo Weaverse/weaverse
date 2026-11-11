@@ -134,8 +134,8 @@ importers:
   packages/hydrogen:
     dependencies:
       '@weaverse/react':
-        specifier: 6.1.3
-        version: 6.1.3
+        specifier: 6.2.0
+        version: 6.2.0
       '@weaverse/schema':
         specifier: 0.20.0
         version: 0.20.0
@@ -165,8 +165,8 @@ importers:
   packages/react:
     dependencies:
       '@weaverse/core':
-        specifier: 6.1.3
-        version: 6.1.3
+        specifier: 6.2.0
+        version: 6.2.0
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -1087,12 +1087,12 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@weaverse/core@6.1.3':
-    resolution: {integrity: sha512-cik1nKNAkB9a0KJVSD3AVkBbjXhxbEv+JU26MkdG92p11x8c7iYiqfAqcdosfBTf7bgHCUWiRJxtMiHuKa7Vcw==}
+  '@weaverse/core@6.2.0':
+    resolution: {integrity: sha512-owNG2HGzTxvh67s2HWUo/Izc6mxG+RLsoNmF9sd5C2iUaH3tNzG9AyIuTTNeVMlpiE9vGASOQWucunXVhDXpxA==}
     engines: {node: '>=18'}
 
-  '@weaverse/react@6.1.3':
-    resolution: {integrity: sha512-Y0Ief2ulDkrKaaGL2BU0uEDyRZyoDBk+mD3bH+lMElcf4rVq9kfOG2c57L2JUjrfcWzzrWznabFRsuMfbCEprA==}
+  '@weaverse/react@6.2.0':
+    resolution: {integrity: sha512-AieiYhHOV8GP8RT+UO5l0w6ju17i0Jxgmri9AkxiR9lDe1Z7vFOy2LGrOKzls8PXXz6+ZsSi5HDmtNSUpiaGMw==}
     engines: {node: '>=18'}
 
   '@weaverse/schema@0.20.0':
@@ -2753,11 +2753,11 @@ snapshots:
   '@voidzero-dev/vite-plus-win32-x64-msvc@0.1.24':
     optional: true
 
-  '@weaverse/core@6.1.3': {}
+  '@weaverse/core@6.2.0': {}
 
-  '@weaverse/react@6.1.3':
+  '@weaverse/react@6.2.0':
     dependencies:
-      '@weaverse/core': 6.1.3
+      '@weaverse/core': 6.2.0
       clsx: 2.1.1
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
