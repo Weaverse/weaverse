@@ -1,39 +1,15 @@
 /**
  * Pure translation helpers, free of React so server code can call them.
  *
- * `translation-context.tsx` builds the client provider and hook on top of
- * these; keeping them apart lets the root entry export them as real functions
- * outside the `'use client'` boundary.
+ * Shared by both adapters: the React Router and Next.js `translation-context`
+ * modules build their provider and hook on top of these. Keeping them apart
+ * from React lets the Next.js adapter export them as real functions outside
+ * its `'use client'` boundary.
  */
 
-/**
- * Traverse a nested object by dot-path.
- *
- * @example
- * getNestedKey({ cart: { title: 'Cart' } }, 'cart.title') // => 'Cart'
- * getNestedKey({}, 'cart.title', 'fallback')              // => 'fallback'
- */
-export function getNestedKey(
-  obj: Record<string, unknown>,
-  path: string,
-  fallback?: string
-): string | undefined {
-  let keys = path.split('.')
-  let current: unknown = obj
+import { getNestedKey } from './nested-key'
 
-  for (let key of keys) {
-    if (current == null || typeof current !== 'object') {
-      return fallback
-    }
-    current = (current as Record<string, unknown>)[key]
-  }
-
-  if (typeof current === 'string') {
-    return current
-  }
-
-  return fallback
-}
+export { getNestedKey }
 
 /**
  * Replace `{{variable}}` patterns in a string with provided values.

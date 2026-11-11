@@ -12,6 +12,14 @@
 export type { StudioSelection } from '@weaverse/react'
 // Re-export schema authoring for migration ergonomics.
 export * from '@weaverse/schema'
+export {
+  type CreateTranslateSources,
+  createTranslate,
+  getNestedKey,
+  interpolate,
+  type TranslateFunction,
+} from '../utils/translate'
+export { ThemeTextStore, TranslationStore } from '../utils/translation-store'
 // Client code (components, hooks, runtime, and the `@weaverse/react`
 // re-exports) comes by name from `./client-boundary`, which the build emits as
 // its own `'use client'` file. Every other value export below is server-safe,
@@ -91,20 +99,12 @@ export {
   type CreateWeaverseNextThemeSettingsStoreOptions,
   createWeaverseNextThemeSettingsStore,
 } from './theme-settings-store'
-export {
-  type CreateTranslateSources,
-  createTranslate,
-  getNestedKey,
-  interpolate,
-  type TranslateFunction,
-} from './translate'
 export type {
   ThemeTextProviderProps,
   ThemeTextValue,
   TranslationProviderProps,
   TranslationValue,
 } from './translation-context'
-export { ThemeTextStore, TranslationStore } from './translation-store'
 export type {
   WeaverseArticle,
   WeaverseBlog,

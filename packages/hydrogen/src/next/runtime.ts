@@ -1,4 +1,5 @@
 import { Weaverse } from '@weaverse/react'
+import { TranslationStore } from '../utils/translation-store'
 import {
   collectDeferredItemUpdates,
   ensureNextItemConstructor,
@@ -6,7 +7,6 @@ import {
 } from './item'
 import { buildWeaverseNextRequestInfo } from './request-info'
 import { createWeaverseNextThemeSettingsStore } from './theme-settings-store'
-import { TranslationStore } from './translation-store'
 import type {
   WeaverseNextClient,
   WeaverseNextLoaderData,

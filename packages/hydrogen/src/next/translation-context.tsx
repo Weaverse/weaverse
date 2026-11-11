@@ -2,8 +2,8 @@
 
 import { useSafeExternalStore } from '@weaverse/react'
 import { createContext, type ReactNode, useContext, useMemo } from 'react'
-import { createTranslate, type TranslateFunction } from './translate'
-import type { TranslationStore } from './translation-store'
+import { createTranslate, type TranslateFunction } from '../utils/translate'
+import type { TranslationStore } from '../utils/translation-store'
 
 // ---------------------------------------------------------------------------
 // Context & Provider

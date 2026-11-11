@@ -12,7 +12,7 @@ import type {
   ThemeRoutes,
 } from '@weaverse/schema'
 import type { ComponentType, ForwardRefExoticComponent, ReactNode } from 'react'
-import type { TranslationStore } from './translation-store'
+import type { TranslationStore } from '../utils/translation-store'
 
 /** Request metadata exposed to the Studio runtime. */
 export interface WeaverseNextRequestInfo {

@@ -13,11 +13,11 @@ import {
   useRef,
   useState,
 } from 'react'
+import type { TranslateFunction } from '../utils/translate'
+import { TranslationStore } from '../utils/translation-store'
 import { WeaverseNextRootContext } from './root-provider'
 import { createWeaverseNextThemeSettingsStore } from './theme-settings-store'
-import type { TranslateFunction } from './translate'
 import { TranslationProvider } from './translation-context'
-import { TranslationStore } from './translation-store'
 import type {
   WeaverseNextClient,
   WeaverseNextCommerceContext,
