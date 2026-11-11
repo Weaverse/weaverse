@@ -236,6 +236,8 @@ export { useItemInstance } from '@weaverse/react';
 
 export { useParentInstance } from '@weaverse/react';
 
+export { useStudioSelection } from '@weaverse/react';
+
 export { useThemeSettings } from '@weaverse/next';
 
 export { useTranslation } from '@weaverse/next';
