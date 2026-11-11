@@ -1,5 +1,11 @@
 # @weaverse/next
 
+> **Deprecated and archived.** The Next.js adapter now ships inside
+> `@weaverse/hydrogen`: import `@weaverse/hydrogen/next` and
+> `@weaverse/hydrogen/next/server` instead (`npx @weaverse/cli migrate v6`
+> rewrites the imports). Its source lives in `packages/hydrogen/src/next`;
+> this folder keeps the last published manifest and README for reference.
+
 Next.js App Router integration for Weaverse-powered Hydrogen storefronts.
 
 This package lets a Next App Router storefront render Weaverse page data, run server-side section loaders, connect to Weaverse Studio, and refresh loader-backed Studio edits without depending on React Router.
