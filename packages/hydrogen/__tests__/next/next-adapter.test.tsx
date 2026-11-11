@@ -9,7 +9,7 @@ import type {
   WeaverseNextComponentProps,
   WeaverseNextLoaderData,
   WeaverseNextThemeSchema,
-} from '../src/index'
+} from '../../src/next/index'
 import {
   bindWeaverseNextStudioRuntime,
   buildWeaverseNextRequestInfo,
@@ -34,7 +34,7 @@ import {
   WeaverseNextRenderer,
   WeaverseNextRootProvider,
   WeaverseNextStudioConnect,
-} from '../src/index'
+} from '../../src/next/index'
 
 const OUTSIDE_PROVIDER_ERROR = /must be used inside a <WeaverseNextProvider>/
 const OUTSIDE_TRANSLATION_PROVIDER_ERROR =
@@ -806,7 +806,7 @@ describe('default main root handling', () => {
 describe('package boundaries', () => {
   it('should_not_import_react_router_or_remix_oxygen_in_src', () => {
     // Arrange
-    let srcDir = join(import.meta.dirname, '..', 'src')
+    let srcDir = join(import.meta.dirname, '..', '..', 'src', 'next')
     let files = readdirSync(srcDir).filter((f) => SRC_FILE_REGEX.test(f))
 
     // Act

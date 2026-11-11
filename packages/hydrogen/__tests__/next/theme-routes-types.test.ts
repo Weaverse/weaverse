@@ -1,5 +1,5 @@
 import { describe, expectTypeOf, it } from 'vitest'
-import type { ThemeRoutes, WeaverseNextThemeSchema } from '../src'
+import type { ThemeRoutes, WeaverseNextThemeSchema } from '../../src/next/index'
 
 describe('WeaverseNextThemeSchema routes', () => {
   it('should_type_routes_as_theme_routes', () => {

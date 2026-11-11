@@ -1,17 +1,17 @@
 import { describe, expect, it, vi } from 'vitest'
-import { createSchema } from '../src/index'
+import { createSchema } from '../../src/next/index'
 import {
   buildWeaverseNextRevalidateRouteContext,
   DEFAULT_REVALIDATE_ENDPOINT,
   revalidateWeaverseNextItem,
-} from '../src/revalidate-item'
-import { getWeaverseNextConfigs } from '../src/server/configs'
-import { createWeaverseNextRevalidateHandler } from '../src/server/revalidate-handler'
+} from '../../src/next/revalidate-item'
+import { getWeaverseNextConfigs } from '../../src/next/server/configs'
+import { createWeaverseNextRevalidateHandler } from '../../src/next/server/revalidate-handler'
 import type {
   WeaverseNextComponent,
   WeaverseNextRequestContext,
   WeaverseNextServerClient,
-} from '../src/types'
+} from '../../src/next/types'
 
 const STATUS_OK = 200
 const STATUS_BAD_REQUEST = 400

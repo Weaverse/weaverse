@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { loadWeaverseNextStudioScript } from '../src/studio-connect'
-import type { WeaverseNextRequestContext } from '../src/types'
+import { loadWeaverseNextStudioScript } from '../../src/next/studio-connect'
+import type { WeaverseNextRequestContext } from '../../src/next/types'
 
 interface FakeScriptElement {
   async?: boolean

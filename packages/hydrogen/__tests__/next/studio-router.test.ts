@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import {
   createWeaverseNextStudioInternals,
   type WeaverseNextRouterLike,
-} from '../src/studio-router'
+} from '../../src/next/studio-router'
 
 function createMockRouter(): WeaverseNextRouterLike & {
   push: ReturnType<typeof vi.fn>

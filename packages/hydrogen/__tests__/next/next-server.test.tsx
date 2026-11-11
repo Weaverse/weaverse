@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { describe, expect, it, vi } from 'vitest'
-import { createSchema } from '../src/index'
+import { createSchema } from '../../src/next/index'
 import {
   createWeaverseNextServerClient,
   formatWeaverseNextSeoMetadata,
@@ -8,11 +8,11 @@ import {
   getWeaverseNextSeoMetadata,
   normalizeNextPageUrl,
   resolveRequestUrl,
-} from '../src/server'
+} from '../../src/next/server'
 import type {
   WeaverseNextComponentLoaderArgs,
   WeaverseNextComponentProps,
-} from '../src/types'
+} from '../../src/next/types'
 
 // ─── Helpers ──────────────────────────────────────────────────────────
 

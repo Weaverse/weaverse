@@ -6,7 +6,7 @@ import {
 import { useContext } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import type { WeaverseNextRuntime } from '../src/index'
+import type { WeaverseNextRuntime } from '../../src/next/index'
 import {
   createSchema,
   createWeaverseNextClient,
@@ -14,7 +14,7 @@ import {
   WeaverseNextProvider,
   WeaverseNextRenderer,
   WeaverseNextRootProvider,
-} from '../src/index'
+} from '../../src/next/index'
 
 type Seen = {
   root?: StudioSelectionStore | null
