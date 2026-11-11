@@ -1,7 +1,7 @@
 /**
  * Repo-local stand-in for `next/navigation`.
  *
- * `next` is a peerDependency of `@weaverse/next` (consuming apps always have it)
+ * `next` is a peerDependency of `@weaverse/hydrogen/next` (consuming apps always have it)
  * and is intentionally NOT installed in this monorepo. This shim lets the
  * package typecheck, test, and build without pulling Next into the workspace:
  *

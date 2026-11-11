@@ -331,7 +331,7 @@ describe('hooks outside provider', () => {
 
 // ─── 3. Root API exports ──────────────────────────────────────────────
 
-describe('@weaverse/next root API exports', () => {
+describe('@weaverse/hydrogen/next root API exports', () => {
   it('should_export_theme_schema_type_and_schema_default_utility_from_root_entry', () => {
     // Arrange
     let themeSchema: WeaverseNextThemeSchema = {

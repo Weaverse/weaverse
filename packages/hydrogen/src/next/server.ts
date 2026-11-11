@@ -5,7 +5,7 @@
  * When migrating from Hydrogen's `context.weaverse`, create a request-scoped
  * client with {@link createWeaverseNextServerClient}, then call `loadPage()` or
  * `loadThemeSettings()`. Keep rendering providers and components imported from
- * the root `@weaverse/next` entrypoint.
+ * the root `@weaverse/hydrogen/next` entrypoint.
  *
  * @packageDocumentation
  */

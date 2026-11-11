@@ -126,8 +126,8 @@ class NextServerClient implements WeaverseNextServerClient {
     // pulls in `../registry` → `@weaverse/react`, which evaluates
     // `React.createContext()` at module load — invalid in the RSC/server graph
     // and the cause of `(0 , x.createContext) is not a function`. The client
-    // wrapper/renderer (root `@weaverse/next` client entry) registers the real
-    // render components instead, keeping `@weaverse/next/server` React-free.
+    // wrapper/renderer (root `@weaverse/hydrogen/next` client entry) registers the real
+    // render components instead, keeping `@weaverse/hydrogen/next/server` React-free.
     this.components = config.components
     this.commerce = config.commerce
     this.requestContext = config.requestContext

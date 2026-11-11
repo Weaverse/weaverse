@@ -151,7 +151,7 @@ export interface WeaverseNextRuntimeConfig {
 // Kept structurally aligned with Hydrogen's `TranslationMapEntry` /
 // `TranslationItemEntry` / `TranslationMap` / `TranslationEntry` /
 // `TranslationChanges` so Builder Studio's item-translation RPC contract works
-// against `@weaverse/next` unchanged. Values stay strings for now; broaden to
+// against `@weaverse/hydrogen/next` unchanged. Values stay strings for now; broaden to
 // object values only when Builder image handling forces it (with tests).
 
 /** A single translated field for one item. */
@@ -540,7 +540,7 @@ export type WeaverseArticle = WeaverseResourcePickerData
 /** Metaobject selected with a Weaverse resource-picker setting. */
 export type WeaverseMetaObject = WeaverseResourcePickerData
 
-// ─── Server client (`@weaverse/next/server`) ──────────────────────────────
+// ─── Server client (`@weaverse/hydrogen/next/server`) ──────────────────────────────
 
 /**
  * Project identifier accepted by {@link WeaverseNextServerClientConfig}. Either

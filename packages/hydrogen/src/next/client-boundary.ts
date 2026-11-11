@@ -4,7 +4,7 @@
  * These exports render components, call hooks, or reach `@weaverse/react`,
  * which creates React contexts at module scope. The build emits this module as
  * its own file under a `'use client'` banner, so a Server Component that
- * imports `@weaverse/next` gets client references for them instead of
+ * imports `@weaverse/hydrogen/next` gets client references for them instead of
  * evaluating `createContext` on the server. The root entry re-exports them by
  * name next to its server-safe exports.
  *

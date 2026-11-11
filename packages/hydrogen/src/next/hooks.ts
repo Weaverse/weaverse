@@ -9,7 +9,9 @@ const OUTSIDE_PROVIDER_ERROR = 'must be used inside a <WeaverseNextProvider>.'
 function useWeaverseNextContext(hookName: string) {
   let context = useContext(WeaverseNextContext)
   if (!context) {
-    throw new Error(`[@weaverse/next] ${hookName} ${OUTSIDE_PROVIDER_ERROR}`)
+    throw new Error(
+      `[@weaverse/hydrogen/next] ${hookName} ${OUTSIDE_PROVIDER_ERROR}`
+    )
   }
   return context
 }

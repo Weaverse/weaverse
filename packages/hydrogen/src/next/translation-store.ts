@@ -7,7 +7,7 @@
  * calls `updateOverrides()` via `runtime.internal.translationStore` (also
  * exposed as the deprecated `runtime.internal.themeTextStore` alias) so live
  * static-text edits reach the runtime — identical surface to Hydrogen's store,
- * so Builder's existing static-text RPC works with `@weaverse/next` unchanged.
+ * so Builder's existing static-text RPC works with `@weaverse/hydrogen/next` unchanged.
  *
  * Shape: flat `Record<string, string>` — dot-notation keys map to values
  * (e.g. "cart.title" → "Shopping Cart").

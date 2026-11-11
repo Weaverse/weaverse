@@ -4,7 +4,7 @@
  * When migrating from `@weaverse/hydrogen`, replace route-loader context with
  * {@link WeaverseNextProvider} props and render page data with
  * {@link WeaverseNextRenderer}. Import server-only fetching and route-handler
- * helpers from `@weaverse/next/server`.
+ * helpers from `@weaverse/hydrogen/next/server`.
  *
  * @packageDocumentation
  */

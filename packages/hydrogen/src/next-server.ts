@@ -10,4 +10,4 @@ export {
   createWeaverseNextServerClient,
   type WeaverseNextServerClient,
   type WeaverseNextThemeSettingsResponse,
-} from '@weaverse/next/server'
+} from './next/server'

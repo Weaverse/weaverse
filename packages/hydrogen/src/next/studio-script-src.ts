@@ -88,7 +88,7 @@ export interface ResolveWeaverseNextStudioScriptSrcOptions {
 }
 
 /**
- * Resolve the Studio script URL from request/search context. `@weaverse/next`
+ * Resolve the Studio script URL from request/search context. `@weaverse/hydrogen/next`
  * uses the dedicated Next bridge path served by Builder.
  */
 export function resolveWeaverseNextStudioScriptSrc(

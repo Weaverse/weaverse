@@ -58,7 +58,7 @@ function setup() {
   return { seen, client, RootProbe }
 }
 
-describe('Studio selection store in @weaverse/next', () => {
+describe('Studio selection store in @weaverse/hydrogen/next', () => {
   afterEach(() => {
     vi.unstubAllGlobals()
   })

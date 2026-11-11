@@ -7,10 +7,19 @@
  * @packageDocumentation
  */
 
+export {
+  type BasicInput,
+  createSchema,
+  IMAGES_PLACEHOLDERS,
+  type InspectorGroup,
+  type PageType,
+  type SchemaType,
+} from '@weaverse/schema'
+export type * from './index'
 // Server Components import this entry (root layouts, section schemas), so no
 // runtime value here may load `@weaverse/react`, whose module scope calls
-// `createContext`. Hooks and stores come from the Next adapter itself, which
-// keeps React behind its own 'use client' boundary and shares its contexts;
+// `createContext`. Hooks and stores come from the Next adapter in `./next`, whose
+// client code is built as its own 'use client' file (`vite.config.ts`);
 // the rest comes from `@weaverse/schema` and React-free local modules, and the
 // core and React entries contribute types only. `package:check` guards this.
 export {
@@ -38,16 +47,7 @@ export {
   WeaverseNextStudioConnect,
   type WeaverseNextThemeSchema,
   type WeaverseNextThemeSchemaGroup,
-} from '@weaverse/next'
-export {
-  type BasicInput,
-  createSchema,
-  IMAGES_PLACEHOLDERS,
-  type InspectorGroup,
-  type PageType,
-  type SchemaType,
-} from '@weaverse/schema'
-export type * from './index'
+} from './next/index'
 export type { WeaverseComponentProps } from './types'
 export { WeaverseError, WeaverseLoadError } from './types'
 export { generateDataFromSchema } from './utils'

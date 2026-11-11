@@ -1018,7 +1018,7 @@ describe('resolveRequestUrl', () => {
 
 // ─── 4. Server subpath exports ────────────────────────────────────────
 
-describe('@weaverse/next/server exports', () => {
+describe('@weaverse/hydrogen/next/server exports', () => {
   it('should_expose_runtime_and_helper_symbols', () => {
     expect(typeof createWeaverseNextServerClient).toBe('function')
     expect(typeof getWeaverseNextConfigs).toBe('function')

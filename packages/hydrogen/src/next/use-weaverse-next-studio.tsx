@@ -67,8 +67,8 @@ export interface WeaverseNextStudioProps
  * {@link WeaverseNextStudioBridge}, so consuming apps get Studio navigation and
  * revalidation without manually wiring `next/navigation`.
  *
- * Client-only — it is the single place `@weaverse/next` touches
- * `next/navigation`, keeping the runtime/renderer and `@weaverse/next/server`
+ * Client-only — it is the single place `@weaverse/hydrogen/next` touches
+ * `next/navigation`, keeping the runtime/renderer and `@weaverse/hydrogen/next/server`
  * free of router imports.
  */
 export function WeaverseNextStudio(props: WeaverseNextStudioProps) {

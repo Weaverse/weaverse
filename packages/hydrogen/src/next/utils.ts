@@ -5,8 +5,7 @@ import type { WeaverseNextThemeSchema } from './types'
  * Generate default component data from a schema's `settings` inputs.
  *
  * Mirrors Hydrogen's `generateDataFromSchema` (settings → `{ [name]:
- * defaultValue }`) but is kept local so `@weaverse/next` doesn't depend on
- * `@weaverse/hydrogen`. Falls back to the deprecated `inspector` array when a
+ * defaultValue }`) and also accepts Next theme schemas. Falls back to the deprecated `inspector` array when a
  * schema predates `settings`.
  */
 export function generateDataFromSchema(
