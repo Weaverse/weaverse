@@ -284,6 +284,7 @@
     "useChildInstances",
     "useItemInstance",
     "useParentInstance",
+    "useStudioSelection",
     "useThemeSettings",
     "useThemeText",
     "useTranslation",

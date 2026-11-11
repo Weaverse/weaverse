@@ -1,5 +1,9 @@
 'use client'
 
+import {
+  StudioSelectionStore,
+  StudioSelectionStoreContext,
+} from '@weaverse/react'
 import type { SchemaType } from '@weaverse/schema'
 import {
   createContext,
@@ -7,6 +11,7 @@ import {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react'
 import {
   getSchemaStaticContent,
@@ -28,6 +33,8 @@ export interface WeaverseNextRootContextValue {
   merchantOverrides?: Record<string, unknown>
   /** Theme default locale JSON shared with route-level providers. */
   staticContent: Record<string, unknown>
+  /** Root-scoped Studio selection store shared with route-level providers. */
+  studioSelectionStore: StudioSelectionStore
   /** Root-scoped external store shared with route-level providers. */
   themeSettingsStore: WeaverseNextThemeSettingsStore
   /** Single live design-mode static-text override store for the whole session. */
@@ -114,6 +121,10 @@ export function WeaverseNextRootProvider(props: WeaverseNextRootProviderProps) {
   }
   let translationStore = translationStoreRef.current
 
+  // One selection store for the session: the Studio bridge writes it through
+  // `runtime.internal.studioSelectionStore`, root UI reads it.
+  let [studioSelectionStore] = useState(() => new StudioSelectionStore())
+
   // If `initialThemeSettings` changes after mount (e.g. root revalidation),
   // update the existing store in place instead of replacing it. This is an
   // effect because external store updates are side effects; the initial render
@@ -144,12 +155,14 @@ export function WeaverseNextRootProvider(props: WeaverseNextRootProviderProps) {
       merchantOverrides,
       staticContent: resolvedStaticContent,
       themeSettingsStore,
+      studioSelectionStore,
       translationStore,
     }),
     [
       merchantOverrides,
       resolvedStaticContent,
       themeSettingsStore,
+      studioSelectionStore,
       translationStore,
     ]
   )
@@ -158,22 +171,30 @@ export function WeaverseNextRootProvider(props: WeaverseNextRootProviderProps) {
       merchantOverrides,
       themeSettings: themeSettingsStore.getSnapshot(),
       themeSettingsStore,
+      studioSelectionStore,
       translationStore,
     }),
-    [merchantOverrides, themeSettingsStore, translationStore]
+    [
+      merchantOverrides,
+      themeSettingsStore,
+      studioSelectionStore,
+      translationStore,
+    ]
   )
 
   return (
     <WeaverseNextRootContext.Provider value={rootContextValue}>
       <WeaverseNextContext.Provider value={contextValue}>
-        <TranslationProvider
-          merchantOverrides={merchantOverrides}
-          staticContent={resolvedStaticContent}
-          t={t}
-          translationStore={translationStore}
-        >
-          {children}
-        </TranslationProvider>
+        <StudioSelectionStoreContext.Provider value={studioSelectionStore}>
+          <TranslationProvider
+            merchantOverrides={merchantOverrides}
+            staticContent={resolvedStaticContent}
+            t={t}
+            translationStore={translationStore}
+          >
+            {children}
+          </TranslationProvider>
+        </StudioSelectionStoreContext.Provider>
       </WeaverseNextContext.Provider>
     </WeaverseNextRootContext.Provider>
   )

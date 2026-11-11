@@ -1,4 +1,5 @@
 import type {
+  StudioSelectionStore,
   WeaverseElement,
   WeaverseResourcePickerData,
 } from '@weaverse/react'
@@ -103,6 +104,8 @@ export interface WeaverseNextRuntimeInternal {
    * must reject on failure so Builder can fall back.
    */
   revalidateItem?: (draftItem: WeaverseNextComponentData) => Promise<void>
+  /** Studio selection store the Studio bridge writes; read by `useStudioSelection`. */
+  studioSelectionStore?: StudioSelectionStore
   /** Live theme-settings store used by Studio. */
   themeSettingsStore?: WeaverseNextThemeSettingsStore
   /**
@@ -135,6 +138,8 @@ export interface WeaverseNextRuntimeConfig {
   navigate?: WeaverseNextRuntimeInternal['navigate']
   /** Route revalidation callback, normally backed by `router.refresh()`. */
   revalidate?: WeaverseNextRuntimeInternal['revalidate']
+  /** Root/route-owned Studio selection store to attach to `internal`. */
+  studioSelectionStore?: StudioSelectionStore
   /** Existing root-scoped theme-settings store to reuse. */
   themeSettingsStore?: WeaverseNextThemeSettingsStore
   /** Root/route-owned translation store to attach to `internal`. */
