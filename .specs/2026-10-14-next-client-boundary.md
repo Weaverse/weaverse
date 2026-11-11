@@ -2,6 +2,8 @@
 
 Issue: [#542](https://github.com/Weaverse/weaverse/issues/542)
 
+> The adapter now lives in `@weaverse/hydrogen` (`src/next`), and its boundary ships as `next-client-boundary.{mjs,js}`; see [2026-11-11-unify-next-adapter-in-hydrogen.md](./2026-11-11-unify-next-adapter-in-hydrogen.md). The contract below is unchanged.
+
 ## Outcome
 
 A Next.js App Router app can import `@weaverse/next` from Server Components. Rendering `WeaverseNextRootProvider` or `WeaverseNextStudioConnect` in `app/layout.tsx`, and calling `createSchema` or `generateDataFromSchema` in server code, both work. In `1.0.0` either one failed `next build` with `createContext is not a function`, because the published bundle lost every `'use client'` directive and evaluated React contexts at module scope.

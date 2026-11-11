@@ -4,11 +4,16 @@
 
 ```ts
 import type * as React from 'react';
+import type { ComponentType } from 'react';
 import type { ElementData } from '@weaverse/react';
+import type { ForwardRefExoticComponent } from 'react';
 import type { I18nConfig } from '@shopify/hydrogen';
 import type { InspectorGroup } from '@weaverse/schema';
+import type { JSX } from 'react/jsx-runtime';
+import type { Metadata } from 'next';
 import type { PageSEOData } from '@weaverse/schema';
 import type { PageType } from '@weaverse/schema';
+import type { ReactNode } from 'react';
 import type { SchemaType } from '@weaverse/schema';
 import type { ThemeOutline } from '@weaverse/schema';
 import type { ThemeRoutes } from '@weaverse/schema';
@@ -20,9 +25,20 @@ export { BasicInput } from '@weaverse/schema';
 
 export type ComponentDataValue = string | number | boolean | undefined | null;
 
+export interface CreateTranslateSources {
+    designOverrides?: Record<string, string>;
+    externalT?: TranslateFunction;
+    merchantOverrides?: Record<string, unknown>;
+    staticContent: Record<string, unknown>;
+}
+
 export { IMAGES_PLACEHOLDERS } from '@weaverse/schema';
 
 export { InspectorGroup } from '@weaverse/schema';
+
+export type NextOpenGraph = NonNullable<Metadata['openGraph']>;
+
+export type NextTwitter = NonNullable<Metadata['twitter']>;
 
 export { PageType } from '@weaverse/schema';
 
@@ -37,9 +53,34 @@ export { StudioSelection } from '@weaverse/react';
 
 export type TranslateFunction = (key: string, variables?: Record<string, string | number>) => string;
 
-export { TranslationProvider } from '@weaverse/next';
+export declare function TranslationProvider(input: TranslationProviderProps): import("react/jsx-runtime").JSX.Element;
 
-export { TranslationStore } from '@weaverse/next';
+export interface TranslationProviderProps {
+    children: ReactNode;
+    merchantOverrides?: Record<string, unknown>;
+    staticContent: Record<string, unknown>;
+    t?: TranslateFunction;
+    // @deprecated
+    themeTextStore?: TranslationStore | null;
+    translationStore?: TranslationStore | null;
+}
+
+export declare class TranslationStore {
+    overrides: Record<string, string>;
+    setOverrides: (overrides: Record<string, string>) => void;
+    updateOverrides: (newOverrides: Record<string, string>) => void;
+    getSnapshot: () => Record<string, string>;
+    getServerSnapshot: () => Record<string, string>;
+    subscribe: (callback: () => void) => () => void;
+}
+
+export interface TranslationValue {
+    merchantOverrides: Record<string, unknown> | null;
+    t: TranslateFunction;
+    // @deprecated
+    themeTextStore: TranslationStore | null;
+    translationStore: TranslationStore | null;
+}
 
 export type WeaverseBlog = WeaverseResourcePickerData;
 
@@ -109,25 +150,245 @@ export type WeaverseLoaderRequestInfo = {
 
 export type WeaverseMetaObject = WeaverseResourcePickerData;
 
-export { WeaverseNextComponent } from '@weaverse/next';
+export interface WeaverseNextClient {
+    commerce?: WeaverseNextCommerceContext;
+    components: WeaverseNextComponent[];
+    data: WeaverseNextLoaderData | null;
+    dataContext: Record<string, unknown>;
+    loadPage: (input?: WeaverseNextLoadPageInput) => Promise<WeaverseNextLoaderData | null>;
+    loadThemeSettings: (context?: WeaverseNextRequestContext) => Promise<unknown>;
+    projectId: string;
+    requestContext?: WeaverseNextRequestContext;
+    storefront?: WeaverseNextStorefront;
+    themeSchema?: SchemaType | WeaverseNextThemeSchema;
+    themeSettings: Record<string, unknown>;
+}
 
-export { WeaverseNextI18n } from '@weaverse/next';
+export interface WeaverseNextClientConfig {
+    commerce?: WeaverseNextCommerceContext;
+    components: WeaverseNextComponent[];
+    fetchPage?: (input: WeaverseNextLoadPageInput) => Promise<WeaverseNextLoaderData | null>;
+    fetchThemeSettings?: (context?: WeaverseNextRequestContext) => Promise<unknown>;
+    projectId: string;
+    requestContext?: WeaverseNextRequestContext;
+    themeSchema?: SchemaType | WeaverseNextThemeSchema;
+    themeSettings?: Record<string, unknown>;
+}
 
-export { WeaverseNextLoaderData } from '@weaverse/next';
+export interface WeaverseNextCommerceContext {
+    cart?: unknown;
+    customerAccount?: unknown;
+    storefront?: WeaverseNextStorefront;
+    [key: string]: unknown;
+}
 
-export { WeaverseNextProvider } from '@weaverse/next';
+export interface WeaverseNextComponent<TProps extends WeaverseNextComponentProps = WeaverseNextComponentProps> {
+    default: ComponentType<TProps> | ForwardRefExoticComponent<TProps>;
+    loader?: (args: WeaverseNextComponentLoaderArgs) => Promise<unknown>;
+    schema: SchemaType;
+}
 
-export { WeaverseNextRenderer } from '@weaverse/next';
+export interface WeaverseNextComponentData {
+    children?: WeaverseNextComponentData[] | {
+        id: string;
+    }[];
+    data?: Record<string, unknown>;
+    id: string;
+    loaderData?: unknown;
+    type: string;
+    [key: string]: unknown;
+}
 
-export { WeaverseNextRequestContext } from '@weaverse/next';
+export interface WeaverseNextComponentLoaderArgs<TData = unknown> {
+    commerce?: WeaverseNextCommerceContext;
+    context?: WeaverseNextRequestContext;
+    data: TData;
+    weaverse: WeaverseNextClient;
+}
 
-export { WeaverseNextRootProvider } from '@weaverse/next';
+export interface WeaverseNextComponentProps<L = unknown> extends Partial<WeaverseElement> {
+    children?: ReactNode;
+    className?: string;
+    loaderData?: L;
+    [key: string]: unknown;
+}
 
-export { WeaverseNextStudioConnect } from '@weaverse/next';
+export interface WeaverseNextI18n {
+    country?: string;
+    label?: string;
+    language?: string;
+    locale?: string;
+    pathPrefix?: string;
+    [key: string]: unknown;
+}
 
-export { WeaverseNextThemeSchema } from '@weaverse/next';
+export interface WeaverseNextLoadPageInput {
+    handle?: string;
+    locale?: string;
+    type?: PageType;
+    [key: string]: unknown;
+}
 
-export { WeaverseNextThemeSchemaGroup } from '@weaverse/next';
+export interface WeaverseNextLoaderData {
+    configs?: Record<string, unknown>;
+    page: WeaverseNextPageData;
+    pageAssignment?: WeaverseNextPageAssignment;
+    project?: Record<string, unknown>;
+    [key: string]: unknown;
+}
+
+export interface WeaverseNextPageAssignment {
+    handle: string;
+    locale: string;
+    meta?: {
+        depth?: number;
+        inherited?: boolean;
+        sourceProjectId?: string;
+        [key: string]: unknown;
+    };
+    projectId: string;
+    type: PageType | string;
+}
+
+export interface WeaverseNextPageData {
+    id: string;
+    items: WeaverseNextComponentData[];
+    name?: string;
+    rootId?: string;
+    seo?: PageSEOData | null;
+    [key: string]: unknown;
+}
+
+export declare function WeaverseNextProvider(props: WeaverseNextProviderProps): import("react/jsx-runtime").JSX.Element;
+
+export interface WeaverseNextProviderProps {
+    children: ReactNode;
+    client?: WeaverseNextClient;
+    commerce?: WeaverseNextCommerceContext;
+    merchantOverrides?: Record<string, unknown>;
+    pageData?: unknown;
+    rootData?: unknown;
+    staticContent?: Record<string, unknown>;
+    t?: TranslateFunction;
+    themeSettings?: Record<string, unknown>;
+}
+
+export declare const WeaverseNextRenderer: import("react").MemoExoticComponent<(props: WeaverseNextRendererProps) => JSX.Element | null>;
+
+export interface WeaverseNextRendererProps {
+    client?: WeaverseNextClient;
+    data?: WeaverseNextLoaderData | null;
+    dataContext?: Record<string, unknown>;
+}
+
+export interface WeaverseNextRequestContext {
+    handle?: string;
+    headers?: Headers;
+    i18n?: WeaverseNextI18n;
+    isDesignMode?: boolean;
+    isPreviewMode?: boolean;
+    isRevisionPreview?: boolean;
+    pageType?: PageType;
+    pathname?: string;
+    searchParams?: URLSearchParams;
+    sectionType?: string;
+    url?: URL | string;
+    [key: string]: unknown;
+}
+
+export interface WeaverseNextRequestInfo {
+    handle?: string;
+    i18n?: WeaverseNextI18n;
+    pageType?: PageType;
+    pathname: string;
+    queries: Record<string, string | boolean>;
+    search: string;
+}
+
+export declare function WeaverseNextRootProvider(props: WeaverseNextRootProviderProps): import("react/jsx-runtime").JSX.Element;
+
+export interface WeaverseNextRootProviderProps {
+    children: ReactNode;
+    initialThemeSettings?: Record<string, unknown>;
+    merchantOverrides?: Record<string, unknown>;
+    publicEnv?: Record<string, string | undefined>;
+    staticContent?: Record<string, unknown>;
+    t?: TranslateFunction;
+    themeSchema?: SchemaType | WeaverseNextThemeSchema;
+}
+
+export type WeaverseNextSeoInput = WeaverseNextLoaderData | WeaverseNextPageData | WeaverseNextSeoPageContainer | null | undefined;
+
+export interface WeaverseNextSeoMetadata {
+    alternates?: {
+        canonical?: string;
+    };
+    description?: string;
+    keywords?: string;
+    openGraph?: NextOpenGraph;
+    robots: {
+        follow: boolean;
+        index: boolean;
+    };
+    title?: string;
+    twitter?: NextTwitter;
+}
+
+export interface WeaverseNextSeoPageContainer {
+    page?: WeaverseNextPageData | null;
+}
+
+export interface WeaverseNextStorefront {
+    i18n?: WeaverseNextI18n;
+    query: (query: string, options?: unknown) => Promise<unknown>;
+    [key: string]: unknown;
+}
+
+export declare function WeaverseNextStudioConnect(props: WeaverseNextStudioConnectProps): null;
+
+export interface WeaverseNextStudioConnectProps {
+    context?: WeaverseNextRequestContext;
+    storefrontHostname?: string;
+}
+
+export interface WeaverseNextThemeSchema {
+    i18n?: {
+        defaultLocale?: WeaverseNextI18n;
+        shopLocales?: WeaverseNextI18n[];
+        staticContent?: Record<string, unknown>;
+        translation?: boolean;
+        urlStructure?: 'url-path' | 'subdomain' | 'top-level-domain';
+        [key: string]: unknown;
+    };
+    info?: {
+        author?: string;
+        authorProfilePhoto?: string;
+        documentationUrl?: string;
+        name?: string;
+        supportUrl?: string;
+        version?: string;
+        [key: string]: unknown;
+    };
+    // @deprecated
+    inspector?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[];
+    outline?: ThemeOutline;
+    routes?: ThemeRoutes;
+    settings?: (InspectorGroup | WeaverseNextThemeSchemaGroup)[];
+    [key: string]: unknown;
+}
+
+export interface WeaverseNextThemeSchemaGroup {
+    group?: string;
+    inputs?: WeaverseNextThemeSchemaInput[];
+    [key: string]: unknown;
+}
+
+export interface WeaverseNextThemeSchemaInput {
+    condition?: unknown;
+    defaultValue?: unknown;
+    name?: string;
+    [key: string]: unknown;
+}
 
 export type WeaversePageAssignment = {
     projectId: string;
@@ -216,19 +477,27 @@ export type WeaverseThemeSettingsResponse = {
 
 export { WeaverseVideo } from '@weaverse/core';
 
-export { buildWeaverseNextRequestInfo } from '@weaverse/next';
+export declare function buildWeaverseNextRequestInfo(context?: WeaverseNextRequestContext): WeaverseNextRequestInfo;
 
 export { createSchema } from '@weaverse/schema';
 
-export { createWeaverseNextClient } from '@weaverse/next';
+export declare function createTranslate(sources: CreateTranslateSources): TranslateFunction;
+
+export declare function createWeaverseNextClient(config: WeaverseNextClientConfig): WeaverseNextClient;
+
+export declare function formatWeaverseNextSeoMetadata(seo: PageSEOData | null | undefined): WeaverseNextSeoMetadata;
 
 export declare function generateDataFromSchema(schema: WeaverseComponentSchema | WeaverseThemeSchema): Record<string, any>;
 
 export declare function getNestedKey(obj: Record<string, unknown>, path: string, fallback?: string): string | undefined;
 
-export { isBrowser } from '@weaverse/next';
+export declare function getWeaverseNextSeoMetadata(data: WeaverseNextSeoInput): WeaverseNextSeoMetadata;
 
-export { isIframe } from '@weaverse/next';
+export declare function interpolate(template: string, variables?: Record<string, string | number>): string;
+
+export declare let isBrowser: boolean;
+
+export declare let isIframe: boolean;
 
 export { useChildInstances } from '@weaverse/react';
 
@@ -238,9 +507,9 @@ export { useParentInstance } from '@weaverse/react';
 
 export { useStudioSelection } from '@weaverse/react';
 
-export { useThemeSettings } from '@weaverse/next';
+export declare function useThemeSettings<T = Record<string, unknown>>(): T;
 
-export { useTranslation } from '@weaverse/next';
+export declare function useTranslation(): TranslationValue;
 
 export { useWeaverse } from '@weaverse/react';
 ```

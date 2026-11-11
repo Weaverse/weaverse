@@ -41,10 +41,7 @@ let TSRS = join(
 )
 const RUNTIME_JSON_BLOCK = /```json\n([\s\S]*?)\n```/
 // Next's browser entry imports next/navigation, which is resolved by its bundler.
-const NODE_ESM_EXCLUSIONS = new Set([
-  '@weaverse/next',
-  '@weaverse/hydrogen/next',
-])
+const NODE_ESM_EXCLUSIONS = new Set(['@weaverse/hydrogen/next'])
 // @weaverse/cli is an ESM-only executable and @weaverse/biome only ships JSON,
 // so neither participates in the dual ESM/CJS runtime contract.
 const CJS_CONTRACT_EXCLUSIONS = new Set(['@weaverse/cli', '@weaverse/biome'])
@@ -164,45 +161,16 @@ function assertCommonJsArtifact(specifier, artifactFile, packedPackageJson) {
   }
 }
 
-// A Server Component that imports @weaverse/next must never evaluate React
-// client APIs. Only the client boundary may reach them, and it must keep the
+// `@weaverse/hydrogen/next` and `/next/server` are imported by Server
+// Components too (root layouts, section schemas), so they must never evaluate
+// React client APIs. Their entry files and every local chunk they load must
+// stay free of React client code; client code is reached only through the
+// Next.js adapter's client boundary, which must keep the `'use client'`
 // directive that makes the bundler treat it as client code.
-const NEXT_CLIENT_BOUNDARY = /^client-boundary\.m?js$/
+const NEXT_CLIENT_BOUNDARY = /^next-client-boundary\.m?js$/
 const NEXT_CLIENT_ONLY_CODE =
   /\bcreateContext\b|@weaverse\/react|['"]react['"]|['"]react\/jsx-runtime['"]|['"]next\/navigation['"]/
 const USE_CLIENT_FIRST = /^\s*['"]use client['"]/
-const SCRIPT_FILE = /\.m?js$/
-
-function assertNextClientBoundary(packedFolder) {
-  let distDir = join(packedFolder, 'dist')
-  let scripts = readdirSync(distDir).filter((file) => SCRIPT_FILE.test(file))
-  let boundaries = scripts.filter((file) => NEXT_CLIENT_BOUNDARY.test(file))
-
-  if (boundaries.length !== 2) {
-    throw new Error(
-      `@weaverse/next must ship client-boundary.mjs and client-boundary.js, found: ${boundaries.join(', ') || 'none'}`
-    )
-  }
-  for (let file of scripts) {
-    let source = readFileSync(join(distDir, file), 'utf8')
-    if (NEXT_CLIENT_BOUNDARY.test(file)) {
-      if (!USE_CLIENT_FIRST.test(source)) {
-        throw new Error(
-          `@weaverse/next dist/${file} lost its 'use client' directive`
-        )
-      }
-    } else if (NEXT_CLIENT_ONLY_CODE.test(source)) {
-      throw new Error(
-        `@weaverse/next dist/${file} reaches client-only code outside the client boundary`
-      )
-    }
-  }
-}
-
-// `@weaverse/hydrogen/next` and `/next/server` are imported by Server
-// Components too (root layouts, section schemas). Their entry files and every
-// local chunk they load must stay free of React client code; client code is
-// reached only through `@weaverse/next`'s own client boundary.
 const HYDROGEN_NEXT_ENTRIES = [
   'next.mjs',
   'next.js',
@@ -214,12 +182,30 @@ const LOCAL_CHUNK_IMPORT =
 
 function assertHydrogenNextServerSafe(packedFolder) {
   let distDir = join(packedFolder, 'dist')
+  let boundaries = readdirSync(distDir).filter((file) =>
+    NEXT_CLIENT_BOUNDARY.test(file)
+  )
+  if (boundaries.length !== 2) {
+    throw new Error(
+      `@weaverse/hydrogen must ship next-client-boundary.mjs and next-client-boundary.js, found: ${boundaries.join(', ') || 'none'}`
+    )
+  }
+  for (let boundary of boundaries) {
+    if (!USE_CLIENT_FIRST.test(readFileSync(join(distDir, boundary), 'utf8'))) {
+      throw new Error(
+        `@weaverse/hydrogen dist/${boundary} lost its 'use client' directive`
+      )
+    }
+  }
+
   for (let entry of HYDROGEN_NEXT_ENTRIES) {
     let pending = [entry]
     let seen = new Set()
     while (pending.length > 0) {
       let file = pending.pop()
-      if (seen.has(file)) {
+      // The client boundary is a client reference for Server Components, so
+      // the walk stops there instead of reading its React imports.
+      if (seen.has(file) || NEXT_CLIENT_BOUNDARY.test(file)) {
         continue
       }
       seen.add(file)
@@ -347,10 +333,10 @@ try {
     rootPackageJson.devDependencies['@types/react']
   packedDependencies['@types/react-dom'] =
     rootPackageJson.devDependencies['@types/react-dom']
-  // `next` is an optional peer of the Next.js adapter; a Next.js storefront
-  // always has it, and the adapter's runtime imports `next/navigation`.
+  // `next` is an optional peer of the Next.js adapter in @weaverse/hydrogen; a
+  // Next.js storefront always has it, and the adapter imports `next/navigation`.
   packedDependencies.next = JSON.parse(
-    readFileSync(join(ROOT_DIR, 'packages', 'next', 'package.json'), 'utf8')
+    readFileSync(join(ROOT_DIR, 'packages', 'hydrogen', 'package.json'), 'utf8')
   ).devDependencies.next
 
   writeFileSync(
@@ -398,9 +384,6 @@ try {
     let packedPackageJson = JSON.parse(
       readFileSync(join(packedFolder, 'package.json'), 'utf8')
     )
-    if (packageJson.name === '@weaverse/next') {
-      assertNextClientBoundary(packedFolder)
-    }
     if (packageJson.name === '@weaverse/hydrogen') {
       assertHydrogenNextServerSafe(packedFolder)
     }
@@ -785,8 +768,8 @@ import { assignVariant } from '@weaverse/experiments'
 import { createExposureTracker } from '@weaverse/experiments/react'
 import { getExperiments } from '@weaverse/experiments/server'
 import { WeaverseClient } from '@weaverse/hydrogen/react-router'
-import { createWeaverseNextClient } from '@weaverse/next'
-import { getWeaverseNextConfigs } from '@weaverse/next/server'
+import { createWeaverseNextClient } from '@weaverse/hydrogen/next'
+import { createWeaverseNextServerClient } from '@weaverse/hydrogen/next/server'
 import { WeaverseRoot } from '@weaverse/react'
 import { createSchema } from '@weaverse/schema'
 import { generateComponentManifest } from '@weaverse/schema/manifest'
@@ -798,7 +781,7 @@ void [
   getExperiments,
   WeaverseClient,
   createWeaverseNextClient,
-  getWeaverseNextConfigs,
+  createWeaverseNextServerClient,
   WeaverseRoot,
   createSchema,
   generateComponentManifest,

@@ -56,21 +56,27 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "vp pack src/index.ts src/react.ts src/react-router.ts src/next.ts src/next-server.ts src/internal.ts --format esm --format cjs --sourcemap --no-fixed-extension --no-dts --watch --on-success 'node ../../scripts/build-declarations.mjs'",
-    "build": "vp pack src/index.ts src/react.ts src/react-router.ts src/next.ts src/next-server.ts src/internal.ts --format esm --format cjs --sourcemap --no-fixed-extension --no-dts && node ../../scripts/build-declarations.mjs",
+    "dev": "vp pack --watch --on-success 'node ../../scripts/build-declarations.mjs'",
+    "build": "rimraf dist && vp pack && node ../../scripts/build-declarations.mjs",
     "clean": "rimraf dist",
     "test": "vp test --run",
     "typecheck": "tsrs --noEmit"
   },
   "peerDependencies": {
-    "@shopify/hydrogen": ">=2026.10.0"
+    "@shopify/hydrogen": ">=2026.10.0",
+    "next": ">=14"
+  },
+  "peerDependenciesMeta": {
+    "next": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@shopify/hydrogen": "^2026.10.2",
-    "happy-dom": "^21.0.4"
+    "happy-dom": "^21.0.4",
+    "next": "16.3.4"
   },
   "dependencies": {
-    "@weaverse/next": "1.1.4",
     "@weaverse/react": "6.1.3",
     "@weaverse/schema": "0.20.0",
     "react": ">=19",

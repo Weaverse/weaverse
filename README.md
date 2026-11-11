@@ -47,8 +47,8 @@ This monorepo contains the following packages:
 - [`@weaverse/react`](https://github.com/Weaverse/weaverse/tree/main/packages/react): React components and utilities for
   CMS integration.
 - [`@weaverse/hydrogen`](https://github.com/Weaverse/weaverse/tree/main/packages/hydrogen): SDK for Shopify Hydrogen
-  integration with Weaverse CMS, powered by React Router v7.
-- [`@weaverse/next`](https://github.com/Weaverse/weaverse/tree/main/packages/next): Alpha SDK for Next.js App Router storefronts, including the server client, renderer/provider, Studio bridge, and per-item revalidation helpers.
+  integration with Weaverse CMS: the React Router v7 adapter (`/react-router`) and the Next.js App Router adapter
+  (`/next`, `/next/server`). `@weaverse/next` is deprecated in favor of `@weaverse/hydrogen/next`.
 - [`@weaverse/schema`](https://github.com/Weaverse/weaverse/tree/main/packages/schema): Schema definitions for Weaverse components.
 - [`@weaverse/cli`](https://github.com/Weaverse/weaverse/tree/main/packages/cli): Command-line tools for Weaverse development.
 - [`@weaverse/biome`](https://github.com/Weaverse/weaverse/tree/main/packages/biome): Shared Biome configuration for code quality.

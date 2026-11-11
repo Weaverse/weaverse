@@ -133,9 +133,6 @@ importers:
 
   packages/hydrogen:
     dependencies:
-      '@weaverse/next':
-        specifier: 1.1.4
-        version: 1.1.4(next@16.3.4(@types/node@25.5.2)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@weaverse/react':
         specifier: 6.1.3
         version: 6.1.3
@@ -161,22 +158,6 @@ importers:
       happy-dom:
         specifier: ^21.0.4
         version: 21.0.4
-
-  packages/next:
-    dependencies:
-      '@weaverse/react':
-        specifier: 6.1.3
-        version: 6.1.3
-      '@weaverse/schema':
-        specifier: 0.20.0
-        version: 0.20.0
-      react:
-        specifier: '>=19'
-        version: 19.2.5
-      react-dom:
-        specifier: '>=19'
-        version: 19.2.5(react@19.2.5)
-    devDependencies:
       next:
         specifier: 16.3.4
         version: 16.3.4(@types/node@25.5.2)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -1109,17 +1090,6 @@ packages:
   '@weaverse/core@6.1.3':
     resolution: {integrity: sha512-cik1nKNAkB9a0KJVSD3AVkBbjXhxbEv+JU26MkdG92p11x8c7iYiqfAqcdosfBTf7bgHCUWiRJxtMiHuKa7Vcw==}
     engines: {node: '>=18'}
-
-  '@weaverse/next@1.1.4':
-    resolution: {integrity: sha512-rr2ZF9Szpfkbg0aDKWdJO/pZSyF5jkYCKdpjEQBLgukhJaq6cpql2GTVOElUO9VNP1+afiyX4s7YSUFB6OHHJA==}
-    engines: {node: '>=20'}
-    peerDependencies:
-      next: '>=14'
-      react: '>=19'
-      react-dom: '>=19'
-    peerDependenciesMeta:
-      next:
-        optional: true
 
   '@weaverse/react@6.1.3':
     resolution: {integrity: sha512-Y0Ief2ulDkrKaaGL2BU0uEDyRZyoDBk+mD3bH+lMElcf4rVq9kfOG2c57L2JUjrfcWzzrWznabFRsuMfbCEprA==}
@@ -2784,15 +2754,6 @@ snapshots:
     optional: true
 
   '@weaverse/core@6.1.3': {}
-
-  '@weaverse/next@1.1.4(next@16.3.4(@types/node@25.5.2)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)':
-    dependencies:
-      '@weaverse/react': 6.1.3
-      '@weaverse/schema': 0.20.0
-      react: 19.2.5
-      react-dom: 19.2.5(react@19.2.5)
-    optionalDependencies:
-      next: 16.3.4(@types/node@25.5.2)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
 
   '@weaverse/react@6.1.3':
     dependencies:

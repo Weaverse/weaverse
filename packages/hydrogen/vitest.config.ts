@@ -10,6 +10,12 @@ export default defineConfig({
   root: packageRoot,
   resolve: {
     alias: {
+      // `next` is an optional peer; resolve the Next.js adapter's single
+      // `next/navigation` import to a local shim for tests.
+      'next/navigation': resolve(
+        packageRoot,
+        '__tests__/next/__mocks__/next-navigation.ts'
+      ),
       react: resolve(repoRoot, 'node_modules/react'),
       'react-dom': resolve(repoRoot, 'node_modules/react-dom'),
       'react/jsx-dev-runtime': resolve(
