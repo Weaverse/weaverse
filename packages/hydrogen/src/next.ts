@@ -16,6 +16,27 @@ export {
   type SchemaType,
 } from '@weaverse/schema'
 export type * from './index'
+// Types the exports above reference, public now that the adapter lives here.
+export type {
+  TranslationProviderProps,
+  TranslationValue,
+  WeaverseNextClient,
+  WeaverseNextClientConfig,
+  WeaverseNextCommerceContext,
+  WeaverseNextComponentData,
+  WeaverseNextComponentLoaderArgs,
+  WeaverseNextComponentProps,
+  WeaverseNextLoadPageInput,
+  WeaverseNextPageAssignment,
+  WeaverseNextPageData,
+  WeaverseNextProviderProps,
+  WeaverseNextRendererProps,
+  WeaverseNextRequestInfo,
+  WeaverseNextRootProviderProps,
+  WeaverseNextStorefront,
+  WeaverseNextStudioConnectProps,
+  WeaverseNextThemeSchemaInput,
+} from './next/index'
 // Server Components import this entry (root layouts, section schemas), so no
 // runtime value here may load `@weaverse/react`, whose module scope calls
 // `createContext`. Hooks and stores come from the Next adapter in `./next`, whose
