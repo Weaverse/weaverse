@@ -6,6 +6,7 @@
 import type { ComponentType } from 'react';
 import type { ForwardRefExoticComponent } from 'react';
 import type { InspectorGroup } from '@weaverse/schema';
+import type { Metadata } from 'next';
 import type { PageSEOData } from '@weaverse/schema';
 import type { PageType } from '@weaverse/schema';
 import type { ReactNode } from 'react';
@@ -13,6 +14,10 @@ import type { SchemaType } from '@weaverse/schema';
 import type { ThemeOutline } from '@weaverse/schema';
 import type { ThemeRoutes } from '@weaverse/schema';
 import type { WeaverseElement } from '@weaverse/react';
+
+export type NextOpenGraph = NonNullable<Metadata['openGraph']>;
+
+export type NextTwitter = NonNullable<Metadata['twitter']>;
 
 export interface WeaverseNextBaseConfigs {
     envProjectId: string;
@@ -187,6 +192,27 @@ export interface WeaverseNextRevalidateHandlerConfig {
     getClient: (request: Request, requestContext?: WeaverseNextRequestContext) => Promise<WeaverseNextServerClient> | WeaverseNextServerClient;
 }
 
+export type WeaverseNextSeoInput = WeaverseNextLoaderData | WeaverseNextPageData | WeaverseNextSeoPageContainer | null | undefined;
+
+export interface WeaverseNextSeoMetadata {
+    alternates?: {
+        canonical?: string;
+    };
+    description?: string;
+    keywords?: string;
+    openGraph?: NextOpenGraph;
+    robots: {
+        follow: boolean;
+        index: boolean;
+    };
+    title?: string;
+    twitter?: NextTwitter;
+}
+
+export interface WeaverseNextSeoPageContainer {
+    page?: WeaverseNextPageData | null;
+}
+
 export interface WeaverseNextServerClient extends WeaverseNextClient {
     configs: WeaverseNextConfigs;
     fetchCustomPages: (options?: WeaverseNextFetchCustomPagesOptions) => Promise<WeaverseNextCustomPageEntry[]>;
@@ -279,4 +305,8 @@ export interface WeaverseNextThemeSettingsResponse {
 export declare function createWeaverseNextRevalidateHandler(config: WeaverseNextRevalidateHandlerConfig): WeaverseNextRevalidateHandler;
 
 export declare function createWeaverseNextServerClient(config: WeaverseNextServerClientConfig): WeaverseNextServerClient;
+
+export declare function formatWeaverseNextSeoMetadata(seo: PageSEOData | null | undefined): WeaverseNextSeoMetadata;
+
+export declare function getWeaverseNextSeoMetadata(data: WeaverseNextSeoInput): WeaverseNextSeoMetadata;
 ```

@@ -10,6 +10,7 @@ import type { ForwardRefExoticComponent } from 'react';
 import type { I18nConfig } from '@shopify/hydrogen';
 import type { InspectorGroup } from '@weaverse/schema';
 import type { JSX } from 'react/jsx-runtime';
+import type { Metadata } from 'next';
 import type { PageSEOData } from '@weaverse/schema';
 import type { PageType } from '@weaverse/schema';
 import type { ReactNode } from 'react';
@@ -24,9 +25,20 @@ export { BasicInput } from '@weaverse/schema';
 
 export type ComponentDataValue = string | number | boolean | undefined | null;
 
+export interface CreateTranslateSources {
+    designOverrides?: Record<string, string>;
+    externalT?: TranslateFunction;
+    merchantOverrides?: Record<string, unknown>;
+    staticContent: Record<string, unknown>;
+}
+
 export { IMAGES_PLACEHOLDERS } from '@weaverse/schema';
 
 export { InspectorGroup } from '@weaverse/schema';
+
+export type NextOpenGraph = NonNullable<Metadata['openGraph']>;
+
+export type NextTwitter = NonNullable<Metadata['twitter']>;
 
 export { PageType } from '@weaverse/schema';
 
@@ -305,6 +317,27 @@ export interface WeaverseNextRootProviderProps {
     themeSchema?: SchemaType | WeaverseNextThemeSchema;
 }
 
+export type WeaverseNextSeoInput = WeaverseNextLoaderData | WeaverseNextPageData | WeaverseNextSeoPageContainer | null | undefined;
+
+export interface WeaverseNextSeoMetadata {
+    alternates?: {
+        canonical?: string;
+    };
+    description?: string;
+    keywords?: string;
+    openGraph?: NextOpenGraph;
+    robots: {
+        follow: boolean;
+        index: boolean;
+    };
+    title?: string;
+    twitter?: NextTwitter;
+}
+
+export interface WeaverseNextSeoPageContainer {
+    page?: WeaverseNextPageData | null;
+}
+
 export interface WeaverseNextStorefront {
     i18n?: WeaverseNextI18n;
     query: (query: string, options?: unknown) => Promise<unknown>;
@@ -448,11 +481,19 @@ export declare function buildWeaverseNextRequestInfo(context?: WeaverseNextReque
 
 export { createSchema } from '@weaverse/schema';
 
+export declare function createTranslate(sources: CreateTranslateSources): TranslateFunction;
+
 export declare function createWeaverseNextClient(config: WeaverseNextClientConfig): WeaverseNextClient;
+
+export declare function formatWeaverseNextSeoMetadata(seo: PageSEOData | null | undefined): WeaverseNextSeoMetadata;
 
 export declare function generateDataFromSchema(schema: WeaverseComponentSchema | WeaverseThemeSchema): Record<string, any>;
 
 export declare function getNestedKey(obj: Record<string, unknown>, path: string, fallback?: string): string | undefined;
+
+export declare function getWeaverseNextSeoMetadata(data: WeaverseNextSeoInput): WeaverseNextSeoMetadata;
+
+export declare function interpolate(template: string, variables?: Record<string, string | number>): string;
 
 export declare let isBrowser: boolean;
 

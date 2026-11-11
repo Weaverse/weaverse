@@ -69,7 +69,22 @@ export {
   type WeaverseNextThemeSchema,
   type WeaverseNextThemeSchemaGroup,
 } from './next/index'
+export {
+  formatWeaverseNextSeoMetadata,
+  getWeaverseNextSeoMetadata,
+  type NextOpenGraph,
+  type NextTwitter,
+  type WeaverseNextSeoInput,
+  type WeaverseNextSeoMetadata,
+  type WeaverseNextSeoPageContainer,
+} from './next/seo'
 export type { WeaverseComponentProps } from './types'
 export { WeaverseError, WeaverseLoadError } from './types'
 export { generateDataFromSchema } from './utils'
-export { getNestedKey } from './utils/nested-key'
+export {
+  type CreateTranslateSources,
+  createTranslate,
+  getNestedKey,
+  interpolate,
+  type TranslateFunction,
+} from './utils/translate'

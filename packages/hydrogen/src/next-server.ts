@@ -5,6 +5,15 @@
  * @packageDocumentation
  */
 
+export {
+  formatWeaverseNextSeoMetadata,
+  getWeaverseNextSeoMetadata,
+  type NextOpenGraph,
+  type NextTwitter,
+  type WeaverseNextSeoInput,
+  type WeaverseNextSeoMetadata,
+  type WeaverseNextSeoPageContainer,
+} from './next/seo'
 // Types the exports above reference, public now that the adapter lives here.
 export type {
   WeaverseNextBaseConfigs,

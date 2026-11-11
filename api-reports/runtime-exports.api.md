@@ -84,9 +84,13 @@
     "WeaverseNextStudioConnect",
     "buildWeaverseNextRequestInfo",
     "createSchema",
+    "createTranslate",
     "createWeaverseNextClient",
+    "formatWeaverseNextSeoMetadata",
     "generateDataFromSchema",
     "getNestedKey",
+    "getWeaverseNextSeoMetadata",
+    "interpolate",
     "isBrowser",
     "isIframe",
     "useChildInstances",
@@ -99,7 +103,9 @@
   ],
   "@weaverse/hydrogen/next/server": [
     "createWeaverseNextRevalidateHandler",
-    "createWeaverseNextServerClient"
+    "createWeaverseNextServerClient",
+    "formatWeaverseNextSeoMetadata",
+    "getWeaverseNextSeoMetadata"
   ],
   "@weaverse/schema": [
     "BasicInputSchema",
