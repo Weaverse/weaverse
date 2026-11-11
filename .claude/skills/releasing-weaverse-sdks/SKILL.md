@@ -322,6 +322,24 @@ the reason it was skipped (for example, no user-facing changes). Do not wait
 for the docs PR review or merge, and a changelog problem never rolls back or
 blocks the npm release: continue to Step 12.
 
+### Step 11c: Update Agent Guidance
+
+When the release changes a major version, adds or renames an entry point (such
+as `@weaverse/hydrogen/react-router`) or renames exported types, update the
+guidance coding agents read in the same release:
+
+- `Weaverse/docs`: `docs.json` → `markdown.instructions`, which tops
+  `llms.txt`, `llms-full.txt` and every page's `.md`.
+- The weaverse.io website source: the "Guidance for coding agents" list in
+  `public/llms.txt` (served at `weaverse.io/llms.txt`).
+- `Weaverse/shopify-hydrogen-skills`: the affected skills. Then re-pin the
+  website's `other/agent-skills.json` (served at
+  `weaverse.io/.well-known/agent-skills/index.json`) to the new skills commit
+  with recomputed `sha256` digests.
+
+Skip this step when the release changes none of these, and record which
+applied in the Step 13 summary.
+
 ### Step 12: Sync Dev Branch
 
 ```bash
@@ -380,6 +398,7 @@ parse intent → main + latest → npm auth (if not set) → calc versions (conf
 verify (biome+types+tests) → bump versions → build (no install) →
 publish core → react → next → hydrogen → pnpm install (refresh lockfile) →
 commit → tag → push → gh release → changelog per stable tag (update-changelogs) →
+agent guidance (major version, entry point or type renames) →
 sync dev → verify npm + report changelog results
 ```
 
