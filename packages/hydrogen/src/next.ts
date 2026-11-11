@@ -12,18 +12,19 @@
 // `createContext`. Hooks and stores come from the Next adapter itself, which
 // keeps React behind its own 'use client' boundary and shares its contexts;
 // the rest comes from `@weaverse/schema` and React-free local modules, and the
-// core and React entries contribute types only. `useStudioSelection` waits for
-// the `@weaverse/next` release that exports it. `package:check` guards this.
+// core and React entries contribute types only. `package:check` guards this.
 export {
   buildWeaverseNextRequestInfo,
   createWeaverseNextClient,
   isBrowser,
   isIframe,
+  type StudioSelection,
   TranslationProvider,
   TranslationStore,
   useChildInstances,
   useItemInstance,
   useParentInstance,
+  useStudioSelection,
   useThemeSettings,
   useTranslation,
   useWeaverse,
@@ -38,7 +39,6 @@ export {
   type WeaverseNextThemeSchema,
   type WeaverseNextThemeSchemaGroup,
 } from '@weaverse/next'
-export type { StudioSelection } from '@weaverse/react'
 export {
   type BasicInput,
   createSchema,
