@@ -49,16 +49,6 @@ Build and publish MUST follow this order.
 
 Hydrogen depends on `@weaverse/schema` (independent group). When releasing schema independently, warn the user that hydrogen's dependency on schema is now stale. Suggest a follow-up fixed group release — but do NOT auto-bump.
 
-### One-time: deprecate `@weaverse/next`
-
-`@weaverse/next` is archived (`archived/next`); its code ships as `@weaverse/hydrogen/next` and `/next/server`. On the **first fixed-group release after the archive** (the first `@weaverse/hydrogen` that no longer depends on `@weaverse/next`), once Step 13 confirms that hydrogen version is on npm, deprecate the package (needs the user's npm OTP):
-
-```bash
-npm deprecate @weaverse/next "Use @weaverse/hydrogen/next instead"
-```
-
-Verify with `npm view @weaverse/next deprecated`, record it in the Step 13 summary, then delete this section. Already-published versions keep installing; never unpublish them.
-
 ## The Release Ritual
 
 Execute these steps in order. Do NOT skip steps or reorder.
