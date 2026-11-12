@@ -254,6 +254,8 @@ let csp = createContentSecurityPolicy({
 It returns `{}` for normal visitors. Inside Studio it allows the Studio origin
 to embed the page and serve the bridge script, plus `'unsafe-eval'` in design
 mode. A `weaverseHost` query that is not a trusted Weaverse origin is ignored.
+Self-hosted or staging Studio deployments outside `weaverse.io` / `weaverse.dev`
+get `{}`, like the bridge loader; add their origin to your own directives.
 Next.js themes import it from `@weaverse/hydrogen/next/server`. Merge in your
 own theme sources (video embeds, analytics, fonts) yourself.
 
