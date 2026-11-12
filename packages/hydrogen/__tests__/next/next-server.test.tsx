@@ -120,6 +120,31 @@ describe('createWeaverseNextServerClient projectId resolution', () => {
 // ─── 2. loadPage request + response shape ─────────────────────────────
 
 describe('createWeaverseNextServerClient loadPage', () => {
+  it('should_send_storefront_locale_when_request_context_has_no_i18n', async () => {
+    let fetchMock = makeFetch(makePagePayload())
+    let client = createWeaverseNextServerClient({
+      components: [heroComponent],
+      projectId: 'proj-123',
+      fetch: fetchMock,
+      requestContext: { url: 'https://shop.example/' },
+      commerce: {
+        storefront: {
+          locale: { country: 'FR', language: 'FR', pathPrefix: '/fr-fr' },
+          query: async () => ({}),
+        },
+      },
+    })
+
+    await client.loadPage({ type: 'INDEX' })
+
+    let [, init] = fetchMock.mock.calls[0] as [string, RequestInit]
+    expect(JSON.parse(init.body as string).i18n).toEqual({
+      country: 'FR',
+      language: 'FR',
+      pathPrefix: '/fr-fr',
+    })
+  })
+
   it('should_post_expected_url_body_and_return_configs_requestInfo', async () => {
     let fetchMock = makeFetch(makePagePayload())
     let client = createWeaverseNextServerClient({

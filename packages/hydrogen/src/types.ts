@@ -1,7 +1,7 @@
 import type {
   CacheInstance,
   CachingStrategy,
-  I18nConfig,
+  ShopifyLocale,
   StorefrontClient,
 } from '@shopify/hydrogen'
 import type {
@@ -372,7 +372,7 @@ export interface WeaversePageData extends WeaverseProjectDataType {
 }
 
 /** Locale metadata used when requesting localized Weaverse content. */
-export type WeaverseI18n = I18nConfig & {
+export type WeaverseI18n = ShopifyLocale & {
   /** Human-readable locale label displayed in Studio. */
   label?: string
   /** Locale path prefix used by the storefront router. */
@@ -563,7 +563,7 @@ export function isProjectIdFunction(
 export type WeaverseClientArgs = {
   /**
    * Request-scoped Hydrogen Storefront API client. Section loaders reach it
-   * as `weaverse.storefront`; its `i18n` selects the content locale unless
+   * as `weaverse.storefront`; its `locale` selects the content locale unless
    * {@link WeaverseClientArgs.locale} is given.
    */
   storefront: WeaverseStorefront
@@ -572,11 +572,11 @@ export type WeaverseClientArgs = {
    * The market this request serves, as Weaverse identifies it. It selects the
    * Translation Manager overrides (`${language}-${country}`, lowercased), the
    * locale sent with page requests and the `requestInfo.i18n` Studio reads,
-   * so include `pathPrefix`. Pass it when the storefront's `i18n.language` is
+   * so include `pathPrefix`. Pass it when the storefront's `locale.language` is
    * a Shopify `LanguageCode` that differs from the market's public language,
    * such as `ZH_TW` for a Traditional Chinese Hong Kong market.
    *
-   * @defaultValue `storefront.i18n`
+   * @defaultValue `storefront.locale`
    */
   locale?: WeaverseI18n
 

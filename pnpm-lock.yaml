@@ -153,8 +153,8 @@ importers:
         version: 7.14.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
     devDependencies:
       '@shopify/hydrogen':
-        specifier: ^2026.10.2
-        version: 2026.10.2(@voidzero-dev/vite-plus-core@0.1.24(@types/node@25.5.2)(typescript@6.0.3)(yaml@2.9.0))(graphql@16.13.2)(react@19.2.5)(typescript@6.0.3)
+        specifier: ^2026.10.3
+        version: 2026.10.3(@voidzero-dev/vite-plus-core@0.1.24(@types/node@25.5.2)(typescript@6.0.3)(yaml@2.9.0))(graphql@16.13.2)(react@19.2.5)(typescript@6.0.3)
       happy-dom:
         specifier: ^21.0.4
         version: 21.0.4
@@ -833,8 +833,8 @@ packages:
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
 
-  '@shopify/hydrogen@2026.10.2':
-    resolution: {integrity: sha512-3i/7xRsBnWGiWA2xEZzF2bt6610XkgAPh0b5NqNiB+UjDM3bvvKRlK+CzJjyqu/sTHOLbRPlKjpVDunkBQ0ifA==}
+  '@shopify/hydrogen@2026.10.3':
+    resolution: {integrity: sha512-ees8MDobbuVngpTAPa4+V9n73r8xgn+06MWQmd7MovJSPGHZbIhW2Nw2u59sXkqbRVaT6Uz6yuN5h7viYAPKDA==}
     hasBin: true
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
@@ -2599,7 +2599,7 @@ snapshots:
 
   '@polka/url@1.0.0-next.29': {}
 
-  '@shopify/hydrogen@2026.10.2(@voidzero-dev/vite-plus-core@0.1.24(@types/node@25.5.2)(typescript@6.0.3)(yaml@2.9.0))(graphql@16.13.2)(react@19.2.5)(typescript@6.0.3)':
+  '@shopify/hydrogen@2026.10.3(@voidzero-dev/vite-plus-core@0.1.24(@types/node@25.5.2)(typescript@6.0.3)(yaml@2.9.0))(graphql@16.13.2)(react@19.2.5)(typescript@6.0.3)':
     dependencies:
       cross-spawn: 7.0.6
       gql.tada: 1.9.2(graphql@16.13.2)(typescript@6.0.3)

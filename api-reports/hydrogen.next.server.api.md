@@ -244,7 +244,9 @@ export interface WeaverseNextServerLoadPageInput extends WeaverseNextLoadPageInp
 }
 
 export interface WeaverseNextStorefront {
+    // @deprecated
     i18n?: WeaverseNextI18n;
+    locale?: WeaverseNextI18n;
     query: (query: string, options?: unknown) => Promise<unknown>;
     [key: string]: unknown;
 }

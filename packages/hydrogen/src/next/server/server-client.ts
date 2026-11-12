@@ -452,7 +452,9 @@ class NextServerClient implements WeaverseNextServerClient {
     params: Record<string, unknown>,
     cache?: WeaverseNextCacheConfig
   ) {
-    let i18n = this.requestContext?.i18n ?? this.commerce?.storefront?.i18n
+    let storefront = this.commerce?.storefront
+    let i18n =
+      this.requestContext?.i18n ?? storefront?.locale ?? storefront?.i18n
     let url = normalizeNextPageUrl(resolveRequestUrl(this.requestContext))
     let apiUrl = `${this._baseConfigs.weaverseApiBase}/api/public/project`
     let userAgent = this.requestContext?.headers?.get('user-agent') ?? ''

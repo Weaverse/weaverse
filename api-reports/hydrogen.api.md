@@ -4,11 +4,11 @@
 
 ```ts
 import type { ElementData } from '@weaverse/react';
-import type { I18nConfig } from '@shopify/hydrogen';
 import type { InspectorGroup } from '@weaverse/schema';
 import type { PageSEOData } from '@weaverse/schema';
 import type { PageType } from '@weaverse/schema';
 import type { SchemaType } from '@weaverse/schema';
+import type { ShopifyLocale } from '@shopify/hydrogen';
 import type { ThemeOutline } from '@weaverse/schema';
 import type { ThemeRoutes } from '@weaverse/schema';
 import type { WeaverseProjectDataType } from '@weaverse/react';
@@ -69,7 +69,7 @@ export declare class WeaverseError extends Error {
     constructor(message: string, code?: string, statusCode?: number, context?: Record<string, unknown>);
 }
 
-export type WeaverseI18n = I18nConfig & {
+export type WeaverseI18n = ShopifyLocale & {
     label?: string;
     pathPrefix?: string;
     [key: string]: any;

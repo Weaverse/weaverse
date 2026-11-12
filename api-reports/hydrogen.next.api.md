@@ -7,7 +7,6 @@ import type * as React from 'react';
 import type { ComponentType } from 'react';
 import type { ElementData } from '@weaverse/react';
 import type { ForwardRefExoticComponent } from 'react';
-import type { I18nConfig } from '@shopify/hydrogen';
 import type { InspectorGroup } from '@weaverse/schema';
 import type { JSX } from 'react/jsx-runtime';
 import type { Metadata } from 'next';
@@ -15,6 +14,7 @@ import type { PageSEOData } from '@weaverse/schema';
 import type { PageType } from '@weaverse/schema';
 import type { ReactNode } from 'react';
 import type { SchemaType } from '@weaverse/schema';
+import type { ShopifyLocale } from '@shopify/hydrogen';
 import type { ThemeOutline } from '@weaverse/schema';
 import type { ThemeRoutes } from '@weaverse/schema';
 import type { WeaverseElement } from '@weaverse/react';
@@ -115,7 +115,7 @@ export declare class WeaverseError extends Error {
     constructor(message: string, code?: string, statusCode?: number, context?: Record<string, unknown>);
 }
 
-export type WeaverseI18n = I18nConfig & {
+export type WeaverseI18n = ShopifyLocale & {
     label?: string;
     pathPrefix?: string;
     [key: string]: any;
@@ -339,7 +339,9 @@ export interface WeaverseNextSeoPageContainer {
 }
 
 export interface WeaverseNextStorefront {
+    // @deprecated
     i18n?: WeaverseNextI18n;
+    locale?: WeaverseNextI18n;
     query: (query: string, options?: unknown) => Promise<unknown>;
     [key: string]: unknown;
 }
