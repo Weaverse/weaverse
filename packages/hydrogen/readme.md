@@ -234,6 +234,31 @@ answers without a `theme` field, it returns schema defaults with
 `_loadFailed: true`; check that flag before treating the settings as the
 merchant's.
 
+### Content Security Policy
+
+`getWeaverseStudioCspDirectives(request)` returns the CSP sources Weaverse
+Studio needs for the current request. Pass it to Hydrogen's
+`createContentSecurityPolicy` (2026.10.3+), which extends its defaults with
+each array:
+
+```typescript
+import { createContentSecurityPolicy } from '@shopify/hydrogen'
+import { getWeaverseStudioCspDirectives } from '@weaverse/hydrogen/react-router'
+
+let csp = createContentSecurityPolicy({
+  shop,
+  directives: getWeaverseStudioCspDirectives(request),
+})
+```
+
+It returns `{}` for normal visitors. Inside Studio it allows the Studio origin
+to embed the page and serve the bridge script, plus `'unsafe-eval'` in design
+mode. A `weaverseHost` query that is not a trusted Weaverse origin is ignored.
+Self-hosted or staging Studio deployments outside `weaverse.io` / `weaverse.dev`
+get `{}`, like the bridge loader; add their origin to your own directives.
+Next.js themes import it from `@weaverse/hydrogen/next/server`. Merge in your
+own theme sources (video embeds, analytics, fonts) yourself.
+
 ### Defining Component Schema
 
 Define your component's schema to control its behavior and interactivity within Weaverse Studio:

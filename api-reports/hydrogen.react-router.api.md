@@ -324,6 +324,15 @@ export type WeaverseStorefrontCallOptions = {
     cache?: CachingStrategy;
 };
 
+export interface WeaverseStudioCspDirectives {
+    connectSrc?: string[];
+    fontSrc?: string[];
+    frameAncestors?: string[];
+    imgSrc?: string[];
+    scriptSrc?: string[];
+    styleSrc?: string[];
+}
+
 export type WeaverseThemeSchema = {
     info: {
         name: string;
@@ -380,6 +389,8 @@ export declare function getNestedKey(obj: Record<string, unknown>, path: string,
 export declare function getSelectedProductOptions(request: Request): SelectedOption[];
 
 export declare function getWeaverseSeoMeta(data: WeaverseSeoInput): MetaDescriptor[];
+
+export declare function getWeaverseStudioCspDirectives(request: Request | URL | string): WeaverseStudioCspDirectives;
 
 export { isBrowser } from '@weaverse/core';
 
