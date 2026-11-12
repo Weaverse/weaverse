@@ -6,6 +6,12 @@
 // bundles tree-shake the validation runtime out entirely.
 import { z } from 'zod/v4'
 
+// Turn off zod's JIT before any schema below is built. Building an object
+// schema probes `new Function('')`, which a storefront CSP without
+// 'unsafe-eval' reports as a violation on every page load. `./manifest` also
+// imports this module, so the call runs before any zod schema in the package.
+z.config({ jitless: true })
+
 // Re-export Zod for backward compatibility and convenience
 export { z }
 
