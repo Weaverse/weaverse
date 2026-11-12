@@ -337,7 +337,7 @@ export class WeaverseClient {
     this.componentsByType = this.buildComponentLookupMap(args.components)
 
     // Configuration
-    this.locale = args.locale ?? args.storefront.i18n
+    this.locale = args.locale ?? args.storefront.locale
     this.fetchTimeoutMs = args.fetchTimeoutMs || DEFAULT_FETCH_TIMEOUT_MS
     this.throwPageLoadFailures = args.throwPageLoadFailures === true
 

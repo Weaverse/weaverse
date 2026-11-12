@@ -308,8 +308,13 @@ export interface WeaverseNextThemeSchema {
  * provides this (public or private token mode); Weaverse never owns it.
  */
 export interface WeaverseNextStorefront {
-  /** Locale and market used for Storefront API queries. */
+  /**
+   * Locale and market used for Storefront API queries.
+   * @deprecated Use `locale`, matching Hydrogen's `storefront.locale`.
+   */
   i18n?: WeaverseNextI18n
+  /** Locale and market used for Storefront API queries. */
+  locale?: WeaverseNextI18n
   /** Execute a Storefront API GraphQL query. */
   query: (query: string, options?: unknown) => Promise<unknown>
   /** Additional methods supplied by the commerce integration. */
