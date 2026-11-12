@@ -59,6 +59,6 @@
     "@weaverse:registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "zod": "^4.3.6"
+    "zod": "^4.4.0"
   }
 }
