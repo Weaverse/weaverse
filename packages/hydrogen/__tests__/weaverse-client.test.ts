@@ -520,7 +520,7 @@ function createMockContext(overrides: any = {}): any {
       WEAVERSE_PROJECT_ID: 'env-project-default',
     },
     storefront: {
-      i18n: { language: 'EN', country: 'US', pathPrefix: '' },
+      locale: { language: 'EN', country: 'US', pathPrefix: '' },
     },
     cache: createMemoryCache(),
     waitUntil: () => {},
@@ -1156,7 +1156,9 @@ describe('loadThemeSettings storefront context', () => {
 describe('WeaverseClient locale option (issue #568)', () => {
   // A Hong Kong market in Traditional Chinese: Shopify needs `ZH_TW`, while
   // Weaverse keys the market by its own locale.
-  let storefront = { i18n: { language: 'ZH_TW', country: 'HK' } }
+  let storefront = {
+    locale: { language: 'ZH_TW', country: 'HK', pathPrefix: '' },
+  }
   let locale = { language: 'ZH', country: 'HK', pathPrefix: '/zh-hk' }
   let themeSchema: WeaverseThemeSchema = {
     info: {
@@ -1214,7 +1216,7 @@ describe('WeaverseClient locale option (issue #568)', () => {
     expect(overridesUrl(fetchSpy)).toContain('locale=zh-hk')
   })
 
-  it('should_key_merchant_overrides_by_storefront_i18n_when_locale_is_omitted', async () => {
+  it('should_key_merchant_overrides_by_storefront_locale_when_locale_is_omitted', async () => {
     let client = makeClient()
     let fetchSpy = spyOn(client, 'fetchWithCache').mockResolvedValue({
       theme: {},

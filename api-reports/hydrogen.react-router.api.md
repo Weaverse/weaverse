@@ -10,7 +10,6 @@ import type { CachingStrategy } from '@shopify/hydrogen';
 import type { ComponentType } from 'react';
 import type { ElementData } from '@weaverse/react';
 import type { ForwardRefExoticComponent } from 'react';
-import type { I18nConfig } from '@shopify/hydrogen';
 import type { InspectorGroup } from '@weaverse/schema';
 import type { JSX } from 'react';
 import type { LoaderFunctionArgs } from 'react-router';
@@ -20,6 +19,7 @@ import type { PageType } from '@weaverse/schema';
 import type { ReactNode } from 'react';
 import type { SchemaType } from '@weaverse/schema';
 import type { SelectedOption } from '@shopify/hydrogen';
+import type { ShopifyLocale } from '@shopify/hydrogen';
 import type { StorefrontClient } from '@shopify/hydrogen';
 import type { ThemeOutline } from '@weaverse/schema';
 import type { ThemeRoutes } from '@weaverse/schema';
@@ -229,7 +229,7 @@ export interface WeaverseHydrogenRootProps {
     errorComponent?: React.FC<WeaverseHydrogenRootErrorProps>;
 }
 
-export type WeaverseI18n = I18nConfig & {
+export type WeaverseI18n = ShopifyLocale & {
     label?: string;
     pathPrefix?: string;
     [key: string]: any;

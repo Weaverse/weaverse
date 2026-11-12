@@ -109,7 +109,7 @@ function makeClient(
       WEAVERSE_HOST: path === 'direct' ? 'https://studio.weaverse.io' : ORIGIN,
       WEAVERSE_PUBLIC_API_BASE: ORIGIN,
     },
-    storefront: { i18n: { language: 'EN', country: 'US', pathPrefix: '' } },
+    storefront: { locale: { language: 'EN', country: 'US', pathPrefix: '' } },
     cache: opts.cache ?? createMemoryCache(),
     waitUntil: () => {},
     request: new Request(opts.url ?? 'https://shop.test/'),
