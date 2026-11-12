@@ -238,7 +238,8 @@ merchant's.
 
 `getWeaverseStudioCspDirectives(request)` returns the CSP sources Weaverse
 Studio needs for the current request. Pass it to Hydrogen's
-`createContentSecurityPolicy`, which extends its defaults with each array:
+`createContentSecurityPolicy` (2026.10.3+), which extends its defaults with
+each array:
 
 ```typescript
 import { createContentSecurityPolicy } from '@shopify/hydrogen'

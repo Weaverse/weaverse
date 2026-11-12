@@ -71,4 +71,38 @@ describe('getWeaverseStudioCspDirectives', () => {
     // Assert
     expect(directives).toEqual({})
   })
+
+  it('should_return_no_directives_when_the_url_is_relative', () => {
+    // Act
+    let directives = getWeaverseStudioCspDirectives('/?isDesignMode=true')
+
+    // Assert
+    expect(directives).toEqual({})
+  })
+
+  it('should_use_the_last_weaverse_host_when_the_param_is_duplicated', () => {
+    // Arrange
+    let request = new Request(
+      'https://shop.example/?weaverseHost=https://evil.example&isDesignMode=true&weaverseHost=https://studio.weaverse.io'
+    )
+
+    // Act
+    let directives = getWeaverseStudioCspDirectives(request)
+
+    // Assert
+    expect(directives.frameAncestors).toEqual(['https://studio.weaverse.io'])
+  })
+
+  it('should_allow_the_studio_origin_when_previewing_a_revision', () => {
+    // Arrange
+    let request = new Request(
+      'https://shop.example/?__revisionId=r1&weaverseHost=https://studio.weaverse.io'
+    )
+
+    // Act
+    let directives = getWeaverseStudioCspDirectives(request)
+
+    // Assert
+    expect(directives.frameAncestors).toEqual(['https://studio.weaverse.io'])
+  })
 })

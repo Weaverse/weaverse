@@ -32,8 +32,11 @@ export interface WeaverseStudioCspDirectives {
  *
  * The `weaverseHost` query is attacker-controllable, so it goes through the
  * same trust check that gates the bridge script: an untrusted host, or a
- * loopback host on a non-loopback storefront, returns `{}`. Works in both
- * report-only and enforcing policies.
+ * loopback host on a non-loopback storefront, returns `{}`, as does a relative
+ * or malformed URL. Works in both report-only and enforcing policies.
+ *
+ * The example below needs `@shopify/hydrogen` 2026.10.3 or later, the first
+ * release with `createContentSecurityPolicy`.
  *
  * @example
  * ```ts
@@ -46,7 +49,13 @@ export interface WeaverseStudioCspDirectives {
 export function getWeaverseStudioCspDirectives(
   request: Request | URL | string
 ): WeaverseStudioCspDirectives {
-  let url = new URL(request instanceof Request ? request.url : request)
+  let url: URL
+  try {
+    url = new URL(request instanceof Request ? request.url : request)
+  } catch {
+    // A relative or malformed URL can't be Studio; never break the response.
+    return {}
+  }
   let bridgeSrc = resolveStudioScriptSrc(url.search, url.hostname)
   if (!bridgeSrc) {
     return {}
