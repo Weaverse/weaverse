@@ -51,3 +51,7 @@ export {
   type WeaverseNextServerClient,
   type WeaverseNextThemeSettingsResponse,
 } from './next/server'
+export {
+  getWeaverseStudioCspDirectives,
+  type WeaverseStudioCspDirectives,
+} from './utils/studio-csp'

@@ -38,6 +38,7 @@
     "createSchema",
     "generateDataFromSchema",
     "getNestedKey",
+    "getWeaverseStudioCspDirectives",
     "isBrowser",
     "isIframe"
   ],
@@ -61,6 +62,7 @@
     "getNestedKey",
     "getSelectedProductOptions",
     "getWeaverseSeoMeta",
+    "getWeaverseStudioCspDirectives",
     "isBrowser",
     "isIframe",
     "useChildInstances",
@@ -105,7 +107,8 @@
     "createWeaverseNextRevalidateHandler",
     "createWeaverseNextServerClient",
     "formatWeaverseNextSeoMetadata",
-    "getWeaverseNextSeoMetadata"
+    "getWeaverseNextSeoMetadata",
+    "getWeaverseStudioCspDirectives"
   ],
   "@weaverse/schema": [
     "BasicInputSchema",

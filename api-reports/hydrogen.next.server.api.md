@@ -302,6 +302,15 @@ export interface WeaverseNextThemeSettingsResponse {
     [key: string]: unknown;
 }
 
+export interface WeaverseStudioCspDirectives {
+    connectSrc?: string[];
+    fontSrc?: string[];
+    frameAncestors?: string[];
+    imgSrc?: string[];
+    scriptSrc?: string[];
+    styleSrc?: string[];
+}
+
 export declare function createWeaverseNextRevalidateHandler(config: WeaverseNextRevalidateHandlerConfig): WeaverseNextRevalidateHandler;
 
 export declare function createWeaverseNextServerClient(config: WeaverseNextServerClientConfig): WeaverseNextServerClient;
@@ -309,4 +318,6 @@ export declare function createWeaverseNextServerClient(config: WeaverseNextServe
 export declare function formatWeaverseNextSeoMetadata(seo: PageSEOData | null | undefined): WeaverseNextSeoMetadata;
 
 export declare function getWeaverseNextSeoMetadata(data: WeaverseNextSeoInput): WeaverseNextSeoMetadata;
+
+export declare function getWeaverseStudioCspDirectives(request: Request | URL | string): WeaverseStudioCspDirectives;
 ```

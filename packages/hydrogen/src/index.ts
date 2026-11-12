@@ -46,4 +46,8 @@ export {
 } from './types'
 export { generateDataFromSchema } from './utils'
 export { getNestedKey } from './utils/nested-key'
+export {
+  getWeaverseStudioCspDirectives,
+  type WeaverseStudioCspDirectives,
+} from './utils/studio-csp'
 export { TranslationStore } from './utils/translation-store'

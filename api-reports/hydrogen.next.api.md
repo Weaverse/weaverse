@@ -434,6 +434,15 @@ export type WeaverseProjectType = {
     [key: string]: any;
 };
 
+export interface WeaverseStudioCspDirectives {
+    connectSrc?: string[];
+    fontSrc?: string[];
+    frameAncestors?: string[];
+    imgSrc?: string[];
+    scriptSrc?: string[];
+    styleSrc?: string[];
+}
+
 export type WeaverseThemeSchema = {
     info: {
         name: string;
@@ -492,6 +501,8 @@ export declare function generateDataFromSchema(schema: WeaverseComponentSchema |
 export declare function getNestedKey(obj: Record<string, unknown>, path: string, fallback?: string): string | undefined;
 
 export declare function getWeaverseNextSeoMetadata(data: WeaverseNextSeoInput): WeaverseNextSeoMetadata;
+
+export declare function getWeaverseStudioCspDirectives(request: Request | URL | string): WeaverseStudioCspDirectives;
 
 export declare function interpolate(template: string, variables?: Record<string, string | number>): string;
 

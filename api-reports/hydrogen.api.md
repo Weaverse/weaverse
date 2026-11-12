@@ -148,6 +148,15 @@ export type WeaverseProjectType = {
     [key: string]: any;
 };
 
+export interface WeaverseStudioCspDirectives {
+    connectSrc?: string[];
+    fontSrc?: string[];
+    frameAncestors?: string[];
+    imgSrc?: string[];
+    scriptSrc?: string[];
+    styleSrc?: string[];
+}
+
 export type WeaverseThemeSchema = {
     info: {
         name: string;
@@ -196,6 +205,8 @@ export { createSchema } from '@weaverse/schema';
 export declare function generateDataFromSchema(schema: WeaverseComponentSchema | WeaverseThemeSchema): Record<string, any>;
 
 export declare function getNestedKey(obj: Record<string, unknown>, path: string, fallback?: string): string | undefined;
+
+export declare function getWeaverseStudioCspDirectives(request: Request | URL | string): WeaverseStudioCspDirectives;
 
 export { isBrowser } from '@weaverse/core';
 
