@@ -144,8 +144,8 @@ When a market's Shopify `LanguageCode` differs from the locale Weaverse keys
 its translations by (for example `ZH_TW` for a Traditional Chinese Hong Kong
 market), pass the market as `locale` instead of relabeling the storefront
 client. It sets the Translation Manager locale, the locale sent with page
-requests and the `requestInfo.i18n` Studio reads, while the Storefront API keeps
-its own `locale`:
+requests and the `requestInfo.i18n` Studio reads (the wire field keeps the name
+`i18n`), while the Storefront API keeps its own `locale`:
 
 ```typescript
 new WeaverseClient({ ...args, locale: { language: 'ZH', country: 'HK', pathPrefix: '/zh-hk' } })

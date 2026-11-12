@@ -9,11 +9,11 @@ Issue: [#591](https://github.com/Weaverse/weaverse/issues/591)
 ## Scope & contract
 
 - `WeaverseI18n` is based on `ShopifyLocale` instead of `I18nConfig`. The shape is unchanged: `{language, country}` plus optional `pathPrefix`, `label` and extra fields, so existing theme objects still type-check.
-- `WeaverseClient` defaults its locale to `storefront.locale` instead of `storefront.i18n`. The explicit `locale` argument still wins.
+- `WeaverseClient` defaults its locale to `storefront.locale` instead of `storefront.i18n`. The explicit `locale` argument still wins. There is no fallback to `storefront.i18n`: `WeaverseStorefront` is Hydrogen's `StorefrontClient`, and the `>=2026.10.3` peer guarantees `locale`. A hand-rolled storefront that only sets `i18n` must set `locale` instead.
 - The Next adapter's structural `WeaverseNextStorefront` gains `locale`; `i18n` stays as a deprecated fallback because the adapter accepts non-Hydrogen clients. Page requests read `requestContext.i18n`, then `storefront.locale`, then `storefront.i18n`.
 - The `@shopify/hydrogen` peer moves to `>=2026.10.3`, the first release with `storefront.locale`.
 - Unchanged: the Weaverse wire format (`requestInfo.i18n`, `routeContext.i18n`, page-request `i18n`) that Studio and the API read.
-- Ships in 6.3.0, together with [#592](https://github.com/Weaverse/weaverse/issues/592).
+- Ships in 6.3.0, together with [#592](https://github.com/Weaverse/weaverse/issues/592). The release notes must call out the peer bump: themes on `@shopify/hydrogen` 2026.10.0–2026.10.2 see a peer warning until they update.
 
 ## Acceptance
 
