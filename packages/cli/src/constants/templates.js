@@ -56,7 +56,7 @@ export const TEMPLATES = [
     repoURL: 'https://github.com/Weaverse/forward',
     defaultDownloadFolder: 'forward-main',
     description:
-      'A Next.js App Router storefront theme for Shopify, built on @weaverse/next.',
+      'A Next.js App Router storefront theme for Shopify, built on @weaverse/hydrogen/next.',
     demoUrl: 'https://forward-sandy.vercel.app',
     framework: 'nextjs',
     packageManager: 'bun',

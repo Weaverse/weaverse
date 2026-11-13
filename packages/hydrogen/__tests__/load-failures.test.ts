@@ -392,3 +392,43 @@ describe('loadThemeSettings envelope validation', () => {
     expect(result.theme).toEqual({ logoText: 'Merchant' })
   })
 })
+
+describe('loadPage result shape', () => {
+  it('should_mark_the_placeholder_as_fallback_when_nothing_is_assigned', async () => {
+    reply({ status: 200, body: UNASSIGNED_PAGE })
+    let client = makeClient('direct')
+
+    let result = await client.loadPage({ type: 'INDEX' })
+
+    expect(result?.isFallback).toBe(true)
+  })
+
+  it('should_not_mark_a_real_empty_page_as_fallback', async () => {
+    reply({ status: 200, body: VALID_PAGE })
+    let client = makeClient('direct')
+
+    let result = await client.loadPage({ type: 'INDEX' })
+
+    expect(result?.isFallback).toBeUndefined()
+  })
+
+  it('should_return_the_route_project_id_in_configs_when_the_route_overrides_it', async () => {
+    reply({ status: 200, body: VALID_PAGE })
+    let client = makeClient('direct')
+
+    let result = await client.loadPage({ type: 'INDEX', projectId: 'proj-2' })
+
+    expect(result?.configs.projectId).toBe('proj-2')
+  })
+
+  it('should_not_serialize_a_weaverse_api_key_from_the_request_url', async () => {
+    reply({ status: 200, body: VALID_PAGE })
+    let client = makeClient('direct', {
+      url: 'https://shop.test/?weaverseApiKey=secret-key&foo=bar',
+    })
+
+    let result = await client.loadPage({ type: 'INDEX' })
+
+    expect(JSON.stringify(result)).not.toContain('secret-key')
+  })
+})
