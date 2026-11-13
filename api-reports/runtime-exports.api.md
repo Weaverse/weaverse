@@ -104,6 +104,8 @@
     "useWeaverse"
   ],
   "@weaverse/hydrogen/next/server": [
+    "WeaverseError",
+    "WeaverseLoadError",
     "createWeaverseNextRevalidateHandler",
     "createWeaverseNextServerClient",
     "formatWeaverseNextSeoMetadata",

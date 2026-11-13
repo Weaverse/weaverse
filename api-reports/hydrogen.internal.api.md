@@ -346,7 +346,6 @@ export declare class WeaverseHydrogen extends Weaverse {
     projectId: string;
     weaverseHost: string;
     weaverseApiBase: string;
-    weaverseApiKey: string;
     weaverseVersion: string;
     isDesignMode: boolean;
     isPreviewMode: boolean;
@@ -387,7 +386,6 @@ export interface WeaverseHydrogenParams extends Omit<WeaverseCoreParams, 'ItemCo
     requestInfo: WeaverseLoaderRequestInfo;
     sectionType?: string;
     weaverseApiBase: string;
-    weaverseApiKey: string;
     weaverseHost: string;
     weaversePublicApiBase?: string;
     weaverseVersion?: string;
@@ -440,6 +438,7 @@ export type WeaverseLoaderData = {
     page: WeaversePageData;
     project: WeaverseProjectType;
     pageAssignment?: WeaversePageAssignment;
+    isFallback?: boolean;
 };
 
 export type WeaverseLoaderRequestInfo = {
@@ -481,7 +480,6 @@ export type WeaverseProjectConfigs = {
     weaverseHost: string;
     weaverseApiBase: string;
     weaversePublicApiBase?: string;
-    weaverseApiKey: string;
     weaverseVersion?: string;
     isDesignMode?: boolean;
     isPreviewMode?: boolean;
@@ -520,7 +518,6 @@ export interface WeaverseStudio {
 
 export type WeaverseStudioQueries = {
     weaverseProjectId: string;
-    weaverseApiKey: string;
     weaverseHost: string;
     weaverseVersion: string;
     isDesignMode: boolean;

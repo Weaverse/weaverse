@@ -13,6 +13,7 @@ import type {
   WeaverseNextComponentLoaderArgs,
   WeaverseNextComponentProps,
 } from '../../src/next/types'
+import type { WeaverseLoadError } from '../../src/types'
 
 // ─── Helpers ──────────────────────────────────────────────────────────
 
@@ -440,6 +441,127 @@ describe('createWeaverseNextServerClient loadPage', () => {
     expect((data?.configs as Record<string, unknown>).projectId).toBe(
       'route-id'
     )
+  })
+})
+
+// ─── 2a. fallback flag and load failures ──────────────────────────────
+
+function makeLoadClient(
+  fetchMock: typeof fetch,
+  opts: { throwPageLoadFailures?: boolean; url?: string } = {}
+) {
+  return createWeaverseNextServerClient({
+    components: [heroComponent],
+    projectId: 'proj-123',
+    fetch: fetchMock,
+    requestContext: { url: opts.url ?? 'https://shop.example/' },
+    throwPageLoadFailures: opts.throwPageLoadFailures,
+  })
+}
+
+async function loadFailure(client: ReturnType<typeof makeLoadClient>) {
+  try {
+    await client.loadPage()
+  } catch (error) {
+    return error
+  }
+  return
+}
+
+describe('createWeaverseNextServerClient loadPage result shape', () => {
+  it('should_mark_the_placeholder_as_fallback_when_payload_has_no_page', async () => {
+    let client = makeLoadClient(
+      makeFetch({ page: null, project: { id: 'p', name: 'Shop' } })
+    )
+
+    let data = await client.loadPage()
+
+    expect(data?.isFallback).toBe(true)
+  })
+
+  it('should_not_mark_a_real_page_as_fallback', async () => {
+    let client = makeLoadClient(makeFetch(makePagePayload()))
+
+    let data = await client.loadPage()
+
+    expect(data?.isFallback).toBeUndefined()
+  })
+
+  it('should_not_serialize_a_weaverse_api_key_from_the_request_url', async () => {
+    let client = makeLoadClient(makeFetch(makePagePayload()), {
+      url: 'https://shop.example/?weaverseApiKey=secret-key&foo=bar',
+    })
+
+    let data = await client.loadPage()
+
+    expect(JSON.stringify(data)).not.toContain('secret-key')
+  })
+})
+
+describe('createWeaverseNextServerClient loadPage failures (opt-in)', () => {
+  it('should_reject_as_unavailable_when_the_api_answers_5xx', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    let client = makeLoadClient(makeFetch({}, { ok: false, status: 503 }), {
+      throwPageLoadFailures: true,
+    })
+
+    let error = await loadFailure(client)
+
+    expect((error as WeaverseLoadError)?.kind).toBe('unavailable')
+  })
+
+  it('should_reject_as_unavailable_when_the_api_cannot_be_reached', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    let fetchMock = vi
+      .fn()
+      .mockRejectedValue(
+        new TypeError('fetch failed')
+      ) as unknown as typeof fetch
+    let client = makeLoadClient(fetchMock, { throwPageLoadFailures: true })
+
+    let error = await loadFailure(client)
+
+    expect((error as WeaverseLoadError)?.kind).toBe('unavailable')
+  })
+
+  it('should_reject_as_configuration_when_the_api_refuses_the_request', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    let client = makeLoadClient(makeFetch({}, { ok: false, status: 403 }), {
+      throwPageLoadFailures: true,
+    })
+
+    let error = await loadFailure(client)
+
+    expect((error as WeaverseLoadError)?.kind).toBe('configuration')
+  })
+
+  it('should_reject_as_invalid_response_when_the_body_has_no_page_field', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    let client = makeLoadClient(makeFetch({}), { throwPageLoadFailures: true })
+
+    let error = await loadFailure(client)
+
+    expect((error as WeaverseLoadError)?.kind).toBe('invalid-response')
+  })
+
+  it('should_resolve_null_when_the_project_does_not_exist', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    let client = makeLoadClient(makeFetch({}, { ok: false, status: 404 }), {
+      throwPageLoadFailures: true,
+    })
+
+    let data = await client.loadPage()
+
+    expect(data).toBeNull()
+  })
+
+  it('should_resolve_null_on_5xx_without_the_opt_in', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    let client = makeLoadClient(makeFetch({}, { ok: false, status: 503 }))
+
+    let data = await client.loadPage()
+
+    expect(data).toBeNull()
   })
 })
 

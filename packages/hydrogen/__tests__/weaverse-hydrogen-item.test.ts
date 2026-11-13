@@ -63,7 +63,6 @@ function makeInstance(itemData: Record<string, unknown>): WeaverseHydrogen {
     projectId: 'project-1',
     requestInfo: { pathname: '/', search: '', queries: {} },
     weaverseApiBase: 'https://api.weaverse.io',
-    weaverseApiKey: 'key',
     weaverseHost: 'https://studio.weaverse.io',
     weaverseVersion: '',
   } as unknown as WeaverseHydrogenParams)
