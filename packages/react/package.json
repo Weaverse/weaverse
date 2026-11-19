@@ -26,7 +26,7 @@
     "dev": "vp pack src/index.ts --format esm --format cjs --sourcemap --no-fixed-extension --no-dts --watch --on-success 'node ../../scripts/build-declarations.mjs'",
     "build": "vp pack src/index.ts --format esm --format cjs --sourcemap --no-fixed-extension --no-dts && node ../../scripts/build-declarations.mjs",
     "clean": "rimraf dist",
-    "test": "vp test --run",
+    "test": "vp test --run --config ../../vite.config.ts",
     "typecheck": "tsrs --noEmit"
   },
   "dependencies": {

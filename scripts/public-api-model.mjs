@@ -13,8 +13,8 @@ import {
   isImportSpecifier,
   isNamespaceImport,
   SyntaxKind,
-} from 'tsrs/unstable/ast'
-import { formatDiagnostics, SymbolFlags } from 'tsrs/unstable/sync'
+} from 'tsrs/ast'
+import { formatDiagnostics, SymbolFlags } from 'tsrs/sync'
 
 const LEADING_SPACE = /^\s*/
 

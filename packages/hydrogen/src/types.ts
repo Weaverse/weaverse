@@ -36,11 +36,7 @@ import type {
 import { isValidSchema } from '@weaverse/schema'
 import type * as React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
-import type {
-  AppLoadContext,
-  LoaderFunctionArgs,
-  NavigateFunction,
-} from 'react-router'
+import type { LoaderFunctionArgs, NavigateFunction } from 'react-router'
 import type { TranslationStore } from './utils/translation-store'
 import type { ThemeSettingsStore } from './utils/use-theme-settings-store'
 import type { WeaverseHydrogen } from './WeaverseHydrogenRoot'
@@ -74,14 +70,20 @@ export type WeaverseComponentLoaderArgs<T = any, _E = any> = {
   weaverse: WeaverseClient
 }
 
-/** Application load context initialized with a request-scoped Weaverse client. */
-export interface WeaverseRouteAppLoadContext extends AppLoadContext {
+/**
+ * Application load context initialized with a request-scoped Weaverse client.
+ * Structurally equal to React Router 7's `AppLoadContext` plus `weaverse`;
+ * React Router 8 removed `AppLoadContext`, so it is spelled out here.
+ */
+export interface WeaverseRouteAppLoadContext {
   /** Client used to load Weaverse content for the current request. */
   weaverse: WeaverseClient
+  /** Other application context values. */
+  [key: string]: unknown
 }
 
 /** React Router loader arguments whose app context includes the Weaverse client. */
-export interface RouteLoaderArgs extends LoaderFunctionArgs {
+export interface RouteLoaderArgs extends Omit<LoaderFunctionArgs, 'context'> {
   /** Request-scoped application context with the initialized Weaverse client. */
   context: WeaverseRouteAppLoadContext
 }

@@ -12,7 +12,7 @@ import {
   isVariableStatement,
   ScriptKind,
   SyntaxKind,
-} from 'tsrs/unstable/ast'
+} from 'tsrs/ast'
 import { getModifiers, parseSourceFile } from './source-parser.mjs'
 
 /**

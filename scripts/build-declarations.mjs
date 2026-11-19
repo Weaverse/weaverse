@@ -10,14 +10,14 @@ import {
 import { createRequire } from 'node:module'
 import { basename, dirname, join, relative, resolve, sep } from 'node:path'
 import { addSegment, GenMapping, toEncodedMap } from '@jridgewell/gen-mapping'
-import { ScriptKind } from 'tsrs/unstable/ast'
+import { ScriptKind } from 'tsrs/ast'
 import {
   isExportDeclaration,
   isImportDeclaration,
   isImportTypeNode,
   isLiteralTypeNode,
   isStringLiteral,
-} from 'tsrs/unstable/ast/is'
+} from 'tsrs/ast/is'
 import { parseSourceFile } from './source-parser.mjs'
 
 const DECLARATION_SUFFIX = /\.d\.ts$/

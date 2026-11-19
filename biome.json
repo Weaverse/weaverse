@@ -1,6 +1,6 @@
 {
   "root": true,
-  "$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.6.8/schema.json",
   "extends": [
     "ultracite/biome/core",
     "ultracite/biome/react",
@@ -26,15 +26,41 @@
       "!**/packages/biome"
     ]
   },
+  "assist": {
+    "actions": {
+      "source": {
+        "useSortedPackageJson": "off"
+      }
+    }
+  },
   "linter": {
     "rules": {
-      "style": {},
-      "suspicious": {
-        "noConsole": "off"
+      "style": {
+        "noExcessiveClassesPerFile": "warn",
+        "useConsistentMethodSignatures": "warn",
+        "useDestructuring": "warn",
+        "useErrorCause": "warn",
+        "useImportsFirst": "warn",
+        "useNamedCaptureGroup": "warn",
+        "useThisInClassMethods": "warn",
+        "useUnicodeRegex": "off"
       },
-      "correctness": {},
+      "suspicious": {
+        "noConsole": "off",
+        "noEqualsToNull": "warn",
+        "noImportCycles": "off"
+      },
+      "correctness": {
+        "noComponentHookFactories": "warn",
+        "noUndeclaredDependencies": "off",
+        "noUnusedInstantiation": "warn"
+      },
       "complexity": {
-        "noExcessiveCognitiveComplexity": "off"
+        "noExcessiveCognitiveComplexity": "off",
+        "noUselessReturn": "off"
+      },
+      "performance": {
+        "noAwaitInLoops": "off"
       },
       "nursery": {}
     }

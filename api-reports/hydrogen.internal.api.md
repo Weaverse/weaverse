@@ -4,7 +4,6 @@
 
 ```ts
 import type * as React from 'react';
-import type { AppLoadContext } from 'react-router';
 import type { CacheInstance } from '@shopify/hydrogen';
 import type { CachingStrategy } from '@shopify/hydrogen';
 import type { ComponentAvailabilityContext } from '@weaverse/schema';
@@ -146,7 +145,7 @@ export interface RouteKeyedDataContext {
     [routeKey: `routes/${string}`]: Record<string, unknown>;
 }
 
-export interface RouteLoaderArgs extends LoaderFunctionArgs {
+export interface RouteLoaderArgs extends Omit<LoaderFunctionArgs, 'context'> {
     context: WeaverseRouteAppLoadContext;
 }
 
@@ -204,7 +203,7 @@ export interface TranslationMapEntry {
     translatedValue: string;
 }
 
-export declare function TranslationProvider(input: TranslationProviderProps): import("react/jsx-runtime").JSX.Element;
+export declare function TranslationProvider(input: TranslationProviderProps): import("react").JSX.Element;
 
 export type TranslationProviderProps = {
     staticContent: Record<string, unknown>;
@@ -393,7 +392,7 @@ export interface WeaverseHydrogenParams extends Omit<WeaverseCoreParams, 'ItemCo
     weaverseVersion?: string;
 }
 
-export declare const WeaverseHydrogenRoot: import("react").MemoExoticComponent<(input: WeaverseHydrogenRootProps) => import("react/jsx-runtime").JSX.Element | null>;
+export declare const WeaverseHydrogenRoot: import("react").MemoExoticComponent<(input: WeaverseHydrogenRootProps) => JSX.Element | null>;
 
 export interface WeaverseHydrogenRootErrorProps {
     error: Error | unknown;
@@ -497,8 +496,9 @@ export type WeaverseProjectType = {
     [key: string]: any;
 };
 
-export interface WeaverseRouteAppLoadContext extends AppLoadContext {
+export interface WeaverseRouteAppLoadContext {
     weaverse: WeaverseClient;
+    [key: string]: unknown;
 }
 
 export type WeaverseSeoInput = WeaverseLoaderData | WeaversePageData | WeaverseSeoPageContainer | null | undefined;
@@ -649,5 +649,5 @@ export { useWeaverse } from '@weaverse/react';
 
 export declare function useWeaverseDataContext(): WeaverseDataContext;
 
-export declare function withWeaverse(Component: ComponentType<any>, options?: WithWeaverseOptions): (props: JSX.IntrinsicAttributes) => import("react/jsx-runtime").JSX.Element;
+export declare function withWeaverse(Component: ComponentType<any>, options?: WithWeaverseOptions): (props: JSX.IntrinsicAttributes) => JSX.Element;
 ```

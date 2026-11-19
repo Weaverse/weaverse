@@ -18,13 +18,15 @@ allowBuilds:
   "@parcel/watcher": true
   sharp: true
 
-# Vite+ unified toolchain. `vite` and `vitest` are aliased to the
-# `@voidzero-dev/vite-plus-*` distributions; `vite-plus` is the CLI
-# (`vp`) used by package `test` scripts.
+# Vite+ unified toolchain. `vite` is aliased to the
+# `@voidzero-dev/vite-plus-core` distribution; `vitest` is pinned to the
+# exact Vitest that `vite-plus` bundles (`vp toolchain vitest`), so the
+# graph keeps one copy; `vite-plus` is the CLI (`vp`) used by package
+# `test` scripts.
 catalog:
-  vite: npm:@voidzero-dev/vite-plus-core@0.1.24
-  vitest: npm:@voidzero-dev/vite-plus-test@0.1.24
-  vite-plus: 0.1.24
+  vite: npm:@voidzero-dev/vite-plus-core@8.3.8000
+  vitest: 5.1.0
+  vite-plus: 1.7.0
 
 verifyDepsBeforeRun: false
 

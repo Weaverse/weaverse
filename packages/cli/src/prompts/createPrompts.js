@@ -25,7 +25,7 @@ export let createPromptQuestions = (missingOptions) => {
 
   if (missingOptions.includes('template')) {
     questions.push({
-      type: 'list',
+      type: 'select',
       name: 'template',
       message: 'Which template would you like to use?',
       choices: TEMPLATES.map((template) => ({

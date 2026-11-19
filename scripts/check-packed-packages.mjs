@@ -23,7 +23,7 @@ import {
   isPropertySignatureDeclaration,
   ScriptKind,
   SyntaxKind,
-} from 'tsrs/unstable/ast'
+} from 'tsrs/ast'
 import {
   collectPublishedFiles,
   getEsmExportNames,

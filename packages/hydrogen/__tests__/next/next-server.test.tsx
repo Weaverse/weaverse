@@ -437,9 +437,9 @@ describe('createWeaverseNextServerClient loadPage', () => {
       (received as unknown as WeaverseNextComponentLoaderArgs).weaverse
         .projectId
     ).toBe('route-id')
-    expect((data?.configs as Record<string, unknown>).projectId).toBe(
-      'route-id'
-    )
+    expect(
+      (data?.configs as Record<string, unknown> | undefined)?.projectId
+    ).toBe('route-id')
   })
 })
 
@@ -496,7 +496,9 @@ describe('createWeaverseNextServerClient preview mode', () => {
     expect(data).not.toBeNull()
     // Harmless placeholder id when no real project is resolved.
     expect(data?.project?.id).toBe('x')
-    expect((data?.configs as Record<string, unknown>).isPreviewMode).toBe(true)
+    expect(
+      (data?.configs as Record<string, unknown> | undefined)?.isPreviewMode
+    ).toBe(true)
   })
 })
 
@@ -904,34 +906,32 @@ describe('getWeaverseNextSeoMetadata', () => {
     })
   })
 
-  it.each([
-    'website',
-    'article',
-    'profile',
-    'video.other',
-  ] as const)('should_preserve_open_graph_type_when_next_supports_%s', (type) => {
-    let metadata: Metadata = formatWeaverseNextSeoMetadata({
-      openGraph: { type },
-    })
+  it.each(['website', 'article', 'profile', 'video.other'] as const)(
+    'should_preserve_open_graph_type_when_next_supports_%s',
+    (type) => {
+      let metadata: Metadata = formatWeaverseNextSeoMetadata({
+        openGraph: { type },
+      })
 
-    expect(metadata.openGraph).toMatchObject({ type })
-  })
+      expect(metadata.openGraph).toMatchObject({ type })
+    }
+  )
 
-  it.each([
-    'app',
-    'player',
-  ] as const)('should_downgrade_twitter_card_to_summary_when_builder_sends_%s', (cardType) => {
-    let metadata: Metadata = formatWeaverseNextSeoMetadata({
-      twitter: { cardType, image: 'https://cdn.example/tw.jpg' },
-    })
+  it.each(['app', 'player'] as const)(
+    'should_downgrade_twitter_card_to_summary_when_builder_sends_%s',
+    (cardType) => {
+      let metadata: Metadata = formatWeaverseNextSeoMetadata({
+        twitter: { cardType, image: 'https://cdn.example/tw.jpg' },
+      })
 
-    expect(metadata.twitter).toEqual({
-      card: 'summary',
-      title: undefined,
-      description: undefined,
-      images: ['https://cdn.example/tw.jpg'],
-    })
-  })
+      expect(metadata.twitter).toEqual({
+        card: 'summary',
+        title: undefined,
+        description: undefined,
+        images: ['https://cdn.example/tw.jpg'],
+      })
+    }
+  )
 
   it('should_omit_open_graph_and_twitter_when_seo_has_no_content', () => {
     let metadata = formatWeaverseNextSeoMetadata({
