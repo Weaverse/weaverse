@@ -338,6 +338,21 @@ try {
   packedDependencies.next = JSON.parse(
     readFileSync(join(ROOT_DIR, 'packages', 'hydrogen', 'package.json'), 'utf8')
   ).devDependencies.next
+  // React Router consumers import it directly (and augment its context types).
+  // Use the version this workspace resolved, so a run with React Router 7
+  // forced checks 7 and the default lock checks 8. The override keeps
+  // @weaverse/hydrogen on the same copy; its `^7 || ^8` range would otherwise
+  // resolve a second, newer React Router whose types the augmentation misses.
+  let reactRouterVersion = JSON.parse(
+    readFileSync(
+      createRequire(
+        join(ROOT_DIR, 'packages', 'hydrogen', 'package.json')
+      ).resolve('react-router/package.json'),
+      'utf8'
+    )
+  ).version
+  packedDependencies['react-router'] = reactRouterVersion
+  packedOverrides['react-router'] = reactRouterVersion
 
   writeFileSync(
     join(consumerDir, 'package.json'),
@@ -925,6 +940,58 @@ void artifact
     )}\n`
   )
   run(process.execPath, [TSRS, '--project', bundlerResolutionConfig], {
+    cwd: consumerDir,
+  })
+
+  // Hydrogen apps type their loader context by merging their app context into
+  // React Router's `AppLoadContext` and `RouterContextProvider` (as Pilot's
+  // env.d.ts does). `RouteLoaderArgs` must carry
+  // those members; a context typed as `{ [key: string]: unknown }` turns
+  // `context.env` into `unknown` and breaks every augmented consumer. Its own
+  // program, because the augmentation is global.
+  writeFileSync(
+    join(consumerDir, 'augmented-context.ts'),
+    `import type { LoaderFunction } from 'react-router'
+import type { RouteLoaderArgs } from '@weaverse/hydrogen/react-router'
+
+interface AppContext {
+  env: { PUBLIC_STORE_DOMAIN: string }
+}
+declare module 'react-router' {
+  interface AppLoadContext extends AppContext {}
+  interface RouterContextProvider extends AppContext {}
+}
+
+export async function loader({ context }: RouteLoaderArgs) {
+  let domain: string = context.env.PUBLIC_STORE_DOMAIN
+  // @ts-expect-error Undeclared members stay errors, not \`any\`.
+  void context.notDeclared.anything
+  return { domain, load: context.weaverse.loadPage }
+}
+export let routeLoader: LoaderFunction = loader
+`
+  )
+  let augmentedContextConfig = join(consumerDir, 'tsconfig.augmented.json')
+  writeFileSync(
+    augmentedContextConfig,
+    `${JSON.stringify(
+      {
+        compilerOptions: {
+          target: 'ES2022',
+          module: 'ESNext',
+          moduleResolution: 'Bundler',
+          strict: true,
+          noEmit: true,
+          skipLibCheck: true,
+          types: [],
+        },
+        files: ['augmented-context.ts'],
+      },
+      null,
+      2
+    )}\n`
+  )
+  run(process.execPath, [TSRS, '--project', augmentedContextConfig], {
     cwd: consumerDir,
   })
 

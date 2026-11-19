@@ -36,7 +36,11 @@ import type {
 import { isValidSchema } from '@weaverse/schema'
 import type * as React from 'react'
 import type { ForwardRefExoticComponent } from 'react'
-import type { LoaderFunctionArgs, NavigateFunction } from 'react-router'
+import type {
+  AppLoadContext,
+  LoaderFunctionArgs,
+  NavigateFunction,
+} from 'react-router'
 import type { TranslationStore } from './utils/translation-store'
 import type { ThemeSettingsStore } from './utils/use-theme-settings-store'
 import type { WeaverseHydrogen } from './WeaverseHydrogenRoot'
@@ -72,20 +76,28 @@ export type WeaverseComponentLoaderArgs<T = any, _E = any> = {
 
 /**
  * Application load context initialized with a request-scoped Weaverse client.
- * Structurally equal to React Router 7's `AppLoadContext` plus `weaverse`;
- * React Router 8 removed `AppLoadContext`, so it is spelled out here.
+ * It extends `AppLoadContext`, so members an app adds by augmenting it keep
+ * their types. React Router 8 no longer exports `AppLoadContext`; the
+ * augmentation at the end of this file declares it, so the name still
+ * resolves there.
  */
-export interface WeaverseRouteAppLoadContext {
+export interface WeaverseRouteAppLoadContext extends AppLoadContext {
   /** Client used to load Weaverse content for the current request. */
   weaverse: WeaverseClient
-  /** Other application context values. */
-  [key: string]: unknown
 }
 
 /** React Router loader arguments whose app context includes the Weaverse client. */
 export interface RouteLoaderArgs extends Omit<LoaderFunctionArgs, 'context'> {
-  /** Request-scoped application context with the initialized Weaverse client. */
-  context: WeaverseRouteAppLoadContext
+  /**
+   * Request-scoped application context with the initialized Weaverse client.
+   * With middleware (always on in React Router 8) it is also the router's
+   * `RouterContextProvider`, so `context.get()` keeps working; without
+   * middleware React Router types the context as `any`, and only the
+   * Weaverse context applies.
+   */
+  context: 0 extends 1 & LoaderFunctionArgs['context']
+    ? WeaverseRouteAppLoadContext
+    : LoaderFunctionArgs['context'] & WeaverseRouteAppLoadContext
 }
 
 /** Primitive value accepted in a component's persisted data. */

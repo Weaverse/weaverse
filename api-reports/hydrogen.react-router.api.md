@@ -4,6 +4,7 @@
 
 ```ts
 import type * as React from 'react';
+import type { AppLoadContext } from 'react-router';
 import type { CacheInstance } from '@shopify/hydrogen';
 import type { CachingStrategy } from '@shopify/hydrogen';
 import type { ComponentType } from 'react';
@@ -80,7 +81,7 @@ export type PublicEnv = {
 };
 
 export interface RouteLoaderArgs extends Omit<LoaderFunctionArgs, 'context'> {
-    context: WeaverseRouteAppLoadContext;
+    context: 0 extends 1 & LoaderFunctionArgs['context'] ? WeaverseRouteAppLoadContext : LoaderFunctionArgs['context'] & WeaverseRouteAppLoadContext;
 }
 
 export { SchemaType } from '@weaverse/schema';
@@ -307,9 +308,8 @@ export type WeaverseProjectType = {
     [key: string]: any;
 };
 
-export interface WeaverseRouteAppLoadContext {
+export interface WeaverseRouteAppLoadContext extends AppLoadContext {
     weaverse: WeaverseClient;
-    [key: string]: unknown;
 }
 
 export type WeaverseSeoInput = WeaverseLoaderData | WeaversePageData | WeaverseSeoPageContainer | null | undefined;
