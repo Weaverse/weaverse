@@ -25,6 +25,6 @@
   ],
   "devDependencies": {
     "@biomejs/biome": "2.6.8",
-    "ultracite": "8.2.1"
+    "ultracite": "8.3.0"
   }
 }

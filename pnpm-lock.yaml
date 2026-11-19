@@ -225,8 +225,8 @@ importers:
         specifier: 2.11.12
         version: 2.11.12
       ultracite:
-        specifier: 8.2.1
-        version: 8.2.1(@biomejs/biome@2.6.8)(oxfmt@0.79.0(vite-plus@1.7.0(@types/node@26.6.6)(@vitest/ui@5.1.0)(happy-dom@21.0.4)(typescript@6.0.3)(yaml@2.9.1)))(oxlint@1.94.0(vite-plus@1.7.0(@types/node@26.6.6)(@vitest/ui@5.1.0)(happy-dom@21.0.4)(typescript@6.0.3)(yaml@2.9.1)))
+        specifier: 8.3.0
+        version: 8.3.0(@biomejs/biome@2.6.8)(oxfmt@0.79.0(vite-plus@1.7.0(@types/node@26.6.6)(@vitest/ui@5.1.0)(happy-dom@21.0.4)(typescript@6.0.3)(yaml@2.9.1)))(oxlint@1.94.0(vite-plus@1.7.0(@types/node@26.6.6)(@vitest/ui@5.1.0)(happy-dom@21.0.4)(typescript@6.0.3)(yaml@2.9.1)))
       vite:
         specifier: npm:@voidzero-dev/vite-plus-core@8.3.8000
         version: '@voidzero-dev/vite-plus-core@8.3.8000(@types/node@26.6.6)(typescript@6.0.3)(yaml@2.9.1)'
@@ -250,8 +250,8 @@ importers:
         specifier: 2.6.8
         version: 2.6.8
       ultracite:
-        specifier: 8.2.1
-        version: 8.2.1(@biomejs/biome@2.6.8)(oxfmt@0.79.0(vite-plus@1.7.0(@types/node@26.6.6)(@vitest/ui@5.1.0)(happy-dom@21.0.4)(typescript@6.0.3)(yaml@2.9.1)))(oxlint@1.94.0(vite-plus@1.7.0(@types/node@26.6.6)(@vitest/ui@5.1.0)(happy-dom@21.0.4)(typescript@6.0.3)(yaml@2.9.1)))
+        specifier: 8.3.0
+        version: 8.3.0(@biomejs/biome@2.6.8)(oxfmt@0.79.0(vite-plus@1.7.0(@types/node@26.6.6)(@vitest/ui@5.1.0)(happy-dom@21.0.4)(typescript@6.0.3)(yaml@2.9.1)))(oxlint@1.94.0(vite-plus@1.7.0(@types/node@26.6.6)(@vitest/ui@5.1.0)(happy-dom@21.0.4)(typescript@6.0.3)(yaml@2.9.1)))
 
   packages/cli:
     dependencies:
@@ -2649,8 +2649,8 @@ packages:
   ufo@1.6.4:
     resolution: {integrity: sha512-JFNbkD1Svwe0KvGi8GOeLcP4kAWQ609twvCdcHxq1oSL8svv39ZuSvajcD8B+5D0eL4+s1Is2D/O6KN3qcTeRA==}
 
-  ultracite@8.2.1:
-    resolution: {integrity: sha512-+HAwOkdpdNaf6Fr+JEh0YkikJU4vjRO977kMAvtOsk8YWk+VG3rdy7gyFLgbO1Edv+k5hhL/3CKAiEmUlvt3ow==}
+  ultracite@8.3.0:
+    resolution: {integrity: sha512-b33aiz4Ho7+J2n7TZGKREU0+WUt4FIYUskHFAfjWMpyQi5dczPueTNE5K9oRoC2vc86PbI2L2TGtEMH4xi0bAA==}
     engines: {node: ^22.22.2 || >=24.15.0}
     hasBin: true
     peerDependencies:
@@ -4709,7 +4709,7 @@ snapshots:
 
   ufo@1.6.4: {}
 
-  ultracite@8.2.1(@biomejs/biome@2.6.8)(oxfmt@0.79.0(vite-plus@1.7.0(@types/node@26.6.6)(@vitest/ui@5.1.0)(happy-dom@21.0.4)(typescript@6.0.3)(yaml@2.9.1)))(oxlint@1.94.0(vite-plus@1.7.0(@types/node@26.6.6)(@vitest/ui@5.1.0)(happy-dom@21.0.4)(typescript@6.0.3)(yaml@2.9.1))):
+  ultracite@8.3.0(@biomejs/biome@2.6.8)(oxfmt@0.79.0(vite-plus@1.7.0(@types/node@26.6.6)(@vitest/ui@5.1.0)(happy-dom@21.0.4)(typescript@6.0.3)(yaml@2.9.1)))(oxlint@1.94.0(vite-plus@1.7.0(@types/node@26.6.6)(@vitest/ui@5.1.0)(happy-dom@21.0.4)(typescript@6.0.3)(yaml@2.9.1))):
     dependencies:
       '@clack/prompts': 1.9.0
       cli-truncate: 6.2.0

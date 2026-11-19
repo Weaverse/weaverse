@@ -45,7 +45,7 @@
     "rimraf": "6.1.4",
     "turbo": "2.11.12",
     "tsrs": "7.1.0-beta.tsrs2",
-    "ultracite": "8.2.1",
+    "ultracite": "8.3.0",
     "vite": "catalog:",
     "vite-plus": "catalog:",
     "vitest": "catalog:"
