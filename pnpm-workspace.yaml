@@ -5,17 +5,17 @@
 nodeLinker: hoisted
 
 packages:
-  - 'packages/*'
-  - 'templates/*'
+  - "packages/*"
+  - "templates/*"
 
 # Whitelist postinstall scripts. pnpm 11's default is to block them as
 # a supply-chain hardening measure.
 allowBuilds:
   esbuild: true
   lefthook: true
-  '@biomejs/biome': true
+  "@biomejs/biome": true
   workerd: true
-  '@parcel/watcher': true
+  "@parcel/watcher": true
   sharp: true
 
 # Vite+ unified toolchain. `vite` and `vitest` are aliased to the
@@ -29,13 +29,13 @@ catalog:
 verifyDepsBeforeRun: false
 
 overrides:
-  vite: 'catalog:'
-  vitest: 'catalog:'
+  vite: "catalog:"
+  vitest: "catalog:"
 
 peerDependencyRules:
   allowAny:
     - vite
     - vitest
   allowedVersions:
-    vite: '*'
-    vitest: '*'
+    vite: "*"
+    vitest: "*"
