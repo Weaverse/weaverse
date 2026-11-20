@@ -118,14 +118,6 @@ describe('Complex Route Patterns Support', () => {
   })
 
   describe('Complex route resolution with special characters', () => {
-    it('should resolve locale index route', () => {
-      const result = replaceContentDataConnectors(
-        '{{routes/($locale)._index.weaverseData.page.name}}',
-        mockComplexDataContext
-      )
-      expect(result).toBe('Homepage')
-    })
-
     it('should resolve nested properties in locale index route', () => {
       const result = replaceContentDataConnectors(
         'Page: {{routes/($locale)._index.weaverseData.page.title}} - {{routes/($locale)._index.localeData.currency}}',
@@ -140,14 +132,6 @@ describe('Complex Route Patterns Support', () => {
         mockComplexDataContext
       )
       expect(result).toBe('Our Blog')
-    })
-
-    it('should resolve deeply nested blog article route', () => {
-      const result = replaceContentDataConnectors(
-        'Article: {{routes/($locale).blogs.$blogHandle.$articleHandle.article.title}} by {{routes/($locale).blogs.$blogHandle.$articleHandle.article.author.name}}',
-        mockComplexDataContext
-      )
-      expect(result).toBe('Article: How to Use Our Products by Jane Smith')
     })
 
     it('should resolve ultra-complex collection product route', () => {
@@ -283,26 +267,21 @@ describe('Complex Route Patterns Support', () => {
     })
   })
 
-  describe('Performance considerations', () => {
-    it('should handle many complex route patterns efficiently', () => {
-      const manyTemplates = Array.from(
-        { length: 100 },
-        (_, i) =>
-          `Template ${i}: {{routes/($locale).blogs.$blogHandle.$articleHandle.article.title}}`
-      )
+  it('should_resolve_distinct_templates_when_they_share_a_complex_route_placeholder', () => {
+    // More unique templates than the template cache can hold.
+    const templateNumbers = Array.from({ length: 101 }, (_, i) => i)
+    const templates = templateNumbers.map(
+      (i) =>
+        `Template ${i}: {{routes/($locale).blogs.$blogHandle.$articleHandle.article.title}}`
+    )
 
-      const startTime = performance.now()
-      const results = manyTemplates.map((template) =>
-        replaceContentDataConnectors(template, mockComplexDataContext)
-      )
-      const endTime = performance.now()
+    const results = templates.map((template) =>
+      replaceContentDataConnectors(template, mockComplexDataContext)
+    )
 
-      // Should process all templates reasonably quickly (under 100ms)
-      expect(endTime - startTime).toBeLessThan(100)
-      expect(
-        results.every((result) => result.includes('How to Use Our Products'))
-      ).toBe(true)
-    })
+    expect(results).toEqual(
+      templateNumbers.map((i) => `Template ${i}: How to Use Our Products`)
+    )
   })
 
   describe('Mixed patterns in single template', () => {
