@@ -24,15 +24,14 @@
     "package:check": "pnpm run api:docs:test && pnpm run build && node scripts/api-reports.mjs && node scripts/check-packed-packages.mjs",
     "postinstall": "lefthook install",
     "typecheck": "turbo run typecheck --filter=./packages/*",
-    "biome": "biome check --diagnostic-level=error",
-    "biome:fix": "biome check --write --diagnostic-level=error",
-    "biome:fix:unsafe": "biome check --write --diagnostic-level=error --unsafe",
-    "format": "biome format --write",
-    "format:check": "biome format",
-    "ci": "biome ci --changed"
+    "check": "vp check",
+    "check:fix": "vp check --fix",
+    "check:fix:unsafe": "vp check --fix-dangerously",
+    "format": "vp fmt",
+    "format:check": "vp fmt --check",
+    "ci": "vp check"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.6.8",
     "@jridgewell/gen-mapping": "0.3.13",
     "@jridgewell/trace-mapping": "0.3.31",
     "@types/node": "26.6.6",
@@ -45,7 +44,6 @@
     "rimraf": "6.1.4",
     "turbo": "2.11.12",
     "tsrs": "7.1.0-beta.tsrs2",
-    "ultracite": "8.3.0",
     "vite": "catalog:",
     "vite-plus": "catalog:",
     "vitest": "catalog:"

@@ -296,9 +296,7 @@ export const ElementSchema = z
       .describe(
         'The title of the child element or the section element, should be short and concise, not include parent element title and any special characters'
       ),
-    type: z
-      .string()
-      .min(1, 'Type is required')
+    type: z.string().min(1, 'Type is required')
       .describe(`The type of the child element or the section based on title in lowercase with space replaced by -, i.e. 'Product Detail' -> 'product-detail' 
     if it's a child element not common child type, it should includes "parentType--" prefix , i.e. an image element is in "hero-banner" parent type, the type of image element is "hero-banner--image"`),
     limit: z
@@ -500,7 +498,7 @@ export interface BasicInput {
    * Controls whether Studio displays this input for the current component data.
    * String conditions remain supported but are deprecated; prefer a function.
    */
-  // biome-ignore lint/complexity/noBannedTypes: preserves the existing public contract inferred by Zod
+  // oxlint-disable-next-line typescript/no-unsafe-function-type -- preserves the existing public contract inferred by Zod
   condition?: string | Function
   /** Control-specific options and constraints. */
   configs?: ConfigsProps
@@ -559,12 +557,12 @@ export type PageType =
 /** Initial data and nested children created by a component preset. */
 export interface ComponentPresets {
   /** Nested child component presets retained in their legacy permissive shape. */
-  // biome-ignore lint/suspicious/noExplicitAny: preserves the existing recursive Zod contract
+  // oxlint-disable-next-line typescript/no-explicit-any -- preserves the existing recursive Zod contract
   children?: any[]
   /** Registered component type to create. */
   type: string
   /** Additional component setting defaults. */
-  // biome-ignore lint/suspicious/noExplicitAny: presets intentionally accept arbitrary component data
+  // oxlint-disable-next-line typescript/no-explicit-any -- presets intentionally accept arbitrary component data
   [key: string]: any
 }
 
@@ -603,7 +601,7 @@ export interface SchemaType {
    */
   // Method syntax (bivariant params) lets authors annotate `data` with their
   // own props type while unannotated callbacks still get Record<string, any>.
-  // biome-ignore lint/suspicious/noExplicitAny: instance settings are schema-defined
+  // oxlint-disable-next-line typescript/no-explicit-any -- instance settings are schema-defined
   label?(data: Record<string, any>): string | null | undefined
   /** Maximum number of instances allowed under the same parent. */
   limit?: number
@@ -612,7 +610,7 @@ export interface SchemaType {
     /** Child components created with the parent. */
     children?: ComponentPresets[]
     /** Additional component setting defaults. */
-    // biome-ignore lint/suspicious/noExplicitAny: presets intentionally accept arbitrary component data
+    // oxlint-disable-next-line typescript/no-explicit-any -- presets intentionally accept arbitrary component data
     [key: string]: any
   }
   /** Setting groups shown in the Studio inspector. */

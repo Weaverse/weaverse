@@ -182,7 +182,7 @@ let isUnsafeEntryPath = (name) =>
  * @returns {number}
  */
 let permissionBits = (mode = DEFAULT_FILE_MODE) => {
-  // biome-ignore lint/suspicious/noBitwiseOperators: masking file mode bits
+  // oxlint-disable-next-line no-bitwise -- masking file mode bits
   let bits = mode & PERMISSION_BITS
   return bits || DEFAULT_FILE_MODE
 }

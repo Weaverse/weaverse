@@ -107,7 +107,8 @@ export function useStudio(weaverse: WeaverseHydrogen) {
     isRevisionPreview,
   } = weaverse
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: only revalidate on pathname/search changes
+  // Only revalidate on pathname/search changes.
+  /* oxlint-disable react/exhaustive-deps */
   useEffect(() => {
     if (navigation.state !== 'idle') {
       return
@@ -146,4 +147,5 @@ export function useStudio(weaverse: WeaverseHydrogen) {
         .catch(console.error)
     }
   }, [pathname, search, navigation.state])
+  /* oxlint-enable react/exhaustive-deps */
 }

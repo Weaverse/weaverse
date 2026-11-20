@@ -35,11 +35,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Setup Biome
-        uses: biomejs/setup-biome@v2
-
-      - name: Run Biome
-        run: biome ci .
+      - name: Check format and lint (Vite+)
+        run: pnpm run ci
 
   typecheck:
     name: ʦ TypeScript

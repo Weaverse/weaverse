@@ -311,7 +311,7 @@ describe('Complex Route Patterns Support', () => {
         Welcome to {{root.shop.name}}!
         Current page: {{routes/($locale)._index.weaverseData.page.name}}
         Featured article: {{routes/($locale).blogs.$blogHandle.$articleHandle.article.title}}
-         Product: {{routes/product.product.title}} (${'{{routes/product.product.price}}'})
+         Product: {{routes/product.product.title}} ({{routes/product.product.price}})
         Collection item: {{routes/($locale).collections.$collectionHandle.products.$productHandle.product.title}}
       `.trim()
 
@@ -325,7 +325,7 @@ describe('Complex Route Patterns Support', () => {
         Welcome to Test Shop!
         Current page: Homepage
         Featured article: How to Use Our Products
-         Product: Amazing Product (${99.99})
+         Product: Amazing Product (99.99)
         Collection item: Featured Product in Collection
       `.trim()
       )

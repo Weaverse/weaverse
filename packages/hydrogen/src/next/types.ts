@@ -423,8 +423,9 @@ export interface WeaverseNextLoaderData {
 }
 
 /** Props injected into every registered Weaverse component. */
-export interface WeaverseNextComponentProps<L = unknown>
-  extends Partial<WeaverseElement> {
+export interface WeaverseNextComponentProps<
+  L = unknown,
+> extends Partial<WeaverseElement> {
   /** Nested rendered component content. */
   children?: ReactNode
   /** Optional CSS class supplied by the renderer or component settings. */
@@ -659,8 +660,7 @@ export interface WeaverseNextThemeSettingsResponse {
  * only — the server client always reads the request context it was created
  * with, so there is no per-call context override.
  */
-export interface WeaverseNextThemeSettingsOptions
-  extends WeaverseNextCacheConfig {}
+export interface WeaverseNextThemeSettingsOptions extends WeaverseNextCacheConfig {}
 
 /** Published custom-page record suitable for a Next.js sitemap entry. */
 export interface WeaverseNextCustomPageEntry {
@@ -679,8 +679,7 @@ export interface WeaverseNextCustomPageEntry {
 }
 
 /** Pagination, locale, and cache options for fetching custom pages. */
-export interface WeaverseNextFetchCustomPagesOptions
-  extends WeaverseNextCacheConfig {
+export interface WeaverseNextFetchCustomPagesOptions extends WeaverseNextCacheConfig {
   /** Maximum number of custom-page results returned per request. */
   limit?: number
   /** Only return custom pages assigned to this locale. */
@@ -760,8 +759,7 @@ export interface WeaverseNextServerClient extends WeaverseNextClient {
 }
 
 /** Input for {@link WeaverseNextServerClient.loadPage}. */
-export interface WeaverseNextServerLoadPageInput
-  extends WeaverseNextLoadPageInput {
+export interface WeaverseNextServerLoadPageInput extends WeaverseNextLoadPageInput {
   /** Per-call cache override merged over the client-level `cache` config. */
   cache?: WeaverseNextCacheConfig
   /** Route-level project override (multi-project), like Hydrogen. */

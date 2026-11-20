@@ -29,7 +29,7 @@ const MAX_SEARCH_LENGTH = 8192
 const MAX_HANDLE_LENGTH = 512
 const MAX_I18N_FIELD_LENGTH = 256
 // ASCII control characters (C0 range + DEL) are never valid in a route path.
-// biome-ignore lint/suspicious/noControlCharactersInRegex: rejecting control chars in untrusted pathnames is the intent.
+// oxlint-disable-next-line no-control-regex -- rejecting control chars in untrusted pathnames is the intent.
 const CONTROL_CHAR_PATTERN = /[\u0000-\u001F\u007F]/
 
 /** Configuration for the App Router item-revalidation handler. */

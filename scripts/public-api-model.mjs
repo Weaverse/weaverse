@@ -30,7 +30,7 @@ function canonical(path) {
 
 /** Tests one checker symbol flag. */
 function hasFlag(symbol, flag) {
-  // biome-ignore lint/suspicious/noBitwiseOperators: checker symbol flags are a bit set
+  // oxlint-disable-next-line no-bitwise -- checker symbol flags are a bit set
   return (symbol.flags & flag) !== 0
 }
 
