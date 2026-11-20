@@ -185,9 +185,6 @@ importers:
 
   .:
     devDependencies:
-      '@biomejs/biome':
-        specifier: 2.6.8
-        version: 2.6.8
       '@jridgewell/gen-mapping':
         specifier: 0.3.13
         version: 0.3.13
@@ -224,9 +221,6 @@ importers:
       turbo:
         specifier: 2.11.12
         version: 2.11.12
-      ultracite:
-        specifier: 8.3.0
-        version: 8.3.0(@biomejs/biome@2.6.8)(oxfmt@0.79.0(vite-plus@1.7.0(@types/node@26.6.6)(@vitest/ui@5.1.0)(happy-dom@21.0.4)(typescript@6.0.3)(yaml@2.9.1)))(oxlint@1.94.0(vite-plus@1.7.0(@types/node@26.6.6)(@vitest/ui@5.1.0)(happy-dom@21.0.4)(typescript@6.0.3)(yaml@2.9.1)))
       vite:
         specifier: npm:@voidzero-dev/vite-plus-core@8.3.8000
         version: '@voidzero-dev/vite-plus-core@8.3.8000(@types/node@26.6.6)(typescript@6.0.3)(yaml@2.9.1)'

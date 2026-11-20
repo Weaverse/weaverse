@@ -1,4 +1,4 @@
-// biome-ignore-all lint/style/noMagicNumbers: HTTP statuses, hash lengths and ports in fixtures
+/* oxlint-disable no-magic-numbers -- HTTP statuses, hash lengths and ports in fixtures */
 import { createHash } from 'node:crypto'
 import { mkdtemp } from 'node:fs/promises'
 import { tmpdir } from 'node:os'

@@ -793,6 +793,7 @@ describe('loadThemeSettings merchant-overrides gating (issue #2291)', () => {
         res.write('{"hero":')
         stalled.push(res)
       })
+      // oxlint-disable-next-line typescript/no-invalid-void-type -- generic type argument, allowed by `allowInGenericTypeArguments` in Biome's equivalent
       let listening = Promise.withResolvers<void>()
       server.listen(0, '127.0.0.1', listening.resolve)
       await listening.promise
@@ -804,6 +805,7 @@ describe('loadThemeSettings merchant-overrides gating (issue #2291)', () => {
         res.destroy()
       }
       server.closeAllConnections()
+      // oxlint-disable-next-line typescript/no-invalid-void-type -- generic type argument, allowed by `allowInGenericTypeArguments` in Biome's equivalent
       let closed = Promise.withResolvers<void>()
       server.close(() => closed.resolve())
       await closed.promise

@@ -1,8 +1,19 @@
 pre-commit:
+  # Format first (re-staged), then lint the formatted index.
+  piped: true
   commands:
-    check:
+    # Oxfmt (`vp fmt`, `fmt` block in vite.config.ts) formats and sorts
+    # imports, then re-stages the result. Oxlint (`vp lint`, `lint` block)
+    # only checks: no `--fix`, so a commit never picks up unreviewed code
+    # rewrites. Lint errors fail the commit; warnings print.
+    format:
+      priority: 1
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
-      run: pnpm exec biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
+      run: ./node_modules/.bin/vp fmt --no-error-on-unmatched-pattern {staged_files}
       stage_fixed: true
+    lint:
+      priority: 2
+      glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx}"
+      run: ./node_modules/.bin/vp lint --no-error-on-unmatched-pattern {staged_files}
 
 source_dir: .lefthook/
