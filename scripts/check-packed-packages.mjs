@@ -5,6 +5,7 @@ import {
   mkdtempSync,
   readdirSync,
   readFileSync,
+  realpathSync,
   rmSync,
   writeFileSync,
 } from 'node:fs'
@@ -92,6 +93,26 @@ function verifyIdentityMap(declarationFile, declarationMap, sourceFile) {
         )
       }
     }
+  }
+}
+
+/**
+ * React Router keeps its contexts in module state, so @weaverse/hydrogen must
+ * import the application's copy. A separate SDK copy makes `useMatches()` and
+ * `useLoaderData()` throw outside the app's router provider.
+ */
+function assertSharedReactRouter(appDir) {
+  let appRequire = createRequire(join(appDir, 'package.json'))
+  let sdkRequire = createRequire(
+    realpathSync(appRequire.resolve('@weaverse/hydrogen/package.json'))
+  )
+  let appCopy = realpathSync(appRequire.resolve('react-router/package.json'))
+  let sdkCopy = realpathSync(sdkRequire.resolve('react-router/package.json'))
+  if (appCopy !== sdkCopy) {
+    let version = (file) => JSON.parse(readFileSync(file, 'utf8')).version
+    throw new Error(
+      `@weaverse/hydrogen resolved its own react-router ${version(sdkCopy)} next to the app's ${version(appCopy)} in ${appDir}; react-router must be a peer dependency`
+    )
   }
 }
 
@@ -338,11 +359,10 @@ try {
   packedDependencies.next = JSON.parse(
     readFileSync(join(ROOT_DIR, 'packages', 'hydrogen', 'package.json'), 'utf8')
   ).devDependencies.next
-  // React Router consumers import it directly (and augment its context types).
-  // Use the version this workspace resolved, so a run with React Router 7
-  // forced checks 7 and the default lock checks 8. The override keeps
-  // @weaverse/hydrogen on the same copy; its `^7 || ^8` range would otherwise
-  // resolve a second, newer React Router whose types the augmentation misses.
+  // React Router apps install it themselves and @weaverse/hydrogen takes it as
+  // a peer. Use the version this workspace resolved, so a run with React
+  // Router 7 forced checks 7 and the default lock checks 8. No override: the
+  // SDK must share the app's copy on its own.
   let reactRouterVersion = JSON.parse(
     readFileSync(
       createRequire(
@@ -352,7 +372,6 @@ try {
     )
   ).version
   packedDependencies['react-router'] = reactRouterVersion
-  packedOverrides['react-router'] = reactRouterVersion
 
   writeFileSync(
     join(consumerDir, 'package.json'),
@@ -372,22 +391,64 @@ try {
       `Leaving registry resolution in place for incompatible internal pins:\n  ${skippedOverrides.join('\n  ')}`
     )
   }
+  let overridesYaml = `overrides:\n${Object.entries(packedOverrides)
+    .map(([edge, specifier]) => `  '${edge}': '${specifier}'`)
+    .join('\n')}\n`
+  let installArgs = [
+    'install',
+    '--prefer-offline',
+    '--ignore-scripts',
+    '--strict-peer-dependencies=false',
+  ]
+  writeFileSync(join(consumerDir, 'pnpm-workspace.yaml'), overridesYaml)
+  run(PNPM, installArgs, { cwd: consumerDir })
+  assertSharedReactRouter(consumerDir)
+
+  // One workspace with an app per supported React Router major. Each app must
+  // get an @weaverse/hydrogen bound to its own router, which only a peer
+  // dependency allows; a regular dependency gives every app the same copy.
+  let hydrogenPackageJson = publishedPackages.find(
+    ({ packageJson }) => packageJson.name === '@weaverse/hydrogen'
+  ).packageJson
+  let supportedRange =
+    hydrogenPackageJson.peerDependencies?.['react-router'] ??
+    hydrogenPackageJson.dependencies?.['react-router']
+  let routerMajors = [...supportedRange.matchAll(/\^(?<major>\d+)/g)].map(
+    (match) => match.groups.major
+  )
+  let majorsDir = join(scratchDir, 'router-majors')
+  mkdirSync(majorsDir)
   writeFileSync(
-    join(consumerDir, 'pnpm-workspace.yaml'),
-    `overrides:\n${Object.entries(packedOverrides)
-      .map(([edge, specifier]) => `  '${edge}': '${specifier}'`)
-      .join('\n')}\n`
+    join(majorsDir, 'package.json'),
+    `${JSON.stringify({ private: true, packageManager: 'pnpm@11.1.2' })}\n`
   )
-  run(
-    PNPM,
-    [
-      'install',
-      '--prefer-offline',
-      '--ignore-scripts',
-      '--strict-peer-dependencies=false',
-    ],
-    { cwd: consumerDir }
+  writeFileSync(
+    join(majorsDir, 'pnpm-workspace.yaml'),
+    `packages:\n  - 'apps/*'\n${overridesYaml}`
   )
+  for (let major of routerMajors) {
+    let appDir = join(majorsDir, 'apps', `react-router-${major}`)
+    mkdirSync(appDir, { recursive: true })
+    writeFileSync(
+      join(appDir, 'package.json'),
+      `${JSON.stringify({
+        name: `react-router-${major}`,
+        private: true,
+        dependencies: {
+          '@weaverse/hydrogen': packedDependencies['@weaverse/hydrogen'],
+          react: rootPackageJson.devDependencies.react,
+          'react-dom': rootPackageJson.devDependencies['react-dom'],
+          'react-router': reactRouterVersion.startsWith(`${major}.`)
+            ? reactRouterVersion
+            : `^${major}`,
+        },
+      })}\n`
+    )
+  }
+  run(PNPM, installArgs, { cwd: majorsDir })
+  for (let major of routerMajors) {
+    assertSharedReactRouter(join(majorsDir, 'apps', `react-router-${major}`))
+  }
 
   for (let publishedPackage of publishedPackages) {
     let { packageJson } = publishedPackage

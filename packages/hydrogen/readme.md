@@ -95,6 +95,9 @@ SDK alone does not add editor controls or change theme rendering.
 npm install @weaverse/hydrogen
 ```
 
+`react-router` (7 or 8) is a peer dependency: the SDK uses your app's copy, so
+install it in the storefront itself.
+
 ## Setup and Usage
 
 ### Weaverse Client Setup
