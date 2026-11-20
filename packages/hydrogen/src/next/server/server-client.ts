@@ -1,4 +1,10 @@
 import type { SchemaType } from '@weaverse/schema'
+import { WeaverseError, WeaverseLoadError } from '../../types'
+import {
+  cachedTransportError,
+  isProjectEnvelope,
+  toPageLoadRejection,
+} from '../../utils/page-load-failure'
 import { runWeaverseComponentLoaders } from '../loader'
 import { buildWeaverseNextRequestInfo } from '../request-info'
 import type {
@@ -117,6 +123,7 @@ class NextServerClient implements WeaverseNextServerClient {
   private readonly _fetch: typeof fetch
   private readonly _cache?: WeaverseNextServerClientConfig['cache']
   private readonly _fetchTimeoutMs: number
+  private readonly _throwPageLoadFailures: boolean
   private _resolvedProjectId?: string
 
   constructor(config: WeaverseNextServerClientConfig) {
@@ -141,6 +148,7 @@ class NextServerClient implements WeaverseNextServerClient {
     this._fetch = config.fetch ?? globalThis.fetch
     this._cache = config.cache
     this._fetchTimeoutMs = config.fetchTimeoutMs ?? DEFAULT_FETCH_TIMEOUT_MS
+    this._throwPageLoadFailures = config.throwPageLoadFailures === true
 
     this._baseConfigs = getWeaverseNextConfigs(config.requestContext, {
       env: config.env,
@@ -245,14 +253,33 @@ class NextServerClient implements WeaverseNextServerClient {
     let controller = new AbortController()
     let timeoutId = setTimeout(() => controller.abort(), this._fetchTimeoutMs)
     try {
-      let response = await this._fetch(url, {
-        ...requestInit,
-        signal: requestInit.signal ?? controller.signal,
-      })
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      let response: Response
+      try {
+        response = await this._fetch(url, {
+          ...requestInit,
+          signal: requestInit.signal ?? controller.signal,
+        })
+      } catch (error) {
+        throw cachedTransportError(error, url)
       }
-      return (await response.json()) as T
+      if (!response.ok) {
+        throw new WeaverseError(
+          `HTTP ${response.status}: ${response.statusText}`,
+          'FETCH_ERROR',
+          response.status,
+          { url }
+        )
+      }
+      try {
+        return (await response.json()) as T
+      } catch {
+        throw new WeaverseError(
+          'Response body is not valid JSON',
+          'INVALID_RESPONSE',
+          response.status,
+          { url }
+        )
+      }
     } finally {
       clearTimeout(timeoutId)
     }
@@ -472,9 +499,19 @@ class NextServerClient implements WeaverseNextServerClient {
     })
   }
 
-  private _assertNoPageError(payload: Record<string, unknown>) {
+  private _assertPagePayload(payload: Record<string, unknown>) {
     if ('error' in payload && typeof payload.error === 'string') {
-      throw new Error(payload.error)
+      throw new WeaverseLoadError(
+        'Weaverse API returned an error body',
+        'invalid-response'
+      )
+    }
+    // Without the opt-in, a malformed body keeps the historical fallback page.
+    if (this._throwPageLoadFailures && !isProjectEnvelope(payload)) {
+      throw new WeaverseLoadError(
+        'Invalid project data structure received from API',
+        'invalid-response'
+      )
     }
   }
 
@@ -482,8 +519,9 @@ class NextServerClient implements WeaverseNextServerClient {
     payload: Record<string, unknown>,
     projectId: string
   ): WeaverseNextLoaderData {
-    this._assertNoPageError(payload)
-    let page = payload.page as WeaverseNextPageData | undefined
+    this._assertPagePayload(payload)
+    let page = (payload.page ?? undefined) as WeaverseNextPageData | undefined
+    let isFallback = !page
     let project = payload.project as WeaverseNextLoaderData['project']
     let pageAssignment = normalizeWeaverseNextPageAssignment(
       payload.pageAssignment
@@ -509,6 +547,7 @@ class NextServerClient implements WeaverseNextServerClient {
       page,
       project,
       pageAssignment,
+      ...(isFallback ? { isFallback } : {}),
       configs: {
         ...this._buildPublicConfigs(projectId),
         requestInfo: buildWeaverseNextRequestInfo(this.requestContext),
@@ -535,7 +574,10 @@ class NextServerClient implements WeaverseNextServerClient {
         return previewData
       }
       if (!projectId) {
-        throw new Error('Missing Weaverse projectId!')
+        throw new WeaverseLoadError(
+          'Missing Weaverse projectId!',
+          'configuration'
+        )
       }
 
       let payload = await this._fetchPagePayload(projectId, params, cache)
@@ -547,6 +589,10 @@ class NextServerClient implements WeaverseNextServerClient {
         projectId: input.projectId || this.configs.projectId,
         message: error instanceof Error ? error.message : String(error),
       })
+      let rejection = toPageLoadRejection(error, this._throwPageLoadFailures)
+      if (rejection) {
+        throw rejection
+      }
       return null
     }
   }

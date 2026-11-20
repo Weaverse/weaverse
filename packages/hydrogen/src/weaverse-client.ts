@@ -24,7 +24,6 @@ import {
   isProjectIdFunction,
   WeaverseError,
   WeaverseLoadError,
-  type WeaverseLoadFailureKind,
 } from './types'
 import {
   generateDataFromSchema,
@@ -32,7 +31,16 @@ import {
   getRequestQueries,
   getWeaverseConfigs,
 } from './utils'
-import { normalizePageUrl } from './utils/normalize-page-url'
+import {
+  normalizePageUrl,
+  withoutCredentialParams,
+} from './utils/normalize-page-url'
+import {
+  cachedTransportError,
+  isPlainObject,
+  isProjectEnvelope,
+  toPageLoadRejection,
+} from './utils/page-load-failure'
 
 /**
  * Cache duration constants (in seconds).
@@ -94,27 +102,6 @@ function parseResponseText(text: string): unknown {
   }
 }
 
-function isPlainObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value)
-}
-
-/**
- * Whether a successful `/project` body is a page envelope.
- *
- * `page: null` is Builder's authoritative "nothing assigned at this URL" and
- * stays valid; anything without a `page` field, with an `error` field, or with
- * a page that has no item list is not an answer about this URL at all.
- */
-function isProjectEnvelope(payload: unknown): boolean {
-  if (!isPlainObject(payload) || hasError(payload) || !('page' in payload)) {
-    return false
-  }
-  const { page, project } = payload
-  const validPage =
-    page === null || (isPlainObject(page) && Array.isArray(page.items))
-  return validPage && (project == null || isPlainObject(project))
-}
-
 /**
  * Whether a successful `/project_configs` body carries theme settings.
  *
@@ -131,40 +118,6 @@ function isThemeConfigsEnvelope(payload: unknown): boolean {
 }
 
 /**
- * Classifies a page-load failure. `'absent'` is Builder's 404 for a project
- * that does not exist, which keeps resolving to `null` like before.
- */
-function classifyPageLoadFailure(
-  error: unknown
-): WeaverseLoadFailureKind | 'absent' {
-  if (error instanceof WeaverseLoadError) {
-    return error.kind
-  }
-  if (!(error instanceof WeaverseError)) {
-    // Thrown while turning a response into page data: the body was not
-    // the shape it claimed to be.
-    return 'invalid-response'
-  }
-  if (error.code === 'TIMEOUT_ERROR' || error.code === 'NETWORK_ERROR') {
-    return 'unavailable'
-  }
-  if (error.code === 'INVALID_RESPONSE') {
-    return 'invalid-response'
-  }
-  if (error.code === 'FETCH_ERROR') {
-    const status = error.statusCode ?? 0
-    if (status === 404) {
-      return 'absent'
-    }
-    if (status === 408 || status === 425 || status === 429 || status >= 500) {
-      return 'unavailable'
-    }
-  }
-  // Refusals (400/401/403) and project-ID errors: retrying cannot succeed.
-  return 'configuration'
-}
-
-/**
  * Validators for Builder requests made by this client itself, keyed on the
  * exact options object (same reasoning as `bodyFreeCacheRequests`). On the
  * cached path such a request rejects a non-2xx status instead of resolving
@@ -175,36 +128,6 @@ const builderPayloadValidators = new WeakMap<
   object,
   (payload: unknown) => boolean
 >()
-
-/**
- * Gives a rejection from Hydrogen's cached fetch the code `fetchOnce` gives
- * the same failure on the direct path.
- *
- * Hydrogen calls the platform `fetch` itself, so a request that never got a
- * response rejects with the platform's error instead of a `WeaverseError`.
- * The Fetch standard rejects a network failure with a `TypeError` and an
- * aborted request with the signal's `AbortError`/`TimeoutError`; those are
- * outages. Anything else is returned unchanged, so it is not reported as one.
- */
-function cachedTransportError(error: unknown, url: string): unknown {
-  if (error instanceof WeaverseError || !(error instanceof Error)) {
-    return error
-  }
-  if (error.name === 'AbortError' || error.name === 'TimeoutError') {
-    return new WeaverseError('Request timed out', 'TIMEOUT_ERROR', undefined, {
-      url,
-    })
-  }
-  if (error instanceof TypeError) {
-    return new WeaverseError(
-      'Network error during fetch',
-      'NETWORK_ERROR',
-      undefined,
-      { url, cause: error.message }
-    )
-  }
-  return error
-}
 
 /**
  * Weaverse API version path
@@ -399,7 +322,6 @@ export class WeaverseClient {
       projectId: this.configs.projectId,
       weaverseHost: this.configs.weaverseHost,
       weaverseApiBase: this.configs.weaverseApiBase,
-      weaverseApiKey: this.configs.weaverseApiKey,
       weaverseVersion: this.configs.weaverseVersion,
       isDesignMode: this.configs.isDesignMode,
       isPreviewMode: this.configs.isPreviewMode,
@@ -1339,6 +1261,7 @@ export class WeaverseClient {
         }
       }
 
+      const isFallback = !page
       if (!page) {
         page = this.generateFallbackPage(
           '<div style="text-align: center;">Please add new section to start.</div>'
@@ -1357,22 +1280,27 @@ export class WeaverseClient {
         const items = page.items
         page.items = await Promise.all(items.map(this.execComponentLoader))
       }
+      const publicUrl = withoutCredentialParams(this.parsedUrl)
       return {
         page,
         project,
         pageAssignment,
+        ...(isFallback ? { isFallback } : {}),
         configs: {
           ...basePageConfigs,
+          // The page answers for the route-level project when one is given.
+          projectId: effectiveProjectId,
           requestInfo: {
             i18n: this.locale,
-            queries: getRequestQueries<WeaverseStudioQueries>(request),
-            pathname: this.parsedUrl.pathname,
-            search: this.parsedUrl.search,
+            queries: getRequestQueries<WeaverseStudioQueries>(
+              new Request(publicUrl)
+            ),
+            pathname: publicUrl.pathname,
+            search: publicUrl.search,
           },
         },
       }
     } catch (error) {
-      const failure = classifyPageLoadFailure(error)
       const errorMessage = '❌ Page load failed'
       const errorContext: Record<string, unknown> = {
         projectId: params.projectId || this.configs.projectId,
@@ -1398,18 +1326,11 @@ export class WeaverseClient {
         })
       }
 
-      if (failure === 'absent' || !this.throwPageLoadFailures) {
-        return null
+      const rejection = toPageLoadRejection(error, this.throwPageLoadFailures)
+      if (rejection) {
+        throw rejection
       }
-      if (error instanceof WeaverseLoadError) {
-        throw error
-      }
-      // Fixed message: the cause can carry request-derived detail.
-      throw new WeaverseLoadError(
-        'Unable to load Weaverse page',
-        failure,
-        error instanceof WeaverseError ? error.statusCode : undefined
-      )
+      return null
     }
   }
 

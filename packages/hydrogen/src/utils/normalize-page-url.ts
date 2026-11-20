@@ -42,3 +42,21 @@ export function normalizePageUrl(url: string): string {
   }
   return `${parsed.origin}${pathname}${search ? `?${search}` : ''}`
 }
+
+/** Query parameters that may carry credentials and must not reach loader data. */
+const CREDENTIAL_QUERY_PARAMS = ['weaverseApiKey']
+
+/**
+ * Returns the URL without credential query parameters, or the same URL when it
+ * carries none, so loader data never echoes a credential back to the browser.
+ */
+export function withoutCredentialParams(url: URL): URL {
+  if (!CREDENTIAL_QUERY_PARAMS.some((key) => url.searchParams.has(key))) {
+    return url
+  }
+  let clean = new URL(url)
+  for (let key of CREDENTIAL_QUERY_PARAMS) {
+    clean.searchParams.delete(key)
+  }
+  return clean
+}

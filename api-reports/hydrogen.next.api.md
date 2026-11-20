@@ -137,6 +137,7 @@ export type WeaverseLoaderData = {
     page: WeaversePageData;
     project: WeaverseProjectType;
     pageAssignment?: WeaversePageAssignment;
+    isFallback?: boolean;
 };
 
 export type WeaverseLoaderRequestInfo = {
@@ -231,6 +232,7 @@ export interface WeaverseNextLoadPageInput {
 
 export interface WeaverseNextLoaderData {
     configs?: Record<string, unknown>;
+    isFallback?: boolean;
     page: WeaverseNextPageData;
     pageAssignment?: WeaverseNextPageAssignment;
     project?: Record<string, unknown>;
@@ -420,7 +422,6 @@ export type WeaverseProjectConfigs = {
     weaverseHost: string;
     weaverseApiBase: string;
     weaversePublicApiBase?: string;
-    weaverseApiKey: string;
     weaverseVersion?: string;
     isDesignMode?: boolean;
     isPreviewMode?: boolean;

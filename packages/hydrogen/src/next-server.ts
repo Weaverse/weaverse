@@ -52,6 +52,11 @@ export {
   type WeaverseNextThemeSettingsResponse,
 } from './next/server'
 export {
+  WeaverseError,
+  WeaverseLoadError,
+  type WeaverseLoadFailureKind,
+} from './types'
+export {
   getWeaverseStudioCspDirectives,
   type WeaverseStudioCspDirectives,
 } from './utils/studio-csp'
