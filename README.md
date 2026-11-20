@@ -2,9 +2,7 @@
 
 [![Better Stack Badge](https://uptime.betterstack.com/status-badges/v1/monitor/vif3.svg)](https://wvse.cc/weaverse-status)
 [![🚀 Lint & Typecheck](https://github.com/Weaverse/weaverse/actions/workflows/check.yml/badge.svg)](https://github.com/Weaverse/weaverse/actions/workflows/check.yml)
-[![Formatted with Biome](https://img.shields.io/badge/Formatted_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev/)
-[![Linted with Biome](https://img.shields.io/badge/Linted_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
-[![Checked with Biome](https://img.shields.io/badge/Checked_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
+[![Checked with Vite+](https://img.shields.io/badge/Checked_with-Vite%2B-646cff?style=flat)](https://viteplus.dev/guide/check)
 [![committers.top badge](https://org-badge.committers.top/vietnam/weaverse.svg)](https://org-badge.committers.top/vietnam/weaverse)
 
 > **🚀 Weaverse v5 is here!** Now powered by React Router v7 for better performance and developer experience. [See what's new →](./CHANGELOG.md#500---2024-12-20)
@@ -51,7 +49,7 @@ This monorepo contains the following packages:
   (`/next`, `/next/server`). `@weaverse/next` is deprecated in favor of `@weaverse/hydrogen/next`.
 - [`@weaverse/schema`](https://github.com/Weaverse/weaverse/tree/main/packages/schema): Schema definitions for Weaverse components.
 - [`@weaverse/cli`](https://github.com/Weaverse/weaverse/tree/main/packages/cli): Command-line tools for Weaverse development.
-- [`@weaverse/biome`](https://github.com/Weaverse/weaverse/tree/main/packages/biome): Shared Biome configuration for code quality.
+- [`@weaverse/biome`](https://github.com/Weaverse/weaverse/tree/main/packages/biome): Shared Biome configuration (deprecated; Weaverse projects now use Vite+).
 
 ## Getting Started
 
@@ -84,9 +82,9 @@ pnpm run dev
 # Run type checking
 pnpm run typecheck
 
-# Run linting and formatting
-pnpm run biome
-pnpm run biome:fix
+# Check formatting and lint (Vite+: Oxfmt + Oxlint)
+pnpm run check
+pnpm run check:fix
 
 # Run tests
 pnpm run test
@@ -115,7 +113,7 @@ submit pull requests with your improvements.
 1. Fork and clone the repository
 2. Create a feature branch
 3. Make your changes
-4. Run `pnpm run biome:fix` and `pnpm run typecheck`
+4. Run `pnpm run check:fix` and `pnpm run typecheck`
 5. Submit a pull request
 
 ## Documentation

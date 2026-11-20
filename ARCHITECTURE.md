@@ -84,7 +84,7 @@
 │                                                                                       │
 │  ┌──────────────────────────────────────┐                                             │
 │  │      @weaverse/biome (Config)         │                                             │
-│  │      v5.7.3                          │                                             │
+│  │      v5.8.0 (deprecated)             │                                             │
 │  │                                      │                                             │
 │  │      Shared Biome configuration       │                                             │
 │  │      - 2-space indentation           │                                             │
@@ -177,21 +177,19 @@ Each Package Build (`vp pack` for JS, tsrs CLI for declarations):
 
 ```
 1. Pre-commit Hook (Lefthook):
-   - biome check --write (auto-fix staged files)
-   - Auto-stage fixed files
+   - vp fmt (format staged files, re-stage)
+   - vp lint (check staged JS/TS, no auto-fix)
 
 2. GitHub Actions CI:
-   - biome ci . (strict, no auto-fix)
+   - pnpm run ci → vp check (format + lint, fails on errors)
    - pnpm run typecheck (TypeScript validation)
 
-3. Quality Rules (Biome 2.4.4):
-   ✓ Single quotes only
-   ✓ 2-space indentation
-   ✓ No namespace imports (import * as)
-   ✓ Prefer let over const (useConst OFF)
-   ✓ Optional chaining (?.) required
-   ✓ No unused imports/variables
-   ✓ No console.* in production code
+3. Quality Rules (Vite+: Oxfmt + Oxlint, root vite.config.ts):
+   ✓ Single quotes, no semicolons, 2-space indentation
+   ✓ No namespace imports (import * as), warned
+   ✓ let and const both allowed (no prefer-const)
+   ✓ Optional chaining (?.) preferred, warned
+   ✓ No unused imports/variables, warned
 ```
 
 ## Release Process
@@ -210,7 +208,7 @@ Steps:
 
 Version Groups:
 - FIXED: core, react, hydrogen (sync versions: 5.10.0)
-- FREE:  schema (0.8.2), cli (5.5.2), biome (5.7.3), i18n (1.1.2)
+- FREE:  schema, cli, biome (deprecated, frozen at 5.8.0), i18n
 ```
 
 ## State Management Flow

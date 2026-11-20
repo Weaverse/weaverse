@@ -18,9 +18,9 @@ Monorepo of SDKs for integrating React/JamStack frameworks (Shopify Hydrogen, Re
 | Typecheck all packages | `pnpm run typecheck` |
 | Check packed public APIs | `pnpm run package:check` |
 | Accept intentional API report changes | `pnpm run api:report` |
-| Lint/format check | `pnpm run biome` |
-| Lint/format fix | `pnpm run biome:fix` |
-| Format only | `pnpm run format` |
+| Lint/format check | `pnpm run check` (`vp check`) |
+| Lint/format fix | `pnpm run check:fix` |
+| Format only | `pnpm run format` (`vp fmt`) |
 
 ### Single Package Commands
 
@@ -38,9 +38,9 @@ turbo test --filter=@weaverse/hydrogen
 - **Script runner**: pnpm (`pnpm run <script>` from any workspace package)
 - **Test runner**: Vite+ 1.7.0 (`vp test`, exposed via the `vite-plus` catalog dep) — Vitest 5.1.0 under the hood. Package `test` scripts pass `--config ../../vite.config.ts`, because Vite+ 1.7 no longer walks up to the root config from a package directory
 - **Build orchestrator**: Turbo (`turbo.json` defines task pipeline)
-- **Linting/Formatting:** Biome 2.6.8 with ultracite 8 presets (configured in `packages/biome/biome.json`; the root `biome.json` keeps rules that ultracite 8 newly enables at `warn` or `off`)
-- **Pre-commit hooks**: Lefthook runs `biome check --write` on staged files
-- **CI**: GitHub Actions on Node 26 — `biome ci .` + `pnpm run typecheck` + `pnpm run test` + `pnpm run package:check`
+- **Linting/Formatting:** Vite+ — Oxlint (`vp lint`) and Oxfmt (`vp fmt`), configured in the `lint` and `fmt` blocks of the root `vite.config.ts`. The rule set carries over the retired Biome + ultracite policy at the same severities; the parity ledger is in `.specs/2026-11-20-sdk-viteplus-checks.md`. Lint errors fail; warnings print
+- **Pre-commit hooks**: Lefthook runs `vp fmt` (re-staged) then `vp lint` on staged files
+- **CI**: GitHub Actions on Node 26 — `pnpm run ci` (`vp check`) + `pnpm run typecheck` + `pnpm run test` + `pnpm run package:check`
 - **Releases**: Git tag + `pnpm publish` workflow via `.claude/skills/releasing-weaverse-sdks/` skill (core, react, hydrogen stay in sync)
 
 ### Package Dependency Graph
@@ -68,7 +68,7 @@ packages/
                  Next.js adapter in src/next (/next, /next/server entries)
   schema/        Zod-based schema definitions for component settings
   cli/           CLI tools
-  biome/         Shared Biome configuration
+  biome/         Shared Biome configuration (deprecated; this repo uses Vite+)
   i18n/          Internationalization utilities
   remix/         Remix integration
   experiments/   Framework-agnostic A/B testing (engine + /server + /react)
@@ -89,7 +89,7 @@ Each package `build` runs `vp pack` (Vite+ / tsdown) for JavaScript, then `scrip
 
 ## Code Style
 
-### Enforced by Biome
+### Enforced by Oxfmt and Oxlint
 
 | Rule | Setting |
 |------|---------|
@@ -102,8 +102,8 @@ Each package `build` runs `vp pack` (Vite+ / tsdown) for JavaScript, then `scrip
 | Unused imports | Warned — remove them |
 | Unused variables | Warned — remove them |
 | `forEach` | Warned — prefer `for...of` loops |
-| `console.*` | Warned — use proper logging |
-| Optional chaining | Required (`?.` instead of `&&` chains) |
+| `console.*` | Allowed — log with context |
+| Optional chaining | Warned — prefer `?.` over `&&` chains |
 | Namespace imports | Warned — use named imports, not `import * as` |
 
 ### Naming Conventions
@@ -301,7 +301,7 @@ import type { HydrogenComponentProps, WeaverseLoaderData } from '@weaverse/hydro
 // Relative imports within a package
 import { someUtil } from './utils'
 
-// NO namespace imports (warned by biome)
+// NO namespace imports (warned by Oxlint)
 // ❌ import * as Utils from './utils'
 // ✅ import { specificUtil } from './utils'
 ```
@@ -327,13 +327,13 @@ try {
 ### Pre-commit (Lefthook)
 
 Runs automatically on `git commit`:
-1. `biome check --write` on staged files
-2. Auto-stages any fixed files
-3. Commit proceeds if checks pass
+1. `vp fmt` on staged files, re-staging the formatted output
+2. `vp lint` on staged JS/TS files (check only, no auto-fix)
+3. Commit proceeds if there are no lint errors
 
 ### CI Pipeline (GitHub Actions)
 
-1. `biome ci .` — lint/format check (strict, no auto-fix)
+1. `pnpm run ci` (`vp check`) — format + lint check (fails on unformatted files or lint errors)
 2. `pnpm run typecheck` — TypeScript type checking (tsrs)
 
 ### Releasing
@@ -342,7 +342,7 @@ Uses a Claude Code skill (`.claude/skills/releasing-weaverse-sdks/SKILL.md`) for
 1. Tell Claude which packages to release and the bump type (e.g., "release the fixed group as minor")
 2. The skill runs: verify → bump → build → publish to npm → tag → GitHub Release → sync dev
 3. Core, React, and Hydrogen versions stay in sync (fixed group); the Next.js adapter ships inside Hydrogen
-4. Schema, CLI, Biome, and i18n are versioned independently
+4. Schema, CLI, Biome (deprecated, frozen at 5.8.0), and i18n are versioned independently
 5. See the skill file for the full 13-step ritual
 
 ## Spec-Driven Development (SDD)
@@ -359,9 +359,9 @@ Uses a Claude Code skill (`.claude/skills/releasing-weaverse-sdks/SKILL.md`) for
 ## Common Pitfalls
 
 - **Don't use `npm install` / `bun install`** — use `pnpm install` for dependency management
-- **Don't use double quotes** — biome enforces single quotes
+- **Don't use double quotes** — Oxfmt enforces single quotes
 - **Don't use `inspector` in schemas** — use `settings` (inspector is deprecated)
 - **Don't use namespace imports** — use named imports (`import { x }` not `import * as`)
 - **Don't modify `archived/` or `templates/`** — these are excluded from linting
-- **Don't add semicolons everywhere** — biome uses "as needed" mode
+- **Don't add semicolons everywhere** — Oxfmt omits them (`semi: false`)
 - **Don't use `.then()` chains** — use `async/await`

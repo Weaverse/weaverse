@@ -15,7 +15,7 @@ Release ritual for the `@weaverse/*` npm packages monorepo. Covers version bump,
 - **Package manager:** `pnpm` only for development (never `npm install` or `bun install`)
 - **Publish command:** `npm publish` (from individual package directories)
 - **Fixed version group:** core, react, hydrogen (always same version)
-- **Independent packages:** schema, cli, biome, i18n (each has own version)
+- **Independent packages:** schema, cli, i18n (each has own version); `@weaverse/biome` is deprecated and stays at 5.8.0, so do not release it
 - **Next.js adapter:** ships inside `@weaverse/hydrogen` (`/next`, `/next/server`), so it is released with the fixed group and needs no bump of its own
 - **Never release:** remix (placeholder), shopify and next (archived)
 - **Tag format:** `v{VERSION}` for fixed group, `@weaverse/{pkg}@{VERSION}` for independents
@@ -114,7 +114,7 @@ Apply the semver bump:
 ### Step 4: Run Verification
 
 ```bash
-pnpm run biome && pnpm run typecheck && pnpm run test
+pnpm run check && pnpm run typecheck && pnpm run test
 ```
 
 Always runs across ALL packages regardless of release scope. All three MUST pass. Do not proceed if any fail.
@@ -205,7 +205,7 @@ git commit -m "release: @weaverse/$PKG@$NEW_VERSION"
 ```
 
 Only stage `package.json` files and `pnpm-lock.yaml`. Never use `git add -A`.
-Lefthook pre-commit hooks will run biome on staged files — this is expected
+Lefthook pre-commit hooks will run `vp fmt` and `vp lint` on staged files — this is expected
 and should pass.
 
 ### Step 10: Tag and Push
@@ -332,7 +332,7 @@ publishes succeed**, so a mid-publish failure leaves git untouched.
 
 ```
 parse intent → main + latest → npm auth (if not set) → calc versions (confirm) →
-verify (biome+types+tests) → bump versions → build (no install) →
+verify (vp check+types+tests) → bump versions → build (no install) →
 publish core → react → hydrogen → pnpm install (refresh lockfile) →
 commit → tag → push → gh release → changelog per stable tag (update-changelogs) →
 agent guidance (major version, entry point or type renames) →
