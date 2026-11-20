@@ -29,10 +29,16 @@
     "test": "vp test --run --config ../../vite.config.ts",
     "typecheck": "tsrs --noEmit"
   },
-  "dependencies": {
-    "@weaverse/core": "6.3.1",
-    "clsx": "^2.1.1",
+  "peerDependencies": {
     "react": ">=19",
     "react-dom": ">=19"
+  },
+  "devDependencies": {
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "dependencies": {
+    "@weaverse/core": "6.3.1",
+    "clsx": "^2.1.1"
   }
 }

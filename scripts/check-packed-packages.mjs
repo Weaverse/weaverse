@@ -116,6 +116,69 @@ function assertSharedReactRouter(appDir) {
   }
 }
 
+/**
+ * Finds the package.json Node would load for `packageName` from `fromFile`,
+ * through the node_modules lookup paths, so packages whose `exports` omit
+ * `./package.json` (such as @weaverse/experiments) are found too.
+ */
+function findPackageFile(fromFile, packageName) {
+  for (let lookupPath of createRequire(fromFile).resolve.paths(packageName)) {
+    let packageFile = join(lookupPath, packageName, 'package.json')
+    if (existsSync(packageFile)) {
+      return realpathSync(packageFile)
+    }
+  }
+  throw new Error(`Cannot find ${packageName} from ${fromFile}`)
+}
+
+/**
+ * React keeps hooks state in module scope, so every @weaverse/* package an app
+ * installs must import the app's `react` and `react-dom`. A second copy makes
+ * the SDK's hooks throw "Invalid hook call" inside the app's tree.
+ */
+function assertSharedReact(appDir) {
+  let appFile = join(appDir, 'package.json')
+  // Each @weaverse/* package resolves from the package that depends on it,
+  // starting with the ones the app installs directly.
+  let pending = Object.keys(
+    JSON.parse(readFileSync(appFile, 'utf8')).dependencies
+  )
+    .filter((dependency) => dependency.startsWith('@weaverse/'))
+    .map((dependency) => [dependency, appFile])
+  let seen = new Set()
+  while (pending.length > 0) {
+    let [packageName, parentFile] = pending.pop()
+    let packageFile = findPackageFile(parentFile, packageName)
+    if (seen.has(packageFile)) {
+      continue
+    }
+    seen.add(packageFile)
+    let packageJson = JSON.parse(readFileSync(packageFile, 'utf8'))
+    let declared = {
+      ...packageJson.peerDependencies,
+      ...packageJson.dependencies,
+    }
+    for (let singleton of ['react', 'react-dom']) {
+      if (!declared[singleton]) {
+        continue
+      }
+      let appCopy = findPackageFile(appFile, singleton)
+      let packageCopy = findPackageFile(packageFile, singleton)
+      if (appCopy !== packageCopy) {
+        let version = (file) => JSON.parse(readFileSync(file, 'utf8')).version
+        throw new Error(
+          `${packageName} resolved its own ${singleton} ${version(packageCopy)} next to the app's ${version(appCopy)} in ${appDir}; ${singleton} must be a peer dependency`
+        )
+      }
+    }
+    for (let dependency of Object.keys(packageJson.dependencies ?? {})) {
+      if (dependency.startsWith('@weaverse/')) {
+        pending.push([dependency, packageFile])
+      }
+    }
+  }
+}
+
 function normalizeEntry(entryFile) {
   return entryFile.startsWith('./') ? entryFile.slice(2) : entryFile
 }
@@ -354,6 +417,9 @@ try {
     rootPackageJson.devDependencies['@types/react']
   packedDependencies['@types/react-dom'] =
     rootPackageJson.devDependencies['@types/react-dom']
+  // React apps install React themselves; the SDK packages take it as a peer.
+  packedDependencies.react = rootPackageJson.devDependencies.react
+  packedDependencies['react-dom'] = rootPackageJson.devDependencies['react-dom']
   // `next` is an optional peer of the Next.js adapter in @weaverse/hydrogen; a
   // Next.js storefront always has it, and the adapter imports `next/navigation`.
   packedDependencies.next = JSON.parse(
@@ -403,10 +469,12 @@ try {
   writeFileSync(join(consumerDir, 'pnpm-workspace.yaml'), overridesYaml)
   run(PNPM, installArgs, { cwd: consumerDir })
   assertSharedReactRouter(consumerDir)
+  assertSharedReact(consumerDir)
 
-  // One workspace with an app per supported React Router major. Each app must
-  // get an @weaverse/hydrogen bound to its own router, which only a peer
-  // dependency allows; a regular dependency gives every app the same copy.
+  // One workspace with an app per supported React Router major, plus an app on
+  // the lowest supported React. Each app must get SDK packages bound to its own
+  // router and React, which only peer dependencies allow; regular dependencies
+  // give every app the same copy.
   let hydrogenPackageJson = publishedPackages.find(
     ({ packageJson }) => packageJson.name === '@weaverse/hydrogen'
   ).packageJson
@@ -416,7 +484,11 @@ try {
   let routerMajors = [...supportedRange.matchAll(/\^(?<major>\d+)/g)].map(
     (match) => match.groups.major
   )
-  let majorsDir = join(scratchDir, 'router-majors')
+  let supportedReact =
+    hydrogenPackageJson.peerDependencies?.react ??
+    hydrogenPackageJson.dependencies?.react
+  let lowestReact = `${supportedReact.match(/>=\s*(?<major>\d+)/).groups.major}.0.0`
+  let majorsDir = join(scratchDir, 'supported-versions')
   mkdirSync(majorsDir)
   writeFileSync(
     join(majorsDir, 'package.json'),
@@ -445,10 +517,28 @@ try {
       })}\n`
     )
   }
+  let lowestReactDir = join(majorsDir, 'apps', `react-${lowestReact}`)
+  mkdirSync(lowestReactDir, { recursive: true })
+  writeFileSync(
+    join(lowestReactDir, 'package.json'),
+    `${JSON.stringify({
+      name: `react-${lowestReact}`,
+      private: true,
+      dependencies: {
+        '@weaverse/hydrogen': packedDependencies['@weaverse/hydrogen'],
+        react: lowestReact,
+        'react-dom': lowestReact,
+        'react-router': reactRouterVersion,
+      },
+    })}\n`
+  )
   run(PNPM, installArgs, { cwd: majorsDir })
   for (let major of routerMajors) {
-    assertSharedReactRouter(join(majorsDir, 'apps', `react-router-${major}`))
+    let appDir = join(majorsDir, 'apps', `react-router-${major}`)
+    assertSharedReactRouter(appDir)
+    assertSharedReact(appDir)
   }
+  assertSharedReact(lowestReactDir)
 
   for (let publishedPackage of publishedPackages) {
     let { packageJson } = publishedPackage
