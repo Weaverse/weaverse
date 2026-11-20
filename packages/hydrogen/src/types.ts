@@ -43,8 +43,8 @@ import type {
 } from 'react-router'
 import type { TranslationStore } from './utils/translation-store'
 import type { ThemeSettingsStore } from './utils/use-theme-settings-store'
-import type { WeaverseHydrogen } from './WeaverseHydrogenRoot'
 import type { WeaverseClient } from './weaverse-client'
+import type { WeaverseHydrogen } from './WeaverseHydrogenRoot'
 
 // Re-export CachingStrategy from Hydrogen for convenience
 export type { CachingStrategy } from '@shopify/hydrogen'
@@ -222,8 +222,10 @@ export type HydrogenElement = {
 }
 
 /** Initialization parameters for a request-scoped {@link WeaverseHydrogen} runtime. */
-export interface WeaverseHydrogenParams
-  extends Omit<WeaverseCoreParams, 'ItemConstructor'> {
+export interface WeaverseHydrogenParams extends Omit<
+  WeaverseCoreParams,
+  'ItemConstructor'
+> {
   /** Page content used to initialize component instances. */
   data: WeaversePageData
   /** Route loader data made available to component data bindings. */
