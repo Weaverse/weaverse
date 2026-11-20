@@ -80,8 +80,8 @@ export type PublicEnv = {
     PUBLIC_STOREFRONT_API_TOKEN: string;
 };
 
-export interface RouteLoaderArgs extends LoaderFunctionArgs {
-    context: WeaverseRouteAppLoadContext;
+export interface RouteLoaderArgs extends Omit<LoaderFunctionArgs, 'context'> {
+    context: 0 extends 1 & LoaderFunctionArgs['context'] ? WeaverseRouteAppLoadContext : LoaderFunctionArgs['context'] & WeaverseRouteAppLoadContext;
 }
 
 export { SchemaType } from '@weaverse/schema';
@@ -90,7 +90,7 @@ export { StudioSelection } from '@weaverse/react';
 
 export type TranslateFunction = (key: string, variables?: Record<string, string | number>) => string;
 
-export declare function TranslationProvider(input: TranslationProviderProps): import("react/jsx-runtime").JSX.Element;
+export declare function TranslationProvider(input: TranslationProviderProps): import("react").JSX.Element;
 
 export type TranslationProviderProps = {
     staticContent: Record<string, unknown>;
@@ -217,7 +217,7 @@ export interface WeaverseFetchWithCacheOptions extends RequestInit {
     strategy?: CachingStrategy;
 }
 
-export declare const WeaverseHydrogenRoot: import("react").MemoExoticComponent<(input: WeaverseHydrogenRootProps) => import("react/jsx-runtime").JSX.Element | null>;
+export declare const WeaverseHydrogenRoot: import("react").MemoExoticComponent<(input: WeaverseHydrogenRootProps) => JSX.Element | null>;
 
 export interface WeaverseHydrogenRootErrorProps {
     error: Error | unknown;
@@ -410,5 +410,5 @@ export declare function useTranslation(): TranslationValue;
 
 export { useWeaverse } from '@weaverse/react';
 
-export declare function withWeaverse(Component: ComponentType<any>, options?: WithWeaverseOptions): (props: JSX.IntrinsicAttributes) => import("react/jsx-runtime").JSX.Element;
+export declare function withWeaverse(Component: ComponentType<any>, options?: WithWeaverseOptions): (props: JSX.IntrinsicAttributes) => JSX.Element;
 ```

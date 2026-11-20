@@ -1255,7 +1255,7 @@ describe('fetchWithCache non-string bodies', () => {
 
   it('should_return_each_response_when_FormData_bodies_differ', async () => {
     spyOn(globalThis, 'fetch').mockImplementation(async (_url, init) =>
-      Response.json({ q: (init?.body as FormData).get('q') })
+      Response.json({ q: (init?.body as FormData | undefined)?.get('q') })
     )
     let pending: Promise<unknown>[] = []
     let weaverse = new WeaverseClient({

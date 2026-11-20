@@ -74,16 +74,30 @@ export type WeaverseComponentLoaderArgs<T = any, _E = any> = {
   weaverse: WeaverseClient
 }
 
-/** Application load context initialized with a request-scoped Weaverse client. */
+/**
+ * Application load context initialized with a request-scoped Weaverse client.
+ * It extends `AppLoadContext`, so members an app adds by augmenting it keep
+ * their types. React Router 8 no longer exports `AppLoadContext`; the
+ * augmentation at the end of this file declares it, so the name still
+ * resolves there.
+ */
 export interface WeaverseRouteAppLoadContext extends AppLoadContext {
   /** Client used to load Weaverse content for the current request. */
   weaverse: WeaverseClient
 }
 
 /** React Router loader arguments whose app context includes the Weaverse client. */
-export interface RouteLoaderArgs extends LoaderFunctionArgs {
-  /** Request-scoped application context with the initialized Weaverse client. */
-  context: WeaverseRouteAppLoadContext
+export interface RouteLoaderArgs extends Omit<LoaderFunctionArgs, 'context'> {
+  /**
+   * Request-scoped application context with the initialized Weaverse client.
+   * With middleware (always on in React Router 8) it is also the router's
+   * `RouterContextProvider`, so `context.get()` keeps working; without
+   * middleware React Router types the context as `any`, and only the
+   * Weaverse context applies.
+   */
+  context: 0 extends 1 & LoaderFunctionArgs['context']
+    ? WeaverseRouteAppLoadContext
+    : LoaderFunctionArgs['context'] & WeaverseRouteAppLoadContext
 }
 
 /** Primitive value accepted in a component's persisted data. */

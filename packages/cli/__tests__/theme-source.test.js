@@ -131,16 +131,19 @@ describe('requestThemeSource', () => {
     [403, 'no_license'],
     [429, 'rate_limited'],
     [404, 'not_found'],
-  ])('should_explain_%i_%s_when_the_endpoint_rejects_the_pass', async (status, code) => {
-    // Arrange
-    let fetch = vi.fn(async () => jsonResponse(status, { error: code }))
+  ])(
+    'should_explain_%i_%s_when_the_endpoint_rejects_the_pass',
+    async (status, code) => {
+      // Arrange
+      let fetch = vi.fn(async () => jsonResponse(status, { error: code }))
 
-    // Act
-    let request = requestThemeSource({ apiBase: API_BASE, pass: 'p', fetch })
+      // Act
+      let request = requestThemeSource({ apiBase: API_BASE, pass: 'p', fetch })
 
-    // Assert
-    await expect(request).rejects.toThrow(THEME_SOURCE_ERRORS[code])
-  })
+      // Assert
+      await expect(request).rejects.toThrow(THEME_SOURCE_ERRORS[code])
+    }
+  )
 
   it('should_point_to_the_dashboard_when_a_pass_is_used_or_expired', () => {
     // Act

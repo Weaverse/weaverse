@@ -20,7 +20,7 @@ export interface ExposureTracker {
     expose(assignments: Assignment[], onExpose: (assignment: Assignment) => void): void;
 }
 
-export declare function WeaverseExperiments(input: WeaverseExperimentsProps): import("react/jsx-runtime").JSX.Element;
+export declare function WeaverseExperiments(input: WeaverseExperimentsProps): import("react").JSX.Element;
 
 export interface WeaverseExperimentsProps {
     children?: ReactNode;

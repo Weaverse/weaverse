@@ -53,7 +53,7 @@ export { StudioSelection } from '@weaverse/react';
 
 export type TranslateFunction = (key: string, variables?: Record<string, string | number>) => string;
 
-export declare function TranslationProvider(input: TranslationProviderProps): import("react/jsx-runtime").JSX.Element;
+export declare function TranslationProvider(input: TranslationProviderProps): import("react").JSX.Element;
 
 export interface TranslationProviderProps {
     children: ReactNode;
@@ -259,7 +259,7 @@ export interface WeaverseNextPageData {
     [key: string]: unknown;
 }
 
-export declare function WeaverseNextProvider(props: WeaverseNextProviderProps): import("react/jsx-runtime").JSX.Element;
+export declare function WeaverseNextProvider(props: WeaverseNextProviderProps): import("react").JSX.Element;
 
 export interface WeaverseNextProviderProps {
     children: ReactNode;
@@ -305,7 +305,7 @@ export interface WeaverseNextRequestInfo {
     search: string;
 }
 
-export declare function WeaverseNextRootProvider(props: WeaverseNextRootProviderProps): import("react/jsx-runtime").JSX.Element;
+export declare function WeaverseNextRootProvider(props: WeaverseNextRootProviderProps): import("react").JSX.Element;
 
 export interface WeaverseNextRootProviderProps {
     children: ReactNode;

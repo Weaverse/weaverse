@@ -34,14 +34,13 @@ turbo test --filter=@weaverse/hydrogen
 
 ### Package Manager & Tooling
 
-- **Package manager**: pnpm 11.1.2 (use `pnpm install`, NOT npm/bun install)
+- **Package manager**: pnpm 12.21.0 (use `pnpm install`, NOT npm/bun install)
 - **Script runner**: pnpm (`pnpm run <script>` from any workspace package)
-- **Test runner**: Vite+ (`vp test`, exposed via the `vite-plus` catalog dep) — Vitest under the hood
+- **Test runner**: Vite+ 1.7.0 (`vp test`, exposed via the `vite-plus` catalog dep) — Vitest 5.1.0 under the hood. Package `test` scripts pass `--config ../../vite.config.ts`, because Vite+ 1.7 no longer walks up to the root config from a package directory
 - **Build orchestrator**: Turbo (`turbo.json` defines task pipeline)
-- **Linting/Formatting:** Biome 2.5.0 (configured in `packages/biome/biome.json`)
-- **Testing**: Bun's native test runner
+- **Linting/Formatting:** Biome 2.6.8 with ultracite 8 presets (configured in `packages/biome/biome.json`; the root `biome.json` keeps rules that ultracite 8 newly enables at `warn` or `off`)
 - **Pre-commit hooks**: Lefthook runs `biome check --write` on staged files
-- **CI**: GitHub Actions — `biome ci .` + `pnpm run typecheck` + `pnpm run test`
+- **CI**: GitHub Actions on Node 26 — `biome ci .` + `pnpm run typecheck` + `pnpm run test` + `pnpm run package:check`
 - **Releases**: Git tag + `pnpm publish` workflow via `.claude/skills/releasing-weaverse-sdks/` skill (core, react, hydrogen stay in sync)
 
 ### Package Dependency Graph
@@ -145,7 +144,7 @@ Each package `build` runs `vp pack` (Vite+ / tsdown) for JavaScript, then `scrip
 
 ### Framework
 
-Bun's native test runner. Tests exist for `hydrogen`, `react`, `schema`, and `i18n` packages.
+Vitest through Vite+ (`vp test`). Tests exist for `hydrogen`, `react`, `schema`, and `i18n` packages.
 
 ### Test File Location
 
