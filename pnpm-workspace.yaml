@@ -18,6 +18,14 @@ allowBuilds:
   "@parcel/watcher": true
   sharp: true
 
+# pnpm 12 holds back packages published in the last 24 hours
+# (`minimumReleaseAge`), and in CI it rejects a lockfile that pins one.
+# The release ritual publishes core, react and hydrogen, then commits the
+# lockfile that pins them right away, so our own scope is exempt.
+# Third-party packages keep the cool-down.
+minimumReleaseAgeExclude:
+  - "@weaverse/*"
+
 # Vite+ unified toolchain. `vite` is aliased to the
 # `@voidzero-dev/vite-plus-core` distribution; `vitest` is pinned to the
 # exact Vitest that `vite-plus` bundles (`vp toolchain vitest`), so the

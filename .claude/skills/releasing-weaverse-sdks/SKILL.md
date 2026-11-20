@@ -192,6 +192,19 @@ Internal deps should still show `specifier: <NEW_VERSION>` resolved from
 the registry (NOT `link:../<pkg>`). If they show as `link:`, something
 added `link-workspace-packages=true` somewhere — abort and investigate.
 
+Then check the lockfile the way CI does. Without `CI=true`, pnpm skips its
+supply-chain check:
+
+```bash
+CI=true pnpm install --frozen-lockfile
+```
+
+CI rejects packages published less than 24 hours ago (`minimumReleaseAge`).
+`pnpm-workspace.yaml` exempts `@weaverse/*`, so the versions you just
+published pass. If this fails with `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION`
+on a `@weaverse` package, restore that exemption. Do not commit the
+version-specific entries `pnpm install` adds to `minimumReleaseAgeExclude`.
+
 ### Step 9: Commit the Release
 
 ```bash
