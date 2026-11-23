@@ -272,7 +272,12 @@ class NextServerClient implements WeaverseNextServerClient {
       }
       try {
         return (await response.json()) as T
-      } catch {
+      } catch (error) {
+        // Only a parse failure means a bad body; an abort or network error
+        // while the body streams is the same outage as one before headers.
+        if (!(error instanceof SyntaxError)) {
+          throw cachedTransportError(error, url)
+        }
         throw new WeaverseError(
           'Response body is not valid JSON',
           'INVALID_RESPONSE',

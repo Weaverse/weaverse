@@ -524,6 +524,38 @@ describe('createWeaverseNextServerClient loadPage failures (opt-in)', () => {
     expect((error as WeaverseLoadError)?.kind).toBe('unavailable')
   })
 
+  it('should_reject_as_unavailable_when_the_body_times_out_after_headers', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    let fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: () =>
+        Promise.reject(
+          new DOMException('The operation was aborted', 'AbortError')
+        ),
+    }) as unknown as typeof fetch
+    let client = makeLoadClient(fetchMock, { throwPageLoadFailures: true })
+
+    let error = await loadFailure(client)
+
+    expect((error as WeaverseLoadError)?.kind).toBe('unavailable')
+  })
+
+  it('should_not_send_the_weaverse_api_key_upstream', async () => {
+    let fetchMock = makeFetch({ page: null })
+    let client = makeLoadClient(fetchMock, {
+      url: 'https://shop.example/?weaverseApiKey=secret&isDesignMode=true',
+    })
+
+    await client.loadPage()
+
+    let body = String(
+      (fetchMock as unknown as ReturnType<typeof vi.fn>).mock.calls[0][1].body
+    )
+    expect(body).not.toContain('secret')
+    expect(body).toContain('isDesignMode')
+  })
+
   it('should_reject_as_configuration_when_the_api_refuses_the_request', async () => {
     vi.spyOn(console, 'error').mockImplementation(() => undefined)
     let client = makeLoadClient(makeFetch({}, { ok: false, status: 403 }), {

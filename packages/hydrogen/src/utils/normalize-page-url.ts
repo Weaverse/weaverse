@@ -2,7 +2,9 @@
 // revision previews, design-mode flags, and `weaverse*` control params
 // (host, version, project id). Everything else — utm_*, fbclid, gclid,
 // storefront filters — is irrelevant to which page the Builder returns.
-const KEPT_PARAM_RE = /^(?:__revisionId|isDesignMode|weaverse)/
+// `weaverseApiKey` is a credential the Builder never reads: keeping it would
+// send it upstream and split the cache per key.
+const KEPT_PARAM_RE = /^(?:__revisionId|isDesignMode|weaverse(?!ApiKey$))/
 
 /**
  * Normalize the storefront URL sent in the Builder page API request body.

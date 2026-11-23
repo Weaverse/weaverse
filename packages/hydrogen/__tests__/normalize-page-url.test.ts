@@ -22,6 +22,14 @@ describe('normalizePageUrl', () => {
     )
   })
 
+  it('should_drop_the_weaverse_api_key_credential', () => {
+    expect(
+      normalizePageUrl(
+        'https://shop.com/?weaverseApiKey=secret&weaverseHost=h&isDesignMode=true'
+      )
+    ).toBe('https://shop.com/?isDesignMode=true&weaverseHost=h')
+  })
+
   it('should_produce_identical_keys_regardless_of_param_order', () => {
     const a = normalizePageUrl(
       'https://shop.com/help?isDesignMode=true&__revisionId=r1'
