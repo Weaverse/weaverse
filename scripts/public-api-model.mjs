@@ -13,8 +13,8 @@ import {
   isImportSpecifier,
   isNamespaceImport,
   SyntaxKind,
-} from 'tsrs/unstable/ast'
-import { formatDiagnostics, SymbolFlags } from 'tsrs/unstable/sync'
+} from 'tsrs/ast'
+import { formatDiagnostics, SymbolFlags } from 'tsrs/sync'
 
 const LEADING_SPACE = /^\s*/
 
@@ -30,7 +30,7 @@ function canonical(path) {
 
 /** Tests one checker symbol flag. */
 function hasFlag(symbol, flag) {
-  // biome-ignore lint/suspicious/noBitwiseOperators: checker symbol flags are a bit set
+  // oxlint-disable-next-line no-bitwise -- checker symbol flags are a bit set
   return (symbol.flags & flag) !== 0
 }
 
@@ -368,12 +368,26 @@ export function analyzeEntrypoint(api, { packageDir, entryFile, cacheDir }) {
     let statements = new Map()
     let ownersByStatement = new Map()
     let imports = new Map()
-    // A symbol belongs to this package only when every declaration is local;
-    // a local `declare module`/`declare global` augmentation merges into an
-    // externally owned symbol instead.
+    // A symbol belongs to this package only when every declaration is local
+    // and none sits in a `declare module '<package>'` augmentation: that names
+    // the external module's symbol, even when the installed module version
+    // has no declaration of its own (React Router 8's `AppLoadContext`).
+    let inModuleAugmentation = (handle) => {
+      for (let node = handle.resolve(project); node; node = node.parent) {
+        if (
+          node.kind === SyntaxKind.ModuleDeclaration &&
+          node.name.kind === SyntaxKind.StringLiteral
+        ) {
+          return true
+        }
+      }
+      return false
+    }
     let isOwned = (symbol) =>
       symbol.declarations.length > 0 &&
-      symbol.declarations.every((handle) => isLocal(handle.path))
+      symbol.declarations.every(
+        (handle) => isLocal(handle.path) && !inModuleAugmentation(handle)
+      )
     let pending = [...exportsByName.values()].filter(isOwned)
     let visited = new Set()
     // Each distinct external binding, keyed by local name and what it binds;

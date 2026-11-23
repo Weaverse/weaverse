@@ -31,7 +31,6 @@ export let createEnvFile = async (
     // Replace existing WEAVERSE_PROJECT_ID or add it if it doesn't exist
     if (projectId && envContent.includes('WEAVERSE_PROJECT_ID=')) {
       envContent = envContent.replace(
-        // biome-ignore lint/performance/useTopLevelRegex: the func only run once
         /WEAVERSE_PROJECT_ID=.*/,
         `WEAVERSE_PROJECT_ID=${projectId}`
       )
@@ -45,7 +44,6 @@ export let createEnvFile = async (
       let sessionSecret = generateSessionSecret()
       if (envContent.includes('SESSION_SECRET=')) {
         envContent = envContent.replace(
-          // biome-ignore lint/performance/useTopLevelRegex: the func only run once
           /^SESSION_SECRET=.*/m,
           `SESSION_SECRET="${sessionSecret}"`
         )

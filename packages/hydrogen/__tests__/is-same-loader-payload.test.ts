@@ -113,12 +113,12 @@ describe('isSameLoaderPayload', () => {
   it('should_report_changed_when_distinct_thenables_stand_in_for_promises', () => {
     // Cross-realm promises and hand-rolled thenables fail `instanceof Promise`;
     // duck-typing keeps them atomic instead of collapsing them to `{}`.
-    // biome-ignore-start lint/suspicious/noThenProperty: exercising the thenable detection path requires a literal `then`
+    /* oxlint-disable unicorn/no-thenable -- exercising the thenable detection path requires a literal `then` */
     let result = isSameLoaderPayload(
       { deferred: { then: () => undefined } },
       { deferred: { then: () => undefined } }
     )
-    // biome-ignore-end lint/suspicious/noThenProperty: see above
+    /* oxlint-enable unicorn/no-thenable */
 
     expect(result).toBe(false)
   })

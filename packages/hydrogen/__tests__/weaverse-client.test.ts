@@ -793,6 +793,7 @@ describe('loadThemeSettings merchant-overrides gating (issue #2291)', () => {
         res.write('{"hero":')
         stalled.push(res)
       })
+      // oxlint-disable-next-line typescript/no-invalid-void-type -- generic type argument, allowed by `allowInGenericTypeArguments` in Biome's equivalent
       let listening = Promise.withResolvers<void>()
       server.listen(0, '127.0.0.1', listening.resolve)
       await listening.promise
@@ -804,6 +805,7 @@ describe('loadThemeSettings merchant-overrides gating (issue #2291)', () => {
         res.destroy()
       }
       server.closeAllConnections()
+      // oxlint-disable-next-line typescript/no-invalid-void-type -- generic type argument, allowed by `allowInGenericTypeArguments` in Biome's equivalent
       let closed = Promise.withResolvers<void>()
       server.close(() => closed.resolve())
       await closed.promise
@@ -1255,7 +1257,7 @@ describe('fetchWithCache non-string bodies', () => {
 
   it('should_return_each_response_when_FormData_bodies_differ', async () => {
     spyOn(globalThis, 'fetch').mockImplementation(async (_url, init) =>
-      Response.json({ q: (init?.body as FormData).get('q') })
+      Response.json({ q: (init?.body as FormData | undefined)?.get('q') })
     )
     let pending: Promise<unknown>[] = []
     let weaverse = new WeaverseClient({

@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { API } from 'tsrs/unstable/sync'
+import { API } from 'tsrs/sync'
 import { getUndocumentedMembers } from './public-api-docs.mjs'
 import { analyzeEntrypoint } from './public-api-model.mjs'
 import { getEsmExportNames, getPublishedPackages } from './public-packages.mjs'

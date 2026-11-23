@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { after, describe, test } from 'node:test'
-import { API } from 'tsrs/unstable/sync'
+import { API } from 'tsrs/sync'
 import { analyzeEntrypoint } from './public-api-model.mjs'
 
 let directories = []

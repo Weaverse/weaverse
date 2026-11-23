@@ -30,7 +30,7 @@ export const useSafeExternalStore = (
 
   // In client environment, use React.useSyncExternalStore if available (React 18+)
   if (React.useSyncExternalStore) {
-    // biome-ignore lint/correctness/useHookAtTopLevel: <$>
+    // oxlint-disable-next-line react/rules-of-hooks -- feature check is constant for the process lifetime
     return React.useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
   }
 
@@ -127,11 +127,13 @@ const ItemComponent = memo(({ instance }: ItemComponentProps) => {
   // and context-only updates swap the store reference via `setData({})` in
   // syncReusedInstance — so re-renders with an unchanged snapshot skip the
   // deep placeholder scan + clone entirely.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: `rest` is a pure projection of `data`
+  // `rest` is a pure projection of `data`.
+  /* oxlint-disable react/exhaustive-deps */
   const processedRest = useMemo(
     () => replaceContentDataConnectorsDeep(rest, context.dataContext),
     [data, context.dataContext]
   )
+  /* oxlint-enable react/exhaustive-deps */
 
   useEffect(() => {
     if (!instance.ref.current) {

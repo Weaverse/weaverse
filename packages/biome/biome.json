@@ -92,7 +92,7 @@
         "useImageSize": "warn"
       },
       "nursery": {
-        "useSortedClasses": "off"
+        "useTailwindSortedClasses": "off"
       },
       "performance": {
         "noNamespaceImport": "warn",

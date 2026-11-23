@@ -1,4 +1,4 @@
-// biome-ignore-all lint/style/noMagicNumbers: zip header field offsets and sizes
+/* oxlint-disable no-magic-numbers -- zip header field offsets and sizes */
 import { crc32 } from 'node:zlib'
 
 const UNIX_FILE = 0o10_0644

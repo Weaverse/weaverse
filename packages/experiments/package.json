@@ -1,7 +1,7 @@
 {
   "name": "@weaverse/experiments",
   "version": "0.2.1",
-  "description": "Framework-agnostic A/B testing and experimentation for Weaverse \u2014 deterministic, storage-free variant assignment",
+  "description": "Framework-agnostic A/B testing and experimentation for Weaverse — deterministic, storage-free variant assignment",
   "author": "Weaverse",
   "license": "MIT",
   "type": "module",
@@ -61,7 +61,7 @@
     "dev": "vp pack src/index.ts src/server.ts src/react.tsx --format esm --format cjs --sourcemap --no-fixed-extension --no-dts --watch --on-success 'node ../../scripts/build-declarations.mjs'",
     "build": "vp pack src/index.ts src/server.ts src/react.tsx --format esm --format cjs --sourcemap --no-fixed-extension --no-dts && node ../../scripts/build-declarations.mjs",
     "clean": "rimraf dist",
-    "test": "vp test --run",
+    "test": "vp test --run --config ../../vite.config.ts",
     "typecheck": "tsrs --noEmit"
   },
   "peerDependencies": {
@@ -73,6 +73,6 @@
     }
   },
   "devDependencies": {
-    "@types/react": "^19.2.13"
+    "@types/react": "19.3.0"
   }
 }

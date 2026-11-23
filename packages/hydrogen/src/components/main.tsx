@@ -10,11 +10,11 @@ function Main(props: WeaverseComponentProps & HTMLAttributes<HTMLDivElement>) {
   let { children, dangerouslySetInnerHTML, ...rest } = props
 
   return (
+    // oxlint-disable-next-line react/no-danger-with-children -- `dangerouslySetInnerHTML` is dropped whenever `children` is set
     <div
       {...rest}
-      // biome-ignore lint/correctness/noChildrenProp: <explanation>
+      // oxlint-disable-next-line react/no-children-prop -- forwards the Weaverse children slot alongside `rest`
       children={children}
-      // biome-ignore lint/security/noDangerouslySetInnerHtmlWithChildren: <explanation>
       dangerouslySetInnerHTML={children ? undefined : dangerouslySetInnerHTML}
     />
   )

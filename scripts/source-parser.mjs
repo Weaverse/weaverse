@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
-import { isModifier } from 'tsrs/unstable/ast'
-import { API } from 'tsrs/unstable/sync'
+import { isModifier } from 'tsrs/ast'
+import { API } from 'tsrs/sync'
 
 let api
 

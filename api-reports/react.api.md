@@ -48,7 +48,7 @@ export declare let WeaverseItemContext: import("react").Context<{
     parentId: string;
 }>;
 
-export declare const WeaverseRoot: React.MemoExoticComponent<(input: WeaverseRootPropsType) => import("react/jsx-runtime").JSX.Element | null>;
+export declare const WeaverseRoot: React.MemoExoticComponent<(input: WeaverseRootPropsType) => React.JSX.Element | null>;
 
 export type WeaverseRootPropsType = {
     context: Weaverse;

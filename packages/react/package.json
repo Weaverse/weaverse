@@ -2,7 +2,7 @@
   "name": "@weaverse/react",
   "author": "Weaverse Team",
   "description": "React bindings for Weaverse",
-  "version": "6.3.1",
+  "version": "6.4.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",
@@ -26,13 +26,19 @@
     "dev": "vp pack src/index.ts --format esm --format cjs --sourcemap --no-fixed-extension --no-dts --watch --on-success 'node ../../scripts/build-declarations.mjs'",
     "build": "vp pack src/index.ts --format esm --format cjs --sourcemap --no-fixed-extension --no-dts && node ../../scripts/build-declarations.mjs",
     "clean": "rimraf dist",
-    "test": "vp test --run",
+    "test": "vp test --run --config ../../vite.config.ts",
     "typecheck": "tsrs --noEmit"
   },
-  "dependencies": {
-    "@weaverse/core": "6.3.1",
-    "clsx": "^2.1.1",
+  "peerDependencies": {
     "react": ">=19",
     "react-dom": ">=19"
+  },
+  "devDependencies": {
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "dependencies": {
+    "@weaverse/core": "6.4.0",
+    "clsx": "^2.1.1"
   }
 }

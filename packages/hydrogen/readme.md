@@ -95,6 +95,10 @@ SDK alone does not add editor controls or change theme rendering.
 npm install @weaverse/hydrogen
 ```
 
+`react`, `react-dom` (19 or later) and `react-router` (7 or 8) are peer
+dependencies: the SDK uses your app's copies, so install them in the storefront
+itself.
+
 ## Setup and Usage
 
 ### Weaverse Client Setup

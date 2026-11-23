@@ -43,8 +43,8 @@ import type {
 } from 'react-router'
 import type { TranslationStore } from './utils/translation-store'
 import type { ThemeSettingsStore } from './utils/use-theme-settings-store'
-import type { WeaverseHydrogen } from './WeaverseHydrogenRoot'
 import type { WeaverseClient } from './weaverse-client'
+import type { WeaverseHydrogen } from './WeaverseHydrogenRoot'
 
 // Re-export CachingStrategy from Hydrogen for convenience
 export type { CachingStrategy } from '@shopify/hydrogen'
@@ -74,16 +74,30 @@ export type WeaverseComponentLoaderArgs<T = any, _E = any> = {
   weaverse: WeaverseClient
 }
 
-/** Application load context initialized with a request-scoped Weaverse client. */
+/**
+ * Application load context initialized with a request-scoped Weaverse client.
+ * It extends `AppLoadContext`, so members an app adds by augmenting it keep
+ * their types. React Router 8 no longer exports `AppLoadContext`; the
+ * augmentation at the end of this file declares it, so the name still
+ * resolves there.
+ */
 export interface WeaverseRouteAppLoadContext extends AppLoadContext {
   /** Client used to load Weaverse content for the current request. */
   weaverse: WeaverseClient
 }
 
 /** React Router loader arguments whose app context includes the Weaverse client. */
-export interface RouteLoaderArgs extends LoaderFunctionArgs {
-  /** Request-scoped application context with the initialized Weaverse client. */
-  context: WeaverseRouteAppLoadContext
+export interface RouteLoaderArgs extends Omit<LoaderFunctionArgs, 'context'> {
+  /**
+   * Request-scoped application context with the initialized Weaverse client.
+   * With middleware (always on in React Router 8) it is also the router's
+   * `RouterContextProvider`, so `context.get()` keeps working; without
+   * middleware React Router types the context as `any`, and only the
+   * Weaverse context applies.
+   */
+  context: 0 extends 1 & LoaderFunctionArgs['context']
+    ? WeaverseRouteAppLoadContext
+    : LoaderFunctionArgs['context'] & WeaverseRouteAppLoadContext
 }
 
 /** Primitive value accepted in a component's persisted data. */
@@ -208,8 +222,10 @@ export type HydrogenElement = {
 }
 
 /** Initialization parameters for a request-scoped {@link WeaverseHydrogen} runtime. */
-export interface WeaverseHydrogenParams
-  extends Omit<WeaverseCoreParams, 'ItemConstructor'> {
+export interface WeaverseHydrogenParams extends Omit<
+  WeaverseCoreParams,
+  'ItemConstructor'
+> {
   /** Page content used to initialize component instances. */
   data: WeaversePageData
   /** Route loader data made available to component data bindings. */

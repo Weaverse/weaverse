@@ -62,11 +62,11 @@ const UINT32_RANGE = 0x1_00_00_00_00
 export function hashToBucket(key: string): number {
   let hash = FNV_OFFSET_BASIS
   for (let i = 0; i < key.length; i += 1) {
-    // biome-ignore lint/suspicious/noBitwiseOperators: FNV-1a hashing is defined in terms of XOR
+    // oxlint-disable-next-line no-bitwise -- FNV-1a hashing is defined in terms of XOR
     hash ^= key.charCodeAt(i)
     hash = Math.imul(hash, FNV_PRIME)
   }
-  // biome-ignore lint/suspicious/noBitwiseOperators: coerce signed Math.imul result to a uint32 before normalising
+  // oxlint-disable-next-line no-bitwise -- coerce signed Math.imul result to a uint32 before normalising
   return (hash >>> 0) / UINT32_RANGE
 }
 
