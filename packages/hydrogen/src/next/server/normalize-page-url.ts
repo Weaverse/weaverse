@@ -8,8 +8,10 @@ import type { WeaverseNextRequestContext } from '../types'
 // page the Builder returns and would otherwise fragment any fetch cache keyed
 // on the request body. `weaverseDraftItem` is the current draft item param;
 // `__weaverseDraftItem` is kept as a legacy compatibility alias.
+// `weaverseApiKey` is a credential the Builder never reads: keeping it would
+// send it upstream and split the cache per key.
 const KEPT_PARAM_RE =
-  /^(?:__revisionId|__weaverseDraftItem|isDesignMode|weaverse)/
+  /^(?:__revisionId|__weaverseDraftItem|isDesignMode|weaverse(?!ApiKey$))/
 const DATA_SUFFIX = '.data'
 
 /**

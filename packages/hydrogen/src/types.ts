@@ -248,11 +248,6 @@ export interface WeaverseHydrogenParams extends Omit<
   sectionType?: string
   /** Base URL used for public Weaverse API requests. */
   weaverseApiBase: string
-  /**
-   * API key read from environment/configuration for storefront requests or
-   * supplied by Studio requests while editing and previewing.
-   */
-  weaverseApiKey: string
   /** Origin used for Weaverse Studio assets and editor communication. */
   weaverseHost: string
   /**
@@ -279,8 +274,6 @@ export type WeaverseComponent<T extends WeaverseComponentProps = any> = {
 export type WeaverseStudioQueries = {
   /** Project identifier selected by Studio for this request. */
   weaverseProjectId: string
-  /** API key passed by Studio for design and preview requests. */
-  weaverseApiKey: string
   /** Studio origin serving editor assets and APIs. */
   weaverseHost: string
   /** Studio asset version requested by the editor. */
@@ -311,11 +304,6 @@ export type WeaverseProjectConfigs = {
   weaverseApiBase: string
   /** Explicit public data API origin, when separately configured. */
   weaversePublicApiBase?: string
-  /**
-   * API key read from environment/configuration for storefront requests or
-   * supplied by Studio requests while editing and previewing.
-   */
-  weaverseApiKey: string
   /** Optional Studio asset version. */
   weaverseVersion?: string
   /** Whether the request is running inside the visual editor. */
@@ -364,6 +352,12 @@ export type WeaverseLoaderData = {
   project: WeaverseProjectType
   /** Route assignment that selected the page, when available. */
   pageAssignment?: WeaversePageAssignment
+  /**
+   * `true` when nothing is assigned at the URL and `page` is the SDK's
+   * placeholder. Studio still edits the placeholder in design mode; outside
+   * it, a route usually answers with a 404.
+   */
+  isFallback?: boolean
 }
 
 /** Published Weaverse page content consumed by the Hydrogen renderer. */
@@ -696,7 +690,10 @@ export interface WeaverseEnv {
   PUBLIC_STORE_DOMAIN?: string
   /** Public Storefront API token exposed to Studio. */
   PUBLIC_STOREFRONT_API_TOKEN?: string
-  /** Weaverse API key. */
+  /**
+   * Weaverse Content API key, for server-only code that calls the Content API.
+   * The storefront client never reads it.
+   */
   WEAVERSE_API_KEY?: string
   /** Weaverse Studio host, e.g. `https://studio.weaverse.io`. */
   WEAVERSE_HOST?: string
@@ -854,10 +851,22 @@ export interface CustomPageEntry {
   lastModified: string
   /** Locale code, or `null` for the project's default locale. */
   locale: string | null
+  /**
+   * Market country code for a market-first assignment, otherwise `null`.
+   * Missing when Builder predates the field.
+   */
+  market?: string | null
   /** Storefront path for the custom page. */
   path: string
   /** Optional sitemap priority from zero to one. */
   priority?: number
+  /**
+   * Who the page is assigned to: every market (`global`), one locale
+   * (`locale`) or one market (`market`). `locale` is `null` for both
+   * `global` and `market`, so use this to tell them apart. Missing when
+   * Builder predates the field.
+   */
+  scope?: 'global' | 'locale' | 'market'
 }
 
 /**

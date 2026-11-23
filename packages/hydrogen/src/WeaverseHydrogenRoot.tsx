@@ -216,11 +216,6 @@ export class WeaverseHydrogen extends Weaverse {
   weaverseHost: string
   /** Base URL used for public content API requests. */
   weaverseApiBase: string
-  /**
-   * API key read from environment/configuration for storefront requests or
-   * supplied by Studio requests while editing and previewing.
-   */
-  weaverseApiKey: string
   /** Studio asset version supplied by the preview request. */
   weaverseVersion: string
   /** Whether the page is running inside the visual editor. */
@@ -264,7 +259,6 @@ export class WeaverseHydrogen extends Weaverse {
     this.projectId = params.projectId
     this.weaverseHost = params.weaverseHost
     this.weaverseApiBase = params.weaverseApiBase
-    this.weaverseApiKey = params.weaverseApiKey
     this.weaverseVersion = params.weaverseVersion || ''
     this.isDesignMode = params.isDesignMode ?? false
     this.isPreviewMode = params.isPreviewMode ?? false

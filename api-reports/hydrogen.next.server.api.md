@@ -19,6 +19,20 @@ export type NextOpenGraph = NonNullable<Metadata['openGraph']>;
 
 export type NextTwitter = NonNullable<Metadata['twitter']>;
 
+export declare class WeaverseError extends Error {
+    readonly code: string;
+    readonly statusCode?: number;
+    readonly context?: Record<string, unknown>;
+    constructor(message: string, code?: string, statusCode?: number, context?: Record<string, unknown>);
+}
+
+export declare class WeaverseLoadError extends WeaverseError {
+    readonly kind: WeaverseLoadFailureKind;
+    constructor(message: string, kind: WeaverseLoadFailureKind, statusCode?: number, context?: Record<string, unknown>);
+}
+
+export type WeaverseLoadFailureKind = 'unavailable' | 'invalid-response' | 'configuration';
+
 export interface WeaverseNextBaseConfigs {
     envProjectId: string;
     isDesignMode: boolean;
@@ -107,8 +121,10 @@ export interface WeaverseNextCustomPageEntry {
     handle: string;
     lastModified: string;
     locale: string | null;
+    market?: string | null;
     path: string;
     priority?: number;
+    scope?: 'global' | 'locale' | 'market';
 }
 
 export interface WeaverseNextFetchCustomPagesOptions extends WeaverseNextCacheConfig {
@@ -139,6 +155,7 @@ export interface WeaverseNextLoadPageInput {
 
 export interface WeaverseNextLoaderData {
     configs?: Record<string, unknown>;
+    isFallback?: boolean;
     page: WeaverseNextPageData;
     pageAssignment?: WeaverseNextPageAssignment;
     project?: Record<string, unknown>;
@@ -233,6 +250,7 @@ export interface WeaverseNextServerClientConfig {
     requestContext?: WeaverseNextRequestContext;
     themeSchema?: SchemaType | WeaverseNextThemeSchema;
     themeSettings?: Record<string, unknown>;
+    throwPageLoadFailures?: boolean;
     weaverseApiBase?: string;
     weaverseHost?: string;
     weaverseVersion?: string;

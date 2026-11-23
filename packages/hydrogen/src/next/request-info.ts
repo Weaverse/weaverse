@@ -90,6 +90,8 @@ const TRANSIENT_STUDIO_PARAMS = new Set([
   // runtime requestInfo too, in case an older Builder bundle is in front of a
   // newer Next storefront.
   '__weaverseDraftItem',
+  // Credentials must never be echoed back into serialized loader data.
+  'weaverseApiKey',
 ])
 
 function getRequestInfoSearchParams(

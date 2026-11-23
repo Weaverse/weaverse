@@ -106,7 +106,6 @@ export function getWeaverseConfigs(
   let queries = getRequestQueries<WeaverseStudioQueries>(request)
   let {
     WEAVERSE_PROJECT_ID,
-    WEAVERSE_API_KEY,
     WEAVERSE_HOST,
     WEAVERSE_PUBLIC_API_BASE,
     PUBLIC_STORE_DOMAIN,
@@ -121,7 +120,6 @@ export function getWeaverseConfigs(
     isPreviewMode,
     sectionType,
     weaverseVersion,
-    weaverseApiKey,
   } = queries
 
   let url = new URL(request.url)
@@ -159,11 +157,6 @@ export function getWeaverseConfigs(
     weaverseHost: resolvedWeaverseHost,
     weaverseApiBase: resolvedWeaverseApiBase,
     weaversePublicApiBase: resolvedWeaverseApiBase,
-    weaverseApiKey:
-      weaverseApiKey ||
-      WEAVERSE_API_KEY ||
-      envFromProcess.WEAVERSE_API_KEY ||
-      '',
     weaverseVersion: weaverseVersion || '',
     isDesignMode,
     isPreviewMode,

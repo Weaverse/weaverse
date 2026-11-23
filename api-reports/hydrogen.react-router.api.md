@@ -38,8 +38,10 @@ export interface CustomPageEntry {
     handle: string;
     lastModified: string;
     locale: string | null;
+    market?: string | null;
     path: string;
     priority?: number;
+    scope?: 'global' | 'locale' | 'market';
 }
 
 export interface FetchCustomPagesOptions {
@@ -251,6 +253,7 @@ export type WeaverseLoaderData = {
     page: WeaversePageData;
     project: WeaverseProjectType;
     pageAssignment?: WeaversePageAssignment;
+    isFallback?: boolean;
 };
 
 export type WeaverseLoaderRequestInfo = {
@@ -292,7 +295,6 @@ export type WeaverseProjectConfigs = {
     weaverseHost: string;
     weaverseApiBase: string;
     weaversePublicApiBase?: string;
-    weaverseApiKey: string;
     weaverseVersion?: string;
     isDesignMode?: boolean;
     isPreviewMode?: boolean;

@@ -412,6 +412,12 @@ export interface WeaverseNextPageData {
 export interface WeaverseNextLoaderData {
   /** Client-safe runtime configuration returned with the page. */
   configs?: Record<string, unknown>
+  /**
+   * `true` when nothing is assigned at the URL and `page` is the SDK's
+   * placeholder. Studio still edits the placeholder in design mode; outside
+   * it, a route usually answers with a 404.
+   */
+  isFallback?: boolean
   /** Serialized page to render. */
   page: WeaverseNextPageData
   /** Assignment used by Studio when saving the page. */
@@ -672,10 +678,22 @@ export interface WeaverseNextCustomPageEntry {
   lastModified: string
   /** Assigned locale, or `null` for the default locale. */
   locale: string | null
+  /**
+   * Market country code for a market-first assignment, otherwise `null`.
+   * Missing when Builder predates the field.
+   */
+  market?: string | null
   /** Storefront pathname for the custom page. */
   path: string
   /** Suggested sitemap priority. */
   priority?: number
+  /**
+   * Who the page is assigned to: every market (`global`), one locale
+   * (`locale`) or one market (`market`). `locale` is `null` for both
+   * `global` and `market`, so use this to tell them apart. Missing when
+   * Builder predates the field.
+   */
+  scope?: 'global' | 'locale' | 'market'
 }
 
 /** Pagination, locale, and cache options for fetching custom pages. */
@@ -713,6 +731,14 @@ export interface WeaverseNextServerClientConfig {
   themeSchema?: SchemaType | WeaverseNextThemeSchema
   /** Merchant theme settings merged over schema defaults. */
   themeSettings?: Record<string, unknown>
+  /**
+   * When `true`, `loadPage()` rejects with a `WeaverseLoadError` when the page
+   * cannot be loaded (`unavailable`, `invalid-response` or `configuration`), so
+   * a route can answer an outage with a retryable 503 instead of a 404. A
+   * missing project still resolves to `null` and an unassigned page still
+   * resolves to the fallback page. Defaults to `false`.
+   */
+  throwPageLoadFailures?: boolean
   /** Optional override for the resolved Weaverse public API base. */
   weaverseApiBase?: string
   /** Optional override for the resolved Weaverse host. */
