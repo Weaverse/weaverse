@@ -117,6 +117,39 @@ function assertSharedReactRouter(appDir) {
 }
 
 /**
+ * A Next.js storefront imports only `@weaverse/hydrogen/next` and
+ * `/next/server`, which never load React Router or Shopify Hydrogen, so those
+ * peers must be optional: pnpm (and bun) install required peers on their own,
+ * pulling an unused router into every Next.js app.
+ */
+function assertNextAppSkipsRouterPeers(appDir) {
+  let appRequire = createRequire(join(appDir, 'package.json'))
+  let sdkFile = realpathSync(
+    appRequire.resolve('@weaverse/hydrogen/package.json')
+  )
+  // pnpm links each resolved peer next to the SDK in its virtual store
+  // folder. The workspace's hoisted folder holds the router apps' copies, so
+  // a plain node_modules lookup would find those.
+  let linkedDir = join(dirname(sdkFile), '..', '..')
+  for (let peer of ['react-router', '@shopify/hydrogen']) {
+    if (existsSync(join(linkedDir, peer))) {
+      throw new Error(
+        `A Next.js app installing @weaverse/hydrogen also got ${peer} in ${appDir}; ${peer} must be an optional peer`
+      )
+    }
+  }
+  run(
+    process.execPath,
+    [
+      '--input-type=module',
+      '-e',
+      "await import('@weaverse/hydrogen/next/server')",
+    ],
+    { cwd: appDir }
+  )
+}
+
+/**
  * Finds the package.json Node would load for `packageName` from `fromFile`,
  * through the node_modules lookup paths, so packages whose `exports` omit
  * `./package.json` (such as @weaverse/experiments) are found too.
@@ -438,6 +471,11 @@ try {
     )
   ).version
   packedDependencies['react-router'] = reactRouterVersion
+  // Hydrogen storefronts install @shopify/hydrogen themselves; it is an
+  // optional peer of @weaverse/hydrogen, which Next.js apps can skip.
+  packedDependencies['@shopify/hydrogen'] = JSON.parse(
+    readFileSync(join(ROOT_DIR, 'packages', 'hydrogen', 'package.json'), 'utf8')
+  ).devDependencies['@shopify/hydrogen']
 
   writeFileSync(
     join(consumerDir, 'package.json'),
@@ -517,6 +555,24 @@ try {
       })}\n`
     )
   }
+  // Its own install: in the router apps' workspace, pnpm would dedupe the SDK
+  // onto the instance that already has React Router linked.
+  let nextOnlyDir = join(scratchDir, 'next-only')
+  mkdirSync(nextOnlyDir, { recursive: true })
+  writeFileSync(join(nextOnlyDir, 'pnpm-workspace.yaml'), overridesYaml)
+  writeFileSync(
+    join(nextOnlyDir, 'package.json'),
+    `${JSON.stringify({
+      name: 'next-only',
+      private: true,
+      dependencies: {
+        '@weaverse/hydrogen': packedDependencies['@weaverse/hydrogen'],
+        next: packedDependencies.next,
+        react: rootPackageJson.devDependencies.react,
+        'react-dom': rootPackageJson.devDependencies['react-dom'],
+      },
+    })}\n`
+  )
   let lowestReactDir = join(majorsDir, 'apps', `react-${lowestReact}`)
   mkdirSync(lowestReactDir, { recursive: true })
   writeFileSync(
@@ -533,12 +589,14 @@ try {
     })}\n`
   )
   run(PNPM, installArgs, { cwd: majorsDir })
+  run(PNPM, installArgs, { cwd: nextOnlyDir })
   for (let major of routerMajors) {
     let appDir = join(majorsDir, 'apps', `react-router-${major}`)
     assertSharedReactRouter(appDir)
     assertSharedReact(appDir)
   }
   assertSharedReact(lowestReactDir)
+  assertNextAppSkipsRouterPeers(nextOnlyDir)
 
   for (let publishedPackage of publishedPackages) {
     let { packageJson } = publishedPackage
