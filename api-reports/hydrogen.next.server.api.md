@@ -121,8 +121,10 @@ export interface WeaverseNextCustomPageEntry {
     handle: string;
     lastModified: string;
     locale: string | null;
+    market?: string | null;
     path: string;
     priority?: number;
+    scope?: 'global' | 'locale' | 'market';
 }
 
 export interface WeaverseNextFetchCustomPagesOptions extends WeaverseNextCacheConfig {

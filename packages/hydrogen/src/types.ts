@@ -851,10 +851,22 @@ export interface CustomPageEntry {
   lastModified: string
   /** Locale code, or `null` for the project's default locale. */
   locale: string | null
+  /**
+   * Market country code for a market-first assignment, otherwise `null`.
+   * Missing when Builder predates the field.
+   */
+  market?: string | null
   /** Storefront path for the custom page. */
   path: string
   /** Optional sitemap priority from zero to one. */
   priority?: number
+  /**
+   * Who the page is assigned to: every market (`global`), one locale
+   * (`locale`) or one market (`market`). `locale` is `null` for both
+   * `global` and `market`, so use this to tell them apart. Missing when
+   * Builder predates the field.
+   */
+  scope?: 'global' | 'locale' | 'market'
 }
 
 /**

@@ -38,8 +38,10 @@ export interface CustomPageEntry {
     handle: string;
     lastModified: string;
     locale: string | null;
+    market?: string | null;
     path: string;
     priority?: number;
+    scope?: 'global' | 'locale' | 'market';
 }
 
 export interface FetchCustomPagesOptions {

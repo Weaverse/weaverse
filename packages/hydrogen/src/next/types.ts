@@ -678,10 +678,22 @@ export interface WeaverseNextCustomPageEntry {
   lastModified: string
   /** Assigned locale, or `null` for the default locale. */
   locale: string | null
+  /**
+   * Market country code for a market-first assignment, otherwise `null`.
+   * Missing when Builder predates the field.
+   */
+  market?: string | null
   /** Storefront pathname for the custom page. */
   path: string
   /** Suggested sitemap priority. */
   priority?: number
+  /**
+   * Who the page is assigned to: every market (`global`), one locale
+   * (`locale`) or one market (`market`). `locale` is `null` for both
+   * `global` and `market`, so use this to tell them apart. Missing when
+   * Builder predates the field.
+   */
+  scope?: 'global' | 'locale' | 'market'
 }
 
 /** Pagination, locale, and cache options for fetching custom pages. */
