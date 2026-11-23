@@ -21,7 +21,7 @@ Themes on both adapters can tell "nothing assigned here" from "Weaverse is down"
 - Next client with the option: 503 and network failure → `unavailable`; 403 → `configuration`; body without `page` → `invalid-response`; 404 → `null`. Without the option, 503 → `null`.
 - A request URL carrying `?weaverseApiKey=` never appears in serialized loader data on either adapter.
 - `loadPage({ projectId: 'B' })` on a client defaulting to `A` returns `configs.projectId === 'B'`.
-- Release: fixed group 6.4.0, noted as a security fix for the removed field.
+- Release: fixed group 6.5.0, noted as a security fix for the removed field.
 
 ## Approach
 
