@@ -961,7 +961,7 @@ describe('createWeaverseNextServerClient fetchCustomPages', () => {
         })
       )
       .mockRejectedValueOnce(
-        new Error('network down')
+        new TypeError('fetch failed')
       ) as unknown as typeof fetch
     let client = createWeaverseNextServerClient({
       components: [heroComponent],

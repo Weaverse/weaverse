@@ -39,6 +39,7 @@ import {
   cachedTransportError,
   isPlainObject,
   isProjectEnvelope,
+  toCustomPagesLoadError,
   toPageLoadRejection,
 } from './utils/page-load-failure'
 
@@ -1087,10 +1088,9 @@ export class WeaverseClient {
         result = await this.fetchWithCache(url, { cacheTarget: 'custom-pages' })
       } catch (error) {
         let message = error instanceof Error ? error.message : String(error)
-        throw new WeaverseLoadError(
-          `[Weaverse] Failed to fetch custom pages after ${entries.length} entries: ${message}`,
-          'unavailable',
-          error instanceof WeaverseError ? error.statusCode : undefined
+        throw toCustomPagesLoadError(
+          error,
+          `[Weaverse] Failed to fetch custom pages after ${entries.length} entries: ${message}`
         )
       }
       if (!Array.isArray(result?.data)) {

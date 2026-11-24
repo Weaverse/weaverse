@@ -3,6 +3,7 @@ import { WeaverseError, WeaverseLoadError } from '../../types'
 import {
   cachedTransportError,
   isProjectEnvelope,
+  toCustomPagesLoadError,
   toPageLoadRejection,
 } from '../../utils/page-load-failure'
 import { runWeaverseComponentLoaders } from '../loader'
@@ -345,10 +346,9 @@ class NextServerClient implements WeaverseNextServerClient {
         })
       } catch (error) {
         let message = error instanceof Error ? error.message : String(error)
-        throw new WeaverseLoadError(
-          `[WeaverseNext] Failed to fetch custom pages after ${entries.length} entries: ${message}`,
-          'unavailable',
-          error instanceof WeaverseError ? error.statusCode : undefined
+        throw toCustomPagesLoadError(
+          error,
+          `[WeaverseNext] Failed to fetch custom pages after ${entries.length} entries: ${message}`
         )
       }
       if (!Array.isArray(result?.data)) {

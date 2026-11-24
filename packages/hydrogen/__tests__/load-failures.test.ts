@@ -450,6 +450,17 @@ describe('fetchCustomPages failures', () => {
     })
   })
 
+  it('should_keep_a_refusal_as_a_configuration_failure', async () => {
+    reply({ status: 403, body: '{}' })
+
+    let result = makeClient('direct').fetchCustomPages()
+
+    await expect(result).rejects.toMatchObject({
+      kind: 'configuration',
+      statusCode: 403,
+    })
+  })
+
   it('should_reject_when_the_response_has_no_data_list', async () => {
     reply({ status: 200, body: JSON.stringify({ error: 'internal' }) })
 
