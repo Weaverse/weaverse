@@ -944,8 +944,7 @@ describe('createWeaverseNextServerClient fetchCustomPages', () => {
     )
   })
 
-  it('should_return_partial_results_when_later_page_fails', async () => {
-    let warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+  it('should_reject_instead_of_returning_partial_results_when_later_page_fails', async () => {
     let fetchMock = vi
       .fn()
       .mockResolvedValueOnce(
@@ -962,7 +961,7 @@ describe('createWeaverseNextServerClient fetchCustomPages', () => {
         })
       )
       .mockRejectedValueOnce(
-        new Error('network down')
+        new TypeError('fetch failed')
       ) as unknown as typeof fetch
     let client = createWeaverseNextServerClient({
       components: [heroComponent],
@@ -970,11 +969,12 @@ describe('createWeaverseNextServerClient fetchCustomPages', () => {
       fetch: fetchMock,
     })
 
-    let pages = await client.fetchCustomPages()
+    let result = client.fetchCustomPages()
 
-    expect(pages).toHaveLength(1)
-    expect(pages[0].handle).toBe('about')
-    warn.mockRestore()
+    await expect(result).rejects.toMatchObject({
+      name: 'WeaverseLoadError',
+      kind: 'unavailable',
+    })
   })
 })
 

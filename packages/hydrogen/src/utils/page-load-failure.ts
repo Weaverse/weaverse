@@ -114,3 +114,24 @@ export function toPageLoadRejection(
     error instanceof WeaverseError ? error.statusCode : undefined
   )
 }
+
+/**
+ * Wraps a failed custom-pages read in a `WeaverseLoadError`, keeping the
+ * failure class (a refusal stays `configuration`, a bad body stays
+ * `invalid-response`). There is no "absent" for this list: Builder answers an
+ * unknown project with an empty list, so a 404 is a misconfigured endpoint.
+ */
+export function toCustomPagesLoadError(
+  error: unknown,
+  message: string
+): WeaverseLoadError {
+  if (error instanceof WeaverseLoadError) {
+    return error
+  }
+  const kind = classifyPageLoadFailure(error)
+  return new WeaverseLoadError(
+    message,
+    kind === 'absent' ? 'configuration' : kind,
+    error instanceof WeaverseError ? error.statusCode : undefined
+  )
+}

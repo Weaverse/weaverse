@@ -432,3 +432,40 @@ describe('loadPage result shape', () => {
     expect(JSON.stringify(result)).not.toContain('secret-key')
   })
 })
+
+describe('fetchCustomPages failures', () => {
+  const FIRST_PAGE = JSON.stringify({
+    data: [{ handle: 'about', path: '/about', locale: null }],
+    nextCursor: 'cursor-2',
+  })
+
+  it('should_reject_instead_of_returning_partial_results_when_a_later_page_fails', async () => {
+    reply({ status: 200, body: FIRST_PAGE }, CONNECTION_FAILED)
+
+    let result = makeClient('direct').fetchCustomPages()
+
+    await expect(result).rejects.toMatchObject({
+      name: 'WeaverseLoadError',
+      kind: 'unavailable',
+    })
+  })
+
+  it('should_keep_a_refusal_as_a_configuration_failure', async () => {
+    reply({ status: 403, body: '{}' })
+
+    let result = makeClient('direct').fetchCustomPages()
+
+    await expect(result).rejects.toMatchObject({
+      kind: 'configuration',
+      statusCode: 403,
+    })
+  })
+
+  it('should_reject_when_the_response_has_no_data_list', async () => {
+    reply({ status: 200, body: JSON.stringify({ error: 'internal' }) })
+
+    let result = makeClient('direct').fetchCustomPages()
+
+    await expect(result).rejects.toMatchObject({ kind: 'invalid-response' })
+  })
+})
