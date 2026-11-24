@@ -1054,7 +1054,9 @@ export class WeaverseClient {
 
   /**
    * Fetch all published custom pages for sitemap generation.
-   * Paginates automatically, never throws, returns accumulated results on partial failure.
+   * Paginates automatically. Rejects with a {@link WeaverseLoadError} when any
+   * page of results cannot be loaded, so a sitemap route can answer 5xx
+   * instead of serving a partial or empty sitemap that search engines cache.
    */
   async fetchCustomPages(
     opts?: FetchCustomPagesOptions
@@ -1080,33 +1082,34 @@ export class WeaverseClient {
       const qs = params.toString()
       const url = `${weaverseApiBase}/api/public/v1/projects/${projectId}/custom-pages${qs ? `?${qs}` : ''}`
 
+      let result: { data?: CustomPageEntry[]; nextCursor?: string | null }
       try {
-        const result = await this.fetchWithCache<{
-          data: CustomPageEntry[]
-          nextCursor: string | null
-        }>(url, { cacheTarget: 'custom-pages' })
-        entries.push(...(result.data || []))
-
-        if (!result.nextCursor) {
-          return entries
-        }
-        cursor = result.nextCursor
-      } catch (err: any) {
-        const status = err?.status
-        const msg = err?.message || String(err)
-        console.warn(
-          entries.length === 0
-            ? `[Weaverse] Failed to fetch custom pages: ${msg}${status ? ` (HTTP ${status})` : ''}`
-            : `[Weaverse] Custom pages pagination interrupted: ${msg}`
+        result = await this.fetchWithCache(url, { cacheTarget: 'custom-pages' })
+      } catch (error) {
+        let message = error instanceof Error ? error.message : String(error)
+        throw new WeaverseLoadError(
+          `[Weaverse] Failed to fetch custom pages after ${entries.length} entries: ${message}`,
+          'unavailable',
+          error instanceof WeaverseError ? error.statusCode : undefined
         )
+      }
+      if (!Array.isArray(result?.data)) {
+        throw new WeaverseLoadError(
+          '[Weaverse] Invalid custom pages response',
+          'invalid-response'
+        )
+      }
+      entries.push(...result.data)
+      if (!result.nextCursor) {
         return entries
       }
+      cursor = result.nextCursor
     }
 
-    console.warn(
-      '[Weaverse] Custom pages pagination cap reached (100 iterations)'
+    throw new WeaverseLoadError(
+      `[Weaverse] Custom pages pagination cap reached (${MAX_PAGES} pages)`,
+      'invalid-response'
     )
-    return entries
   }
 
   /**

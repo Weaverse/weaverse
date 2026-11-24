@@ -313,9 +313,10 @@ class NextServerClient implements WeaverseNextServerClient {
 
   /**
    * Fetch all published custom pages for sitemap generation. Mirrors Hydrogen's
-   * helper but uses Next's fetch cache knobs (`revalidate` / `tags`). It returns
-   * accumulated results on partial pagination failure so a single API hiccup
-   * does not break sitemap generation entirely.
+   * helper but uses Next's fetch cache knobs (`revalidate` / `tags`). Rejects
+   * with a {@link WeaverseLoadError} when any page of results cannot be
+   * loaded, so a sitemap route can answer 5xx instead of serving a partial or
+   * empty sitemap that search engines cache.
    */
   fetchCustomPages = async (
     options: WeaverseNextFetchCustomPagesOptions = {}
@@ -323,42 +324,50 @@ class NextServerClient implements WeaverseNextServerClient {
     let projectId = await this.resolveProjectId()
     let entries: WeaverseNextCustomPageEntry[] = []
     if (!projectId) {
-      console.warn(
-        '[WeaverseNext] Failed to fetch custom pages: missing projectId'
+      throw new WeaverseLoadError(
+        '[WeaverseNext] Failed to fetch custom pages: missing projectId',
+        'configuration'
       )
-      return entries
     }
 
     let cursor: string | null = null
     for (let page = 0; page < MAX_CUSTOM_PAGE_PAGES; page += 1) {
       let url = this._buildCustomPagesUrl(projectId, options, cursor)
 
+      let result: {
+        data?: WeaverseNextCustomPageEntry[]
+        nextCursor?: string | null
+      }
       try {
-        let result = await this.fetchWithCache<{
-          data?: WeaverseNextCustomPageEntry[]
-          nextCursor?: string | null
-        }>(url, {
+        result = await this.fetchWithCache(url, {
           revalidate: options.revalidate,
           tags: options.tags,
         })
-        entries.push(...(result.data ?? []))
-        if (!result.nextCursor) {
-          return entries
-        }
-        cursor = result.nextCursor
       } catch (error) {
         let message = error instanceof Error ? error.message : String(error)
-        console.warn(
-          entries.length === 0
-            ? `[WeaverseNext] Failed to fetch custom pages: ${message}`
-            : `[WeaverseNext] Custom pages pagination interrupted: ${message}`
+        throw new WeaverseLoadError(
+          `[WeaverseNext] Failed to fetch custom pages after ${entries.length} entries: ${message}`,
+          'unavailable',
+          error instanceof WeaverseError ? error.statusCode : undefined
         )
+      }
+      if (!Array.isArray(result?.data)) {
+        throw new WeaverseLoadError(
+          '[WeaverseNext] Invalid custom pages response',
+          'invalid-response'
+        )
+      }
+      entries.push(...result.data)
+      if (!result.nextCursor) {
         return entries
       }
+      cursor = result.nextCursor
     }
 
-    console.warn('[WeaverseNext] Custom pages pagination cap reached')
-    return entries
+    throw new WeaverseLoadError(
+      '[WeaverseNext] Custom pages pagination cap reached',
+      'invalid-response'
+    )
   }
 
   private _generateFallbackPage(message: string): WeaverseNextPageData {
