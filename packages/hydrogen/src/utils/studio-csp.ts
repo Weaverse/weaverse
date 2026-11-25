@@ -39,6 +39,9 @@ export interface WeaverseStudioCspDirectives {
  * Studio on another domain is not trusted, so add that origin to your own
  * directives. Works in both report-only and enforcing policies.
  *
+ * React Router storefronts import it from `@weaverse/hydrogen/react-router`,
+ * Next.js storefronts from `@weaverse/hydrogen/next/server`.
+ *
  * The example below needs `@shopify/hydrogen` 2026.10.3 or later, the first
  * release with `createContentSecurityPolicy`.
  *
