@@ -49,8 +49,6 @@ function cloneItem(item: WeaverseNextComponentData): WeaverseNextComponentData {
  * top-level walk.
  *
  * @returns a cloned `data` object with `loaderData` attached to cloned items.
- *
- * @category Utilities
  */
 export async function runWeaverseComponentLoaders(
   args: RunComponentLoadersArgs

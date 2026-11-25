@@ -22,11 +22,7 @@ export interface WeaverseNextStudioBridgeProps {
   runtime: WeaverseNextRuntime
 }
 
-/**
- * Page-level Studio runtime binder.
- *
- * @category Components
- */
+/** Page-level Studio runtime binder. */
 export function WeaverseNextStudioBridge(props: WeaverseNextStudioBridgeProps) {
   let { runtime, navigate, revalidate, revalidateItem } = props
   let lastRuntimeRef = useRef(runtime)

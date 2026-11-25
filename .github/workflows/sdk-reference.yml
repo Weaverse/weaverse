@@ -16,27 +16,27 @@ concurrency:
 jobs:
   sdk-reference:
     # Stable releases of packages the reference covers: the fixed group
-    # (`vX.Y.Z`), Next and Schema. CLI, Biome and prereleases are skipped.
+    # (`vX.Y.Z`, which ships both adapters) and Schema. CLI, Biome and
+    # prereleases are skipped.
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (!github.event.release.prerelease && (
         startsWith(github.event.release.tag_name, 'v') ||
-        startsWith(github.event.release.tag_name, '@weaverse/next@') ||
         startsWith(github.event.release.tag_name, '@weaverse/schema@')))
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: ⎔ Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
-          version: 11.1.2
+          version: 12.21.0
 
       - name: ⎔ Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version: 26
           cache: pnpm
 
       - name: Install dependencies
@@ -46,14 +46,14 @@ jobs:
         run: pnpm run sdk:reference
 
       - name: ⬇️ Checkout Weaverse/docs
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: Weaverse/docs
           token: ${{ secrets.DOCS_REPO_TOKEN }}
           path: docs
 
       - name: Copy artifacts
-        run: cp sdk-reference/hydrogen.json sdk-reference/next.json docs/sdk-artifacts/
+        run: cp sdk-reference/react-router.json sdk-reference/next.json docs/sdk-artifacts/
 
       - name: Open docs PR
         uses: peter-evans/create-pull-request@v7
@@ -64,7 +64,7 @@ jobs:
           commit-message: Update the SDK reference for ${{ github.event.release.tag_name || github.ref_name }}
           title: Update the SDK reference for ${{ github.event.release.tag_name || github.ref_name }}
           body: |
-            Regenerated `sdk-artifacts/hydrogen.json` and `sdk-artifacts/next.json` from Weaverse/weaverse at `${{ github.event.release.tag_name || github.sha }}`.
+            Regenerated `sdk-artifacts/react-router.json` and `sdk-artifacts/next.json` from Weaverse/weaverse at `${{ github.event.release.tag_name || github.sha }}`.
 
             Review the generated pages in the Mintlify preview, then merge to publish.
           delete-branch: true

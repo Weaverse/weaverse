@@ -7,7 +7,6 @@
  * helpers from `@weaverse/hydrogen/next/server`.
  *
  * @packageDocumentation
- * @module main
  */
 
 export type { StudioSelection } from '@weaverse/react'

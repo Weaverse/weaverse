@@ -21,8 +21,6 @@ import type { WeaverseNextRuntimeInternal } from './types'
  * cached in a ref keyed on the router instance so the bridge's bind effect
  * (which depends on `navigate` / `revalidate` identity) doesn't re-run — and
  * re-`refreshStudio` — on every render.
- *
- * @category Hooks
  */
 export function useWeaverseNextStudioInternals(
   options?: CreateWeaverseNextStudioInternalsOptions
@@ -71,8 +69,6 @@ export interface WeaverseNextStudioProps extends CreateWeaverseNextStudioInterna
  * Client-only — it is the single place `@weaverse/hydrogen/next` touches
  * `next/navigation`, keeping the runtime/renderer and `@weaverse/hydrogen/next/server`
  * free of router imports.
- *
- * @category Components
  */
 export function WeaverseNextStudio(props: WeaverseNextStudioProps) {
   let { runtime, replace, revalidateEndpoint } = props
