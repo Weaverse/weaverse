@@ -5,6 +5,8 @@ import {
   promptForMissingOptions,
 } from '../src/prompts/createPrompts.js'
 
+const FORWARD_EXAMPLE = /create --template=forward --project-id=/
+
 describe('isNonInteractive', () => {
   it('is true when --yes is passed', () => {
     expect(isNonInteractive({ yes: true })).toBe(true)
@@ -68,6 +70,12 @@ describe('promptForMissingOptions (non-interactive)', () => {
     await expect(
       promptForMissingOptions({ template: 'pilot' }, opts)
     ).rejects.toThrow(/non-interactive run: --project-id\./)
+  })
+
+  it('uses the chosen template in the example command', async () => {
+    await expect(
+      promptForMissingOptions({ template: 'forward' }, opts)
+    ).rejects.toThrow(FORWARD_EXAMPLE)
   })
 })
 

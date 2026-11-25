@@ -137,3 +137,18 @@ export let checkDirectoryExists = async (projectPath) => {
     }
   }
 }
+
+/**
+ * Checks that a project folder can be created in `directory`, so a read-only or
+ * foreign location (e.g. `/` on macOS) fails before any prompt or install.
+ * @param {string} [directory] - Where the project folder will be created
+ * @returns {Promise<string|boolean>} Error message string if not writable, true if writable
+ */
+export let validateWritableDirectory = async (directory = process.cwd()) => {
+  try {
+    await fs.access(directory, fs.constants.W_OK)
+    return true
+  } catch {
+    return `Cannot create a project in '${directory}': you don't have write access to it. Run the command from a folder you own, such as your home directory.`
+  }
+}

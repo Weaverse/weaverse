@@ -18,9 +18,9 @@ Monorepo of SDKs for integrating React/JamStack frameworks (Shopify Hydrogen, Re
 | Typecheck all packages | `pnpm run typecheck` |
 | Check packed public APIs | `pnpm run package:check` |
 | Accept intentional API report changes | `pnpm run api:report` |
-| Lint/format check | `pnpm run biome` |
-| Lint/format fix | `pnpm run biome:fix` |
-| Format only | `pnpm run format` |
+| Lint/format check | `pnpm run check` (`vp check`) |
+| Lint/format fix | `pnpm run check:fix` |
+| Format only | `pnpm run format` (`vp fmt`) |
 
 ### Single Package Commands
 
@@ -34,14 +34,13 @@ turbo test --filter=@weaverse/hydrogen
 
 ### Package Manager & Tooling
 
-- **Package manager**: pnpm 11.1.2 (use `pnpm install`, NOT npm/bun install)
+- **Package manager**: pnpm 12.21.0 (use `pnpm install`, NOT npm/bun install)
 - **Script runner**: pnpm (`pnpm run <script>` from any workspace package)
-- **Test runner**: Vite+ (`vp test`, exposed via the `vite-plus` catalog dep) — Vitest under the hood
+- **Test runner**: Vite+ 1.7.0 (`vp test`, exposed via the `vite-plus` catalog dep) — Vitest 5.1.0 under the hood. Package `test` scripts pass `--config ../../vite.config.ts`, because Vite+ 1.7 no longer walks up to the root config from a package directory
 - **Build orchestrator**: Turbo (`turbo.json` defines task pipeline)
-- **Linting/Formatting:** Biome 2.5.0 (configured in `packages/biome/biome.json`)
-- **Testing**: Bun's native test runner
-- **Pre-commit hooks**: Lefthook runs `biome check --write` on staged files
-- **CI**: GitHub Actions — `biome ci .` + `pnpm run typecheck` + `pnpm run test`
+- **Linting/Formatting:** Vite+ — Oxlint (`vp lint`) and Oxfmt (`vp fmt`), configured in the `lint` and `fmt` blocks of the root `vite.config.ts`. The rule set carries over the retired Biome + ultracite policy at the same severities; the parity ledger is in `.specs/2026-11-20-sdk-viteplus-checks.md`. Lint errors fail; warnings print
+- **Pre-commit hooks**: Lefthook runs `vp fmt` (re-staged) then `vp lint` on staged files
+- **CI**: GitHub Actions on Node 26 — `pnpm run ci` (`vp check`) + `pnpm run typecheck` + `pnpm run test` + `pnpm run package:check`
 - **Releases**: Git tag + `pnpm publish` workflow via `.claude/skills/releasing-weaverse-sdks/` skill (core, react, hydrogen stay in sync)
 
 ### Package Dependency Graph
@@ -49,12 +48,12 @@ turbo test --filter=@weaverse/hydrogen
 ```
 @weaverse/hydrogen → @weaverse/react → @weaverse/core
                    → @weaverse/schema
+                   (React Router and Next.js adapters; `next` is an optional peer)
 @weaverse/react    → @weaverse/core
 @weaverse/core     ← foundation, no internal deps
 @weaverse/schema (v0.8.2)   ← independent versioning (Zod-based)
 @weaverse/cli               ← CLI tools (JavaScript)
 @weaverse/i18n              ← internationalization
-@weaverse/next              ← Next.js integration
 @weaverse/remix             ← Remix integration
 @weaverse/experiments       ← A/B testing (independent; zero-dep engine + optional react peer)
 ```
@@ -65,33 +64,32 @@ turbo test --filter=@weaverse/hydrogen
 packages/
   core/          Framework-agnostic foundation (event system, types, utilities)
   react/         React bindings (hooks, context, components)
-  hydrogen/      Shopify Hydrogen integration (WeaverseClient, components, hooks)
+  hydrogen/      Shopify Hydrogen integration: React Router adapter, and the
+                 Next.js adapter in src/next (/next, /next/server entries)
   schema/        Zod-based schema definitions for component settings
   cli/           CLI tools
-  biome/         Shared Biome configuration
+  biome/         Shared Biome configuration (deprecated; this repo uses Vite+)
   i18n/          Internationalization utilities
-  next/          Next.js integration
   remix/         Remix integration
   experiments/   Framework-agnostic A/B testing (engine + /server + /react)
 templates/
   pilot/         Example Hydrogen storefront theme
 archived/
+  next/          Archived @weaverse/next (adapter moved to hydrogen), do not modify
   shopify/       Archived, do not modify
 ```
 
-### Build Configuration (tsup)
+### Build Configuration (vp pack + tsrs declarations)
 
-All packages use tsup with consistent config:
-- **Entry**: `src/index.ts`
-- **Formats**: ESM + CJS (schema is ESM-only)
-- **Output**: `dist/` directory
-- **DTS**: Generated type declarations
-- **Sourcemaps**: Enabled
-- **Clean**: Builds clear output directory first
+Each package `build` runs `vp pack` (Vite+ / tsdown) for JavaScript, then `scripts/build-declarations.mjs` for types:
+- **Entries**: `src/index.ts` plus package subpath entries (`hydrogen`: `src/react.ts`, `src/react-router.ts`, `src/next.ts`, `src/next-server.ts`, `src/internal.ts`; `schema`: `src/manifest.ts`; `experiments`: `src/server.ts`, `src/react.tsx`)
+- **Formats**: ESM + CJS with sourcemaps; `vp pack` declaration output is off
+- **Declarations**: emitted by the pinned tsrs CLI into `dist/types/` (`.d.ts` and `.d.cts`, with maps)
+- **Config**: CLI flags in the package `build` script, or `packages/<name>/vite.config.ts` (`pack` block) where options need code (`core`, `hydrogen`: its Next.js client boundary is built as a separate `'use client'` file)
 
 ## Code Style
 
-### Enforced by Biome
+### Enforced by Oxfmt and Oxlint
 
 | Rule | Setting |
 |------|---------|
@@ -104,8 +102,8 @@ All packages use tsup with consistent config:
 | Unused imports | Warned — remove them |
 | Unused variables | Warned — remove them |
 | `forEach` | Warned — prefer `for...of` loops |
-| `console.*` | Warned — use proper logging |
-| Optional chaining | Required (`?.` instead of `&&` chains) |
+| `console.*` | Allowed — log with context |
+| Optional chaining | Warned — prefer `?.` over `&&` chains |
 | Namespace imports | Warned — use named imports, not `import * as` |
 
 ### Naming Conventions
@@ -117,7 +115,10 @@ All packages use tsup with consistent config:
 
 ### TypeScript
 
-- Target: `esnext`, JSX: `react-jsx`, Module resolution: `node`
+- Target: `esnext`, JSX: `react-jsx`, Module resolution: `bundler`
+- Compiler: pinned `tsrs` (TypeScript 7 native). Its published binaries cover macOS arm64 and Linux x64/arm64 (glibc and musl) only, so builds, typecheck and API/package checks need one of those development hosts; Windows and Intel macOS are unsupported for SDK development until a pinned release ships them. Published SDK packages carry no such host restriction. Package `typecheck` scripts run `tsrs --noEmit`; `scripts/build-declarations.mjs` emits declarations with the tsrs CLI. Do not add `tsc`/`tsgo` fallbacks.
+- Packed consumer checks cover NodeNext, Node16 and Bundler resolution. TypeScript `moduleResolution: Node10` is not a supported consumer mode.
+- Public API gate: `pnpm run api:check` / `api:report` run `scripts/api-reports.mjs`, which builds each published declaration entrypoint's API model on the tsrs checker (`scripts/public-api-model.mjs`, replacing API Extractor and its bundled TypeScript 5.9). It fails on declaration diagnostics, forgotten (unexported but referenced) declarations, unresolved `{@link}` targets, a missing `@packageDocumentation`, undocumented public members and any drift from the committed `api-reports/*.api.md` and runtime-export report. A non-zero exit is a failed gate; regenerate reports only for intentional API changes.
 - `strict: false` but `strictNullChecks: true`
 - Use `type` keyword for type-only imports: `import type { Foo } from 'bar'`
 - Prefer interfaces over type aliases for object shapes
@@ -143,7 +144,7 @@ All packages use tsup with consistent config:
 
 ### Framework
 
-Bun's native test runner. Tests exist for `hydrogen`, `react`, `schema`, and `i18n` packages.
+Vitest through Vite+ (`vp test`). Tests exist for `hydrogen`, `react`, `schema`, and `i18n` packages.
 
 ### Test File Location
 
@@ -300,7 +301,7 @@ import type { HydrogenComponentProps, WeaverseLoaderData } from '@weaverse/hydro
 // Relative imports within a package
 import { someUtil } from './utils'
 
-// NO namespace imports (warned by biome)
+// NO namespace imports (warned by Oxlint)
 // ❌ import * as Utils from './utils'
 // ✅ import { specificUtil } from './utils'
 ```
@@ -330,22 +331,22 @@ The SDK reference on docs.weaverse.io is generated from TSDoc by `pnpm sdk:refer
 ### Pre-commit (Lefthook)
 
 Runs automatically on `git commit`:
-1. `biome check --write` on staged files
-2. Auto-stages any fixed files
-3. Commit proceeds if checks pass
+1. `vp fmt` on staged files, re-staging the formatted output
+2. `vp lint` on staged JS/TS files (check only, no auto-fix)
+3. Commit proceeds if there are no lint errors
 
 ### CI Pipeline (GitHub Actions)
 
-1. `biome ci .` — lint/format check (strict, no auto-fix)
-2. `pnpm run typecheck` — TypeScript type checking
+1. `pnpm run ci` (`vp check`) — format + lint check (fails on unformatted files or lint errors)
+2. `pnpm run typecheck` — TypeScript type checking (tsrs)
 
 ### Releasing
 
 Uses a Claude Code skill (`.claude/skills/releasing-weaverse-sdks/SKILL.md`) for releases:
 1. Tell Claude which packages to release and the bump type (e.g., "release the fixed group as minor")
 2. The skill runs: verify → bump → build → publish to npm → tag → GitHub Release → sync dev
-3. Core, React, and Hydrogen versions stay in sync (fixed group)
-4. Schema, CLI, Biome, and i18n are versioned independently
+3. Core, React, and Hydrogen versions stay in sync (fixed group); the Next.js adapter ships inside Hydrogen
+4. Schema, CLI, Biome (deprecated, frozen at 5.8.0), and i18n are versioned independently
 5. See the skill file for the full 13-step ritual
 
 ## Spec-Driven Development (SDD)
@@ -362,9 +363,9 @@ Uses a Claude Code skill (`.claude/skills/releasing-weaverse-sdks/SKILL.md`) for
 ## Common Pitfalls
 
 - **Don't use `npm install` / `bun install`** — use `pnpm install` for dependency management
-- **Don't use double quotes** — biome enforces single quotes
+- **Don't use double quotes** — Oxfmt enforces single quotes
 - **Don't use `inspector` in schemas** — use `settings` (inspector is deprecated)
 - **Don't use namespace imports** — use named imports (`import { x }` not `import * as`)
 - **Don't modify `archived/` or `templates/`** — these are excluded from linting
-- **Don't add semicolons everywhere** — biome uses "as needed" mode
+- **Don't add semicolons everywhere** — Oxfmt omits them (`semi: false`)
 - **Don't use `.then()` chains** — use `async/await`

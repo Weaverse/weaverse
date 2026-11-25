@@ -15,9 +15,9 @@ Release ritual for the `@weaverse/*` npm packages monorepo. Covers version bump,
 - **Package manager:** `pnpm` only for development (never `npm install` or `bun install`)
 - **Publish command:** `npm publish` (from individual package directories)
 - **Fixed version group:** core, react, hydrogen (always same version)
-- **Independent packages:** schema, cli, biome, i18n, next (each has own version)
-- **Next prereleases:** use exact prerelease versions, publish with npm dist-tag `alpha`, move `latest` to the version just published, and create `@weaverse/next@{VERSION}` tags and GitHub prereleases
-- **Never release:** remix (placeholder), shopify (archived)
+- **Independent packages:** schema, cli, i18n (each has own version); `@weaverse/biome` is deprecated and stays at 5.8.0, so do not release it
+- **Next.js adapter:** ships inside `@weaverse/hydrogen` (`/next`, `/next/server`), so it is released with the fixed group and needs no bump of its own
+- **Never release:** remix (placeholder), shopify and next (archived)
 - **Tag format:** `v{VERSION}` for fixed group, `@weaverse/{pkg}@{VERSION}` for independents
 - **Internal deps use exact version pins** (e.g., `"@weaverse/core": "5.9.3"`)
 - **Root `package.json` version is never bumped** (private monorepo root)
@@ -48,34 +48,6 @@ Build and publish MUST follow this order.
 ### Cross-Group Warning
 
 Hydrogen depends on `@weaverse/schema` (independent group). When releasing schema independently, warn the user that hydrogen's dependency on schema is now stale. Suggest a follow-up fixed group release — but do NOT auto-bump.
-
-### Next Prerelease Override
-
-A Next prerelease is version-only and does not use the bootstrap-publish ordering for interdependent packages. This sequence overrides Steps 5-10 below for `@weaverse/next`:
-
-1. Merge the feature PR first, then start from clean, synchronized `main`.
-2. Increment the exact prerelease (`0.1.0-alpha.15` → `0.1.0-alpha.16`) in `packages/next/package.json` only.
-3. Run the repository-wide quality gates, Next build/tests/typecheck/Biome, and `pnpm run package:check`, then run artifact dry-runs from the Next package directory:
-   ```bash
-   cd packages/next
-   pnpm pack --dry-run
-   npm publish --dry-run --tag alpha
-   cd ../..
-   ```
-4. Commit and push the release bump before publishing so the npm artifact has committed provenance:
-   ```bash
-   git add packages/next/package.json
-   git commit -m "Release @weaverse/next $NEW_VERSION"
-   git push origin main
-   ```
-5. Publish with `npm publish --tag alpha`, then point `latest` at the same version:
-   ```bash
-   npm dist-tag add @weaverse/next@$NEW_VERSION latest
-   ```
-6. Create and push an annotated `@weaverse/next@$NEW_VERSION` tag, then create a GitHub prerelease from that tag.
-7. Verify npm dist-tags, the registry tarball/package version, tag target, GitHub prerelease metadata, and release CI.
-
-A version-only Next bump does not require `pnpm install` or a lockfile change. If dependencies also changed, stop and audit the lockfile explicitly rather than applying the version-only override blindly.
 
 ## The Release Ritual
 
@@ -142,7 +114,7 @@ Apply the semver bump:
 ### Step 4: Run Verification
 
 ```bash
-pnpm run biome && pnpm run typecheck && pnpm run test
+pnpm run check && pnpm run typecheck && pnpm run test
 ```
 
 Always runs across ALL packages regardless of release scope. All three MUST pass. Do not proceed if any fail.
@@ -167,8 +139,8 @@ above). The lockfile is regenerated in Step 8 after publish.
 pnpm run build
 ```
 
-Turbo builds in dependency order (core → react → hydrogen). `tsup` transpiles
-local source — no install needed for the build itself. Must succeed.
+Turbo builds in dependency order (core → react → hydrogen). `vp pack` bundles
+local source and the pinned tsrs CLI emits declarations — no install needed for the build itself. Must succeed.
 
 Quick sanity check after build (optional but recommended):
 ```bash
@@ -186,17 +158,11 @@ cd packages/react && npm publish && cd ../..
 cd packages/hydrogen && npm publish && cd ../..
 ```
 
-For independent packages other than Next:
+A prerelease of the fixed group publishes with `--tag` (for example `beta`) so it doesn't take `latest`.
+
+For independent packages:
 ```bash
 cd packages/$PKG && npm publish && cd ../..
-```
-
-For a Next prerelease, publish under `alpha` and move `latest` to it, so
-`npm i @weaverse/next` resolves to the newest release rather than a stale one:
-```bash
-cd packages/next && npm publish --tag alpha
-npm dist-tag add @weaverse/next@$NEW_VERSION latest
-cd ../..
 ```
 
 Verify each publish succeeds before continuing to the next. If one fails,
@@ -226,6 +192,19 @@ Internal deps should still show `specifier: <NEW_VERSION>` resolved from
 the registry (NOT `link:../<pkg>`). If they show as `link:`, something
 added `link-workspace-packages=true` somewhere — abort and investigate.
 
+Then check the lockfile the way CI does. Without `CI=true`, pnpm skips its
+supply-chain check:
+
+```bash
+CI=true pnpm install --frozen-lockfile
+```
+
+CI rejects packages published less than 24 hours ago (`minimumReleaseAge`).
+`pnpm-workspace.yaml` exempts `@weaverse/*`, so the versions you just
+published pass. If this fails with `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION`
+on a `@weaverse` package, restore that exemption. Do not commit the
+version-specific entries `pnpm install` adds to `minimumReleaseAgeExclude`.
+
 ### Step 9: Commit the Release
 
 ```bash
@@ -239,7 +218,7 @@ git commit -m "release: @weaverse/$PKG@$NEW_VERSION"
 ```
 
 Only stage `package.json` files and `pnpm-lock.yaml`. Never use `git add -A`.
-Lefthook pre-commit hooks will run biome on staged files — this is expected
+Lefthook pre-commit hooks will run `vp fmt` and `vp lint` on staged files — this is expected
 and should pass.
 
 ### Step 10: Tag and Push
@@ -265,16 +244,10 @@ gh release create "v$NEW_VERSION" \
   --generate-notes \
   --latest
 
-# Independent packages other than Next
+# Independent packages
 gh release create "@weaverse/$PKG@$NEW_VERSION" \
   --title "@weaverse/$PKG@$NEW_VERSION" \
   --generate-notes
-
-# Next prerelease
-gh release create "@weaverse/next@$NEW_VERSION" \
-  --title "@weaverse/next@$NEW_VERSION" \
-  --generate-notes \
-  --prerelease
 ```
 
 For first-time independent package tags, `--generate-notes` generates notes from all commits. This is expected.
@@ -290,7 +263,7 @@ skill owns every changelog rule (which releases count, labels, dates, dedupe,
 entry copy, and the PR to `Weaverse/docs:main`). Never push the changelog to
 `main` directly.
 
-Skip Next prereleases and drafts; record them as skipped. If the workspace
+Skip prereleases and drafts; record them as skipped. If the workspace
 checkout is missing, read the skill from `Weaverse/workspace` on GitHub; if it
 still cannot run, record the handoff as not done with the reason. Never report
 a changelog PR that was not opened.
@@ -301,11 +274,29 @@ the reason it was skipped (for example, no user-facing changes). Do not wait
 for the docs PR review or merge, and a changelog problem never rolls back or
 blocks the npm release: continue to Step 12.
 
-### Step 11c: SDK Reference PR
+### Step 11c: Update Agent Guidance
 
-Publishing a stable release of the fixed group, `@weaverse/next` or
-`@weaverse/schema` triggers `.github/workflows/sdk-reference.yml`, which opens
-a PR on `Weaverse/docs` that regenerates `sdk-artifacts/`. Do not run anything
+When the release changes a major version, adds or renames an entry point (such
+as `@weaverse/hydrogen/react-router`) or renames exported types, update the
+guidance coding agents read in the same release:
+
+- `Weaverse/docs`: `docs.json` → `markdown.instructions`, which tops
+  `llms.txt`, `llms-full.txt` and every page's `.md`.
+- The weaverse.io website source: the "Guidance for coding agents" list in
+  `public/llms.txt` (served at `weaverse.io/llms.txt`).
+- `Weaverse/shopify-hydrogen-skills`: the affected skills. Then re-pin the
+  website's `other/agent-skills.json` (served at
+  `weaverse.io/.well-known/agent-skills/index.json`) to the new skills commit
+  with recomputed `sha256` digests.
+
+Skip this step when the release changes none of these, and record which
+applied in the Step 13 summary.
+
+### Step 11d: SDK Reference PR
+
+Publishing a stable release of the fixed group or `@weaverse/schema` triggers
+`.github/workflows/sdk-reference.yml`, which opens a PR on `Weaverse/docs` that
+regenerates `sdk-artifacts/`. Do not run anything
 for it: record the docs PR link (or the failed run) for the Step 13 summary
 and continue. Like the changelog PR, it never blocks the npm release.
 
@@ -362,9 +353,10 @@ publishes succeed**, so a mid-publish failure leaves git untouched.
 
 ```
 parse intent → main + latest → npm auth (if not set) → calc versions (confirm) →
-verify (biome+types+tests) → bump versions → build (no install) →
+verify (vp check+types+tests) → bump versions → build (no install) →
 publish core → react → hydrogen → pnpm install (refresh lockfile) →
 commit → tag → push → gh release → changelog per stable tag (update-changelogs) →
+agent guidance (major version, entry point or type renames) →
 sync dev → verify npm + report changelog results
 ```
 
@@ -379,6 +371,7 @@ sync dev → verify npm + report changelog results
 | Publishing without building first | Build must succeed before publish |
 | Forgetting internal dep updates | Fixed group packages reference each other — update the exact pins |
 | Publishing in wrong order | Must be core → react → hydrogen (dependency order) |
+| Bumping or publishing `@weaverse/next` | It is archived; the Next.js adapter ships in `@weaverse/hydrogen` |
 | Not verifying npm registry after publish | Always check `npm view` to confirm |
 | Hardcoding version numbers | Always read from `package.json` and compute |
 | Mixing fixed + independent in one release | Run separate rituals for each scope |

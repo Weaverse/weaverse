@@ -2,9 +2,7 @@
 
 [![Better Stack Badge](https://uptime.betterstack.com/status-badges/v1/monitor/vif3.svg)](https://wvse.cc/weaverse-status)
 [![🚀 Lint & Typecheck](https://github.com/Weaverse/weaverse/actions/workflows/check.yml/badge.svg)](https://github.com/Weaverse/weaverse/actions/workflows/check.yml)
-[![Formatted with Biome](https://img.shields.io/badge/Formatted_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev/)
-[![Linted with Biome](https://img.shields.io/badge/Linted_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
-[![Checked with Biome](https://img.shields.io/badge/Checked_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
+[![Checked with Vite+](https://img.shields.io/badge/Checked_with-Vite%2B-646cff?style=flat)](https://viteplus.dev/guide/check)
 [![committers.top badge](https://org-badge.committers.top/vietnam/weaverse.svg)](https://org-badge.committers.top/vietnam/weaverse)
 
 > **🚀 Weaverse v5 is here!** Now powered by React Router v7 for better performance and developer experience. [See what's new →](./CHANGELOG.md#500---2024-12-20)
@@ -47,18 +45,19 @@ This monorepo contains the following packages:
 - [`@weaverse/react`](https://github.com/Weaverse/weaverse/tree/main/packages/react): React components and utilities for
   CMS integration.
 - [`@weaverse/hydrogen`](https://github.com/Weaverse/weaverse/tree/main/packages/hydrogen): SDK for Shopify Hydrogen
-  integration with Weaverse CMS, powered by React Router v7.
-- [`@weaverse/next`](https://github.com/Weaverse/weaverse/tree/main/packages/next): Alpha SDK for Next.js App Router storefronts, including the server client, renderer/provider, Studio bridge, and per-item revalidation helpers.
+  integration with Weaverse CMS: the React Router v7 adapter (`/react-router`) and the Next.js App Router adapter
+  (`/next`, `/next/server`). `@weaverse/next` is deprecated in favor of `@weaverse/hydrogen/next`.
 - [`@weaverse/schema`](https://github.com/Weaverse/weaverse/tree/main/packages/schema): Schema definitions for Weaverse components.
 - [`@weaverse/cli`](https://github.com/Weaverse/weaverse/tree/main/packages/cli): Command-line tools for Weaverse development.
-- [`@weaverse/biome`](https://github.com/Weaverse/weaverse/tree/main/packages/biome): Shared Biome configuration for code quality.
+- [`@weaverse/biome`](https://github.com/Weaverse/weaverse/tree/main/packages/biome): Shared Biome configuration (deprecated; Weaverse projects now use Vite+).
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js >= 20
-- pnpm 11.1.2
+- Node.js `^22.22.2 || ^24.15.0 || >=26.0.0`
+- pnpm 12.21.0
+- macOS arm64 or Linux x64/arm64 (glibc or musl) for repository builds and checks: the pinned `tsrs` compiler ships no Windows or Intel macOS binary. This applies to SDK development only, not to projects that install the published packages.
 
 ### Installation
 
@@ -83,9 +82,9 @@ pnpm run dev
 # Run type checking
 pnpm run typecheck
 
-# Run linting and formatting
-pnpm run biome
-pnpm run biome:fix
+# Check formatting and lint (Vite+: Oxfmt + Oxlint)
+pnpm run check
+pnpm run check:fix
 
 # Run tests
 pnpm run test
@@ -114,7 +113,7 @@ submit pull requests with your improvements.
 1. Fork and clone the repository
 2. Create a feature branch
 3. Make your changes
-4. Run `pnpm run biome:fix` and `pnpm run typecheck`
+4. Run `pnpm run check:fix` and `pnpm run typecheck`
 5. Submit a pull request
 
 ## Documentation

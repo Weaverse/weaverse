@@ -27,9 +27,15 @@ function createFlatDataContext(
 
   // Process matches from root to leaf, creating route-keyed structure
   for (const match of matches) {
-    if (match.data && typeof match.data === 'object') {
+    // React Router 8 removed the deprecated `data` alias; 7.0-7.7 only have
+    // `data`. Read `loaderData` and fall back so both majors keep working.
+    let loaderData =
+      'loaderData' in match
+        ? match.loaderData
+        : (match as { data?: unknown }).data
+    if (loaderData && typeof loaderData === 'object') {
       // Use route ID as key (e.g., "root", "routes/product")
-      context[match.id] = match.data
+      context[match.id] = loaderData as Record<string, unknown>
     }
   }
 

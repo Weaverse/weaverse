@@ -604,7 +604,6 @@ describe('replaceContentDataConnectors', () => {
     })
 
     // Skipped: Error handling for property getters needs refinement
-    // biome-ignore lint/suspicious/noSkippedTests: Edge case being refined
     it.skip('should handle errors gracefully and skip problematic properties', () => {
       // Create content with a safer error property that doesn't throw during Object.keys()
       const problematicContent = {

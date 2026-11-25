@@ -1,5 +1,5 @@
-import { loadScript } from '@weaverse/react'
-import { useEffect } from 'react'
+import { loadScript, StudioSelectionStoreContext } from '@weaverse/react'
+import { useContext, useEffect } from 'react'
 import {
   useLocation,
   useNavigate,
@@ -7,7 +7,7 @@ import {
   useRevalidator,
 } from 'react-router'
 import { useTranslation } from '../hooks/translation-context'
-import type { WeaverseHydrogen } from '../index'
+import type { WeaverseHydrogen } from '../internal'
 import { hasWeaverseStudio } from '../types'
 import { getStudioScriptSrc, resolveStudioScriptSrc } from './studio-script-src'
 import { useThemeSettingsStore } from './use-theme-settings-store'
@@ -79,12 +79,25 @@ export function useStudioConnect() {
   }, [search])
 }
 
+let warnedMissingSelectionStore = false
+
+function warnMissingSelectionStore() {
+  if (warnedMissingSelectionStore) {
+    return
+  }
+  warnedMissingSelectionStore = true
+  console.warn(
+    '[Weaverse] useStudioSelection() needs the root Layout wrapped with withWeaverse(); Studio selections will not reach the theme.'
+  )
+}
+
 export function useStudio(weaverse: WeaverseHydrogen) {
   let { revalidate } = useRevalidator()
   let navigation = useNavigation()
   let { pathname, search } = useLocation()
   let navigate = useNavigate()
   let themeSettingsStore = useThemeSettingsStore()
+  let studioSelectionStore = useContext(StudioSelectionStoreContext)
   let { translationStore, themeTextStore, merchantOverrides } = useTranslation()
   let {
     isDesignMode,
@@ -94,7 +107,8 @@ export function useStudio(weaverse: WeaverseHydrogen) {
     isRevisionPreview,
   } = weaverse
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: only revalidate on pathname/search changes
+  // Only revalidate on pathname/search changes.
+  /* oxlint-disable react/exhaustive-deps */
   useEffect(() => {
     if (navigation.state !== 'idle') {
       return
@@ -112,12 +126,17 @@ export function useStudio(weaverse: WeaverseHydrogen) {
     if (isRevisionPreview || isPreviewMode) {
       loadScript(src).catch(console.error)
     } else {
+      if (!studioSelectionStore) {
+        warnMissingSelectionStore()
+      }
       weaverse.internal = {
         ...weaverse.internal,
         navigate,
         revalidate,
         merchantOverrides,
         themeSettingsStore,
+        // Must stay one instance per root: the effect deps above exclude it.
+        studioSelectionStore,
         translationStore,
         // Deprecated alias for existing Studio bridge integrations.
         themeTextStore,
@@ -128,4 +147,5 @@ export function useStudio(weaverse: WeaverseHydrogen) {
         .catch(console.error)
     }
   }, [pathname, search, navigation.state])
+  /* oxlint-enable react/exhaustive-deps */
 }

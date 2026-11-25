@@ -1,4 +1,3 @@
-// biome-ignore-all lint/style/useNamingConvention: manifest JSON uses a stable public field name
 /**
  * Build-time component manifest generation for Weaverse themes.
  *
@@ -7,11 +6,7 @@
 
 import { z } from 'zod/v4'
 
-export type {
-  ComponentGroup,
-  InputType,
-  PageType,
-} from './validation.js'
+export type { ComponentGroup, InputType, PageType } from './validation.js'
 
 import {
   type BasicInput,

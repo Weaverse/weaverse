@@ -16,7 +16,7 @@
 ├────────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                    │
 │  ┌──────────────────────────┐  ┌──────────────────┐  ┌──────────────────┐          │
-│  │  @weaverse/hydrogen      │  │  @weaverse/next  │  │ @weaverse/remix  │          │
+│  │  @weaverse/hydrogen      │  │  hydrogen/next   │  │ @weaverse/remix  │          │
 │  │  (Shopify + RRv7)        │  │  (Next.js App)   │  │ (Remix)          │          │
 │  │                          │  │  [Alpha]         │  │ [Stub]           │          │
 │  │  WeaverseClient          │  │  Server client   │  └──────────────────┘          │
@@ -84,7 +84,7 @@
 │                                                                                       │
 │  ┌──────────────────────────────────────┐                                             │
 │  │      @weaverse/biome (Config)         │                                             │
-│  │      v5.7.3                          │                                             │
+│  │      v5.8.0 (deprecated)             │                                             │
 │  │                                      │                                             │
 │  │      Shared Biome configuration       │                                             │
 │  │      - 2-space indentation           │                                             │
@@ -165,34 +165,31 @@ $ pnpm run build (orchestrated by Turbo)
      ├─→ @weaverse/react (depends on core)
      ├─→ @weaverse/cli (no deps)
      │
-     ├─→ @weaverse/hydrogen (depends on react + schema)
-     ├─→ @weaverse/next (depends on react + schema; publishes `.` and `./server` entrypoints)
+     ├─→ @weaverse/hydrogen (depends on react + schema; React Router and Next.js adapters)
      └─→ @weaverse/remix (stub)
 
-Each Package Build (tsup):
+Each Package Build (`vp pack` for JS, tsrs CLI for declarations):
 - Most packages: `src/index.ts` → CJS/ESM/declarations/maps.
-- `@weaverse/next`: `src/index.ts` and `src/server.ts` → root client/shared entrypoint plus server-only entrypoint.
+- `@weaverse/hydrogen`: one entry per subpath (`.`, `/react`, `/react-router`, `/next`, `/next/server`, `/internal`), plus the Next.js adapter's `'use client'` boundary built as its own file (`next-client-boundary`).
 ```
 
 ## Code Quality Checks (Pre-commit & CI)
 
 ```
 1. Pre-commit Hook (Lefthook):
-   - biome check --write (auto-fix staged files)
-   - Auto-stage fixed files
+   - vp fmt (format staged files, re-stage)
+   - vp lint (check staged JS/TS, no auto-fix)
 
 2. GitHub Actions CI:
-   - biome ci . (strict, no auto-fix)
+   - pnpm run ci → vp check (format + lint, fails on errors)
    - pnpm run typecheck (TypeScript validation)
 
-3. Quality Rules (Biome 2.4.4):
-   ✓ Single quotes only
-   ✓ 2-space indentation
-   ✓ No namespace imports (import * as)
-   ✓ Prefer let over const (useConst OFF)
-   ✓ Optional chaining (?.) required
-   ✓ No unused imports/variables
-   ✓ No console.* in production code
+3. Quality Rules (Vite+: Oxfmt + Oxlint, root vite.config.ts):
+   ✓ Single quotes, no semicolons, 2-space indentation
+   ✓ No namespace imports (import * as), warned
+   ✓ let and const both allowed (no prefer-const)
+   ✓ Optional chaining (?.) preferred, warned
+   ✓ No unused imports/variables, warned
 ```
 
 ## Release Process
@@ -211,7 +208,7 @@ Steps:
 
 Version Groups:
 - FIXED: core, react, hydrogen (sync versions: 5.10.0)
-- FREE:  schema (0.8.2), cli (5.5.2), biome (5.7.3), i18n (1.1.2)
+- FREE:  schema, cli, biome (deprecated, frozen at 5.8.0), i18n
 ```
 
 ## State Management Flow
@@ -259,7 +256,7 @@ Version Groups:
 | Platform | Status | Notes |
 |----------|--------|-------|
 | Shopify Hydrogen (React Router v7) | **Primary** | Full support via `@weaverse/hydrogen` |
-| Next.js App Router | Alpha | `@weaverse/next` server client, renderer/provider, Studio bridge, revalidation, i18n/static-text foundations |
+| Next.js App Router | Alpha | `@weaverse/hydrogen/next` and `/next/server`: server client, renderer/provider, Studio bridge, revalidation, i18n/static-text foundations |
 | Remix | Future/Stub | Server-side rendering |
 | Generic React Router v7 | Supported | Via `@weaverse/react` directly |
 

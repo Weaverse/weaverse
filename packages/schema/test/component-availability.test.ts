@@ -15,23 +15,23 @@ import {
 } from '../src'
 
 describe('component availability', () => {
-  it.each([
-    true,
-    false,
-  ])('should_preserve_boolean_enabled_when_value_is_%s', (enabled) => {
-    // Arrange
-    let componentSchema = {
-      title: 'Availability Test',
-      type: 'availability-test',
-      enabled,
+  it.each([true, false])(
+    'should_preserve_boolean_enabled_when_value_is_%s',
+    (enabled) => {
+      // Arrange
+      let componentSchema = {
+        title: 'Availability Test',
+        type: 'availability-test',
+        enabled,
+      }
+
+      // Act
+      let result = validateSchema(componentSchema)
+
+      // Assert
+      expect(result.success && result.data.enabled).toBe(enabled)
     }
-
-    // Act
-    let result = validateSchema(componentSchema)
-
-    // Assert
-    expect(result.success && result.data.enabled).toBe(enabled)
-  })
+  )
 
   it('should_preserve_callback_enabled_without_executing_it', () => {
     // Arrange

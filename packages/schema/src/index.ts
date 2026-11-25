@@ -20,11 +20,14 @@ import type {
 // browser-targeted package with no @types/node.
 declare const process: { env: { NODE_ENV?: string } }
 
-export type {
-  OpenGraphType,
-  PageSEOData,
-  TwitterCardType,
-} from './page-seo.js'
+export type { OpenGraphType, PageSEOData, TwitterCardType } from './page-seo.js'
+export {
+  getThemeElementId,
+  getThemeElementProps,
+  THEME_ELEMENT_ATTRIBUTE,
+  type ThemeElementProps,
+  type ThemeOutline,
+} from './theme-outline.js'
 export type { ThemeRoutePageType, ThemeRoutes } from './theme-routes.js'
 
 /** Schema type with required title and type fields in non-strict projects. */
@@ -250,6 +253,9 @@ export function mergeSchemas(
   base: SchemaType,
   ...overrides: Partial<SchemaType>[]
 ): SchemaType {
+  // Oxlint also checks loops (Biome checked only `reduce`); one shallow merge
+  // per override is intended.
+  /* oxlint-disable oxc/no-accumulating-spread */
   let result = { ...base }
 
   for (const override of overrides) {
@@ -271,6 +277,7 @@ export function mergeSchemas(
         : result.enabledOn,
     }
   }
+  /* oxlint-enable oxc/no-accumulating-spread */
 
   return createSchema(result)
 }

@@ -1,11 +1,11 @@
-import type { HydrogenEnv } from '@shopify/hydrogen'
 import type {
-  HydrogenComponent,
-  HydrogenComponentSchema,
-  HydrogenThemeSchema,
+  WeaverseComponent,
+  WeaverseComponentSchema,
+  WeaverseEnv,
   WeaverseLoaderData,
   WeaverseProjectConfigs,
   WeaverseStudioQueries,
+  WeaverseThemeSchema,
 } from '../types'
 import { isTrustedStudioHost } from './studio-script-src'
 
@@ -104,18 +104,18 @@ export function getRequestQueries<T = Record<string, string | boolean>>(
  */
 export function getWeaverseConfigs(
   request: Request,
-  env: HydrogenEnv
+  env: WeaverseEnv
 ): WeaverseProjectConfigs {
   let queries = getRequestQueries<WeaverseStudioQueries>(request)
   let {
     WEAVERSE_PROJECT_ID,
-    WEAVERSE_API_KEY,
     WEAVERSE_HOST,
     WEAVERSE_PUBLIC_API_BASE,
     PUBLIC_STORE_DOMAIN,
     PUBLIC_STOREFRONT_API_TOKEN,
   } = env || {}
-  let envFromProcess = (typeof process !== 'undefined' && process.env) || {}
+  let envFromProcess: WeaverseEnv =
+    (typeof process !== 'undefined' && process.env) || {}
   let {
     weaverseProjectId,
     weaverseHost,
@@ -123,7 +123,6 @@ export function getWeaverseConfigs(
     isPreviewMode,
     sectionType,
     weaverseVersion,
-    weaverseApiKey,
   } = queries
 
   let url = new URL(request.url)
@@ -161,11 +160,6 @@ export function getWeaverseConfigs(
     weaverseHost: resolvedWeaverseHost,
     weaverseApiBase: resolvedWeaverseApiBase,
     weaversePublicApiBase: resolvedWeaverseApiBase,
-    weaverseApiKey:
-      weaverseApiKey ||
-      WEAVERSE_API_KEY ||
-      envFromProcess.WEAVERSE_API_KEY ||
-      '',
     weaverseVersion: weaverseVersion || '',
     isDesignMode,
     isPreviewMode,
@@ -183,7 +177,7 @@ export function getWeaverseConfigs(
  * WeakMap allows garbage collection when schema objects are no longer referenced.
  */
 const schemaDefaultsCache = new WeakMap<
-  HydrogenComponentSchema | HydrogenThemeSchema,
+  WeaverseComponentSchema | WeaverseThemeSchema,
   Record<string, any>
 >()
 
@@ -196,7 +190,7 @@ const schemaDefaultsCache = new WeakMap<
  * @returns Default data object extracted from schema inputs
  */
 export function generateDataFromSchema(
-  schema: HydrogenComponentSchema | HydrogenThemeSchema
+  schema: WeaverseComponentSchema | WeaverseThemeSchema
 ) {
   // Check cache first for performance
   const cached = schemaDefaultsCache.get(schema)
@@ -211,11 +205,11 @@ export function generateDataFromSchema(
 
   // Type guard to check if it's a component schema
   const isComponentSchema = (
-    s: HydrogenComponentSchema | HydrogenThemeSchema
-  ): s is HydrogenComponentSchema => 'type' in s && typeof s.type === 'string'
+    s: WeaverseComponentSchema | WeaverseThemeSchema
+  ): s is WeaverseComponentSchema => 'type' in s && typeof s.type === 'string'
 
   if (isComponentSchema(schema)) {
-    // Handle HydrogenComponentSchema
+    // Handle WeaverseComponentSchema
     if (schema.settings) {
       inspectorGroups = schema.settings
     }
@@ -240,7 +234,7 @@ export function generateDataFromSchema(
       }
     }
   } else {
-    // Handle HydrogenThemeSchema
+    // Handle WeaverseThemeSchema
     if (schema.settings) {
       inspectorGroups = schema.settings
     }
@@ -283,7 +277,7 @@ export function generateDataFromSchema(
 
 function recursivelyAddDataItem(
   type: string,
-  components: HydrogenComponent<any>[],
+  components: WeaverseComponent<any>[],
   items: any[],
   initData?: object
 ) {
@@ -317,7 +311,7 @@ function recursivelyAddDataItem(
  */
 export function getPreviewData(
   type: string,
-  components: HydrogenComponent[],
+  components: WeaverseComponent[],
   weaverseHost: string
 ) {
   let items = []

@@ -1,70 +1,18 @@
 import { useSafeExternalStore } from '@weaverse/react'
 import { createContext, type ReactNode, useContext, useMemo } from 'react'
+import {
+  createTranslate,
+  getNestedKey,
+  interpolate,
+  type TranslateFunction,
+} from '../utils/translate'
 import type { TranslationStore } from '../utils/translation-store'
 
-/**
- * Traverse a nested object by dot-path.
- *
- * @category Utilities
- * @example
- * getNestedKey({ cart: { title: 'Cart' } }, 'cart.title') // => 'Cart'
- * getNestedKey({}, 'cart.title', 'fallback')              // => 'fallback'
- */
-export function getNestedKey(
-  obj: Record<string, unknown>,
-  path: string,
-  fallback?: string
-): string | undefined {
-  const keys = path.split('.')
-  let current: unknown = obj
-
-  for (const key of keys) {
-    if (current == null || typeof current !== 'object') {
-      return fallback
-    }
-    current = (current as Record<string, unknown>)[key]
-  }
-
-  if (typeof current === 'string') {
-    return current
-  }
-
-  return fallback
-}
-
-/**
- * Replace `{{variable}}` patterns in a string with provided values.
- *
- * @category Utilities
- * @example
- * interpolate('Hello {{name}}!', { name: 'World' }) // => 'Hello World!'
- * interpolate('-{{percentage}}% Off', { percentage: 15 }) // => '-15% Off'
- */
-export function interpolate(
-  template: string,
-  variables?: Record<string, string | number>
-): string {
-  if (!variables) {
-    return template
-  }
-
-  return template.replace(/\{\{(\w+)\}\}/g, (match, key: string) => {
-    const value = variables[key]
-    return value === undefined ? match : String(value)
-  })
-}
+export { createTranslate, getNestedKey, interpolate, type TranslateFunction }
 
 // ---------------------------------------------------------------------------
 // Context & Provider
 // ---------------------------------------------------------------------------
-
-/**
- * Signature for a translation function.
- */
-export type TranslateFunction = (
-  key: string,
-  variables?: Record<string, string | number>
-) => string
 
 /** Translation function, stores, and locale overrides exposed by the provider. */
 export type TranslationValue = {
@@ -121,58 +69,6 @@ export type TranslationProviderProps = {
   children: ReactNode
 }
 
-/**
- * Build the `t()` translation function over a fixed set of sources.
- *
- * Resolution order, highest priority first:
- * 1. `externalT`         – host i18n (e.g. Shopify), unless it echoes the key
- * 2. `designOverrides`   – live design-mode edits, flat dot-path keys
- * 3. `merchantOverrides` – locale overrides from the API, nested
- * 4. `staticContent`     – the theme's default locale JSON
- * 5. the key itself
- *
- * Design overrides are looked up per-key (own properties only) rather than
- * merged into `merchantOverrides`: a flat key like `cart.title` must override
- * exactly that leaf without wiping sibling keys (`cart.subtitle`), and a
- * per-key own-property lookup never builds nested objects from
- * merchant-controlled keys, so it cannot pollute `Object.prototype`.
- */
-export function createTranslate(sources: {
-  staticContent: Record<string, unknown>
-  merchantOverrides?: Record<string, unknown>
-  designOverrides?: Record<string, string>
-  externalT?: TranslateFunction
-}): TranslateFunction {
-  const { staticContent, merchantOverrides, designOverrides, externalT } =
-    sources
-  return (key, variables) => {
-    // Priority 1: external t (e.g. Shopify i18n, third-party library).
-    if (externalT) {
-      const external = externalT(key, variables)
-      // Accept the external value unless it echoed the key unchanged.
-      if (external && external !== key) {
-        return external
-      }
-    }
-
-    // Priority 2: live design-mode override (flat, keyed by exact dot-path,
-    // own properties only so inherited keys never resolve to functions).
-    const design =
-      designOverrides && Object.hasOwn(designOverrides, key)
-        ? designOverrides[key]
-        : undefined
-    // Priority 3: merchant overrides (nested). Priority 4: static content.
-    const override = merchantOverrides
-      ? getNestedKey(merchantOverrides, key)
-      : undefined
-    const staticValue = getNestedKey(staticContent, key)
-
-    // Priority 5: the key itself as the final fallback.
-    const raw = design ?? override ?? staticValue ?? key
-    return interpolate(raw, variables)
-  }
-}
-
 // No-op fallback for useSafeExternalStore when store is null (production).
 // Module-level constants — stable references, zero allocation per render.
 const EMPTY: Record<string, string> = {}
@@ -186,8 +82,6 @@ const NOOP_SNAPSHOT = () => EMPTY
  * - `merchantOverrides`  – locale-specific overrides fetched from the API
  * - `translationStore`   – optional store for live design-mode text overrides
  *   (the deprecated `themeTextStore` prop is accepted as a fallback)
- *
- * @category Components
  */
 export function TranslationProvider({
   staticContent,
@@ -235,7 +129,6 @@ export function TranslationProvider({
  *
  * Must be used inside a component wrapped by `withWeaverse` or `TranslationProvider`.
  *
- * @category Hooks
  * @example
  * ```tsx
  * function CartTitle() {
@@ -260,13 +153,11 @@ export function useTranslation(): TranslationValue {
 
 /**
  * Legacy name for {@link TranslationProvider}.
- * @category Components
  * @deprecated Use {@link TranslationProvider} instead.
  */
 export const ThemeTextProvider = TranslationProvider
 /**
  * Legacy name for {@link useTranslation}.
- * @category Hooks
  * @deprecated Use {@link useTranslation} instead.
  */
 export const useThemeText = useTranslation

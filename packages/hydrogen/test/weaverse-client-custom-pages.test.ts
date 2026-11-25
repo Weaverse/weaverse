@@ -1,6 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
-
-const spyOn = vi.spyOn
+import { describe, expect, it } from 'vitest'
 
 import type { CustomPageEntry } from '../src/types'
 
@@ -58,24 +56,18 @@ describe('fetchCustomPages', () => {
     expect(await fetchPages(client)).toEqual([])
   })
 
-  it('returns [] and warns on network error', async () => {
-    const warnSpy = spyOn(console, 'warn').mockImplementation(() => {})
+  it('rejects on network error', async () => {
     const client = makeClient(() =>
       Promise.reject(new Error('Network failure'))
     )
-    expect(await fetchPages(client)).toEqual([])
-    expect(warnSpy).toHaveBeenCalled()
-    warnSpy.mockRestore()
+    await expect(fetchPages(client)).rejects.toThrow('Network failure')
   })
 
-  it('returns [] and warns with status on 404', async () => {
-    const warnSpy = spyOn(console, 'warn').mockImplementation(() => {})
+  it('rejects on 404', async () => {
     const client = makeClient(() =>
       Promise.resolve(new Response('Not found', { status: 404 }))
     )
-    expect(await fetchPages(client)).toEqual([])
-    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('404'))
-    warnSpy.mockRestore()
+    await expect(fetchPages(client)).rejects.toThrow('404')
   })
 
   it('appends locale param to URL', async () => {
@@ -100,7 +92,7 @@ describe('fetchCustomPages', () => {
     expect(parsed.pathname.startsWith('/api/public/')).toBe(true)
   })
 
-  it('returns accumulated entries when later page fails', async () => {
+  it('rejects instead of returning accumulated entries when a later page fails', async () => {
     const cursor = btoa('1000:some-id')
     let callCount = 0
     const client = makeClient(() => {
@@ -112,13 +104,10 @@ describe('fetchCustomPages', () => {
       }
       return Promise.reject(new Error('Network failure on page 2'))
     })
-    const warnSpy = spyOn(console, 'warn').mockImplementation(() => {})
-    const result = await fetchPages(client)
-    expect(result).toEqual([ENTRY])
-    warnSpy.mockRestore()
+    await expect(fetchPages(client)).rejects.toThrow('after 1 entries')
   })
 
-  it('stops at pagination cap (100 iterations)', async () => {
+  it('rejects after at most 100 pages when the cursor never ends', async () => {
     let callCount = 0
     const cursor = btoa('1000:id')
     const client = makeClient(() => {
@@ -127,27 +116,7 @@ describe('fetchCustomPages', () => {
         Response.json({ data: [ENTRY], nextCursor: cursor })
       )
     })
-    await fetchPages(client)
-    expect(callCount).toBeLessThanOrEqual(100)
-  })
-
-  it('warns when pagination cap reached', async () => {
-    const cursor = btoa('1000:id')
-    const warnSpy = spyOn(console, 'warn').mockImplementation(() => {})
-    let callCount = 0
-    const client = makeClient(() => {
-      callCount++
-      return Promise.resolve(
-        Response.json({ data: [ENTRY], nextCursor: cursor })
-      )
-    })
-    const result = await fetchPages(client)
-    expect(result.length).toBeGreaterThan(0)
-    if (callCount >= 100) {
-      expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('pagination cap')
-      )
-    }
-    warnSpy.mockRestore()
+    await expect(fetchPages(client)).rejects.toThrow('pagination cap')
+    expect(callCount).toBe(100)
   })
 })

@@ -35,7 +35,7 @@ export const TEMPLATES = [
     defaultDownloadFolder: 'aspen-main',
     description:
       'A sophisticated Shopify Hydrogen theme designed for home furniture and interior design stores.',
-    demoUrl: 'https://weaverse-aspen-furniture.fly.dev',
+    demoUrl: 'https://aspen-shopify-hydrogen.weaverse.dev/',
     framework: 'hydrogen',
     packageManager: 'npm',
     devPort: 3456,
@@ -56,7 +56,7 @@ export const TEMPLATES = [
     repoURL: 'https://github.com/Weaverse/forward',
     defaultDownloadFolder: 'forward-main',
     description:
-      'A Next.js App Router storefront theme for Shopify, built on @weaverse/next.',
+      'A Next.js App Router storefront theme for Shopify, built on @weaverse/hydrogen/next.',
     demoUrl: 'https://forward-sandy.vercel.app',
     framework: 'nextjs',
     packageManager: 'bun',

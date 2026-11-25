@@ -19,7 +19,6 @@ const baseParams = {
     search: '?_routes=routes/product',
   },
   weaverseApiBase: 'https://studio.weaverse.io',
-  weaverseApiKey: 'key',
   weaverseHost: 'https://studio.weaverse.io',
   weaverseVersion: '5.14.0',
 } as unknown as WeaverseHydrogenParams

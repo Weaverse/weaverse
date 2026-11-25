@@ -1,32 +1,29 @@
-import {
-  CacheCustom,
-  createWithCache,
-  type HydrogenEnv,
-  type I18nBase,
-} from '@shopify/hydrogen'
+import { Cache, createFetchWithCache } from '@shopify/hydrogen'
 import type {
   CachingStrategy,
   CustomPageEntry,
   FetchProjectPayload,
   FetchProjectRequestBody,
-  HydrogenComponent,
-  HydrogenComponentData,
-  HydrogenPageData,
   LoadPageParams,
   PageType,
   ProjectIdValidationResult,
-  ThemeSettingsResponse,
   WeaverseClientArgs,
+  WeaverseComponent,
+  WeaverseComponentData,
+  WeaverseEnv,
+  WeaverseI18n,
   WeaverseLoaderData,
+  WeaversePageData,
   WeaverseProjectConfigs,
   WeaverseStudioQueries,
+  WeaverseThemeSettingsResponse,
   WithCacheFetchResponse,
 } from './types'
 import {
   hasError,
-  isFetchProjectPayload,
   isProjectIdFunction,
   WeaverseError,
+  WeaverseLoadError,
 } from './types'
 import {
   generateDataFromSchema,
@@ -34,21 +31,27 @@ import {
   getRequestQueries,
   getWeaverseConfigs,
 } from './utils'
-import { normalizePageUrl } from './utils/normalize-page-url'
+import {
+  normalizePageUrl,
+  withoutCredentialParams,
+} from './utils/normalize-page-url'
+import {
+  cachedTransportError,
+  isPlainObject,
+  isProjectEnvelope,
+  toCustomPagesLoadError,
+  toPageLoadRejection,
+} from './utils/page-load-failure'
 
 /**
  * Cache duration constants (in seconds).
  * These values optimize CDN hit rates while maintaining fresh content.
  */
 const CACHE_DURATIONS = {
-  /** Short browser freshness for content that can change in Builder */
+  /** Freshness for content that can change in Builder */
   SHORT: 60,
-  /** Shared cache freshness for anonymous storefront traffic */
-  SHARED_SHORT: 300,
   /** Long stale window so slow Builder responses do not block storefront rendering */
   LONG: 86_400,
-  /** Extra freshness for sitemap-like index data */
-  STATIC: 3600,
 } as const
 
 /**
@@ -76,11 +79,56 @@ function isRetryableFetchError(error: unknown): boolean {
   if (!(error instanceof WeaverseError)) {
     return false
   }
-  if (error.code === 'TIMEOUT_ERROR' || error.code === 'NETWORK_ERROR') {
+  // A successful status with an unparsable body was classified as a network
+  // error before it got its own code; it keeps the same single retry.
+  if (
+    error.code === 'TIMEOUT_ERROR' ||
+    error.code === 'NETWORK_ERROR' ||
+    error.code === 'INVALID_RESPONSE'
+  ) {
     return true
   }
   return error.code === 'FETCH_ERROR' && (error.statusCode ?? 0) >= 500
 }
+
+/** Parses a JSON body, or returns the raw text when it is not JSON. */
+function parseResponseText(text: string): unknown {
+  if (!text) {
+    return text
+  }
+  try {
+    return JSON.parse(text)
+  } catch {
+    return text
+  }
+}
+
+/**
+ * Whether a successful `/project_configs` body carries theme settings.
+ *
+ * Builder always sends the `theme` field; `null` means the merchant never
+ * saved settings, so schema defaults are the real configuration.
+ */
+function isThemeConfigsEnvelope(payload: unknown): boolean {
+  return (
+    isPlainObject(payload) &&
+    !hasError(payload) &&
+    'theme' in payload &&
+    (payload.theme === null || isPlainObject(payload.theme))
+  )
+}
+
+/**
+ * Validators for Builder requests made by this client itself, keyed on the
+ * exact options object (same reasoning as `bodyFreeCacheRequests`). On the
+ * cached path such a request rejects a non-2xx status instead of resolving
+ * to `null`, and only stores a body its validator accepts. Every other
+ * `fetchWithCache` caller keeps the existing behavior.
+ */
+const builderPayloadValidators = new WeakMap<
+  object,
+  (payload: unknown) => boolean
+>()
 
 /**
  * Weaverse API version path
@@ -88,15 +136,18 @@ function isRetryableFetchError(error: unknown): boolean {
 const API_PATH = 'v1' as const
 
 /**
- * Default cache strategy for Weaverse API requests.
- * Optimized for CDN performance with 23-hour stale content tolerance.
+ * Cache strategy for Weaverse API requests: fresh for a minute, then served
+ * stale for a day while it refreshes or while Builder errors.
+ *
+ * Every Builder resource uses it. Hydrogen 2026.4's subrequest cache only read
+ * `max-age` for freshness, so the old per-resource `sMaxAge` values never
+ * changed how long an entry stayed fresh.
  */
-const DEFAULT_CACHE_STRATEGY: CachingStrategy = {
+const DEFAULT_CACHE_STRATEGY: CachingStrategy = Cache({
   maxAge: CACHE_DURATIONS.SHORT,
-  sMaxAge: CACHE_DURATIONS.SHARED_SHORT,
   staleWhileRevalidate: CACHE_DURATIONS.LONG,
   staleIfError: CACHE_DURATIONS.LONG,
-} as const
+})
 
 /** Builder API resource whose freshness policy should be used for a request. */
 export type BuilderApiCacheTarget =
@@ -107,9 +158,9 @@ export type BuilderApiCacheTarget =
 
 /** Fetch options accepted by {@link WeaverseClient.fetchWithCache}. */
 export interface WeaverseFetchWithCacheOptions extends RequestInit {
-  /** Builder API resource whose default freshness policy should be used. */
+  /** Builder API resource the request reads; part of the cache key. */
   cacheTarget?: BuilderApiCacheTarget
-  /** Explicit Hydrogen caching strategy overriding the resource default. */
+  /** Explicit Hydrogen caching strategy overriding the default. */
   strategy?: CachingStrategy
 }
 
@@ -120,18 +171,6 @@ export interface FetchCustomPagesOptions {
   /** Locale whose published custom pages should be returned. */
   locale?: string
 }
-
-const SMART_CACHE_STRATEGIES: Record<BuilderApiCacheTarget, CachingStrategy> = {
-  project: DEFAULT_CACHE_STRATEGY,
-  'theme-settings': DEFAULT_CACHE_STRATEGY,
-  'merchant-overrides': DEFAULT_CACHE_STRATEGY,
-  'custom-pages': {
-    maxAge: CACHE_DURATIONS.SHORT,
-    sMaxAge: CACHE_DURATIONS.STATIC,
-    staleWhileRevalidate: CACHE_DURATIONS.LONG,
-    staleIfError: CACHE_DURATIONS.LONG,
-  },
-} as const
 
 /**
  * Options objects created by the internal `project_configs` request whose
@@ -177,7 +216,7 @@ const BODY_FREE_CACHE_SENTINEL = '\u0000weaverse:body-free'
  * @example
  * ```ts
  * // app/.server/context.ts
- * import { WeaverseClient } from '@weaverse/hydrogen'
+ * import { WeaverseClient } from '@weaverse/hydrogen/react-router'
  *
  * const hydrogenContext = createHydrogenContext({ env, request, cache, waitUntil, session })
  *
@@ -202,12 +241,12 @@ export class WeaverseClient {
   basePageRequestBody: Omit<FetchProjectRequestBody, 'url'>
   /** Resolved project and rendering-mode configuration. */
   configs: WeaverseProjectConfigs
-  /** Hydrogen cache wrapper used for Builder API requests. */
-  withCache: ReturnType<typeof createWithCache>
+  /** Hydrogen cached fetch used for Builder API requests. */
+  private cachedFetch: ReturnType<typeof createFetchWithCache>
 
   /** Incoming request associated with this client instance. */
   request: WeaverseClientArgs['request']
-  /** Hydrogen customer-account client, when configured. */
+  /** Customer Account API client, when the storefront passes one. */
   customerAccount: WeaverseClientArgs['customerAccount']
   /** Hydrogen Storefront API client and locale context. */
   storefront: WeaverseClientArgs['storefront']
@@ -215,21 +254,23 @@ export class WeaverseClient {
   components: WeaverseClientArgs['components']
   /** Theme schema used for defaults and Studio editing. */
   themeSchema: WeaverseClientArgs['themeSchema']
-  /** Hydrogen runtime environment variables. */
+  /** Runtime environment variables. */
   env: WeaverseClientArgs['env']
   /** Cache storage supplied by the Hydrogen runtime. */
   cache: WeaverseClientArgs['cache']
-  /** Background execution hook supplied by the Oxygen runtime. */
+  /** Background execution hook supplied by the runtime. */
   waitUntil: WeaverseClientArgs['waitUntil']
 
   // Performance optimizations
   private readonly parsedUrl: URL
-  private readonly componentsByType: Map<string, HydrogenComponent>
+  private readonly componentsByType: Map<string, WeaverseComponent>
 
   // Configuration
+  private readonly locale: WeaverseI18n
   private readonly fetchTimeoutMs: number
+  private readonly throwPageLoadFailures: boolean
 
-  /** Creates a request-scoped client from the Hydrogen app context. */
+  /** Creates a request-scoped client from the storefront's request context. */
   constructor(args: WeaverseClientArgs) {
     // Assign required dependencies
     this.request = args.request
@@ -246,7 +287,9 @@ export class WeaverseClient {
     this.componentsByType = this.buildComponentLookupMap(args.components)
 
     // Configuration
+    this.locale = args.locale ?? args.storefront.locale
     this.fetchTimeoutMs = args.fetchTimeoutMs || DEFAULT_FETCH_TIMEOUT_MS
+    this.throwPageLoadFailures = args.throwPageLoadFailures === true
 
     // Initialize cache and configs
     this.initializeCache(args)
@@ -264,10 +307,9 @@ export class WeaverseClient {
       )
     }
 
-    this.withCache = createWithCache({
+    this.cachedFetch = createFetchWithCache({
       cache: args.cache,
-      waitUntil: args.waitUntil || (() => Promise.resolve()),
-      request: args.request,
+      waitUntil: args.waitUntil,
     })
   }
 
@@ -277,16 +319,13 @@ export class WeaverseClient {
    */
   private initializeConfigs(args: WeaverseClientArgs): void {
     // Get base configs once to avoid duplicate calls
-    const baseConfigs = getWeaverseConfigs(
-      args.request,
-      args.env as HydrogenEnv
-    )
+    const baseConfigs = getWeaverseConfigs(args.request, args.env)
 
     // Resolve projectId with multi-project support
     const resolvedProjectId = this.resolveProjectIdSync(
       args.projectId,
       args.request,
-      args.env as HydrogenEnv,
+      args.env,
       baseConfigs
     )
 
@@ -310,7 +349,6 @@ export class WeaverseClient {
       projectId: this.configs.projectId,
       weaverseHost: this.configs.weaverseHost,
       weaverseApiBase: this.configs.weaverseApiBase,
-      weaverseApiKey: this.configs.weaverseApiKey,
       weaverseVersion: this.configs.weaverseVersion,
       isDesignMode: this.configs.isDesignMode,
       isPreviewMode: this.configs.isPreviewMode,
@@ -319,7 +357,7 @@ export class WeaverseClient {
 
     this.basePageRequestBody = {
       isDesignMode: this.configs.isDesignMode,
-      i18n: args.storefront.i18n,
+      i18n: this.locale,
       projectId: this.configs.projectId,
     }
 
@@ -334,8 +372,8 @@ export class WeaverseClient {
    * Significantly improves performance for large component lists.
    */
   private buildComponentLookupMap(
-    components: HydrogenComponent[]
-  ): Map<string, HydrogenComponent> {
+    components: WeaverseComponent[]
+  ): Map<string, WeaverseComponent> {
     return new Map(components.map((comp) => [comp.schema?.type, comp]))
   }
 
@@ -433,7 +471,7 @@ export class WeaverseClient {
   private resolveProjectIdSync(
     projectId: string | (() => string) | (() => Promise<string>) | undefined,
     request: Request,
-    env: HydrogenEnv,
+    env: WeaverseEnv,
     baseConfigs?: WeaverseProjectConfigs
   ): string {
     return (
@@ -551,7 +589,7 @@ export class WeaverseClient {
   private resolveFromEnvironment(
     baseConfigs: WeaverseProjectConfigs | undefined,
     request: Request,
-    env: HydrogenEnv
+    env: WeaverseEnv
   ): string | null {
     const configs = baseConfigs || getWeaverseConfigs(request, env)
 
@@ -564,7 +602,6 @@ export class WeaverseClient {
 
   /**
    * Helper method for direct fetching in design mode.
-   * Returns same format as withCache.fetch for consistency.
    * Includes 10-second timeout to prevent hanging requests.
    */
   private readonly fetchOnce = async <T>(
@@ -594,7 +631,22 @@ export class WeaverseClient {
         )
       }
 
-      const data = (await response.json()) as T
+      let data: T
+      try {
+        data = (await response.json()) as T
+      } catch (parseError) {
+        // A cut-short body still times out; anything else is a successful
+        // status whose body is not JSON, which is not a network failure.
+        if (parseError?.name === 'AbortError') {
+          throw parseError
+        }
+        throw new WeaverseError(
+          'Response body is not valid JSON',
+          'INVALID_RESPONSE',
+          response.status,
+          { url }
+        )
+      }
       return { data, response }
     } catch (err) {
       if (err instanceof WeaverseError) {
@@ -661,7 +713,7 @@ export class WeaverseClient {
 
   /**
    * Fetch data with caching support for both design mode and production.
-   * Uses direct fetch in design mode, Hydrogen's withCache in production.
+   * Uses direct fetch in design mode, Hydrogen's cached fetch in production.
    * Automatically includes projectId in cache key for multi-project isolation.
    *
    * @remarks
@@ -689,13 +741,18 @@ export class WeaverseClient {
     options: WeaverseFetchWithCacheOptions = {}
   ): Promise<T> => {
     const { cacheTarget, strategy: strategyOverride, ...fetchOptions } = options
-    const strategy =
-      strategyOverride ||
-      CacheCustom(
-        cacheTarget
-          ? SMART_CACHE_STRATEGIES[cacheTarget]
-          : DEFAULT_CACHE_STRATEGY
-      )
+    const { body } = fetchOptions
+    // Only a string or `URLSearchParams` body stringifies to its content for
+    // the cache key. Any other body (FormData, Blob, ArrayBuffer, stream)
+    // becomes a constant such as `[object FormData]` and would share one entry
+    // across different bodies, so such requests skip the shared cache.
+    const hasUncacheableBody =
+      body != null &&
+      typeof body !== 'string' &&
+      !(body instanceof URLSearchParams)
+    const strategy = hasUncacheableBody
+      ? Cache.none()
+      : strategyOverride || DEFAULT_CACHE_STRATEGY
 
     // Update cache key to include method, body content, and projectId for multi-project isolation
     // Prefix for easier debugging in cache systems
@@ -710,7 +767,9 @@ export class WeaverseClient {
       options.method || 'GET',
       bodyFreeCacheRequests.has(options)
         ? BODY_FREE_CACHE_SENTINEL
-        : fetchOptions.body,
+        : body == null
+          ? null
+          : String(body),
       // WeakSet-derived discriminator: this slot cannot be produced by any
       // caller-supplied shape, so no external call can reach the marked
       // identity — even one that happens to send the sentinel string as its
@@ -719,40 +778,66 @@ export class WeaverseClient {
       this.configs.projectId,
       cacheTarget || 'default',
     ]
-    let result: WithCacheFetchResponse<T>
 
     // Bypass the shared Hydrogen subrequest cache for design/revision modes
     // and for the Cloudflare public API proxy. The proxy owns freshness with
     // versioned cache keys; keeping Hydrogen's URL/body cache in front would
     // keep serving a stale response even after Builder bumps the proxy's
     // project version.
+    const validateBuilderPayload = builderPayloadValidators.get(options)
+
     if (
       this.configs.isDesignMode ||
       this.configs.isRevisionPreview ||
       this.isExternalPublicApiUrl(url)
     ) {
-      result = await this.directFetch<T>(url, fetchOptions)
-    } else {
-      // Use withCache.fetch for better integration with Hydrogen's caching system
-      result = (await this.withCache.fetch(url, fetchOptions, {
-        cacheKey,
-        cacheStrategy: strategy,
-        shouldCacheResponse: (response: any): boolean => {
+      const result = await this.directFetch<T>(url, fetchOptions)
+      return result.data
+    }
+
+    let response: Response
+    let text: string
+    try {
+      response = await this.cachedFetch(url, fetchOptions, {
+        key: cacheKey,
+        strategy,
+        shouldCacheResponse: async ({ text: readText }) => {
           // An aborted request never caches: Hydrogen turns a body read cut
-          // short by the abort into an empty payload, not an error.
+          // short by the abort into an empty body, not an error.
           if (fetchOptions.signal?.aborted) {
             return false
           }
+          const payload = parseResponseText(await readText())
+          if (validateBuilderPayload && !validateBuilderPayload(payload)) {
+            return false
+          }
           // Cache any non-error response (for both Weaverse API and third-party APIs)
-          return (
-            !hasError(response) && response !== null && response !== undefined
-          )
+          return !hasError(payload) && payload !== null && payload !== ''
         },
-        displayName: 'Weaverse API',
-      })) as WithCacheFetchResponse<T>
+      })
+      text = await response.text()
+    } catch (error) {
+      // Only this client's own Builder requests are normalized; a
+      // third-party `fetchWithCache` caller keeps the platform error.
+      throw validateBuilderPayload ? cachedTransportError(error, url) : error
     }
 
-    return result.data
+    if (!response.ok) {
+      // For this client's own Builder requests a non-2xx status must not read
+      // as "nothing published"; surface the status the direct path already
+      // throws instead. Other callers keep the `null` body they always got.
+      if (validateBuilderPayload) {
+        throw new WeaverseError(
+          `HTTP ${response.status}: ${response.statusText}`,
+          'FETCH_ERROR',
+          response.status,
+          { url }
+        )
+      }
+      return null as T
+    }
+
+    return parseResponseText(text) as T
   }
 
   /**
@@ -791,7 +876,7 @@ export class WeaverseClient {
    */
   loadThemeSettings = async (
     strategy?: CachingStrategy
-  ): Promise<ThemeSettingsResponse> => {
+  ): Promise<WeaverseThemeSettingsResponse> => {
     const defaultThemeSettings = generateDataFromSchema(this.themeSchema)
     try {
       const { configs } = this
@@ -834,31 +919,27 @@ export class WeaverseClient {
         },
       }
       bodyFreeCacheRequests.add(themeSettingsOptions)
+      builderPayloadValidators.set(themeSettingsOptions, isThemeConfigsEnvelope)
 
       const [data, merchantOverrides] = await Promise.all([
-        this.fetchWithCache<ThemeSettingsResponse>(url, themeSettingsOptions),
+        this.fetchWithCache<WeaverseThemeSettingsResponse>(
+          url,
+          themeSettingsOptions
+        ),
         this.fetchMerchantOverrides(strategy),
       ])
 
-      let result = data
-
-      // Validate that data is a proper object, not corrupted/compressed content
-      if (typeof result !== 'object' || result === null) {
-        console.warn(
-          'Invalid theme settings response format, using defaults:',
-          {
-            type: typeof result,
-            isString: typeof result === 'string',
-            length:
-              typeof result === 'string' ? (result as string).length : 'N/A',
-            preview:
-              typeof result === 'string'
-                ? `${(result as string).slice(0, 50)}...`
-                : String(result),
-          }
+      // A body without a `theme` field (corrupted content, an error body, an
+      // empty object) is not the merchant's configuration. Report it like any
+      // other failure so schema defaults are never presented as loaded.
+      if (!isThemeConfigsEnvelope(data)) {
+        throw new WeaverseError(
+          'Invalid theme settings response format',
+          'INVALID_RESPONSE'
         )
-        result = { theme: defaultThemeSettings }
       }
+
+      let result = data
 
       if (this.themeSchema?.settings || this.themeSchema?.inspector) {
         // Ensure result.theme exists and is an object before merging
@@ -933,7 +1014,7 @@ export class WeaverseClient {
   ): Promise<Record<string, unknown> | undefined> => {
     try {
       const { projectId, weaverseHost } = this.configs
-      const i18n = this.storefront.i18n
+      const i18n = this.locale
 
       // Skip entirely when the theme hasn't opted into i18n. Merchant overrides
       // are locale-specific translations; a theme with no `i18n` schema has no
@@ -948,7 +1029,7 @@ export class WeaverseClient {
         return
       }
 
-      // Build locale code from storefront i18n (e.g. "en-us")
+      // Build locale code from the market's locale (e.g. "en-us")
       const language = (i18n?.language || 'en').toLowerCase()
       const country = (i18n?.country || 'us').toLowerCase()
       const locale = `${language}-${country}`
@@ -995,9 +1076,9 @@ export class WeaverseClient {
    * Used internally when API returns no page or when page needs default content.
    *
    * @param message - Custom message to display in the fallback page
-   * @returns HydrogenPageData with single main component containing the message
+   * @returns WeaversePageData with single main component containing the message
    */
-  generateFallbackPage = (message: string): HydrogenPageData => {
+  generateFallbackPage = (message: string): WeaversePageData => {
     const rootId = crypto.randomUUID()
     return {
       id: `fallback_page_${Date.now()}`,
@@ -1015,7 +1096,9 @@ export class WeaverseClient {
 
   /**
    * Fetch all published custom pages for sitemap generation.
-   * Paginates automatically, never throws, returns accumulated results on partial failure.
+   * Paginates automatically. Rejects with a {@link WeaverseLoadError} when any
+   * page of results cannot be loaded, so a sitemap route can answer 5xx
+   * instead of serving a partial or empty sitemap that search engines cache.
    *
    * @example
    * ```ts
@@ -1046,33 +1129,33 @@ export class WeaverseClient {
       const qs = params.toString()
       const url = `${weaverseApiBase}/api/public/v1/projects/${projectId}/custom-pages${qs ? `?${qs}` : ''}`
 
+      let result: { data?: CustomPageEntry[]; nextCursor?: string | null }
       try {
-        const result = await this.fetchWithCache<{
-          data: CustomPageEntry[]
-          nextCursor: string | null
-        }>(url, { cacheTarget: 'custom-pages' })
-        entries.push(...(result.data || []))
-
-        if (!result.nextCursor) {
-          return entries
-        }
-        cursor = result.nextCursor
-      } catch (err: any) {
-        const status = err?.status
-        const msg = err?.message || String(err)
-        console.warn(
-          entries.length === 0
-            ? `[Weaverse] Failed to fetch custom pages: ${msg}${status ? ` (HTTP ${status})` : ''}`
-            : `[Weaverse] Custom pages pagination interrupted: ${msg}`
+        result = await this.fetchWithCache(url, { cacheTarget: 'custom-pages' })
+      } catch (error) {
+        let message = error instanceof Error ? error.message : String(error)
+        throw toCustomPagesLoadError(
+          error,
+          `[Weaverse] Failed to fetch custom pages after ${entries.length} entries: ${message}`
         )
+      }
+      if (!Array.isArray(result?.data)) {
+        throw new WeaverseLoadError(
+          '[Weaverse] Invalid custom pages response',
+          'invalid-response'
+        )
+      }
+      entries.push(...result.data)
+      if (!result.nextCursor) {
         return entries
       }
+      cursor = result.nextCursor
     }
 
-    console.warn(
-      '[Weaverse] Custom pages pagination cap reached (100 iterations)'
+    throw new WeaverseLoadError(
+      `[Weaverse] Custom pages pagination cap reached (${MAX_PAGES} pages)`,
+      'invalid-response'
     )
-    return entries
   }
 
   /**
@@ -1090,7 +1173,8 @@ export class WeaverseClient {
    * @remarks
    * When the response has no page, a fallback page is generated instead, so
    * `null` means loading or validation failed; do not treat it as a
-   * page-not-found signal. `locale` is forwarded unchanged; when omitted the
+   * page-not-found signal. With `throwPageLoadFailures: true` on the client,
+   * those failures reject with a {@link WeaverseLoadError} instead. `locale` is forwarded unchanged; when omitted the
    * request uses `context.storefront.i18n`.
    *
    * @example
@@ -1112,33 +1196,32 @@ export class WeaverseClient {
   loadPage = async (
     params: LoadPageParams = {}
   ): Promise<WeaverseLoaderData | null> => {
+    // Validate route-level projectId if provided
+    if (params.projectId !== undefined) {
+      const message =
+        typeof params.projectId === 'string'
+          ? this.validateProjectId(params.projectId).error
+          : `must be a string. Received: ${typeof params.projectId}`
+      if (message) {
+        console.error(`Route-level projectId validation failed: ${message}`)
+        if (this.throwPageLoadFailures) {
+          throw new WeaverseLoadError(
+            'Route-level projectId validation failed',
+            'configuration'
+          )
+        }
+        return null
+      }
+    }
+
     try {
-      const { request, storefront, basePageRequestBody, basePageConfigs } = this
+      const { request, basePageRequestBody, basePageConfigs } = this
       const {
         projectId: clientProjectId,
         weaverseHost,
         isPreviewMode,
         sectionType,
       } = this.configs
-
-      // Validate route-level projectId if provided
-      if (params.projectId !== undefined) {
-        if (typeof params.projectId !== 'string') {
-          console.error(
-            'Route-level projectId validation failed: must be a string. ' +
-              `Received: ${typeof params.projectId}`
-          )
-          return null
-        }
-
-        const validation = this.validateProjectId(params.projectId)
-        if (!validation.valid) {
-          console.error(
-            `Route-level projectId validation failed: ${validation.error}`
-          )
-          return null
-        }
-      }
 
       // Override client-level projectId with route-level projectId if provided
       const effectiveProjectId = params.projectId || clientProjectId
@@ -1148,14 +1231,17 @@ export class WeaverseClient {
       }
 
       if (!effectiveProjectId) {
-        throw new Error('Missing Weaverse projectId!')
+        throw new WeaverseLoadError(
+          'Missing Weaverse projectId!',
+          'configuration'
+        )
       }
 
       const { strategy, ...pageLoadParams } = params
       const body: {
         projectId: string
         url: string
-        i18n?: I18nBase
+        i18n?: WeaverseI18n
         params?: {
           type?: PageType
           locale?: string
@@ -1183,39 +1269,44 @@ export class WeaverseClient {
       }
       const url = this.getApiUrl('project')
 
+      const projectOptions: WeaverseFetchWithCacheOptions = {
+        ...reqInit,
+        cacheTarget: 'project',
+        strategy,
+      }
+      builderPayloadValidators.set(projectOptions, isProjectEnvelope)
       const projectData: FetchProjectPayload =
-        await this.fetchWithCache<FetchProjectPayload>(url, {
-          ...reqInit,
-          cacheTarget: 'project',
-          strategy,
-        })
+        await this.fetchWithCache<FetchProjectPayload>(url, projectOptions)
 
       if (hasError(projectData)) {
-        throw new Error(projectData.error)
+        throw new WeaverseLoadError(
+          'Weaverse API returned an error body',
+          'invalid-response'
+        )
       }
 
-      // Extract what we can from the response using type guard
-      // If validation fails, use fallback data instead of throwing
-      let page: HydrogenPageData | undefined
-      let project: WeaverseLoaderData['project'] | undefined
-      let pageAssignment: WeaverseLoaderData['pageAssignment'] | undefined
-
-      if (isFetchProjectPayload(projectData)) {
-        // Valid response - extract normally
-        page = projectData.page
-        project = projectData.project
-        pageAssignment = projectData.pageAssignment
-      } else {
+      if (!isProjectEnvelope(projectData)) {
+        // A body that does not answer for this URL is not "nothing assigned
+        // here". Without the opt-in, keep the historical fallback page.
+        if (this.throwPageLoadFailures) {
+          throw new WeaverseLoadError(
+            'Invalid project data structure received from API',
+            'invalid-response'
+          )
+        }
         console.warn(
           'Invalid project data structure received from API, using fallback data',
           { projectId: effectiveProjectId }
         )
-        // Try to extract what we can from the malformed response
-        const responseData = projectData as any
-        page = responseData?.page
-        project = responseData?.project
-        pageAssignment = responseData?.pageAssignment
       }
+
+      // Extract what we can; a legacy-mode malformed body may lack any field.
+      const responseData = projectData as Partial<FetchProjectPayload> | null
+      let page: WeaversePageData | undefined = responseData?.page ?? undefined
+      let project: WeaverseLoaderData['project'] | undefined =
+        responseData?.project
+      const pageAssignment: WeaverseLoaderData['pageAssignment'] | undefined =
+        responseData?.pageAssignment
 
       if (!project) {
         console.warn('Weaverse project not found. Id:', effectiveProjectId)
@@ -1226,6 +1317,7 @@ export class WeaverseClient {
         }
       }
 
+      const isFallback = !page
       if (!page) {
         page = this.generateFallbackPage(
           '<div style="text-align: center;">Please add new section to start.</div>'
@@ -1244,17 +1336,23 @@ export class WeaverseClient {
         const items = page.items
         page.items = await Promise.all(items.map(this.execComponentLoader))
       }
+      const publicUrl = withoutCredentialParams(this.parsedUrl)
       return {
         page,
         project,
         pageAssignment,
+        ...(isFallback ? { isFallback } : {}),
         configs: {
           ...basePageConfigs,
+          // The page answers for the route-level project when one is given.
+          projectId: effectiveProjectId,
           requestInfo: {
-            i18n: storefront.i18n,
-            queries: getRequestQueries<WeaverseStudioQueries>(request),
-            pathname: this.parsedUrl.pathname,
-            search: this.parsedUrl.search,
+            i18n: this.locale,
+            queries: getRequestQueries<WeaverseStudioQueries>(
+              new Request(publicUrl)
+            ),
+            pathname: publicUrl.pathname,
+            search: publicUrl.search,
           },
         },
       }
@@ -1284,12 +1382,16 @@ export class WeaverseClient {
         })
       }
 
+      const rejection = toPageLoadRejection(error, this.throwPageLoadFailures)
+      if (rejection) {
+        throw rejection
+      }
       return null
     }
   }
 
   /** Executes the registered loader for one component and attaches its result. */
-  execComponentLoader = async (item: HydrogenComponentData) => {
+  execComponentLoader = async (item: WeaverseComponentData) => {
     const { data = {}, type, id } = item
     const component = this.componentsByType.get(type)
     const loader = component?.loader

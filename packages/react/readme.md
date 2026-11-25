@@ -19,6 +19,9 @@ functionalities of `@weaverse/core`, enabling easy integration of Weaverse conte
 npm install @weaverse/react
 ```
 
+`react` and `react-dom` (19 or later) are peer dependencies: the SDK uses your
+app's copies, so install them in the app itself.
+
 ## Initialization and Component Registration
 
 First, initialize a Weaverse Core instance with the necessary parameters:

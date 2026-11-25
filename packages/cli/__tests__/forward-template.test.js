@@ -13,6 +13,9 @@ const FORWARD_DEV_PORT = 3333
 /** Numbered steps, before the explanatory notes. */
 const STEP_COUNT = 4
 const HYDROGEN_DEV_PORT = 3456
+const PARTNER_DEV_PORT = 3000
+/** Numbered partner-theme steps when install is skipped and no project ID. */
+const PARTNER_MISSING_ID_STEP_COUNT = 6
 const NON_INTERACTIVE_BUN_ERROR =
   /requires Bun[\s\S]*npm install -g bun[\s\S]*--no-install/
 const DECLINED_BUN_ERROR = /Bun is required[\s\S]*bun\.sh\/install/
@@ -99,6 +102,36 @@ describe('next steps', () => {
     expect(getNextSteps('shop', forward, { installed: false })[1]).toBe(
       '2. bun install'
     )
+  })
+
+  it('connects the store before the first run for a partner theme and asks for a missing project id', () => {
+    let partner = {
+      name: 'aurora',
+      framework: 'hydrogen',
+      packageManager: 'npm',
+      devPort: PARTNER_DEV_PORT,
+      partnerTheme: { hasProjectId: false },
+    }
+    let withProjectId = { ...partner, partnerTheme: { hasProjectId: true } }
+
+    let missing = getNextSteps('aurora', partner, { installed: false })
+    let known = getNextSteps('aurora', withProjectId)
+
+    expect(missing.slice(0, PARTNER_MISSING_ID_STEP_COUNT)).toEqual([
+      '1. cd aurora',
+      '2. npm install',
+      '3. Set WEAVERSE_PROJECT_ID in .env to your Weaverse project ID (Weaverse dashboard → your project)',
+      '4. Connect your Shopify store (see below)',
+      '5. npm run dev',
+      '6. Open http://localhost:3000 and connect it in Weaverse Studio',
+    ])
+    expect(missing.join('\n')).not.toContain('demo store')
+    expect(known.slice(0, STEP_COUNT)).toEqual([
+      '1. cd aurora',
+      '2. Connect your Shopify store (see below)',
+      '3. npm run dev',
+      '4. Open http://localhost:3000 and connect it in Weaverse Studio',
+    ])
   })
 })
 

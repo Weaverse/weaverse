@@ -2,12 +2,14 @@
 // revision previews, design-mode flags, and `weaverse*` control params
 // (host, version, project id). Everything else — utm_*, fbclid, gclid,
 // storefront filters — is irrelevant to which page the Builder returns.
-const KEPT_PARAM_RE = /^(?:__revisionId|isDesignMode|weaverse)/
+// `weaverseApiKey` is a credential the Builder never reads: keeping it would
+// send it upstream and split the cache per key.
+const KEPT_PARAM_RE = /^(?:__revisionId|isDesignMode|weaverse(?!ApiKey$))/
 
 /**
  * Normalize the storefront URL sent in the Builder page API request body.
  *
- * The POST body participates in the `withCache` cache key, so a raw
+ * The POST body participates in Hydrogen's cached fetch key, so a raw
  * `request.url` fragments the cache by every marketing/tracking param:
  * each distinct `?utm_…`/`fbclid` URL is a guaranteed Builder round-trip
  * even when the resolved page is identical — precisely the paid/social
@@ -41,4 +43,22 @@ export function normalizePageUrl(url: string): string {
     pathname = pathname.slice(0, -'.data'.length)
   }
   return `${parsed.origin}${pathname}${search ? `?${search}` : ''}`
+}
+
+/** Query parameters that may carry credentials and must not reach loader data. */
+const CREDENTIAL_QUERY_PARAMS = ['weaverseApiKey']
+
+/**
+ * Returns the URL without credential query parameters, or the same URL when it
+ * carries none, so loader data never echoes a credential back to the browser.
+ */
+export function withoutCredentialParams(url: URL): URL {
+  if (!CREDENTIAL_QUERY_PARAMS.some((key) => url.searchParams.has(key))) {
+    return url
+  }
+  let clean = new URL(url)
+  for (let key of CREDENTIAL_QUERY_PARAMS) {
+    clean.searchParams.delete(key)
+  }
+  return clean
 }

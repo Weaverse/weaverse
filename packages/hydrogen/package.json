@@ -2,11 +2,44 @@
   "name": "@weaverse/hydrogen",
   "author": "Weaverse Team",
   "description": "Components, hooks, and utilities for building Shopify Hydrogen websites with Weaverse",
-  "version": "5.23.0",
+  "version": "6.6.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",
   "module": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/types/react.d.ts",
+      "import": "./dist/react.mjs",
+      "require": "./dist/react.js"
+    },
+    "./react-router": {
+      "types": "./dist/types/react-router.d.ts",
+      "import": "./dist/react-router.mjs",
+      "require": "./dist/react-router.js"
+    },
+    "./next": {
+      "types": "./dist/types/next.d.ts",
+      "import": "./dist/next.mjs",
+      "require": "./dist/next.js"
+    },
+    "./next/server": {
+      "types": "./dist/types/next-server.d.ts",
+      "import": "./dist/next-server.mjs",
+      "require": "./dist/next-server.js"
+    },
+    "./internal": {
+      "types": "./dist/types/internal.d.ts",
+      "import": "./dist/internal.mjs",
+      "require": "./dist/internal.js"
+    },
+    "./package.json": "./package.json"
+  },
   "publishConfig": {
     "access": "public",
     "@weaverse:registry": "https://registry.npmjs.org"
@@ -23,34 +56,41 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup && node ../../scripts/build-declarations.mjs",
+    "dev": "vp pack --watch --on-success 'node ../../scripts/build-declarations.mjs'",
+    "build": "rimraf dist && vp pack && node ../../scripts/build-declarations.mjs",
     "clean": "rimraf dist",
     "test": "vp test --run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsrs --noEmit"
   },
-  "tsup": {
-    "entry": [
-      "src/index.ts"
-    ],
-    "format": [
-      "esm",
-      "cjs"
-    ],
-    "dts": true,
-    "sourcemap": true,
-    "clean": true,
-    "outDir": "dist",
-    "treeshake": true
-  },
-  "dependencies": {
-    "@shopify/hydrogen": ">=2025.5 <2026.10.0",
-    "@shopify/remix-oxygen": "3",
-    "@weaverse/react": "5.23.0",
-    "@weaverse/schema": "0.19.0",
+  "peerDependencies": {
+    "@shopify/hydrogen": ">=2026.10.3",
+    "next": ">=14",
     "react": ">=19",
     "react-dom": ">=19",
-    "react-error-boundary": "^6",
-    "react-router": "^7"
+    "react-router": "^7 || ^8"
+  },
+  "peerDependenciesMeta": {
+    "@shopify/hydrogen": {
+      "optional": true
+    },
+    "next": {
+      "optional": true
+    },
+    "react-router": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@shopify/hydrogen": "2026.10.3",
+    "happy-dom": "21.0.4",
+    "next": "16.4.6",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "react-router": "8.5.1"
+  },
+  "dependencies": {
+    "@weaverse/react": "6.6.0",
+    "@weaverse/schema": "0.20.1",
+    "react-error-boundary": "^6"
   }
 }

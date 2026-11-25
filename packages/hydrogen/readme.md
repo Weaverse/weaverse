@@ -3,13 +3,13 @@
 ## Overview
 
 `@weaverse/hydrogen` is a crucial package within the Weaverse ecosystem, designed to facilitate the integration of
-Shopify Hydrogen and Remix projects with the Weaverse CMS. It leverages `@weaverse/react` for rendering content and
+Shopify Hydrogen (React Router) and Next.js storefronts with the Weaverse CMS. It leverages `@weaverse/react` for rendering content and
 provides a client for easy setup and data fetching from Weaverse CMS.
 
 ## Key Features
 
 - **Weaverse Client Integration**: Enables seamless integration with Weaverse CMS, allowing for efficient data fetching
-  and rendering in Hydrogen/Remix projects.
+  and rendering in Hydrogen and Next.js storefronts.
 - **Dynamic Data Fetching**: Fetch and render page data and global theme settings server-side, ensuring dynamic and
   consistent content delivery.
 - **Component Registration and Rendering**: Register React components with Weaverse and render them using
@@ -24,7 +24,7 @@ provides a client for easy setup and data fetching from Weaverse CMS.
 `WeaverseImage` supports optional metadata for each image input/usage:
 
 ```ts
-import type { WeaverseImage } from '@weaverse/hydrogen'
+import type { WeaverseImage } from '@weaverse/hydrogen/react-router'
 
 let heroImage: WeaverseImage = {
   id: 'hero-image',
@@ -95,32 +95,76 @@ SDK alone does not add editor controls or change theme rendering.
 npm install @weaverse/hydrogen
 ```
 
+`react`, `react-dom` (19 or later) and `react-router` (7 or 8) are peer
+dependencies: the SDK uses your app's copies, so install them in the storefront
+itself.
+
 ## Setup and Usage
 
 ### Weaverse Client Setup
 
-Initialize the Weaverse Client to establish a connection between your Hydrogen project and Weaverse CMS:
+`@weaverse/hydrogen` 6 requires `@shopify/hydrogen` 2026.10 or later, wired
+through React Router middleware (`future.v8_middleware`). Hydrogen 2026.4 and
+earlier use `@weaverse/hydrogen` 5.
+
+Create one client per request from the request-scoped Storefront API client and
+expose it to loaders as `context.weaverse`. Hydrogen 2026.10 has no
+`createHydrogenContext()`, so the app builds its per-request context itself
+(this is what the Pilot theme does in `app/.server/context.ts`, which
+`server.ts` copies onto React Router's context):
 
 ```typescript
-// <root>/server.ts
+// <root>/app/.server/context.ts
 
-import { createWeaverseClient } from '~/weaverse/create-weaverse.server'
+import { WeaverseClient } from '@weaverse/hydrogen/react-router'
+import { components } from '~/weaverse/components'
+import { themeSchema } from '~/weaverse/schema.server'
 
-const handleRequest = createRequestHandler({
-  // ...
-  getLoadContext: () => ({
-    // Injecting the Weaverse client into the loader context.
-    weaverse: createWeaverseClient({
-      storefront,
-      request,
-      env,
-      cache,
-      waitUntil,
-    }),
-    // ... more app context properties
-  }),
-})
+export async function createAppContext(
+  request: Request,
+  env: Env,
+  executionContext: ExecutionContext
+) {
+  const waitUntil = executionContext.waitUntil.bind(executionContext)
+  const cache = await caches.open('hydrogen')
+  const storefront = createRequestStorefront({ request, env, cache, waitUntil })
+
+  const weaverse = new WeaverseClient({
+    request,
+    storefront,
+    env,
+    cache,
+    waitUntil,
+    components,
+    themeSchema,
+    // Optional: reject with `WeaverseLoadError` on outages instead of
+    // resolving `null`, so a route can answer 503 rather than 404.
+    throwPageLoadFailures: true,
+  })
+
+  return { env, cache, waitUntil, storefront, weaverse }
+}
 ```
+
+`loadPage()` resolves to `null` when the project does not exist, and to a
+placeholder page with `isFallback: true` when nothing is assigned at the URL.
+Studio edits that placeholder in design mode; outside design mode a route
+usually answers it with a 404.
+
+`storefront.locale` selects the content locale, including its `pathPrefix`.
+When a market's Shopify `LanguageCode` differs from the locale Weaverse keys
+its translations by (for example `ZH_TW` for a Traditional Chinese Hong Kong
+market), pass the market as `locale` instead of relabeling the storefront
+client. It sets the Translation Manager locale, the locale sent with page
+requests and the `requestInfo.i18n` Studio reads (the wire field keeps the name
+`i18n`), while the Storefront API keeps its own `locale`:
+
+```typescript
+new WeaverseClient({ ...args, locale: { language: 'ZH', country: 'HK', pathPrefix: '/zh-hk' } })
+```
+
+Section loaders receive the same client as `weaverse`, so they query the
+Storefront API with `weaverse.storefront.graphql(QUERY, { variables, cache })`.
 
 ### Data Fetching and Rendering
 
@@ -129,17 +173,16 @@ Use the Weaverse Client to fetch data such as page content and global theme sett
 ```typescript
 // <root>/app/routes/($locale)._index.tsx
 
-import { json } from '@shopify/remix-oxygen'
-import { type RouteLoaderArgs } from '@weaverse/hydrogen'
+import { type RouteLoaderArgs } from '@weaverse/hydrogen/react-router'
 
 export async function loader({ context }: RouteLoaderArgs) {
   let { weaverse } = context
 
-  return json({
+  return {
     // The key prop for a Weaverse page must always be `weaverseData`
     weaverseData: await weaverse.loadPage(),
     // Additional page data...
-  })
+  }
 }
 ```
 
@@ -148,7 +191,7 @@ Implement the `WeaverseHydrogenRoot` component to render the fetched content:
 ```jsx
 // <root>/app/weaverse/index.tsx
 
-import { WeaverseHydrogenRoot } from '@weaverse/hydrogen'
+import { WeaverseHydrogenRoot } from '@weaverse/hydrogen/react-router'
 import { GenericError } from '~/components/GenericError'
 import { components } from './components'
 
@@ -170,13 +213,71 @@ export default function Homepage() {
 }
 ```
 
+### Handling Load Failures
+
+By default `loadPage()` resolves to `null` both when the project does not exist
+and when the Weaverse API could not answer, so a route can only answer 404.
+Create the client with `throwPageLoadFailures: true` to tell them apart:
+
+```typescript
+import { WeaverseLoadError } from '@weaverse/hydrogen/react-router'
+
+new WeaverseClient({ ...args, components, themeSchema, throwPageLoadFailures: true })
+
+// In a route loader:
+try {
+  weaverseData = await weaverse.loadPage({ type: 'INDEX' })
+} catch (error) {
+  if (error instanceof WeaverseLoadError && error.kind === 'unavailable') {
+    throw new Response(null, { status: 503, headers: { 'Cache-Control': 'no-store' } })
+  }
+  throw error
+}
+```
+
+`error.kind` is `unavailable` (timeout, network error or transient status after
+the built-in retry), `invalid-response` (a successful response that is not a
+page) or `configuration` (missing or invalid project ID, or a refused request).
+A missing project still resolves to `null`, and a URL with no assigned page
+still resolves to a fallback page, so design mode is unchanged.
+
+`loadThemeSettings()` never throws. When settings cannot be loaded, or the API
+answers without a `theme` field, it returns schema defaults with
+`_loadFailed: true`; check that flag before treating the settings as the
+merchant's.
+
+### Content Security Policy
+
+`getWeaverseStudioCspDirectives(request)` returns the CSP sources Weaverse
+Studio needs for the current request. Pass it to Hydrogen's
+`createContentSecurityPolicy` (2026.10.3+), which extends its defaults with
+each array:
+
+```typescript
+import { createContentSecurityPolicy } from '@shopify/hydrogen'
+import { getWeaverseStudioCspDirectives } from '@weaverse/hydrogen/react-router'
+
+let csp = createContentSecurityPolicy({
+  shop,
+  directives: getWeaverseStudioCspDirectives(request),
+})
+```
+
+It returns `{}` for normal visitors. Inside Studio it allows the Studio origin
+to embed the page and serve the bridge script, plus `'unsafe-eval'` in design
+mode. A `weaverseHost` query that is not a trusted Weaverse origin is ignored.
+Self-hosted or staging Studio deployments outside `weaverse.io` / `weaverse.dev`
+get `{}`, like the bridge loader; add their origin to your own directives.
+Next.js themes import it from `@weaverse/hydrogen/next/server`. Merge in your
+own theme sources (video embeds, analytics, fonts) yourself.
+
 ### Defining Component Schema
 
 Define your component's schema to control its behavior and interactivity within Weaverse Studio:
 
 ```tsx
 // app/sections/Hero.tsx
-import { createSchema } from '@weaverse/hydrogen'
+import { createSchema } from '@weaverse/hydrogen/react-router'
 
 export type HeroProps = {
   heading: string
@@ -257,22 +358,22 @@ Serve different content per country domain without changing any route files:
 
 ```typescript
 // app/weaverse/create-weaverse.server.ts
-import { WeaverseClient } from '@weaverse/hydrogen'
-
-const PROJECT_MAP = {
-  'mystore.se': process.env.WEAVERSE_PROJECT_SWEDEN!,
-  'mystore.fr': process.env.WEAVERSE_PROJECT_FRANCE!,
-  'mystore.de': process.env.WEAVERSE_PROJECT_GERMANY!,
-}
+import { WeaverseClient } from '@weaverse/hydrogen/react-router'
 
 export function createWeaverseClient(args) {
+  // Read project IDs from the worker env, not `process.env` (Oxygen has none).
+  const PROJECT_MAP = {
+    'mystore.se': args.env.WEAVERSE_PROJECT_SWEDEN,
+    'mystore.fr': args.env.WEAVERSE_PROJECT_FRANCE,
+    'mystore.de': args.env.WEAVERSE_PROJECT_GERMANY,
+  }
   return new WeaverseClient({
     ...args,
     components,
     themeSchema,
     projectId: () => {
       const host = new URL(args.request.url).hostname
-      return PROJECT_MAP[host] || process.env.WEAVERSE_PROJECT_ID!
+      return PROJECT_MAP[host] || args.env.WEAVERSE_PROJECT_ID
     }
   })
 }
@@ -281,14 +382,18 @@ export function createWeaverseClient(args) {
 export async function loader({ context }: LoaderFunctionArgs) {
   const { weaverse } = context
   // Automatically loads from correct project based on domain
-  const weaverseData = await weaverse.loadPage({ type: 'HOME' })
-  return json({ weaverseData })
+  const weaverseData = await weaverse.loadPage({ type: 'INDEX' })
+  return { weaverseData }
 }
 ```
 
 #### Use Case 2: Route-Level Overrides
 
 Override the project for specific routes (e.g., campaign landing pages):
+
+The returned `configs.projectId` is the route's project. Section loaders still
+receive the client (`weaverse.configs.projectId` is the client's default), and
+theme settings come from the default project.
 
 ```typescript
 // app/routes/campaigns.summer-sale.tsx
@@ -299,10 +404,10 @@ export async function loader({ context }: LoaderFunctionArgs) {
   const weaverseData = await weaverse.loadPage({
     type: 'PAGE',
     handle: 'summer-sale',
-    projectId: process.env.WEAVERSE_PROJECT_CAMPAIGN!
+    projectId: context.env.WEAVERSE_PROJECT_CAMPAIGN,
   })
 
-  return json({ weaverseData })
+  return { weaverseData }
 }
 ```
 
@@ -322,8 +427,8 @@ export function createWeaverseClient(args) {
       const experimentVariant = cookies?.includes('experiment=variant-b')
 
       return experimentVariant
-        ? process.env.WEAVERSE_PROJECT_VARIANT_B!
-        : process.env.WEAVERSE_PROJECT_ID!
+        ? args.env.WEAVERSE_PROJECT_VARIANT_B
+        : args.env.WEAVERSE_PROJECT_ID
     }
   })
 }

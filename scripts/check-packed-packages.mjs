@@ -5,26 +5,44 @@ import {
   mkdtempSync,
   readdirSync,
   readFileSync,
+  realpathSync,
   rmSync,
   writeFileSync,
 } from 'node:fs'
+import { createRequire } from 'node:module'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve, sep } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { originalPositionFor, TraceMap } from '@jridgewell/trace-mapping'
-import ts from 'typescript'
+import {
+  getJSDocTags,
+  isExportAssignment,
+  isExportDeclaration,
+  isImportDeclaration,
+  isInterfaceDeclaration,
+  isMethodDeclaration,
+  isPropertySignatureDeclaration,
+  ScriptKind,
+  SyntaxKind,
+} from 'tsrs/ast'
 import {
   collectPublishedFiles,
   getEsmExportNames,
   getPublishedPackages,
 } from './public-packages.mjs'
+import { getModifiers, parseSourceFile } from './source-parser.mjs'
 
 let ROOT_DIR = join(dirname(fileURLToPath(import.meta.url)), '..')
 let RUNTIME_REPORT = join(ROOT_DIR, 'api-reports', 'runtime-exports.api.md')
 let PNPM = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm'
+let TSRS = join(
+  dirname(createRequire(import.meta.url).resolve('tsrs/package.json')),
+  'bin',
+  'tsrs'
+)
 const RUNTIME_JSON_BLOCK = /```json\n([\s\S]*?)\n```/
 // Next's browser entry imports next/navigation, which is resolved by its bundler.
-const NODE_ESM_EXCLUSIONS = new Set(['@weaverse/next'])
+const NODE_ESM_EXCLUSIONS = new Set(['@weaverse/hydrogen/next'])
 // @weaverse/cli is an ESM-only executable and @weaverse/biome only ships JSON,
 // so neither participates in the dual ESM/CJS runtime contract.
 const CJS_CONTRACT_EXCLUSIONS = new Set(['@weaverse/cli', '@weaverse/biome'])
@@ -78,6 +96,122 @@ function verifyIdentityMap(declarationFile, declarationMap, sourceFile) {
   }
 }
 
+/**
+ * React Router keeps its contexts in module state, so @weaverse/hydrogen must
+ * import the application's copy. A separate SDK copy makes `useMatches()` and
+ * `useLoaderData()` throw outside the app's router provider.
+ */
+function assertSharedReactRouter(appDir) {
+  let appRequire = createRequire(join(appDir, 'package.json'))
+  let sdkRequire = createRequire(
+    realpathSync(appRequire.resolve('@weaverse/hydrogen/package.json'))
+  )
+  let appCopy = realpathSync(appRequire.resolve('react-router/package.json'))
+  let sdkCopy = realpathSync(sdkRequire.resolve('react-router/package.json'))
+  if (appCopy !== sdkCopy) {
+    let version = (file) => JSON.parse(readFileSync(file, 'utf8')).version
+    throw new Error(
+      `@weaverse/hydrogen resolved its own react-router ${version(sdkCopy)} next to the app's ${version(appCopy)} in ${appDir}; react-router must be a peer dependency`
+    )
+  }
+}
+
+/**
+ * A Next.js storefront imports only `@weaverse/hydrogen/next` and
+ * `/next/server`, which never load React Router or Shopify Hydrogen, so those
+ * peers must be optional: pnpm (and bun) install required peers on their own,
+ * pulling an unused router into every Next.js app.
+ */
+function assertNextAppSkipsRouterPeers(appDir) {
+  let appRequire = createRequire(join(appDir, 'package.json'))
+  let sdkFile = realpathSync(
+    appRequire.resolve('@weaverse/hydrogen/package.json')
+  )
+  // pnpm links each resolved peer next to the SDK in its virtual store
+  // folder. The workspace's hoisted folder holds the router apps' copies, so
+  // a plain node_modules lookup would find those.
+  let linkedDir = join(dirname(sdkFile), '..', '..')
+  for (let peer of ['react-router', '@shopify/hydrogen']) {
+    if (existsSync(join(linkedDir, peer))) {
+      throw new Error(
+        `A Next.js app installing @weaverse/hydrogen also got ${peer} in ${appDir}; ${peer} must be an optional peer`
+      )
+    }
+  }
+  run(
+    process.execPath,
+    [
+      '--input-type=module',
+      '-e',
+      "await import('@weaverse/hydrogen/next/server')",
+    ],
+    { cwd: appDir }
+  )
+}
+
+/**
+ * Finds the package.json Node would load for `packageName` from `fromFile`,
+ * through the node_modules lookup paths, so packages whose `exports` omit
+ * `./package.json` (such as @weaverse/experiments) are found too.
+ */
+function findPackageFile(fromFile, packageName) {
+  for (let lookupPath of createRequire(fromFile).resolve.paths(packageName)) {
+    let packageFile = join(lookupPath, packageName, 'package.json')
+    if (existsSync(packageFile)) {
+      return realpathSync(packageFile)
+    }
+  }
+  throw new Error(`Cannot find ${packageName} from ${fromFile}`)
+}
+
+/**
+ * React keeps hooks state in module scope, so every @weaverse/* package an app
+ * installs must import the app's `react` and `react-dom`. A second copy makes
+ * the SDK's hooks throw "Invalid hook call" inside the app's tree.
+ */
+function assertSharedReact(appDir) {
+  let appFile = join(appDir, 'package.json')
+  // Each @weaverse/* package resolves from the package that depends on it,
+  // starting with the ones the app installs directly.
+  let pending = Object.keys(
+    JSON.parse(readFileSync(appFile, 'utf8')).dependencies
+  )
+    .filter((dependency) => dependency.startsWith('@weaverse/'))
+    .map((dependency) => [dependency, appFile])
+  let seen = new Set()
+  while (pending.length > 0) {
+    let [packageName, parentFile] = pending.pop()
+    let packageFile = findPackageFile(parentFile, packageName)
+    if (seen.has(packageFile)) {
+      continue
+    }
+    seen.add(packageFile)
+    let packageJson = JSON.parse(readFileSync(packageFile, 'utf8'))
+    let declared = {
+      ...packageJson.peerDependencies,
+      ...packageJson.dependencies,
+    }
+    for (let singleton of ['react', 'react-dom']) {
+      if (!declared[singleton]) {
+        continue
+      }
+      let appCopy = findPackageFile(appFile, singleton)
+      let packageCopy = findPackageFile(packageFile, singleton)
+      if (appCopy !== packageCopy) {
+        let version = (file) => JSON.parse(readFileSync(file, 'utf8')).version
+        throw new Error(
+          `${packageName} resolved its own ${singleton} ${version(packageCopy)} next to the app's ${version(appCopy)} in ${appDir}; ${singleton} must be a peer dependency`
+        )
+      }
+    }
+    for (let dependency of Object.keys(packageJson.dependencies ?? {})) {
+      if (dependency.startsWith('@weaverse/')) {
+        pending.push([dependency, packageFile])
+      }
+    }
+  }
+}
+
 function normalizeEntry(entryFile) {
   return entryFile.startsWith('./') ? entryFile.slice(2) : entryFile
 }
@@ -111,19 +245,15 @@ function getNodeModuleFormat(artifactFile, packedPackageJson) {
 function hasEsmSyntax(sourceFile) {
   return sourceFile.statements.some((statement) => {
     if (
-      ts.isImportDeclaration(statement) ||
-      ts.isExportDeclaration(statement) ||
-      ts.isExportAssignment(statement)
+      isImportDeclaration(statement) ||
+      isExportDeclaration(statement) ||
+      isExportAssignment(statement)
     ) {
       return true
     }
-    let modifiers = ts.canHaveModifiers(statement)
-      ? ts.getModifiers(statement)
-      : undefined
+    let modifiers = getModifiers(statement)
     return Boolean(
-      modifiers?.some(
-        (modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword
-      )
+      modifiers?.some((modifier) => modifier.kind === SyntaxKind.ExportKeyword)
     )
   })
 }
@@ -135,12 +265,10 @@ function assertCommonJsArtifact(specifier, artifactFile, packedPackageJson) {
     )
   }
 
-  let sourceFile = ts.createSourceFile(
+  let sourceFile = parseSourceFile(
     artifactFile,
-    readFileSync(artifactFile, 'utf8'),
-    ts.ScriptTarget.Latest,
-    true,
-    ts.ScriptKind.JS
+    ScriptKind.JS,
+    readFileSync(artifactFile, 'utf8')
   )
 
   if (hasEsmSyntax(sourceFile)) {
@@ -150,64 +278,88 @@ function assertCommonJsArtifact(specifier, artifactFile, packedPackageJson) {
   }
 }
 
-// A Server Component that imports @weaverse/next must never evaluate React
-// client APIs. Only the client boundary may reach them, and it must keep the
+// `@weaverse/hydrogen/next` and `/next/server` are imported by Server
+// Components too (root layouts, section schemas), so they must never evaluate
+// React client APIs. Their entry files and every local chunk they load must
+// stay free of React client code; client code is reached only through the
+// Next.js adapter's client boundary, which must keep the `'use client'`
 // directive that makes the bundler treat it as client code.
-const NEXT_CLIENT_BOUNDARY = /^client-boundary\.m?js$/
+const NEXT_CLIENT_BOUNDARY = /^next-client-boundary\.m?js$/
 const NEXT_CLIENT_ONLY_CODE =
   /\bcreateContext\b|@weaverse\/react|['"]react['"]|['"]react\/jsx-runtime['"]|['"]next\/navigation['"]/
 const USE_CLIENT_FIRST = /^\s*['"]use client['"]/
-const SCRIPT_FILE = /\.m?js$/
+const HYDROGEN_NEXT_ENTRIES = [
+  'next.mjs',
+  'next.js',
+  'next-server.mjs',
+  'next-server.js',
+]
+const LOCAL_CHUNK_IMPORT =
+  /(?:from|import|require\()\s*['"](\.\/[^'"]+\.m?js)['"]/g
 
-function assertNextClientBoundary(packedFolder) {
+function assertHydrogenNextServerSafe(packedFolder) {
   let distDir = join(packedFolder, 'dist')
-  let scripts = readdirSync(distDir).filter((file) => SCRIPT_FILE.test(file))
-  let boundaries = scripts.filter((file) => NEXT_CLIENT_BOUNDARY.test(file))
-
+  let boundaries = readdirSync(distDir).filter((file) =>
+    NEXT_CLIENT_BOUNDARY.test(file)
+  )
   if (boundaries.length !== 2) {
     throw new Error(
-      `@weaverse/next must ship client-boundary.mjs and client-boundary.js, found: ${boundaries.join(', ') || 'none'}`
+      `@weaverse/hydrogen must ship next-client-boundary.mjs and next-client-boundary.js, found: ${boundaries.join(', ') || 'none'}`
     )
   }
-  for (let file of scripts) {
-    let source = readFileSync(join(distDir, file), 'utf8')
-    if (NEXT_CLIENT_BOUNDARY.test(file)) {
-      if (!USE_CLIENT_FIRST.test(source)) {
+  for (let boundary of boundaries) {
+    if (!USE_CLIENT_FIRST.test(readFileSync(join(distDir, boundary), 'utf8'))) {
+      throw new Error(
+        `@weaverse/hydrogen dist/${boundary} lost its 'use client' directive`
+      )
+    }
+  }
+
+  for (let entry of HYDROGEN_NEXT_ENTRIES) {
+    let pending = [entry]
+    let seen = new Set()
+    while (pending.length > 0) {
+      let file = pending.pop()
+      // The client boundary is a client reference for Server Components, so
+      // the walk stops there instead of reading its React imports.
+      if (seen.has(file) || NEXT_CLIENT_BOUNDARY.test(file)) {
+        continue
+      }
+      seen.add(file)
+      let source = readFileSync(join(distDir, file), 'utf8')
+      if (NEXT_CLIENT_ONLY_CODE.test(source)) {
         throw new Error(
-          `@weaverse/next dist/${file} lost its 'use client' directive`
+          `@weaverse/hydrogen dist/${entry} loads client-only code through dist/${file}, which breaks React Server Components`
         )
       }
-    } else if (NEXT_CLIENT_ONLY_CODE.test(source)) {
-      throw new Error(
-        `@weaverse/next dist/${file} reaches client-only code outside the client boundary`
-      )
+      for (let match of source.matchAll(LOCAL_CHUNK_IMPORT)) {
+        pending.push(match[1].slice(2))
+      }
     }
   }
 }
 
 function hasInterfaceProperty(declarationFile, interfaceName, propertyName) {
-  let sourceFile = ts.createSourceFile(
+  let sourceFile = parseSourceFile(
     declarationFile,
-    readFileSync(declarationFile, 'utf8'),
-    ts.ScriptTarget.Latest,
-    true,
-    ts.ScriptKind.TS
+    ScriptKind.TS,
+    readFileSync(declarationFile, 'utf8')
   )
   let found = false
 
   function visit(node) {
     if (
-      ts.isInterfaceDeclaration(node) &&
+      isInterfaceDeclaration(node) &&
       node.name.text === interfaceName &&
       node.members.some(
         (member) =>
-          ts.isPropertySignature(member) &&
+          isPropertySignatureDeclaration(member) &&
           member.name?.getText(sourceFile) === propertyName
       )
     ) {
       found = true
     }
-    ts.forEachChild(node, visit)
+    node.forEachChild(visit)
   }
 
   visit(sourceFile)
@@ -220,29 +372,25 @@ function hasDeprecatedMember(
   memberKind,
   migrationTarget
 ) {
-  let sourceFile = ts.createSourceFile(
+  let sourceFile = parseSourceFile(
     declarationFile,
-    readFileSync(declarationFile, 'utf8'),
-    ts.ScriptTarget.Latest,
-    true,
-    ts.ScriptKind.TS
+    ScriptKind.TS,
+    readFileSync(declarationFile, 'utf8')
   )
   let found = false
 
   function visit(node) {
     let kindMatches =
-      (memberKind === 'property' && ts.isPropertySignature(node)) ||
-      (memberKind === 'method' && ts.isMethodDeclaration(node))
+      (memberKind === 'property' && isPropertySignatureDeclaration(node)) ||
+      (memberKind === 'method' && isMethodDeclaration(node))
     if (kindMatches && node.name?.getText(sourceFile) === memberName) {
-      found = ts
-        .getJSDocTags(node)
-        .some(
-          (tag) =>
-            tag.kind === ts.SyntaxKind.JSDocDeprecatedTag &&
-            tag.getText(sourceFile).includes(migrationTarget)
-        )
+      found = getJSDocTags(node).some(
+        (tag) =>
+          tag.kind === SyntaxKind.JSDocDeprecatedTag &&
+          tag.getText(sourceFile).includes(migrationTarget)
+      )
     }
-    ts.forEachChild(node, visit)
+    node.forEachChild(visit)
   }
 
   visit(sourceFile)
@@ -302,6 +450,32 @@ try {
     rootPackageJson.devDependencies['@types/react']
   packedDependencies['@types/react-dom'] =
     rootPackageJson.devDependencies['@types/react-dom']
+  // React apps install React themselves; the SDK packages take it as a peer.
+  packedDependencies.react = rootPackageJson.devDependencies.react
+  packedDependencies['react-dom'] = rootPackageJson.devDependencies['react-dom']
+  // `next` is an optional peer of the Next.js adapter in @weaverse/hydrogen; a
+  // Next.js storefront always has it, and the adapter imports `next/navigation`.
+  packedDependencies.next = JSON.parse(
+    readFileSync(join(ROOT_DIR, 'packages', 'hydrogen', 'package.json'), 'utf8')
+  ).devDependencies.next
+  // React Router apps install it themselves and @weaverse/hydrogen takes it as
+  // a peer. Use the version this workspace resolved, so a run with React
+  // Router 7 forced checks 7 and the default lock checks 8. No override: the
+  // SDK must share the app's copy on its own.
+  let reactRouterVersion = JSON.parse(
+    readFileSync(
+      createRequire(
+        join(ROOT_DIR, 'packages', 'hydrogen', 'package.json')
+      ).resolve('react-router/package.json'),
+      'utf8'
+    )
+  ).version
+  packedDependencies['react-router'] = reactRouterVersion
+  // Hydrogen storefronts install @shopify/hydrogen themselves; it is an
+  // optional peer of @weaverse/hydrogen, which Next.js apps can skip.
+  packedDependencies['@shopify/hydrogen'] = JSON.parse(
+    readFileSync(join(ROOT_DIR, 'packages', 'hydrogen', 'package.json'), 'utf8')
+  ).devDependencies['@shopify/hydrogen']
 
   writeFileSync(
     join(consumerDir, 'package.json'),
@@ -321,22 +495,108 @@ try {
       `Leaving registry resolution in place for incompatible internal pins:\n  ${skippedOverrides.join('\n  ')}`
     )
   }
+  let overridesYaml = `overrides:\n${Object.entries(packedOverrides)
+    .map(([edge, specifier]) => `  '${edge}': '${specifier}'`)
+    .join('\n')}\n`
+  let installArgs = [
+    'install',
+    '--prefer-offline',
+    '--ignore-scripts',
+    '--strict-peer-dependencies=false',
+  ]
+  writeFileSync(join(consumerDir, 'pnpm-workspace.yaml'), overridesYaml)
+  run(PNPM, installArgs, { cwd: consumerDir })
+  assertSharedReactRouter(consumerDir)
+  assertSharedReact(consumerDir)
+
+  // One workspace with an app per supported React Router major, plus an app on
+  // the lowest supported React. Each app must get SDK packages bound to its own
+  // router and React, which only peer dependencies allow; regular dependencies
+  // give every app the same copy.
+  let hydrogenPackageJson = publishedPackages.find(
+    ({ packageJson }) => packageJson.name === '@weaverse/hydrogen'
+  ).packageJson
+  let supportedRange =
+    hydrogenPackageJson.peerDependencies?.['react-router'] ??
+    hydrogenPackageJson.dependencies?.['react-router']
+  let routerMajors = [...supportedRange.matchAll(/\^(?<major>\d+)/g)].map(
+    (match) => match.groups.major
+  )
+  let supportedReact =
+    hydrogenPackageJson.peerDependencies?.react ??
+    hydrogenPackageJson.dependencies?.react
+  let lowestReact = `${supportedReact.match(/>=\s*(?<major>\d+)/).groups.major}.0.0`
+  let majorsDir = join(scratchDir, 'supported-versions')
+  mkdirSync(majorsDir)
   writeFileSync(
-    join(consumerDir, 'pnpm-workspace.yaml'),
-    `overrides:\n${Object.entries(packedOverrides)
-      .map(([edge, specifier]) => `  '${edge}': '${specifier}'`)
-      .join('\n')}\n`
+    join(majorsDir, 'package.json'),
+    `${JSON.stringify({ private: true, packageManager: 'pnpm@11.1.2' })}\n`
   )
-  run(
-    PNPM,
-    [
-      'install',
-      '--prefer-offline',
-      '--ignore-scripts',
-      '--strict-peer-dependencies=false',
-    ],
-    { cwd: consumerDir }
+  writeFileSync(
+    join(majorsDir, 'pnpm-workspace.yaml'),
+    `packages:\n  - 'apps/*'\n${overridesYaml}`
   )
+  for (let major of routerMajors) {
+    let appDir = join(majorsDir, 'apps', `react-router-${major}`)
+    mkdirSync(appDir, { recursive: true })
+    writeFileSync(
+      join(appDir, 'package.json'),
+      `${JSON.stringify({
+        name: `react-router-${major}`,
+        private: true,
+        dependencies: {
+          '@weaverse/hydrogen': packedDependencies['@weaverse/hydrogen'],
+          react: rootPackageJson.devDependencies.react,
+          'react-dom': rootPackageJson.devDependencies['react-dom'],
+          'react-router': reactRouterVersion.startsWith(`${major}.`)
+            ? reactRouterVersion
+            : `^${major}`,
+        },
+      })}\n`
+    )
+  }
+  // Its own install: in the router apps' workspace, pnpm would dedupe the SDK
+  // onto the instance that already has React Router linked.
+  let nextOnlyDir = join(scratchDir, 'next-only')
+  mkdirSync(nextOnlyDir, { recursive: true })
+  writeFileSync(join(nextOnlyDir, 'pnpm-workspace.yaml'), overridesYaml)
+  writeFileSync(
+    join(nextOnlyDir, 'package.json'),
+    `${JSON.stringify({
+      name: 'next-only',
+      private: true,
+      dependencies: {
+        '@weaverse/hydrogen': packedDependencies['@weaverse/hydrogen'],
+        next: packedDependencies.next,
+        react: rootPackageJson.devDependencies.react,
+        'react-dom': rootPackageJson.devDependencies['react-dom'],
+      },
+    })}\n`
+  )
+  let lowestReactDir = join(majorsDir, 'apps', `react-${lowestReact}`)
+  mkdirSync(lowestReactDir, { recursive: true })
+  writeFileSync(
+    join(lowestReactDir, 'package.json'),
+    `${JSON.stringify({
+      name: `react-${lowestReact}`,
+      private: true,
+      dependencies: {
+        '@weaverse/hydrogen': packedDependencies['@weaverse/hydrogen'],
+        react: lowestReact,
+        'react-dom': lowestReact,
+        'react-router': reactRouterVersion,
+      },
+    })}\n`
+  )
+  run(PNPM, installArgs, { cwd: majorsDir })
+  run(PNPM, installArgs, { cwd: nextOnlyDir })
+  for (let major of routerMajors) {
+    let appDir = join(majorsDir, 'apps', `react-router-${major}`)
+    assertSharedReactRouter(appDir)
+    assertSharedReact(appDir)
+  }
+  assertSharedReact(lowestReactDir)
+  assertNextAppSkipsRouterPeers(nextOnlyDir)
 
   for (let publishedPackage of publishedPackages) {
     let { packageJson } = publishedPackage
@@ -348,8 +608,8 @@ try {
     let packedPackageJson = JSON.parse(
       readFileSync(join(packedFolder, 'package.json'), 'utf8')
     )
-    if (packageJson.name === '@weaverse/next') {
-      assertNextClientBoundary(packedFolder)
+    if (packageJson.name === '@weaverse/hydrogen') {
+      assertHydrogenNextServerSafe(packedFolder)
     }
     let entryFiles = collectPublishedFiles(packedPackageJson.exports)
 
@@ -663,7 +923,7 @@ main().catch((error) => {
 import type {
   ComponentAvailabilityContext as HydrogenAvailabilityContext,
   Resolvable as HydrogenResolvable,
-} from '@weaverse/hydrogen'
+} from '@weaverse/hydrogen/internal'
 import type { WeaverseImage as CoreImage } from '@weaverse/core'
 import type { WeaverseImage as ReactImage } from '@weaverse/react'
 import type { WeaverseImage as HydrogenImage } from '@weaverse/hydrogen'
@@ -731,9 +991,9 @@ void [modules, componentSchema, hydrogenEnabled, manifestArtifact]
 import { assignVariant } from '@weaverse/experiments'
 import { createExposureTracker } from '@weaverse/experiments/react'
 import { getExperiments } from '@weaverse/experiments/server'
-import { WeaverseClient } from '@weaverse/hydrogen'
-import { createWeaverseNextClient } from '@weaverse/next'
-import { getWeaverseNextConfigs } from '@weaverse/next/server'
+import { WeaverseClient } from '@weaverse/hydrogen/react-router'
+import { createWeaverseNextClient } from '@weaverse/hydrogen/next'
+import { createWeaverseNextServerClient } from '@weaverse/hydrogen/next/server'
 import { WeaverseRoot } from '@weaverse/react'
 import { createSchema } from '@weaverse/schema'
 import { generateComponentManifest } from '@weaverse/schema/manifest'
@@ -745,7 +1005,7 @@ void [
   getExperiments,
   WeaverseClient,
   createWeaverseNextClient,
-  getWeaverseNextConfigs,
+  createWeaverseNextServerClient,
   WeaverseRoot,
   createSchema,
   generateComponentManifest,
@@ -798,15 +1058,7 @@ void legacyLooseSchema
         2
       )}\n`
     )
-    run(
-      process.execPath,
-      [
-        join(ROOT_DIR, 'node_modules', 'typescript', 'bin', 'tsc'),
-        '--project',
-        configPath,
-      ],
-      { cwd: consumerDir }
-    )
+    run(process.execPath, [TSRS, '--project', configPath], { cwd: consumerDir })
   }
 
   // `module: node16` is the stable CommonJS mode most consumers pin. Unlike
@@ -855,18 +1107,13 @@ void [
       2
     )}\n`
   )
-  run(
-    process.execPath,
-    [
-      join(ROOT_DIR, 'node_modules', 'typescript', 'bin', 'tsc'),
-      '--project',
-      node16Config,
-    ],
-    { cwd: consumerDir }
-  )
+  run(process.execPath, [TSRS, '--project', node16Config], { cwd: consumerDir })
 
+  // Bundler resolution is the mode Vite, Next.js and React Router consumers
+  // type-check with: it reads `exports` through the `import` condition without
+  // NodeNext's file-extension rules.
   writeFileSync(
-    join(consumerDir, 'legacy-resolution.ts'),
+    join(consumerDir, 'bundler-resolution.ts'),
     `import {
   type ComponentManifestArtifact,
   generateComponentManifest,
@@ -874,43 +1121,88 @@ void [
 
 let artifact: Promise<ComponentManifestArtifact> = generateComponentManifest(
   [{ schema: { type: 'hero', title: 'Hero' } }],
-  { source: { name: 'legacy-consumer', revision: 'abc123' } }
+  { source: { name: 'bundler-consumer', revision: 'abc123' } }
 )
 void artifact
 `
   )
-  let legacyResolutionConfig = join(
+  let bundlerResolutionConfig = join(
     consumerDir,
-    'tsconfig.legacy-resolution.json'
+    'tsconfig.bundler-resolution.json'
   )
   writeFileSync(
-    legacyResolutionConfig,
+    bundlerResolutionConfig,
     `${JSON.stringify(
       {
         compilerOptions: {
           target: 'ES2022',
           module: 'ESNext',
-          moduleResolution: 'Node10',
-          ignoreDeprecations: '6.0',
+          moduleResolution: 'Bundler',
           strict: true,
           noEmit: true,
           skipLibCheck: true,
         },
-        files: ['legacy-resolution.ts'],
+        files: ['bundler-resolution.ts'],
       },
       null,
       2
     )}\n`
   )
-  run(
-    process.execPath,
-    [
-      join(ROOT_DIR, 'node_modules', 'typescript', 'bin', 'tsc'),
-      '--project',
-      legacyResolutionConfig,
-    ],
-    { cwd: consumerDir }
+  run(process.execPath, [TSRS, '--project', bundlerResolutionConfig], {
+    cwd: consumerDir,
+  })
+
+  // Hydrogen apps type their loader context by merging their app context into
+  // React Router's `AppLoadContext` and `RouterContextProvider` (as Pilot's
+  // env.d.ts does). `RouteLoaderArgs` must carry
+  // those members; a context typed as `{ [key: string]: unknown }` turns
+  // `context.env` into `unknown` and breaks every augmented consumer. Its own
+  // program, because the augmentation is global.
+  writeFileSync(
+    join(consumerDir, 'augmented-context.ts'),
+    `import type { LoaderFunction } from 'react-router'
+import type { RouteLoaderArgs } from '@weaverse/hydrogen/react-router'
+
+interface AppContext {
+  env: { PUBLIC_STORE_DOMAIN: string }
+}
+declare module 'react-router' {
+  interface AppLoadContext extends AppContext {}
+  interface RouterContextProvider extends AppContext {}
+}
+
+export async function loader({ context }: RouteLoaderArgs) {
+  let domain: string = context.env.PUBLIC_STORE_DOMAIN
+  // @ts-expect-error Undeclared members stay errors, not \`any\`.
+  void context.notDeclared.anything
+  return { domain, load: context.weaverse.loadPage }
+}
+export let routeLoader: LoaderFunction = loader
+`
   )
+  let augmentedContextConfig = join(consumerDir, 'tsconfig.augmented.json')
+  writeFileSync(
+    augmentedContextConfig,
+    `${JSON.stringify(
+      {
+        compilerOptions: {
+          target: 'ES2022',
+          module: 'ESNext',
+          moduleResolution: 'Bundler',
+          strict: true,
+          noEmit: true,
+          skipLibCheck: true,
+          types: [],
+        },
+        files: ['augmented-context.ts'],
+      },
+      null,
+      2
+    )}\n`
+  )
+  run(process.execPath, [TSRS, '--project', augmentedContextConfig], {
+    cwd: consumerDir,
+  })
 
   writeFileSync(
     join(consumerDir, 'declaration-check.ts'),
@@ -953,15 +1245,9 @@ void [
       2
     )}\n`
   )
-  run(
-    process.execPath,
-    [
-      join(ROOT_DIR, 'node_modules', 'typescript', 'bin', 'tsc'),
-      '--project',
-      declarationConfig,
-    ],
-    { cwd: consumerDir }
-  )
+  run(process.execPath, [TSRS, '--project', declarationConfig], {
+    cwd: consumerDir,
+  })
 
   console.log(
     `Verified ${publishedPackages.length} packed packages and ${typeEntrypoints.length} TypeScript entrypoints`

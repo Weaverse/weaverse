@@ -1,6 +1,8 @@
 import type { ElementData } from '@weaverse/react'
 import {
   isBrowser,
+  StudioSelectionStore,
+  StudioSelectionStoreContext,
   useSafeExternalStore,
   Weaverse,
   WeaverseItemStore,
@@ -13,6 +15,7 @@ import {
   Suspense,
   useMemo,
   useRef,
+  useState,
 } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import {
@@ -28,19 +31,19 @@ import {
 } from './hooks/translation-context'
 import { createWeaverseDataContext } from './hooks/use-weaverse-data-context'
 import type {
-  HydrogenComponentData,
   HydrogenElement,
-  HydrogenPageData,
-  HydrogenThemeSettings,
   TranslationChanges,
   TranslationEntry,
   TranslationItemEntry,
   TranslationMap,
+  WeaverseComponentData,
   WeaverseInternal,
   WeaverseLoaderRequestInfo,
-} from './index'
+  WeaversePageData,
+  WeaverseThemeSettings,
+} from './internal'
 import type {
-  HydrogenComponent,
+  WeaverseComponent,
   WeaverseHydrogenParams,
   WeaverseLoaderData,
 } from './types'
@@ -95,7 +98,7 @@ export class WeaverseHydrogenItem extends WeaverseItemStore {
   private _snapshotTranslationRef: TranslationItemEntry | null = null
 
   /** Creates an item store from serialized component data and its owner. */
-  constructor(initialData: HydrogenComponentData, weaverse: WeaverseHydrogen) {
+  constructor(initialData: WeaverseComponentData, weaverse: WeaverseHydrogen) {
     super(initialData, weaverse)
     const { data, ...rest } = initialData
     if (!this.Element?.schema) {
@@ -219,11 +222,6 @@ export class WeaverseHydrogen extends Weaverse {
   weaverseHost: string
   /** Base URL used for public content API requests. */
   weaverseApiBase: string
-  /**
-   * API key read from environment/configuration for storefront requests or
-   * supplied by Studio requests while editing and previewing.
-   */
-  weaverseApiKey: string
   /** Studio asset version supplied by the preview request. */
   weaverseVersion: string
   /** Whether the page is running inside the visual editor. */
@@ -237,7 +235,7 @@ export class WeaverseHydrogen extends Weaverse {
   /** Component item store constructor used by the core runtime. */
   declare ItemConstructor: typeof WeaverseHydrogenItem
   /** Current page content owned by the runtime. */
-  declare data: HydrogenPageData
+  declare data: WeaversePageData
   /** Component item stores indexed by instance ID. */
   declare static itemInstances: Map<string, WeaverseHydrogenItem>
   /** Registered component definitions indexed by component type. */
@@ -267,7 +265,6 @@ export class WeaverseHydrogen extends Weaverse {
     this.projectId = params.projectId
     this.weaverseHost = params.weaverseHost
     this.weaverseApiBase = params.weaverseApiBase
-    this.weaverseApiKey = params.weaverseApiKey
     this.weaverseVersion = params.weaverseVersion || ''
     this.isDesignMode = params.isDesignMode ?? false
     this.isPreviewMode = params.isPreviewMode ?? false
@@ -365,7 +362,7 @@ export class WeaverseHydrogen extends Weaverse {
   /**
    * Override setProjectData to re-extract translation sidecar from new page data.
    */
-  setProjectData = (data: HydrogenPageData) => {
+  setProjectData = (data: WeaversePageData) => {
     this.data = data
     this.extractTranslationSidecar()
     this.initProject()
@@ -377,8 +374,11 @@ function createWeaverseInstance(
 ): WeaverseHydrogen {
   const normalizedParams = normalizeRequestInfo(params)
   if (isBrowser) {
-    window.__weaverses = window.__weaverses || {}
-    const existing = window.__weaverses[normalizedParams.pageId]
+    const runtimeWindow = window as unknown as {
+      __weaverses?: Record<string, WeaverseHydrogen>
+    }
+    runtimeWindow.__weaverses = runtimeWindow.__weaverses || {}
+    const existing = runtimeWindow.__weaverses[normalizedParams.pageId]
     // Reuse the instance only while the browser stays on the same URL —
     // navigation to a different pathname/search builds a fresh instance.
     const isReused =
@@ -388,7 +388,7 @@ function createWeaverseInstance(
     const weaverse = isReused
       ? existing
       : new WeaverseHydrogen(normalizedParams)
-    window.__weaverses[normalizedParams.pageId] = weaverse
+    runtimeWindow.__weaverses[normalizedParams.pageId] = weaverse
     if (weaverse.isDesignMode) {
       weaverse.requestInfo = normalizedParams.requestInfo
       if (hasWeaverseStudio(window)) {
@@ -420,11 +420,11 @@ const StudioConnect = memo(() => {
  * allocates and loops on every render — theme component arrays are
  * module-level constants, so register each list identity once.
  */
-const registeredComponentLists = new WeakSet<HydrogenComponent[]>()
+const registeredComponentLists = new WeakSet<WeaverseComponent[]>()
 
 function RenderRoot(props: {
   data: WeaverseLoaderData
-  components: HydrogenComponent[]
+  components: WeaverseComponent[]
   dataContext?: Record<string, any>
 }) {
   const { data, components, dataContext } = props
@@ -495,7 +495,7 @@ export interface WeaverseHydrogenRootErrorProps {
 /** Props accepted by {@link WeaverseHydrogenRoot}. */
 export interface WeaverseHydrogenRootProps {
   /** Theme components available to the page renderer. */
-  components: HydrogenComponent[]
+  components: WeaverseComponent[]
   /**
    * Optional explicit `weaverseData` payload. When provided, bypasses the
    * automatic route-scoped resolution. Accepts a resolved value, a
@@ -702,17 +702,20 @@ export function withWeaverse(
     if (!translationStoreRef.current) {
       translationStoreRef.current = new TranslationStore()
     }
+    let [studioSelectionStore] = useState(() => new StudioSelectionStore())
     return (
       <ThemeSettingsStoreContext.Provider value={themeSettingsStore}>
-        <TranslationProvider
-          merchantOverrides={translationData.merchantOverrides}
-          staticContent={translationData.staticContent}
-          t={options?.t}
-          translationStore={translationStoreRef.current}
-        >
-          <StudioConnect />
-          <Component {...props} />
-        </TranslationProvider>
+        <StudioSelectionStoreContext.Provider value={studioSelectionStore}>
+          <TranslationProvider
+            merchantOverrides={translationData.merchantOverrides}
+            staticContent={translationData.staticContent}
+            t={options?.t}
+            translationStore={translationStoreRef.current}
+          >
+            <StudioConnect />
+            <Component {...props} />
+          </TranslationProvider>
+        </StudioSelectionStoreContext.Provider>
       </ThemeSettingsStoreContext.Provider>
     )
   }
@@ -772,7 +775,7 @@ function useTranslationData(): {
  * }
  * ```
  */
-export function useThemeSettings<T = HydrogenThemeSettings>() {
+export function useThemeSettings<T = WeaverseThemeSettings>() {
   const themeSettingsStore = useThemeSettingsStore()
   const settings = useSafeExternalStore(
     themeSettingsStore.subscribe,

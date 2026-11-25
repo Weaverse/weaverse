@@ -2,7 +2,10 @@ import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
 
 let require = createRequire(import.meta.url)
-let { registerComponent, WeaverseHydrogen } = require('@weaverse/hydrogen')
+let {
+  registerComponent,
+  WeaverseHydrogen,
+} = require('@weaverse/hydrogen/internal')
 let { WeaverseRoot } = require('@weaverse/react')
 
 // Use the renderer's own React pair in the isolated package consumer.
