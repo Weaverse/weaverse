@@ -771,8 +771,12 @@ class NextServerClient implements WeaverseNextServerClient {
  * @remarks
  * Create one client per request. The project id resolves from
  * `?weaverseProjectId=` → a `projectId` function → a `projectId` string →
- * `WEAVERSE_PROJECT_ID`. Host and API base resolution follow
- * {@link getWeaverseNextConfigs}.
+ * `WEAVERSE_PROJECT_ID`. The Studio host resolves from a trusted
+ * `?weaverseHost=` (`https://*.weaverse.io`, `https://*.weaverse.dev`) →
+ * `weaverseHost` → `WEAVERSE_HOST` → `https://studio.weaverse.io`, and the API
+ * base from a trusted `?weaverseHost=` → `weaverseApiBase` →
+ * `WEAVERSE_PUBLIC_API_BASE` → a non-default `WEAVERSE_HOST` →
+ * `https://api.weaverse.io`. Env keys are read from `env`, then `process.env`.
  *
  * @example
  * ```ts

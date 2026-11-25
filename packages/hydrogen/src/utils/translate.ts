@@ -17,6 +17,8 @@ export { getNestedKey }
  * @example
  * interpolate('Hello {{name}}!', { name: 'World' }) // => 'Hello World!'
  * interpolate('-{{percentage}}% Off', { percentage: 15 }) // => '-15% Off'
+ *
+ * @category Utilities
  */
 export function interpolate(
   template: string,
@@ -67,6 +69,8 @@ export interface CreateTranslateSources {
  * exactly that leaf without wiping sibling keys (`cart.subtitle`), and a
  * per-key own-property lookup never builds nested objects from
  * merchant-controlled keys, so it cannot pollute `Object.prototype`.
+ *
+ * @category Utilities
  */
 export function createTranslate(
   sources: CreateTranslateSources

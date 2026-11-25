@@ -163,8 +163,6 @@ export function useTranslation(): TranslationValue {
  *
  * @deprecated Replace `ThemeTextProvider` with {@link TranslationProvider};
  * the props and runtime behavior are unchanged.
- *
- * @category Components
  */
 export const ThemeTextProvider = TranslationProvider
 /**
@@ -172,8 +170,6 @@ export const ThemeTextProvider = TranslationProvider
  *
  * @deprecated Replace `useThemeText` with {@link useTranslation}; the return
  * value is unchanged.
- *
- * @category Hooks
  */
 export const useThemeText = useTranslation
 /**

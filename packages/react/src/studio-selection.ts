@@ -87,6 +87,12 @@ const DETACHED_STORE = new StudioSelectionStore()
  * a theme settings group name, never both. Both are `null` on the storefront,
  * during server rendering and outside a Weaverse root.
  *
+ * @remarks
+ * The component re-renders whenever the selection changes. The adapter's root
+ * mounts the selection store: `withWeaverse` on the React Router root
+ * `Layout`, or `WeaverseNextRootProvider` in Next.js. Without it, the hook
+ * keeps returning the empty selection and the SDK logs a warning in Studio.
+ *
  * @returns The current Studio selection.
  *
  * @example
@@ -97,6 +103,8 @@ const DETACHED_STORE = new StudioSelectionStore()
  *   // ...
  * }
  * ```
+ *
+ * @category Hooks
  */
 export function useStudioSelection(): StudioSelection {
   let store = useContext(StudioSelectionStoreContext) ?? DETACHED_STORE

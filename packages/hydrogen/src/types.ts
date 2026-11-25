@@ -71,13 +71,15 @@ export type {
  *
  * @example
  * ```ts
+ * import { Cache } from '@shopify/hydrogen'
  * import type { WeaverseComponentLoaderArgs } from '@weaverse/hydrogen/react-router'
  *
  * export async function loader({ weaverse, data }: WeaverseComponentLoaderArgs<{ handle: string }>) {
- *   const { collection } = await weaverse.storefront.query(COLLECTION_QUERY, {
+ *   const { data: result } = await weaverse.storefront.graphql(COLLECTION_QUERY, {
  *     variables: { handle: data.handle },
+ *     cache: Cache.short(),
  *   })
- *   return { collection }
+ *   return { collection: result?.collection }
  * }
  * ```
  */
@@ -151,7 +153,7 @@ export interface WeaverseComponentData extends ElementData {
  *
  * @example
  * ```ts
- * import { createSchema } from '@weaverse/hydrogen'
+ * import { createSchema } from '@weaverse/hydrogen/react-router'
  *
  * export const schema = createSchema({
  *   type: 'hero-banner',
@@ -469,8 +471,9 @@ export type WeaverseI18n = ShopifyLocale & {
  * Theme metadata, global settings, and localization configuration.
  *
  * @remarks
- * Pass it as `themeSchema` to {@link WeaverseClient}; its `settings` defaults
- * seed the values returned by {@link useThemeSettings}. `media` is a sibling
+ * Pass it as `themeSchema` to the Weaverse client (`WeaverseClient` on React
+ * Router, `createWeaverseNextServerClient` on Next.js); its `settings` defaults
+ * seed the values returned by `useThemeSettings`. `media` is a sibling
  * of `settings` because its rules are fixed by the theme author rather than
  * edited by merchants.
  *
@@ -539,12 +542,29 @@ export type WeaverseThemeSchema = {
   /**
    * URL patterns for the page types whose routes differ from the Shopify
    * convention, so Studio can navigate to them, e.g.
-   * `{ COLLECTION: '/shop/:handle' }`. See `ThemeRoutes`.
+   * `{ COLLECTION: '/shop/:handle' }`. See `ThemeRoutes`, which only
+   * `@weaverse/schema` exports.
    */
   routes?: ThemeRoutes
   /**
-   * Settings groups listed in the Studio Page Outline, keyed by area. See
-   * `ThemeOutline`.
+   * Settings groups listed in the Studio Page Outline, keyed by area. Values
+   * are settings `group` names, matched case-insensitively. `header` and
+   * `aside` render above the page sections, in that order; every other key,
+   * `footer` included, renders below them in declaration order. See
+   * `ThemeOutline` in `@weaverse/schema`.
+   *
+   * To let Studio highlight and select a group's DOM, spread
+   * `getThemeElementProps('Header')` (from `@weaverse/schema`) on the element
+   * that renders it.
+   *
+   * @example
+   * ```ts
+   * outline: {
+   *   header: ['Scrolling announcements', 'Header'],
+   *   footer: ['Footer'],
+   *   'popups-and-newsletter': ['Newsletter Popup'],
+   * }
+   * ```
    */
   outline?: ThemeOutline
   /** Theme localization configuration. */
@@ -739,7 +759,15 @@ export type WeaverseClientArgs = {
    * **Value Types**:
    * - Static string: 'project-123' (existing usage)
    * - Synchronous function: () => determineProject(request)
-   * - Asynchronous function: async () => await getProject(request) (must be awaited)
+   *
+   * An `async` function, or one that returns a promise, makes the constructor
+   * throw a {@link WeaverseError} with code `ASYNC_PROJECT_ID`, even though the
+   * type lists `() => Promise<string>`: resolve the ID first and pass the
+   * result, for example `projectId: await resolveProjectId(request)`. When no
+   * project ID resolves (`?weaverseProjectId=`, this argument or
+   * `WEAVERSE_PROJECT_ID`), the constructor throws `MISSING_PROJECT_ID`; a
+   * malformed value throws `INVALID_PROJECT_ID`. Both happen whatever
+   * `throwPageLoadFailures` is set to.
    *
    * **Backward Compatibility**:
    * - Optional parameter (defaults to environment variable)
@@ -791,7 +819,31 @@ export type WeaverseStorefrontCallOptions = {
 /** Storefront API client accepted by `WeaverseClient`, with a per-call `cache` option. */
 export type WeaverseStorefront = StorefrontClient<WeaverseStorefrontCallOptions>
 
-/** Environment variables read by Weaverse, plus any other storefront variables. */
+/**
+ * Environment variables read by Weaverse, plus any other storefront variables.
+ *
+ * @example
+ * Hydrogen 2026.10 has no `HydrogenEnv`, so a theme's `Env` extends this type
+ * in `env.d.ts`, and the load context type comes from the app's own
+ * `createAppContext()`:
+ * ```ts
+ * import type { WeaverseEnv } from '@weaverse/hydrogen/react-router'
+ * import type { AppContext } from './app/.server/context' // includes `weaverse: WeaverseClient`
+ *
+ * declare module 'react-router' {
+ *   interface AppLoadContext extends AppContext {}
+ *   interface RouterContextProvider extends AppContext {}
+ * }
+ *
+ * declare global {
+ *   interface Env extends WeaverseEnv {
+ *     SESSION_SECRET: string
+ *     PUBLIC_STORE_DOMAIN: string
+ *     WEAVERSE_PROJECT_ID: string
+ *   }
+ * }
+ * ```
+ */
 export interface WeaverseEnv {
   /** Shopify store domain exposed to Studio. */
   PUBLIC_STORE_DOMAIN?: string
@@ -911,6 +963,9 @@ export class WeaverseError extends Error {
  *   a page/project envelope.
  * - `configuration`: the request was refused or could not be built (missing or
  *   invalid project ID, 400/401/403 from the API). Retrying will not help.
+ *
+ * Suggested responses: `503` without caching for `unavailable` and
+ * `invalid-response`, `500` for `configuration`.
  */
 export type WeaverseLoadFailureKind =
   | 'unavailable'
@@ -923,6 +978,47 @@ export type WeaverseLoadFailureKind =
  *
  * Genuine absence is not an error: a missing project still resolves to `null`
  * and an unassigned page still resolves to a fallback page.
+ *
+ * @remarks
+ * `code` is always `LOAD_FAILURE`; `kind` tells a route whether to answer
+ * with a retryable or a configuration error. The Next.js server client
+ * (`@weaverse/hydrogen/next/server`) takes the same opt-in option and `kind`
+ * values, with two differences: a missing project ID is a `configuration`
+ * load failure rather than a constructor error, and it does not retry, so
+ * `unavailable` means the first request failed.
+ *
+ * @example
+ * Answer an outage with a 503 instead of a 404 that crawlers treat as a
+ * deleted page, by wrapping `loadPage` once where the client is created
+ * (as Pilot does in `app/weaverse/load-failure.ts`):
+ * ```ts
+ * import { type WeaverseClient, WeaverseLoadError } from '@weaverse/hydrogen/react-router'
+ * import { data } from 'react-router'
+ *
+ * export function throwRouteFailures(client: WeaverseClient): WeaverseClient {
+ *   const loadPage = client.loadPage
+ *   client.loadPage = async (params) => {
+ *     try {
+ *       return await loadPage(params)
+ *     } catch (error) {
+ *       if (!(error instanceof WeaverseLoadError)) throw error
+ *       const retryable = error.kind !== 'configuration'
+ *       throw data(
+ *         { weaverseFailure: retryable ? 'unavailable' : 'error' },
+ *         { status: retryable ? 503 : 500, headers: { 'Cache-Control': 'no-store' } }
+ *       )
+ *     }
+ *   }
+ *   return client
+ * }
+ *
+ * // app/.server/context.ts
+ * const weaverse = throwRouteFailures(
+ *   new WeaverseClient({ ...args, throwPageLoadFailures: true })
+ * )
+ * ```
+ *
+ * @category Utilities
  */
 export class WeaverseLoadError extends WeaverseError {
   /** Failure class used to choose a response status or recovery action. */

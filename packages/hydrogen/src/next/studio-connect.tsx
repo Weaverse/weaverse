@@ -39,8 +39,6 @@ export interface LoadWeaverseNextStudioScriptOptions {
  * context, deduping by src. SSR-safe (no-op without `document`) so it can run
  * unconditionally from a root layout/error boundary before any page tree or
  * runtime exists — e.g. App Router `not-found.tsx` / `error.tsx` routes.
- *
- * @category Utilities
  */
 export function loadWeaverseNextStudioScript(
   context?: WeaverseNextRequestContext,

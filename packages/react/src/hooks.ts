@@ -15,9 +15,8 @@ export {
  * @remarks
  * `itemInstances` maps component instance IDs to their item stores, `data` is
  * the current page data, and `elementRegistry` maps component types (not
- * instance IDs or DOM nodes) to their registered definitions. Pass the
- * integration's runtime type (`WeaverseHydrogen` or `WeaverseNextRuntime`) as
- * `T` for its page data type. In Next.js, call it from a Client Component.
+ * instance IDs or DOM nodes) to their registered definitions. In Next.js,
+ * call it from a Client Component.
  *
  * @typeParam T - Runtime subtype expected by the integration.
  *
@@ -26,7 +25,7 @@ export {
  * @example
  * Toggle another component by its instance ID:
  * ```tsx
- * import { useWeaverse } from '@weaverse/hydrogen' // or '@weaverse/next'
+ * import { useWeaverse } from '@weaverse/hydrogen/react-router' // or '@weaverse/hydrogen/next'
  *
  * export function AnnouncementToggle() {
  *   let { itemInstances } = useWeaverse()
@@ -41,6 +40,18 @@ export {
  *       {bar.data.isVisible ? 'Hide' : 'Show'} announcement
  *     </button>
  *   )
+ * }
+ * ```
+ *
+ * @example
+ * Type `data` to read the page data, for example with `WeaversePageData` in a
+ * React Router theme (`WeaverseNextPageData` in Next.js):
+ * ```tsx
+ * import { useWeaverse, type WeaversePageData } from '@weaverse/hydrogen/react-router'
+ *
+ * export function PageInfo() {
+ *   let { data } = useWeaverse<{ data: WeaversePageData }>()
+ *   return <h1>{data.name}</h1>
  * }
  * ```
  */
@@ -67,7 +78,7 @@ export function useWeaverse<T = Weaverse>() {
  * @example
  * Read the current component's data:
  * ```tsx
- * import { useItemInstance } from '@weaverse/hydrogen' // or '@weaverse/next'
+ * import { useItemInstance } from '@weaverse/hydrogen/react-router' // or '@weaverse/hydrogen/next'
  *
  * export function ProductDetails() {
  *   let item = useItemInstance()
@@ -81,7 +92,7 @@ export function useWeaverse<T = Weaverse>() {
  * @example
  * Update another component by its instance ID:
  * ```tsx
- * import { useItemInstance } from '@weaverse/hydrogen' // or '@weaverse/next'
+ * import { useItemInstance } from '@weaverse/hydrogen/react-router' // or '@weaverse/hydrogen/next'
  *
  * export function ResetFilters() {
  *   let productGrid = useItemInstance('product-grid-main')
@@ -120,7 +131,7 @@ export let useItemInstance = (id?: string) => {
  * @example
  * Read loader data and settings from the parent component:
  * ```tsx
- * import { useParentInstance } from '@weaverse/hydrogen' // or '@weaverse/next'
+ * import { useParentInstance } from '@weaverse/hydrogen/react-router' // or '@weaverse/hydrogen/next'
  *
  * export function ReviewItem({ text }: { text: string }) {
  *   let parent = useParentInstance()
@@ -156,7 +167,7 @@ export let useParentInstance = () => {
  * @example
  * Show only the active slide of a carousel:
  * ```tsx
- * import { useChildInstances } from '@weaverse/hydrogen' // or '@weaverse/next'
+ * import { useChildInstances } from '@weaverse/hydrogen/react-router' // or '@weaverse/hydrogen/next'
  * import { useEffect, useState } from 'react'
  *
  * export function Carousel() {

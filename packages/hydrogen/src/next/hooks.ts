@@ -19,8 +19,6 @@ function useWeaverseNextContext(hookName: string) {
 /**
  * Read explicit root/global data passed to the provider. Next-native
  * replacement for `useRouteLoaderData('root')`.
- *
- * @category Hooks
  */
 export function useWeaverseRootData<T = unknown>(): T {
   return useWeaverseNextContext('useWeaverseRootData').rootData as T
@@ -29,18 +27,12 @@ export function useWeaverseRootData<T = unknown>(): T {
 /**
  * Read explicit page/route commerce data passed to the provider. Next-native
  * replacement for section-level `useLoaderData()`.
- *
- * @category Hooks
  */
 export function useWeaversePageData<T = unknown>(): T {
   return useWeaverseNextContext('useWeaversePageData').pageData as T
 }
 
-/**
- * Read the app-provided commerce context (storefront/cart/customer).
- *
- * @category Hooks
- */
+/** Read the app-provided commerce context (storefront/cart/customer). */
 export function useWeaverseCommerce<T = WeaverseNextCommerceContext>(): T {
   return useWeaverseNextContext('useWeaverseCommerce').commerce as T
 }
@@ -57,7 +49,7 @@ export function useWeaverseCommerce<T = WeaverseNextCommerceContext>(): T {
  * ```tsx
  * 'use client'
  *
- * import { useThemeSettings } from '@weaverse/next'
+ * import { useThemeSettings } from '@weaverse/hydrogen/next'
  *
  * type ThemeSettings = { colorPrimary: string; navHeightMobile: number }
  *
@@ -78,7 +70,7 @@ export function useWeaverseCommerce<T = WeaverseNextCommerceContext>(): T {
  * ```tsx
  * 'use client'
  *
- * import { useThemeSettings } from '@weaverse/next'
+ * import { useThemeSettings } from '@weaverse/hydrogen/next'
  *
  * export function GlobalStyle() {
  *   let { bodyBaseSize, headingBaseSize } = useThemeSettings()

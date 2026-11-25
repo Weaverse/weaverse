@@ -528,7 +528,7 @@ export interface WeaverseHydrogenRootProps {
  *
  * @example
  * ```tsx
- * import { WeaverseHydrogenRoot } from '@weaverse/hydrogen'
+ * import { WeaverseHydrogenRoot } from '@weaverse/hydrogen/react-router'
  * import type { Route } from './+types/$'
  * import { components } from '~/weaverse/components'
  *
@@ -665,7 +665,7 @@ export type WithWeaverseOptions = {
  * @example
  * ```tsx
  * // app/root.tsx
- * import { withWeaverse } from '@weaverse/hydrogen'
+ * import { withWeaverse } from '@weaverse/hydrogen/react-router'
  * import type { ReactNode } from 'react'
  * import type { Route } from './+types/root'
  *
@@ -750,12 +750,12 @@ function useTranslationData(): {
  * it falls back to a store built from the root loader's `weaverseTheme` data.
  *
  * @category Hooks
- * @typeParam T - Shape of your theme's settings; defaults to {@link HydrogenThemeSettings}.
+ * @typeParam T - Shape of your theme's settings; defaults to {@link WeaverseThemeSettings}.
  * @returns Current theme settings object
  *
  * @example
  * ```tsx
- * import { useThemeSettings } from '@weaverse/hydrogen'
+ * import { useThemeSettings } from '@weaverse/hydrogen/react-router'
  *
  * type ThemeSettings = {
  *   colorPrimary: string

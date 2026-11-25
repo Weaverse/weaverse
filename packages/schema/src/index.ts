@@ -73,7 +73,7 @@ function reportSchemaIssues(issues: readonly SchemaValidationIssue[]): void {
  *
  * @example
  * ```tsx
- * import { createSchema, IMAGES_PLACEHOLDERS } from '@weaverse/hydrogen' // or '@weaverse/next'
+ * import { createSchema, IMAGES_PLACEHOLDERS } from '@weaverse/hydrogen/react-router' // or '@weaverse/hydrogen/next'
  *
  * export let schema = createSchema({
  *   type: 'hero-banner',

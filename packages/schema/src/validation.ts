@@ -533,7 +533,7 @@ export interface RangeInputConfigs {
 /**
  * Configuration for the `image` and `video` media pickers.
  *
- * Also accepted as `media` on `HydrogenThemeSchema`, where it sets the
+ * Also accepted as `media` on `WeaverseThemeSchema`, where it sets the
  * store-wide default. A value declared here overrides the theme's value for
  * this input only, field by field: an omitted field inherits the theme's,
  * while `excludeFilenamePrefixes: []` deliberately shows every file.
@@ -633,7 +633,7 @@ export interface ComponentPresets {
 }
 
 /**
- * Public component schema authoring contract. `HydrogenComponentSchema` is an
+ * Public component schema authoring contract. `WeaverseComponentSchema` is an
  * alias of this type.
  *
  * @remarks
