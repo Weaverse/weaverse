@@ -210,6 +210,13 @@ const BODY_FREE_CACHE_SENTINEL = '\u0000weaverse:body-free'
  * through Hydrogen's cache. `API` is the API version segment (`'v1'`), not a
  * complete endpoint URL.
  *
+ * The constructor checks the project ID, whatever `throwPageLoadFailures` is
+ * set to: it throws a {@link WeaverseError} with code `MISSING_PROJECT_ID`
+ * when none resolves (`?weaverseProjectId=`, the `projectId` argument or
+ * `WEAVERSE_PROJECT_ID`), `INVALID_PROJECT_ID` for a malformed `projectId`,
+ * and `ASYNC_PROJECT_ID` for an `async` `projectId` function, which must be
+ * awaited before you create the client.
+ *
  * @category Utilities
  *
  * @example

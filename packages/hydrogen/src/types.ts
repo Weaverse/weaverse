@@ -472,7 +472,10 @@ export type WeaverseI18n = ShopifyLocale & {
  * Router, `createWeaverseNextServerClient` on Next.js); its `settings` defaults
  * seed the values returned by `useThemeSettings`. `media` is a sibling
  * of `settings` because its rules are fixed by the theme author rather than
- * edited by merchants.
+ * edited by merchants. `outline` lists settings groups in Studio's Page
+ * Outline, keyed by area: `header` and `aside` render above the page
+ * sections, every other key below them. `routes` and `outline` take the
+ * `ThemeRoutes` and `ThemeOutline` types from `@weaverse/schema`.
  *
  * @example
  * ```ts
@@ -494,6 +497,11 @@ export type WeaverseI18n = ShopifyLocale & {
  *     },
  *   ],
  *   routes: { COLLECTION: '/shop/:handle' },
+ *   outline: {
+ *     header: ['Scrolling announcements', 'Header'],
+ *     footer: ['Footer'],
+ *     'popups-and-newsletter': ['Newsletter Popup'],
+ *   },
  * }
  * ```
  */
