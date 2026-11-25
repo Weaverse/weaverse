@@ -768,7 +768,6 @@ class NextServerClient implements WeaverseNextServerClient {
  * Create a server-side {@link WeaverseNextServerClient} for Next.js App Router
  * routes / server components.
  *
- * @remarks
  * Create one client per request. The project id resolves from
  * `?weaverseProjectId=` → a `projectId` function → a `projectId` string →
  * `WEAVERSE_PROJECT_ID`. The Studio host resolves from a trusted

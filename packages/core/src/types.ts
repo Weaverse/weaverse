@@ -36,7 +36,7 @@ export type PositionInputValue =
 /**
  * Input controls supported by legacy Core schemas.
  *
- * @remarks Prefer the equivalent input types from `@weaverse/schema` for new
+ * Prefer the equivalent input types from `@weaverse/schema` for new
  * schemas. This type remains available for backward compatibility.
  */
 export type InputType =
@@ -160,7 +160,7 @@ export type WeaverseElement = {
 /**
  * Minimal legacy schema metadata for an element.
  *
- * @remarks Prefer `SchemaType` from `@weaverse/schema` for new schemas. This
+ * Prefer `SchemaType` from `@weaverse/schema` for new schemas. This
  * type remains available for backward compatibility.
  */
 export type ElementSchema = {

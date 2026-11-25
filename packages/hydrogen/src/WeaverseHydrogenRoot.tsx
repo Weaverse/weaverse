@@ -516,7 +516,6 @@ export interface WeaverseHydrogenRootProps {
  * Pass `data` to override automatic route-loader resolution. A promise is
  * handled with React Router's `Await`, while explicit `null` suppresses output.
  *
- * @remarks
  * - Without `data`, the closest route's `weaverseData` loader field is used,
  *   so a layout route and a child route can each render their own root.
  * - Missing auto-resolved data renders `errorComponent`.
@@ -650,7 +649,6 @@ export type WithWeaverseOptions = {
  * wrapper (`export default withWeaverse(App)`) is replaced by the error
  * boundary on those routes and would drop the bridge.
  *
- * @remarks
  * The root loader must return the result of
  * {@link WeaverseClient.loadThemeSettings} under the `weaverseTheme` key:
  * the theme store reads `weaverseTheme.theme` and the translation provider
@@ -744,7 +742,6 @@ function useTranslationData(): {
 /**
  * React hook to access Weaverse theme settings from anywhere in your component tree.
  *
- * @remarks
  * Subscribes to the theme settings store provided by {@link withWeaverse}, so
  * components re-render when settings change in Studio. Outside that provider
  * it falls back to a store built from the root loader's `weaverseTheme` data.

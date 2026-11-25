@@ -146,7 +146,6 @@ export interface WeaverseComponentData extends ElementData {
 /**
  * Schema exported by a Hydrogen component module. Public alias for `SchemaType`.
  *
- * @remarks
  * The alias itself is not deprecated; only its `inspector` (use `settings`)
  * and `enabledOn` (use `enabled`) fields are. Author it with `createSchema()`
  * to type-check the object and get development-time validation warnings.
@@ -323,7 +322,6 @@ export interface WeaverseHydrogenParams extends Omit<
 /**
  * Export shape for a renderable component, its schema, and optional loader.
  *
- * @remarks
  * A component module's exports (`default`, `schema`, `loader`) match this
  * shape, so `import * as Hero from './hero'` can be listed directly in the
  * `components` array passed to {@link WeaverseClient} and
@@ -470,7 +468,6 @@ export type WeaverseI18n = ShopifyLocale & {
 /**
  * Theme metadata, global settings, and localization configuration.
  *
- * @remarks
  * Pass it as `themeSchema` to the Weaverse client (`WeaverseClient` on React
  * Router, `createWeaverseNextServerClient` on Next.js); its `settings` defaults
  * seed the values returned by `useThemeSettings`. `media` is a sibling
@@ -979,7 +976,6 @@ export type WeaverseLoadFailureKind =
  * Genuine absence is not an error: a missing project still resolves to `null`
  * and an unassigned page still resolves to a fallback page.
  *
- * @remarks
  * `code` is always `LOAD_FAILURE`; `kind` tells a route whether to answer
  * with a retryable or a configuration error. The Next.js server client
  * (`@weaverse/hydrogen/next/server`) takes the same opt-in option and `kind`

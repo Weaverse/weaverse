@@ -1,7 +1,6 @@
 /**
  * Placeholder asset URLs for component schema defaults and theme previews.
  *
- * @remarks
  * Keys: `logo_white`, `logo_black`, `image`, `banner_1`–`banner_2`,
  * `collection_1`–`collection_6` and `product_1`–`product_18`.
  *

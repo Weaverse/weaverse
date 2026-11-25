@@ -7,7 +7,6 @@ import {
  * Filter out Weaverse-specific query parameters from product options.
  * Removes `isDesignMode` and any parameters starting with `weaverse` prefix.
  *
- * @remarks
  * Delegates to Shopify Hydrogen 2026.10's `getSelectedProductOptions`. The
  * Next.js adapter has no equivalent; a Next.js storefront reads product
  * options from its own route search params. All other

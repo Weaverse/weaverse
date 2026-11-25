@@ -596,7 +596,6 @@ export type Input = BasicInput | HeadingInput
 /**
  * A labeled group of component settings.
  *
- * @remarks
  * The name keeps "Inspector" for compatibility; new schemas list groups under
  * `settings`, not the deprecated `inspector`.
  */
@@ -636,7 +635,6 @@ export interface ComponentPresets {
  * Public component schema authoring contract. `WeaverseComponentSchema` is an
  * alias of this type.
  *
- * @remarks
  * Only `inspector` (use `settings`) and `enabledOn` (use `enabled`) are
  * deprecated. `enabled` controls insertion availability only: a type listed in
  * another component's `childTypes` appears in the root Add Section picker only

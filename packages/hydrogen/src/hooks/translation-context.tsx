@@ -145,7 +145,6 @@ export function TranslationProvider({
  *
  * Must be used inside a component wrapped by `withWeaverse` or `TranslationProvider`.
  *
- * @remarks
  * Keys are dot paths into the theme's text (`cart.title` reads
  * `{ "cart": { "title": "..." } }`), and `t()` replaces `{{name}}`
  * placeholders with the matching `variables` value. It does not handle plurals

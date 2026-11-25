@@ -12,7 +12,6 @@ export {
 /**
  * Returns the active Weaverse runtime from React context.
  *
- * @remarks
  * `itemInstances` maps component instance IDs to their item stores, `data` is
  * the current page data, and `elementRegistry` maps component types (not
  * instance IDs or DOM nodes) to their registered definitions. In Next.js,
@@ -64,14 +63,13 @@ export function useWeaverse<T = Weaverse>() {
  * Returns a Weaverse item instance by ID, or the current rendered item when no
  * ID is provided.
  *
- * @param id - Optional item ID to look up.
- * @returns The matching item instance, or `null` when it is unavailable.
- *
- * @remarks
  * The item store exposes `data` (always includes `id` and `type`),
  * `setData(update)` to merge an update and re-render, `triggerUpdate()` to
  * re-render without changing data, `_id`, and `_element` (the DOM node, when
  * mounted).
+ *
+ * @param id - Optional item ID to look up.
+ * @returns The matching item instance, or `null` when it is unavailable.
  *
  * @category Hooks
  *
@@ -154,13 +152,12 @@ export let useParentInstance = () => {
 /**
  * Returns the direct child instances of an item.
  *
+ * A found parent instance must have a `children` array in its data; if it is
+ * missing, the hook throws instead of returning an empty array.
+ *
  * @param id - Optional parent item ID; defaults to the current rendered item.
  * @returns Child item stores registered in the runtime, or an empty array
  * when the parent instance cannot be found.
- *
- * @remarks
- * A found parent instance must have a `children` array in its data; if it is
- * missing, the hook throws instead of returning an empty array.
  *
  * @category Hooks
  *

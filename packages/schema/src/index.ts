@@ -64,7 +64,6 @@ function reportSchemaIssues(issues: readonly SchemaValidationIssue[]): void {
  * both the browser bundle and the Oxygen/SSR worker. Production storefronts
  * therefore ship section schemas with zero validation overhead and no zod.
  *
- * @remarks
  * Returns the original schema immediately. Outside production, validation
  * issues are logged as `console.warn` warnings; validation and import failures
  * never throw through the call.

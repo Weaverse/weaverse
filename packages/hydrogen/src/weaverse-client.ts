@@ -206,7 +206,6 @@ const BODY_FREE_CACHE_SENTINEL = '\u0000weaverse:body-free'
  * {@link WeaverseClient.loadPage} from route loaders and
  * {@link WeaverseClient.loadThemeSettings} from the root loader.
  *
- * @remarks
  * Also runs registered component loaders and routes Builder API requests
  * through Hydrogen's cache. `API` is the API version segment (`'v1'`), not a
  * complete endpoint URL.
@@ -739,7 +738,6 @@ export class WeaverseClient {
    * Uses direct fetch in design mode, Hydrogen's cached fetch in production.
    * Automatically includes projectId in cache key for multi-project isolation.
    *
-   * @remarks
    * Pass Hydrogen cache-control options as `strategy`, not the Fetch API
    * `cache` property.
    *
@@ -887,13 +885,12 @@ export class WeaverseClient {
    * Load theme settings from Weaverse API with fallback to schema defaults.
    * Merges remote settings with local theme schema and handles design mode serialization.
    *
-   * @param strategy - Optional cache strategy override
-   * @returns Promise resolving to theme settings response
-   *
-   * @remarks
    * Return the whole response under `weaverseTheme` from the root loader so
    * {@link withWeaverse} can initialize the theme settings and translation
    * stores. Read setting values from `response.theme`.
+   *
+   * @param strategy - Optional cache strategy override
+   * @returns Promise resolving to theme settings response
    *
    * @example
    * ```ts
@@ -1131,7 +1128,6 @@ export class WeaverseClient {
    * page of results cannot be loaded, so a sitemap route can answer 5xx
    * instead of serving a partial or empty sitemap that search engines cache.
    *
-   * @remarks
    * The list is not filtered by publication state, so an entry is not proof
    * that the page is published. Apply your own publication policy before you
    * add a route to a public sitemap.
@@ -1198,15 +1194,6 @@ export class WeaverseClient {
    * Load page data from Weaverse API with optional route-level project override.
    * Fetches page content, executes component loaders, and handles empty items fallback.
    *
-   * @param params - Optional page loading parameters
-   * @param params.type - Page type (INDEX, PAGE, PRODUCT, COLLECTION, etc.)
-   * @param params.handle - Page handle for dynamic routes
-   * @param params.locale - Locale override
-   * @param params.projectId - Route-level project ID override (for multi-project)
-   * @param params.strategy - Custom cache strategy override
-   * @returns Promise resolving to page data or null on error
-   *
-   * @remarks
    * What `loadPage()` resolves to:
    * - A page when one is assigned to the route.
    * - A fallback page with `isFallback: true` when the project loads but no
@@ -1226,6 +1213,14 @@ export class WeaverseClient {
    * client's `locale` argument, or `storefront.locale`. `strategy` takes effect
    * only when the page request goes through Hydrogen's cache: requests to the
    * default Weaverse public API proxy skip it.
+   *
+   * @param params - Optional page loading parameters
+   * @param params.type - Page type (INDEX, PAGE, PRODUCT, COLLECTION, etc.)
+   * @param params.handle - Page handle for dynamic routes
+   * @param params.locale - Locale override
+   * @param params.projectId - Route-level project ID override (for multi-project)
+   * @param params.strategy - Custom cache strategy override
+   * @returns Promise resolving to page data or null on error
    *
    * @example
    * ```ts
