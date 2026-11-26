@@ -53,7 +53,6 @@ export interface WeaverseStudioCspDirectives {
  * })
  * ```
  *
- * @example
  * Append Studio's sources to the theme's own instead of assigning them:
  * overwriting `scriptSrc` drops sources such as `'unsafe-inline'` inside
  * Studio.

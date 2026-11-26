@@ -24,10 +24,10 @@ export { InspectorGroup } from '@weaverse/schema';
 
 export { PageType } from '@weaverse/schema';
 
-export type PublicEnv = {
+export interface PublicEnv {
     PUBLIC_STORE_DOMAIN: string;
     PUBLIC_STOREFRONT_API_TOKEN: string;
-};
+}
 
 export { SchemaType } from '@weaverse/schema';
 
@@ -69,11 +69,11 @@ export declare class WeaverseError extends Error {
     constructor(message: string, code?: string, statusCode?: number, context?: Record<string, unknown>);
 }
 
-export type WeaverseI18n = ShopifyLocale & {
+export interface WeaverseI18n extends ShopifyLocale {
     label?: string;
     pathPrefix?: string;
     [key: string]: any;
-};
+}
 
 export { WeaverseImage } from '@weaverse/core';
 
@@ -84,7 +84,7 @@ export declare class WeaverseLoadError extends WeaverseError {
 
 export type WeaverseLoadFailureKind = 'unavailable' | 'invalid-response' | 'configuration';
 
-export type WeaverseLoaderData = {
+export interface WeaverseLoaderData {
     configs: Omit<WeaverseProjectConfigs, 'publicEnv'> & {
         requestInfo: WeaverseLoaderRequestInfo;
     };
@@ -92,20 +92,20 @@ export type WeaverseLoaderData = {
     project: WeaverseProjectType;
     pageAssignment?: WeaversePageAssignment;
     isFallback?: boolean;
-};
+}
 
-export type WeaverseLoaderRequestInfo = {
+export interface WeaverseLoaderRequestInfo {
     search: string;
     pathname: string;
     queries: {
         [key: string]: string | boolean;
     };
     i18n: WeaverseI18n;
-};
+}
 
 export type WeaverseMetaObject = WeaverseResourcePickerData;
 
-export type WeaversePageAssignment = {
+export interface WeaversePageAssignment {
     projectId: string;
     type: PageType;
     handle: string;
@@ -115,7 +115,7 @@ export type WeaversePageAssignment = {
         sourceProjectId: string;
         depth: number;
     };
-};
+}
 
 export interface WeaversePageData extends WeaverseProjectDataType {
     __cacheId?: string;
@@ -128,7 +128,7 @@ export interface WeaversePageData extends WeaverseProjectDataType {
 
 export type WeaverseProduct = WeaverseResourcePickerData;
 
-export type WeaverseProjectConfigs = {
+export interface WeaverseProjectConfigs {
     projectId: string;
     weaverseHost: string;
     weaverseApiBase: string;
@@ -139,14 +139,14 @@ export type WeaverseProjectConfigs = {
     isRevisionPreview?: boolean;
     sectionType?: string;
     publicEnv?: PublicEnv;
-};
+}
 
-export type WeaverseProjectType = {
+export interface WeaverseProjectType {
     id: string;
     weaverseShopId: string;
     name: string;
     [key: string]: any;
-};
+}
 
 export interface WeaverseStudioCspDirectives {
     connectSrc?: string[];
@@ -157,7 +157,7 @@ export interface WeaverseStudioCspDirectives {
     styleSrc?: string[];
 }
 
-export type WeaverseThemeSchema = {
+export interface WeaverseThemeSchema {
     info: {
         name: string;
         version: string;
@@ -182,13 +182,13 @@ export type WeaverseThemeSchema = {
         staticContent?: Record<string, unknown>;
         translation?: boolean;
     };
-};
+}
 
 export type WeaverseThemeSettings = {
     [key: string]: any;
 };
 
-export type WeaverseThemeSettingsResponse = {
+export interface WeaverseThemeSettingsResponse {
     theme?: WeaverseThemeSettings;
     schema?: WeaverseThemeSchema;
     publicEnv?: PublicEnv;
@@ -196,7 +196,7 @@ export type WeaverseThemeSettingsResponse = {
     merchantOverrides?: Record<string, unknown>;
     _error?: string;
     _loadFailed?: boolean;
-};
+}
 
 export { WeaverseVideo } from '@weaverse/core';
 

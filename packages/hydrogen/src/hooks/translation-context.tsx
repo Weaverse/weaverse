@@ -15,7 +15,7 @@ export { createTranslate, getNestedKey, interpolate, type TranslateFunction }
 // ---------------------------------------------------------------------------
 
 /** Translation function, stores, and locale overrides exposed by the provider. */
-export type TranslationValue = {
+export interface TranslationValue {
   /**
    * Translate a key with optional variable interpolation.
    *
@@ -45,7 +45,7 @@ const TranslationContext = createContext<TranslationValue | null>(null)
 TranslationContext.displayName = 'WeaverseTranslationContext'
 
 /** Inputs accepted by {@link TranslationProvider}. */
-export type TranslationProviderProps = {
+export interface TranslationProviderProps {
   /** Theme-provided default-locale translation content. */
   staticContent: Record<string, unknown>
   /** Active-locale translations published by the merchant. */

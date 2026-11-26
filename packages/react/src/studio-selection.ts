@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react'
 import { useSafeExternalStore } from './renderer'
 
 /** What the merchant has selected in Weaverse Studio. */
-export type StudioSelection = {
+export interface StudioSelection {
   /** ID of the selected page item, or `null`. */
   selectedItemId: string | null
   /**

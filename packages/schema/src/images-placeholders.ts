@@ -17,7 +17,6 @@
  * }
  * ```
  *
- * @example
  * Render a placeholder directly:
  * ```tsx
  * <img src={IMAGES_PLACEHOLDERS.product_1} alt="Placeholder product" />

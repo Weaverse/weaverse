@@ -83,7 +83,7 @@ export type {
  * }
  * ```
  */
-export type WeaverseComponentLoaderArgs<T = any, _E = any> = {
+export interface WeaverseComponentLoaderArgs<T = any, _E = any> {
   /** Persisted component data merged with schema defaults. */
   data: T
   /** Request-scoped client available to the component loader. */
@@ -203,7 +203,7 @@ export interface WeaverseComponentProps<L = any> extends WeaverseElement {
 }
 
 /** Normalized request details attached to loader data for Studio navigation. */
-export type WeaverseLoaderRequestInfo = {
+export interface WeaverseLoaderRequestInfo {
   /** URL search string, including the leading question mark when present. */
   search: string
   /** Storefront request pathname. */
@@ -224,7 +224,7 @@ export type WeaverseThemeSettings = {
 }
 
 /** Project metadata returned with a Weaverse page payload. */
-export type WeaverseProjectType = {
+export interface WeaverseProjectType {
   /** Unique Weaverse project identifier. */
   id: string
   /** Identifier of the Shopify shop connected to the project. */
@@ -335,7 +335,7 @@ export interface WeaverseHydrogenParams extends Omit<
  * export const components: WeaverseComponent[] = [HeroBanner]
  * ```
  */
-export type WeaverseComponent<T extends WeaverseComponentProps = any> = {
+export interface WeaverseComponent<T extends WeaverseComponentProps = any> {
   /** React renderer exported by the component module. */
   default: ForwardRefExoticComponent<T> | ((props: T) => React.JSX.Element)
   /** Schema exported by the component module. */
@@ -361,7 +361,7 @@ export type WeaverseStudioQueries = {
 }
 
 /** Storefront-safe environment values exposed with theme settings. */
-export type PublicEnv = {
+export interface PublicEnv {
   /** Public Shopify storefront domain. */
   PUBLIC_STORE_DOMAIN: string
   /** Public Storefront API access token. */
@@ -369,7 +369,7 @@ export type PublicEnv = {
 }
 
 /** Resolved project, API endpoint, and rendering-mode configuration. */
-export type WeaverseProjectConfigs = {
+export interface WeaverseProjectConfigs {
   /** Identifier of the Weaverse project supplying content. */
   projectId: string
   /** Origin used for Studio assets and editor communication. */
@@ -393,7 +393,7 @@ export type WeaverseProjectConfigs = {
 }
 
 /** Assignment describing which project page handles a storefront route. */
-export type WeaversePageAssignment = {
+export interface WeaversePageAssignment {
   /** Project identifier owning the assigned page. */
   projectId: string
   /** Storefront page type matched by the assignment. */
@@ -414,7 +414,7 @@ export type WeaversePageAssignment = {
 }
 
 /** Complete payload returned by `WeaverseClient.loadPage()`. */
-export type WeaverseLoaderData = {
+export interface WeaverseLoaderData {
   /** Resolved runtime configuration and normalized request details. */
   configs: Omit<WeaverseProjectConfigs, 'publicEnv'> & {
     /** Normalized URL and locale information for the request. */
@@ -456,7 +456,7 @@ export interface WeaversePageData extends WeaverseProjectDataType {
 }
 
 /** Locale metadata used when requesting localized Weaverse content. */
-export type WeaverseI18n = ShopifyLocale & {
+export interface WeaverseI18n extends ShopifyLocale {
   /** Human-readable locale label displayed in Studio. */
   label?: string
   /** Locale path prefix used by the storefront router. */
@@ -505,7 +505,7 @@ export type WeaverseI18n = ShopifyLocale & {
  * }
  * ```
  */
-export type WeaverseThemeSchema = {
+export interface WeaverseThemeSchema {
   /** Theme identity, author, and support metadata. */
   info: {
     /** Human-readable theme name. */
@@ -588,7 +588,7 @@ export type WeaverseThemeSchema = {
 }
 
 /** Request body sent to the Weaverse project content endpoint. */
-export type FetchProjectRequestBody = {
+export interface FetchProjectRequestBody {
   /** Identifier of the project to load. */
   projectId: string
   /** Normalized storefront URL being resolved. */
@@ -664,7 +664,8 @@ export function isProjectIdFunction(
 /**
  * Extended WeaverseClient constructor arguments supporting multi-project architecture.
  *
- * @example Static project (existing pattern - backward compatible)
+ * @example
+ * A static project ID:
  * ```ts
  * const weaverse = new WeaverseClient({
  *   ...hydrogenContext,
@@ -672,7 +673,7 @@ export function isProjectIdFunction(
  * })
  * ```
  *
- * @example Dynamic project selection (new capability)
+ * A project ID chosen per request:
  * ```ts
  * const weaverse = new WeaverseClient({
  *   ...hydrogenContext,
@@ -702,7 +703,7 @@ export function isProjectIdFunction(
  * **Request Context Access**:
  * Functions access request via closure from constructor arguments.
  */
-export type WeaverseClientArgs = {
+export interface WeaverseClientArgs {
   /**
    * Request-scoped Hydrogen Storefront API client. Section loaders reach it
    * as `weaverse.storefront`; its `locale` selects the content locale unless
@@ -815,7 +816,13 @@ export type WeaverseClientArgs = {
   throwPageLoadFailures?: boolean
 }
 
-/** Per-call options the storefront client accepts in addition to Hydrogen's. */
+// A type alias, not an interface: Hydrogen's `StorefrontClient` constrains its
+// options to `Record<string, unknown>`. `@interface` makes TypeDoc list the members.
+/**
+ * Per-call options the storefront client accepts in addition to Hydrogen's.
+ *
+ * @interface
+ */
 export type WeaverseStorefrontCallOptions = {
   /** Caching strategy for this Storefront API request. */
   cache?: CachingStrategy
@@ -889,7 +896,7 @@ export type WithCacheFetchResponse<T> = {
 }
 
 /** Theme configuration returned by the Weaverse project API. */
-export type WeaverseThemeSettingsResponse = {
+export interface WeaverseThemeSettingsResponse {
   /** Published theme setting values. */
   theme?: WeaverseThemeSettings
   /** Theme schema included for Studio editing. */
@@ -1266,7 +1273,8 @@ declare module 'react-router' {
 /**
  * Parameters for loadPage method supporting route-level project override.
  *
- * @example Basic usage (uses client-level project)
+ * @example
+ * Load a page from the client's project:
  * ```ts
  * const weaverseData = await weaverse.loadPage({
  *   type: 'PRODUCT',
@@ -1274,7 +1282,7 @@ declare module 'react-router' {
  * })
  * ```
  *
- * @example Route-level project override
+ * Override the project for one route:
  * ```ts
  * export async function loader({ params, context }: LoaderFunctionArgs) {
  *   const { weaverse } = context
@@ -1290,7 +1298,7 @@ declare module 'react-router' {
  * }
  * ```
  */
-export type LoadPageParams = {
+export interface LoadPageParams {
   /**
    * Page type to load from Weaverse CMS.
    *

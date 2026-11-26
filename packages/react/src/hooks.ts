@@ -22,7 +22,11 @@ export {
  * @category Hooks
  *
  * @example
- * Toggle another component by its instance ID:
+ * Toggle another component by its instance ID. `setData()` re-renders that
+ * component, which hides itself (for example, `if (!isVisible) return null`).
+ * `useWeaverse()` does not subscribe to items, so the toggle reads `bar.data`
+ * when clicked; to re-render on an item's changes, read it with React's
+ * `useSyncExternalStore(item.subscribe, item.getSnapShot, item.getSnapShot)`.
  * ```tsx
  * import { useWeaverse } from '@weaverse/hydrogen/react-router' // or '@weaverse/hydrogen/next'
  *
@@ -36,13 +40,12 @@ export {
  *       type="button"
  *       onClick={() => bar.setData({ isVisible: !bar.data.isVisible })}
  *     >
- *       {bar.data.isVisible ? 'Hide' : 'Show'} announcement
+ *       Toggle announcement
  *     </button>
  *   )
  * }
  * ```
  *
- * @example
  * Type `data` to read the page data, for example with `WeaversePageData` in a
  * React Router theme (`WeaverseNextPageData` in Next.js):
  * ```tsx
@@ -87,7 +90,6 @@ export function useWeaverse<T = Weaverse>() {
  * }
  * ```
  *
- * @example
  * Update another component by its instance ID:
  * ```tsx
  * import { useItemInstance } from '@weaverse/hydrogen/react-router' // or '@weaverse/hydrogen/next'
@@ -104,6 +106,27 @@ export function useWeaverse<T = Weaverse>() {
  *       Clear filters
  *     </button>
  *   )
+ * }
+ * ```
+ *
+ * Find the closest Weaverse item from a DOM node. Weaverse renders each item
+ * with a `data-wv-id` attribute:
+ * ```tsx
+ * import { useItemInstance } from '@weaverse/hydrogen/react-router' // or '@weaverse/hydrogen/next'
+ * import { useEffect, useState, type RefObject } from 'react'
+ *
+ * export function useClosestWeaverseItem(ref: RefObject<HTMLElement | null>) {
+ *   let [weaverseId, setWeaverseId] = useState('')
+ *   let weaverseItem = useItemInstance(weaverseId)
+ *
+ *   useEffect(() => {
+ *     if (!weaverseItem && ref.current) {
+ *       let closest = ref.current.closest('[data-wv-id]')
+ *       setWeaverseId(closest?.getAttribute('data-wv-id') ?? '')
+ *     }
+ *   }, [ref, weaverseItem])
+ *
+ *   return weaverseItem
  * }
  * ```
  */
@@ -162,28 +185,34 @@ export let useParentInstance = () => {
  * @category Hooks
  *
  * @example
- * Show only the active slide of a carousel:
+ * Build carousel navigation from the slides' data. Weaverse passes the
+ * rendered child items as `children`, in the same order as the child
+ * instances; the carousel shows the active one itself.
  * ```tsx
  * import { useChildInstances } from '@weaverse/hydrogen/react-router' // or '@weaverse/hydrogen/next'
- * import { useEffect, useState } from 'react'
+ * import { Children, useState, type ComponentProps } from 'react'
  *
- * export function Carousel() {
+ * export function Carousel({ children, ...rest }: ComponentProps<'div'>) {
  *   let [activeIndex, setActiveIndex] = useState(0)
  *   let slides = useChildInstances()
  *
- *   useEffect(() => {
- *     slides.forEach((slide, index) => {
- *       slide.setData({ isVisible: index === activeIndex })
- *     })
- *   }, [slides, activeIndex])
- *
  *   return (
- *     <div>
- *       {slides.map((slide, index) => (
- *         <button key={slide._id} type="button" onClick={() => setActiveIndex(index)}>
- *           {index + 1}
- *         </button>
+ *     <div {...rest}>
+ *       {Children.map(children, (slide, index) => (
+ *         <div hidden={index !== activeIndex}>{slide}</div>
  *       ))}
+ *       <nav>
+ *         {slides.map((slide, index) => (
+ *           <button
+ *             key={slide._id}
+ *             type="button"
+ *             aria-pressed={index === activeIndex}
+ *             onClick={() => setActiveIndex(index)}
+ *           >
+ *             {slide.data.title ?? `Slide ${index + 1}`}
+ *           </button>
+ *         ))}
+ *       </nav>
  *     </div>
  *   )
  * }

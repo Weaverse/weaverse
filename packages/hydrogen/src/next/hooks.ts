@@ -66,7 +66,7 @@ export function useWeaverseCommerce<T = WeaverseNextCommerceContext>(): T {
  * }
  * ```
  *
- * @example
+ * Write theme settings into CSS variables:
  * ```tsx
  * 'use client'
  *

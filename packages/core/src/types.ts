@@ -79,7 +79,7 @@ export type WeaverseResourcePickerData = {
 }
 
 /** Image metadata returned by a Weaverse image input. */
-export type WeaverseImage = {
+export interface WeaverseImage {
   /** The image identifier. */
   id: string
   /** The image URL. */
@@ -106,7 +106,7 @@ export type WeaverseImage = {
 }
 
 /** Video metadata returned by a Weaverse video input. */
-export type WeaverseVideo = {
+export interface WeaverseVideo {
   /** The video identifier. */
   id: string
   /** The video URL. */

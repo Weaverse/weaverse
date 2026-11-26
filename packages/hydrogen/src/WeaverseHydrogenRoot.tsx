@@ -540,10 +540,9 @@ export interface WeaverseHydrogenRootProps {
  * }
  * ```
  *
- * @example
+ * Pass `data` explicitly when a layout and a child route render different
+ * Weaverse pages on the same URL:
  * ```tsx
- * // Pass data explicitly when a layout and a child route render
- * // different Weaverse pages on the same URL.
  * export default function WeaversePage() {
  *   const { weaverseData } = useLoaderData<typeof loader>()
  *   return <WeaverseHydrogenRoot components={components} data={weaverseData} />
@@ -628,7 +627,7 @@ export const WeaverseHydrogenRoot = memo(
 /**
  * Options for the `withWeaverse` HOC.
  */
-export type WithWeaverseOptions = {
+export interface WithWeaverseOptions {
   /**
    * Optional external translation function (e.g. from Shopify i18n).
    * When provided it becomes the **highest-priority** source
@@ -683,9 +682,9 @@ export type WithWeaverseOptions = {
  * export const Layout = withWeaverse(RootLayout)
  * ```
  *
- * @example
+ * Pass an external translation function, which takes the highest priority in
+ * `t()`:
  * ```tsx
- * // An external translation function takes the highest priority in `t()`.
  * export const Layout = withWeaverse(RootLayout, { t: myI18nFunction })
  * ```
  */

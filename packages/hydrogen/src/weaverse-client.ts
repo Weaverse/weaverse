@@ -1239,7 +1239,7 @@ export class WeaverseClient {
    * })
    * ```
    *
-   * @example
+   * Answer a missing page with a 404:
    * ```ts
    * // app/routes/($locale).pages.$handle.tsx
    * export async function loader({ context, params }: Route.LoaderArgs) {

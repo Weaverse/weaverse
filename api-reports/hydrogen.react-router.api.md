@@ -49,7 +49,7 @@ export interface FetchCustomPagesOptions {
     locale?: string;
 }
 
-export type FetchProjectRequestBody = {
+export interface FetchProjectRequestBody {
     projectId: string;
     url: string;
     i18n?: WeaverseI18n;
@@ -59,28 +59,28 @@ export type FetchProjectRequestBody = {
         handle?: string;
     };
     isDesignMode?: boolean;
-};
+}
 
 export { IMAGES_PLACEHOLDERS } from '@weaverse/schema';
 
 export { InspectorGroup } from '@weaverse/schema';
 
-export type LoadPageParams = {
+export interface LoadPageParams {
     type?: PageType;
     locale?: string;
     handle?: string;
     strategy?: CachingStrategy;
     projectId?: string;
-};
+}
 
 export { PageType } from '@weaverse/schema';
 
 export type ProjectIdValue = string | (() => string) | (() => Promise<string>);
 
-export type PublicEnv = {
+export interface PublicEnv {
     PUBLIC_STORE_DOMAIN: string;
     PUBLIC_STOREFRONT_API_TOKEN: string;
-};
+}
 
 export interface RouteLoaderArgs extends Omit<LoaderFunctionArgs, 'context'> {
     context: 0 extends 1 & LoaderFunctionArgs['context'] ? WeaverseRouteAppLoadContext : LoaderFunctionArgs['context'] & WeaverseRouteAppLoadContext;
@@ -94,7 +94,7 @@ export type TranslateFunction = (key: string, variables?: Record<string, string 
 
 export declare function TranslationProvider(input: TranslationProviderProps): import("react").JSX.Element;
 
-export type TranslationProviderProps = {
+export interface TranslationProviderProps {
     staticContent: Record<string, unknown>;
     merchantOverrides?: Record<string, unknown>;
     t?: TranslateFunction;
@@ -102,7 +102,7 @@ export type TranslationProviderProps = {
     // @deprecated
     themeTextStore?: TranslationStore | null;
     children: ReactNode;
-};
+}
 
 export declare class TranslationStore {
     overrides: Record<string, string>;
@@ -113,13 +113,13 @@ export declare class TranslationStore {
     subscribe: (callback: () => void) => () => void;
 }
 
-export type TranslationValue = {
+export interface TranslationValue {
     t: TranslateFunction;
     translationStore: TranslationStore | null;
     // @deprecated
     themeTextStore: TranslationStore | null;
     merchantOverrides: Record<string, unknown> | null;
-};
+}
 
 export type WeaverseBlog = WeaverseResourcePickerData;
 
@@ -149,7 +149,7 @@ export declare class WeaverseClient {
     execComponentLoader: (item: WeaverseComponentData) => Promise<WeaverseComponentData>;
 }
 
-export type WeaverseClientArgs = {
+export interface WeaverseClientArgs {
     storefront: WeaverseStorefront;
     locale?: WeaverseI18n;
     env: WeaverseEnv;
@@ -162,15 +162,15 @@ export type WeaverseClientArgs = {
     projectId?: ProjectIdValue;
     fetchTimeoutMs?: number;
     throwPageLoadFailures?: boolean;
-};
+}
 
 export type WeaverseCollection = WeaverseResourcePickerData;
 
-export type WeaverseComponent<T extends WeaverseComponentProps = any> = {
+export interface WeaverseComponent<T extends WeaverseComponentProps = any> {
     default: ForwardRefExoticComponent<T> | ((props: T) => React.JSX.Element);
     schema: WeaverseComponentSchema;
     loader?: (args: WeaverseComponentLoaderArgs) => Promise<unknown>;
-};
+}
 
 export interface WeaverseComponentData extends ElementData {
     children?: WeaverseChildComponentReference[];
@@ -182,10 +182,10 @@ export interface WeaverseComponentData extends ElementData {
     updatedAt?: string;
 }
 
-export type WeaverseComponentLoaderArgs<T = any, _E = any> = {
+export interface WeaverseComponentLoaderArgs<T = any, _E = any> {
     data: T;
     weaverse: WeaverseClient;
-};
+}
 
 export interface WeaverseComponentProps<L = any> extends WeaverseElement {
     children?: React.JSX.Element[];
@@ -231,11 +231,11 @@ export interface WeaverseHydrogenRootProps {
     errorComponent?: React.FC<WeaverseHydrogenRootErrorProps>;
 }
 
-export type WeaverseI18n = ShopifyLocale & {
+export interface WeaverseI18n extends ShopifyLocale {
     label?: string;
     pathPrefix?: string;
     [key: string]: any;
-};
+}
 
 export { WeaverseImage } from '@weaverse/core';
 
@@ -246,7 +246,7 @@ export declare class WeaverseLoadError extends WeaverseError {
 
 export type WeaverseLoadFailureKind = 'unavailable' | 'invalid-response' | 'configuration';
 
-export type WeaverseLoaderData = {
+export interface WeaverseLoaderData {
     configs: Omit<WeaverseProjectConfigs, 'publicEnv'> & {
         requestInfo: WeaverseLoaderRequestInfo;
     };
@@ -254,20 +254,20 @@ export type WeaverseLoaderData = {
     project: WeaverseProjectType;
     pageAssignment?: WeaversePageAssignment;
     isFallback?: boolean;
-};
+}
 
-export type WeaverseLoaderRequestInfo = {
+export interface WeaverseLoaderRequestInfo {
     search: string;
     pathname: string;
     queries: {
         [key: string]: string | boolean;
     };
     i18n: WeaverseI18n;
-};
+}
 
 export type WeaverseMetaObject = WeaverseResourcePickerData;
 
-export type WeaversePageAssignment = {
+export interface WeaversePageAssignment {
     projectId: string;
     type: PageType;
     handle: string;
@@ -277,7 +277,7 @@ export type WeaversePageAssignment = {
         sourceProjectId: string;
         depth: number;
     };
-};
+}
 
 export interface WeaversePageData extends WeaverseProjectDataType {
     __cacheId?: string;
@@ -290,7 +290,7 @@ export interface WeaversePageData extends WeaverseProjectDataType {
 
 export type WeaverseProduct = WeaverseResourcePickerData;
 
-export type WeaverseProjectConfigs = {
+export interface WeaverseProjectConfigs {
     projectId: string;
     weaverseHost: string;
     weaverseApiBase: string;
@@ -301,14 +301,14 @@ export type WeaverseProjectConfigs = {
     isRevisionPreview?: boolean;
     sectionType?: string;
     publicEnv?: PublicEnv;
-};
+}
 
-export type WeaverseProjectType = {
+export interface WeaverseProjectType {
     id: string;
     weaverseShopId: string;
     name: string;
     [key: string]: any;
-};
+}
 
 export interface WeaverseRouteAppLoadContext extends AppLoadContext {
     weaverse: WeaverseClient;
@@ -335,7 +335,7 @@ export interface WeaverseStudioCspDirectives {
     styleSrc?: string[];
 }
 
-export type WeaverseThemeSchema = {
+export interface WeaverseThemeSchema {
     info: {
         name: string;
         version: string;
@@ -360,13 +360,13 @@ export type WeaverseThemeSchema = {
         staticContent?: Record<string, unknown>;
         translation?: boolean;
     };
-};
+}
 
 export type WeaverseThemeSettings = {
     [key: string]: any;
 };
 
-export type WeaverseThemeSettingsResponse = {
+export interface WeaverseThemeSettingsResponse {
     theme?: WeaverseThemeSettings;
     schema?: WeaverseThemeSchema;
     publicEnv?: PublicEnv;
@@ -374,13 +374,13 @@ export type WeaverseThemeSettingsResponse = {
     merchantOverrides?: Record<string, unknown>;
     _error?: string;
     _loadFailed?: boolean;
-};
+}
 
 export { WeaverseVideo } from '@weaverse/core';
 
-export type WithWeaverseOptions = {
+export interface WithWeaverseOptions {
     t?: TranslateFunction;
-};
+}
 
 export { createSchema } from '@weaverse/schema';
 
