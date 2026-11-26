@@ -41,6 +41,48 @@ export function useWeaverseCommerce<T = WeaverseNextCommerceContext>(): T {
  * Read live Weaverse theme settings. The Studio bridge updates the provider's
  * external store via `updateThemeSettings`, so components re-render during live
  * design-mode edits.
+ *
+ * Pass your theme settings type as `T`. Call it from a Client Component under
+ * {@link WeaverseNextRootProvider} or {@link WeaverseNextProvider}.
+ *
+ * @example
+ * ```tsx
+ * 'use client'
+ *
+ * import { useThemeSettings } from '@weaverse/hydrogen/next'
+ *
+ * type ThemeSettings = { colorPrimary: string; navHeightMobile: number }
+ *
+ * export function Header() {
+ *   let settings = useThemeSettings<ThemeSettings>()
+ *   return (
+ *     <header
+ *       style={{
+ *         height: `${settings.navHeightMobile}rem`,
+ *         backgroundColor: settings.colorPrimary,
+ *       }}
+ *     />
+ *   )
+ * }
+ * ```
+ *
+ * Write theme settings into CSS variables:
+ * ```tsx
+ * 'use client'
+ *
+ * import { useThemeSettings } from '@weaverse/hydrogen/next'
+ *
+ * export function GlobalStyle() {
+ *   let { bodyBaseSize, headingBaseSize } = useThemeSettings()
+ *   return (
+ *     <style>
+ *       {`:root { --body-base-size: ${bodyBaseSize}px; --heading-base-size: ${headingBaseSize}px; }`}
+ *     </style>
+ *   )
+ * }
+ * ```
+ *
+ * @category Hooks
  */
 export function useThemeSettings<T = Record<string, unknown>>(): T {
   let { themeSettingsStore } = useWeaverseNextContext('useThemeSettings')

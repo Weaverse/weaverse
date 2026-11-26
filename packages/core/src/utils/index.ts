@@ -2,10 +2,18 @@
 export let isReactNative =
   typeof navigator === 'object' && navigator.product === 'ReactNative'
 
-/** Whether the current runtime provides a browser window. */
+/**
+ * Whether the current runtime provides a browser window.
+ *
+ * @category Utilities
+ */
 export let isBrowser = typeof window !== 'undefined' && !isReactNative
 
-/** Whether the current browser window is embedded in an iframe. */
+/**
+ * Whether the current browser window is embedded in an iframe.
+ *
+ * @category Utilities
+ */
 export let isIframe = isBrowser && window.top !== window.self
 
 /** An object whose properties can be recursively merged. */

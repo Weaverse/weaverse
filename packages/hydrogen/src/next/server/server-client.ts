@@ -768,6 +768,15 @@ class NextServerClient implements WeaverseNextServerClient {
  * Create a server-side {@link WeaverseNextServerClient} for Next.js App Router
  * routes / server components.
  *
+ * Create one client per request. The project id resolves from
+ * `?weaverseProjectId=` → a `projectId` function → a `projectId` string →
+ * `WEAVERSE_PROJECT_ID`. The Studio host resolves from a trusted
+ * `?weaverseHost=` (`https://*.weaverse.io`, `https://*.weaverse.dev`) →
+ * `weaverseHost` → `WEAVERSE_HOST` → `https://studio.weaverse.io`, and the API
+ * base from a trusted `?weaverseHost=` → `weaverseApiBase` →
+ * `WEAVERSE_PUBLIC_API_BASE` → a non-default `WEAVERSE_HOST` →
+ * `https://api.weaverse.io`. Env keys are read from `env`, then `process.env`.
+ *
  * @example
  * ```ts
  * let weaverse = createWeaverseNextServerClient({
@@ -780,6 +789,8 @@ class NextServerClient implements WeaverseNextServerClient {
  * let data = await weaverse.loadPage({ type: 'INDEX' })
  * let theme = await weaverse.loadThemeSettings()
  * ```
+ *
+ * @category Utilities
  */
 export function createWeaverseNextServerClient(
   config: WeaverseNextServerClientConfig

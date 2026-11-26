@@ -1,0 +1,12 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "tsconfig": "./tsconfig.typedoc.json",
+  "excludeExternals": true,
+  "externalPattern": ["**/node_modules/**"],
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "skipErrorChecking": true,
+  "categoryOrder": ["Components", "Hooks", "Utilities", "Schema", "Types", "*"],
+  "logLevel": "Warn",
+  "defaultCategory": "Types"
+}

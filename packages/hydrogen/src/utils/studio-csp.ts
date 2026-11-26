@@ -33,7 +33,14 @@ export interface WeaverseStudioCspDirectives {
  * The `weaverseHost` query is attacker-controllable, so it goes through the
  * same trust check that gates the bridge script: an untrusted host, or a
  * loopback host on a non-loopback storefront, returns `{}`, as does a relative
- * or malformed URL. Works in both report-only and enforcing policies.
+ * or malformed URL. Only `https://` hosts on `weaverse.io` or `weaverse.dev`
+ * (or their subdomains) are trusted; without a `weaverseHost`, the default
+ * Studio origin `https://studio.weaverse.io` is used. A self-hosted or staging
+ * Studio on another domain is not trusted, so add that origin to your own
+ * directives. Works in both report-only and enforcing policies.
+ *
+ * React Router storefronts import it from `@weaverse/hydrogen/react-router`,
+ * Next.js storefronts from `@weaverse/hydrogen/next/server`.
  *
  * The example below needs `@shopify/hydrogen` 2026.10.3 or later, the first
  * release with `createContentSecurityPolicy`.
@@ -45,6 +52,25 @@ export interface WeaverseStudioCspDirectives {
  *   directives: getWeaverseStudioCspDirectives(request),
  * })
  * ```
+ *
+ * Append Studio's sources to the theme's own instead of assigning them:
+ * overwriting `scriptSrc` drops sources such as `'unsafe-inline'` inside
+ * Studio.
+ * ```ts
+ * import type { ContentSecurityPolicyDirectives } from '@shopify/hydrogen'
+ * import { getWeaverseStudioCspDirectives } from '@weaverse/hydrogen/react-router'
+ *
+ * export function getCspDirectives(request: Request): ContentSecurityPolicyDirectives {
+ *   let directives: ContentSecurityPolicyDirectives = { ...THEME_DIRECTIVES }
+ *   let studio = getWeaverseStudioCspDirectives(request)
+ *   for (let key of Object.keys(studio) as (keyof typeof studio)[]) {
+ *     directives[key] = [...(directives[key] ?? []), ...(studio[key] ?? [])]
+ *   }
+ *   return directives
+ * }
+ * ```
+ *
+ * @category Utilities
  */
 export function getWeaverseStudioCspDirectives(
   request: Request | URL | string

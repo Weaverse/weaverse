@@ -205,6 +205,61 @@ const BODY_FREE_CACHE_SENTINEL = '\u0000weaverse:body-free'
  * Create one client from the Hydrogen app context, then call
  * {@link WeaverseClient.loadPage} from route loaders and
  * {@link WeaverseClient.loadThemeSettings} from the root loader.
+ *
+ * Also runs registered component loaders and routes Builder API requests
+ * through Hydrogen's cache. `API` is the API version segment (`'v1'`), not a
+ * complete endpoint URL.
+ *
+ * The constructor checks the project ID, whatever `throwPageLoadFailures` is
+ * set to: it throws a {@link WeaverseError} with code `MISSING_PROJECT_ID`
+ * when none resolves (`?weaverseProjectId=`, the `projectId` argument or
+ * `WEAVERSE_PROJECT_ID`), `INVALID_PROJECT_ID` for a malformed `projectId`,
+ * and `ASYNC_PROJECT_ID` for an `async` `projectId` function, which must be
+ * awaited before you create the client.
+ *
+ * @category Utilities
+ *
+ * @example
+ * Create the client once per request in the app context, from the request's
+ * Hydrogen 2026.10 Storefront API client. `createRequestStorefront`,
+ * `createCustomerAccount`, `AppSession` and `resolveRequestLocale` are app
+ * code (see the v6 migration guide); `server.ts` copies the returned object
+ * onto React Router's context, so loaders read `context.weaverse`.
+ * ```ts
+ * // app/.server/context.ts
+ * import { WeaverseClient } from '@weaverse/hydrogen/react-router'
+ *
+ * export async function createAppContext(
+ *   request: Request,
+ *   env: Env,
+ *   executionContext: ExecutionContext
+ * ) {
+ *   const waitUntil = executionContext.waitUntil.bind(executionContext)
+ *   const [cache, session] = await Promise.all([
+ *     caches.open('hydrogen'),
+ *     AppSession.init(request, [env.SESSION_SECRET]),
+ *   ])
+ *   const storefront = createRequestStorefront({ request, env, cache, waitUntil })
+ *   const customerAccount = createCustomerAccount({ env, request, session, storefront })
+ *
+ *   const weaverse = new WeaverseClient({
+ *     storefront,
+ *     env,
+ *     cache,
+ *     waitUntil,
+ *     request,
+ *     customerAccount, // Optional: passed through to section loaders
+ *     themeSchema,
+ *     components,
+ *     // Optional: the market's public locale, when it differs from `storefront.locale`
+ *     locale: resolveRequestLocale(request),
+ *     // Optional: reject with WeaverseLoadError on a failed load instead of resolving to null
+ *     throwPageLoadFailures: true,
+ *   })
+ *
+ *   return { env, cache, waitUntil, session, storefront, customerAccount, weaverse }
+ * }
+ * ```
  */
 export class WeaverseClient {
   /** Builder API version used by this client. */
@@ -690,16 +745,29 @@ export class WeaverseClient {
    * Uses direct fetch in design mode, Hydrogen's cached fetch in production.
    * Automatically includes projectId in cache key for multi-project isolation.
    *
+   * Pass Hydrogen cache-control options as `strategy`, not the Fetch API
+   * `cache` property.
+   *
+   * Hydrogen's cache is skipped in design mode, in revision preview, and for
+   * requests to the Weaverse public API proxy
+   * (`https://api.weaverse.io/api/public/...` by default). The proxy owns the
+   * freshness of Weaverse data, so `strategy` applies to third-party URLs and
+   * to a self-hosted `WEAVERSE_HOST` that serves the API itself.
+   *
    * @param url - The URL to fetch from
    * @param options - Fetch options including optional cache strategy
    * @returns Promise resolving to the fetched data
    *
    * @example
-   * ```typescript
-   * const data = await weaverse.fetchWithCache<MyData>(
-   *   'https://api.example.com/data',
-   *   { method: 'POST', body: JSON.stringify({ key: 'value' }) }
-   * )
+   * ```ts
+   * // Inside a component loader
+   * export async function loader({ weaverse }: WeaverseComponentLoaderArgs) {
+   *   const products = await weaverse.fetchWithCache<Product[]>(
+   *     'https://api.example.com/products',
+   *     { strategy: { maxAge: 60, staleWhileRevalidate: 600 } }
+   *   )
+   *   return { products }
+   * }
    * ```
    */
   public fetchWithCache = async <T = unknown>(
@@ -824,13 +892,19 @@ export class WeaverseClient {
    * Load theme settings from Weaverse API with fallback to schema defaults.
    * Merges remote settings with local theme schema and handles design mode serialization.
    *
+   * Return the whole response under `weaverseTheme` from the root loader so
+   * {@link withWeaverse} can initialize the theme settings and translation
+   * stores. Read setting values from `response.theme`.
+   *
    * @param strategy - Optional cache strategy override
    * @returns Promise resolving to theme settings response
    *
    * @example
-   * ```typescript
-   * const settings = await weaverse.loadThemeSettings()
-   * const primaryColor = settings.theme.colors?.primary
+   * ```ts
+   * // app/root.tsx
+   * export async function loader({ context }: Route.LoaderArgs) {
+   *   return { weaverseTheme: await context.weaverse.loadThemeSettings() }
+   * }
    * ```
    */
   loadThemeSettings = async (
@@ -1054,10 +1128,21 @@ export class WeaverseClient {
   }
 
   /**
-   * Fetch all published custom pages for sitemap generation.
-   * Paginates automatically. Rejects with a {@link WeaverseLoadError} when any
+   * Fetch the route metadata of every custom page assigned in the project
+   * (`path`, `lastModified`, `changeFrequency`, `priority`, plus `locale`,
+   * `market` and `scope`, which tell global, locale and market assignments
+   * apart), for sitemap and route generation. Paginates automatically. Rejects with a {@link WeaverseLoadError} when any
    * page of results cannot be loaded, so a sitemap route can answer 5xx
    * instead of serving a partial or empty sitemap that search engines cache.
+   *
+   * The list is not filtered by publication state, so an entry is not proof
+   * that the page is published. Apply your own publication policy before you
+   * add a route to a public sitemap.
+   *
+   * @example
+   * ```ts
+   * const pages = await context.weaverse.fetchCustomPages({ locale: 'en-US', limit: 100 })
+   * ```
    */
   async fetchCustomPages(
     opts?: FetchCustomPagesOptions
@@ -1116,6 +1201,26 @@ export class WeaverseClient {
    * Load page data from Weaverse API with optional route-level project override.
    * Fetches page content, executes component loaders, and handles empty items fallback.
    *
+   * What `loadPage()` resolves to:
+   * - A page when one is assigned to the route.
+   * - A fallback page with `isFallback: true` when the project loads but no
+   *   page is assigned to the route. It is not `null`. Answer it with a 404 on
+   *   the live storefront, but keep it in design mode, where the merchant
+   *   builds on it in Studio.
+   * - `null` when the Weaverse API answers 404 (for example, the project does
+   *   not exist), and, by default, when the load fails (invalid per-call
+   *   `projectId`, network error, timeout, error status or error body). The
+   *   failure is logged.
+   * - The fallback page, by default, when the API answers 200 with a body that
+   *   is not a page envelope (for example `{}`).
+   * - A rejection with a {@link WeaverseLoadError} instead of `null` for a
+   *   failed load when the client sets `throwPageLoadFailures: true`.
+   *
+   * `locale` is forwarded unchanged; when omitted, the request uses the
+   * client's `locale` argument, or `storefront.locale`. `strategy` takes effect
+   * only when the page request goes through Hydrogen's cache: requests to the
+   * default Weaverse public API proxy skip it.
+   *
    * @param params - Optional page loading parameters
    * @param params.type - Page type (INDEX, PAGE, PRODUCT, COLLECTION, etc.)
    * @param params.handle - Page handle for dynamic routes
@@ -1125,19 +1230,32 @@ export class WeaverseClient {
    * @returns Promise resolving to page data or null on error
    *
    * @example
-   * ```typescript
-   * // Basic usage
-   * const data = await weaverse.loadPage()
-   *
-   * // With page type
-   * const data = await weaverse.loadPage({ type: 'INDEX' })
-   *
+   * ```ts
    * // Route-level project override
    * const data = await weaverse.loadPage({
    *   type: 'PAGE',
    *   handle: 'about',
-   *   projectId: 'campaign-project-123'
+   *   projectId: 'campaign-project-123',
    * })
+   * ```
+   *
+   * Answer a missing page with a 404:
+   * ```ts
+   * // app/routes/($locale).pages.$handle.tsx
+   * export async function loader({ context, params }: Route.LoaderArgs) {
+   *   const weaverseData = await context.weaverse.loadPage({
+   *     type: 'PAGE',
+   *     handle: params.handle,
+   *   })
+   *   // `null`, or the fallback page outside design mode, means no page
+   *   if (
+   *     !weaverseData ||
+   *     (weaverseData.isFallback && !weaverseData.configs.isDesignMode)
+   *   ) {
+   *     throw new Response(null, { status: 404 })
+   *   }
+   *   return { weaverseData }
+   * }
    * ```
    */
   loadPage = async (

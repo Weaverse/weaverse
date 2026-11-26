@@ -354,7 +354,7 @@ export type WeaverseElement = {
     'data-wv-type': string;
 };
 
-export type WeaverseImage = {
+export interface WeaverseImage {
     id: string;
     url: string;
     altText: string;
@@ -365,7 +365,7 @@ export type WeaverseImage = {
         x: number;
         y: number;
     };
-};
+}
 
 export declare class WeaverseItemStore extends EventEmitter {
     weaverse: Weaverse;
@@ -394,14 +394,14 @@ export type WeaverseResourcePickerData = {
     handle: string;
 };
 
-export type WeaverseVideo = {
+export interface WeaverseVideo {
     id: string;
     url: string;
     altText: string;
     width: number;
     height: number;
     previewSrc: string;
-};
+}
 
 export declare let isBrowser: boolean;
 

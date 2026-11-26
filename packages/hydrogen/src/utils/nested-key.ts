@@ -4,6 +4,8 @@
  * @example
  * getNestedKey({ cart: { title: 'Cart' } }, 'cart.title') // => 'Cart'
  * getNestedKey({}, 'cart.title', 'fallback')              // => 'fallback'
+ *
+ * @category Utilities
  */
 export function getNestedKey(
   obj: Record<string, unknown>,

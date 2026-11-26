@@ -18,10 +18,10 @@ export type ItemComponentProps = {
     instance: InstanceType<typeof WeaverseItemStore>;
 };
 
-export type StudioSelection = {
+export interface StudioSelection {
     selectedItemId: string | null;
     selectedThemeGroup: string | null;
-};
+}
 
 export declare class StudioSelectionStore {
     getSnapshot: () => StudioSelection;

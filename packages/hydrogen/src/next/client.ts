@@ -94,6 +94,8 @@ class NextClient implements WeaverseNextClient {
  *   fetchPage: async ({ type, handle }) => fetchWeaversePage({ type, handle }),
  * })
  * ```
+ *
+ * @category Utilities
  */
 export function createWeaverseNextClient(
   config: WeaverseNextClientConfig

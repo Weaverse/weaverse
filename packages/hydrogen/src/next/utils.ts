@@ -7,6 +7,8 @@ import type { WeaverseNextThemeSchema } from './types'
  * Mirrors Hydrogen's `generateDataFromSchema` (settings → `{ [name]:
  * defaultValue }`) and also accepts Next theme schemas. Falls back to the deprecated `inspector` array when a
  * schema predates `settings`.
+ *
+ * @category Utilities
  */
 export function generateDataFromSchema(
   schema: SchemaType | WeaverseNextThemeSchema | undefined
@@ -41,8 +43,14 @@ export function generateDataFromSchema(
  * Defined here rather than re-exported from `@weaverse/react`, which sits
  * behind the `'use client'` boundary: there a Server Component would receive a
  * client reference, a truthy object, instead of `false`.
+ *
+ * @category Utilities
  */
 export let isBrowser = typeof window !== 'undefined'
 
-/** Whether the code runs in a browser window embedded in an iframe. */
+/**
+ * Whether the code runs in a browser window embedded in an iframe.
+ *
+ * @category Utilities
+ */
 export let isIframe = isBrowser && window.top !== window.self

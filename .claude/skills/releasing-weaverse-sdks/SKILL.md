@@ -292,6 +292,14 @@ guidance coding agents read in the same release:
 Skip this step when the release changes none of these, and record which
 applied in the Step 13 summary.
 
+### Step 11d: SDK Reference PR
+
+Publishing a stable release of the fixed group or `@weaverse/schema` triggers
+`.github/workflows/sdk-reference.yml`, which opens a PR on `Weaverse/docs` that
+regenerates `sdk-artifacts/`. Do not run anything
+for it: record the docs PR link (or the failed run) for the Step 13 summary
+and continue. Like the changelog PR, it never blocks the npm release.
+
 ### Step 12: Sync Dev Branch
 
 ```bash

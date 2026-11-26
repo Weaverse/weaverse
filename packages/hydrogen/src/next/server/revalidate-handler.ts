@@ -282,6 +282,8 @@ export interface WeaverseNextRevalidateHandler {
  *   getClient: () => getWeaverseServerClient(Promise.resolve({})),
  * })
  * ```
+ *
+ * @category Utilities
  */
 export function createWeaverseNextRevalidateHandler(
   config: WeaverseNextRevalidateHandlerConfig

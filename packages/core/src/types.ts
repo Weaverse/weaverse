@@ -36,7 +36,7 @@ export type PositionInputValue =
 /**
  * Input controls supported by legacy Core schemas.
  *
- * @remarks Prefer the equivalent input types from `@weaverse/schema` for new
+ * Prefer the equivalent input types from `@weaverse/schema` for new
  * schemas. This type remains available for backward compatibility.
  */
 export type InputType =
@@ -79,7 +79,7 @@ export type WeaverseResourcePickerData = {
 }
 
 /** Image metadata returned by a Weaverse image input. */
-export type WeaverseImage = {
+export interface WeaverseImage {
   /** The image identifier. */
   id: string
   /** The image URL. */
@@ -106,7 +106,7 @@ export type WeaverseImage = {
 }
 
 /** Video metadata returned by a Weaverse video input. */
-export type WeaverseVideo = {
+export interface WeaverseVideo {
   /** The video identifier. */
   id: string
   /** The video URL. */
@@ -160,7 +160,7 @@ export type WeaverseElement = {
 /**
  * Minimal legacy schema metadata for an element.
  *
- * @remarks Prefer `SchemaType` from `@weaverse/schema` for new schemas. This
+ * Prefer `SchemaType` from `@weaverse/schema` for new schemas. This
  * type remains available for backward compatibility.
  */
 export type ElementSchema = {

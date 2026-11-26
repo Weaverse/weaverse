@@ -244,7 +244,7 @@ export interface WeaverseNextThemeSchemaGroup {
 
 /**
  * Theme schema shape accepted by the Next adapter. Mirrors Hydrogen's
- * `HydrogenThemeSchema` while keeping locale data framework-neutral via
+ * `WeaverseThemeSchema` while keeping locale data framework-neutral via
  * {@link WeaverseNextI18n}.
  */
 export interface WeaverseNextThemeSchema {

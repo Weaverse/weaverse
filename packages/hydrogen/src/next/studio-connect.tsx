@@ -74,6 +74,8 @@ export interface WeaverseNextStudioConnectProps {
  * Root-level Studio script connector for Next client boundaries. Mount once
  * near the app root (e.g. root layout) so it also covers routes that never
  * render `WeaverseNextRenderer`, such as `not-found.tsx` / `error.tsx`.
+ *
+ * @category Components
  */
 export function WeaverseNextStudioConnect(
   props: WeaverseNextStudioConnectProps

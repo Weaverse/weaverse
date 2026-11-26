@@ -63,6 +63,41 @@ function reportSchemaIssues(issues: readonly SchemaValidationIssue[]): void {
  * consuming bundler statically evaluates and eliminates in production builds —
  * both the browser bundle and the Oxygen/SSR worker. Production storefronts
  * therefore ship section schemas with zero validation overhead and no zod.
+ *
+ * Returns the original schema immediately. Outside production, validation
+ * issues are logged as `console.warn` warnings; validation and import failures
+ * never throw through the call.
+ *
+ * @category Schema
+ *
+ * @example
+ * ```tsx
+ * import { createSchema, IMAGES_PLACEHOLDERS } from '@weaverse/hydrogen/react-router' // or '@weaverse/hydrogen/next'
+ *
+ * export let schema = createSchema({
+ *   type: 'hero-banner',
+ *   title: 'Hero Banner',
+ *   settings: [
+ *     {
+ *       group: 'Content',
+ *       inputs: [
+ *         {
+ *           type: 'text',
+ *           name: 'heading',
+ *           label: 'Heading',
+ *           defaultValue: 'Welcome to our store',
+ *         },
+ *         {
+ *           type: 'image',
+ *           name: 'image',
+ *           label: 'Image',
+ *           defaultValue: IMAGES_PLACEHOLDERS.banner_1,
+ *         },
+ *       ],
+ *     },
+ *   ],
+ * })
+ * ```
  */
 export function createSchema(schema: SchemaType): SchemaType {
   if (process.env.NODE_ENV !== 'production') {
@@ -82,6 +117,8 @@ export function createSchema(schema: SchemaType): SchemaType {
  * Type-safe variant of {@link createSchema} that enforces required fields even
  * when the consumer's TypeScript `strict` mode is disabled. Validation is
  * dev-only, exactly as in {@link createSchema}.
+ *
+ * @category Schema
  */
 export function createSchemaTypeSafe(schema: SchemaTypeStrict): SchemaType {
   if (process.env.NODE_ENV !== 'production') {
@@ -99,6 +136,8 @@ export function createSchemaTypeSafe(schema: SchemaTypeStrict): SchemaType {
 
 /**
  * Schema composition utilities
+ *
+ * @category Schema
  */
 export class SchemaBuilder {
   private readonly schema: Partial<SchemaType>
@@ -197,6 +236,8 @@ export class SchemaBuilder {
 
 /**
  * Create a new schema builder
+ *
+ * @category Schema
  */
 export function schemaBuilder(initial?: Partial<SchemaType>): SchemaBuilder {
   return new SchemaBuilder(initial)
@@ -204,6 +245,8 @@ export function schemaBuilder(initial?: Partial<SchemaType>): SchemaBuilder {
 
 /**
  * Merge multiple schemas (for composition)
+ *
+ * @category Schema
  */
 export function mergeSchemas(
   base: SchemaType,
@@ -240,6 +283,8 @@ export function mergeSchemas(
 
 /**
  * Create common input configurations
+ *
+ * @category Schema
  */
 export const inputHelpers = {
   /**
@@ -347,6 +392,8 @@ export const inputHelpers = {
 
 /**
  * Create common inspector groups
+ *
+ * @category Schema
  */
 export const groupHelpers = {
   /**

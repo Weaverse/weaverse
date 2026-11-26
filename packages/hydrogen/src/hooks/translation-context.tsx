@@ -15,7 +15,7 @@ export { createTranslate, getNestedKey, interpolate, type TranslateFunction }
 // ---------------------------------------------------------------------------
 
 /** Translation function, stores, and locale overrides exposed by the provider. */
-export type TranslationValue = {
+export interface TranslationValue {
   /**
    * Translate a key with optional variable interpolation.
    *
@@ -45,7 +45,7 @@ const TranslationContext = createContext<TranslationValue | null>(null)
 TranslationContext.displayName = 'WeaverseTranslationContext'
 
 /** Inputs accepted by {@link TranslationProvider}. */
-export type TranslationProviderProps = {
+export interface TranslationProviderProps {
   /** Theme-provided default-locale translation content. */
   staticContent: Record<string, unknown>
   /** Active-locale translations published by the merchant. */
@@ -78,10 +78,26 @@ const NOOP_SNAPSHOT = () => EMPTY
 /**
  * Provider that wraps the app to expose the `t()` function.
  *
+ * `withWeaverse` already renders it, so themes rarely use it directly. Use it
+ * to provide `t()` to a tree outside the Weaverse root, such as a test or a
+ * standalone component preview.
+ *
  * - `staticContent`      – the theme's default locale JSON (from themeSchema.i18n)
  * - `merchantOverrides`  – locale-specific overrides fetched from the API
  * - `translationStore`   – optional store for live design-mode text overrides
  *   (the deprecated `themeTextStore` prop is accepted as a fallback)
+ *
+ * @example
+ * ```tsx
+ * import { TranslationProvider } from '@weaverse/hydrogen/react-router'
+ * import staticContent from '~/i18n/en.json'
+ *
+ * <TranslationProvider staticContent={staticContent}>
+ *   <CartTitle count={2} />
+ * </TranslationProvider>
+ * ```
+ *
+ * @category Components
  */
 export function TranslationProvider({
   staticContent,
@@ -129,6 +145,26 @@ export function TranslationProvider({
  *
  * Must be used inside a component wrapped by `withWeaverse` or `TranslationProvider`.
  *
+ * Keys are dot paths into the theme's text (`cart.title` reads
+ * `{ "cart": { "title": "..." } }`), and `t()` replaces `{{name}}`
+ * placeholders with the matching `variables` value. It does not handle plurals
+ * or number formatting. `t(key)` returns the first value it finds, highest
+ * priority first:
+ * 1. The external `t` passed to `withWeaverse(Layout, { t })` or
+ *    `TranslationProvider`, unless it returns an empty string or the key
+ *    unchanged.
+ * 2. Unsaved edits the merchant is making in Studio's design mode.
+ * 3. The merchant's translations for the active locale (`merchantOverrides`).
+ * 4. The theme's default copy (`staticContent`, from `i18n.staticContent` in
+ *    the theme schema).
+ * 5. The key itself.
+ *
+ * Studio's translations always win over the bundled default copy, so editing
+ * the theme's default JSON does not change a key the merchant has already
+ * translated. `withWeaverse` reads `staticContent` and `merchantOverrides`
+ * from the root loader's `weaverseTheme` (the `loadThemeSettings()` result).
+ * Throws when no `TranslationProvider` is above it.
+ *
  * @example
  * ```tsx
  * function CartTitle() {
@@ -136,6 +172,8 @@ export function TranslationProvider({
  *   return <h2>{t('cart.title')}</h2>
  * }
  * ```
+ *
+ * @category Hooks
  */
 export function useTranslation(): TranslationValue {
   const ctx = useContext(TranslationContext)

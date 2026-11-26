@@ -29,7 +29,8 @@
     "check:fix:unsafe": "vp check --fix-dangerously",
     "format": "vp fmt",
     "format:check": "vp fmt --check",
-    "ci": "vp check"
+    "ci": "vp check",
+    "sdk:reference": "node scripts/sdk-reference.mjs"
   },
   "devDependencies": {
     "@jridgewell/gen-mapping": "0.3.13",
@@ -44,6 +45,8 @@
     "rimraf": "6.1.4",
     "turbo": "2.11.12",
     "tsrs": "7.1.0-beta.tsrs2",
+    "typedoc": "0.28.20",
+    "typescript": "6.0.3",
     "vite": "catalog:",
     "vite-plus": "catalog:",
     "vitest": "catalog:"
